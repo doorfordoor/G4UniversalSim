@@ -1,0 +1,50 @@
+{
+  "status": "pass",
+  "source_docs4_SHA_unchanged": true,
+  "initial_draft_all_bytes_unchanged": true,
+  "STATUS_old_current_snapshot_and_dated_tail_exact": true,
+  "agent_history_entire_original_raw_prefix_exact": true,
+  "J2_usage_body_exact_after_blank_start_heading": true,
+  "ROADMAP_only_two_current_status_rows": true,
+  "new_links_checked": [
+    {
+      "file": "docs/J2编辑覆盖与F8验收.md",
+      "target": "ROADMAP.md",
+      "exists": true
+    },
+    {
+      "file": "docs/J2编辑覆盖与F8验收.md",
+      "target": "../STATUS.md",
+      "exists": true
+    }
+  ],
+  "deleted_lines": [
+    {
+      "file": "docs/ROADMAP.md",
+      "text": "| **F8** | 环境设置衔接、空白/模板/导入与向导重入、跨页DPI/键盘/文案一致性与可访问性 | I1/I2提供环境链路；J1实现布局/主题/主要中文及焦点适配；J2实现无源创建和编辑能力；F8做跨项桌面验收 | 2026-11-02 第三修复候选，相关专项独审已完成，完整新候选验收待进行；2901f42本机已过范围、CI失败及原生开放边界见STATUS，History/QLayout专项不代替新冻结复验 |"
+    },
+    {
+      "file": "docs/ROADMAP.md",
+      "text": "| **J2 编辑覆盖与几何往返** | 原M3余项；空白创建与无已有配置文件输入、NIST元素来源辅助、命名多源及球面源、物理模块组合/替换、多敏感体编辑和高级实体/场/偏置；后端vis属性往返 | E6；实体能力归一相关部分依赖E7，其余不被无关实体重构阻塞；在L1前完成本轮明确范围 | **2026-11-02 第三修复候选，相关专项独审已完成，完整新候选验收待进行**：保留56b689f及2901f42原失败；K1 policy final-v1专项独审已通过603入口，完整新candidate验收仍待进行，几何路径仅修严格同文件测试；不提高物理支持等级 |"
+    },
+    {
+      "file": "docs/J2编辑覆盖与F8验收.md",
+      "text": "当前为第三修复候选，相关专项独审已完成，完整新候选验收待进行；正式状态见 [ROADMAP](ROADMAP.md)。本页说明接口、使用方法和验收边界，不把组件检查或界面预览当作完整模拟验收。"
+    },
+    {
+      "file": "docs/J2编辑覆盖与F8验收.md",
+      "text": "第三修复候选包含已审History、spacer、STL路径测试与K1 policy修复，J2/F8阶段仍未关闭。2901f42本机已过范围、CI明确失败及原生边界见[状态入口](../STATUS.md)；113 integration已通过31/31、6790入口及gate0，114 integration已通过31/31、6780入口及gate0；本快照2901f42六份本机profile均已通过，合计300/300、180992入口，独立汇总errors=[]。完整新candidate验收待进行。本页不将专项或界面预览升级为整体验收。"
+    }
+  ],
+  "no_placeholder_or_stale_review_gate": true,
+  "apply_check_exit": 0,
+  "tracked_expected_main_changes_before": " M gui/smoke_tests/smoke_f8_accessibility.py\n M gui/smoke_tests/smoke_j2_geometry.py\n",
+  "tracked_expected_main_changes_after": " M gui/smoke_tests/smoke_f8_accessibility.py\n M gui/smoke_tests/smoke_j2_geometry.py\n",
+  "only_two_reviewed_test_diffs_allowed": {
+    "gui/smoke_tests/smoke_j2_geometry.py": "b3fefeac58f044c99021d1caf7812fd66c8fe41bd14fb94ebcf8facf0c1cb6bd",
+    "gui/smoke_tests/smoke_f8_accessibility.py": "5f234e69c00d602039cb8f2ebc7daadb4f69edc860e6010989628d06253b3814"
+  },
+  "no_product_native_or_formal_execution": true,
+  "futureHEAD_map_not_freeze_gate": true,
+  "additional_native_not_freeze_gate": true
+}

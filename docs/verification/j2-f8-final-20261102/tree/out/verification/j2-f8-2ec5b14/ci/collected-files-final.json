@@ -1,0 +1,262 @@
+{
+  "candidate_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+  "workflow_completion": "all_completed",
+  "runs": [
+    {
+      "id": 41352200727,
+      "path": ".github/workflows/desktop-package.yml",
+      "head_sha": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1
+    },
+    {
+      "id": 41352200756,
+      "path": ".github/workflows/m0-static-gui.yml",
+      "head_sha": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1
+    },
+    {
+      "id": 41352200731,
+      "path": ".github/workflows/full-installation.yml",
+      "head_sha": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1
+    },
+    {
+      "id": 41352200765,
+      "path": ".github/workflows/linux-geant4.yml",
+      "head_sha": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1
+    }
+  ],
+  "files": [
+    {
+      "role": "github_original_artifact_zip",
+      "path": "artifacts\\frozen-desktop-Linux-13101732052.zip",
+      "bytes": 23680,
+      "sha256": "243576d836270e70a9e7c870b29173052e4890626a0acb64d2dec0567add888c",
+      "artifact_id": 13101732052,
+      "run_id": 41352200727
+    },
+    {
+      "role": "github_original_artifact_zip",
+      "path": "artifacts\\frozen-desktop-Windows-13101268672.zip",
+      "bytes": 27266,
+      "sha256": "9ac6281c7b6f57a0f7536563f17fae41d68f27f6c21d7e7e78b8a94a7efa1664",
+      "artifact_id": 13101268672,
+      "run_id": 41352200727
+    },
+    {
+      "role": "github_original_artifact_zip",
+      "path": "artifacts\\full-installation-Windows-13102807661.zip",
+      "bytes": 29409093,
+      "sha256": "13f6835c5b17667b1e23a682f32f8fcedbc587a6114368cb170af67ab0e42d70",
+      "artifact_id": 13102807661,
+      "run_id": 41352200731
+    },
+    {
+      "role": "github_original_artifact_zip",
+      "path": "artifacts\\full-installation-Linux-13102765216.zip",
+      "bytes": 32730914,
+      "sha256": "596e8d1f518c17df942b2a258349d40934884668e91885a66ac81db4e8846345",
+      "artifact_id": 13102765216,
+      "run_id": 41352200731
+    },
+    {
+      "role": "github_original_artifact_zip",
+      "path": "artifacts\\linux-evidence-11.4.3-13103140474.zip",
+      "bytes": 31205878,
+      "sha256": "33c758dfc5933e4a80231a3323d723494c8fcc4af40db38644f980eb2bc8258a",
+      "artifact_id": 13103140474,
+      "run_id": 41352200765
+    },
+    {
+      "role": "github_original_artifact_zip",
+      "path": "artifacts\\linux-evidence-11.3.2-13102513206.zip",
+      "bytes": 31530307,
+      "sha256": "50e28bef8a91f0a02e0d269fd498f8becc426b183dc55e9846280c5b46ec71ff",
+      "artifact_id": 13102513206,
+      "run_id": 41352200765
+    },
+    {
+      "role": "github_original_artifact_zip",
+      "path": "artifacts\\m0-report-windows-latest-13102896151.zip",
+      "bytes": 478586,
+      "sha256": "093d0e98cb3b3a9584eb0b096ecec7949057bf2343b1b4b592709057abfa0df5",
+      "artifact_id": 13102896151,
+      "run_id": 41352200756
+    },
+    {
+      "role": "github_original_artifact_zip",
+      "path": "artifacts\\m0-report-ubuntu-latest-13102097206.zip",
+      "bytes": 428245,
+      "sha256": "7c0f19e40411e0621531f5830695dca46cf870260cf051f195c39418840d2043",
+      "artifact_id": 13102097206,
+      "run_id": 41352200756
+    },
+    {
+      "role": "github_connector_decoded_complete_job_log",
+      "path": "job-124984634805.log",
+      "bytes": 87005,
+      "sha256": "bb20b1d34de9b413e9cf23d325c0b9f770dd992151348239b1702321f3e317b4",
+      "job_id": 124984634805,
+      "run_id": 41352200756
+    },
+    {
+      "role": "github_connector_decoded_complete_job_log",
+      "path": "job-124984635063.log",
+      "bytes": 53321,
+      "sha256": "e90ed2fdee4bf47606adb55554278a2044b81934b8f99d754055745099d5c999",
+      "job_id": 124984635063,
+      "run_id": 41352200756
+    },
+    {
+      "role": "github_connector_decoded_complete_job_log",
+      "path": "job-124984635016.log",
+      "bytes": 146403,
+      "sha256": "4de0b4526c1fa94257a840f878d90b28e73698de40199bd251a728dd3295c974",
+      "job_id": 124984635016,
+      "run_id": 41352200765
+    },
+    {
+      "role": "github_connector_decoded_complete_job_log",
+      "path": "job-124984635146.log",
+      "bytes": 148384,
+      "sha256": "a0e04cf4d276ede22a50d6ed3713f5d080375bf7aeae0ab0a86f79f3bf00ec0e",
+      "job_id": 124984635146,
+      "run_id": 41352200765
+    },
+    {
+      "role": "github_connector_decoded_complete_job_log",
+      "path": "job-124984634839.log",
+      "bytes": 61932,
+      "sha256": "ed24e5747e4d9493b4a25b8eb03f444df2d35785578e374f46ff5f9951d8b063",
+      "job_id": 124984634839,
+      "run_id": 41352200731
+    },
+    {
+      "role": "github_connector_decoded_complete_job_log",
+      "path": "job-124984634891.log",
+      "bytes": 115417,
+      "sha256": "f596b1c079ab9e398b4be1921bbda39441874a9ceeeef97150b4f98ca617ed07",
+      "job_id": 124984634891,
+      "run_id": 41352200731
+    },
+    {
+      "role": "github_connector_decoded_complete_job_log",
+      "path": "job-124984634815.log",
+      "bytes": 42940,
+      "sha256": "8a7bf911502f1ed269344206c37ba29b2101bfb5c7d2d8cdbf07dd9eb6162266",
+      "job_id": 124984634815,
+      "run_id": 41352200727
+    },
+    {
+      "role": "github_connector_decoded_complete_job_log",
+      "path": "job-124984635023.log",
+      "bytes": 73240,
+      "sha256": "e180279401e517953b6856e231128f1e26ddd02b9b07151215eeed1fd9855ad2",
+      "job_id": 124984635023,
+      "run_id": 41352200727
+    }
+  ],
+  "strict_pass": 12,
+  "strict_fail": 0,
+  "actual_profiles": [
+    [
+      "linux113",
+      "backend"
+    ],
+    [
+      "linux113",
+      "gui"
+    ],
+    [
+      "linux113",
+      "integration"
+    ],
+    [
+      "linux113",
+      "static"
+    ],
+    [
+      "linux114",
+      "backend"
+    ],
+    [
+      "linux114",
+      "gui"
+    ],
+    [
+      "linux114",
+      "integration"
+    ],
+    [
+      "linux114",
+      "static"
+    ],
+    [
+      "m0-linux",
+      "gui"
+    ],
+    [
+      "m0-linux",
+      "static"
+    ],
+    [
+      "m0-windows",
+      "gui"
+    ],
+    [
+      "m0-windows",
+      "static"
+    ]
+  ],
+  "missing_profiles": [],
+  "unexpected_profiles": [],
+  "desktop_installation_semantic_receipts": {
+    "desktop-linux-checked.json": {
+      "sha256": "30cafe33bda877b95a1eddf9b9f1edea664ef226c00e2bcc12724aa6155fb243",
+      "status": "independently_verified"
+    },
+    "desktop-win32-checked.json": {
+      "sha256": "1e5cceebc9f27f38aea93444c9db5901d67eed03436cad12f13eea26afa9746d",
+      "status": "independently_verified"
+    },
+    "installation-linux-checked.json": {
+      "sha256": "c39e3a1e1fb70cfb31e2446a3f9ef1dafda64e9e079002735edbcc2a93455433",
+      "status": "independently_verified"
+    },
+    "installation-windows-checked.json": {
+      "sha256": "3870088d483f4aab7f3cfa5e548ebd46f92d208475cbdd2c4f49f04a94cf229f",
+      "status": "independently_verified"
+    }
+  },
+  "release_accepted": true,
+  "acceptance_scope": "CI workflow/report evidence only; not stage acceptance, new native observation or physical validation.",
+  "note": "Run HEAD binds jobs through run_id; connector jobs do not supply head_sha. Initial attempt-1 job IDs must match. Original artifact ZIPs and complete decoded job logs are distinct formats. No workflow rerun or relaxed evidence gate.",
+  "ci_tamper_negative_control_steps": [
+    {
+      "job_id": 124984635016,
+      "conclusions": [
+        "success"
+      ]
+    },
+    {
+      "job_id": 124984635146,
+      "conclusions": [
+        "success"
+      ]
+    }
+  ],
+  "ci_tamper_negative_controls_verified": true
+}

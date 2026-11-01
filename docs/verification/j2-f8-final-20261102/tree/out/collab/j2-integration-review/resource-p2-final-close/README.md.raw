@@ -1,0 +1,22 @@
+# Shared main资源P2最终独立关闭复核
+
+结论：**原P2-1、原P2-2及后续parameterized alias缺口均可关闭；本次限定范围无新增未决发现。**
+
+冻结身份：逐文件核对 `out/collab/j2-resource-p2-fix/alias-files.json` 的bytes/SHA及作者log_sha256全部匹配；测试前后产品三文件SHA不变。run_editor_resources仍为51a5e11c53ff9072b5a07b174d24920cb3931c85338b0407d0316a6ea0609c46，未借此轮alias变更扩大迁移改动。
+
+独立验证：
+
+1. `python -B tools/test_assert_probe.py scripts/test_j2_resource_bundle.py`，退出0，G4USIM_ASSERTS=101。日志 `../resource-p2-alias-final-recheck.log`。覆盖原legacy source-copy重复声明/last-value/shadow missing/raw保存、strict v2/version拒绝、STL current/legacy/冲突/missing/outside、inline copies无外部表，以及实际CURRENT包两种placement拼写的资源收据和拒绝路径。
+2. 重用本审查原有、曾复现漏表的实际包 `resource-p2-alias-1793552138787128200/runs/20261102_005538_new_simulation/project_snapshot.json` 再做独立窄反例。对于parameterised、parameterized各自验证：完整时恰好一个geometry.AliasCopies.copies_file收据，路径和原字节SHA一致；真实临时移开包内CSV时拒绝missing；CURRENT几何路径改到实际存在的包根外CSV时拒绝outside-root。六个对照均通过。
+3. CSV和geometry.ini在finally恢复，确认字节与测试前相同；只改本审查fixture/证据，没有改产品、schema、C++或其他owner文件。原失败报告和旧82收据保留。
+
+定点修复审阅：project_snapshot gate现在接受backend已有两种拼写集合，没有通过禁止合法alias规避；文件提取仍经统一current/legacy冲突规则和原_read_inside。P2-1自有scanner与strict迁移规则分离保持；本轮没有更改它。
+
+最终三个产品/测试身份：
+- gui/g4usim_gui/core/run_editor_resources.py：6658 bytes / 51a5e11c53ff9072b5a07b174d24920cb3931c85338b0407d0316a6ea0609c46
+- gui/g4usim_gui/core/project_snapshot.py：20224 bytes / daed5db7923042fa4fb90beac447ce7fe91313ce15a254beae25656d6b800a97
+- scripts/test_j2_resource_bundle.py：18793 bytes / 67bf4ba34658dea6c49a411b0172b1a2b3a175b0c7f294df64625b92ace5d919
+
+窄反例结构化证据：本目录receipt.json。上轮 `../resource-p2-recheck.md` 的alias未决结论由本次同对象复核关闭，不追改旧观察。
+
+边界：这是资源复制、CURRENT包加载、输入身份与拒绝路径验收；没有全局构建、主C++测试、native、正式矩阵或物理有效性验证。占位STL不作为物理实体证据。主代理仍负责候选commit/正式矩阵及阶段判定，本结论不代替那些门禁。所有调用已结束，无后台命令。

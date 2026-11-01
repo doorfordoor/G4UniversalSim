@@ -1,0 +1,81 @@
+--- a/gui/smoke_tests/smoke_f8_accessibility.py
++++ b/gui/smoke_tests/smoke_f8_accessibility.py
+@@ -586,6 +586,37 @@
+             close_window(app, window)
+ 
+ 
++def _assert_history_provider(interface, control, text_label, expected):
++    """Check real Qt naming semantics and the actual accessible label object.
++
++    Qt 6.11 QAccessibleComboBox::text uses currentText for Name on Unix;
++    the semantic label is exposed through the Label relation. Windows uses
++    the widget Name. Keep both paths strict, never fall back to property-only.
++    https://github.com/qt/qtbase/blob/v6.11.3/src/widgets/accessible/complexwidgets.cpp#L381
++    """
++    from PySide6.QtGui import QAccessible
++    from PySide6.QtWidgets import QComboBox
++    assert interface.object() is control
++    labels = [target for target, flags in interface.relations(QAccessible.Label)
++              if flags & QAccessible.Label and target.object() is text_label]
++    assert labels, ('missing actual Label relation', type(control).__name__, expected)
++    label_interface = labels[0]
++    assert label_interface.role() == QAccessible.StaticText
++    assert label_interface.text(QAccessible.Name) == expected
++    actual_name = interface.text(QAccessible.Name)
++    if isinstance(control, QComboBox):
++        assert interface.role() == QAccessible.ComboBox
++        assert interface.text(QAccessible.Value) == control.currentText()
++        expected_name = (control.currentText() or expected) if sys.platform.startswith('linux') else expected
++        assert actual_name == expected_name, (sys.platform, actual_name, expected_name)
++    else:
++        assert interface.role() == QAccessible.EditableText
++        assert actual_name == expected
++    return {'qt_label_name': label_interface.text(QAccessible.Name),
++            'qt_label_role': str(label_interface.role()),
++            'qt_label_object_matches': label_interface.object() is text_label}
++
++
+ def test_history_directory_accessibility(app, output=None):
+     """Bind the explicit History directory label without broad QHBox guessing."""
+     from PySide6.QtGui import QAccessible
+@@ -656,10 +687,10 @@
+                     assert control.accessibleName() == readable_label(text_label.text()) == ui_text(source)
+                     interface = QAccessible.queryAccessibleInterface(control)
+                     assert interface is not None
+-                    assert interface.text(QAccessible.Name) == ui_text(source)
++                    provider = _assert_history_provider(interface, control, text_label, ui_text(source))
+                     accessible.append({'source': source, 'name': control.accessibleName(),
+                                        'qt_accessible_name': interface.text(QAccessible.Name),
+-                                       'role': str(interface.role())})
++                                       'role': str(interface.role()), **provider})
+                 parent = field.parentWidget()
+                 inner_can_fit_union = True
+                 details = []
+@@ -693,6 +724,27 @@
+                         window._edit_session.is_modified) == history
+                 observations.append({'language': language, 'name': field.accessibleName(),
+                                      'label': label.text(), 'accessible_controls': accessible, 'viewports': details})
++            # A correct QWidget property alone must not pass: remove the real
++            # status label relation, then restore it before any further events.
++            status_label, status_control, _ = pairs[2]
++            status_label.setBuddy(None)
++            rejected = False
++            try:
++                assert status_control.accessibleName() == ui_text('Status')
++                interface = QAccessible.queryAccessibleInterface(status_control)
++                assert interface is not None
++                try:
++                    _assert_history_provider(interface, status_control, status_label, ui_text('Status'))
++                except AssertionError:
++                    rejected = True
++                assert rejected, 'Property-only status naming must not replace the real Label relation'
++                observations[-1]['missing_status_buddy_negative'] = {
++                    'property': status_control.accessibleName(),
++                    'interface_name': interface.text(QAccessible.Name), 'rejected': rejected}
++            finally:
++                status_label.setBuddy(status_control)
++            _assert_history_provider(QAccessible.queryAccessibleInterface(status_control),
++                                     status_control, status_label, ui_text('Status'))
+             # The helper must be idempotent at the readable nonzero pan; the
+             # test never supplies an offset or reveals the field itself.
+             offset = window.content_scroll.horizontalScrollBar().value()

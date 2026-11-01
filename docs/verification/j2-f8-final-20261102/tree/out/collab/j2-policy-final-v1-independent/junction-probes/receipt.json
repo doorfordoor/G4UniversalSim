@@ -1,0 +1,17 @@
+{
+  "status": "pass",
+  "rows": [
+    {
+      "script": "link_probe.py",
+      "exit_code": 0,
+      "log_sha256": "dca2cb5d70795a6e0fc2fd43b6705ec6e2fff698df87c7c47b5b8ced25fc9bd5"
+    },
+    {
+      "script": "late_resource_policy_probe.py",
+      "exit_code": 0,
+      "log_sha256": "1069f765d7b492063228f3c8421866c3570ce8e19ec3d8f8eaff9307ef8868bc"
+    }
+  ],
+  "copy_product_sha256": "4990d9f4439711f96aa5a5475f6f39ea3588b8c1e3fabf7e3e2eca0318a45610",
+  "scope": "Real junction rejection for policy and resource inputs, then a resource turned into a junction after read before policy comparison; all fixture paths in independent out root."
+}

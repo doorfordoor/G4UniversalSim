@@ -1,0 +1,614 @@
+Window: "G4UniversalSim Runner — new_simulation", App: pythonw.exe.
+	0 窗口 (settable, string) G4UniversalSim Runner — new_simulation Secondary Actions: Raise ID: QApplication.MainWindow
+		492 对话框 Open G4UniversalSim project Secondary Actions: Raise
+			493 窗格
+				494 工具栏 命令模块 ID: FolderBandModuleInner
+					495 按钮 帮助(&H) Description: 获取帮助。 ID: HelpButton
+					496 复选框 预览窗格 Description: 显示预览窗格。 ID: PreviewButton
+					497 拆分按钮 详细信息 Description: 更改你的视图。 ID: ViewControl
+						498 按钮 视图滑块 Description: 更多选项 ID: SplitMenuButton
+					499 按钮 组织​​ Description: 组织该文件夹的内容。 ID: {7DDC1264-7E4D-4F74-BBC0-D191987C8D0F}
+					500 按钮 新建​​文件夹​​ Description: 新建文件夹。 ID: {E44616AD-6DF1-4B94-85A4-E465AE8A19DB}
+				501 窗格 控制项宿主 ID: ProperTreeHost
+					502 树 导航窗格 ID: 100
+						503 滚动条 (settable, float) 垂直滚动条 Value: 11 ID: NonClientVerticalScrollBar
+							504 按钮 上一行 ID: UpButton
+							505 按钮 向上翻页 ID: UpPageButton
+							506 缩略图 位置 ID: ScrollbarThumb
+							507 按钮 向下翻页 ID: DownPageButton
+							508 按钮 下一行 ID: DownButton
+						509 树项目 (selectable, settable, string) 桌面 Value: 桌面
+							510 树项目 (selectable, settable, string) WPS云盘 Value: WPS云盘
+							511 树项目 (selectable, settable, string) 主文件夹 Value: 主文件夹
+							512 树项目 (selectable, settable, string) 图库 Value: 图库
+							513 树项目 (selectable, settable, string) 亚勇 - 个人 Value: 亚勇 - 个人
+								514 树项目 (selectable, settable, string) Desktop Value: Desktop
+								515 树项目 (selectable, settable, string) Microsoft Copilot Chat 文件 Value: Microsoft Copilot Chat 文件
+								516 树项目 (selectable, settable, string) Music Value: Music
+								517 树项目 (selectable, settable, string) Pictures Value: Pictures
+								518 树项目 (selectable, settable, string) Videos Value: Videos
+								519 树项目 (selectable, settable, string) 附件 Value: 附件
+								520 树项目 (selectable, settable, string) 李亚勇 Value: 李亚勇
+								521 树项目 (selectable, settable, string) 李亚勇 1 Value: 李亚勇 1
+								522 树项目 (selectable, settable, string) 视频 Value: 视频
+								523 树项目 (selectable, settable, string) 文档 Value: 文档
+								524 树项目 (selectable, settable, string) 音乐 Value: 音乐
+							525 树项目 (selectable, settable, string) 快速访问开始 - Downloads (已固定) Value: 快速访问开始 - Downloads (已固定)
+							526 树项目 (selectable, settable, string) 文档 (已固定) Value: 文档 (已固定)
+							527 树项目 (selectable, settable, string) 图片 (已固定) Value: 图片 (已固定)
+							528 树项目 (selectable, settable, string) 桌面 (已固定) Value: 桌面 (已固定)
+							529 树项目 (selectable, settable, string) 19号-书籍 (已固定) Value: 19号-书籍 (已固定)
+							530 树项目 (selectable, settable, string) 音乐 (已固定) Value: 音乐 (已固定)
+							531 树项目 (selectable, settable, string) 视频 (已固定) Value: 视频 (已固定)
+							532 树项目 (selectable, settable, string) 3-档案馆 (已固定) Value: 3-档案馆 (已固定)
+							533 树项目 (selectable, settable, string) Fc_test (已固定) Value: Fc_test (已固定)
+							534 树项目 (selectable, settable, string) JFM7VX690T_前八篇论文PDF Value: JFM7VX690T_前八篇论文PDF
+							535 树项目 (selectable, settable, string) Chrome Value: Chrome
+							536 树项目 (selectable, settable, string) 快速访问结束 - 模板+规则 Value: 快速访问结束 - 模板+规则
+							537 树项目 (selectable, settable, string) 此电脑 Value: 此电脑
+								538 树项目 (selectable, settable, string) 本地磁盘 (C:) Value: 本地磁盘 (C:)
+								539 树项目 (selectable, settable, string) DATA (D:) Value: DATA (D:)
+								540 树项目 (selectable, settable, string) WORK (E:) Value: WORK (E:)
+								541 树项目 (selectable, settable, string) GAMES (F:) Value: GAMES (F:)
+								542 树项目 (selectable, settable, string) PortableSSD (G:) Value: PortableSSD (G:)
+							543 树项目 (selectable, settable, string) PortableSSD (G:) Value: PortableSSD (G:)
+							544 树项目 (selectable, settable, string) 网络 Value: 网络
+							545 树项目 (selectable, settable, string) Linux Value: Linux
+								546 树项目 (selectable, settable, string) Ubuntu Value: Ubuntu
+				547 窗格 Shell 文件夹视图 ID: listview
+					548 列表 项目视图
+						549 滚动条 (settable, float) 垂直 Value: 0 ID: VerticalScrollBar
+							550 按钮 上一行 ID: UpButton
+							551 缩略图 位置 ID: ScrollbarThumb
+							552 按钮 向下翻页 ID: DownPageButton
+							553 按钮 下一行 ID: DownButton
+						554 标头 标题
+							555 拆分按钮 名称 ID: System.ItemNameDisplay
+								556 按钮 筛选器下拉列表 ID: DropDown
+							557 拆分按钮 修改日期 ID: System.DateModified
+								558 按钮 筛选器下拉列表 ID: DropDown
+							559 拆分按钮 类型 ID: System.ItemTypeText
+								560 按钮 筛选器下拉列表 ID: DropDown
+							561 拆分按钮 大小 ID: System.Size
+								562 按钮 筛选器下拉列表 ID: DropDown
+						563 列表项目 (selectable, settable, string) .github Value: .github ID: 0
+							564 编辑 (settable, string) 名称 Value: .github ID: System.ItemNameDisplay
+							565 编辑 修改日期 Value: ‎29/‎10/‎2026 ‏‎上午10:07 ID: System.DateModified
+							566 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							567 编辑 大小 ID: System.Size
+						568 列表项目 (selectable, settable, string) cmake Value: cmake ID: 1
+							569 编辑 (settable, string) 名称 Value: cmake ID: System.ItemNameDisplay
+							570 编辑 修改日期 Value: ‎31/‎10/‎2026 ‏‎上午11:22 ID: System.DateModified
+							571 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							572 编辑 大小 ID: System.Size
+						573 列表项目 (selectable, settable, string) config Value: config ID: 2
+							574 编辑 (settable, string) 名称 Value: config ID: System.ItemNameDisplay
+							575 编辑 修改日期 Value: ‎29/‎10/‎2026 ‏‎上午10:07 ID: System.DateModified
+							576 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							577 编辑 大小 ID: System.Size
+						578 列表项目 (selectable, settable, string) docs Value: docs ID: 3
+							579 编辑 (settable, string) 名称 Value: docs ID: System.ItemNameDisplay
+							580 编辑 修改日期 Value: ‎2/‎11/‎2026 ‏‎上午12:30 ID: System.DateModified
+							581 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							582 编辑 大小 ID: System.Size
+						583 列表项目 (selectable, settable, string) examples Value: examples ID: 4
+							584 编辑 (settable, string) 名称 Value: examples ID: System.ItemNameDisplay
+							585 编辑 修改日期 Value: ‎29/‎10/‎2026 ‏‎上午10:07 ID: System.DateModified
+							586 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							587 编辑 大小 ID: System.Size
+						588 列表项目 (selectable, settable, string) gui Value: gui ID: 5
+							589 编辑 (settable, string) 名称 Value: gui ID: System.ItemNameDisplay
+							590 编辑 修改日期 Value: ‎30/‎10/‎2026 ‏‎下午8:21 ID: System.DateModified
+							591 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							592 编辑 大小 ID: System.Size
+						593 列表项目 (selectable, settable, string) gui_runs Value: gui_runs ID: 6
+							594 编辑 (settable, string) 名称 Value: gui_runs ID: System.ItemNameDisplay
+							595 编辑 修改日期 Value: ‎31/‎10/‎2026 ‏‎上午10:24 ID: System.DateModified
+							596 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							597 编辑 大小 ID: System.Size
+						598 列表项目 (selectable, settable, string) include Value: include ID: 7
+							599 编辑 (settable, string) 名称 Value: include ID: System.ItemNameDisplay
+							600 编辑 修改日期 Value: ‎29/‎10/‎2026 ‏‎上午10:07 ID: System.DateModified
+							601 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							602 编辑 大小 ID: System.Size
+						603 列表项目 (selectable, settable, string) macros Value: macros ID: 8
+							604 编辑 (settable, string) 名称 Value: macros ID: System.ItemNameDisplay
+							605 编辑 修改日期 Value: ‎29/‎10/‎2026 ‏‎上午10:07 ID: System.DateModified
+							606 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							607 编辑 大小 ID: System.Size
+						608 列表项目 (selectable, settable, string) out Value: out ID: 9
+							609 编辑 (settable, string) 名称 Value: out ID: System.ItemNameDisplay
+							610 编辑 修改日期 Value: ‎2/‎11/‎2026 ‏‎上午2:57 ID: System.DateModified
+							611 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							612 编辑 大小 ID: System.Size
+						613 列表项目 (selectable, settable, string) packaging Value: packaging ID: 10
+							614 编辑 (settable, string) 名称 Value: packaging ID: System.ItemNameDisplay
+							615 编辑 修改日期 Value: ‎1/‎11/‎2026 ‏‎下午7:56 ID: System.DateModified
+							616 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							617 编辑 大小 ID: System.Size
+						618 列表项目 (selectable, settable, string) scenarios Value: scenarios ID: 11
+							619 编辑 (settable, string) 名称 Value: scenarios ID: System.ItemNameDisplay
+							620 编辑 修改日期 Value: ‎29/‎10/‎2026 ‏‎上午10:07 ID: System.DateModified
+							621 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							622 编辑 大小 ID: System.Size
+						623 列表项目 (selectable, settable, string) schema Value: schema ID: 12
+							624 编辑 (settable, string) 名称 Value: schema ID: System.ItemNameDisplay
+							625 编辑 修改日期 Value: ‎29/‎10/‎2026 ‏‎上午10:07 ID: System.DateModified
+							626 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							627 编辑 大小 ID: System.Size
+						628 列表项目 (selectable, settable, string) scripts Value: scripts ID: 13
+							629 编辑 (settable, string) 名称 Value: scripts ID: System.ItemNameDisplay
+							630 编辑 修改日期 Value: ‎2/‎11/‎2026 ‏‎上午2:24 ID: System.DateModified
+							631 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							632 编辑 大小 ID: System.Size
+				633 树 应用程序控件 ID: AppControlsModuleInner
+			634 文本 文件名(N): ID: 1090
+			635 组合框 (settable, string) 文件名(N): ID: 1148
+				636 编辑 (settable, string) 文件名(N): Value: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\j2-f8-2901f42\native100\blank-native.json ID: 1148
+				637 按钮 打开 ID: DropDown
+			638 组合框 (settable, string) 文件类型(T): Value: JSON files (*.json) ID: 1136
+				639 文本 (settable, string) 文件类型(T): Value: JSON files (*.json)
+				640 按钮 打开 ID: DropDown
+			641 按钮 打开(O) ID: 1
+			642 按钮 取消 ID: 2
+			643 缩略图 (settable, float) Value: 0
+			644 窗格 ID: 40965
+				645 窗格
+					646 工具栏 导航按钮
+						647 按钮 (disabled) 后退 (Alt + 向左键)
+						648 按钮 (disabled) 前进 (Alt + 向右键)
+						649 按钮 (disabled) 最近浏览的位置
+				650 窗格
+					651 工具栏 上区段
+						652 按钮 上移到“effective-config”(Alt + 向上键)
+				653 窗格 ID: 41477
+					654 进度栏 正在加载 Value: 0
+						655 窗格
+							656 工具栏 地址: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim ID: 1001
+								657 拆分按钮 所有位置
+								658 拆分按钮 wenpe-mtm
+								659 拆分按钮 ‎.codex
+								660 拆分按钮 ‎worktrees
+								661 拆分按钮 ‎effective-config
+								662 拆分按钮 ‎G4UniversalSim
+						663 工具栏 地址区段
+							664 按钮 上一个位置
+							665 按钮 刷新“G4UniversalSim”(F5)
+				666 窗格
+					667 窗格
+						668 窗格
+							669 编辑 (settable, string) 搜索框 Description: 在 G4UniversalSim 中搜索 ID: SearchEditBox
+							670 按钮 搜索 ID: SearchBoxSearchButton
+			671 标题栏 (settable, string) Value: Open G4UniversalSim project
+				672 菜单栏 系统 ID: MenuBar
+					673 菜单项 系统
+				674 按钮 关闭
+		1 标题栏 (settable, string) Value: G4UniversalSim Runner — new_simulation
+			2 菜单栏 系统 ID: MenuBar
+				3 菜单项 系统
+			4 按钮 最小化
+			5 按钮 最大化
+			6 按钮 关闭
+		7 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll
+			8 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport
+				9 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell
+					10 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar
+						11 图像 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.brandLogo
+						12 文本 G4UniversalSim ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.brandMark
+						13 文本 Simulation workspace ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.brandCaption
+						14 文本 WORKFLOW ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.sidebarSection
+						15 复选框 (settable, string) Start ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.QToolButton
+						16 复选框 (settable, string) Project ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.QToolButton
+						17 复选框 (settable, string) Configuration ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.QToolButton
+						18 复选框 (settable, string) Scenario ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.QToolButton
+						19 复选框 (settable, string) Effective Configuration ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.QToolButton
+						20 复选框 (settable, string) Run Console ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.QToolButton
+						21 复选框 (settable, string) Results ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.QToolButton
+						22 复选框 (settable, string) Run History ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.QToolButton
+						23 复选框 (settable, string) Parameter Scans ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.QToolButton
+						24 文本 G4UniversalSim 0.1.0 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.sidebarFooter
+					25 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost
+						26 自定义 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.pageHeader
+							27 文本 Configuration ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.pageHeader.pageTitle
+							28 文本 Compose supported simulation inputs and inspect the geometry preview. ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.pageHeader.pageSubtitle
+							29 文本 Project: new_simulation ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.pageHeader.QLabel
+							30 文本 ● Idle ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.pageHeader.QLabel
+							31 按钮 (settable, string) Theme ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.pageHeader.QToolButton
+							32 按钮 (settable, string) Language ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.pageHeader.QToolButton
+						33 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll
+							34 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport
+								35 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget
+									36 窗口 (settable, string) Secondary Actions: Raise ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace
+										37 窗格 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport
+											110 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.QWidget
+										111 窗格 (settable, string) Configuration editors ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration
+											112 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage
+												113 自定义 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter
+													114 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget
+														115 文本 Materials: 0 entries | Geometry: 1 volumes, 0 boolean ops | Messages: 0 errors, 0 warnings | Materials: Dirty | Geometry: hierarchical Dirty | Source: OK | Physics: OK | Scoring: WARN ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QLabel
+														116 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget
+															117 窗格 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget
+																118 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll
+																	119 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport
+																		120 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor
+																			121 文本 Materials Editor ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QLabel
+																			122 文本 Materials: 0 rows, 0 enabled | 0 errors, 0 warnings | Dirty ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QLabel
+																			123 文本 Generated target: run package config/materials/material.ini. Source file is never overwritten. ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QLabel
+																			124 按钮 (settable, string) Add NIST ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QPushButton
+																			125 按钮 (settable, string) Add mass_fraction ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QPushButton
+																			126 按钮 (settable, string) Add volume_fraction ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QPushButton
+																			127 按钮 (settable, string) Add atom_count ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QPushButton
+																			128 按钮 (settable, string) Load from file ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QPushButton
+																			129 按钮 (settable, string) Duplicate ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QPushButton
+																			130 按钮 (settable, string) Delete ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QPushButton
+																			131 按钮 (settable, string) Validate Materials ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QPushButton
+																			132 按钮 (settable, string) Revert to source ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QPushButton
+																			133 表格 (settable, string) Materials table ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QTableWidget
+																				134 窗格 (selectable, settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QTableWidget
+																				135 标头 (selectable, settable, string) enabled ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QTableWidget
+																				136 标头 (selectable, settable, string) name ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QTableWidget
+																				137 标头 (selectable, settable, string) mode ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QTableWidget
+																				138 标头 (selectable, settable, string) density ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QTableWidget
+																				139 标头 (selectable, settable, string) components ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QTableWidget
+																				140 标头 (selectable, settable, string) status ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QTableWidget
+																			141 组 (settable, string) Selected material ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox
+																				142 文本 Name ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox.QLabel
+																				143 编辑 (settable, string) Name ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox.QLineEdit
+																				144 文本 Mode ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox.QLabel
+																				145 组合框 (settable, string) Mode Value: nist ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox.QComboBox
+																				146 文本 Density ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox.QLabel
+																				147 编辑 (settable, string) Density ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox.QLineEdit
+																				148 复选框 (settable, string) Enabled ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox.QCheckBox
+																				149 文本 Components ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox.QLabel
+																				150 编辑 (settable, string) Components ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox.QPlainTextEdit
+																					151 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox.QPlainTextEdit.qt_scrollarea_viewport
+																				152 文本 Status ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox.QLabel
+																				153 编辑 Status Value: Select a material row to edit. ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox.QPlainTextEdit
+																					154 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox.QPlainTextEdit.qt_scrollarea_viewport
+																				155 编辑 (settable, string) Selected material ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox.QLineEdit
+																				156 组合框 (settable, string) Selected material Value: H ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox.QComboBox
+																				157 按钮 (disabled, settable, string) Insert element component ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox.QPushButton
+																				158 文本 Select mass_fraction or atom_count to insert elements; volume_fraction requires materials with density. ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox.QLabel
+																				159 文本 Element catalog: Geant4 11.3.2 / 11.4.3; custom definitions take priority. Backend validates again. ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox.QLabel
+																	160 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_hcontainer
+																		161 滚动条 (settable, float) Value: 0 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_hcontainer.QScrollBar
+																	162 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_vcontainer
+																		163 滚动条 (settable, float) Value: 0 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_vcontainer.QScrollBar
+															164 选项卡 (settable, string) Materials ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_tabbar
+																165 选项卡项目 (selectable, settable, string) Materials ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_tabbar
+																166 选项卡项目 (selectable, settable, string) Geometry ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_tabbar
+																167 选项卡项目 (selectable, settable, string) Boolean Ops ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_tabbar
+																168 选项卡项目 (selectable, settable, string) 3D Preview ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_tabbar
+																169 选项卡项目 (selectable, settable, string) Run Config ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_tabbar
+																170 选项卡项目 (selectable, settable, string) Messages and files ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_tabbar
+																171 按钮 (selectable, disabled, settable, string) Scroll Left ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_tabbar.ScrollLeftButton
+																172 按钮 (selectable, settable, string) Scroll Right ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_tabbar.ScrollRightButton
+													173 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel
+														174 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport
+															175 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel
+																176 文本 Setup generates a reproducible run package. Material and geometry previews are read-only in this round. ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.QLabel
+																177 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection
+																	178 复选框 (settable, string) Run ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QToolButton
+																	179 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox
+																		180 文本 Run name ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		181 编辑 (settable, string) Run name Value: new_simulation ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLineEdit
+																		182 文本 Threads ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		183 旋转图标 (settable, float) Threads Value: 1 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QSpinBox
+																		184 文本 Seed ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		185 编辑 (settable, string) Seed Value: 12345 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLineEdit
+																		186 文本 BeamOn ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		187 旋转图标 (settable, float) BeamOn Value: 100 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QSpinBox
+																		188 文本 Check overlaps ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		189 复选框 (settable, string) [run] check_overlaps: Check overlaps when volumes are placed; [geometry] check_overlaps overrides it; default true ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QCheckBox
+																		190 文本 Dry run ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		191 复选框 (settable, string) [run] dry_run: Check the configuration and write the summary without running events; default false ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QCheckBox
+																192 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection
+																	193 复选框 (settable, string) Input files ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QToolButton
+																	194 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox
+																		195 文本 Materials config ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		196 组 (settable, string) Materials config ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QWidget
+																			197 编辑 (settable, string) Materials config ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QWidget.QLineEdit
+																			198 按钮 (settable, string) Browse ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QWidget.QPushButton
+																		199 按钮 (settable, string) Reload materials ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QPushButton
+																		200 文本 Geometry config ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		201 组 (settable, string) Geometry config ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QWidget
+																			202 编辑 (settable, string) Geometry config ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QWidget.QLineEdit
+																			203 按钮 (settable, string) Browse ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QWidget.QPushButton
+																		204 按钮 (settable, string) Reload geometry ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QPushButton
+																		205 文本 Geometry template ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		206 组合框 (settable, string) Geometry template Value: Hierarchical Model ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QComboBox
+																207 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection
+																	208 复选框 (settable, string) Source ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QToolButton
+																	209 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox
+																		210 文本 Preset ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		211 组合框 (settable, string) Preset Value: proton_beam ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QComboBox
+																		212 文本 Particle ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		213 编辑 (settable, string) Particle Value: gamma ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLineEdit
+																		214 文本 Energy ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		215 编辑 (settable, string) Energy Value: 1 MeV ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLineEdit
+																		216 文本 Position ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		217 编辑 (settable, string) Position Value: 0,0,0 mm ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLineEdit
+																		218 文本 Direction ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		219 编辑 (settable, string) Direction Value: 0,0,1 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLineEdit
+																220 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection
+																	221 复选框 (settable, string) Physics ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QToolButton
+																	222 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox
+																		223 文本 Reference list ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		224 编辑 (settable, string) Reference list Value: FTFP_BERT_EMZ ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLineEdit
+																		225 文本 Default cut ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		226 编辑 (settable, string) Default cut Value: 1 mm ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLineEdit
+																		227 文本 Biasing hook (external input only) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		228 复选框 (settable, string) Biasing hook (external input only) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QCheckBox
+																229 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection
+																	230 复选框 (settable, string) Scoring ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QToolButton
+																	231 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox
+																		232 文本 Enable scoring ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		233 复选框 (settable, string) Enable scoring ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QCheckBox
+																		234 文本 Hits ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		235 复选框 (settable, string) Hits ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QCheckBox
+																		236 文本 Event edep ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		237 复选框 (settable, string) Event edep ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QCheckBox
+																		238 文本 Edep histogram ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		239 复选框 (settable, string) Edep histogram ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QCheckBox
+																		240 文本 Histogram bins ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		241 旋转图标 (settable, float) Histogram bins Value: 100 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QSpinBox
+																		242 文本 Histogram min ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		243 编辑 (settable, string) Histogram min Value: 0 eV ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLineEdit
+																		244 文本 Histogram max ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLabel
+																		245 编辑 (settable, string) Histogram max Value: 10 MeV ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.CollapsibleSection.QGroupBox.QLineEdit
+																246 组 (settable, string) Actions ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.QGroupBox
+																	247 按钮 (settable, string) Validate ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.QGroupBox.QPushButton
+																	248 按钮 (settable, string) Generate Package ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.QGroupBox.QPushButton
+																	249 按钮 (settable, string) Generate and Run ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.QGroupBox.QPushButton
+																	250 文本 Generated package: <none> ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_viewport.setupPanel.QGroupBox.QLabel
+														251 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_hcontainer
+															252 滚动条 (settable, float) Value: 0 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_hcontainer.QScrollBar
+														253 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_vcontainer
+															254 滚动条 (settable, float) Value: 0 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.SetupPanel.qt_scrollarea_vcontainer.QScrollBar
+													255 缩略图 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.qt_splithandle_
+											256 按钮 (settable, string) Close ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.qt_dockwidget_closebutton
+											257 按钮 (settable, string) Float ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.qt_dockwidget_floatbutton
+										258 窗格 (settable, string) 3D view ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview
+											259 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll
+												260 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport
+													261 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel
+														262 按钮 (settable, string) Refresh Preview ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.QPushButton
+														263 按钮 (settable, string) Show Backend Geometry ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.QPushButton
+														264 按钮 (settable, string) Load Tracks... ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.QPushButton
+														265 复选框 (settable, string) Geant4 geometry automatically ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.QCheckBox
+														266 复选框 (settable, string) Show Source ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.QCheckBox
+														267 复选框 (settable, string) Show Labels ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.QCheckBox
+														268 文本 Backend geometry: 1 volume copies from Geant4. ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.QLabel
+														269 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget
+															270 文本 View ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.QLabel
+															271 按钮 (settable, string) Front ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.QToolButton
+															272 按钮 (settable, string) Side ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.QToolButton
+															273 按钮 (settable, string) Top ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.QToolButton
+															274 按钮 (settable, string) Iso ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.QToolButton
+															275 复选框 (settable, string) Orthographic ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.QCheckBox
+															276 复选框 (settable, string) World ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.QCheckBox
+															277 组合框 (settable, string) Value: No section ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.QComboBox
+															278 滑块 (disabled, settable, float) Value: 500 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.QSlider
+															279 按钮 (disabled, settable, string) Isolate ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.QToolButton
+															280 按钮 (disabled, settable, string) Hide ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.QToolButton
+															281 按钮 (disabled, settable, string) Show all ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.QToolButton
+															282 窗格 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.QStackedWidget
+																304 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.QStackedWidget.QtInteractor
+															284 文本 Materials ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.QLabel
+															285 列表 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.QListWidget
+															286 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.AppearanceControls
+																287 文本 3D appearance ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.AppearanceControls.QLabel
+																288 组合框 (settable, string) Value: Volume copy ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.AppearanceControls.QComboBox
+																289 组合框 (settable, string) Value: /world_PV#0 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.AppearanceControls.QComboBox
+																290 按钮 (settable, string) Choose colour ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.AppearanceControls.QPushButton
+																291 文本 Opacity ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.AppearanceControls.QLabel
+																292 旋转图标 (settable, float) Value: 25 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.AppearanceControls.QDoubleSpinBox
+																293 按钮 (settable, string) Reset target appearance ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.AppearanceControls.QPushButton
+																294 按钮 (disabled, settable, string) Reset all appearance ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.AppearanceControls.QPushButton
+																295 文本 View only; not saved to the project. Explicit opacity overrides selection and track fading. ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.AppearanceControls.QLabel
+															296 文本 Backend geometry: 1 volume copies from Geant4. Hover a volume to name it; click to select it. Source: gamma 1 MeV, point at (0, 0, 0) mm, fixed direction (0, 0, 1) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.PyVistaPreviewWidget.QLabel
+														297 文本 3D preview messages ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_viewport.Preview3DPanel.QLabel
+												298 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_hcontainer
+													299 滚动条 (settable, float) Value: 0 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_hcontainer.QScrollBar
+												300 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_vcontainer
+													301 滚动条 (settable, float) Value: 0 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.editorScroll.qt_scrollarea_vcontainer.QScrollBar
+											302 按钮 (settable, string) Close ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.qt_dockwidget_closebutton
+											303 按钮 (settable, string) Float ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_preview.qt_dockwidget_floatbutton
+		99 菜单栏 (settable, string) ID: QApplication.MainWindow.QMenuBar
+			100 菜单项 (settable, string) File ID: QApplication.MainWindow.QMenuBar.QAction
+			101 菜单项 (settable, string) Edit ID: QApplication.MainWindow.QMenuBar.QAction
+			102 菜单项 (settable, string) View ID: QApplication.MainWindow.QMenuBar.QAction
+			103 菜单项 (settable, string) Navigate ID: QApplication.MainWindow.QMenuBar.QAction
+		104 工具栏 (settable, string) Edit history ID: QApplication.MainWindow.editHistoryToolbar
+			105 按钮 (disabled, settable, string) Undo ID: QApplication.MainWindow.editHistoryToolbar.QToolButton
+			106 按钮 (disabled, settable, string) Redo ID: QApplication.MainWindow.editHistoryToolbar.QToolButton
+		107 状态栏 ID: QApplication.MainWindow.QStatusBar
+			108 缩略图 (settable, string) ID: QApplication.MainWindow.QStatusBar.QSizeGrip
+			109 文本 Recovery copy: no unsaved changes ID: QApplication.MainWindow.QStatusBar.QLabel
+		492 对话框 Open G4UniversalSim project Secondary Actions: Raise
+			493 窗格
+				494 工具栏 命令模块 ID: FolderBandModuleInner
+					495 按钮 帮助(&H) Description: 获取帮助。 ID: HelpButton
+					496 复选框 预览窗格 Description: 显示预览窗格。 ID: PreviewButton
+					497 拆分按钮 详细信息 Description: 更改你的视图。 ID: ViewControl
+						498 按钮 视图滑块 Description: 更多选项 ID: SplitMenuButton
+					499 按钮 组织​​ Description: 组织该文件夹的内容。 ID: {7DDC1264-7E4D-4F74-BBC0-D191987C8D0F}
+					500 按钮 新建​​文件夹​​ Description: 新建文件夹。 ID: {E44616AD-6DF1-4B94-85A4-E465AE8A19DB}
+				501 窗格 控制项宿主 ID: ProperTreeHost
+					502 树 导航窗格 ID: 100
+						503 滚动条 (settable, float) 垂直滚动条 Value: 11 ID: NonClientVerticalScrollBar
+							504 按钮 上一行 ID: UpButton
+							505 按钮 向上翻页 ID: UpPageButton
+							506 缩略图 位置 ID: ScrollbarThumb
+							507 按钮 向下翻页 ID: DownPageButton
+							508 按钮 下一行 ID: DownButton
+						509 树项目 (selectable, settable, string) 桌面 Value: 桌面
+							510 树项目 (selectable, settable, string) WPS云盘 Value: WPS云盘
+							511 树项目 (selectable, settable, string) 主文件夹 Value: 主文件夹
+							512 树项目 (selectable, settable, string) 图库 Value: 图库
+							513 树项目 (selectable, settable, string) 亚勇 - 个人 Value: 亚勇 - 个人
+								514 树项目 (selectable, settable, string) Desktop Value: Desktop
+								515 树项目 (selectable, settable, string) Microsoft Copilot Chat 文件 Value: Microsoft Copilot Chat 文件
+								516 树项目 (selectable, settable, string) Music Value: Music
+								517 树项目 (selectable, settable, string) Pictures Value: Pictures
+								518 树项目 (selectable, settable, string) Videos Value: Videos
+								519 树项目 (selectable, settable, string) 附件 Value: 附件
+								520 树项目 (selectable, settable, string) 李亚勇 Value: 李亚勇
+								521 树项目 (selectable, settable, string) 李亚勇 1 Value: 李亚勇 1
+								522 树项目 (selectable, settable, string) 视频 Value: 视频
+								523 树项目 (selectable, settable, string) 文档 Value: 文档
+								524 树项目 (selectable, settable, string) 音乐 Value: 音乐
+							525 树项目 (selectable, settable, string) 快速访问开始 - Downloads (已固定) Value: 快速访问开始 - Downloads (已固定)
+							526 树项目 (selectable, settable, string) 文档 (已固定) Value: 文档 (已固定)
+							527 树项目 (selectable, settable, string) 图片 (已固定) Value: 图片 (已固定)
+							528 树项目 (selectable, settable, string) 桌面 (已固定) Value: 桌面 (已固定)
+							529 树项目 (selectable, settable, string) 19号-书籍 (已固定) Value: 19号-书籍 (已固定)
+							530 树项目 (selectable, settable, string) 音乐 (已固定) Value: 音乐 (已固定)
+							531 树项目 (selectable, settable, string) 视频 (已固定) Value: 视频 (已固定)
+							532 树项目 (selectable, settable, string) 3-档案馆 (已固定) Value: 3-档案馆 (已固定)
+							533 树项目 (selectable, settable, string) Fc_test (已固定) Value: Fc_test (已固定)
+							534 树项目 (selectable, settable, string) JFM7VX690T_前八篇论文PDF Value: JFM7VX690T_前八篇论文PDF
+							535 树项目 (selectable, settable, string) Chrome Value: Chrome
+							536 树项目 (selectable, settable, string) 快速访问结束 - 模板+规则 Value: 快速访问结束 - 模板+规则
+							537 树项目 (selectable, settable, string) 此电脑 Value: 此电脑
+								538 树项目 (selectable, settable, string) 本地磁盘 (C:) Value: 本地磁盘 (C:)
+								539 树项目 (selectable, settable, string) DATA (D:) Value: DATA (D:)
+								540 树项目 (selectable, settable, string) WORK (E:) Value: WORK (E:)
+								541 树项目 (selectable, settable, string) GAMES (F:) Value: GAMES (F:)
+								542 树项目 (selectable, settable, string) PortableSSD (G:) Value: PortableSSD (G:)
+							543 树项目 (selectable, settable, string) PortableSSD (G:) Value: PortableSSD (G:)
+							544 树项目 (selectable, settable, string) 网络 Value: 网络
+							545 树项目 (selectable, settable, string) Linux Value: Linux
+								546 树项目 (selectable, settable, string) Ubuntu Value: Ubuntu
+				547 窗格 Shell 文件夹视图 ID: listview
+					548 列表 项目视图
+						549 滚动条 (settable, float) 垂直 Value: 0 ID: VerticalScrollBar
+							550 按钮 上一行 ID: UpButton
+							551 缩略图 位置 ID: ScrollbarThumb
+							552 按钮 向下翻页 ID: DownPageButton
+							553 按钮 下一行 ID: DownButton
+						554 标头 标题
+							555 拆分按钮 名称 ID: System.ItemNameDisplay
+								556 按钮 筛选器下拉列表 ID: DropDown
+							557 拆分按钮 修改日期 ID: System.DateModified
+								558 按钮 筛选器下拉列表 ID: DropDown
+							559 拆分按钮 类型 ID: System.ItemTypeText
+								560 按钮 筛选器下拉列表 ID: DropDown
+							561 拆分按钮 大小 ID: System.Size
+								562 按钮 筛选器下拉列表 ID: DropDown
+						563 列表项目 (selectable, settable, string) .github Value: .github ID: 0
+							564 编辑 (settable, string) 名称 Value: .github ID: System.ItemNameDisplay
+							565 编辑 修改日期 Value: ‎29/‎10/‎2026 ‏‎上午10:07 ID: System.DateModified
+							566 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							567 编辑 大小 ID: System.Size
+						568 列表项目 (selectable, settable, string) cmake Value: cmake ID: 1
+							569 编辑 (settable, string) 名称 Value: cmake ID: System.ItemNameDisplay
+							570 编辑 修改日期 Value: ‎31/‎10/‎2026 ‏‎上午11:22 ID: System.DateModified
+							571 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							572 编辑 大小 ID: System.Size
+						573 列表项目 (selectable, settable, string) config Value: config ID: 2
+							574 编辑 (settable, string) 名称 Value: config ID: System.ItemNameDisplay
+							575 编辑 修改日期 Value: ‎29/‎10/‎2026 ‏‎上午10:07 ID: System.DateModified
+							576 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							577 编辑 大小 ID: System.Size
+						578 列表项目 (selectable, settable, string) docs Value: docs ID: 3
+							579 编辑 (settable, string) 名称 Value: docs ID: System.ItemNameDisplay
+							580 编辑 修改日期 Value: ‎2/‎11/‎2026 ‏‎上午12:30 ID: System.DateModified
+							581 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							582 编辑 大小 ID: System.Size
+						583 列表项目 (selectable, settable, string) examples Value: examples ID: 4
+							584 编辑 (settable, string) 名称 Value: examples ID: System.ItemNameDisplay
+							585 编辑 修改日期 Value: ‎29/‎10/‎2026 ‏‎上午10:07 ID: System.DateModified
+							586 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							587 编辑 大小 ID: System.Size
+						588 列表项目 (selectable, settable, string) gui Value: gui ID: 5
+							589 编辑 (settable, string) 名称 Value: gui ID: System.ItemNameDisplay
+							590 编辑 修改日期 Value: ‎30/‎10/‎2026 ‏‎下午8:21 ID: System.DateModified
+							591 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							592 编辑 大小 ID: System.Size
+						593 列表项目 (selectable, settable, string) gui_runs Value: gui_runs ID: 6
+							594 编辑 (settable, string) 名称 Value: gui_runs ID: System.ItemNameDisplay
+							595 编辑 修改日期 Value: ‎31/‎10/‎2026 ‏‎上午10:24 ID: System.DateModified
+							596 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							597 编辑 大小 ID: System.Size
+						598 列表项目 (selectable, settable, string) include Value: include ID: 7
+							599 编辑 (settable, string) 名称 Value: include ID: System.ItemNameDisplay
+							600 编辑 修改日期 Value: ‎29/‎10/‎2026 ‏‎上午10:07 ID: System.DateModified
+							601 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							602 编辑 大小 ID: System.Size
+						603 列表项目 (selectable, settable, string) macros Value: macros ID: 8
+							604 编辑 (settable, string) 名称 Value: macros ID: System.ItemNameDisplay
+							605 编辑 修改日期 Value: ‎29/‎10/‎2026 ‏‎上午10:07 ID: System.DateModified
+							606 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							607 编辑 大小 ID: System.Size
+						608 列表项目 (selectable, settable, string) out Value: out ID: 9
+							609 编辑 (settable, string) 名称 Value: out ID: System.ItemNameDisplay
+							610 编辑 修改日期 Value: ‎2/‎11/‎2026 ‏‎上午2:57 ID: System.DateModified
+							611 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							612 编辑 大小 ID: System.Size
+						613 列表项目 (selectable, settable, string) packaging Value: packaging ID: 10
+							614 编辑 (settable, string) 名称 Value: packaging ID: System.ItemNameDisplay
+							615 编辑 修改日期 Value: ‎1/‎11/‎2026 ‏‎下午7:56 ID: System.DateModified
+							616 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							617 编辑 大小 ID: System.Size
+						618 列表项目 (selectable, settable, string) scenarios Value: scenarios ID: 11
+							619 编辑 (settable, string) 名称 Value: scenarios ID: System.ItemNameDisplay
+							620 编辑 修改日期 Value: ‎29/‎10/‎2026 ‏‎上午10:07 ID: System.DateModified
+							621 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							622 编辑 大小 ID: System.Size
+						623 列表项目 (selectable, settable, string) schema Value: schema ID: 12
+							624 编辑 (settable, string) 名称 Value: schema ID: System.ItemNameDisplay
+							625 编辑 修改日期 Value: ‎29/‎10/‎2026 ‏‎上午10:07 ID: System.DateModified
+							626 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							627 编辑 大小 ID: System.Size
+						628 列表项目 (selectable, settable, string) scripts Value: scripts ID: 13
+							629 编辑 (settable, string) 名称 Value: scripts ID: System.ItemNameDisplay
+							630 编辑 修改日期 Value: ‎2/‎11/‎2026 ‏‎上午2:24 ID: System.DateModified
+							631 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							632 编辑 大小 ID: System.Size
+				633 树 应用程序控件 ID: AppControlsModuleInner
+			634 文本 文件名(N): ID: 1090
+			635 组合框 (settable, string) 文件名(N): ID: 1148
+				636 编辑 (settable, string) 文件名(N): Value: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\j2-f8-2901f42\native100\blank-native.json ID: 1148
+				637 按钮 打开 ID: DropDown
+			638 组合框 (settable, string) 文件类型(T): Value: JSON files (*.json) ID: 1136
+				639 文本 (settable, string) 文件类型(T): Value: JSON files (*.json)
+				640 按钮 打开 ID: DropDown
+			641 按钮 打开(O) ID: 1
+			642 按钮 取消 ID: 2
+			643 缩略图 (settable, float) Value: 0
+			644 窗格 ID: 40965
+				645 窗格
+					646 工具栏 导航按钮
+						647 按钮 (disabled) 后退 (Alt + 向左键)
+						648 按钮 (disabled) 前进 (Alt + 向右键)
+						649 按钮 (disabled) 最近浏览的位置
+				650 窗格
+					651 工具栏 上区段
+						652 按钮 上移到“effective-config”(Alt + 向上键)
+				653 窗格 ID: 41477
+					654 进度栏 正在加载 Value: 0
+						655 窗格
+							656 工具栏 地址: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim ID: 1001
+								657 拆分按钮 所有位置
+								658 拆分按钮 wenpe-mtm
+								659 拆分按钮 ‎.codex
+								660 拆分按钮 ‎worktrees
+								661 拆分按钮 ‎effective-config
+								662 拆分按钮 ‎G4UniversalSim
+						663 工具栏 地址区段
+							664 按钮 上一个位置
+							665 按钮 刷新“G4UniversalSim”(F5)
+				666 窗格
+					667 窗格
+						668 窗格
+							669 编辑 (settable, string) 搜索框 Description: 在 G4UniversalSim 中搜索 ID: SearchEditBox
+							670 按钮 搜索 ID: SearchBoxSearchButton
+			671 标题栏 (settable, string) Value: Open G4UniversalSim project
+				672 菜单栏 系统 ID: MenuBar
+					673 菜单项 系统
+				674 按钮 关闭
+
+Document text: ```
+10 MeV
+```

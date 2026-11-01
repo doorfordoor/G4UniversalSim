@@ -1,0 +1,16 @@
+G4USIM_ASSERTS=5
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_end_to_end.py", line 334, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_end_to_end.py", line 313, in main
+    assert args.allow_stale_backend or receipt["source_matches_backend"], "Fresh G4USIM_EXE required: backend source fingerprint differs"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Fresh G4USIM_EXE required: backend source fingerprint differs

@@ -1,0 +1,65 @@
+# 第三候选18c5858：四workflow最终独立收据
+
+精确HEAD `18c5858fd6e80a5cb6096beacebfef69c479ad49`，branch roadmap/J2-F8-editing；四个自动push run均attempt1，八job全部终态。**整体门禁不通过，release_accepted=false。** 原件位于本新根，不拼接前两轮报告；旧56b/2901及本轮首败证据均保持原态。
+
+| Workflow | Run | 终态 |
+|---|---:|---|
+| [Desktop package](https://github.com/doorfordoor/G4UniversalSim/actions/runs/41344573534) | 41344573534 | Linux/Windows success |
+| [M0 static/GUI](https://github.com/doorfordoor/G4UniversalSim/actions/runs/41344573541) | 41344573541 | 两平台GUI failure；static均通过 |
+| [Linux Geant4](https://github.com/doorfordoor/G4UniversalSim/actions/runs/41344573528) | 41344573528 | 11.3.2/11.4.3 GUI failure；static均通过 |
+| [Full installation](https://github.com/doorfordoor/G4UniversalSim/actions/runs/41344573604) | 41344573604 | Linux/Windows success |
+
+完整公开API原件public-push-runs-final.json、connector八job终态jobs-final.json、最终原文件/归属/SHA清单collected-files-final.json均已落盘。初始化及收齐时显式git -c core.longpaths=true status均为tracked clean；main freeze15文件原字节SHA逐项核对，freeze-receipt-checked.json保留收据。CRLF应用首败诊断不重写。
+
+## 两类真实失败
+
+1. **M0 Ubuntu与Linux双版本**，各自唯一失败 `gui_f8_accessibility`：`gui/smoke_tests/smoke_f8_accessibility.py:659`，test_history_directory_accessibility的 `interface.text(QAccessible.Name) == ui_text(source)` 断言失败。真实job为124961551155、124961551454、124961551099；完整日志job-<id>.log，各失败逐例原日志分别来自自己的artifact。原trace未打印实际/预期字符串，不凭trace推断具体平台根因。first-failure.md与report-gates-first-failure.json保持首败时状态。
+2. **M0 Windows**，唯一失败 `gui_j2_geometry`：`gui/smoke_tests/smoke_j2_geometry.py:264` 的 `page.geometry_document.source_path==str(source)` 断言，195入口。真实job124961550970；完整日志job-124961550970.log；逐例原日志extracted/m0-report-windows-latest-13099775646/20261101-200537-064d6571/gui_j2_geometry.log，SHA256 `5cd56cb11a6a639fa9208a6c63006d9c5f5ad4fc645de1a6b253ff9293347a5d`。本轮已越过旧162行，不能把新264行失败当作已关闭。详情windows-m0-failure.md。
+
+Windows实际报告的K1 workflow和F8 accessibility通过；Linux三报告实际F8失败。各平台事实分别保留，不相互替代。Linux两版本backend/integration共四profile因上游GUI失败未执行，无报告，不能计为通过。
+
+## 严格门禁与matching历史逐例
+
+| lane/profile | 实际入口 / matching历史 | strict |
+|---|---:|---|
+| M0 Ubuntu static | 4573 / 3966 | pass |
+| M0 Ubuntu GUI | 8401 / 6739 | fail |
+| M0 Windows static | 4573 / 3959 | pass |
+| M0 Windows GUI | 8536 / 6739 | fail |
+| Linux11.3.2 static | 4573 / 3966 | pass |
+| Linux11.3.2 GUI | 8401 / 6739 | fail |
+| Linux11.4.3 static | 4573 / 3966 | pass |
+| Linux11.4.3 GUI | 8401 / 6739 | fail |
+
+实际8报告 **4strict pass /4strict fail**；预期12profile报告中，缺少上述四份未执行backend/integration。最终汇总明确列missing_profiles，不用前两轮或main本机formal结果补齐。
+
+每份报告完整HEAD、source_fp `9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a`、tests_fp `d5a1691bb3ed613faae4db96405167c0f7ea0a35aa465444e2d260a36a7e67a9`、tracked-source gate、全部原始逐例日志SHA和入口总和均核对。候选checker-18c5858.py从该Git对象原字节固定并核SHA；matching同OS/版本/profile历史归档先核manifest/报告/原日志SHA并strict通过，再核当前。逐旧例无缺失或入口下降；新增专项失败仍严格拒绝，入口总数增加不抵消失败。完整比较report-gates-current.json；无allow-incomplete/legacy放宽。
+
+## 八个原artifact ZIP
+
+| artifact | ID |
+|---|---:|
+| frozen-desktop-Linux | 13099021059 |
+| frozen-desktop-Windows | 13099130875 |
+| m0-report-ubuntu-latest | 13099526165 |
+| m0-report-windows-latest | 13099775646 |
+| linux-evidence-11.3.2 | 13098459375 |
+| linux-evidence-11.4.3 | 13099380815 |
+| full-installation-Linux | 13099091881 |
+| full-installation-Windows | 13099083446 |
+
+八ZIP大小/实际SHA均逐一核对GitHubdigest、workflow_run完整HEAD/run_id，不靠文件名推断来源。collected-files-final.json含全部原ZIP完整SHA及8份完成job完整connector解码日志SHA，共16文件。解码job日志不冒称GitHub原始run logs ZIP。两份Linux及Ubuntu的失败逐例日志相同文本SHA，仍分别从各自原ZIP读取核验，不复用一份代替其他平台。
+
+## 安装和桌面独立语义核验
+
+Windows installation job124961550829 success；artifact13099083446，29409116 bytes，ZIP SHA256 `96993a1e8606fbaeacfd9f3a3f49698a711de166798dfaf278f0bbc3ba2a7533`。独立核验9stage全部exit0、阶段原日志SHA、retained index25对象SHA、889源码及候选workflow checkout身份、runtime真实summary completed5/5、SDK consumer/full application configure-build-run、host-tools身份和runtime/sdk卸载均通过；installation-windows-checked.json。
+
+Linux installation job124961550947 success；artifact13099091881 ZIP SHA256 `bf8adcee6f86057650a70dff5524b22b7fe0f8e00013295e96628e062d89923f`。相同核验10stage/23保留对象/889源码/真实5events/SDK及卸载通过；installation-linux-checked.json。仅按该候选.gitattributes处理允许的源码checkout换行，证据日志始终落盘原字节哈希。
+
+Desktop双平台delivery passed、frozen自检、各150 GUI源SHA与候选Git对象匹配且前后稳定、4条命令正负对照0/1/0/1和原日志SHA均独立通过；desktop-linux-checked.json /desktop-win32-checked.json。其范围是冻结GUI启动/自然退出与Python ROOT读写，不覆盖失败的完整GUI回归，也不替代Geant4物理验证。
+
+## 完成状态与操作边界
+
+本轮收集和离线核验已完成，无待收job或本侧运行进程。finalize.py离线汇总exit0表示收据自洽，不表示CI通过；机器结论release_accepted=false。未dispatch、rerun、取消CI、修改tracked/产品/测试判据、全局构建或启动native。
+
+下载引用首次缺file_uri的编排TypeError已记录progress：检查本地无ZIP后单次重新获取引用，原ZIP实际只下载一次。间歇jobs查询transport send error核对公开状态后单次重读恢复，均不混为CI测试失败。下一修复/新候选/阶段定案由main安排，本报告不自动启动下一轮。

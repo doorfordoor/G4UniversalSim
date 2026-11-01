@@ -1,0 +1,17 @@
+# J2/F8 设计协作进度
+
+- 任务：实际获取 DeepSeek 中文设计，给出可实现取舍与独立验收清单；不修改产品、STATUS、ROADMAP。
+- 工作区：effective-config/G4UniversalSim；branch roadmap/J2-F8-editing；读取 HEAD fc606739b9bb5b381b87d5ffd2870844c10afee2。
+- 已读：docs/ROADMAP.md 的 J2/F8、MODEL-POLICY、20261101-j2-f8-execution；现有 DeepSeek k1 / i2-j1 调用脚本；主窗、向导、材料、编辑模型、来源约束的相关结构。
+- 已发出：request_design.py 复用现有 endpoint/model/urllib 路由；request.json 保存不含鉴权头的实际请求；仅发送必要结构摘述和任务边界。
+- 运行会话：39687。尚未收到最终状态前不重复请求。
+- 已见工作区原有 STATUS/ROADMAP 修改及长路径状态警告；不处理、不归入本任务。
+- 下一步：检查该会话最终响应与 finish_reason；保存原文、整理取舍及独立验收，验证交付文件。
+
+## 完成检查
+
+- 会话39687已退出0；HTTP 200，finish_reason=stop。实际模型 deepseek-flash；响应ID 71afe251-f7e3-4e72-9e69-5201ef842583；usage {"prompt_tokens": 1392, "completion_tokens": 2498, "total_tokens": 3890, "prompt_tokens_details": {"cached_tokens": 0}, "prompt_cache_hit_tokens": 0, "prompt_cache_miss_tokens": 1392}。
+- request/response与原文已保存；prompt哈希、原文抽取一致性、交付引用存在性检查通过。
+- 独立验收清单 31 项，全部待执行；已完成本地设计取舍和回信错误纠正。
+- 交付：docs/collab/outbox/20261101-deepseek-j2-f8-design.md。未改产品/STATUS/ROADMAP，未运行实现或实窗验收。
+- 后续：主负责人裁决默认源/文档身份、向导替换范围、多源模型、物理替换接口、未知字段保存导出、NIST目录、E7/高级能力及DPI边界，再集成实施。无运行中的请求，无需重发。

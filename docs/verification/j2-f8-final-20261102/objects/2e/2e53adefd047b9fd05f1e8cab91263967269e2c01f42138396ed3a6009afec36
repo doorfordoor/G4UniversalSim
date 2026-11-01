@@ -1,0 +1,116 @@
+{
+  "history_trust": "stale_requires_revalidation",
+  "integrity": "sha256_not_signature",
+  "members": [
+    {
+      "bytes": 122,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0000-mesh.stl",
+      "redistribution_override": false,
+      "role": "stl",
+      "sha256": "e4c3c6cbe5ac5f5c2d1fb5888c89516902109ad03c47fbfb9ba312468c614fd8",
+      "source_sha256": "e4c3c6cbe5ac5f5c2d1fb5888c89516902109ad03c47fbfb9ba312468c614fd8"
+    },
+    {
+      "bytes": 54,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0001-copies.csv",
+      "redistribution_override": false,
+      "role": "copies",
+      "sha256": "df205fc0198d0aadf59563e8088d45bfa686a271992760ba63d8cd272f1a3e11",
+      "source_sha256": "df205fc0198d0aadf59563e8088d45bfa686a271992760ba63d8cd272f1a3e11"
+    },
+    {
+      "bytes": 937,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0002-main.ini",
+      "redistribution_override": false,
+      "role": "main",
+      "sha256": "63a75c581c261f068ce5070a9df84ba6b11926b7bad3f324873d09700b60d39b",
+      "source_sha256": "fa1b45134dbbe8b560bf595ba0bc0ff0efec2376ee81eacf2ae3748ab646765f"
+    },
+    {
+      "bytes": 77,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0003-material.ini",
+      "redistribution_override": false,
+      "role": "materials",
+      "sha256": "1f1d80c69daa3a2a0a0dc8b7f25631c3059cbf644d978704af9fa1eee6cb6a02",
+      "source_sha256": "1f1d80c69daa3a2a0a0dc8b7f25631c3059cbf644d978704af9fa1eee6cb6a02"
+    },
+    {
+      "bytes": 972,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0004-geometry.ini",
+      "redistribution_override": false,
+      "role": "geometry",
+      "sha256": "fe55b21ab507180a5afade27c9e8eecc8549f8dc6f3e0faa6afa0f44f2b4334c",
+      "source_sha256": "35477068c53c6267aef1d273738d886693e640d12ccebdf9bb6c0e7441f8ac31"
+    },
+    {
+      "bytes": 122,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0005-g0000.stl",
+      "redistribution_override": false,
+      "role": "stl",
+      "sha256": "e4c3c6cbe5ac5f5c2d1fb5888c89516902109ad03c47fbfb9ba312468c614fd8",
+      "source_sha256": "e4c3c6cbe5ac5f5c2d1fb5888c89516902109ad03c47fbfb9ba312468c614fd8"
+    },
+    {
+      "bytes": 54,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0006-g0001.csv",
+      "redistribution_override": false,
+      "role": "copies",
+      "sha256": "df205fc0198d0aadf59563e8088d45bfa686a271992760ba63d8cd272f1a3e11",
+      "source_sha256": "df205fc0198d0aadf59563e8088d45bfa686a271992760ba63d8cd272f1a3e11"
+    },
+    {
+      "bytes": 149,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0007-run.mac",
+      "redistribution_override": false,
+      "role": "macro",
+      "sha256": "ad0cdf210f49ccd8c9c94284d3b89fa3917779bccd13b845ca831532aa8e210e",
+      "source_sha256": "ad0cdf210f49ccd8c9c94284d3b89fa3917779bccd13b845ca831532aa8e210e"
+    },
+    {
+      "bytes": 9401,
+      "path": "workspace.json",
+      "role": "snapshot",
+      "sha256": "d7ce788511cece40798c8a300f65503927347786b8ed07795884c0583ce8ed0d"
+    },
+    {
+      "bytes": 71,
+      "path": "validation_records.json",
+      "role": "validation_history",
+      "sha256": "e7153946374c1e029196ca4351f9632e5818c56159662d01b4d101b506e50146"
+    },
+    {
+      "bytes": 329,
+      "path": "replay.py",
+      "role": "replay_entry",
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    }
+  ],
+  "outputs_included": false,
+  "replay_entry": "replay.py",
+  "replay_inputs": {
+    "config": "resources/r0002-main.ini",
+    "macro": "resources/r0007-run.mac",
+    "working_directory": "."
+  },
+  "replay_verified": false,
+  "schema": "g4usim_experiment_bundle",
+  "snapshot": "workspace.json",
+  "validation_history": "validation_records.json",
+  "version": 1
+}

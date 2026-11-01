@@ -1,0 +1,45 @@
+# J2 第三身份：shape schema 定点独审
+
+结论：Geant4 11.3.2 / 11.4.3 均通过本次 30 项独立定点检查，未发现新增 P0/P1/P2。产品只读，无 C++、schema、GUI 产品修改，无构建或全局矩阵。未重复作者 test_solid_registry permanent r5，探针独立实现网格体积积分及输运判定。
+
+## 身份与环境
+
+- manifest：`out/collab/j2-shape-schema-build-identities.json`
+- source fingerprint（开始/结束、capabilities 一致）：`9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a`
+- 113 SHA256：`76b369fdf6d981e1cce7c476f72756cd16b5dc69166f7ccdf1c0081d80e7edfd`
+- 114 SHA256：`95aee9b960620a17473a957dac4f9c6edc7bef9eab9be2efc0a9f3ffd0456af7`
+- 两次探针退出 0；实际运行每个 fixture 4 事件、2 线程，检查新摘要 completed 与完成数；每版 8 个 run fixture 共 32 完成事件。
+- 启动前清理继承 G4*DATA / GEANT4_DATA_DIR，再设置指定根与对应 SDK PATH。113 使用 `D:/ProgramFiles/Geant4/share/Geant4/data`；114 使用工作区 `out/i2-controlled/windows114-data/data`。每版保存 discovery 原文和 `data-version-verification.json`，12 数据集路径真实存在、文件夹名和发现版本一致且位于指定根；114 LEDATA 为 G4EMLOW8.8，非继承 113 的8.6.1。没有仅凭 required_complete 判通过。
+
+## 实际构造、网格与输运
+
+实体几何正例显式 `[global] version=2`；旧 metadata 兼容对照另用 v1。目标为 V，避免已知旧 parser 对目标名 Boolean 的 section 歧义。
+
+| 对象 | 实际 G4 solid | 网格独立积分 mm³ | 4 事件敏感路径 mm |
+|---|---|---:|---:|
+| world trd / trap | G4Trd / G4Trap | 17280 | 40（初级点在中心） |
+| 普通 volume trd / trap | G4Trd / G4Trap | 17280 | 80 |
+| 80 mm box 对照 | G4Box | 512000 | 320 |
+| box − trd / trap | G4SubtractionSolid | 494720 | 240 |
+
+trd 半长 dx1=8、dx2=12、dy1=dy2=12、dz=18 mm，trap 采用等价几何；工具是非等截面，解析体积17280。三角面有向体积积分误差小于1e-6 mm³；Boolean 减孔体积与解析值一致。实际 G4 GetCubicVolume 113 为494714.6443、114为494720.3888 mm³，保留原2%容差；此近似口径没有用于掩盖未应用 Boolean，因为精确网格和轨迹均独立约束。轨迹逐事件穿过 x=−10/+10 mm 孔边界，敏感路径由每事件80变60 mm。探针在事件之后导出，不额外提前调用 Boolean GetCubicVolume 预热缓存。
+
+## 拒绝与兼容边界
+
+- trd/trap 缺 dx1：必须报告具体 dx1、缺长度字段及 created_geometry_object_count=0。
+- Boolean material/sensitive/bias/region/parent/placement/copyNo/vis.color/cut.gamma 共9类：strict v2 均以具体 key 的 ignored_boolean_key 拒绝，created count=0；已排除旧参数 legacy_metadata 提前失败的伪证据。
+- trd 的 theta 已知字段仍因形状不匹配拒绝，未因 diagnostic known 放过。trap 的 z_planes 在 strict v2 先以 legacy_metadata 拒绝；另用 v1 穿过 schema 后，实际 shape 校验仍以 shape-specific field is not valid 拒绝。
+- 真正旧 user_note=keep：v1 实际完成4事件，run_summary 保留 `[GeometryConfigWarning]`、字段位置和 legacy unprefixed metadata 提示；v2 以该字段 legacy_metadata 拒绝且 created count=0；规范 metadata.note strict v2 Inspect 通过。
+- 静态核对 world / volume / Boolean 各11命名字段共33项皆 diagnostic known。相对 fc606739 已有 world/volume 22项，除 recognition 和本轮 GUI 元数据外，后端属性（类型、范围、默认、描述等）一致；GeometryConfigDiagnostic.cc 与基线一致，未知 metadata 策略没有扩大。生成器 --check 通过。静态完整结果见 schema-33-static-compatibility-final.json。
+
+## 原始证据与首错保留
+
+- 独立探针：`verify-boolean-schema.py`（仅 out 审查工具，无作者测试导入）。
+- 最终113：`boolean-schema-1132-r3.log`、`boolean-schema-1132-r3/receipt.json`。
+- 最终114：`boolean-schema-1143-r3.log`、`boolean-schema-1143-r3/receipt.json`。
+- 每例保留 geometry/main INI、macro、原始 stdout/stderr、摘要、mesh 与计分/轨迹；receipt 含逐例返回码、日志SHA、实际体积和轨迹事实。
+- 113 r1 停于探针期望 z_planes 命中 shape 校验，真实结果先命中 strict legacy_metadata；修探针区分层级并增加 v1 拒绝，旧日志/目录保留。
+- 113 r2 停于探针要求 v1 人类告警包含内部 code legacy_metadata，真实摘要已有完整 GeometryConfigWarning 与原字段/提示，仅不渲染 code；改为核对真实人类消息，旧日志/目录保留。两处均为独立探针预期错误，无产品修改，也未修改作者原判据。
+- 原 fp88c32 的实际 Boolean/mesh 证据继续保留原身份。其 strict forbidden 非零结果曾可能被旧 parser_only 先行拒绝，不能作为具体 forbidden 分支证明；本次第三身份已按诊断码和具体 key 补足。
+
+此前 geometry 三项 P2 的独审关闭仍见 `p2-recheck/README.md`；本报告不把本次 schema/几何证明扩展为源/物理新身份验证、辐射物理基准或完整 J2/F8 验收。

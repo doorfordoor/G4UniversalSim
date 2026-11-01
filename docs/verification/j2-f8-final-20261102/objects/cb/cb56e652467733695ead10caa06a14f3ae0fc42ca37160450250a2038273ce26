@@ -1,0 +1,15 @@
+# original geometry is never overwritten
+[global]
+version = 1
+[world]
+shape = box
+size = 100 mm,100 mm,100 mm
+material = G4_Galactic
+[volume.Target]
+parent = world
+shape = box
+size = 8 mm,8 mm,8 mm
+material = FirstTarget
+position = 0 mm,0 mm,0 mm
+sensitive = true
+vis.palette = legacy

@@ -1,0 +1,32 @@
+# K1 resource policy final-v1 独立审查：通过
+
+范围：out/collab/j2-resource-policy-path-review/final-v1；基准2901f4254303c3a9089c9025717908c0d77ff190。依据作者receipt.json的明确冻结状态frozen_out_candidate_ready_for_independent_review核对身份，审查前后作者文件SHA不变。只审最终版，不把中间fix.patch/pretail当候选。**未发现需阻止采用的P1/P2问题。**
+
+冻结身份：产品experiment_bundle.py SHA256 `4990d9f4439711f96aa5a5475f6f39ea3588b8c1e3fabf7e3e2eca0318a45610`；测试test_k1_bundle.py `80726fb8eeda65700169416b8a9711967ed15283ed8bbc22bbf20b42d8c216f3`；fix.patch `f705dc96bcfb4706e03d045a00e281c53ce0e8fe6eb9912c27579188e8a446de`。两完整文件真实LF、compile通过；git -c core.longpaths=true apply --check通过，未apply。独立AST对比确认所有原函数（除main追加两组调用）AST保持。
+
+## 代码边界
+
+- `_Closure.__init__`对绝对str policy key先 `_no_links` 检查原词法父路径，再resolve取canonical key；同文件8.3/case别名映射到同一决策；重复canonical键明确拒绝，不静默覆盖。
+- `add`对资源路径仍先 `_no_links`，读取后的policy匹配再次 `_no_links` 再resolve，避免用resolve洗掉刚出现的链接。decision的字典/字段/distribution/bool校验及restricted必须明确allow_redistribution=True未削弱。
+- `policy_paths`另存原输入拼写，`validate_policy_paths`不只检查canonical目标；collect返回前、export最终源SHA复核后且_publish_directory前均调用。unused决策检查保留，不能以canonical未命中降成unknown后成功返回。
+- 既有普通单链接文件读取、源SHA复核、bundle根边界、exclusive publication及失败暂存清理均未改；本次canonical仅用于policy匹配，不改资源复制/来源收据或事务发布实现。
+
+## 实际独立运行
+
+机器结果execution.json，所有加载仅在独立子进程内覆盖候选产品模块，不改tracked。原入口保持原仓库__file__/ROOT；标准v3 probe计数；临时文件和证据仅在本独立out根。
+
+| 检查 | 结果 |
+|---|---|
+| 原tracked source_capture_scope，真实Windows8.3 TEMP，原产品 | 受控exit1/9入口，仍在test_k1_workflow.py:175断言失败，实际Unused resource policy entries；与原CI首因一致 |
+| 同原入口、真实8.3 TEMP、final-v1产品 | exit0/30入口；无修改旧测试 |
+| 最终完整test_k1_bundle.py main --component | exit0/603入口，13组全通过 |
+| 真实junction的policy-key/resource双侧入口 | exit0/3入口，均拒绝 |
+| 资源读取完成后、policy比较前变为真实junction | exit0/5入口，拒绝 |
+
+完整603入口实际包含canonical case/8.3/restricted/allow/unused/duplicate组；新collect/export晚policy词法路径替换组；原refusals、atomic_and_tamper、搬移、generated、source-copy及未知字段拒绝组。晚替换测试确认不发布目标、不留staging、原资源字节不变。后两项junction脚本由作者冻结原字节复制到本独立out目录重跑，产品副本SHA一致；结果junction-probes/receipt.json、link-facts.json、late-resource-policy-final.json。
+
+原CI gui_k1_workflow.log、原tracked两文件、作者final-v1全部顶层证据文件前后SHA一致；execution.json存完整核对值。本机显式git -c core.longpaths=true status tracked clean；无Git配置修改、CI动作、GUI/native/后端启动或formal重跑。
+
+## 结论与限制
+
+最终草案修正真实Windows别名导致policy未命中的问题，同时保留词法no_links、重复/unused/restricted及收集/发布前晚变化拒绝。可交main统一采用并安排新候选正式复验。受控baseline红仅为反例，不追改原CI或正式报告；本检查不声称覆盖任意并发目录替换，沿用既有K1已声明边界。QSpacer/F8/geometry不在本次范围。

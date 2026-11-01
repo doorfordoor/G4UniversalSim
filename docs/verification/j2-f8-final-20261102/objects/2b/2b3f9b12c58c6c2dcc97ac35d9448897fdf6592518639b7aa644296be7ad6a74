@@ -1,0 +1,17 @@
+--- a/gui/smoke_tests/smoke_j2_geometry.py
++++ b/gui/smoke_tests/smoke_j2_geometry.py
+@@ -159,9 +159,13 @@
+         assert len(doc.boolean_ops)==7
+         assert sum(row.sensitive for row in doc.volumes)==15
+         generated=generate_geometry_ini_text(doc)
+-        assert f'file = {folder / "mesh.stl"}' in generated
++        assert f'file = {(folder / "mesh.stl").resolve()}' in generated
+         second=folder/'generated.ini'; second.write_text(generated,encoding='utf-8')
+         restored=document(generated,second)
++        restored_mesh=next(row for row in restored.volumes if row.shape=='tessellated')
++        restored_mesh_path=Path(restored_mesh.shape_properties['file'])
++        assert restored_mesh_path.samefile(folder/'mesh.stl')
++        assert hashlib.sha256(restored_mesh_path.read_bytes()).hexdigest()==hashlib.sha256((folder/'mesh.stl').read_bytes()).hexdigest()
+         assert [r.shape for r in restored.volumes]==[r.shape for r in doc.volumes]
+         for left,right in zip(doc.volumes,restored.volumes):
+             assert left.sensitive==right.sensitive and left.parent==right.parent

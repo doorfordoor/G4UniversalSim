@@ -1,0 +1,206 @@
+{
+  "base_head": "2901f4254303c3a9089c9025717908c0d77ff190",
+  "plan_sha256": "791a308eecae9d6dce5ba2461b702493a00fa38a2b9a5cd37a6aca1487e55f8e",
+  "old_local_audit_sha256": "2fdb8bade7ba7e5283851d3b8171d7f98424d9169c426c75e8b16885f2415fa1",
+  "preflight": {
+    "status": "verified",
+    "base_git_commit": "2901f4254303c3a9089c9025717908c0d77ff190",
+    "patch_count": 5,
+    "target_count": 6,
+    "patches": [
+      {
+        "patch_id": "history_explicit_labels",
+        "apply_count_planned": 1,
+        "file_count": 1,
+        "files": [
+          {
+            "id": "history_explicit_labels",
+            "target": "gui/g4usim_gui/widgets/run_history_page.py",
+            "hunks": 2,
+            "original_matches_commit": true,
+            "projection_matches_candidate": true,
+            "review_identity_matches": true
+          }
+        ]
+      },
+      {
+        "patch_id": "spacer_layout_type_boundary",
+        "apply_count_planned": 1,
+        "file_count": 1,
+        "files": [
+          {
+            "id": "spacer_layout_type_boundary",
+            "target": "gui/g4usim_gui/core/accessibility.py",
+            "hunks": 4,
+            "original_matches_commit": true,
+            "projection_matches_candidate": true,
+            "review_identity_matches": true
+          }
+        ]
+      },
+      {
+        "patch_id": "combined_f8_permanent_tests",
+        "apply_count_planned": 1,
+        "file_count": 1,
+        "files": [
+          {
+            "id": "combined_f8_permanent_tests",
+            "target": "gui/smoke_tests/smoke_f8_accessibility.py",
+            "hunks": 2,
+            "original_matches_commit": true,
+            "projection_matches_candidate": true,
+            "review_identity_matches": true
+          }
+        ]
+      },
+      {
+        "patch_id": "geometry_path_identity_test",
+        "apply_count_planned": 1,
+        "file_count": 1,
+        "files": [
+          {
+            "id": "geometry_path_identity_test",
+            "target": "gui/smoke_tests/smoke_j2_geometry.py",
+            "hunks": 1,
+            "original_matches_commit": true,
+            "projection_matches_candidate": true,
+            "review_identity_matches": true
+          }
+        ]
+      },
+      {
+        "patch_id": "k1_policy_final_v1",
+        "apply_count_planned": 1,
+        "file_count": 2,
+        "files": [
+          {
+            "id": "k1_policy_product",
+            "target": "gui/g4usim_gui/core/experiment_bundle.py",
+            "hunks": 5,
+            "original_matches_commit": true,
+            "projection_matches_candidate": true,
+            "review_identity_matches": true
+          },
+          {
+            "id": "k1_policy_tests",
+            "target": "scripts/test_k1_bundle.py",
+            "hunks": 2,
+            "original_matches_commit": true,
+            "projection_matches_candidate": true,
+            "review_identity_matches": true
+          }
+        ]
+      }
+    ],
+    "K1_multi_file_patch_planned_once": true,
+    "v1_originals_unchanged": true,
+    "patches_applied": false,
+    "qt_or_native_started": false,
+    "tests_rerun": false,
+    "pending_main_additions": [
+      "docs"
+    ]
+  },
+  "application_patch_order": [
+    "out/collab/f8-history-label/v2/run_history_page.patch",
+    "out/collab/f8-layout-item-compat/accessibility.patch",
+    "out/collab/f8-history-spacer-combined/smoke_f8_accessibility.patch",
+    "out/collab/j2-geometry-ci-path/fix.patch",
+    "out/collab/j2-resource-policy-path-review/final-v1/fix.patch"
+  ],
+  "status": "applied_exact_reviewed_bytes",
+  "targets": [
+    {
+      "id": "history_explicit_labels",
+      "kind": "product",
+      "target_relative_path": "gui/g4usim_gui/widgets/run_history_page.py",
+      "original_tracked_sha256": "c84990c20b6af4aa727bc38d49b7e2106025ddf192673fdefcc31bb568369005",
+      "patch_relative_path": "out/collab/f8-history-label/v2/run_history_page.patch",
+      "patch_sha256": "c6f9a716e3f6d58050593bb33f8ada02f4432585ff03b8927aeac69f72a794de",
+      "candidate_source_relative_path": "out/collab/f8-history-label/v2/run_history_page.proposed.py",
+      "applied_candidate_sha256": "cc98442e975cec3f1b33d556a8dabdd7381ec22368e94bd6124178edacb5a463",
+      "independent_review_relative_path": "out/collab/f8-history-label-independent/review.md",
+      "independent_review_sha256": "f44e7f25626e30ab6a3d0cf822c78f496b8964afc356715d7a38b82d86100a6e",
+      "review_status": "PASS documented in pinned independent report",
+      "patch_id": "history_explicit_labels"
+    },
+    {
+      "id": "spacer_layout_type_boundary",
+      "kind": "product",
+      "target_relative_path": "gui/g4usim_gui/core/accessibility.py",
+      "original_tracked_sha256": "631df8861ca70524b3ab9d3941a4e9a263cbd5a017824b7647c64ded90025a37",
+      "patch_relative_path": "out/collab/f8-layout-item-compat/accessibility.patch",
+      "patch_sha256": "697cbc1f7d615bfaf1e2a1448095aa2dd49e8077861497b0d2f0c7ae8a33c7d2",
+      "candidate_source_relative_path": "out/collab/f8-layout-item-compat/accessibility.proposed.py",
+      "applied_candidate_sha256": "c9d87e23c88704fedc2c17a8a954aba9acf365c607ea47fe86b6c56854be2be7",
+      "independent_review_relative_path": "out/collab/f8-layout-item-compat-independent/review.md",
+      "independent_review_sha256": "ec699c31301e4bf70ae368c4d3eb281f4d33e1ff5ee50b07c08a09f7c330b460",
+      "review_status": "PASS documented in pinned independent report",
+      "patch_id": "spacer_layout_type_boundary"
+    },
+    {
+      "id": "combined_f8_permanent_tests",
+      "kind": "test",
+      "target_relative_path": "gui/smoke_tests/smoke_f8_accessibility.py",
+      "original_tracked_sha256": "69b11a915a0864110171df75a1a2402ea3025f0a3a01b79d31af8ee26bd9f0e6",
+      "patch_relative_path": "out/collab/f8-history-spacer-combined/smoke_f8_accessibility.patch",
+      "patch_sha256": "0f8f8fd2f73fb9cbd7636259cb059c2652fdc041637754d1027db63b7b07f548",
+      "candidate_source_relative_path": "out/collab/f8-history-spacer-combined/smoke_f8_accessibility.proposed.py",
+      "applied_candidate_sha256": "943c92a0cdd0650511b7c8ce45378ebcbddc06b7f55b90835317eb44d3a59e95",
+      "independent_review_relative_path": "out/collab/f8-history-spacer-combined-independent/review.md",
+      "independent_review_sha256": "7be12eb8ffeb4119f6136223ec4664fb919898602a1d016558ba9b2195967850",
+      "review_status": "PASS documented in pinned independent report",
+      "patch_id": "combined_f8_permanent_tests"
+    },
+    {
+      "id": "geometry_path_identity_test",
+      "kind": "test",
+      "target_relative_path": "gui/smoke_tests/smoke_j2_geometry.py",
+      "original_tracked_sha256": "091cfffed46daa8473d8021f7ea9e4811e40a2c35b98129a4307da8f1efed489",
+      "patch_relative_path": "out/collab/j2-geometry-ci-path/fix.patch",
+      "patch_sha256": "2b3f9b12c58c6c2dcc97ac35d9448897fdf6592518639b7aa644296be7ad6a74",
+      "candidate_source_relative_path": "out/collab/j2-geometry-ci-path/smoke_j2_geometry.py",
+      "applied_candidate_sha256": "579c6a7a00a93a41570aa28357053d3009b1c2758cf005ccf6de78477fb5b671",
+      "independent_review_relative_path": "out/collab/j2-geometry-ci-path-independent/review.md",
+      "independent_review_sha256": "7f7614fb70d909f24b0ec51ac05b82d016e7f875cf0b7da925e140fad23c9a38",
+      "review_status": "PASS documented in pinned independent report",
+      "patch_id": "geometry_path_identity_test"
+    },
+    {
+      "id": "k1_policy_product",
+      "kind": "product",
+      "target_relative_path": "gui/g4usim_gui/core/experiment_bundle.py",
+      "original_tracked_sha256": "fd94da357bfc97ffdf53ac9bd0c5c55d480087f6df226b4266449aad12ff068e",
+      "patch_id": "k1_policy_final_v1",
+      "patch_relative_path": "out/collab/j2-resource-policy-path-review/final-v1/fix.patch",
+      "patch_sha256": "f705dc96bcfb4706e03d045a00e281c53ce0e8fe6eb9912c27579188e8a446de",
+      "candidate_source_relative_path": "out/collab/j2-resource-policy-path-review/final-v1/experiment_bundle.py",
+      "applied_candidate_sha256": "4990d9f4439711f96aa5a5475f6f39ea3588b8c1e3fabf7e3e2eca0318a45610",
+      "independent_review_relative_path": "out/collab/j2-policy-final-v1-independent/review.md",
+      "independent_review_sha256": "de31b3715ee785c5cfc44595efcedb70d2f1598822ae1eb91cabe4947b51e444",
+      "independent_execution_relative_path": "out/collab/j2-policy-final-v1-independent/execution.json",
+      "independent_execution_sha256": "1be83e73e78d3cbd6b929441fa1907ffcc1a8e101f6b6d0e579e083c4d6ba2eb",
+      "review_status": "PASS documented in pinned independent report and execution"
+    },
+    {
+      "id": "k1_policy_tests",
+      "kind": "test",
+      "target_relative_path": "scripts/test_k1_bundle.py",
+      "original_tracked_sha256": "e825d4278bd9b59d7ff871c1f2abd39d564b0fc5591de460f784a6d28cb2fa4f",
+      "patch_id": "k1_policy_final_v1",
+      "patch_relative_path": "out/collab/j2-resource-policy-path-review/final-v1/fix.patch",
+      "patch_sha256": "f705dc96bcfb4706e03d045a00e281c53ce0e8fe6eb9912c27579188e8a446de",
+      "candidate_source_relative_path": "out/collab/j2-resource-policy-path-review/final-v1/test_k1_bundle.py",
+      "applied_candidate_sha256": "80726fb8eeda65700169416b8a9711967ed15283ed8bbc22bbf20b42d8c216f3",
+      "independent_review_relative_path": "out/collab/j2-policy-final-v1-independent/review.md",
+      "independent_review_sha256": "de31b3715ee785c5cfc44595efcedb70d2f1598822ae1eb91cabe4947b51e444",
+      "independent_execution_relative_path": "out/collab/j2-policy-final-v1-independent/execution.json",
+      "independent_execution_sha256": "1be83e73e78d3cbd6b929441fa1907ffcc1a8e101f6b6d0e579e083c4d6ba2eb",
+      "review_status": "PASS documented in pinned independent report and execution"
+    }
+  ],
+  "apply_exit_code": 0,
+  "post_apply_hashes_verified": true,
+  "docs": "pending independent final freeze",
+  "formal_new_candidate": "not_started"
+}

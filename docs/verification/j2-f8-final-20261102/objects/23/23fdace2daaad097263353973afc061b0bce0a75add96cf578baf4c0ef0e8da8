@@ -1,0 +1,22 @@
+--- frozen-v1/proposed/STATUS.md
++++ frozen-v2/proposed/STATUS.md
+@@ -15,7 +15,7 @@
+ | windows113-integration | 31/31 | 6790 | 0 / 0 / [] |
+ | windows114-integration | 31/31 | 6780 | 0 / 0 / [] |
+ 
+-18c六profile均已终态passed，合计300/300、181295入口；local-final-audit的status=passed、errors=[]，六份原report/launch SHA及逐项算术已核对。六份原报告的identity_errors=[]、git_dirty=false；这些是18c冻结的本机结果，不替代第四候选新CI或阶段验收。证据根文字为 `out/verification/j2-f8-18c5858/`，不把未归档OUT作为公共链接。
++18c六profile均已终态passed，合计300/300、181295入口；local-final-audit的status=passed、errors=[]，六份原report/launch SHA及逐项算术已核对。六份launch的identity_errors=[]，对应report均git_dirty=false；这些是18c冻结的本机结果，不替代第四候选新CI或阶段验收。证据根文字为 `out/verification/j2-f8-18c5858/`，不把未归档OUT作为公共链接。
+ 
+ 18c5858四项push/attempt1 CI均终态：Linux Geant4 `41344573528` 与M0 `41344573541`失败，Desktop `41344573534`与Full installation `41344573604`成功；八份profile报告strict4pass/4fail，release_accepted=false。Linux114、113及M0 Ubuntu各仅gui_f8_accessibility在659行QAccessible.Name断言失败；Windows M0另仅gui_j2_geometry在264行成功reload后的source_path字面相等断言失败（195入口），不是上一轮STL162。Linuxbackend/integration因上游GUI失败未执行，不能记为通过。首败、全部原log/ZIP及旧身份保持，专项归因或入口数增加不把原CI改绿。
+ 
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -3,6 +3,8 @@
+ 本文件是仓库级约束，适用于根目录及其子目录。更具体的目录约束可以由更深层的 AGENTS.md 补充；gui/AGENTS.md 适用于 GUI 目录。
+ 
+ ## 0. 条目索引与历史全文
++
++- 2026-11-02 J2/F8第四修复候选：test-only接口、字节映射及未关闭边界见[同名历史条目](docs/agent-history.md#2026-11-02-j2f8-第四修复候选18c5858平台测试接口与证据映射)。
+ 
+ - 2026-11-02 J2/F8第三修复候选：相关专项独审已完成，完整新候选验收待进行；2901f42本机已过范围不代表CI/原生整体通过；History三显式buddy/动态语言、QLayout类型递归、K1 policy规范身份与原拼写首尾guard的候选边界见 docs/agent-history.md 同名新条目。原失败与旧身份保留，未宣告阶段关闭。
+ 

@@ -1,0 +1,34 @@
+# External Inspect 最小候选独立审查
+
+结论：通过；在本次mode/来源边界范围内未发现剩余确认P0/P1/P2，建议主线程按冻结补丁统一apply。未修改tracked，未重跑作者的整套113/114 smoke或K1 component，未操作现有会话/native。
+
+审查对象fix.patch SHA256 `37b15980b429fe2e9f39106c164682e885fc449a0204e9725d8a215b1f7ae399`，候选workflow SHA `4efcf4f0443fce588780e7cee8ee363a6b62be829c723d4259b101b7ebe26325`。HEAD56b689fb9ac920cbb1203b2b94dae2483d25f622。收据receipt.json。
+
+## 独立源码核对
+
+移除候选_field_report来源for循环首个 `if project.runInputMode != "generated": continue` 后，整份workflow AST与tracked原件完全一致。因此_original_inspection_identity、真实Inspect分支、pre/post原始输入核验、capture_identity、离线可编辑包闭包和生命周期均未改。source/history/documents未清空，外部输入资格与生成编辑器来源分离；generated检查的原路径/读取状态/内容比较保持原代码。
+
+永久测试candidate移除新增source_capture_scope函数及synthetic首个调用后，整份test_k1_workflow AST与原件一致。既有断言、component/backend分流及runner入口没有被改写；新回归进入既有synthetic生命周期。新函数包含external不变性、generated失败路径、actual main/macro身份、缺实际输入拒绝、全editablebundle休眠谱缺失拒绝及restricted显式裁决正反例，不只是can_run单一正例。
+
+非法mode即使跳过该来源循环仍由未改的validate_project_report产生project.input_mode错误，未形成绕过。
+
+## 独立验证（非作者专项复跑）
+
+自写mode_probe.py，用完整Dvenv和官方v3探针，在相同fixture分别加载tracked原产品与out候选。原产品exit1，报materials/geometry的experiment.captured_source.changed；候选exit0，探针记录10个断言入口。原日志mode-baseline.log及mode-candidate.log完整保留，有SHA。
+
+覆盖作者原专项之外的组合：
+
+- workspaceRoot内相对actual-main.ini/actual.mac；休眠材料文件删除、几何文件改写仍external可检查，snapshot/state/doc原样保留。
+- config-only、macro-only仍可检查；两者皆空、实际main/macro缺失、非法mode仍拒绝。
+- 实际macro内容或main内容各自改变resource_fingerprint，declared receipts仅实际两文件；recursive_closure继续明确unobserved。
+- external→generated切换重新激活两项来源拒绝；再切external可检查，历史状态不被清洗。
+- 恢复真实文件后generated正常；capture读取失败/选择路径改为另一真实文件依然拒绝。
+- 无运行输出目录被创建。
+
+本独立探针不启动Geant4；真实UI→Inspect证据来自作者双版原smoke49入口各exit0，已逐项核验final-receipt中的原log SHA与候选/补丁SHA，区分作者执行与独立验证。作者focused30、永久K1 component260、原产品反例3的log SHA亦核对，未将其计作本独立执行。v2/v3新fixture失败保留，最终v4判断具体错误，未覆盖或篡改首错。
+
+## 保留边界
+
+external Inspect仅观察已声明main/macro文件pre/post SHA，递归资源闭包继续unobserved；本修复不扩大覆盖承诺，也不声称一般外部run、完整矩阵或物理正确性通过。完整可编辑包仍保留休眠编辑资源并检查闭包，候选没有改closure模块；作者相应正反例已保留。
+
+git apply --check退出0，审查结束tracked clean。独立验证短进程均已退出，本线程无遗留读源码测试，未apply补丁。原Windows113/114正式首轮失败报告仍保留，后续正式结果须绑定新候选身份。

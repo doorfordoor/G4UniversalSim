@@ -1,0 +1,456 @@
+--- a/scripts/test_k1_bundle.py
++++ b/scripts/test_k1_bundle.py
+@@ -20,7 +20,8 @@
+ from g4usim_gui.core import experiment_bundle as bundle
+ from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot, snapshot_to_json
+ from g4usim_gui.core.project import G4USimProject, project_from_dict
+-from g4usim_gui.editors.geometry_editor_model import geometry_document_from_summary
++from g4usim_gui.editors.geometry_editor_model import geometry_document_from_summary, validate_geometry_document
++from g4usim_gui.writers.geometry_ini_writer import generate_geometry_ini_text
+ from g4usim_gui.editors.material_editor_model import material_document_from_summary
+ from g4usim_gui.models.package_model import PathSettings, GeometrySettings
+ from g4usim_gui.parsers.geometry_parser import parse_geometry
+@@ -566,7 +567,8 @@
+     for record in ({"access_token": "K1_FAKE_SECRET_ONLY_47812"}, {"parameters": {"apiKey": "FAKE"}}):
+         refused(lambda: bundle.export_bundle(snapshot, root / "secret-refused", validation_records=[record]), "credential")
+     # project_to_dict intentionally shares preview/volumes containers. Traversal
+-    # must relocate copies_file exactly once and retain source-copy blockers.
++    # must relocate copies_file exactly once. J2 supports editing these volumes;
++    # unknown-field blockers are exercised separately below.
+     geometry = Path(snapshot.project.pathSettings.geometry_config)
+     hierarchical = """[world]
+ shape = box
+@@ -584,23 +586,104 @@
+     copies = write(geometry.parent / "copies.csv", "x_mm,y_mm,z_mm\n0,0,0\n0,0,10\n")
+     snapshot.project.geometrySettings.template = "hierarchical"
+     snapshot.project.geometryEditor = geometry_document_from_summary(parse_geometry(geometry, "hierarchical"), "hierarchical")
+-    snapshot.project.geometryEditor.source_copy_mode = True
++    document = snapshot.project.geometryEditor
++    validate_geometry_document(document, material_names={"G4_Galactic", "G4_Si"})
++    assert not document.round_trip_blockers and not document.errors
++    det = next(row for row in document.volumes if row.name == "det")
++    assert det.preview_properties == {"placement": "parameterised", "copies_file": "copies.csv"}
++    generated = generate_geometry_ini_text(document)
++    assert "placement = parameterised" in generated
++    assert f"copies_file = {copies.resolve()}" in generated
++    # Explicit source-copy remains a separate user choice, not a fabricated blocker.
++    document.source_copy_mode = True
+     main = Path(snapshot.project.configPath)
+     write(main, main.read_text(encoding="utf-8").replace("template = simple_box", "template = hierarchical"))
+     collected = bundle.collect_bundle_resources(snapshot)
+     assert any(row["role"] == "copies" for row in collected["resources"])
+-    assert collected["snapshot"]["project"]["geometryEditor"]["round_trip_blockers"]
+-    assert all(str(geometry) not in msg for msg in collected["snapshot"]["project"]["geometryEditor"]["round_trip_blockers"])
++    portable = collected["snapshot"]["project"]["geometryEditor"]
++    assert not portable["round_trip_blockers"] and portable["source_copy_mode"] is True
++    receipts = [row for row in collected["resources"] if row["role"] == "copies"]
++    assert len(receipts) == 1 and receipts[0]["source_sha256"] == bundle.digest(copies.read_bytes())
++    portable_det = next(row for row in portable["volumes"] if row["name"] == "det")
++    assert portable_det["preview_properties"]["copies_file"] == receipts[0]["path"]
+     exported = bundle.export_bundle(snapshot, root / "copies-bundle")
+     restored = bundle.load_bundle(root / "copies-bundle")
+     assert restored.project.geometryEditor.source_copy_mode is True
+-    assert restored.project.geometryEditor.round_trip_blockers
++    assert not restored.project.geometryEditor.round_trip_blockers
+     assert sum(row.get("role") == "copies" for row in exported["manifest"]["members"]) == 1
+     assert copies.is_file()
++    copies_before = copies.read_bytes()
++    # Relocate the bundle and take its original source tree offline. New input paths
++    # must resolve inside the moved bundle; the old workspace must fail closed.
++    moved = root / "copies-moved"
++    (root / "copies-bundle").rename(moved)
++    original_source = Path(snapshot.project.workspaceRoot)
++    parked_source = root / "source-offline"
++    original_source.rename(parked_source)
++    try:
++        refused(lambda: bundle.collect_bundle_resources(snapshot))
++        refused(lambda: bundle.export_bundle(snapshot, root / "missing-source-refused"))
++        assert not (root / "missing-source-refused").exists()
++        relocated = bundle.load_bundle(moved)
++        moved_doc = relocated.project.geometryEditor
++        moved_det = next(row for row in moved_doc.volumes if row.name == "det")
++        table = Path(moved_det.preview_properties["copies_file"])
++        assert table.resolve().is_relative_to(moved.resolve())
++        assert table.read_bytes() == copies_before
++        moved_doc.source_copy_mode = False
++        emitted = generate_geometry_ini_text(moved_doc)
++        assert f"copies_file = {table.resolve()}" in emitted
++        assert str(original_source) not in emitted
++        table.unlink()
++        try:
++            refused(lambda: bundle.load_bundle(moved))
++        finally:
++            table.write_bytes(copies_before)
++        assert bundle.inspect_bundle(moved)["replay_verified"] is False
++    finally:
++        parked_source.rename(original_source)
++    assert copies.read_bytes() == copies_before
+     # Template changes in a nested macro affect later parent loadConfig commands.
+     write(geometry.parent / "select.mac", "/AIHL/geometry/setTemplate hierarchical\n")
+     write(macro, "/control/execute select.mac\n/AIHL/geometry/loadConfig geometry.ini\n/run/initialize\n/run/beamOn 1\n")
+     assert bundle.collect_bundle_resources(snapshot)["resources"]
++
++
++def test_unknown_geometry_blocker_controls(root):
++    """An unknown field stays blocked; source-copy is not a K1 grammar bypass."""
++    snapshot = fixture(root / "source")
++    geometry = Path(snapshot.project.pathSettings.geometry_config)
++    text = GEOMETRY + "placement_future = replica\n"
++    write(geometry, text)
++    document = geometry_document_from_summary(parse_geometry(geometry, "simple_box"), "simple_box")
++    snapshot.project.geometryEditor = document
++    before = geometry.read_bytes()
++    blockers = list(document.round_trip_blockers)
++    assert blockers and any("placement_future" in item for item in blockers)
++    assert document.raw_source_text == text
++    for source_copy in (False, True):
++        document.source_copy_mode = source_copy
++        if source_copy:
++            refused(lambda: generate_geometry_ini_text(document), "original source copy mode")
++        else:
++            refused(lambda: generate_geometry_ini_text(document), "round-trip is blocked")
++        refused(lambda: bundle.collect_bundle_resources(snapshot), "Unknown resource grammar")
++        destination = root / ("unknown-copy-refused" if source_copy else "unknown-editor-refused")
++        refused(lambda: bundle.export_bundle(snapshot, destination), "Unknown resource grammar")
++        assert not destination.exists() and geometry.read_bytes() == before
++        assert document.round_trip_blockers == blockers and document.raw_source_text == text
++    # A captured blocker must not turn a vanished source into an empty geometry.
++    parked = geometry.with_suffix(".offline")
++    geometry.rename(parked)
++    try:
++        refused(lambda: bundle.collect_bundle_resources(snapshot))
++        refused(lambda: bundle.export_bundle(snapshot, root / "unknown-missing-refused"))
++        assert not (root / "unknown-missing-refused").exists()
++        assert document.source_path == str(geometry)
++        assert document.raw_source_text == text and document.round_trip_blockers == blockers
++    finally:
++        parked.rename(geometry)
++    assert geometry.read_bytes() == before
+ 
+ 
+ def backend_check(root, executable):
+@@ -672,7 +755,8 @@
+     cases = []
+     try:
+         for case in (test_safe_environment_history, test_build_version_text, test_reference_source_urls, test_move_and_history, test_resource_kinds_and_identity, test_generated,
+-                     test_refusals, test_atomic_and_tamper, test_gdml, test_independent_review_regressions):
++                     test_refusals, test_atomic_and_tamper, test_gdml, test_independent_review_regressions,
++                     test_unknown_geometry_blocker_controls):
+             folder = root / case.__name__
+             folder.mkdir()
+             case(folder)
+--- a/scripts/test_config_migration.py
++++ b/scripts/test_config_migration.py
+@@ -17,7 +17,7 @@
+ from g4usim_gui.editors.geometry_editor_model import (geometry_document_from_summary, validate_geometry_document,
+                                                      geometry_document_from_dict, geometry_document_to_snapshot)
+ from g4usim_gui.parsers.geometry_parser import parse_geometry
+-from g4usim_gui.writers.geometry_ini_writer import generate_geometry_ini_text
++from g4usim_gui.writers.geometry_ini_writer import generate_geometry_ini_text, write_geometry_ini
+ from g4usim_gui.editors.source_physics_scoring_model import SourceEditableModel
+ 
+ 
+@@ -135,7 +135,13 @@
+         rejected(lambda mapping=mapping: plan_geometry_migration(source, "hierarchical", metadata_mapping=mapping))
+     resource = work / "mesh.stl"
+     resource.write_text("test placeholder; backend checks actual STL", encoding="utf-8")
+-    source.write_text(HIERARCHICAL.replace("shape = box\nsize = 1 cm, 1 cm, 1 cm", "shape = tessellated\nfile = mesh.stl"), encoding="utf-8")
++    mesh_text = HIERARCHICAL.replace("shape = box\nsize = 1 cm, 1 cm, 1 cm",
++                                    "shape = tessellated\nfile = mesh.stl\nunit = cm")
++    mesh_text += ("position = 2 mm,3 mm,4 mm\nrotation = 0 deg,0 deg,30 deg\n"
++                  "sensitive = true\ncopyNo = 7\nvis.alpha = 0.4\nmetadata.Note = mesh-token\n")
++    source.write_text(mesh_text, encoding="utf-8")
++    mesh_before = source.read_bytes()
++    original_doc = geometry_document_from_summary(parse_geometry(source, "hierarchical"), "hierarchical")
+     plan = plan_geometry_migration(source, "hierarchical")
+     assert str(resource.resolve()).encode() in plan.payload
+     assert any("Backend Inspect inputs" in item for item in plan.validation)
+@@ -143,7 +149,51 @@
+     target.parent.mkdir()
+     publish_migration(plan, target)
+     doc = geometry_document_from_summary(parse_geometry(target, "hierarchical"), "hierarchical")
+-    assert doc.round_trip_blockers  # migration cannot confer J2 editing support
++    validate_geometry_document(doc)
++    assert not doc.round_trip_blockers and not doc.errors
++    assert doc.source_path == str(target) and doc.schema_version == 2
++    original_row = next(row for row in original_doc.volumes if row.name == "Target")
++    migrated_row = next(row for row in doc.volumes if row.name == "Target")
++    retained = ("name", "parent", "shape", "size", "parameters", "material", "position", "rotation",
++                "sensitive", "bias", "region", "copy_no", "metadata", "visual", "production_cuts",
++                "preview_properties")
++    for field in retained:
++        assert getattr(migrated_row, field) == getattr(original_row, field), field
++    expected_properties = {**original_row.shape_properties, "file": str(resource.resolve())}
++    assert migrated_row.shape_properties == expected_properties
++    assert migrated_row.shape == "tessellated" and migrated_row.shape_properties["unit"] == "cm"
++    migrated_bytes = target.read_bytes()
++    assert source.read_bytes() == mesh_before
++    written = work / "writer-output" / "mesh.ini"
++    write_geometry_ini(str(written), doc)
++    generated = generate_geometry_ini_text(doc)
++    assert written.read_text(encoding="utf-8") == generated
++    assert f"file = {resource.resolve()}" in generated and "version = 2" in generated
++    round_trip = geometry_document_from_summary(parse_geometry(written, "hierarchical"), "hierarchical")
++    validate_geometry_document(round_trip)
++    assert not round_trip.errors and not round_trip.round_trip_blockers
++    written_row = next(row for row in round_trip.volumes if row.name == "Target")
++    for field in retained:
++        assert getattr(written_row, field) == getattr(migrated_row, field), field
++    assert written_row.shape_properties == expected_properties
++    assert source.read_bytes() == mesh_before and target.read_bytes() == migrated_bytes
++    # A genuine unknown field still blocks editing and strict migration.
++    unknown = work / "unknown-mesh.ini"
++    unknown_text = mesh_text + "placement_future = replica\n"
++    unknown.write_text(unknown_text, encoding="utf-8")
++    blocked = geometry_document_from_summary(parse_geometry(unknown, "hierarchical"), "hierarchical")
++    assert blocked.round_trip_blockers and any("placement_future" in item for item in blocked.round_trip_blockers)
++    rejected(lambda: generate_geometry_ini_text(blocked), "round-trip is blocked")
++    rejected(lambda: plan_geometry_migration(unknown, "hierarchical"), "explicit legacy metadata")
++    assert unknown.read_text(encoding="utf-8") == unknown_text
++    # Valid STL editing support does not bypass migration source identity checks.
++    stale_target = work / "stale-mesh.ini"
++    source.write_bytes(mesh_before + b"# changed after planning\n")
++    try:
++        rejected(lambda: publish_migration(plan, stale_target), "source changed")
++        assert not stale_target.exists() and target.read_bytes() == migrated_bytes
++    finally:
++        source.write_bytes(mesh_before)
+     source.write_text("version = 1\n" + HIERARCHICAL, encoding="utf-8")
+     assert plan_geometry_migration(source, "hierarchical").payload.replace(b"\r\n", b"\n").startswith(b"[global]\nversion = 2")
+     for separator in ("\r", "\x85", "\u2028", "\u2029", "\u00a0"):
+--- a/scripts/test_f4_producers.py
++++ b/scripts/test_f4_producers.py
+@@ -8,6 +8,7 @@
+ ROOT = Path(__file__).resolve().parents[1]
+ sys.path.insert(0, str(ROOT / 'gui'))
+ from g4usim_gui.core.config_schema import check_diagnostic, check_value
++from g4usim_gui.core.run_editor_model import BiasRuleDefinition
+ from g4usim_gui.core.diagnostics import collect_diagnostics, diagnostics_from_dict
+ from g4usim_gui.editors.source_physics_scoring_model import (
+     SourceEditableModel, PhysicsEditableModel, ScoringEditableModel,
+@@ -66,15 +67,16 @@
+         ({'confine_volume':'Target'}, {'confine.not_generated':'confine_volume'}),
+     ]
+     physics = [
+-        ({'mode':'manual'}, {'mode.unsupported':'mode'}),
++        ({'mode':'future'}, {'mode.unsupported':'mode'}),
++        ({'mode':'manual'}, {'structured.invalid':'manual_modules'}),
+         ({'reference_list':''}, {'reference.required':'reference_list'}),
+         ({'reference_list':'custom'}, {'reference.unknown':'reference_list'}),
+         ({'default_cut':''}, {'cut.required':'default_cut'}),
+         ({'default_cut':'bad'}, {'cut.invalid':'default_cut'}),
+         ({'default_cut':'1'}, {'cut.unit_hint':'default_cut'}),
+-        ({'enable_biasing_physics':True}, {'biasing.not_editable':'enable_biasing_physics'}),
+-        ({'extra_modules':['em']}, {'extra_modules.not_editable':'extra_modules'}),
+-        ({'manual_modules':['em']}, {'manual_modules.not_generated':'manual_modules'}),
++        ({'enable_biasing_physics':True}, {'structured.invalid':'bias_rules'}),
++        ({'extra_modules':['G4EmStandardPhysics']}, {'structured.invalid':'extra_modules'}),
++        ({'manual_modules':['G4EmStandardPhysics']}, {'structured.invalid':'manual_modules'}),
+     ]
+     scoring = [
+         ({'hits':False,'event_edep':False,'edep':False},
+@@ -117,6 +119,28 @@
+             assert set(snapshot(model))=={f.name for f in fields(model)}
+             assert '_f4_diagnostics' not in asdict(model)
+ 
++    # J2 supports manual constructors, reference extensions/replacements and
++    # process rules. These are editor-validation positives, not physics proof.
++    legacy_codes = {'physics.biasing.not_editable', 'physics.extra_modules.not_editable',
++                    'physics.manual_modules.not_generated', 'physics.mode.unsupported'}
++    for values in (
++        {'mode':'manual', 'manual_modules':['G4EmStandardPhysics']},
++        {'extra_modules':['G4OpticalPhysics']},
++        {'replace_modules':['G4EmStandardPhysics_option4']},
++        {'enable_biasing_physics':True, 'bias_rules':[BiasRuleDefinition(volumes='Target')]},
++    ):
++        model = PhysicsEditableModel(**values)
++        validate_physics_model(model)
++        records = collect_diagnostics(model)
++        assert not model.errors, (values, model.errors)
++        assert not legacy_codes.intersection(d.code for d in records)
++        assert physics_model_to_snapshot(model)['mode'] == model.mode
++    unknown = PhysicsEditableModel(mode='future')
++    validate_physics_model(unknown)
++    errors = [d for d in collect_diagnostics(unknown) if d.severity == 'error']
++    assert [d.code for d in errors] == ['physics.mode.unsupported']
++    assert errors[0].location.field == 'mode' and errors[0].location.collection == ''
++
+     # Dynamic field rules must preserve each distinct same-code occurrence.
+     model=SourceEditableModel(theta_min='bad',theta_max='bad',phi_min='bad',phi_max='bad',
+                               energy='nan',position='nan,0,0',direction='0,inf,0',
+@@ -206,11 +230,16 @@
+     path.write_text(text,encoding='utf-8')
+     report=ValidationReport();_validate_geometry_text(path,report)
+     by_code={d.code:d for d in report.diagnostics}
+-    for code,line in (('geometry.shape.not_editable',4),('geometry.placement.not_editable',5),
++    for code,line in (('geometry.shape.experimental',4),('geometry.placement.experimental',5),
+                       ('geometry.placement.unsupported',7),('geometry.boolean.ignored_field',9)):
+         assert by_code[code].source.line==line,(code,by_code[code].source)
+         assert by_code[code].source.text_snapshot==text
+         assert by_code[code].location is None and by_code[code].unavailable_reason=='source_only'
++    for code in ('geometry.shape.experimental', 'geometry.placement.experimental'):
++        assert by_code[code].severity == 'warning'
++        assert 'cannot edit' not in by_code[code].message
++    assert by_code['geometry.placement.unsupported'].severity == 'error' and not report.can_run
++    assert 'geometry.shape.not_editable' not in by_code and 'geometry.placement.not_editable' not in by_code
+     path.write_text('[material.A]\ntemperature=300 K\npressure=1 atm\n',encoding='utf-8')
+     report=ValidationReport();_validate_material_text(path,report)
+     assert {d.source.key:d.source.line for d in report.diagnostics}=={'pressure':3,'temperature':2}
+--- a/scripts/test_f4_document_diagnostics.py
++++ b/scripts/test_f4_document_diagnostics.py
+@@ -28,7 +28,8 @@
+ )
+ from g4usim_gui.parsers.geometry_parser import parse_geometry
+ from g4usim_gui.parsers.ini_light_parser import parse_ini_light
+-from g4usim_gui.parsers.materials_parser import parse_materials
++from g4usim_gui.parsers.materials_parser import parse_materials, NIST_QUICK_LIST
++from g4usim_gui.core.nist_elements import NIST_MATERIALS
+ from g4usim_gui.validators.config_validator import ValidationReport, _include_messages
+ 
+ 
+@@ -117,12 +118,26 @@
+     assert record.location.field == "components_text" and record.location.row == 1
+     assert record.message in cycle.errors
+     nist = MaterialDocument(rows=[MaterialRow(name="Alias", mode="nist", nist_name="Unknown"),
+-                                 MaterialRow(name="Unknown", mode="nist")])
++                                 MaterialRow(name="Unknown", mode="nist"),
++                                 MaterialRow(name="G4_F4_UNKNOWN", mode="nist")])
+     validate_material_document(nist)
+-    targets = selected(nist, "materials.nist.unlisted")
++    targets = selected(nist, "materials.nist.unknown")
++    assert len(targets) == 3 and all(item.severity == "error" for item in targets)
++    assert not selected(nist, "materials.nist.unlisted")
+     assert targets[0].location is None and targets[0].unavailable_reason == "unsupported_editor"
+     assert targets[0].identity_parameters["field"] == "nist_name"
++    # Keep the original non-prefixed editable-name case; do not mask its current
++    # missing-location regression by renaming the fixture to start with G4_.
++    assert targets[1].location is not None
+     assert targets[1].location.field == "name" and targets[1].location.row == 1
++    assert targets[2].location.field == "name" and targets[2].location.row == 2
++    catalog_name = "G4_A-150_TISSUE"
++    assert catalog_name in NIST_MATERIALS and catalog_name not in NIST_QUICK_LIST
++    accepted = MaterialDocument(rows=[MaterialRow(name=catalog_name, mode="nist"),
++        MaterialRow(name="Alias", mode="nist", nist_name=catalog_name)])
++    validate_material_document(accepted)
++    assert not accepted.errors and not selected(accepted, "materials.nist.unknown")
++    assert not selected(accepted, "materials.nist.unlisted")
+ 
+ 
+ def check_geometry_sources(temp: Path) -> None:
+@@ -183,8 +198,13 @@
+     assert all(item.location.collection == "layers" and item.location.editor == "layers" for item in thickness)
+     alpha = selected(layered, "geometry.layer.alpha_range")
+     assert len(alpha) == 2 and len({item.identity for item in alpha}) == 2
+-    assert all(item.location is None and item.unavailable_reason == "unsupported_editor" for item in alpha)
+-    assert all(item.location is None for item in selected(layered, "geometry.metadata.syntax"))
++    assert [item.location.row for item in alpha] == [1, 2]
++    assert all(item.location.editor == "layers" and item.location.collection == "layers"
++               and item.location.field == "vis.alpha" and not item.unavailable_reason for item in alpha)
++    metadata = selected(layered, "geometry.metadata.syntax")
++    assert [item.location.row for item in metadata] == [1, 2]
++    assert all(item.location.field == "metadata" and item.location.collection == "layers"
++               and not item.unavailable_reason for item in metadata)
+     assert selected(layered, "geometry.layered.axis")[0].location.collection == "layered_device"
+     assert all(not any(key.startswith("_f4") for key in vars(row)) for row in layered.layered_device.layers)
+     assert LayerRow(**vars(layered.layered_device.layers[1])).name == "same"
+@@ -201,7 +221,7 @@
+     duplicate = selected(geometry, "geometry.volume.duplicate_name")
+     assert {item.location.row for item in duplicate} == {2, 3}
+     assert len({item.identity for item in duplicate}) == 2
+-    size = selected(geometry, "geometry.vector.components")
++    size = selected(geometry, "geometry.solid.size")
+     assert [item.location.row for item in size] == [2, 3]
+     operation = selected(geometry, "geometry.boolean.operation")[0]
+     assert (operation.location.editor, operation.location.collection, operation.location.row, operation.location.entity) == ("booleans", "boolean_ops", 1, "same[0]")
+@@ -210,10 +230,16 @@
+     geometry.volumes = [world, trd]
+     geometry.boolean_ops = []
+     validate_geometry_document(geometry)
+-    assert {item.location.field for item in selected(geometry, "geometry.trd.length")} == {"dx1", "dx2", "dy1", "dy2", "dz"}
++    required_fields = {"dx1", "dx2", "dy1", "dy2", "dz"}
++    required = [item for item in collect_diagnostics(geometry)
++                if item.code in {"geometry.solid." + field for field in required_fields}]
++    assert len(required) == 5 and {item.location.field for item in required} == required_fields
++    assert all(item.location.collection == "volumes" and item.location.row == 1
++               and item.code == "geometry.solid." + item.location.field for item in required)
+     visual = selected(geometry, "geometry.visual.alpha_range")[0]
+-    assert visual.location is None and visual.identity_parameters["field"] == "vis.alpha"
+-    assert visual.unavailable_reason == "unsupported_editor"
++    assert visual.location.field == "vis.alpha" and visual.location.collection == "volumes"
++    assert visual.location.row == 1 and visual.location.entity == "shape"
++    assert not visual.unavailable_reason
+     identities = [item.identity for item in collect_diagnostics(geometry)]
+     with patch("g4usim_gui.editors.geometry_editor_model.ui_text", lambda value: "translated:" + value), patch(
+             "g4usim_gui.editors.geometry_editor_model.ui_format", lambda value, **kwargs: "translated:" + value.format(**kwargs)):
+@@ -322,12 +348,71 @@
+     assert all(item.source is None or item.source.text_snapshot is None for item in collect_diagnostics(denied))
+ 
+ 
++def check_density_machine_categories() -> None:
++    # Every invalid density has one category and one identity at the real row.
++    for value, suffix in (("bad", "numeric"), ("0 g/cm3", "positive"),
++                          ("-1 G/CM3", "positive"), ("-0x1p0 * g/cm3", "positive"),
++                          ("1e-999 g/cm3", "positive"), ("1 unknown", "invalid"),
++                          ("1e309 g/cm3", "invalid"), ("1e308 g/cm3", "invalid")):
++        document = MaterialDocument(rows=[MaterialRow(name="M", density=value, components_text="Si:1")])
++        validate_material_document(document)
++        records = [item for item in collect_diagnostics(document) if item.code.startswith("materials.density.")]
++        assert [item.code for item in records] == ["materials.density." + suffix], (value, records)
++        assert len({item.identity for item in records}) == 1
++        record = records[0]
++        assert record.severity == "error" and record.location.field == "density"
++        assert record.location.row == 0 and record.location.collection == "rows"
++        validate_material_document(document)
++        assert [item.identity for item in collect_diagnostics(document) if item.code.startswith("materials.density.")] == [record.identity]
++    for value in ("1 G/CM3", "2.7 * g/cm3", "0x1p0 * G/CM3"):
++        document = MaterialDocument(rows=[MaterialRow(name="M", density=value, components_text="Si:1")])
++        validate_material_document(document)
++        assert not document.errors, (value, document.errors)
++        assert not [item for item in collect_diagnostics(document) if item.code.startswith("materials.density.")]
++
++
++def check_legacy_code_json_unchanged() -> None:
++    # Golden synthesized with 5fe0a10's serializer, not a claimed old run receipt.
++    # Changing today's capability must not rewrite yesterday's code or identity.
++    payload = json.loads('{"schema":"g4usim_diagnostics_v1","snapshot_id":"historical-code-golden","can_run":false,"errors":["legacy numeric","legacy positive","legacy manual unsupported"],"warnings":[],"info":[],"diagnostics":[{"identity":"825163aaecb59795030073ce1be05176f120e5430079ba8b1a6d65cfe5151214","code":"materials.density.numeric","severity":"error","origin":"materials.editor","message":"legacy numeric","message_key":"","params":{},"identity_parameters":{"value":"bad"},"raw_message":"","unavailable_reason":"","location":{"editor":"materials","field":"density","collection":"rows","row":0,"entity":"M","snapshot_id":""},"source":null,"related_locations":[]},{"identity":"8846271706903ded5fe458a8c514e5176e73992916457aa0f53a96e6a95bd486","code":"materials.density.positive","severity":"error","origin":"materials.editor","message":"legacy positive","message_key":"","params":{},"identity_parameters":{"value":"0 g/cm3"},"raw_message":"","unavailable_reason":"","location":{"editor":"materials","field":"density","collection":"rows","row":1,"entity":"N","snapshot_id":""},"source":null,"related_locations":[]},{"identity":"3e1098535a7dd5c237ab6f509ea127267212aba88776537e6131316198491abe","code":"physics.mode.unsupported","severity":"error","origin":"physics.editor","message":"legacy manual unsupported","message_key":"","params":{},"identity_parameters":{"value":"manual"},"raw_message":"","unavailable_reason":"","location":{"editor":"physics","field":"mode","collection":"","row":null,"entity":"","snapshot_id":""},"source":null,"related_locations":[]}]}')
++    original = copy.deepcopy(payload)
++    loaded = diagnostics_from_dict(payload)
++    assert [item.code for item in loaded.diagnostics] == ["materials.density.numeric", "materials.density.positive", "physics.mode.unsupported"]
++    assert diagnostics_to_dict(loaded.diagnostics, snapshot_id=loaded.snapshot_id) == original
++    assert payload == original
++
++
++def check_nist_alias_source(temp: Path) -> None:
++    path = temp / "nist-alias.ini"
++    text = "[Alias]\nmaterial = G4_F4_UNKNOWN\n"
++    path.write_text(text, encoding="utf-8")
++    document = material_document_from_summary(parse_materials(path))
++    validate_material_document(document)
++    records = selected(document, "materials.nist.unknown")
++    assert len(records) == 1 and records[0].severity == "error"
++    record = records[0]
++    assert record.location is None and record.unavailable_reason == "unsupported_editor"
++    assert record.identity_parameters["field"] == "nist_name" and record.identity_parameters["row"] == 0
++    assert record.source.filename == str(path.resolve()) and record.source.line is None
++    assert record.source.text_snapshot == text
++    path.write_text("[Alias]\nmaterial = G4_Si\n", encoding="utf-8")
++    validate_material_document(document)
++    assert selected(document, "materials.nist.unknown")[0].identity == record.identity
++    assert selected(document, "materials.nist.unknown")[0].source.text_snapshot == text
++    refreshed = material_document_from_summary(parse_materials(path))
++    validate_material_document(refreshed)
++    assert not selected(refreshed, "materials.nist.unknown")
++
++
+ def main() -> int:
+     with tempfile.TemporaryDirectory(prefix="g4usim-f4-documents-") as raw:
+         temp = Path(raw)
+         check_source_reads(temp)
+         check_material_sources(temp)
+         check_material_rows()
++        check_density_machine_categories()
++        check_legacy_code_json_unchanged()
++        check_nist_alias_source(temp)
+         check_geometry_sources(temp)
+         check_geometry_targets()
+         check_cut_region_identities()

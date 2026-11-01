@@ -1,0 +1,38 @@
+# F8 实现与离屏专项交接（组件候选）
+
+2026-11-02；分支 roadmap/J2-F8-editing；未提交、未全局构建、未改阶段状态、未做正式实窗。保留main原先在三个现有文件中的J2改动。F8只改授权的五个文件：新core/accessibility.py、widgets/start_page.py、main_window.py、window/shell.py、新smoke_f8_accessibility.py。中央i18n、transactions、其他编辑器、runner、I1/I2实现未修改。HEAD/五文件SHA/日志SHA见 f8-accessibility/receipt.json。
+
+## 实现与所有权
+
+- Ctrl+Alt+1…9切换并聚焦九个页面；F6/Shift+F6在导航、当前页面、已显示的其他dock和标题栏之间切换；导航菜单显示实际快捷键。Ctrl+Alt+E打开环境，Ctrl+Alt+I打开现有环境安装器，Ctrl+Alt+O走K1配置包导入。原Ctrl+N、Ctrl+Shift+N、Ctrl+O等保持原功能。
+- core/accessibility.py按实际QFormLayout或QGridLayout的同一行label建立buddy与可访问名称，已有明确名称保留；不从当前值/报错文本/控件变量名猜身份。表格补明确名称，导航按钮补页名/快捷键说明。多行文本Tab离开控件；焦点通过原有嵌套滚动区域自动可见。名称随语言刷新，不写入业务快照。
+- 开始页五入口：空白、模板、打开项目、导入配置包、环境。动作按实际内容视口宽度网格换行，近期项目改纵排，示例按1–3列排列；打断宽布局最小尺寸与列数的循环。主窗口目标最小尺寸降至760×480，既有workspace.restore仍按实际screen约束处理。外层shell滚动保障短屏导航，内容滚动只包既有workspace host，标题栏保持外部可见；没有复制或重建任何dock/page。
+- main窗口入口防止模态向导嵌套重入；创建与应用仍由ContentMixin原方法负责，同一F5事务链未替换。向导page原body放入scroll（RunPage已有scroll不重复包），原字段和布局对象保留，Next/Back/Cancel在滚动外。安装/发现对话框也只补呈现元数据和按availableGeometry收敛初始尺寸。
+
+## I1/I2事实与复用入口
+
+当前源码真实入口：ExperimentMixin._experiment_action('environment') → _open_environment() → EnvironmentDialog；其environment_selected仍连原_select_environment，选择是否允许变更仍受原can_mutate_workspace与workspace_transaction控制。
+I2由同一个EnvironmentDialog.install_button → _open_installation()创建/复用InstallDialog，installation_published仍连原_installed_candidate，发布后仍经I1重新发现，不自动选择/模拟。show_environment_installer只点击这个既有按钮，不创建第二个安装器或重新连接发布信号。show_environment_settings只在既有可见对话框时raise，否则走K1入口。
+F8专项替换的是只读discover_environments返回fixture；使用真实I1/I2控件、真实父对象/信号链。没有下载、安装、真实环境就绪或模拟完成的验收声明。
+
+## 通过证据与限制
+
+- 最终独立进程125%和150%：accepted125.log/accepted150.log，实际window DPR分别1.25/1.5，各142个v3 assert入口。虚拟availableGeometry分别640×640与533×533，窗口测试1024×700和800×540；这是offscreen缩放/布局压力测试，不冒充物理屏幕或正式DPI实窗。
+- 九页真实快捷键、F6前后焦点；表单buddy/名称与多行Tab行为；开始页键盘打开/取消项目和配置包选择；空白创建Cancel保护；两次真实modal向导前进/后退/重入/取消后完整快照、undo可用性及非法seed草稿保持；I1/I2真实对话框和runner/service实例身份保持；全部关键开始动作获焦点后全矩形可见；标题栏项目/状态/主题/语言控件可见；增大字体压力与中英文切换快照保持均已覆盖。
+- 旧专项：smoke_start_page 74、smoke_new_simulation_wizard 62、smoke_main_window_ui 46、smoke_workspace_layout 149 v3入口通过；compileall gui、限定文件diff --check通过。最后一次workspace/main复跑日志分别workspace-final.log/main-ui-final.log。
+- accepted150/start-zh.png等四张最终离屏图保留。最终150%中文图已实际打开：五个开始入口、页间导航、项目/空闲状态与主题/语言按钮可读。测试显式加载Windows系统字体，避免offscreen空字体库方框。
+- 保留首轮失败及改动原因：isAncestorOf不跨dialog窗口边界导致I2漏命名，改父对象链；首次截图旧导航revealed docks导致布局过宽，测试普通开始布局显式隐藏peer docks，同时产品按真正viewport预算换行；两次完整矩形可见性失败暴露inactive页面最小尺寸撑宽host，内容scroll与开始内容宽度约束修复。旧log不追改成通过。
+
+未做正式Windows实窗/读屏软件/多屏与物理DPI热切换、原生Linux桌面。真实runner、安装和物理能力由各自已有入口验收，本专项不提升为F8阶段完成。
+
+## 主集成hook
+
+1. 合并 out/collab/f8-accessibility-i18n.json 的15个新键到集中ZH_CN（占位符逐项一致）；不另建语言所有者。_set_language末尾调用_refresh_accessibility，更新名称/描述；既有StartPage.refresh_language更新开始页文字与卡片名称。
+2. MainWindow构造在workspace_layout.restore之后调用_setup_accessibility；接受关闭之后移除自身AccessibilityController过滤器，拒绝关闭时保留。现已接好，不需要main再重复安装控制器。
+3. StartPage新environmentRequested/importBundleRequested已在MainWindow._connect_signals接到上述既有服务；导航动作_create_accessibility_actions由原_create_menu调用。无需给runner或安装器增加状态。
+4. main登记新GUI Case脚本 gui/smoke_tests/smoke_f8_accessibility.py，默认无必需参数。离屏证据命令：QT_QPA_PLATFORM=offscreen、QT_SCALE_FACTOR=1.25或1.5，python -B tools/test_assert_probe.py gui/smoke_tests/smoke_f8_accessibility.py --translations out/collab/f8-accessibility-i18n.json --output <本次截图目录>。中央翻译合入后无需--translations。
+5. 独审与正式实窗由main后续负责。建议实窗依次验证九页键盘/F6与floating dock、开始五入口、非法草稿下向导重入Cancel、环境/安装入口关闭、1024×768/1366×768与125%/150%及读屏名称；不要把本次offscreen通过当作正式通过。
+
+材料M01/M02间隙修复独立记录在j2-materials-density-fix.md；两材料文件已冻结并通知父任务转Ptolemy。永久--backend无output时保留唯一temp证据目录已实际通过，不需要main修改runner参数，只登记args=(--backend,)即可。
+
+冻结复核补充：五文件当前SHA均仍与receipt一致；后续新增翻译0。main原生实窗入口与最终证据索引已写out/collab/f8-native-handoff.md。本次仅文件/日志读取与交接文档写入，没有原生鼠标键盘操作。

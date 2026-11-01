@@ -1,0 +1,11 @@
+# History + spacer组合最小AST独审
+
+通过。组合完整测试SHA943c92a0cdd0650511b7c8ce45378ebcbddc06b7f55b90835317eb44d3a59e95，LF patch0f8f8fd2f73fb9cbd7636259cb059c2652fdc041637754d1027db63b7b07f548。
+
+独立review.py重新解析AST，不依赖作者ast-proof的布尔结论：全部旧416函数原样；History新增函数与独审v2原件逐AST相同，spacer新增函数与独审最终草案相同；main只按顺序新增两个调用。剔除这两个新增函数及其调用后，整个模块AST与冻结69b11a原件完全一致，包括全部旧imports和顶层入口。
+
+两产品proposal及全部receipt记录身份当前SHA匹配，identity-before/after相等；两档作者595原日志SHA及v3 marker匹配、exit0/process_ended收据一致，预期controlled RuntimeWarning原样存在。原History519和spacer492两目录所有receipt列出的产物/日志原字节SHA仍匹配。
+
+两个产品patch与组合测试patch一起git apply --check exit0，未apply。不再逐个应用两份旧独立测试patch，避免覆盖新函数。独立证据receipt.json及review.py。
+
+只做AST/字节核对/可应用性检查，未重跑旧专项、Qt/native/backend/runner/build，未改tracked。595为作者完整组合运行证据，不冒充本次另跑595；不新增CI自然复现或CI已关闭主张。独立进程已结束，可交main统一集成/新冻结。

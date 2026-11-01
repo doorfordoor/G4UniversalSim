@@ -1,0 +1,16 @@
+# 18c Geometry Reload 路径断言修复草案
+
+仅 OUT 草案，tracked 产品/测试/runner 未变。产品 `widgets/config/geometry.py:529,535` 对成功读入保存 `str(Path(path).expanduser().resolve())`；失败读入分支保留当前文档与原 source_path。这是现有两种不同合同。
+
+原完整 smoke 在真实 GetShortPathNameW 取得的 Windows 8.3 临时根下自然运行，原第264行失败，exit1/195入口；诊断另调用实际 ConfigBuilderPage.reload_geometry，记录长路径与短路径的 requested/actual/resolved/samefile/SHA。短路径与实际规范锚点不逐字相等，但确为同一文件；随后 missing.ini 读取仍保留此前锚点并报告错误。
+
+草案只修改成功 Reload 的预期，精确要求 source.resolve()，并加 samefile 与内容 SHA 两个断言。原第253行读取失败保留原字面路径的断言、无源保护、其他全部测试和产品均未改变。不会用文件名、endswith、存在性或单纯同字节代替身份。
+
+- 完整候选 SHA256：b3fefeac58f044c99021d1caf7812fd66c8fe41bd14fb94ebcf8facf0c1cb6bd
+- LF patch SHA256：646d69038b11b24ee59145493de3df0d33ee9f4ae36d32d28ed96e21fdb85930
+- 原短路径完整入口：exit1/195；候选短、长路径完整入口：各 exit0/214 v3。进程已真正结束。
+- `git -c core.longpaths=true apply --check` exit0；receipt.json 的五个 tracked 文件 before/after SHA 相同。
+
+实际解释器为 D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe，offscreen。候选按 OUT 文件名编译，供原 v3 probe 计数；仅 __file__ 指回原 smoke 以保持 ROOT，未替换产品模块。临时路径通过子进程 TEMP/TMP 注入，未改全局环境。原 baseline.py、失败日志及原 CI 报告全部保留。
+
+边界：原 Windows CI trace 未打印 actual/expected，所以本机实际 8.3 复现证明此断言的跨拼写缺陷，不证明原 CI 的具体 TEMP 字符串。新候选正式 CI 仍待执行。本专项没有 native UI、后端运行或物理验证。

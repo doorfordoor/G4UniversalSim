@@ -1,0 +1,53 @@
+{
+  "out_only": true,
+  "tracked_sources_unchanged": true,
+  "density_acceptance_function_ast_unchanged": true,
+  "density_cases": [
+    {
+      "value": "bad",
+      "code": "numeric"
+    },
+    {
+      "value": "0 g/cm3",
+      "code": "positive"
+    },
+    {
+      "value": "-1 G/CM3",
+      "code": "positive"
+    },
+    {
+      "value": "-0x1p0 * g/cm3",
+      "code": "positive"
+    },
+    {
+      "value": "1e-999 g/cm3",
+      "code": "positive"
+    },
+    {
+      "value": "1e309 g/cm3",
+      "code": "invalid"
+    },
+    {
+      "value": "1e308 g/cm3",
+      "code": "invalid"
+    },
+    {
+      "value": "1 unknown",
+      "code": "invalid"
+    },
+    {
+      "value": "1 G/CM3",
+      "code": null
+    },
+    {
+      "value": "2.7 * g/cm3",
+      "code": null
+    },
+    {
+      "value": "0x1p0 * G/CM3",
+      "code": null
+    }
+  ],
+  "physics_cases": 3,
+  "source_diagnostic_cases": 3
+}

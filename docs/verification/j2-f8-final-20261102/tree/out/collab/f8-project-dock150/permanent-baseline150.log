@@ -1,0 +1,24 @@
+F8 window DPR: 1.5 available: PySide6.QtCore.QRect(0, 0, 533, 533)
+Traceback (most recent call last):
+G4USIM_ASSERTS=303
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\f8-project-dock150\probe-permanent-baseline.py", line 11, in <module>
+    runpy.run_path(str(ROOT/'tools/test_assert_probe.py'),run_name='__main__')
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\f8-project-dock150\smoke_f8_accessibility.proposed.py", line 608, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\f8-project-dock150\smoke_f8_accessibility.proposed.py", line 603, in main
+    test_retained_dock_focus(app, args.output)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\f8-project-dock150\smoke_f8_accessibility.proposed.py", line 464, in test_retained_dock_focus
+    assert not failures, failures
+           ^^^^^^^^^^^^
+AssertionError: [AssertionError()]

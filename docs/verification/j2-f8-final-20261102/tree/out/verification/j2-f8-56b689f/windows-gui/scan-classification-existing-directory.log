@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\j2-f8-56b689f\windows-gui\classify_scan.py", line 4, in <module>
+    ROOT=Path(__file__).resolve().parents[4];OUT=Path(__file__).resolve().parent/'scan-classification';OUT.mkdir();tempfile.tempdir=str(OUT);os.environ['QT_QPA_PLATFORM']='offscreen';sys.path[:0]=[str(ROOT/'gui'),str(ROOT/'gui/smoke_tests')]
+                                                                                                       ^^^^^^^^^^^
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\pathlib.py", line 1116, in mkdir
+    os.mkdir(self, mode)
+FileExistsError: [WinError 183] 当文件已存在时，无法创建该文件。: 'C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows-gui\\scan-classification'

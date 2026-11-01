@@ -1,0 +1,28 @@
+# 第四候选2ec5b14 CI独立收集（过程快照）
+
+现已全部终态，最终见review-final.md及collected-files-final.json：四workflow/8job attempt1 success，12strictpass/0fail、零skip/无缺项，8ZIP+8完整日志齐全。以下保留先前收集过程，不作为最新状态。
+
+完整HEAD2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8；自动push/attempt1；初始8job ID固定，拒绝later attempt替换。7冻结文件=2smoke+5docs原字节核对，workflows相对18c无差异，本机初始化显式longpaths tracked clean。
+
+source_fp9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a；tests_fpce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8。使用新HEAD固定checker；不复用前三轮报告。
+
+| Workflow/run | 当前事实 |
+|---|---|
+| Desktop41352200727 | 两job success，原件及独立语义收据齐 |
+| M041352200756 | 两平台success，四profile均独立strict pass |
+| Linux41352200765 | 11.4.3 success且四profile独立strict pass；11.3.2 integration运行中 |
+| Installation41352200731 | 两平台success且独立语义通过 |
+
+M0Ubuntu job124984635063原artifact13102097206 ZIP SHA256 7c0f19e40411e0621531f5830695dca46cf870260cf051f195c39418840d2043，完整job日志已保存。报告static4573/历史3966入口、GUI8615/历史6739均strict pass，HEAD/双指纹/tracked-source gate/全部原日志SHA/总和与matching历史逐例核对，无旧例缺失/入口下降。仅为已收的2份报告，不能据此宣告预期12profile均通过。report-gates-current.json与report-gates-m0-ubuntu.json保存当前及首份green快照。
+
+Desktop Linux13101732052、Windows13101268672两原ZIP大小/SHA对GitHubdigest与HEAD归属核验，两完整job日志齐；150GUI源身份、frozen自检、前后稳定及4命令正负例0/1/0/1、原日志SHA独立通过。desktop-linux-checked.json/desktop-win32-checked.json。范围仍为冻结启动/自然退出、Python ROOT读写，不替代完整GUI/模拟/物理验证。
+
+Linux安装job124984634891 success；原artifact13102765216 ZIP SHA596e8d1f518c17df942b2a258349d40934884668e91885a66ac81db4e8846345，10阶段/23保留对象/889源文件与workflow原Git身份、真实summary5/5、SDK consumer/fullapplication configure-build-run与host tools、runtime/sdk卸载独立通过；installation-linux-checked.json。源码checkout换行仅按候选属性处理，原证据日志不归一化。
+
+Windows M0 job124984634805也success；artifact13102896151 ZIP SHA093d0e98cb3b3a9584eb0b096ecec7949057bf2343b1b4b592709057abfa0df5与完整log已收核验。static4573/历史3959、GUI8615/6739独立strict pass；M0双平台全4报告无缺例或入口下降。
+
+Windows安装job124984634839也success；原artifact13102807661 ZIP SHA13f6835c5b17667b1e23a682f32f8fcedbc587a6114368cb170af67ab0e42d70，9阶段/25保留对象/889源/真实5events/SDK及卸载独立通过，installation-windows-checked.json。
+
+Linux114 job124984635016已success，篡改报告负对照步骤success。原artifact13103140474 ZIP SHA33c758dfc5933e4a80231a3323d723494c8fcc4af40db38644f980eb2bc8258a及完整job日志已保存核验；四profile独立matching历史strict全pass：static46/4573（历史3966）、GUI66/8615（6739）、backend63/72874（67674）、integration31/6770（6035）。零skip，无旧例缺失/入口下降，真实backend版本1143匹配。当前已收8份实际报告，8strictpass/0fail。
+
+当前7原ZIP/7完整job解码日志，尚无失败；之前六job文件清单collected-files-six-completed-jobs.json保留。只有Linux113 job124984635146 integration待终态；新root最终要求12报告/8job原件齐，不以旧轮/本机formal/native映射补齐。最终acceptance_scope只限本轮CI证据，不自行判阶段完成。没有dispatch/rerun/cancel/改tracked/本机build/native/profile，main双build58124和native最终map由main所有。

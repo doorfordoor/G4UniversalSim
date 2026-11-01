@@ -1,0 +1,38 @@
+# 第三候选统一集成计划：已审四项（OUT-only）
+
+冻结基准：`2901f4254303c3a9089c9025717908c0d77ff190`。本清单只引用已审原件，不复制或重写补丁；未apply，未运行Qt/native/backend或重跑测试。原519/492测试patch不属于待应用清单。K1 final及docs由main后续追加，本次不推断其目标/身份。
+
+权威机器清单：[manifest.json](manifest.json)；可验证收据：[verification-receipt.json](verification-receipt.json)；只读核验器：[verify_plan.py](verify_plan.py)。所有SHA均为落盘原始字节SHA256。
+
+| 项目/目标相对路径 | 原tracked SHA256 | patch SHA256 | 应用后候选SHA256 | 独审报告 |
+| --- | --- | --- | --- | --- |
+| history_explicit_labels<br>`gui/g4usim_gui/widgets/run_history_page.py` | `c84990c20b6af4aa727bc38d49b7e2106025ddf192673fdefcc31bb568369005` | `c6f9a716e3f6d58050593bb33f8ada02f4432585ff03b8927aeac69f72a794de` | `cc98442e975cec3f1b33d556a8dabdd7381ec22368e94bd6124178edacb5a463` | [review](../f8-history-label-independent/review.md) |
+| spacer_layout_type_boundary<br>`gui/g4usim_gui/core/accessibility.py` | `631df8861ca70524b3ab9d3941a4e9a263cbd5a017824b7647c64ded90025a37` | `697cbc1f7d615bfaf1e2a1448095aa2dd49e8077861497b0d2f0c7ae8a33c7d2` | `c9d87e23c88704fedc2c17a8a954aba9acf365c607ea47fe86b6c56854be2be7` | [review](../f8-layout-item-compat-independent/review.md) |
+| combined_f8_permanent_tests<br>`gui/smoke_tests/smoke_f8_accessibility.py` | `69b11a915a0864110171df75a1a2402ea3025f0a3a01b79d31af8ee26bd9f0e6` | `0f8f8fd2f73fb9cbd7636259cb059c2652fdc041637754d1027db63b7b07f548` | `943c92a0cdd0650511b7c8ce45378ebcbddc06b7f55b90835317eb44d3a59e95` | [review](../f8-history-spacer-combined-independent/review.md) |
+| geometry_path_identity_test<br>`gui/smoke_tests/smoke_j2_geometry.py` | `091cfffed46daa8473d8021f7ea9e4811e40a2c35b98129a4307da8f1efed489` | `2b3f9b12c58c6c2dcc97ac35d9448897fdf6592518639b7aa644296be7ad6a74` | `579c6a7a00a93a41570aa28357053d3009b1c2758cf005ccf6de78477fb5b671` | [review](../j2-geometry-ci-path-independent/review.md) |
+
+## 补丁原件（统一应用时仅使用这四份）
+
+1. [out/collab/f8-history-label/v2/run_history_page.patch](../f8-history-label/v2/run_history_page.patch)
+2. [out/collab/f8-layout-item-compat/accessibility.patch](../f8-layout-item-compat/accessibility.patch)
+3. [out/collab/f8-history-spacer-combined/smoke_f8_accessibility.patch](../f8-history-spacer-combined/smoke_f8_accessibility.patch)
+4. [out/collab/j2-geometry-ci-path/fix.patch](../j2-geometry-ci-path/fix.patch)
+
+四目标互不重叠。F8测试仅采用combined595补丁，它已经包含History与spacer两个新增函数/main调用；不要追加两份旧独立testpatch。
+
+## 本次核验
+
+- 当前HEAD与基准相同；四目标当前字节逐项等于该提交Git blob。
+- 严格解析unified diff，在内存核对每个context/hunk计数和目标头；投影结果逐字节等于对应已审候选，SHA一致。
+- 独审报告原字节SHA已钉住，并核对报告确实包含对应补丁及候选完整SHA。
+- 只读核验器不加载任何产品模块，不运行补丁目标，不写目标文件，不调用git apply。四项receipt状态均verified。
+
+统一应用前，可在仓库根目录运行（仅身份/补丁投影核验）：
+
+```powershell
+& D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe -B out/collab/j2-f8-third-integration-plan/verify_plan.py
+```
+
+此核验器针对应用前2901f42基线；应用后应按manifest的applied_candidate_sha256核对，不把应用前检查失败误当产品测试失败。任何补丁、目标或报告字节变化都需更新身份与审查依据，不接受静默漂移。
+
+manifest SHA256：`b2751e8dc6862b718ee7c01468502e59eccbba98bddb15be6af32e96dffcc0f5`。本收据仅证明四项身份/投影自洽，不新增正式验收或CI关闭结论。

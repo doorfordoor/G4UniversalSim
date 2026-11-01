@@ -1,0 +1,42 @@
+# 第四test-only候选：native纯文件身份映射准备
+
+状态：**prepared_pending_future_head**。尚无futureHEAD，未执行最终新HEAD映射，不能判第四候选passed。此工具是对原生证据的补充身份映射，不替代18c已完成CI审、正式矩阵或原始原生观察。
+
+仅Python标准库和只读Git：不import GUI、Qt或项目runner，不启动EXE/native/backend/build/profile，不写tracked或原证据。Git调用显式core.longpaths=true，无shell、配置写入或Git写命令。输出仅可新建在本OUT目录；已有文件拒绝覆盖。
+
+## 已完成的准备核对
+
+- 三档native100/125/150各identity.gui_files恰好149项，与18c Git树全部149个GUI Python路径集合相等；三档每项SHA一致并与18c原Git blob逐字节SHA相符。
+- identity/launch/ending_head均18c5858fd6e80a5cb6096beacebfef69c479ad49；原EXE SHA保持01e0fb795f93772ccfa818d625fee145d8da1ad3ad80894372a9a855f0af108a；原host、launcher PID、scale factor等原身份保留，launch/exit均为原正常exit0证据。
+- 12份原JSON（每档identity/launch/exit/visual-observations）和main范围文SHA固定在origin-anchor.json。visual metadata记录数100=30、125=14、150=32；仅读取元数据，不重新看图、不读取或复制截图。原图含外部QQ，仍local-only。
+- C++源码指纹从18c Git blobs按既有source manifest算法独立复算为9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a。没有运行二进制或调用项目指纹函数。
+- selftest.py的13组纯合成拒绝逻辑检查已执行exit0：包括运行产品变化/新增资源、伪装docs、额外smoke、未冻结/错HEAD/错scope、未批准docs、重复路径、link/executable/submodule模式、blob篡改、unused allowlist及歧义路径/重复JSON。它没有调用Git、创建真实futureHEAD或运行任何产品profile；不算候选映射通过。
+
+origin-anchor.json SHA256：`946d8262ec404178e9f08d18c1619192f06f9fdacb66d079ed6221f5e9a5e3ae`。每个原文件SHA均在该anchor，checker/anchor/template自身SHA见preparation.json。
+
+## main下一步冻结输入
+
+allowlist.template.json只是不可执行的模板：status=template_not_frozen、candidate_head=null、frozen_by=null、两smoke的after_sha256=null，**检查器必拒绝**。
+
+main给出新40位HEAD后，另存新的allowlist文件，明确status=frozen、frozen_by=main、candidate_head为该HEAD，并填实际新Git blob原字节SHA256。allowed_changes必须正好列出真实diff中的文件：
+
+1. 两个唯一smoke：gui/smoke_tests/smoke_f8_accessibility.py、gui/smoke_tests/smoke_j2_geometry.py。只允许修改现有普通100644文件，不允许增删、换名、改模式或额外smoke。
+2. main逐项明确冻结的docs：限docs/、gui/docs/或根AGENTS.md/STATUS.md/README.md、gui/AGENTS.md。无glob、无目录级放行；每文件旧/新SHA，新增/删除一侧用null。未变文件不要填allowed_changes。此为main明确docs类别清单，不能将schema/config/packaging/workflows或gui运行资源声明为docs。
+
+main需独立提供allowlist文件的SHA参数；frozen_by字段只是格式标识，不替代main对具体HEAD/清单的授权。只使用Git blob原字节，不归一换行。全部tracked差异（含增加/删除/模式/type）必须恰好等于允许清单；任一运行Python、JSON资源、writer、C++、构建或其他未列项变化均拒绝。
+
+## futureHEAD通知后才可执行
+
+```text
+python -B out/collab/j2-f8-native-fourth-mapping-prep/check_mapping.py check --anchor out/collab/j2-f8-native-fourth-mapping-prep/origin-anchor.json --anchor-sha256 946d8262ec404178e9f08d18c1619192f06f9fdacb66d079ed6221f5e9a5e3ae --candidate-head <MAIN_NEW_FULL_HEAD> --allowlist <MAIN_FROZEN_ALLOWLIST_JSON> --allowlist-sha256 <MAIN_FROZEN_ALLOWLIST_SHA256> --output out/collab/j2-f8-native-fourth-mapping-prep/results/<NEW_SHORT7>.json
+```
+
+该命令现在**未执行**。无“自动取branch最新HEAD”选项；不接受18c自身作为future；要求future为18c后代。输入anchor/allowlist SHA不同、原12JSON或scope被改变、149GUI与future不一致、全树diff超出精确冻结、C++指纹变化均拒绝。输入scope若由main更新，须经main批准重新准备新anchor，不能偷偷刷新旧SHA。
+
+成功时仅输出status=file_identity_mapping_verified_only，原生original_native_head仍18c、original_exe_sha256仍01e0…；candidate_head是实现文件映射目标。显式new_build_executed_natively=false、visuals_reobserved=false、native_claims_extended=false；新编译的矩阵验收separate_pending_not_inferred。不读取当前EXE文件来冒充旧EXE，旧二进制的独立保管/归档仍属main，工具不会覆盖它。
+
+## 不扩大的原生范围
+
+main范围文：out/collab/j2-f8-18c5858-main-acceptance-scope.md（SHA被anchor固定）。150是760x640自然九页/F6、retained Project/Tab、History三语言顺序、template Return/Back/Esc和深色Project；125仅1200x800导航/语言/Project/Tab，不是九页或向导完整流程；100是实际blank Save/Open→fields/init no_run→generate→Run100→生产Export→Results/History。
+
+保留F6窄viewport/oversized联合可见性边界、QQ原图local-only、host/launcher非完整父子树证明、125仅cached F5 flags、无新liveF5观察、导出不等于离线CLI replay、空白world不是物理基准及未验证多屏热插拔。工具只比文件身份，不重判这些UI观测，更不声称新HEAD曾重新构建后原生执行/重新观图。源指纹相同只允许C++实现映射，新编译仍由另矩阵验证。

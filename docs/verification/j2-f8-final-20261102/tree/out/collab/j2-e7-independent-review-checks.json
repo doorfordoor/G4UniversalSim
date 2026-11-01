@@ -1,0 +1,108 @@
+{
+  "kind": "independent_E7_readonly_review",
+  "baseline": "fc606739",
+  "source_fingerprint": "e44d005a039448d083008c0c6ba3f824b2f1b680b8d6b2b63f297137754d76f6",
+  "files_sha256": {
+    "include/Geometry/SolidRegistry.hh": "245107c43ce261f5801d88a6a125647a02615183759eeda97ef0a8ebb75e95b9",
+    "src/Geometry/SolidRegistry.cc": "31d2b348be3e1c27926ae35379862b3a41be0fad173bc4b51f0ca9da6b782188",
+    "include/Geometry/VolumeBuilder.hh": "97a2c8c56c5941d8d86f319b1766aa20037e9ae3a26b9fa50742ce21657cf677",
+    "src/Geometry/VolumeBuilder.cc": "acdbadfda0bb1e809db32171612fb6136934f494356d545f87cf99aac1582822",
+    "include/Core/BackendCapabilities.hh": "5ecaf821f0a680917c13ef629bcbe1f80fada081ea0e6633a231bde0f61c611a"
+  },
+  "checks": {
+    "all_real_constructor_and_later_lifecycle_bytes_unchanged": true,
+    "boolean_composite_creation_unchanged": true,
+    "boolean_transform_unchanged": true,
+    "world_logical_placement_create_solid_unchanged": true,
+    "15_dispatches_and_a5_cache_match_old_switch": true,
+    "legacy_capability_ids_runtime_parameters_unchanged": true,
+    "reviewed_capability_matches_current_cpp_fingerprint": true,
+    "cached_author_metadata_matches_observed_binary": true,
+    "shape_numeric_parser_unchanged": true,
+    "seven_legacy_tool_eight_a5_only_cache": true
+  },
+  "old_to_new_dispatch": {
+    "Box": {
+      "factory": "CreateBoxSolid",
+      "warm": false,
+      "polyhedra": null
+    },
+    "Tubs": {
+      "factory": "CreateTubsSolid",
+      "warm": false,
+      "polyhedra": null
+    },
+    "Sphere": {
+      "factory": "CreateSphereSolid",
+      "warm": false,
+      "polyhedra": null
+    },
+    "Orb": {
+      "factory": "CreateOrbSolid",
+      "warm": false,
+      "polyhedra": null
+    },
+    "Cone": {
+      "factory": "CreateConeSolid",
+      "warm": false,
+      "polyhedra": null
+    },
+    "Trd": {
+      "factory": "CreateTrdSolid",
+      "warm": false,
+      "polyhedra": null
+    },
+    "Trap": {
+      "factory": "CreateTrapSolid",
+      "warm": false,
+      "polyhedra": null
+    },
+    "Ellipsoid": {
+      "factory": "CreateEllipsoidSolid",
+      "warm": true,
+      "polyhedra": null
+    },
+    "EllipticalTube": {
+      "factory": "CreateEllipticalTubeSolid",
+      "warm": true,
+      "polyhedra": null
+    },
+    "Torus": {
+      "factory": "CreateTorusSolid",
+      "warm": true,
+      "polyhedra": null
+    },
+    "Para": {
+      "factory": "CreateParaSolid",
+      "warm": true,
+      "polyhedra": null
+    },
+    "Hype": {
+      "factory": "CreateHypeSolid",
+      "warm": true,
+      "polyhedra": null
+    },
+    "Polycone": {
+      "factory": "CreatePolyconeSolid",
+      "warm": true,
+      "polyhedra": "false"
+    },
+    "Polyhedra": {
+      "factory": "CreatePolyconeSolid",
+      "warm": true,
+      "polyhedra": "true"
+    },
+    "Tessellated": {
+      "factory": "CreateTessellatedSolid",
+      "warm": true,
+      "polyhedra": null
+    }
+  },
+  "author_tests_rerun": false,
+  "product_mutations": false,
+  "reviewed_author_logs": {
+    "out\\collab\\j2-e7-real113.log": "f39866d1ad6404325fa5b6fb93b2e350d1c2106e08e27ef135d231bae4ffc5a6",
+    "out\\collab\\j2-e7-real113-second.log": "dbb17d9dcb10230f4f3501b600b5e0811658e4189c19001d0772cdd01c866a16"
+  },
+  "review_report_sha256": "e17911d0999563288a6d29a7f34832aa677d716272f7c127c1e362e3b88b5d71"
+}

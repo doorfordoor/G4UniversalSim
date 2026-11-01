@@ -1,0 +1,92 @@
+{
+  "passed": true,
+  "scope": "independent out-only candidate loading, no QApplication/render/backend; not new runtime evidence",
+  "density_acceptance_function_and_constants_ast_identical": true,
+  "acceptance_comparisons": 256,
+  "density_categories": [
+    {
+      "value": "",
+      "code": "required"
+    },
+    {
+      "value": "garbage",
+      "code": "numeric"
+    },
+    {
+      "value": "nan g/cm3",
+      "code": "numeric"
+    },
+    {
+      "value": "-inf kg/m3",
+      "code": "numeric"
+    },
+    {
+      "value": ". kg/m3",
+      "code": "numeric"
+    },
+    {
+      "value": "-0 * MG/CM^3",
+      "code": "positive"
+    },
+    {
+      "value": "-0x1p-5 g/cm3",
+      "code": "positive"
+    },
+    {
+      "value": "1e-999 g/cm3",
+      "code": "positive"
+    },
+    {
+      "value": "1e287 g/cm3",
+      "code": "invalid"
+    },
+    {
+      "value": "1e309 mg/cm3",
+      "code": "invalid"
+    },
+    {
+      "value": "0x1p-1075 g/cm3",
+      "code": "positive"
+    },
+    {
+      "value": "1 ** g/cm3",
+      "code": "invalid"
+    },
+    {
+      "value": "1_0 g/cm3",
+      "code": "invalid"
+    },
+    {
+      "value": "1e g/cm3",
+      "code": "invalid"
+    },
+    {
+      "value": "1 g / cm3",
+      "code": "invalid"
+    },
+    {
+      "value": "1e283 kg/m3",
+      "code": null
+    },
+    {
+      "value": "0x1p-1074 mg/cm3",
+      "code": null
+    }
+  ],
+  "historical_actual_runtime_cases_reconciled": 11,
+  "targeted_permanent_material_checks": "density_checks and model_checks PASS (M01/M02)",
+  "unknown_mode_project_and_json_roundtrip": [
+    "unknown",
+    "",
+    "Manual",
+    "reference_typo",
+    "手动"
+  ],
+  "legacy_identity_reader_preserved": true,
+  "tampered_identity_rejected": true,
+  "machine_path_with_deceptive_display": "PASS three branches",
+  "geometry_en_zh_arbitrary_display_identity": "PASS",
+  "tracked_four_files_unchanged": true,
+  "draft_manifest_sha256": "71d7302a3d788b3ad5cb6800a320a917ebeb640267fccc7b1924cea16ecfca27",
+  "product_patch_sha256": "8cb495e2ebd08bfcd64b75f5ddda3bf14c578369e2668ad28b823bf76422995a"
+}

@@ -1,0 +1,34 @@
+[
+  {
+    "case": "k1_bundle",
+    "first_observed_cause": "test_k1_bundle.py:592 expects nonempty round_trip_blockers for supported parameterised copies_file source-copy fixture",
+    "assertions_executed": 523,
+    "log": "out/verification/j2-f8-56b689f/windows-static/20261102-011952-3779ed5f/k1_bundle.log",
+    "log_sha256": "5daf330e5015b487f5c4206d45bf6286ce63113a51f4f7ec26b5c8bcfea42b99",
+    "rerun": false
+  },
+  {
+    "case": "f4_producers",
+    "first_observed_cause": "test_f4_producers.py:104 expects physics.mode.unsupported; actual code tuple is physics.structured.invalid",
+    "assertions_executed": 287,
+    "log": "out/verification/j2-f8-56b689f/windows-static/20261102-011952-3779ed5f/f4_producers.log",
+    "log_sha256": "c6e9cbd04806f52b64bc44f138264180f4f69896f75fdbd2b159eb0d228dcb5b",
+    "rerun": false
+  },
+  {
+    "case": "f4_document_diagnostics",
+    "first_observed_cause": "test_f4_document_diagnostics.py:100 selects materials.density.numeric and expects rows [1,2]; current density validator emits materials.density.invalid",
+    "assertions_executed": 27,
+    "log": "out/verification/j2-f8-56b689f/windows-static/20261102-011952-3779ed5f/f4_document_diagnostics.log",
+    "log_sha256": "f602706b934ab08f4a003b19878036d5b869c9e339006f3baf98e7f5fe96b93e",
+    "rerun": false
+  },
+  {
+    "case": "config_migration",
+    "first_observed_cause": "test_config_migration.py:146 requires round_trip_blockers for tessellated file after migration; parser reports no blockers",
+    "assertions_executed": 138,
+    "log": "out/verification/j2-f8-56b689f/windows-static/20261102-011952-3779ed5f/config_migration.log",
+    "log_sha256": "e13c12a50241d1e4aa5fabf84b6ef020a4f63acbbfcb81aa5e4f02715bbfb98d",
+    "rerun": false
+  }
+]

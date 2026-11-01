@@ -1,0 +1,29 @@
+# 第四候选2ec native125窄范围纯文件独审
+
+结论：限定链路文件一致，通过；不是第二次原生操作或独立观图验收。仅标准库JSON/文本/hash，未运行产品代码、Qt/native/backend/CI/profile/CLI，未修改tracked或native原件。main主观视觉范围另以out/collab/j2-f8-2ec5b14-main-native-scope.md为准（本审已读并绑定SHA60c35ef3ce7e2c28bfc608fb985cf9a5fdd25e9fea59cb824972a8de2c230f50）。
+
+## 身份与终态
+
+launch/identity起止均HEAD2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8；113EXE fe5d23d309106d9fca7ad179f6c0cb39fa8b98c6ef35286a0b21866b90d89f89，当前字节匹配，capabilities同HEAD/clean。149GUI源码逐SHA匹配native identity，host-v2原SHA匹配；Dvenv/windows QPA，27条被动记录DPR均1.25，未混用scale_env（本轮None）。结束git status空。
+
+原6497终态、launch.process_exit_code、exit.json均为0，exit.visible=false，terminal-sync-r2记录remaining0且与原launch真实字段一致。首版terminal-sync launch_exit_code=null来自字段名误读，原件保留；本审不把null当0，也不据此误判退出失败。短暂残留list_windows记录不是仍存活的进程证据，终态采用实际session退出+launch/exit+CIM记录组合。两host日志均0字节，未解释为空运行。
+
+## 实际链路文件核验
+
+1. I1/I2：003发现文本含11.3.2，observations捕获I1→I2→I1→关闭；I2仅首屏打开/关闭，未附安装清单/Start禁用/同意未勾选的视觉细节采用main范围，不能改写成安装、下载或环境应用成功。发现说明不等于事件模拟或数据集字节验证。
+2. 原包：18c native100/blank-native-bundle实际8文件逐项与此前native100纯文件独审已保存SHA比较，完全不变；manifest7成员size/SHA逐项吻合，replay_verified仍false。仅核原包身份，不重复native100事件链路，不作新CLI replay/搬移运行claim。
+3. Import：新project使用当前113路径（实际fe5d...字节）和独立native125/import-runs，workspace保留原18c包根，generated mode、材料/几何/config/macro源路径空、内存材料0行/几何1个world、gamma1MeV，计划100事件/1线程。010与012文本明确“待验证”。保存imported-18c-bundle.json SHA bf400ffbead0d5ef5a4a6a7f8c8e8459675fd24cde77e14095e55535f93bf55c。
+4. 历史与当前验证：import-runs恰5条record。其中4条原包history（validate字段/初始化、generate、run）全部status=stale、historical_requires_local_revalidation，backend仍原18c/01e0...身份；历史run100成功没有被冒充本轮新113结果。唯一当前passed record是import_history，imported_count=4，level=history。当前validate/generate/run新记录0，目录无新run_summary/run_metadata。Import成功不等于本地验证通过。
+5. 模板Finish与另存：独立template-finished.json保存single_target、proton100MeV、world G4_Galactic+Target G4_WATER、计划1000事件/2线程；仍用新113和独立import-runs，两个项目文件分开且原imported文件未被覆盖。该文件SHA a4f50c840574d84973c1ca16b0f5bbfeef2dc1cf8a9c8f9e1c5df815031d3bda。计划事件数不是完成事件数。
+6. 生成后运行勾选默认/取消：016/017文本均能定位实际checkbox，但未暴露checked state，故本纯文件审不从同文本推断勾选变化；该操作与目视复核依main原scope。无本轮新K1 generate/run与全部被观察runner NotRunning支持“未点击事件Run”的窄范围，不保证没有其他后端进程；Finish后自动几何预览可真实调用后端构造，不能声称完全无后端启动。
+7. QQ拒绝的Finish坐标没有输入，不计成功输入或产品失败。随后activate+Return、成功应用模板及SaveAs由main操作/视觉记录与上述持久化JSON共同支持，本审不重新证明拒绝命中点或像素。重入Next到几何/Back回场景/Esc、再AltF4的按键/观图范围采用main记录；021–024文本/对话框与终态文件一致，不扩成其他页或九页全验收。
+
+## Passive / 缓存 / 图像边界
+
+27条host记录是状态变化时的分段采样，不是连续录制，也没有新live capture_workspace。保存模板后至取消/退出的project_sha相同，cached undo=true/redo=false/modified=false保持；这些只是dataclasses存量model摘要与缓存edit_history，不能据此证明所有未提交draft或F5完整snapshot不变。
+
+visual focused_element（含系统文件对话框旧SearchEditBox/Run页旧spinbox）可为UIA缓存，不代替host QApplication.focusWidget；本审不把二者矛盾直接判产品焦点错误。Qt host观察只证明相应采样时刻实际焦点，不能补造未采样中间步骤。
+
+24条visual记录、41张jpg逐项size/SHA核对且覆盖全部原jpg；每张都标记local-only/可能含其他应用像素。未打开、复制、上传原图，没有新增pixelpass、无遮挡判断或将窗口矩形包含等同可视无遮挡。004/007等多图含QQ范围仍排除。
+
+receipt.json保存输入SHA、两保存文件身份、5记录语义、149GUI与终态核对。native根84原文件核验前后SHA一致；原包8文件一致。只在本out目录写独审文件，初次receipt-before-terminal-r2.json保留首版输入核对，最终receipt使用r2更正与实际launch字段。没有运行后台任务，等待main汇总，不在此接integration或扩大原生范围。

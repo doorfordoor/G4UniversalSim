@@ -1,0 +1,51 @@
+# 第三候选集成计划 v2：6 targets / 5 patches
+
+基准：`2901f4254303c3a9089c9025717908c0d77ff190`。v1目录既有文件全部原样保留；v2只增加本子目录。仅进行标准库字节核验与严格内存diff投影，未调用apply、Qt/native、backend或测试。docs仍pending；K1 final-v1已纳入。
+
+机器清单：[manifest.json](manifest.json)；收据：[verification-receipt.json](verification-receipt.json)；只读核验器：[verify_plan.py](verify_plan.py)。
+
+## 应用单位：以下5份patch各一次
+
+**不要按6条target逐条apply。K1 fix.patch是两文件补丁，整体只应用一次。** manifest的`patches`/`application_patch_order`是应用单位，`targets`只是每文件身份映射。
+
+| 顺序 | Patch id | 原件路径 | SHA256 | 目标数 |
+| --- | --- | --- | --- | --- |
+| 1 | history_explicit_labels | `out/collab/f8-history-label/v2/run_history_page.patch` | `c6f9a716e3f6d58050593bb33f8ada02f4432585ff03b8927aeac69f72a794de` | 1 |
+| 2 | spacer_layout_type_boundary | `out/collab/f8-layout-item-compat/accessibility.patch` | `697cbc1f7d615bfaf1e2a1448095aa2dd49e8077861497b0d2f0c7ae8a33c7d2` | 1 |
+| 3 | combined_f8_permanent_tests | `out/collab/f8-history-spacer-combined/smoke_f8_accessibility.patch` | `0f8f8fd2f73fb9cbd7636259cb059c2652fdc041637754d1027db63b7b07f548` | 1 |
+| 4 | geometry_path_identity_test | `out/collab/j2-geometry-ci-path/fix.patch` | `2b3f9b12c58c6c2dcc97ac35d9448897fdf6592518639b7aa644296be7ad6a74` | 1 |
+| 5 | k1_policy_final_v1 | `out/collab/j2-resource-policy-path-review/final-v1/fix.patch` | `f705dc96bcfb4706e03d045a00e281c53ce0e8fe6eb9912c27579188e8a446de` | 2 |
+
+## 6个目标的原始/候选身份
+
+| Target | 原tracked SHA256 | 投影后候选SHA256 | patch id |
+| --- | --- | --- | --- |
+| `gui/g4usim_gui/widgets/run_history_page.py` | `c84990c20b6af4aa727bc38d49b7e2106025ddf192673fdefcc31bb568369005` | `cc98442e975cec3f1b33d556a8dabdd7381ec22368e94bd6124178edacb5a463` | history_explicit_labels |
+| `gui/g4usim_gui/core/accessibility.py` | `631df8861ca70524b3ab9d3941a4e9a263cbd5a017824b7647c64ded90025a37` | `c9d87e23c88704fedc2c17a8a954aba9acf365c607ea47fe86b6c56854be2be7` | spacer_layout_type_boundary |
+| `gui/smoke_tests/smoke_f8_accessibility.py` | `69b11a915a0864110171df75a1a2402ea3025f0a3a01b79d31af8ee26bd9f0e6` | `943c92a0cdd0650511b7c8ce45378ebcbddc06b7f55b90835317eb44d3a59e95` | combined_f8_permanent_tests |
+| `gui/smoke_tests/smoke_j2_geometry.py` | `091cfffed46daa8473d8021f7ea9e4811e40a2c35b98129a4307da8f1efed489` | `579c6a7a00a93a41570aa28357053d3009b1c2758cf005ccf6de78477fb5b671` | geometry_path_identity_test |
+| `gui/g4usim_gui/core/experiment_bundle.py` | `fd94da357bfc97ffdf53ac9bd0c5c55d480087f6df226b4266449aad12ff068e` | `4990d9f4439711f96aa5a5475f6f39ea3588b8c1e3fabf7e3e2eca0318a45610` | k1_policy_final_v1 |
+| `scripts/test_k1_bundle.py` | `e825d4278bd9b59d7ff871c1f2abd39d564b0fc5591de460f784a6d28cb2fa4f` | `80726fb8eeda65700169416b8a9711967ed15283ed8bbc22bbf20b42d8c216f3` | k1_policy_final_v1 |
+
+## 独审依据
+
+- `out/collab/f8-history-label-independent/review.md`
+- `out/collab/f8-layout-item-compat-independent/review.md`
+- `out/collab/f8-history-spacer-combined-independent/review.md`
+- `out/collab/j2-geometry-ci-path-independent/review.md`
+- `out/collab/j2-policy-final-v1-independent/review.md`
+- `out/collab/j2-policy-final-v1-independent/execution.json`
+
+每目标的review SHA已记录；K1两目标另固定execution.json SHA并核对status=pass、patch SHA、逐文件original/candidate SHA一致。K1仅使用final-v1，不引用中间版。F8仍只包含combined595测试patch，未纳入原519/492 testpatch。
+
+只读复核（应用前，标准库核验，不运行Qt/产品/测试）：
+
+```powershell
+& D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe -B out/collab/j2-f8-third-integration-plan/v2/verify_plan.py
+```
+
+收据证明：当前六目标字节均等于基准Git blob；每patch header/目标集合/hunk context和计数严格核对；K1整patch拆成两个内存section分别投影，无遗漏额外文件；投影字节与完整已审候选一致；5个应用单位覆盖6目标且无重复。v1全部原件摘要前后一致。
+
+本计划是应用前身份/投影证据，不新增测试或正式验收结论。应用后由main按applied_candidate_sha256核对，并另外追加docs计划。
+
+manifest SHA256：`791a308eecae9d6dce5ba2461b702493a00fa38a2b9a5cd37a6aca1487e55f8e`。

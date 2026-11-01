@@ -1,0 +1,41 @@
+{
+  "duplicate_order_and_dedup": true,
+  "moved_after_originals_deleted": true,
+  "original_snapshot_unchanged": true,
+  "empty_parts": [
+    {
+      "value": "a.csv,",
+      "source_rejected": true,
+      "export_rejected": "PackageValidationError"
+    },
+    {
+      "value": ",a.csv",
+      "source_rejected": true,
+      "export_rejected": "PackageValidationError"
+    },
+    {
+      "value": "a.csv,,a.csv",
+      "source_rejected": true,
+      "export_rejected": "PackageValidationError"
+    }
+  ],
+  "missing_second": {
+    "rejected": "ValueError: Complete editable export requires every retained resource, including inactive drafts: phase_space_file = a.csv,missing.csv",
+    "no_publish_or_staging": true,
+    "snapshot_unchanged": true
+  },
+  "cli": [
+    {
+      "command": "generate",
+      "exit_code": 0,
+      "status": "passed"
+    },
+    {
+      "command": "validate",
+      "exit_code": 0,
+      "status": "passed"
+    }
+  ],
+  "source_unchanged": true,
+  "scope": "resource portability/fields/generation only; no Geant4 physics run"
+}

@@ -1,0 +1,35 @@
+# Shared main资源2P2冻结修复定点复核（2026-11-02）
+
+结论：P2-1可关闭；P2-2原STL反例的修复通过，但同一资源核验入口发现合法parameterized别名漏收copies_file的新P2，建议补齐后再整体关闭。本轮只读产品；没有全局构建/后端/native操作，没有物理有效性声明。
+
+## 冻结与重跑
+
+三文件当前bytes/SHA与 `out/collab/j2-resource-p2-fix/files.json` 全部一致：
+- run_editor_resources.py：6658 bytes，51a5e11c53ff9072b5a07b174d24920cb3931c85338b0407d0316a6ea0609c46
+- project_snapshot.py：20205 bytes，ba155ee3acedc5c13b3c7d75d31a7924305b62fc989e2045c668d6ca2fa873b6
+- test_j2_resource_bundle.py：16820 bytes，842b0c516ba20515c37b6fb5f80c216ef1f0a1e77051cc5cb712c7d76a077287
+
+独立重跑 `python -B tools/test_assert_probe.py scripts/test_j2_resource_bundle.py`，退出0，G4USIM_ASSERTS=82。日志 `resource-p2-recheck-permanent.log`。定点反例前后3文件SHA一致，与冻结收据一致。
+
+## 原问题验证
+
+P2-1：自有span scanner不再用迁移strict规则拒绝普通legacy重复key/section；按规范section/key物理最后值，只复制effective资源，shadowed missing路径不读；保留raw行、CRLF、源字节不变。v2调用原_scan及重复version拒绝在复制前。脚本含实际source_copy包正例，不只helper单测。此原问题可关闭。
+
+P2-2原STL问题：shape_properties/legacy preview提取file，dual同值一receipt、冲突拒绝，missing/outside-root仍走未改_read_inside；实际包load记录单个STL/table SHA，缺失资源对照拒绝。原STL漏读已修，不否认这些通过证据。
+
+## 新P2：parameterized合法别名仍跳过copy-table核验
+
+位置：`gui/g4usim_gui/core/project_snapshot.py` 的_geometry_resources，placement只比较字符串`parameterised`。实际GeometryUtils::ParsePlacementType接受`parameterised`和`parameterized`；GUI _validate_placement也接受二者。检查应按同一支持集合判断，不能只靠正例拼写。
+
+实际包反例（未启动后端）：
+1. 无源项目world下唯一daughter box，`placement=parameterized`，合法copies_file。create_run_package成功并真实复制CSV。
+2. 完整包load_project_snapshot成功，但inputs只有materials/geometry/main/macro四项，已经没有copies_file收据。
+3. 包内CSV临时改名后再load：仍accepted=true，table_exists=false，没有缺失拒绝。
+4. 保持其他文件/路径和缺失状态不变，仅把CURRENT geometry.ini的placement拼写换成parameterised：正确抛Snapshot package resource is missing: geometry.AliasCopies.copies_file。
+5. fixture表文件和geometry.ini在finally恢复，产品未修改。
+
+建议：将backend两种placement别名统一归一到Parameterised，或检查两个现有拼写；永久脚本增加同包两种别名的receipt SHA及missing/outside-root控制。不能通过禁止后端已支持别名来关闭。
+
+证据：`resource-p2-alias-1793552138787128200/receipt.json`，包含快照路径、3个对照、冻结SHA和前后相等证明。其runs目录保留实际生成包。该case说明资源闭包/输入身份遗漏，不冒充模拟运行或STL物理验证。
+
+本次没有重做main C++/native、全矩阵或其他owner审查。没有运行中的命令。

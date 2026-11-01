@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_geometry_editor.py", line 349, in <module>
+    test_hierarchical_visual_and_cut_roundtrip()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_geometry_editor.py", line 161, in test_hierarchical_visual_and_cut_roundtrip
+    assert any("trd dx1 must be a positive length" in item for item in complex_document.errors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

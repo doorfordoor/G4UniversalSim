@@ -1,0 +1,61 @@
+{
+  "method": "In-memory product-module substitution plus draft test execution; __file__ anchored to original repository for test ROOT. All temporary fixture writes constrained to out. No tracked source edits or formal profile rerun.",
+  "product_manifest_sha256": "71d7302a3d788b3ad5cb6800a320a917ebeb640267fccc7b1924cea16ecfca27",
+  "product_patch_sha256": "8cb495e2ebd08bfcd64b75f5ddda3bf14c578369e2668ad28b823bf76422995a",
+  "full_scripts": [
+    {
+      "script": "scripts/test_f4_producers.py",
+      "draft_sha256": "b7a860995370f36e77552da2c990fd8a8deb6e3d2714d2846b64c7fd5e1ebcfa",
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-static-fixture-patch-draft\\test_f4_producers-combination-r1.log",
+      "status": "pass",
+      "log_sha256": "4ba1b54bb01206bdd1a349502e8c82745f0d0775da3f4855ade5a57406b2dabb"
+    },
+    {
+      "script": "scripts/test_f4_document_diagnostics.py",
+      "draft_sha256": "46e49c4292890aaf95c1a026c58b029a19584c72c39d14e3d9d697a811963330",
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-static-fixture-patch-draft\\test_f4_document_diagnostics-combination-r1.log",
+      "status": "fail",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-static-fixture-patch-draft\\run_f4_combination.py\", line 25, in <module>\n    ns['main']();result['status']='pass';log.write_text('Draft main completed without exception. Not a formal profile result.\\n',encoding='utf-8')\n    ^^^^^^^^^^^^\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-static-fixture-patch-draft\\proposed\\scripts\\test_f4_document_diagnostics.py\", line 412, in main\n    check_material_rows()\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-static-fixture-patch-draft\\proposed\\scripts\\test_f4_document_diagnostics.py\", line 131, in check_material_rows\n    assert targets[1].location is not None\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "log_sha256": "a141d61c38934e78b5eef7a6a464012a4a2b764c524260485e7abbad4c1877ed"
+    }
+  ],
+  "post_failure_independent_groups": [
+    {
+      "script": "scripts/test_f4_document_diagnostics.py",
+      "group": "check_density_machine_categories",
+      "status": "pass"
+    },
+    {
+      "script": "scripts/test_f4_document_diagnostics.py",
+      "group": "check_legacy_code_json_unchanged",
+      "status": "pass"
+    },
+    {
+      "script": "scripts/test_f4_document_diagnostics.py",
+      "group": "check_nist_alias_source",
+      "status": "pass"
+    },
+    {
+      "script": "scripts/test_f4_document_diagnostics.py",
+      "group": "check_geometry_sources",
+      "status": "pass"
+    },
+    {
+      "script": "scripts/test_f4_document_diagnostics.py",
+      "group": "check_geometry_targets",
+      "status": "pass"
+    },
+    {
+      "script": "scripts/test_f4_document_diagnostics.py",
+      "group": "check_cut_region_identities",
+      "status": "pass"
+    },
+    {
+      "script": "scripts/test_f4_document_diagnostics.py",
+      "group": "check_geometry_read_evidence",
+      "status": "pass"
+    }
+  ],
+  "tracked_sources_unchanged": true,
+  "status": "fail"
+}

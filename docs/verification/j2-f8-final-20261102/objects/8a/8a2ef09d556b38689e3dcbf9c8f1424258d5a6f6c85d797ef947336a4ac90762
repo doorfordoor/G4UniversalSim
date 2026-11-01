@@ -1,0 +1,9 @@
+{
+  "candidate_head": "2901f4254303c3a9089c9025717908c0d77ff190",
+  "command": "git -c core.longpaths=true status --porcelain --untracked-files=no",
+  "exit_code": 0,
+  "stdout": "",
+  "tracked_state": "clean",
+  "prior_observation_preserved": "local-worktree-observation.json",
+  "explanation": "The earlier 73 historical-path D entries were the default Windows Git long-path-disabled view, not actual candidate tracked changes. Main's explicit long-path-enabled view is independently confirmed clean. Subsequent local Git calls use explicit -c core.longpaths=true or equivalent child environment. No global/local configuration changed."
+}

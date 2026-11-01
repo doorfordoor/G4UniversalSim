@@ -1,0 +1,12 @@
+# Windows GUI正式整轮 checkpoint
+
+目标18c5858fd6e80a5cb6096beacebfef69c479ad49，113EXE01e0fb795f93772ccfa818d625fee145d8da1ad3ad80894372a9a855f0af108a，source9e40e889...；新build-1132 receipt [0,0]与EXE字节已核对。冻结launcher SHA4f812f44506e2ea14f03ab49b223ccc0c01b8105c491feaa6dc36095e0c2e1dc。
+
+已指定Dvenv启动原launcher，series113/profilegui/report-root当前目录；精确原命令、同env childlongpaths/status、前置来源/依赖/baseline身份见launch.json。严格require-tracked-sources/fail-on-skip/同历史baseline，不用旧probe替代。用户授予nativeVTK独占slot至完整终态；main static与两backend可并行，main结束后安排native再integration。
+
+正在运行原command session12419；仅poll此session，runner.log持续落盘，不重复启动。最初gui_i2_install59PASS。不得修改tracked产品/测试/runner。完成后核对launch终态、strict gate、report身份及66逐项assert，另查实际VTK35且无内部SKIP；立即通知main释放slot，写summary/delivery-receipt。
+
+## 完整终态
+- session12419 exit0；66/0/0、8574断言，strict historical59/6760 gate exit0，identity_errors=[]，report git_dirty=false/status空。
+- 实际VTK35/35且无内部SKIP，全部进程已结束。native独占slot已通知main释放，main可安排新三档native；本任务不启动integration。
+- report SHA4c91c9f2971ae618821a00d3e22ccc196bbf8ebf9449bd3f7bda2da69ba5ad22；summary.md与delivery-receipt.json完成。无tracked改动/报告拼接，无session待poll。

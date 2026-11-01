@@ -1,0 +1,15 @@
+# NIST v2单行delta独审（实际Qt）
+
+结论：通过，本范围未发现P1/P2。v2 material候选SHA1768ee44ce216fb0d742c650ddefc23b827f9cbf7d79b33e400a66b0cec606cb。与已审v1候选逐行diff确认仅editable_target一行变化；不重跑密度256组。四tracked源码仍匹配v2 manifest原始SHA，未apply。
+
+独立review.py在Dvenv/offscreen加载v2，使用真实ConfigBuilderPage与生产validate_current→set_validation_report→navigate_diagnostic。无源blank项目提供内存geometry及dirty materials，不伪造目标Diagnostic。英文/中文各4例：
+- name=Unknown / nist_name=''：materials.nist.unknown定位materials/rows/0/name，点击导航真实聚焦material_name，diagnosticFocus=true、文本Unknown；无unsupported标记。
+- name=Unknown / nist_name='  '：同上，空白显式目标按无值处理。
+- name=Alias / nist_name=Unknown：location=None，unsupported_editor，保留源文件及快照，导航source_shown；没有错误地跳到Alias名称控件。
+- name=Unknown / nist_name=Unknown（非G4显式相同目标）：继续unsupported/source_shown，不扩大为任意name可改目标语义。
+
+8例导航前后材料asdict与diagnostic snapshot完全相同，settingsChanged信号0；diagnostic JSON/identity回读通过。receipt.json记录每例真实状态，review.log进程exit0。未运行backend或native UI，未修改v1证据。
+
+out测试器的前置错误保留：initial-no-record.log / initial-fixture-missing-paths.log最初fixture缺必需路径导致validator在材料聚合前返回；改用生产blank内存项目，不改产品。initial-source-attribute.log为测试器误读SourceLocation.file，已按实际filename字段修正。最终断言保持实际生产验证/导航链，无手动伪造location。
+
+所有本任务out源码运行已经结束，无待跑Qt进程/session；main可统一apply/新candidate。F8永久v3的stale真实排队增量待Harvey交付后仅定点复核。

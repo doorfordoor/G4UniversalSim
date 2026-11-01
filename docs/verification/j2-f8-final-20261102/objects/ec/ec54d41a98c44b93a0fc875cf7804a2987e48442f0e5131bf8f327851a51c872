@@ -1,0 +1,76 @@
+# J2 空白/模板无来源文件链路独立审查
+
+日期：2026-11-02（本机跨日）。工作区 `C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim`；branch `roadmap/J2-F8-editing`；对照基线 `fc606739b9bb5b381b87d5ffd2870844c10afee2` 的工作区变更。
+
+结论：发现 **1 项可复现 P2**，未证实 P1。旧输入隔离、取消、源丢失拒绝、模板Undo/恢复、无来源包搬移及GUI重导入、CLI生成/校验均有独立证据。当前目录随后发生并行改动并出现真实 `NameError`；**不能宣布最新产品快照通过或本段正式验收关闭**。本审查未修改产品、测试、STATUS或ROADMAP。
+
+## P2：无来源几何文档点击“恢复来源”会清空全部体积
+
+位置：`gui/g4usim_gui/widgets/config/geometry.py:304–318`，按钮在295行绑定 `reload_geometry`。本次J2允许材料/几何完全驻留内存后，这条既有reload分支成为正常用户可达路径。
+
+步骤：
+
+1. 新建无来源文件的几何文档，保持 `geometry_config == ''`；world之外新增体积KEEP。
+2. 点击几何页“恢复来源”（`revert_geometry_button`），没有任何外部几何源可供恢复。
+3. 实际：`parse_geometry`未运行，`geometry_summary=None`，随后用空 `GeometryDocument()` 替换现有文档；体积从 `[world, KEEP]` 变成 `[]`，revision 1→2，校验出现 `hierarchical geometry requires at least one enabled volume`。
+4. 预期：无源时禁用该动作，或说明“没有来源文件，已保留当前编辑”，保留完整模型/非法草稿，不将“恢复来源”解释为“清空几何”。
+
+影响：用户在正常空白/模板编辑流程中意外丢失当前几何视图，并把原可校验配置变成非法配置。Undo可以完整恢复原指纹，故定P2，不声称不可恢复丢失或P1。材料侧的无源保留机制不能替代几何侧相同防护。
+
+独立复现：`python out/collab/j2-blank-review/reload_cases.py`。证据：[reload-results.json](reload-results.json)、[reload.log](reload.log)。该运行记录相关源文件运行前后SHA相同；结束后geometry.py仍相同，materials.py已被其他任务继续修改。无需把此动作隐藏或丢弃Undo历史来修复；建议在空路径分支进入任何清空操作前返回，并对无源/已导入来源/来源被删三种情况分别回归。
+
+## 实际执行与证据
+
+环境：Windows、CPython3.11、PySide6 6.11.1、`QT_QPA_PLATFORM=offscreen`。测试使用独立QSettings/history/recovery目录；fixture文件、生成包和日志均位于本审查目录。所有窗口通过既有close helper排空工作流后关闭；没有实际图像观察，不记作原生实窗验收。
+
+| 独立用例 | 实际结果 | 证据 |
+| --- | --- | --- |
+| 五模板替换带外部材料/几何来源的项目 | 新文档路径/原文清空，5模板均可生成；旧输入原始字节不变 | results.json / old-input-isolation |
+| dirty外部几何源删除；再清空材料/几何路径控件 | 分别以missing/required诊断拒绝，未洗成独立内存文档 | results.json / source-disappeared-and-cleared |
+| 空白新建前已有非法seed草稿，选择Cancel | 草稿、快照指纹、project_file、revision保持 | results.json / cancel-invalid-draft |
+| 新建投影中途受控失败 | 返回False；旧草稿/路径/revision回滚；另见下方标志位观察 | results.json / new-projection-failure |
+| 新建候选检查受控拒绝 | 未询问保存且无状态变化，但ValueError逸出；见下方硬化建议 | results.json / new-candidate-rejection |
+| 模板覆盖非法草稿→Undo/Redo→codec恢复→恢复投影 | 原非法seed可撤销回读；模板可恢复，无旧来源summary | results.json / wizard-undo-recovery |
+| 无源包导出→搬移→异cwd加载/收集→实际异步GUI重新导入 | 无旧源路径；detector与world保留，再生成/校验通过 | results.json / portable-async-reimport |
+| 非法seed草稿保存/底层导出 | 普通保存保留非法草稿；底层导出发布包，不等于授予执行资格 | results.json / invalid-draft-export |
+| 搬移后合法包replay.py generate / validate | 两条统一CLI均退出0、passed，无后端启动 | replay-results.json、valid-*.stdout.json |
+| 非法seed包replay.py generate / validate | 两条均退出1、failed，`experiment.raw_seed.invalid`、`experiment.raw_draft.unaccepted` | replay-results.json、invalid-*.stdout.json |
+| 无来源几何“恢复来源”→Undo | 清空，Undo恢复原指纹；对应上方P2 | reload-results.json |
+| 空白之后重新导入真实几何源 | source_path与捕获来源指向新文件，raw字节匹配，REIMPORTED体积可校验 | reload-results.json / reimport_after_blank |
+
+主脚本：[review_cases.py](review_cases.py)，日志[run.log](run.log)，结构化[results.json](results.json)。主脚本8组观察全部完成，进程退出0；这表示反例执行完成，包含发现不符预期行为，不表示产品全通过。
+
+CLI脚本：[replay_cases.py](replay_cases.py)，摘要[replay-results.json](replay-results.json)。这里只测试生成/字段校验，选用Python可执行文件作为存在性fixture，没有将其称为Geant4或初始化/执行/物理通过。原始stdout保留完整诊断，不以截断终端摘要代替。
+
+首轮主代理 `j2-blank-third.log` / `j2-wizard-regression.log` 只读作背景，没有作为本独审通过证据。
+
+## 非缺陷边界与未升级观察
+
+1. **无来源文档的dirty标志**：这里表示需要writer生成独立输入，不能等同F5未保存标志；保存项目不应把它误清为从不存在源文件复制。源码已有package_writer的空路径材料fallback，本次独立GUI收集和CLI生成已覆盖实际调用。
+2. **非法草稿可导出不等于可重放执行**：原始快照保留非法seed，CLI generate/validate确实拒绝，尚未发现导出洗白草稿。在缺少明确“所有导出一律先拒绝草稿”的接口契约时，不把底层export_bundle发布草稿包单独列P1/P2。
+3. **新建与模板的Undo语义不同**：新建新文档重置原文档历史；模板应用是当前项目中的一条事务。后者Undo恢复旧草稿已验证；不要求跨新建Undo复活旧项目。
+4. **源文件消失**：dirty编辑不代表可忽略捕获来源。已导入文档仍需原来源核验；合法的新内存文档应独立运行。两条路径已分别检验。
+5. **失败后discard标志泄漏**：受控投影失败后旧数据回滚，但 `_history_discard_on_close` 从False变True。当前关闭仍会再次进入未保存保护，未证明这会静默丢失用户数据，因此只记状态清理建议，不升级P1。应在失败路径恢复原标志，避免依赖后续保护偶然兜底。
+6. **候选检查异常未捕获**：new_blank_project第39行在try之外，注入ValueError后直接逸出而非提示并返回False。默认blank候选的固定值目前可投影，尚无自然用户输入触发的复现；记异常处理硬化项，不与实际P2清空行为混为一谈。
+7. **几何base修正**：无几何来源时使用cwd，避免把空路径解析为cwd后再取parent。合法无源包搬移/生成已验证；高级STL/相对依赖全覆盖不在本次通过范围，不能用普通box正例替代该链路。
+
+## 并行变更与当前失败，不能套用旧通过
+
+主脚本开始/结束对9个相关产品文件记录SHA，运行内一致；reload专项记录5个相关文件SHA，运行内一致。不是全仓库冻结，也不承诺未记录依赖没有并行变动。之后复核发现 `window/content.py`、`core/experiment_bundle.py`、`writers/package_writer.py` 已继续变化，不能将主脚本结果推广到新字节。
+
+追加组合反例 [source_undo_cases.py](source_undo_cases.py) 计划覆盖真实导入来源＋非法seed→向导Cancel→应用模板→删旧源→Undo→保存重载。然而在fixture调用真实geometry writer时实际失败：
+
+```
+NameError: name '_validate_solid' is not defined
+geometry_editor_model.py:576  _validate_solid(row, document)
+```
+
+[原始失败日志](source-undo.log)与[只读状态收据](concurrent-edit-observation.json)保留：当时helper定义确实缺失，同时另一调用位于660行。这是实际产品调用失败，不是shell退出码误判；但该文件属于正在进行的其他几何变更，不能把未完成工作区当冻结交付来定归属或宣称J2新增P1。需要主负责人补齐/冻结这批改动后重跑组合反例，再判断最终是否仍有问题。
+
+另有 [reload-first-harness-error.log](reload-first-harness-error.log)：初版复现脚本错误复用投影后被修改的fixture引用而发生IndexError，已改为预先深拷贝原始fixture，后续完整专项退出0。该IndexError是本审查脚本问题，不计产品缺陷，未隐去首轮失败。
+
+## 复测与关闭建议
+
+先修复几何无源reload的P2；补齐并冻结当前helper及后续内容/导出变更。冻结后重新运行：无源reload与Undo、source_undo组合反例、搬移后实际GUI重导入/收集、合法/非法草稿CLI重放。独立脚本固定写runtime目录；重复主脚本应改用新的独立审查目录或新runtime路径，不覆盖本轮证据和已发布bundle。正式统一runner/严格证据门禁及真实Geant4验证仍由主负责人组织，不把本专项的自定义JSON等同正式v3报告。
+
+F8后续具体缺口：空白菜单快捷键Ctrl+Shift+N与向导Ctrl+N的键盘可达/焦点恢复；无来源时Revert的禁用状态与读屏说明；错误跳转到空几何表；向导Esc/重入/高级字段替换范围；100/125/150/200%下确认和取消按钮可达；环境对话框往返保持非法草稿与焦点。上述需原生实窗/读屏适用测试，offscreen构造或本轮结果不能代替。

@@ -1,0 +1,72 @@
+{
+  "schema": "j2_static_test_patch_draft_v1",
+  "applied": false,
+  "tracked_sources_modified": false,
+  "candidate_head": "56b689fb9ac920cbb1203b2b94dae2483d25f622",
+  "files": [
+    {
+      "path": "scripts/test_k1_bundle.py",
+      "base_sha256_raw": "1d290891c6978e1720701f7727c21e7a62e02bfaa3b3af0ed110c5973bc266de",
+      "proposed_sha256": "e825d4278bd9b59d7ff871c1f2abd39d564b0fc5591de460f784a6d28cb2fa4f",
+      "patch": "test_k1_bundle.patch",
+      "syntax": "ast.parse only; not executed or applied"
+    },
+    {
+      "path": "scripts/test_config_migration.py",
+      "base_sha256_raw": "7b8ba6dc0ac7e715aef4ac524de1067e4b29e072f32b94b6a032494bda53ddbb",
+      "proposed_sha256": "e82849979a7ca78ff338c13c9918564930393150b92bb54fe352e8ca25f17849",
+      "patch": "test_config_migration.patch",
+      "syntax": "ast.parse only; not executed or applied"
+    },
+    {
+      "path": "scripts/test_f4_producers.py",
+      "base_sha256_raw": "258d9a99e43846a169818b78c97da315d7f13a8eb1bbe378280f42f3b0f5b8dc",
+      "proposed_sha256": "b7a860995370f36e77552da2c990fd8a8deb6e3d2714d2846b64c7fd5e1ebcfa",
+      "patch": "test_f4_producers.patch",
+      "syntax": "ast.parse only"
+    },
+    {
+      "path": "scripts/test_f4_document_diagnostics.py",
+      "base_sha256_raw": "97e026d5c5f83e7aa41b172599e791d6d4f55d77518bb193b4e35e5decf0f657",
+      "proposed_sha256": "46e49c4292890aaf95c1a026c58b029a19584c72c39d14e3d9d697a811963330",
+      "patch": "test_f4_document_diagnostics.patch",
+      "syntax": "ast.parse only"
+    }
+  ],
+  "combined_patch": "tests.patch",
+  "combined_patch_sha256": "0e620606a106285c02df27a49281dea21d80a86d753627cd1ef16237d339218c",
+  "product_draft_manifest": "out\\collab\\j2-f8-repair-draft\\manifest.json",
+  "product_draft_manifest_sha256": "71d7302a3d788b3ad5cb6800a320a917ebeb640267fccc7b1924cea16ecfca27",
+  "product_patch_sha256": "8cb495e2ebd08bfcd64b75f5ddda3bf14c578369e2668ad28b823bf76422995a",
+  "product_files": [
+    {
+      "path": "gui/g4usim_gui/editors/material_editor_model.py",
+      "original_raw_sha256": "f931ce13b1ba0634d77f9b8547ffdf12067e7c15ab6ca7a685a4cfa205919b16",
+      "candidate_sha256": "ad85de1ffc3a49bef7fde8c776fd3683b08a7ad027f93d4cb28f3d42a695b385"
+    },
+    {
+      "path": "gui/g4usim_gui/editors/source_physics_scoring_model.py",
+      "original_raw_sha256": "c53440fe5f9fcba60bad8b11feb87ef3554540670181f81073c9383bc27fab7b",
+      "candidate_sha256": "127134de38b876b9cdd9851219754b34dadd56432273e890db8a71fd98ade1d8"
+    },
+    {
+      "path": "gui/g4usim_gui/validators/config_validator.py",
+      "original_raw_sha256": "23cc892444316efe659f953e8fb7763c8915d1b4ebc346ad155d1e9cf246759f",
+      "candidate_sha256": "a815d9eef6b35fbeba874d7e182be574befdba283cb0a3679eabd463e36c7d87"
+    },
+    {
+      "path": "gui/g4usim_gui/core/i18n.py",
+      "original_raw_sha256": "749bf9570f7e0fc55fcd010c933aae29a7e2900670318228509799c38609ba70",
+      "candidate_sha256": "b404eb2b52c1db4fbe8f0b50aa396ea4635e65942fada84e302d9c6e015282ec"
+    }
+  ],
+  "f4_combination_receipt": "f4-combination-r1.json",
+  "f4_combination_status": "fail",
+  "pending_decisions": [
+    "Fix producer direct NIST empty-target name location; retain failing original assertion",
+    "Confirm explicit registry machine-code migration for malformed box size and trd required properties, or preserve compatibility before adapting draft",
+    "All matrix terminal and main lifts freeze before application/testing tracked files"
+  ],
+  "first_two_scripts_validation": "AST and exact diff projection only; no K1/migration draft execution",
+  "f4_validation": "Main product modules substituted in memory, out-only draft tests executed. producers main PASS; document main FAIL at preserved Unknown name location; seven subsequent groups independently PASS. Not formal profile evidence."
+}

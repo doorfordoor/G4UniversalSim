@@ -1,0 +1,37 @@
+# 第四候选真实CI收集检查点
+
+## 最终完成
+
+四workflow/初始8job全部attempt1 success。最后Linux113124984635146已success；原artifact13102513206 ZIP SHA50e28bef8a91f0a02e0d269fd498f8becc426b183dc55e9846280c5b46ec71ff及完整joblog已齐。四profilestatic46/4573、GUI66/8615、backend63/82020、integration31/6770均独立strict pass，匹配历史3966/6739/76820/6035，无skip/旧例下降。
+
+最终12报告12strictpass/0fail，缺项为空；8ZIP+8完整解码job日志16文件大小/SHA及归属齐全（collected-files-final.json），原job ID集合等于初始attempt1。Linux双job篡改报告负对照均success；desktop/installation四语义收据均独立通过。finalize.py exit0，release_accepted=true仅指CI证据，不替阶段/native/物理验收。最终报告review-final.md、公开终态public-push-runs-final.json、jobs-final.json。当前case红例对应通过记录current-ci-regression-targets.json；所有旧18c等红例原件保持。
+
+无待收job/本侧运行进程；不改tracked、不rerun/dispatch/cancel、不执行本机Qt/native/backend/build/profile，未占main58124/native最终map。下方为先前过程快照，以本终态为准。按用户要求仅新终态/新失败简报，终态交付后等待main安排。
+
+最新终态：Linux114124984635016 success，artifact13103140474原ZIP SHA33c758dfc5933e4a80231a3323d723494c8fcc4af40db38644f980eb2bc8258a及完整log已齐；static46/4573、GUI66/8615、backend63/72874、integration31/6770均独立strict pass（历史3966/6739/67674/6035），无skip/旧例下降，tamper负对照step success。目前7ZIP/7joblog，8实际报告全strict pass。唯一剩余Linux113124984635146在integration。综合review-current.md；只在新终态或新失败时向main简报，按最新用户要求静默常规等待。仍未判全轮通过，12报告到齐再最终汇总。
+
+最新：Desktop/M0/Installation三个workflow均success；安装Windows124984634839最后success，原artifact13102807661 ZIP SHA13f6835c5b17667b1e23a682f32f8fcedbc587a6114368cb170af67ab0e42d70/完整log已齐，9stage/25索引/889源/实际5events/SDK及卸载独立通过。已收6ZIP+6joblogs=12文件（collected-files-six-completed-jobs.json），M0四报告均strict pass。只剩Linux41352200765两job124984635016/124984635146，backend及其workflow gate均已过，正在integration。无失败。public-push-runs-status-2.json保留三绿一运行；最终仍待12实际报告/8job原件，不提前判阶段完成。
+
+最新：M0 Windows124984634805已success，artifact13102896151 ZIP SHA093d0e98cb3b3a9584eb0b096ecec7949057bf2343b1b4b592709057abfa0df5/完整log已齐。M0双平台static4573、GUI8615，四报告均strict pass、无旧例下降。当前5ZIP/5joblog，只剩Linux双版（backend运行中）与Windows installation。无失败。综合review-current.md，最终仍须12真实profiles，不提前判全部CI通过。
+
+最新：Linux安装124984634891已success，原artifact13102765216/完整joblog已齐；10stage/23索引/889源/实际5events/SDK及卸载独立通过。当前4ZIP/4joblog，完成desktop两平台、M0Ubuntu、Linux安装；M0Ubuntu两报告static4573/GUI8615均strict pass。Linux双版正在backend，Windows M0仍GUI、Windows安装lifecycle，无失败。综合review-current.md。最终须真实12profile/8job/8原ZIP齐并独立门禁，未提前判全通过。
+
+完整HEAD2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8；parent18c5858fd6e80a5cb6096beacebfef69c479ad49。实际7文件=2smoke+5docs，main freeze逐项SHA核对，本机显式longpaths tracked clean。freeze-receipt-checked.json仅CI来源核验，native最终映射由main执行，本侧未执行。
+
+source_fp9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a；tests_fpce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8。固定该HEAD Git对象checker及新root工具；workflows相对18c无差异，自动push，无dispatch。
+
+四run全精确HEAD/attempt1，初始8job无失败：
+- M041352200756：Windows124984634805 / Ubuntu124984635063。
+- Linux41352200765：11.4.3=124984635016 /11.3.2=124984635146。
+- Installation41352200731：Windows124984634839 / Linux124984634891。
+- Desktop41352200727：Windows124984634815 / Linux124984635023。
+
+public-push-runs-initial.json、jobs-initial-*.json固定原始身份/初始job IDs。最终拒绝later attempt替换；预期M0双OS static/gui及Linux双版本四profile共12报告，缺项不计通过。先保留任何真实首因，继续收其余原运行，终态后只取一次原ZIP/完整解码job日志，原SHA对GitHubdigest，独立strict及matching历史逐例检查；桌面/安装另核语义收据。
+
+旧18c及之前全轮原红例/日志/ZIP冻结不动，不拼报告。不改tracked、不rerun/取消CI、不占用main双build session58124，不启动本机Qt/native/backend/build/profile。
+
+Desktop两平台job已success；原ZIP Linux13101732052/Windows13101268672对GitHubdigest及候选归属验证、解压完成；150GUI源身份、frozen自检、稳定性、正负例0/1/0/1与全部命令原日志SHA各平台独立通过，机器收据desktop-linux-checked.json/desktop-win32-checked.json。两完整job解码日志已保存。其余原CI继续跟踪，无失败。
+
+阶段推进：Linux114 job124984635016已通过GUI步骤及其workflow校验，进入Run backend tests on Linux；Linux113仍GUI，M0两平台仍GUI，安装双平台lifecycle，当前无失败步骤。此为step状态，未代替artifact内报告独立strict；待该job终态收完整原件。
+
+M0 Ubuntu job124984635063已success；原artifact13102097206 ZIP SHA7c0f19e40411e0621531f5830695dca46cf870260cf051f195c39418840d2043、完整joblog已收核验。static4573/历史3966、GUI8615/历史6739均独立strict pass，无旧例缺失/入口下降，首份green快照report-gates-m0-ubuntu.json保留。Linux双版均已通过GUI步骤，正在backend。当前3ZIP/3完整job日志，无失败。

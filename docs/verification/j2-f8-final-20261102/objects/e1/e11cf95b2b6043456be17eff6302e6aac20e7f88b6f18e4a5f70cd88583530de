@@ -1,0 +1,44 @@
+{
+  "scope": "History 3 explicit labels only; no tracked changes; no new i18n keys; separate from CI layout-item compatibility",
+  "files": {
+    "run_history_page.proposed.py": {
+      "sha256": "cc98442e975cec3f1b33d556a8dabdd7381ec22368e94bd6124178edacb5a463",
+      "bytes": 14804
+    },
+    "run_history_page.patch": {
+      "sha256": "c6f9a716e3f6d58050593bb33f8ada02f4432585ff03b8927aeac69f72a794de",
+      "bytes": 1449
+    },
+    "smoke_f8_accessibility.proposed.py": {
+      "sha256": "1620ccc2168cfeaf45802339aef41d9e16b7d028d7e3630ac11b616d77f3b086",
+      "bytes": 40043
+    },
+    "smoke_f8_accessibility.patch": {
+      "sha256": "eefb54ee53de668796149d9c5d8de61ae8e18d7e6f100bbc6c0f5d65ff72cad8",
+      "bytes": 8755
+    }
+  },
+  "runs": [
+    {
+      "scale": "1.25",
+      "exit_code": 0,
+      "process_ended": true,
+      "session": 79585,
+      "assertions_v3": 519,
+      "log_sha256": "dc7b0a8a16764e6609d1946f4dc6cbe81e02580ad0b838181902ec18b5a9ab1c"
+    },
+    {
+      "scale": "1.5",
+      "exit_code": 0,
+      "process_ended": true,
+      "session": 87700,
+      "assertions_v3": 519,
+      "log_sha256": "b5b5d3c04091e4b253e98e7e995ed18ee589ec705657beb34adfa80fd60f6df9"
+    }
+  ],
+  "frozen_negative": {
+    "exit_code": 1,
+    "all_three_QAccessible_names_empty": true,
+    "path": "frozen-negative.log"
+  }
+}

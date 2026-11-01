@@ -1,0 +1,34 @@
+# PyVista完整测试与既有安装路线，只读建议
+
+本轮未安装包、未改变解释器/PYTHONPATH/系统环境、未启动UI，也未修改冻结测试。
+
+## 为什么18不能代替35
+
+smoke_3d_view.py在历史baseline至候选56b689f没有diff。check_model为无Qt/VTK模型检查，本轮18断言完成；check_widget依赖PyVista/PyVistaQt/VTK，缺依赖时直接打印SKIP并return，主脚本仍OK/退出0。当前runner该Case仅要求qt，故case级fail-on-skip看不到内部子路径跳过。历史gui_3d_view原日志实际完成actors、拾取、可见性、截面/相机与页面双向selection，共35断言。
+
+本轮gui_3d_view.log确实是No module named pyvista；不能靠接受18、下降baseline或追加无关assert冒充完整widget覆盖。
+
+## 依赖清单与当前已有环境
+
+- gui/requirements.txt为基础GUI：PySide6>=6.11.1,<6.12、uproot、numpy、matplotlib。
+- gui/requirements-3d.txt另列pyvista、pyvistaqt、vtk，未锁具体版本；只装基础文件不能保证完整3D。
+- gui/README.md明确两份依赖安装入口，以及Windows offscreen默认文字fallback；只有已知offscreen OpenGL可用时才考虑G4USIM_ENABLE_OFFSCREEN_PYVISTA=1，不宜用它替代本次Windows native验收。
+- packaging/build_package.py默认包含3D，--no-3d才排除pyvista/pyvistaqt/vtk/vtkmodules；这解释冻结包与source GUI最小解释器可能具有不同依赖范围。I1环境发现只读探测PyVista/VTK等，不等于已经为当前source解释器安装。
+
+历史I2正式矩阵的现存路线由out/collab/i2-formal-gui-python-environment.json和run-i2-windows-matrix.ps1第15行共同支持：
+
+`D:\Geant4\G4UniversalSim\gui\.venv\Scripts\python.exe`
+
+该exe和PyVista/PyVistaQt/VTK/PySide6模块原件现仍存在。只读取当前dist-info元数据：PySide6/shiboken6 6.11.1、PyVista0.48.4、PyVistaQt0.11.4、VTK9.6.2、QtPy2.4.3、uproot5.7.7。完整清单见pyvista-route-inventory.json。不是import/渲染通过证明，不要求修改D盘检出；可只使用其venv解释器来运行C盘effective-config候选的绝对源码脚本，cwd仍为本次候选，避免误跑D盘产品。
+
+建议先由main核验并优先复用已有完整venv，而非给本轮base Python盲装3D。若需新隔离环境，按两份requirements共同解析，保持PySide6 6.11验证线及Essentials/Addons/shiboken一致，不独立混装；因为3D文件未锁版，应记录实际解析/安装版本，不凭文件名断言依赖已齐。
+
+## 是否确需native与排程
+
+原测试在win32且QT_QPA_PLATFORM=offscreen时，会在导入Qt前把变量改成windows（注释明确VTK需要真实OpenGL context）。核心pyvista_available又在offscreen默认拒绝预览，除非显式开启实验性offscreen PyVista。因此：模型18断言无需native；保持原完整widget35覆盖的本机Windows路线确实是native Qt/OpenGL。
+
+本轮由于pyvista不存在，没有进入创建native widget的分支，未争用main原生UI。安装或换用完整venv后即使runner声明offscreen，这一个脚本仍可能打开native窗口，必须提前排程，不能把它描述成纯offscreen全量。
+
+建议main独占原生窗口时段，以该完整venv启动候选C盘的原test_assert_probe.py和smoke_3d_view.py；核对无内部SKIP、35完整断言及自然进程退出。不要由本任务自动启动。若分阶段运行，分别保留报告和环境，不能将旧失败report.json中的单行手改/拼接成绿色。最终包含旧59case的严格baseline仍须由新候选完整scope的新报告覆盖；不能仅靠单例native通过解除整个profile的两项失败或偷偷改变基线范围。
+
+后续可由main在解冻后将原生/可选依赖要求显式编码到Case或测试模式，防止内部SKIP仍返回普通PASS。此为后续改进建议，本轮冻结未修改runner或源测试，也没有用allow/legacy参数。

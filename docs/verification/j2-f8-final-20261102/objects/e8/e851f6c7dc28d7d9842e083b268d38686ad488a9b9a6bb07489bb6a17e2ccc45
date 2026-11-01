@@ -1,0 +1,64 @@
+# J2/F8 candidate CI 独立收集准备
+
+状态：**离线准备完成，等待主代理发完整 candidate HEAD；未查询远程、未触发任何 workflow、未收集或宣称新 CI 通过。** 仅新增本 out 目录脚本与收据，不修改产品、STATUS 或 workflows。
+
+## 已核对的历史路线
+
+- 基线索引：`out/collab/j2-f8-baselines.json`，18份；逐一核对原报告（缺失时读归档对象）的 SHA、HEAD、profile、case数、断言总数及 v3/raw-bytes-LF 口径。结果 `preparation.json`。
+- 历史授权入口：`docs/verification/i2-j1-final-20261101/acceptance-state.json`。
+- 索引及归档：`docs/verification/i2-j1-final-20261101/automated-delivery/reports-index.json`、`increments/<increment>/manifest.json` 与 content-addressed evidence.zip。
+- 原归档验证入口 `automated-delivery/verify_archive.py --replay-dir <new out dir>` 可做完整重放；本脚本仅从匹配 increment 读取所需报告和逐例日志，核对 manifest SHA 与每个选中对象 SHA，原报告字节不改写。没有宣称本次重哈希全部历史ZIP对象。
+- `self-test.json`：取真实归档 linux113-static，实际验证报告及日志的 strict gate 和同v3逐例比较；总数/逐例回退、缺旧例、日志篡改、错HEAD/平台、原路径回退和ZIP穿越反例均拒绝。历史字节用于离线工具自测，绝非本轮candidate结果。
+
+## 收到 HEAD 后执行顺序
+
+1. 主代理提交/推送并提供完整40位HEAD、冻结 source_fingerprint、tests_content_fingerprint。不得以当前分支名或最近一次绿色运行替代该HEAD。
+2. 仅用 public API 查询 **该HEAD的push runs**。`ci_review.py list-runs` 只有GET，不实现dispatch/rerun/push；准备阶段未执行该命令。保留全部匹配结果、run_id、run_attempt、URL，不自动从失败/重跑之间挑绿色。
+3. 按当前可用 GitHub connector 取得精确run/attempt的jobs、完整logs ZIP、artifact清单与下载；优先连接器，不另造认证客户端。原始响应和下载字节一并保留；metadata中的artifact name/id、workflow_run.id及head归属必须交叉核对。若连接器artifact接口回传共享URL/过期错误，先记录原始结果，不重复触发运行或改工作流。
+4. 原始ZIP使用 `extract` 安全解压到全新 out 目录。拒绝路径逃逸、绝对路径、盘符、symlink、大小写碰撞和覆盖已有证据；保存原始ZIP SHA。
+5. 用 `receipt-check` 核对下面4个workflow、2个实际job和每组2个artifact的归属及完成状态。绿色run或artifact存在本身不等于内容验收。
+6. 对 M0/Linux artifacts 中的 **每份** report.json 分别执行 `gate`，不得只挑最新一份。预期M0四份（两OS × static/gui）、Linux八份（11.3/11.4 × 四profile），实际清单必须与workflow jobs/产物对应；重复/缺失须明确拒绝或解释，不能靠汇总总数覆盖。
+7. full-installation / frozen-desktop artifacts 不属于v2回归报告：分别核对两平台的实际安装生命周期、运行/SDK构建与冻结应用测试收据、对应job日志中的探针入口、失败诊断、源/二进制身份。脚本的workflow receipt通过不替代这些内容检查，不能套用backend/static基线或伪造report.json。主代理可读这些实际收据后确认内容门禁。
+8. 最终汇总必须列精确HEAD、4个run id/attempt、job结果、artifact id/SHA、逐报告baseline id及strict结果；失败/skip/未完成均保持原状态。不得使用allow-incomplete、allow-legacy-*、no-assert-probe或allow-stale-backend放宽发布。
+
+四workflow及预期artifact名：
+
+| workflow | artifacts |
+|---|---|
+| m0-static-gui.yml | m0-report-ubuntu-latest；m0-report-windows-latest |
+| linux-geant4.yml | linux-evidence-11.3.2；linux-evidence-11.4.3 |
+| full-installation.yml | full-installation-Linux；full-installation-Windows |
+| desktop-package.yml | frozen-desktop-Linux；frozen-desktop-Windows |
+
+## 命令（以下远程命令尚未运行）
+
+```text
+python -B out/collab/j2-ci-review/ci_review.py list-runs --head FULL_HEAD --output out/collab/j2-ci-review/CANDIDATE/public-push-runs.json
+python -B out/collab/j2-ci-review/ci_review.py extract --zip RAW_ARTIFACT.zip --destination out/collab/j2-ci-review/CANDIDATE/extracted/ARTIFACT --output out/collab/j2-ci-review/CANDIDATE/ARTIFACT-extraction.json
+python -B out/collab/j2-ci-review/ci_review.py receipt-check --head FULL_HEAD --receipt RECEIPTS.json --output out/collab/j2-ci-review/CANDIDATE/workflows-verified.json
+python -B out/collab/j2-ci-review/ci_review.py gate --head FULL_HEAD --source-fingerprint SOURCE_FP --tests-fingerprint TESTS_FP --report EXTRACTED_REPORT.json --lane linux113 --output-dir out/collab/j2-ci-review/CANDIDATE/gates/UNIQUE_REPORT
+```
+
+`gate` 要求实际报告的git_head、两个冻结指纹、tracked_source_gate与untracked列表成立，并按lane校验OS和backend/integration实际Geant4版本。历史baseline也strict验证，再调用同一严格checker进行总数/逐例不下降与旧例不缺失检查；输出逐例delta及新例名。日志仅在内存中映射到报告旁已下载的本地副本，禁止回读原机器绝对路径；原report不改写。
+
+lane选择必须来自已验证artifact，而非按断言数挑有利基线：`m0-linux`→linux-m0-6310969-{static,gui}；`m0-windows`→windows-m0-6310969-{static,gui}；`linux113`/`linux114`→同版本四profile。`windows113`/`windows114`只用于对应本机报告；不存在的matching基线直接拒绝，不能跨平台或拿M0替换本机profile。
+
+RECEIPTS.json 是保存原始connector结果后的本地关联表，结构如下（省略号不是可执行JSON）：
+
+```text
+candidate_head: FULL_HEAD
+workflows:
+  m0-static-gui.yml:
+    run: 原始run对象（id/head_sha/event/path/status/conclusion/run_attempt等）
+    jobs: 原始jobs数组（保留run_id/head_sha/status/conclusion）
+    logs_zip: 已下载完整run日志ZIP的绝对路径
+    logs_sha256: 对该原始ZIP字节计算
+    artifacts:
+      - id/name/expired: 原始artifact元数据
+        run_id: 由元数据workflow_run.id映射，不能人工假设
+        zip/download_sha256: 已下载原始artifactZIP及其实际SHA
+        github_digest: 原始元数据digest（提供时必须与实际SHA一致）
+  其余三个workflow: 同结构
+```
+
+完成receipt-check只证明收集关联和完成状态，report gates及安装/桌面收据验收分别保留。准备收据中的remote_requests=0、current_candidate_results=false不应被未来人工覆盖；新HEAD使用新目录保留新证据。

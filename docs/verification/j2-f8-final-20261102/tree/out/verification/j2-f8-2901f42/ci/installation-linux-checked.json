@@ -1,0 +1,39 @@
+{
+  "candidate_head": "2901f4254303c3a9089c9025717908c0d77ff190",
+  "platform": "linux",
+  "status": "independently_verified",
+  "stages": 10,
+  "stage_raw_logs_sha_verified": true,
+  "retained_index_objects_sha_verified": 23,
+  "source_checkout_identity": {
+    "files": 889,
+    "raw_git_blob_matches": 887,
+    "declared_text_checkout_crlf_matches": [
+      {
+        "path": "test/scripts/run_tests.bat",
+        "attributes": {
+          "text": "set",
+          "eol": "crlf"
+        }
+      },
+      {
+        "path": "test/scripts/run_tests.ps1",
+        "attributes": {
+          "text": "set",
+          "eol": "crlf"
+        }
+      }
+    ],
+    "note": "Only candidate checkout text EOL is modeled; evidence logs are always hashed as raw bytes"
+  },
+  "workflow_checkout_identity": {
+    "files": 1,
+    "raw_git_blob_matches": 1,
+    "declared_text_checkout_crlf_matches": [],
+    "note": "Only candidate checkout text EOL is modeled; evidence logs are always hashed as raw bytes"
+  },
+  "runtime_actual_summary_completed_events": 5,
+  "sdk_consumer_and_full_application_verified": true,
+  "host_tool_identity_consistent": true,
+  "runtime_and_sdk_uninstalled": true
+}

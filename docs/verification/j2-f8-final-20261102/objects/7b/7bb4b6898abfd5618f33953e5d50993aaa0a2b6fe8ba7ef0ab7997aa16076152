@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-blank-review\source_undo_cases.py", line 20, in <module>
+    geom=WORK/'source-geometry.ini';mat=WORK/'source-materials.ini';write_geometry_ini(str(geom),p.geometryEditor);write_materials_ini(str(mat),p.materialEditor)
+                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\writers\geometry_ini_writer.py", line 47, in write_geometry_ini
+    target.write_text(generate_geometry_ini_text(document), encoding="utf-8", newline="\n")
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\writers\geometry_ini_writer.py", line 28, in generate_geometry_ini_text
+    validate_geometry_document(check, material_names=geometry_material_refs(check))
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\editors\geometry_editor_model.py", line 342, in validate_geometry_document
+    _validate_geometry_document(document, material_names=material_names,
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\editors\geometry_editor_model.py", line 362, in _validate_geometry_document
+    _validate_hierarchical(document, known_materials)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\editors\geometry_editor_model.py", line 576, in _validate_hierarchical
+    _validate_solid(row, document)
+    ^^^^^^^^^^^^^^^
+NameError: name '_validate_solid' is not defined. Did you mean: '_validate_simple'?

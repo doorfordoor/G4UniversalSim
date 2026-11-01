@@ -1,0 +1,20 @@
+# 第三候选九文件文档独立窄审
+
+结论：v3通过，无剩余窄审问题，可由main按冻结候选统一应用。该结论仅为文档审查，不将J2/F8阶段、旧CI或新候选完整验收标为通过。
+
+对象：out/collab/j2-f8-third-doc-draft/v3，基线2901f4254303c3a9089c9025717908c0d77ff190。
+patch SHA256 `721f9bc9a646ebc15524ac68d0dd0080badce7f2454c8d1b5e2b63699cc229f7`；manifest SHA256 `be34758a76e5af7d69835140441583fc1dee6f62bf17f3a8f70fdac4bdbd930b`。机器收据receipt.json。
+
+已完整阅读v2九文件patch，v3仅按corrections.json的7处替换定点复核。确认仅STATUS、agent-history、J2说明、支持矩阵4候选改变，其余5候选与v2字节完全一致；逐条替换重建与v3候选原字节完全相同。
+
+三身份措辞已收口：STATUS的149GUI来源明确为2901f42冻结源码（main发现，非本独审发现）；支持矩阵的Project retained/当时History开放观察限定2901f42；新增history中的四CI明确归属2901f42。其余变更仅纳入114终态与六profile快照。
+
+九doc来源原SHA匹配。STATUS“## 一句话定位”起的旧tail未动；agent-history保留原文件完整字节前缀，仅追加；AGENTS/gui AGENTS/支持矩阵/开发路线图旧段仅插入，不漂移日期历史。ROADMAP仅更新当前F5 v8说明及J2/F8当前行；快速说明当前schema6→8、完整v7枚举迁移边界正确，旧日期历史不追改。
+
+新契约保持已审范围：History三显式buddy/语言链、真实QLayout递归、F6可容纳joint及窄dock边界、K1规范policy身份与原拼写首尾guard、STL仅严格同文件测试。没有提高后端或物理支持等级，没有把containment/文件审计当视觉通过；本审不重看原图，也不重审产品/native。
+
+独立核对六份原report/launch字节SHA、HEAD、终态及计数：300/300、180992入口，runner/strict gate0、identity_errors=[]；local-final-audit原SHA、passed/errors[]一致。旧四CI run身份及失败结论保持，native_overall_pass=false保持，新repair三档及完整新candidate验收仍待进行。此为旧2901f42原证据，不转贴成新候选结果。
+
+新增6个相对链接目标存在，无新增未归档OUT公共链接；锚点/外部网站没有作为新的检查范围。git apply --check退出0。主线程已授权的6项代码/测试diff是预期状态，本审只核九doc原始来源，不要求全tree clean；未改tracked、作者v2/v3或原证据，未启动产品/Qt/native/正式测试。
+
+辅助OUT patch回放的Git换行转换不作为作者文档问题或验收门禁；原尝试目录保留。正式判断使用原/候选rawSHA、旧历史字节保护、精确七项delta及补丁check；不以文件存在性推出内容或视觉正确性。

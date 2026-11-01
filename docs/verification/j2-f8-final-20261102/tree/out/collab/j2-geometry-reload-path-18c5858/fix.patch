@@ -1,0 +1,17 @@
+--- a/gui/smoke_tests/smoke_j2_geometry.py
++++ b/gui/smoke_tests/smoke_j2_geometry.py
+@@ -259,9 +259,12 @@
+         try: generate_geometry_ini_text(page.geometry_document)
+         except ValueError: pass
+         else: assert False,'failed source read was treated as an empty valid source'
+-        # Explicit import after a no-source document still replaces it normally.
++        # Explicit import records the canonical source anchor (including Windows 8.3 aliases).
+         page.geometry_config.setText(str(source)); page.reload_geometry()
+-        assert page.geometry_document.source_path==str(source)
++        reloaded_source=Path(page.geometry_document.source_path)
++        assert page.geometry_document.source_path==str(source.resolve()), (page.geometry_document.source_path, str(source), str(source.resolve()))
++        assert reloaded_source.samefile(source)
++        assert hashlib.sha256(reloaded_source.read_bytes()).hexdigest()==hashlib.sha256(source.read_bytes()).hexdigest()
+         assert len(page.geometry_document.volumes)==len(doc.volumes)
+         assert not page.geometry_document.source_errors
+         page.geometry_document=copy.deepcopy(doc)

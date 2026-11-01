@@ -1,0 +1,106 @@
+--- a/gui/smoke_tests/smoke_f8_accessibility.py
++++ b/gui/smoke_tests/smoke_f8_accessibility.py
+@@ -586,6 +586,95 @@
+             close_window(app, window)
+ 
+ 
++def test_layout_item_compatibility(app):
++    """Actual Qt layouts/spacers, plus a controlled replay of the CI return type.
++
++    Stock Qt usually returns None from spacer.layout(). The CI failure supplied
++    a real QSpacerItem instead; replay only that Python provider value, never a
++    mock layout or an invented Qt class. The underlying Qt objects stay real.
++    """
++    from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout, QFormLayout, QGridLayout, QSpacerItem, QSizePolicy, QLayout
++    from g4usim_gui.core.accessibility import _item_field, decorate_accessibility
++    from g4usim_gui.core.i18n import apply_language, set_application_language
++    from g4usim_gui.widgets.start_page import StartPage
++
++    for replay_nonlayout in (False, True):
++        root = QWidget()
++        outer = QVBoxLayout(root)
++        form = QFormLayout()
++        form_label = QLabel('Search')
++        first = QLineEdit('unchanged search draft')
++        field_row = QHBoxLayout()
++        field_row.addSpacing(8)
++        field_row.addWidget(first)
++        field_row.addStretch()
++        form.addRow(form_label, field_row)
++        outer.addLayout(form)
++        grid = QGridLayout()
++        empty_label = QLabel('Status')
++        grid.addWidget(empty_label, 0, 0)
++        empty = QSpacerItem(12, 12, QSizePolicy.Expanding, QSizePolicy.Minimum)
++        grid.addItem(empty, 0, 1)
++        grid_label = QLabel('Runs root')
++        second = QLineEdit('unchanged directory draft')
++        nested = QVBoxLayout()
++        nested.addSpacing(4)
++        nested.addWidget(second)
++        grid.addWidget(grid_label, 1, 0)
++        grid.addLayout(nested, 1, 1)
++        outer.addLayout(grid)
++        spacer = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
++        outer.addItem(spacer)
++        assert isinstance(outer.itemAt(2), QSpacerItem)
++        assert not isinstance(spacer, QLayout)
++        if replay_nonlayout:
++            # Deterministic boundary replay of the exact CI-observed type.
++            # Restore the original Qt accessor before the C++ owner is deleted.
++            spacer.layout = lambda: spacer
++        try:
++            root.show()
++            app.processEvents()
++            for language in ('en', 'zh_CN', 'en'):
++                set_application_language(app, language)
++                apply_language(root, language)
++                decorate_accessibility(root)
++                assert form_label.buddy() is first
++                assert grid_label.buddy() is second
++                assert first.accessibleName() == ui_text('Search')
++                assert second.accessibleName() == ui_text('Runs root')
++                assert empty_label.buddy() is None
++                assert _item_field(empty) is None
++                assert _item_field(spacer) is None
++                assert _item_field(field_row) is first
++                assert first.text() == 'unchanged search draft'
++                assert second.text() == 'unchanged directory draft'
++        finally:
++            if replay_nonlayout:
++                del spacer.layout
++            root.close()
++            root.deleteLater()
++            app.processEvents()
++    # Real responsive StartPage layout reflow + language switching, the original
++    # CI product path. No backend, fake widget or patched Qt accessor here.
++    start = StartPage()
++    try:
++        start.show()
++        for width in (760, 1200):
++            start.resize(width, 640)
++            start.adapt_to_width(width)
++            app.processEvents()
++            for language in ('en', 'zh_CN', 'en'):
++                set_application_language(app, language)
++                apply_language(start, language)
++                decorate_accessibility(start)
++                assert start.start_actions
++                assert all(button.accessibleName() for button in start.start_actions)
++    finally:
++        start.close()
++        start.deleteLater()
++        app.processEvents()
++
++
+ def main():
+     parser = argparse.ArgumentParser()
+     parser.add_argument('--translations', type=Path)
+@@ -635,6 +724,7 @@
+         finally:
+             close_window(app, window)
+     test_retained_dock_focus(app, args.output)
++    test_layout_item_compatibility(app)
+     print('F8 keyboard/start/environment/wizard/layout offscreen checks passed')
+ 
+ 

@@ -1,0 +1,22 @@
+{
+  "schema": "g4usim_e7_local_checks_v1",
+  "baseline": "fc606739b9bb5b381b87d5ffd2870844c10afee2",
+  "validation_scope": "standalone component and real-header syntax only; no global link or real backend run",
+  "constructor_and_lifecycle_suffix_unchanged": true,
+  "component_exit_code": 0,
+  "component_assertions": 248,
+  "syntax_exit_code": 0,
+  "syntax_warnings": 0,
+  "files": {
+    "include/Geometry/SolidRegistry.hh": "245107c43ce261f5801d88a6a125647a02615183759eeda97ef0a8ebb75e95b9",
+    "src/Geometry/SolidRegistry.cc": "31d2b348be3e1c27926ae35379862b3a41be0fad173bc4b51f0ca9da6b782188",
+    "include/Geometry/VolumeBuilder.hh": "97a2c8c56c5941d8d86f319b1766aa20037e9ae3a26b9fa50742ce21657cf677",
+    "src/Geometry/VolumeBuilder.cc": "acdbadfda0bb1e809db32171612fb6136934f494356d545f87cf99aac1582822",
+    "scripts/test_solid_registry.py": "509e41ef4a0af7409a5c6148318e4d0169903683d2e80d0e6a94e11309da2a7f"
+  },
+  "evidence": {
+    "out/collab/j2-e7-component.log": "24b27ba871aa764c48637e7fccd7f758830ff1ee6b762169f4624c18c973d496",
+    "out/collab/j2-e7-syntax.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "out/collab/j2-e7-solid-metadata.json": "b06a99b9f040ef192a0eb8b82019a3c38b3358f21fd1f8d605dd030e44dd7837"
+  }
+}

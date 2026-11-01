@@ -1,0 +1,41 @@
+# J2 几何 GUI 独立审查（2026-11-02）
+
+结论：**存在3项P2，当前审查不通过**。未修改产品，未运行作者smoke或全局矩阵。独立反例与合法对照在r1/r2中，r2是在作者声明冻结后的复核；r2测试过程中8个受审文件SHA未变化。作者最后两处cut有限性/reload修订不影响以下反例。
+
+## [P2] 参数token分组比后端更宽松，生成后触发原生InvalidUnit终止
+
+位置：`gui/g4usim_gui/editors/geometry_editor_model.py:626-632`（_solid_tokens）。新正则把任意连续数字/单位片段提取成独立参数，并称其与后端规则相同；实际GeometryUtils::SplitVectorText/ParseParameterList对无逗号输入使用固定空白token分组。
+
+重现：hierarchical tubs `parameters=0 10 20 0 360 deg` 或 `0mm10mm20mm0deg360deg`。GUI errors=[]，writer成功原样输出；11.3真实EXE --inspect-run分别报unit '10' / 'mm10mm20mm0deg360deg'，退出3221226505（0xC0000409）。对照逗号输入`0 mm,10 mm,20 mm,0 deg,360 deg` GUI与后端均通过。
+
+建议：使tokenizer精确匹配实际后端分隔/分组，或生成前以明确规则拒绝上述格式并提示逗号；不能默默把GUI解析结果当作后端会使用的token。未知单位触发FatalException属于现有后端健壮性边界，本发现针对新增GUI接受/生成路径，不宣称E7造成了该C++实现。
+证据：`r2/tubs-space-mixed-unit/`、`r2/tubs-no-separators/`，含generated geometry/main和原始stdout/stderr；`r2/receipt.json`记录GUI/writer/backend各层事实。
+
+## [P2] copies_file遗漏position/rotation互斥
+
+位置：`gui/g4usim_gui/editors/geometry_editor_model.py:845-846`。table分支只核查CSV，未拒绝普通row.position/rotation；后端GeometryConfig::ParsePlacement的copies_file分支明确拒绝它们。
+
+重现：唯一daughter box，`placement=parameterised`、合法绝对copies_file，同时`position=0 mm,0 mm,0 mm`。GUI errors=[]、writer成功；真实--inspect-run退出1，消息`copies_file defines every copy's position and rotation; remove position and rotation`，created_geometry_object_count=0。移除position后对照退出0。这是作者新增placement校验范围，不是F4/F5/K1待接线。
+建议：table模式在writer前拒绝position/rotation，并定位真实字段；不得静默删掉原文。
+证据：`r2/table-conflicting-position/`、`r2/table-control/`。
+
+## [P2] replica维度校验采用预览的尾单位传播，误拒后端合法输入
+
+位置：`gui/g4usim_gui/editors/geometry_editor_model.py:831-837`，调用parse_vec3_to_mm。预览helper将逗号最后一个分量单位传播给前面分量；后端GeometryUtils::ParseVec3分别解析分量，未带单位者仍为mm。
+
+重现：world `size=1,1,2 cm`，唯一daughter `size=1 mm,1 mm,1 cm`、replica_axis=z、replica_count=2、replica_width=1 cm。后端解释母体为1×1×20mm，--inspect-run退出0；GUI解释为10×10×20mm，报Replica dimensions...并阻断writer。
+建议：backend-facing维度校验使用与后端一致的向量解析，不复用尾单位传播的预览语义，也不要改变用户原文单位。
+证据：`details-r2/geometry.ini`、`details-r2/stdout.log`、`details-r2/receipt.json`。
+
+## 已通过的局部控制与未归责范围
+
+- 独立10case输入/来源检查：逗号tubs、合法copies table、裸rad hype参数+vis/cuts/metadata、Boolean trd命名字段、相对copies资源经过source_path和字典replay后绝对锚定均通过真实后端Inspect；未知源字段在重复validate后仍block，资源消失仍拒绝writer。
+- 三类详情控件独立offscreen set_row/apply_row对volume/boolean/layer非法原文均逐字段保持，脚本自然退出0；hierarchical及layer的vis/cuts/metadata重解析对照通过。这不是完整窗口/人工视觉/F5事务验收。
+- 不把交接明确列出的F5 capture/flush/restore、F4 focus、i18n、project v7->v8、scene_builder工具预览、STL/copies_file的K1资源捕获/搬移等主代理接线列为作者漏项。未证明离线导出/全项目来源刷新已完成。
+- 已读取core/solid_registry_data.py及generate_solid_registry.py；结构来自compiled Describe并绑定定义SHA，未发现此次范围内另一个可确认缺陷。原文资源writer按source_path解析、内存无锚点要求绝对路径的边界保留。
+
+## 证据与复现
+
+`probe-r2.py` / `probe-r2.log`：独立模型→writer→真实--inspect-run；`detail-probe-r2.py` / 同名.log：独立offscreen raw保留与合法backend replica对照。`r2/receipt.json`含受查前后SHA和全部结果，`r2/snapshot/`保存当轮8文件；首轮r1及日志不覆盖。`additional-controls.json`记录较早vis/cuts往返及发现作者收尾变动的事实，不拿它冒充同一冻结身份。最终发现由r2/details-r2共同复现。
+
+实际EXE为out/build-i2-formal113/Release/G4UniversalSim.exe（Windows Geant4 11.3.2）；测试隔离环境前置Geant4/Qt bin并设置实际数据路径。所有产物只在本review目录。probe总体exit0表示观察收据成功写出，**不表示被审产品通过**；上述三项仍待作者修复和定向复核。

@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-static-fixture-patch-draft\run_f4_combination.py", line 25, in <module>
+    ns['main']();result['status']='pass';log.write_text('Draft main completed without exception. Not a formal profile result.\n',encoding='utf-8')
+    ^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-static-fixture-patch-draft\proposed\scripts\test_f4_document_diagnostics.py", line 412, in main
+    check_material_rows()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-static-fixture-patch-draft\proposed\scripts\test_f4_document_diagnostics.py", line 131, in check_material_rows
+    assert targets[1].location is not None
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

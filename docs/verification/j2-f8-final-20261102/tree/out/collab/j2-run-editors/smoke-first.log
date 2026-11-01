@@ -1,0 +1,20 @@
+G4USIM_ASSERTS=0
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_run_editors.py", line 23, in <module>
+    from g4usim_gui.core.project import G4USimProject, project_from_dict, project_to_dict, save_project, load_project
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\project.py", line 13, in <module>
+    from g4usim_gui.editors.material_editor_model import MaterialComponent, MaterialDocument, MaterialRow
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\editors\material_editor_model.py", line 9, in <module>
+    from g4usim_gui.core.nist_elements import NIST_MATERIALS, custom_elements, resolve_component
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\nist_elements.py", line 16, in <module>
+    NIST_MATERIALS = frozenset(
+                     ^^^^^^^^^^
+TypeError: frozenset expected at most 1 argument, got 309

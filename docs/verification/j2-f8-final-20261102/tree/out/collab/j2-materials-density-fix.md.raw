@@ -1,0 +1,13 @@
+# 材料 M01/M02 定点修复
+
+2026-11-02；只改原材料 model 与永久 smoke，两个文件SHA见 j2-materials/density-fix-identity.json；冻结交独审，其余材料源/同位素路径不变。
+
+真正入口是 src/Materials/MaterialCommandParser.cc 的 ParseNumberUnit/ParseDensity，不是通用 Utils/UnitParser。GUI 按其数值前缀、可选单个 *、去空白/单位小写语义解析6个单位别名；保留原始密度字符串，不写回重排。CLHEP内部质量单位由11.3/11.4 SystemOfUnits.h 的 e_SI/MeV/ns/mm定义推导，按后端 value * mass / volume 原运算顺序检查中间乘法及最终有限正值；拒绝数字下溢到零。不能先预除mass/volume再乘，后者会掩盖中间溢出。
+
+永久定点命令 python -B tools/test_assert_probe.py gui/smoke_tests/smoke_j2_materials.py --density-only：441个v3入口通过，覆盖6别名×数字/大小写/可选*组合、导入→model→writer→parser原文保持、溢出/中间溢出/下溢/负值/错误单位。日志 j2-materials/density-p2-fix-final.log。
+
+真实11.3定点11例全部通过，6个合法大小写/*/三单位六别名场景各1事件完成并核对实际密度；4个单位或中间溢出及1个真实下溢场景受控退出1。脚本 j2-materials/density-backend.py，最终receipt j2-materials/density-runtime-final/receipt.json；首次探索用例把1e-310误认为Windows strtod会拒绝，实测退出0，已保留失败log。修复没有据此扩大为拒绝全部非零subnormal：Windows实际解析接受它，真正下溢到零用1e-999；最终用例按观察修正，未追改旧结果。不声称当前共享C++构建或全矩阵通过。
+
+正式runner可使用Case args=(--backend,)：未给--output时tempfile.mkdtemp建立唯一目录，打印J2 backend evidence并保留；显式output要求新目录。已实际执行成功，日志 j2-materials/backend-auto-output.log，保留证据目录D:\Temp\g4usim-j2-materials-backend-n7qxlvnt。没有改runner，登记交main。
+
+Ptolemy姓名不是有效agent UUID，直接工具发送失败；已用父任务真实ID发送通知，请main转Ptolemy复核。材料两个文件此后暂不动，继续F8。

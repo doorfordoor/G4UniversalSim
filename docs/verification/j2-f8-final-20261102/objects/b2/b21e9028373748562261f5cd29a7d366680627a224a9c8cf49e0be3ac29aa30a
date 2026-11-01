@@ -1,0 +1,17 @@
+# Out-only测试修正草案（作者交付，待他人独审）
+
+候选56b689fb9ac920cbb1203b2b94dae2483d25f622。tests.patch未apply；三文件原始与草案SHA在manifest.json。git apply --check通过，不改tracked源。正式首轮64/2与严格失败门禁保持原样。
+
+1. smoke_source_editor_v2：仅以J2真实active_rules契约替换旧“所有rules不可编辑”断言；空列表和仅disabled保留行都必须拒绝，检查enabled process rule原因，并以collect_diagnostics核对physics/bias_rules机器字段及error类型；一个合法enabled规则通过编辑模型校验作为对照，不声称后端偏置或物理验证。
+2. smoke_scans和smoke_scans_backend：两处fixture仅增加deepcopy导入与materials=deepcopy(project.materialEditor)。不回填旧材料路径。两个scan文件所有原assert的AST逐项完全相同，包括lots len==1、生成结果、队列/完成状态、PSTAR6%+3σ、每点400事件、seed101/202。
+
+作者验证validation.log/json：使用已核对D盘venv，out草案在内存执行，__file__绑定原源码位置以保证导入ROOT属于C候选，未创建QApplication/native/render。source全部函数（含先前square/annulus/cone preview-only和最后save/load）通过；scan能量/seed/厚度/材料生成通过；silicon backend fixture能量3点+seed2点生成通过。三tracked源SHA均不变。初次out harness误把source入口当main函数，KeyError在validation-harness-error.log单独保留；修正的是out harness。
+
+后续断言风险排查：
+- source旧preview-only断言目前仍对应基础SourceEditableModel的方形/环形/cone路径；J2高级GPS列表是另一入口。未因高级GPS存在而删基础拒绝断言；本次实际全部通过，没有第二处unsupported串行失败。
+- source原hook失败后的save/load四断言本次已实际覆盖，无新问题。
+- scan原失败后的合法能量/seed/厚度及材料页生成依赖同一dirty材料对象，补快照后已逐类生成；全scan断言AST保持，因此没有用放宽lots/吞错误换绿色。
+- Backend fixture同样漏文档，已确认生成可达；真实5次后端运行、PSTAR容差、CSV行数、每点完成事件及Qt runner收尾仍待独立复核/正式执行，不能用本次生成验证保证运行通过。原EXE默认fallback旧build_vs2026现存，但runner显式注入G4USIM_EXE；此草案不扩大范围修改该旧默认。
+- 整份新profile应由完整Dvenv启动，gui_3d_view含Windows native子路径；35组件已单独exit0无内部SKIP（../native-3d-20261102-014628/receipt.json），不拼接回首轮报告。
+
+main正等待Harvey定位150缩放焦点/viewport问题。本任务不启动全profile，不修改业务、runner或测试。草案交其他人独审后再由main决定应用与新candidate。

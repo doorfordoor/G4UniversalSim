@@ -1,0 +1,146 @@
+{
+  "action": "generate",
+  "can_run": false,
+  "created_at": "2026-11-01T19:56:44.627259+00:00",
+  "diagnostics": {
+    "can_run": false,
+    "diagnostics": [
+      {
+        "code": "config.path.geometry.missing",
+        "identity": "1b81731a7ceff888b18865dafeec91cc3c1e18e27bbb3fd574b6c81e8cb4e926",
+        "identity_parameters": {},
+        "location": {
+          "collection": "",
+          "editor": "setup",
+          "entity": "",
+          "field": "geometry_config",
+          "row": null,
+          "snapshot_id": ""
+        },
+        "message": "Geometry config does not exist: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-source-copy\\original-geometry.ini",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Geometry config does not exist: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-source-copy\\original-geometry.ini",
+        "related_locations": [],
+        "severity": "error",
+        "source": null,
+        "unavailable_reason": ""
+      },
+      {
+        "code": "config.geometry.source_copy.active",
+        "identity": "884316ceb5bd10e9e7fbfc2d554020a10cd4ffacd5e5f35eac4ce0fb21245103",
+        "identity_parameters": {},
+        "location": {
+          "collection": "",
+          "editor": "geometry",
+          "entity": "",
+          "field": "source_copy_mode",
+          "row": null,
+          "snapshot_id": ""
+        },
+        "message": "Geometry Editor: original source copy mode is active; blocked fields are preserved but not certified by editor validation.",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Geometry Editor: original source copy mode is active; blocked fields are preserved but not certified by editor validation.",
+        "related_locations": [],
+        "severity": "warning",
+        "source": null,
+        "unavailable_reason": ""
+      },
+      {
+        "code": "config.information.add_editor_summary_info.1",
+        "identity": "076621de6d5f9d1ebd4e62868ccb49f737cba8ce77d8104cc0d1466438feb785",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Source summary: preset=proton_beam, particle=e-, energy=1 MeV",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Source summary: preset=proton_beam, particle=e-, energy=1 MeV",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.add_editor_summary_info.2",
+        "identity": "bec34ce34da794f9ac60aee2015471e1923ef869b68f88d42f016a862efb53d6",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Physics summary: mode=reference, reference=FTFP_BERT, default_cut=0.1 mm, biasing=False",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Physics summary: mode=reference, reference=FTFP_BERT, default_cut=0.1 mm, biasing=False",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.add_editor_summary_info.3",
+        "identity": "d91acc777a7b14b1d3460ae8828b7559d510acd72772d733b727a9e9477cda70",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Scoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Scoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "experiment.captured_source.changed",
+        "identity": "b206a255b0cc00cbd8e1630a6457db8cc33cb9706fd16f04aea2428f6bcd0a3d",
+        "identity_parameters": {},
+        "location": {
+          "collection": "",
+          "editor": "setup",
+          "entity": "",
+          "field": "geometry_config",
+          "row": null,
+          "snapshot_id": ""
+        },
+        "message": "geometry",
+        "message_key": "",
+        "origin": "experiment",
+        "params": {},
+        "raw_message": "geometry",
+        "related_locations": [],
+        "severity": "error",
+        "source": null,
+        "unavailable_reason": "source_changed"
+      }
+    ],
+    "errors": [
+      "Geometry config does not exist: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-source-copy\\original-geometry.ini",
+      "geometry"
+    ],
+    "info": [
+      "Source summary: preset=proton_beam, particle=e-, energy=1 MeV",
+      "Physics summary: mode=reference, reference=FTFP_BERT, default_cut=0.1 mm, biasing=False",
+      "Scoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100"
+    ],
+    "schema": "g4usim_diagnostics_v1",
+    "snapshot_id": "49b2f7c4ddd97f438bd0c34cd5084643ddf4f1b84f7be88e53e25282e2de57c5",
+    "warnings": [
+      "Geometry Editor: original source copy mode is active; blocked fields are preserved but not certified by editor validation."
+    ]
+  },
+  "finished_at": "2026-11-01T19:56:44.674089+00:00",
+  "level": "generation",
+  "reason": "experiment.fields_rejected",
+  "record_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\22e6eed2a06e440aaabf446a61e88064",
+  "record_id": "22e6eed2a06e440aaabf446a61e88064",
+  "revision": 0,
+  "run_id": "22e6eed2a06e440aaabf446a61e88064",
+  "schema": "g4usim_experiment_record_v1",
+  "session_id": "8d861f15c1454d608dbc4cf780c18ef4",
+  "stale": false,
+  "status": "failed"
+}

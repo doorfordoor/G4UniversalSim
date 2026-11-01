@@ -1,0 +1,14 @@
+# J2/F8 第三候选九文件文档冻结 v2（仅 OUT）
+
+冻结标记：`frozen=true`，不是以 stage_completed=false 代替冻结。尚未 apply；未改 tracked，未启动/停止正式命令、产品测试、构建或 native。
+
+- 基线 HEAD：`2901f4254303c3a9089c9025717908c0d77ff190`，九文件原字节 SHA 均匹配，前后 tracked clean。
+- docs.patch：`841da554af311ac5af84630311b79d3ee54f47963ad8ab8e4faad9f1da34ffab`，28208 bytes。
+- manifest.json：`dee8d8909952a7f97085e80061f2413f2e0ee568932e266c03d4c9980ce80aa2`。
+- 旧初稿及7b90cae3补丁原字节保留，v2不覆盖原版。
+
+正文按与产品一起应用提交后的第三修复候选描述；History/spacer/STL/K1专项独审均完成，K1完整603入口/13组，113 integration31/6790/gate0；114仍运行中是本快照事实，不阻塞文档冻结，也不承诺其终态。五份本机通过与四份CI原终态各按原身份，旧失败不改绿。新candidate完整验收、三档新repair相关原生范围及阶段关闭仍待进行。
+
+范围固定为manifest列出的九个Markdown文件。STATUS只替换当前段；agent-history严格追加且保留原全文前缀；其余添加当前说明并仅最小更新当前ROADMAP行、J2页首及schema v8句，有日期的旧段不重写。没有未归档OUT公共链接，没有提高物理支持等级。K1写明原拼写no_links先于resolve、规范身份重复/未用拒绝和collect/export末端复核；不承诺任意并发替换安全。原生2901f42开放项按原快照保留，已审修复不冒充新候选通过。
+
+validation.json记录九SHA、历史保护、新链接、空白及git apply --check只读通过；未apply。Feynman只需审范围/历史/链接/新契约错误边界/证据不过度结论，不重跑产品或native。若需修改保留本版并另起v3。

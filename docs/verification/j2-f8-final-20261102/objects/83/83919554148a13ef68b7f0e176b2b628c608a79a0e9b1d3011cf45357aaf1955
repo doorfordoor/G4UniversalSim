@@ -1,0 +1,10 @@
+# 第四候选五文档冻结v3（仅OUT，未apply）
+
+保留v1/v2全部原件。相对v2仅根AGENTS.md §0增加一条第四修复候选短索引，精确指向新增同名history标题；删除新增一行及分隔空行即可恢复AGENTS全部原字节。前四候选文件与v2逐字节相同，STATUS launch/report字段归属更正仍保留。没有GUI AGENTS或其它页改动。
+
+v2-to-v3.delta.patch只含AGENTS增量；v1-to-v3.delta.patch同时记录STATUS单句更正与AGENTS增量。完整docs.patch是相对五份未改tracked源的统一应用补丁。未重做300log或产品/native检查，继承v1证据/v2范围。
+
+docs.patch SHA256：`3cbdb2975abcb36a88325f49851cddef0d025c2ca6cf8c82a62cb8ce1bcc1a03`
+manifest.json SHA256：`e094037f010be282fc9ee91572103913e58199a9a22009b96333823fa53efbea`
+
+5源SHA核对、原索引字节保护、目标heading/anchor以及read-only apply --check0。main预期两test diff允许，未写tracked；未来HEAD map/新增代表性native仍pending，阶段未关闭。请Feynman只核明确delta及继承四文档原字节。

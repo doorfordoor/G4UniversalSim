@@ -1,0 +1,35 @@
+{
+  "schema": "G4UniversalSimScan",
+  "version": 1,
+  "name": "seeds",
+  "parameter": "run.seed",
+  "parameter_label": "random seed",
+  "values": [
+    "101",
+    "202"
+  ],
+  "scan_dir": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021203_scan_seeds",
+  "created": "2026-11-02T02:12:03",
+  "threads": 2,
+  "seed": 12345,
+  "points": [
+    {
+      "index": 0,
+      "value": "101",
+      "package_dir": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021203_scan_seeds\\20261102_021203_seeds_p000",
+      "output_dir": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021203_scan_seeds\\20261102_021203_seeds_p000\\output",
+      "main_ini": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021203_scan_seeds\\20261102_021203_seeds_p000\\config\\main.ini",
+      "macro": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021203_scan_seeds\\20261102_021203_seeds_p000\\macros\\run.mac",
+      "seed": 101
+    },
+    {
+      "index": 1,
+      "value": "202",
+      "package_dir": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021203_scan_seeds\\20261102_021203_seeds_p001",
+      "output_dir": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021203_scan_seeds\\20261102_021203_seeds_p001\\output",
+      "main_ini": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021203_scan_seeds\\20261102_021203_seeds_p001\\config\\main.ini",
+      "macro": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021203_scan_seeds\\20261102_021203_seeds_p001\\macros\\run.mac",
+      "seed": 202
+    }
+  ]
+}

@@ -1,0 +1,6005 @@
+{
+  "rows": [
+    {
+      "stage": "01-project-initial",
+      "page": 1,
+      "stack": {
+        "class": "WorkspacePageStack",
+        "name": "pageViewport",
+        "accessible": "",
+        "visible": true,
+        "geometry": [
+          0,
+          0,
+          612,
+          464
+        ],
+        "global": [
+          221,
+          128,
+          612,
+          464
+        ],
+        "minimum": [
+          0,
+          0
+        ],
+        "min_hint": [
+          612,
+          66
+        ],
+        "hint": [
+          612,
+          408
+        ]
+      },
+      "actual_central": {
+        "class": "ProjectPage",
+        "name": "",
+        "accessible": "",
+        "visible": true,
+        "geometry": [
+          0,
+          0,
+          612,
+          464
+        ],
+        "global": [
+          221,
+          128,
+          612,
+          464
+        ],
+        "minimum": [
+          0,
+          0
+        ],
+        "min_hint": [
+          66,
+          66
+        ],
+        "hint": [
+          612,
+          408
+        ]
+      },
+      "focus": {
+        "class": "QLineEdit",
+        "name": "",
+        "accessible": "项目名称",
+        "visible": true,
+        "geometry": [
+          80,
+          44,
+          190,
+          32
+        ],
+        "global": [
+          313,
+          228,
+          190,
+          32
+        ],
+        "minimum": [
+          0,
+          32
+        ],
+        "min_hint": [
+          48,
+          32
+        ],
+        "hint": [
+          124,
+          32
+        ]
+      },
+      "project_field": {
+        "class": "QLineEdit",
+        "name": "",
+        "accessible": "项目名称",
+        "visible": true,
+        "geometry": [
+          80,
+          44,
+          190,
+          32
+        ],
+        "global": [
+          313,
+          228,
+          190,
+          32
+        ],
+        "minimum": [
+          0,
+          32
+        ],
+        "min_hint": [
+          48,
+          32
+        ],
+        "hint": [
+          124,
+          32
+        ]
+      },
+      "ancestors": [
+        {
+          "class": "QGroupBox",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            292,
+            455
+          ],
+          "global": [
+            233,
+            184,
+            292,
+            455
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            292,
+            256
+          ],
+          "hint": [
+            451,
+            256
+          ]
+        },
+        {
+          "class": "QSplitter",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            12,
+            56,
+            585,
+            455
+          ],
+          "global": [
+            233,
+            184,
+            585,
+            455
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            585,
+            452
+          ],
+          "hint": [
+            811,
+            455
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            609,
+            523
+          ],
+          "global": [
+            221,
+            128,
+            609,
+            523
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            609,
+            503
+          ],
+          "hint": [
+            835,
+            506
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            602,
+            454
+          ],
+          "global": [
+            221,
+            128,
+            602,
+            454
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "projectContentScroll",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            612,
+            464
+          ],
+          "global": [
+            221,
+            128,
+            612,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            602,
+            454
+          ],
+          "field_mapped": [
+            92,
+            100,
+            190,
+            32
+          ],
+          "intersection": [
+            92,
+            100,
+            190,
+            32
+          ],
+          "h": [
+            0,
+            7
+          ],
+          "v": [
+            0,
+            69
+          ]
+        },
+        {
+          "class": "ProjectPage",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            612,
+            464
+          ],
+          "global": [
+            221,
+            128,
+            612,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ]
+        },
+        {
+          "class": "WorkspacePageStack",
+          "name": "pageViewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            612,
+            464
+          ],
+          "global": [
+            221,
+            128,
+            612,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            612,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ]
+        },
+        {
+          "class": "QMainWindow",
+          "name": "workspaceHost_workspace",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            612,
+            464
+          ],
+          "global": [
+            221,
+            128,
+            612,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            612,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            612,
+            464
+          ],
+          "global": [
+            221,
+            128,
+            612,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            612,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            540,
+            464
+          ],
+          "global": [
+            221,
+            128,
+            540,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "workspaceContentScroll",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            66,
+            540,
+            474
+          ],
+          "global": [
+            221,
+            128,
+            540,
+            474
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            528,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            540,
+            464
+          ],
+          "field_mapped": [
+            92,
+            100,
+            190,
+            32
+          ],
+          "intersection": [
+            92,
+            100,
+            190,
+            32
+          ],
+          "h": [
+            0,
+            72
+          ],
+          "v": [
+            0,
+            0
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "contentHost",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            220,
+            0,
+            540,
+            540
+          ],
+          "global": [
+            221,
+            62,
+            540,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            280,
+            132
+          ],
+          "hint": [
+            528,
+            474
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "appShell",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            500,
+            505
+          ],
+          "hint": [
+            748,
+            505
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "workspaceShellScroll",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            61,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "field_mapped": [
+            312,
+            166,
+            190,
+            32
+          ],
+          "intersection": [
+            312,
+            166,
+            190,
+            32
+          ],
+          "h": [
+            0,
+            0
+          ],
+          "v": [
+            0,
+            0
+          ]
+        },
+        {
+          "class": "MainWindow",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            1,
+            1,
+            760,
+            640
+          ],
+          "global": [
+            1,
+            1,
+            760,
+            640
+          ],
+          "minimum": [
+            533,
+            480
+          ],
+          "min_hint": [
+            66,
+            166
+          ],
+          "hint": [
+            612,
+            508
+          ]
+        }
+      ],
+      "docks": {
+        "configuration": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_configuration",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            620,
+            380
+          ],
+          "global": [
+            221,
+            128,
+            620,
+            380
+          ],
+          "minimum": [
+            620,
+            380
+          ],
+          "min_hint": [
+            620,
+            380
+          ],
+          "hint": [
+            1092,
+            548
+          ]
+        },
+        "preview": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_preview",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            100,
+            85
+          ],
+          "global": [
+            221,
+            128,
+            100,
+            85
+          ],
+          "minimum": [
+            66,
+            85
+          ],
+          "min_hint": [
+            66,
+            85
+          ],
+          "hint": [
+            436,
+            427
+          ]
+        },
+        "results": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_results",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            100,
+            85
+          ],
+          "global": [
+            221,
+            128,
+            100,
+            85
+          ],
+          "minimum": [
+            66,
+            85
+          ],
+          "min_hint": [
+            66,
+            85
+          ],
+          "hint": [
+            612,
+            427
+          ]
+        },
+        "logs": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_logs",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            133,
+            208
+          ],
+          "global": [
+            221,
+            128,
+            133,
+            208
+          ],
+          "minimum": [
+            133,
+            208
+          ],
+          "min_hint": [
+            133,
+            208
+          ],
+          "hint": [
+            272,
+            316
+          ]
+        },
+        "ai": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_ai",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            100,
+            54
+          ],
+          "global": [
+            221,
+            128,
+            100,
+            54
+          ],
+          "minimum": [
+            52,
+            54
+          ],
+          "min_hint": [
+            52,
+            54
+          ],
+          "hint": [
+            297,
+            71
+          ]
+        }
+      },
+      "content_h": [
+        0,
+        72
+      ],
+      "content_v": [
+        0,
+        0
+      ]
+    },
+    {
+      "stage": "02-config",
+      "page": 2,
+      "stack": {
+        "class": "WorkspacePageStack",
+        "name": "pageViewport",
+        "accessible": "",
+        "visible": true,
+        "geometry": [
+          -500,
+          -500,
+          0,
+          0
+        ],
+        "global": [
+          -279,
+          -372,
+          0,
+          0
+        ],
+        "minimum": [
+          0,
+          0
+        ],
+        "min_hint": [
+          0,
+          0
+        ],
+        "hint": [
+          0,
+          0
+        ]
+      },
+      "actual_central": {
+        "class": "QWidget",
+        "name": "",
+        "accessible": "",
+        "visible": true,
+        "geometry": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "global": [
+          -279,
+          -372,
+          0,
+          0
+        ],
+        "minimum": [
+          0,
+          0
+        ],
+        "min_hint": [
+          -1,
+          -1
+        ],
+        "hint": [
+          -1,
+          -1
+        ]
+      },
+      "focus": {
+        "class": "QToolButton",
+        "name": "",
+        "accessible": "运行",
+        "visible": true,
+        "geometry": [
+          0,
+          0,
+          59,
+          28
+        ],
+        "global": [
+          241,
+          209,
+          59,
+          28
+        ],
+        "minimum": [
+          0,
+          0
+        ],
+        "min_hint": [
+          59,
+          28
+        ],
+        "hint": [
+          59,
+          28
+        ]
+      },
+      "project_field": {
+        "class": "QLineEdit",
+        "name": "",
+        "accessible": "项目名称",
+        "visible": false,
+        "geometry": [
+          80,
+          44,
+          190,
+          32
+        ],
+        "global": [
+          -187,
+          -272,
+          190,
+          32
+        ],
+        "minimum": [
+          0,
+          32
+        ],
+        "min_hint": [
+          48,
+          32
+        ],
+        "hint": [
+          124,
+          32
+        ]
+      },
+      "ancestors": [
+        {
+          "class": "QGroupBox",
+          "name": "",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            292,
+            455
+          ],
+          "global": [
+            -267,
+            -316,
+            292,
+            455
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            292,
+            256
+          ],
+          "hint": [
+            451,
+            256
+          ]
+        },
+        {
+          "class": "QSplitter",
+          "name": "",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            12,
+            56,
+            585,
+            455
+          ],
+          "global": [
+            -267,
+            -316,
+            585,
+            455
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            585,
+            452
+          ],
+          "hint": [
+            811,
+            455
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            609,
+            523
+          ],
+          "global": [
+            -279,
+            -372,
+            609,
+            523
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            609,
+            503
+          ],
+          "hint": [
+            835,
+            506
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            602,
+            454
+          ],
+          "global": [
+            -279,
+            -372,
+            602,
+            454
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "projectContentScroll",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            612,
+            464
+          ],
+          "global": [
+            -279,
+            -372,
+            612,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            602,
+            454
+          ],
+          "field_mapped": [
+            92,
+            100,
+            190,
+            32
+          ],
+          "intersection": [
+            92,
+            100,
+            190,
+            32
+          ],
+          "h": [
+            0,
+            7
+          ],
+          "v": [
+            0,
+            69
+          ]
+        },
+        {
+          "class": "ProjectPage",
+          "name": "",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            612,
+            464
+          ],
+          "global": [
+            -279,
+            -372,
+            612,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ]
+        },
+        {
+          "class": "WorkspacePageStack",
+          "name": "pageViewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            -500,
+            -500,
+            0,
+            0
+          ],
+          "global": [
+            -279,
+            -372,
+            0,
+            0
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            0,
+            0
+          ],
+          "hint": [
+            0,
+            0
+          ]
+        },
+        {
+          "class": "QMainWindow",
+          "name": "workspaceHost_workspace",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            698,
+            464
+          ],
+          "global": [
+            221,
+            128,
+            698,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            698,
+            380
+          ],
+          "hint": [
+            1540,
+            548
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            698,
+            464
+          ],
+          "global": [
+            221,
+            128,
+            698,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            698,
+            380
+          ],
+          "hint": [
+            1540,
+            548
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            540,
+            464
+          ],
+          "global": [
+            221,
+            128,
+            540,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "workspaceContentScroll",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            66,
+            540,
+            474
+          ],
+          "global": [
+            221,
+            128,
+            540,
+            474
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            528,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            540,
+            464
+          ],
+          "field_mapped": [
+            -408,
+            -400,
+            190,
+            32
+          ],
+          "intersection": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "h": [
+            0,
+            158
+          ],
+          "v": [
+            0,
+            0
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "contentHost",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            220,
+            0,
+            540,
+            540
+          ],
+          "global": [
+            221,
+            62,
+            540,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            280,
+            132
+          ],
+          "hint": [
+            528,
+            474
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "appShell",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            500,
+            505
+          ],
+          "hint": [
+            748,
+            505
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "workspaceShellScroll",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            61,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "field_mapped": [
+            -188,
+            -334,
+            190,
+            32
+          ],
+          "intersection": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "h": [
+            0,
+            0
+          ],
+          "v": [
+            0,
+            0
+          ]
+        },
+        {
+          "class": "MainWindow",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            1,
+            1,
+            760,
+            640
+          ],
+          "global": [
+            1,
+            1,
+            760,
+            640
+          ],
+          "minimum": [
+            533,
+            480
+          ],
+          "min_hint": [
+            66,
+            166
+          ],
+          "hint": [
+            612,
+            508
+          ]
+        }
+      ],
+      "docks": {
+        "configuration": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_configuration",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            620,
+            464
+          ],
+          "global": [
+            221,
+            128,
+            620,
+            464
+          ],
+          "minimum": [
+            620,
+            380
+          ],
+          "min_hint": [
+            620,
+            380
+          ],
+          "hint": [
+            1092,
+            548
+          ]
+        },
+        "preview": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_preview",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            632,
+            0,
+            66,
+            464
+          ],
+          "global": [
+            853,
+            128,
+            66,
+            464
+          ],
+          "minimum": [
+            66,
+            85
+          ],
+          "min_hint": [
+            66,
+            85
+          ],
+          "hint": [
+            436,
+            427
+          ]
+        },
+        "results": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_results",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            100,
+            85
+          ],
+          "global": [
+            221,
+            128,
+            100,
+            85
+          ],
+          "minimum": [
+            66,
+            85
+          ],
+          "min_hint": [
+            66,
+            85
+          ],
+          "hint": [
+            612,
+            427
+          ]
+        },
+        "logs": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_logs",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            133,
+            208
+          ],
+          "global": [
+            221,
+            128,
+            133,
+            208
+          ],
+          "minimum": [
+            133,
+            208
+          ],
+          "min_hint": [
+            133,
+            208
+          ],
+          "hint": [
+            272,
+            316
+          ]
+        },
+        "ai": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_ai",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            100,
+            54
+          ],
+          "global": [
+            221,
+            128,
+            100,
+            54
+          ],
+          "minimum": [
+            52,
+            54
+          ],
+          "min_hint": [
+            52,
+            54
+          ],
+          "hint": [
+            297,
+            71
+          ]
+        }
+      },
+      "content_h": [
+        0,
+        158
+      ],
+      "content_v": [
+        0,
+        0
+      ]
+    },
+    {
+      "stage": "03-f6",
+      "page": 2,
+      "stack": {
+        "class": "WorkspacePageStack",
+        "name": "pageViewport",
+        "accessible": "",
+        "visible": true,
+        "geometry": [
+          -500,
+          -500,
+          0,
+          0
+        ],
+        "global": [
+          -437,
+          -372,
+          0,
+          0
+        ],
+        "minimum": [
+          0,
+          0
+        ],
+        "min_hint": [
+          0,
+          0
+        ],
+        "hint": [
+          0,
+          0
+        ]
+      },
+      "actual_central": {
+        "class": "QWidget",
+        "name": "",
+        "accessible": "",
+        "visible": true,
+        "geometry": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "global": [
+          -437,
+          -372,
+          0,
+          0
+        ],
+        "minimum": [
+          0,
+          0
+        ],
+        "min_hint": [
+          -1,
+          -1
+        ],
+        "hint": [
+          -1,
+          -1
+        ]
+      },
+      "focus": {
+        "class": "QPushButton",
+        "name": "",
+        "accessible": "刷新预览",
+        "visible": true,
+        "geometry": [
+          9,
+          9,
+          82,
+          32
+        ],
+        "global": [
+          704,
+          156,
+          82,
+          32
+        ],
+        "minimum": [
+          0,
+          32
+        ],
+        "min_hint": [
+          82,
+          32
+        ],
+        "hint": [
+          82,
+          32
+        ]
+      },
+      "project_field": {
+        "class": "QLineEdit",
+        "name": "",
+        "accessible": "项目名称",
+        "visible": false,
+        "geometry": [
+          80,
+          44,
+          190,
+          32
+        ],
+        "global": [
+          -345,
+          -272,
+          190,
+          32
+        ],
+        "minimum": [
+          0,
+          32
+        ],
+        "min_hint": [
+          48,
+          32
+        ],
+        "hint": [
+          124,
+          32
+        ]
+      },
+      "ancestors": [
+        {
+          "class": "QGroupBox",
+          "name": "",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            292,
+            455
+          ],
+          "global": [
+            -425,
+            -316,
+            292,
+            455
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            292,
+            256
+          ],
+          "hint": [
+            451,
+            256
+          ]
+        },
+        {
+          "class": "QSplitter",
+          "name": "",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            12,
+            56,
+            585,
+            455
+          ],
+          "global": [
+            -425,
+            -316,
+            585,
+            455
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            585,
+            452
+          ],
+          "hint": [
+            811,
+            455
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            609,
+            523
+          ],
+          "global": [
+            -437,
+            -372,
+            609,
+            523
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            609,
+            503
+          ],
+          "hint": [
+            835,
+            506
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            602,
+            454
+          ],
+          "global": [
+            -437,
+            -372,
+            602,
+            454
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "projectContentScroll",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            612,
+            464
+          ],
+          "global": [
+            -437,
+            -372,
+            612,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            602,
+            454
+          ],
+          "field_mapped": [
+            92,
+            100,
+            190,
+            32
+          ],
+          "intersection": [
+            92,
+            100,
+            190,
+            32
+          ],
+          "h": [
+            0,
+            7
+          ],
+          "v": [
+            0,
+            69
+          ]
+        },
+        {
+          "class": "ProjectPage",
+          "name": "",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            612,
+            464
+          ],
+          "global": [
+            -437,
+            -372,
+            612,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ]
+        },
+        {
+          "class": "WorkspacePageStack",
+          "name": "pageViewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            -500,
+            -500,
+            0,
+            0
+          ],
+          "global": [
+            -437,
+            -372,
+            0,
+            0
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            0,
+            0
+          ],
+          "hint": [
+            0,
+            0
+          ]
+        },
+        {
+          "class": "QMainWindow",
+          "name": "workspaceHost_workspace",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            698,
+            464
+          ],
+          "global": [
+            63,
+            128,
+            698,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            698,
+            380
+          ],
+          "hint": [
+            1540,
+            548
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            -158,
+            0,
+            698,
+            464
+          ],
+          "global": [
+            63,
+            128,
+            698,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            698,
+            380
+          ],
+          "hint": [
+            1540,
+            548
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            540,
+            464
+          ],
+          "global": [
+            221,
+            128,
+            540,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "workspaceContentScroll",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            66,
+            540,
+            474
+          ],
+          "global": [
+            221,
+            128,
+            540,
+            474
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            528,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            540,
+            464
+          ],
+          "field_mapped": [
+            -566,
+            -400,
+            190,
+            32
+          ],
+          "intersection": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "h": [
+            158,
+            158
+          ],
+          "v": [
+            0,
+            0
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "contentHost",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            220,
+            0,
+            540,
+            540
+          ],
+          "global": [
+            221,
+            62,
+            540,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            280,
+            132
+          ],
+          "hint": [
+            528,
+            474
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "appShell",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            500,
+            505
+          ],
+          "hint": [
+            748,
+            505
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "workspaceShellScroll",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            61,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "field_mapped": [
+            -346,
+            -334,
+            190,
+            32
+          ],
+          "intersection": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "h": [
+            0,
+            0
+          ],
+          "v": [
+            0,
+            0
+          ]
+        },
+        {
+          "class": "MainWindow",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            1,
+            1,
+            760,
+            640
+          ],
+          "global": [
+            1,
+            1,
+            760,
+            640
+          ],
+          "minimum": [
+            533,
+            480
+          ],
+          "min_hint": [
+            66,
+            166
+          ],
+          "hint": [
+            612,
+            508
+          ]
+        }
+      ],
+      "docks": {
+        "configuration": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_configuration",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            620,
+            464
+          ],
+          "global": [
+            63,
+            128,
+            620,
+            464
+          ],
+          "minimum": [
+            620,
+            380
+          ],
+          "min_hint": [
+            620,
+            380
+          ],
+          "hint": [
+            1092,
+            548
+          ]
+        },
+        "preview": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_preview",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            632,
+            0,
+            66,
+            464
+          ],
+          "global": [
+            695,
+            128,
+            66,
+            464
+          ],
+          "minimum": [
+            66,
+            85
+          ],
+          "min_hint": [
+            66,
+            85
+          ],
+          "hint": [
+            436,
+            427
+          ]
+        },
+        "results": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_results",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            100,
+            85
+          ],
+          "global": [
+            63,
+            128,
+            100,
+            85
+          ],
+          "minimum": [
+            66,
+            85
+          ],
+          "min_hint": [
+            66,
+            85
+          ],
+          "hint": [
+            612,
+            427
+          ]
+        },
+        "logs": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_logs",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            133,
+            208
+          ],
+          "global": [
+            63,
+            128,
+            133,
+            208
+          ],
+          "minimum": [
+            133,
+            208
+          ],
+          "min_hint": [
+            133,
+            208
+          ],
+          "hint": [
+            272,
+            316
+          ]
+        },
+        "ai": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_ai",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            100,
+            54
+          ],
+          "global": [
+            63,
+            128,
+            100,
+            54
+          ],
+          "minimum": [
+            52,
+            54
+          ],
+          "min_hint": [
+            52,
+            54
+          ],
+          "hint": [
+            297,
+            71
+          ]
+        }
+      },
+      "content_h": [
+        158,
+        158
+      ],
+      "content_v": [
+        0,
+        0
+      ]
+    },
+    {
+      "stage": "04-cancel",
+      "page": 2,
+      "stack": {
+        "class": "WorkspacePageStack",
+        "name": "pageViewport",
+        "accessible": "",
+        "visible": true,
+        "geometry": [
+          -500,
+          -500,
+          0,
+          0
+        ],
+        "global": [
+          -437,
+          -372,
+          0,
+          0
+        ],
+        "minimum": [
+          0,
+          0
+        ],
+        "min_hint": [
+          0,
+          0
+        ],
+        "hint": [
+          0,
+          0
+        ]
+      },
+      "actual_central": {
+        "class": "QWidget",
+        "name": "",
+        "accessible": "",
+        "visible": true,
+        "geometry": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "global": [
+          -437,
+          -372,
+          0,
+          0
+        ],
+        "minimum": [
+          0,
+          0
+        ],
+        "min_hint": [
+          -1,
+          -1
+        ],
+        "hint": [
+          -1,
+          -1
+        ]
+      },
+      "focus": null,
+      "project_field": {
+        "class": "QLineEdit",
+        "name": "",
+        "accessible": "项目名称",
+        "visible": false,
+        "geometry": [
+          80,
+          44,
+          190,
+          32
+        ],
+        "global": [
+          -345,
+          -272,
+          190,
+          32
+        ],
+        "minimum": [
+          0,
+          32
+        ],
+        "min_hint": [
+          48,
+          32
+        ],
+        "hint": [
+          124,
+          32
+        ]
+      },
+      "ancestors": [
+        {
+          "class": "QGroupBox",
+          "name": "",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            292,
+            455
+          ],
+          "global": [
+            -425,
+            -316,
+            292,
+            455
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            292,
+            256
+          ],
+          "hint": [
+            451,
+            256
+          ]
+        },
+        {
+          "class": "QSplitter",
+          "name": "",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            12,
+            56,
+            585,
+            455
+          ],
+          "global": [
+            -425,
+            -316,
+            585,
+            455
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            585,
+            452
+          ],
+          "hint": [
+            811,
+            455
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            609,
+            523
+          ],
+          "global": [
+            -437,
+            -372,
+            609,
+            523
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            609,
+            503
+          ],
+          "hint": [
+            835,
+            506
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            602,
+            454
+          ],
+          "global": [
+            -437,
+            -372,
+            602,
+            454
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "projectContentScroll",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            612,
+            464
+          ],
+          "global": [
+            -437,
+            -372,
+            612,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            602,
+            454
+          ],
+          "field_mapped": [
+            92,
+            100,
+            190,
+            32
+          ],
+          "intersection": [
+            92,
+            100,
+            190,
+            32
+          ],
+          "h": [
+            0,
+            7
+          ],
+          "v": [
+            0,
+            69
+          ]
+        },
+        {
+          "class": "ProjectPage",
+          "name": "",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            612,
+            464
+          ],
+          "global": [
+            -437,
+            -372,
+            612,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ]
+        },
+        {
+          "class": "WorkspacePageStack",
+          "name": "pageViewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            -500,
+            -500,
+            0,
+            0
+          ],
+          "global": [
+            -437,
+            -372,
+            0,
+            0
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            0,
+            0
+          ],
+          "hint": [
+            0,
+            0
+          ]
+        },
+        {
+          "class": "QMainWindow",
+          "name": "workspaceHost_workspace",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            698,
+            464
+          ],
+          "global": [
+            63,
+            128,
+            698,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            698,
+            380
+          ],
+          "hint": [
+            1540,
+            548
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            -158,
+            0,
+            698,
+            464
+          ],
+          "global": [
+            63,
+            128,
+            698,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            698,
+            380
+          ],
+          "hint": [
+            1540,
+            548
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            540,
+            464
+          ],
+          "global": [
+            221,
+            128,
+            540,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "workspaceContentScroll",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            66,
+            540,
+            474
+          ],
+          "global": [
+            221,
+            128,
+            540,
+            474
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            528,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            540,
+            464
+          ],
+          "field_mapped": [
+            -566,
+            -400,
+            190,
+            32
+          ],
+          "intersection": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "h": [
+            158,
+            158
+          ],
+          "v": [
+            0,
+            0
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "contentHost",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            220,
+            0,
+            540,
+            540
+          ],
+          "global": [
+            221,
+            62,
+            540,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            280,
+            132
+          ],
+          "hint": [
+            528,
+            474
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "appShell",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            500,
+            505
+          ],
+          "hint": [
+            748,
+            505
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "workspaceShellScroll",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            61,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "field_mapped": [
+            -346,
+            -334,
+            190,
+            32
+          ],
+          "intersection": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "h": [
+            0,
+            0
+          ],
+          "v": [
+            0,
+            0
+          ]
+        },
+        {
+          "class": "MainWindow",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            1,
+            1,
+            760,
+            640
+          ],
+          "global": [
+            1,
+            1,
+            760,
+            640
+          ],
+          "minimum": [
+            533,
+            480
+          ],
+          "min_hint": [
+            66,
+            166
+          ],
+          "hint": [
+            612,
+            508
+          ]
+        }
+      ],
+      "docks": {
+        "configuration": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_configuration",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            620,
+            464
+          ],
+          "global": [
+            63,
+            128,
+            620,
+            464
+          ],
+          "minimum": [
+            620,
+            380
+          ],
+          "min_hint": [
+            620,
+            380
+          ],
+          "hint": [
+            1092,
+            548
+          ]
+        },
+        "preview": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_preview",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            632,
+            0,
+            66,
+            464
+          ],
+          "global": [
+            695,
+            128,
+            66,
+            464
+          ],
+          "minimum": [
+            66,
+            85
+          ],
+          "min_hint": [
+            66,
+            85
+          ],
+          "hint": [
+            436,
+            427
+          ]
+        },
+        "results": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_results",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            100,
+            85
+          ],
+          "global": [
+            63,
+            128,
+            100,
+            85
+          ],
+          "minimum": [
+            66,
+            85
+          ],
+          "min_hint": [
+            66,
+            85
+          ],
+          "hint": [
+            612,
+            427
+          ]
+        },
+        "logs": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_logs",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            133,
+            208
+          ],
+          "global": [
+            63,
+            128,
+            133,
+            208
+          ],
+          "minimum": [
+            133,
+            208
+          ],
+          "min_hint": [
+            133,
+            208
+          ],
+          "hint": [
+            272,
+            316
+          ]
+        },
+        "ai": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_ai",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            100,
+            54
+          ],
+          "global": [
+            63,
+            128,
+            100,
+            54
+          ],
+          "minimum": [
+            52,
+            54
+          ],
+          "min_hint": [
+            52,
+            54
+          ],
+          "hint": [
+            297,
+            71
+          ]
+        }
+      },
+      "content_h": [
+        158,
+        158
+      ],
+      "content_v": [
+        0,
+        0
+      ]
+    },
+    {
+      "stage": "05-dark",
+      "page": 2,
+      "stack": {
+        "class": "WorkspacePageStack",
+        "name": "pageViewport",
+        "accessible": "",
+        "visible": true,
+        "geometry": [
+          -500,
+          -500,
+          0,
+          0
+        ],
+        "global": [
+          -437,
+          -372,
+          0,
+          0
+        ],
+        "minimum": [
+          0,
+          0
+        ],
+        "min_hint": [
+          0,
+          0
+        ],
+        "hint": [
+          0,
+          0
+        ]
+      },
+      "actual_central": {
+        "class": "QWidget",
+        "name": "",
+        "accessible": "",
+        "visible": true,
+        "geometry": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "global": [
+          -437,
+          -372,
+          0,
+          0
+        ],
+        "minimum": [
+          0,
+          0
+        ],
+        "min_hint": [
+          -1,
+          -1
+        ],
+        "hint": [
+          -1,
+          -1
+        ]
+      },
+      "focus": null,
+      "project_field": {
+        "class": "QLineEdit",
+        "name": "",
+        "accessible": "项目名称",
+        "visible": false,
+        "geometry": [
+          80,
+          44,
+          190,
+          32
+        ],
+        "global": [
+          -345,
+          -272,
+          190,
+          32
+        ],
+        "minimum": [
+          0,
+          32
+        ],
+        "min_hint": [
+          48,
+          32
+        ],
+        "hint": [
+          124,
+          32
+        ]
+      },
+      "ancestors": [
+        {
+          "class": "QGroupBox",
+          "name": "",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            292,
+            455
+          ],
+          "global": [
+            -425,
+            -316,
+            292,
+            455
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            292,
+            256
+          ],
+          "hint": [
+            451,
+            256
+          ]
+        },
+        {
+          "class": "QSplitter",
+          "name": "",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            12,
+            56,
+            585,
+            455
+          ],
+          "global": [
+            -425,
+            -316,
+            585,
+            455
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            585,
+            452
+          ],
+          "hint": [
+            811,
+            455
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            609,
+            523
+          ],
+          "global": [
+            -437,
+            -372,
+            609,
+            523
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            609,
+            503
+          ],
+          "hint": [
+            835,
+            506
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            602,
+            454
+          ],
+          "global": [
+            -437,
+            -372,
+            602,
+            454
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "projectContentScroll",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            612,
+            464
+          ],
+          "global": [
+            -437,
+            -372,
+            612,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            602,
+            454
+          ],
+          "field_mapped": [
+            92,
+            100,
+            190,
+            32
+          ],
+          "intersection": [
+            92,
+            100,
+            190,
+            32
+          ],
+          "h": [
+            0,
+            7
+          ],
+          "v": [
+            0,
+            69
+          ]
+        },
+        {
+          "class": "ProjectPage",
+          "name": "",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            612,
+            464
+          ],
+          "global": [
+            -437,
+            -372,
+            612,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ]
+        },
+        {
+          "class": "WorkspacePageStack",
+          "name": "pageViewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            -500,
+            -500,
+            0,
+            0
+          ],
+          "global": [
+            -437,
+            -372,
+            0,
+            0
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            0,
+            0
+          ],
+          "hint": [
+            0,
+            0
+          ]
+        },
+        {
+          "class": "QMainWindow",
+          "name": "workspaceHost_workspace",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            698,
+            464
+          ],
+          "global": [
+            63,
+            128,
+            698,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            698,
+            380
+          ],
+          "hint": [
+            1540,
+            548
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            -158,
+            0,
+            698,
+            464
+          ],
+          "global": [
+            63,
+            128,
+            698,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            698,
+            380
+          ],
+          "hint": [
+            1540,
+            548
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            540,
+            464
+          ],
+          "global": [
+            221,
+            128,
+            540,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "workspaceContentScroll",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            66,
+            540,
+            474
+          ],
+          "global": [
+            221,
+            128,
+            540,
+            474
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            528,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            540,
+            464
+          ],
+          "field_mapped": [
+            -566,
+            -400,
+            190,
+            32
+          ],
+          "intersection": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "h": [
+            158,
+            158
+          ],
+          "v": [
+            0,
+            0
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "contentHost",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            220,
+            0,
+            540,
+            540
+          ],
+          "global": [
+            221,
+            62,
+            540,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            280,
+            132
+          ],
+          "hint": [
+            528,
+            474
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "appShell",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            500,
+            505
+          ],
+          "hint": [
+            748,
+            505
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "workspaceShellScroll",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            61,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "field_mapped": [
+            -346,
+            -334,
+            190,
+            32
+          ],
+          "intersection": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "h": [
+            0,
+            0
+          ],
+          "v": [
+            0,
+            0
+          ]
+        },
+        {
+          "class": "MainWindow",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            1,
+            1,
+            760,
+            640
+          ],
+          "global": [
+            1,
+            1,
+            760,
+            640
+          ],
+          "minimum": [
+            533,
+            480
+          ],
+          "min_hint": [
+            66,
+            166
+          ],
+          "hint": [
+            612,
+            508
+          ]
+        }
+      ],
+      "docks": {
+        "configuration": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_configuration",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            620,
+            464
+          ],
+          "global": [
+            63,
+            128,
+            620,
+            464
+          ],
+          "minimum": [
+            620,
+            380
+          ],
+          "min_hint": [
+            620,
+            380
+          ],
+          "hint": [
+            1092,
+            548
+          ]
+        },
+        "preview": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_preview",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            632,
+            0,
+            66,
+            464
+          ],
+          "global": [
+            695,
+            128,
+            66,
+            464
+          ],
+          "minimum": [
+            66,
+            85
+          ],
+          "min_hint": [
+            66,
+            85
+          ],
+          "hint": [
+            436,
+            427
+          ]
+        },
+        "results": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_results",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            100,
+            85
+          ],
+          "global": [
+            63,
+            128,
+            100,
+            85
+          ],
+          "minimum": [
+            66,
+            85
+          ],
+          "min_hint": [
+            66,
+            85
+          ],
+          "hint": [
+            612,
+            427
+          ]
+        },
+        "logs": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_logs",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            133,
+            208
+          ],
+          "global": [
+            63,
+            128,
+            133,
+            208
+          ],
+          "minimum": [
+            133,
+            208
+          ],
+          "min_hint": [
+            133,
+            208
+          ],
+          "hint": [
+            272,
+            316
+          ]
+        },
+        "ai": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_ai",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            100,
+            54
+          ],
+          "global": [
+            63,
+            128,
+            100,
+            54
+          ],
+          "minimum": [
+            52,
+            54
+          ],
+          "min_hint": [
+            52,
+            54
+          ],
+          "hint": [
+            297,
+            71
+          ]
+        }
+      },
+      "content_h": [
+        158,
+        158
+      ],
+      "content_v": [
+        0,
+        0
+      ]
+    },
+    {
+      "stage": "06-project-final",
+      "page": 1,
+      "stack": {
+        "class": "WorkspacePageStack",
+        "name": "pageViewport",
+        "accessible": "",
+        "visible": true,
+        "geometry": [
+          626,
+          0,
+          612,
+          464
+        ],
+        "global": [
+          486,
+          128,
+          612,
+          464
+        ],
+        "minimum": [
+          0,
+          0
+        ],
+        "min_hint": [
+          612,
+          66
+        ],
+        "hint": [
+          612,
+          408
+        ]
+      },
+      "actual_central": {
+        "class": "ProjectPage",
+        "name": "",
+        "accessible": "",
+        "visible": true,
+        "geometry": [
+          0,
+          0,
+          612,
+          464
+        ],
+        "global": [
+          486,
+          128,
+          612,
+          464
+        ],
+        "minimum": [
+          0,
+          0
+        ],
+        "min_hint": [
+          66,
+          66
+        ],
+        "hint": [
+          612,
+          408
+        ]
+      },
+      "focus": {
+        "class": "QLineEdit",
+        "name": "",
+        "accessible": "项目名称",
+        "visible": true,
+        "geometry": [
+          80,
+          44,
+          190,
+          32
+        ],
+        "global": [
+          571,
+          159,
+          190,
+          32
+        ],
+        "minimum": [
+          0,
+          32
+        ],
+        "min_hint": [
+          48,
+          32
+        ],
+        "hint": [
+          124,
+          32
+        ]
+      },
+      "project_field": {
+        "class": "QLineEdit",
+        "name": "",
+        "accessible": "项目名称",
+        "visible": true,
+        "geometry": [
+          80,
+          44,
+          190,
+          32
+        ],
+        "global": [
+          571,
+          159,
+          190,
+          32
+        ],
+        "minimum": [
+          0,
+          32
+        ],
+        "min_hint": [
+          48,
+          32
+        ],
+        "hint": [
+          124,
+          32
+        ]
+      },
+      "ancestors": [
+        {
+          "class": "QGroupBox",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            292,
+            455
+          ],
+          "global": [
+            491,
+            115,
+            292,
+            455
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            292,
+            256
+          ],
+          "hint": [
+            451,
+            256
+          ]
+        },
+        {
+          "class": "QSplitter",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            12,
+            56,
+            585,
+            455
+          ],
+          "global": [
+            491,
+            115,
+            585,
+            455
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            585,
+            452
+          ],
+          "hint": [
+            811,
+            455
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            -7,
+            -69,
+            609,
+            523
+          ],
+          "global": [
+            479,
+            59,
+            609,
+            523
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            609,
+            503
+          ],
+          "hint": [
+            835,
+            506
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            602,
+            454
+          ],
+          "global": [
+            486,
+            128,
+            602,
+            454
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "projectContentScroll",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            612,
+            464
+          ],
+          "global": [
+            486,
+            128,
+            612,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            602,
+            454
+          ],
+          "field_mapped": [
+            85,
+            31,
+            190,
+            32
+          ],
+          "intersection": [
+            85,
+            31,
+            190,
+            32
+          ],
+          "h": [
+            7,
+            7
+          ],
+          "v": [
+            69,
+            69
+          ]
+        },
+        {
+          "class": "ProjectPage",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            612,
+            464
+          ],
+          "global": [
+            486,
+            128,
+            612,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ]
+        },
+        {
+          "class": "WorkspacePageStack",
+          "name": "pageViewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            626,
+            0,
+            612,
+            464
+          ],
+          "global": [
+            486,
+            128,
+            612,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            612,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ]
+        },
+        {
+          "class": "QMainWindow",
+          "name": "workspaceHost_workspace",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            1310,
+            464
+          ],
+          "global": [
+            -140,
+            128,
+            1310,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            1310,
+            380
+          ],
+          "hint": [
+            2152,
+            548
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            -361,
+            0,
+            1310,
+            464
+          ],
+          "global": [
+            -140,
+            128,
+            1310,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            1310,
+            380
+          ],
+          "hint": [
+            2152,
+            548
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            540,
+            464
+          ],
+          "global": [
+            221,
+            128,
+            540,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "workspaceContentScroll",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            66,
+            540,
+            474
+          ],
+          "global": [
+            221,
+            128,
+            540,
+            474
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            528,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            540,
+            464
+          ],
+          "field_mapped": [
+            350,
+            31,
+            190,
+            32
+          ],
+          "intersection": [
+            350,
+            31,
+            190,
+            32
+          ],
+          "h": [
+            361,
+            770
+          ],
+          "v": [
+            0,
+            0
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "contentHost",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            220,
+            0,
+            540,
+            540
+          ],
+          "global": [
+            221,
+            62,
+            540,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            280,
+            132
+          ],
+          "hint": [
+            528,
+            474
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "appShell",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            500,
+            505
+          ],
+          "hint": [
+            748,
+            505
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "workspaceShellScroll",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            61,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "field_mapped": [
+            570,
+            97,
+            190,
+            32
+          ],
+          "intersection": [
+            570,
+            97,
+            190,
+            32
+          ],
+          "h": [
+            0,
+            0
+          ],
+          "v": [
+            0,
+            0
+          ]
+        },
+        {
+          "class": "MainWindow",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            1,
+            1,
+            760,
+            640
+          ],
+          "global": [
+            1,
+            1,
+            760,
+            640
+          ],
+          "minimum": [
+            533,
+            480
+          ],
+          "min_hint": [
+            66,
+            166
+          ],
+          "hint": [
+            612,
+            508
+          ]
+        }
+      ],
+      "docks": {
+        "configuration": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_configuration",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            620,
+            464
+          ],
+          "global": [
+            -140,
+            128,
+            620,
+            464
+          ],
+          "minimum": [
+            620,
+            380
+          ],
+          "min_hint": [
+            620,
+            380
+          ],
+          "hint": [
+            1092,
+            548
+          ]
+        },
+        "preview": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_preview",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            1244,
+            0,
+            66,
+            464
+          ],
+          "global": [
+            1104,
+            128,
+            66,
+            464
+          ],
+          "minimum": [
+            66,
+            85
+          ],
+          "min_hint": [
+            66,
+            85
+          ],
+          "hint": [
+            436,
+            427
+          ]
+        },
+        "results": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_results",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            100,
+            85
+          ],
+          "global": [
+            -140,
+            128,
+            100,
+            85
+          ],
+          "minimum": [
+            66,
+            85
+          ],
+          "min_hint": [
+            66,
+            85
+          ],
+          "hint": [
+            612,
+            427
+          ]
+        },
+        "logs": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_logs",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            133,
+            208
+          ],
+          "global": [
+            -140,
+            128,
+            133,
+            208
+          ],
+          "minimum": [
+            133,
+            208
+          ],
+          "min_hint": [
+            133,
+            208
+          ],
+          "hint": [
+            272,
+            316
+          ]
+        },
+        "ai": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_ai",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            100,
+            54
+          ],
+          "global": [
+            -140,
+            128,
+            100,
+            54
+          ],
+          "minimum": [
+            52,
+            54
+          ],
+          "min_hint": [
+            52,
+            54
+          ],
+          "hint": [
+            297,
+            71
+          ]
+        }
+      },
+      "content_h": [
+        361,
+        770
+      ],
+      "content_v": [
+        0,
+        0
+      ]
+    },
+    {
+      "stage": "07-project-settled",
+      "page": 1,
+      "stack": {
+        "class": "WorkspacePageStack",
+        "name": "pageViewport",
+        "accessible": "",
+        "visible": true,
+        "geometry": [
+          626,
+          0,
+          612,
+          464
+        ],
+        "global": [
+          486,
+          128,
+          612,
+          464
+        ],
+        "minimum": [
+          0,
+          0
+        ],
+        "min_hint": [
+          612,
+          66
+        ],
+        "hint": [
+          612,
+          408
+        ]
+      },
+      "actual_central": {
+        "class": "ProjectPage",
+        "name": "",
+        "accessible": "",
+        "visible": true,
+        "geometry": [
+          0,
+          0,
+          612,
+          464
+        ],
+        "global": [
+          486,
+          128,
+          612,
+          464
+        ],
+        "minimum": [
+          0,
+          0
+        ],
+        "min_hint": [
+          66,
+          66
+        ],
+        "hint": [
+          612,
+          408
+        ]
+      },
+      "focus": {
+        "class": "QLineEdit",
+        "name": "",
+        "accessible": "项目名称",
+        "visible": true,
+        "geometry": [
+          80,
+          44,
+          190,
+          32
+        ],
+        "global": [
+          571,
+          159,
+          190,
+          32
+        ],
+        "minimum": [
+          0,
+          32
+        ],
+        "min_hint": [
+          48,
+          32
+        ],
+        "hint": [
+          124,
+          32
+        ]
+      },
+      "project_field": {
+        "class": "QLineEdit",
+        "name": "",
+        "accessible": "项目名称",
+        "visible": true,
+        "geometry": [
+          80,
+          44,
+          190,
+          32
+        ],
+        "global": [
+          571,
+          159,
+          190,
+          32
+        ],
+        "minimum": [
+          0,
+          32
+        ],
+        "min_hint": [
+          48,
+          32
+        ],
+        "hint": [
+          124,
+          32
+        ]
+      },
+      "ancestors": [
+        {
+          "class": "QGroupBox",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            292,
+            455
+          ],
+          "global": [
+            491,
+            115,
+            292,
+            455
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            292,
+            256
+          ],
+          "hint": [
+            451,
+            256
+          ]
+        },
+        {
+          "class": "QSplitter",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            12,
+            56,
+            585,
+            455
+          ],
+          "global": [
+            491,
+            115,
+            585,
+            455
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            585,
+            452
+          ],
+          "hint": [
+            811,
+            455
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            -7,
+            -69,
+            609,
+            523
+          ],
+          "global": [
+            479,
+            59,
+            609,
+            523
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            609,
+            503
+          ],
+          "hint": [
+            835,
+            506
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            602,
+            454
+          ],
+          "global": [
+            486,
+            128,
+            602,
+            454
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "projectContentScroll",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            612,
+            464
+          ],
+          "global": [
+            486,
+            128,
+            612,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            602,
+            454
+          ],
+          "field_mapped": [
+            85,
+            31,
+            190,
+            32
+          ],
+          "intersection": [
+            85,
+            31,
+            190,
+            32
+          ],
+          "h": [
+            7,
+            7
+          ],
+          "v": [
+            69,
+            69
+          ]
+        },
+        {
+          "class": "ProjectPage",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            612,
+            464
+          ],
+          "global": [
+            486,
+            128,
+            612,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ]
+        },
+        {
+          "class": "WorkspacePageStack",
+          "name": "pageViewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            626,
+            0,
+            612,
+            464
+          ],
+          "global": [
+            486,
+            128,
+            612,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            612,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ]
+        },
+        {
+          "class": "QMainWindow",
+          "name": "workspaceHost_workspace",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            1310,
+            464
+          ],
+          "global": [
+            -140,
+            128,
+            1310,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            1310,
+            380
+          ],
+          "hint": [
+            2152,
+            548
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            -361,
+            0,
+            1310,
+            464
+          ],
+          "global": [
+            -140,
+            128,
+            1310,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            1310,
+            380
+          ],
+          "hint": [
+            2152,
+            548
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            540,
+            464
+          ],
+          "global": [
+            221,
+            128,
+            540,
+            464
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "workspaceContentScroll",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            66,
+            540,
+            474
+          ],
+          "global": [
+            221,
+            128,
+            540,
+            474
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            528,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            540,
+            464
+          ],
+          "field_mapped": [
+            350,
+            31,
+            190,
+            32
+          ],
+          "intersection": [
+            350,
+            31,
+            190,
+            32
+          ],
+          "h": [
+            361,
+            770
+          ],
+          "v": [
+            0,
+            0
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "contentHost",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            220,
+            0,
+            540,
+            540
+          ],
+          "global": [
+            221,
+            62,
+            540,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            280,
+            132
+          ],
+          "hint": [
+            528,
+            474
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "appShell",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            500,
+            505
+          ],
+          "hint": [
+            748,
+            505
+          ]
+        },
+        {
+          "class": "QWidget",
+          "name": "qt_scrollarea_viewport",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            -1,
+            -1
+          ],
+          "hint": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "class": "QScrollArea",
+          "name": "workspaceShellScroll",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            61,
+            760,
+            540
+          ],
+          "global": [
+            1,
+            62,
+            760,
+            540
+          ],
+          "minimum": [
+            0,
+            0
+          ],
+          "min_hint": [
+            66,
+            66
+          ],
+          "hint": [
+            612,
+            408
+          ],
+          "viewport": [
+            0,
+            0,
+            760,
+            540
+          ],
+          "field_mapped": [
+            570,
+            97,
+            190,
+            32
+          ],
+          "intersection": [
+            570,
+            97,
+            190,
+            32
+          ],
+          "h": [
+            0,
+            0
+          ],
+          "v": [
+            0,
+            0
+          ]
+        },
+        {
+          "class": "MainWindow",
+          "name": "",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            1,
+            1,
+            760,
+            640
+          ],
+          "global": [
+            1,
+            1,
+            760,
+            640
+          ],
+          "minimum": [
+            533,
+            480
+          ],
+          "min_hint": [
+            66,
+            166
+          ],
+          "hint": [
+            612,
+            508
+          ]
+        }
+      ],
+      "docks": {
+        "configuration": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_configuration",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            0,
+            0,
+            620,
+            464
+          ],
+          "global": [
+            -140,
+            128,
+            620,
+            464
+          ],
+          "minimum": [
+            620,
+            380
+          ],
+          "min_hint": [
+            620,
+            380
+          ],
+          "hint": [
+            1092,
+            548
+          ]
+        },
+        "preview": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_preview",
+          "accessible": "",
+          "visible": true,
+          "geometry": [
+            1244,
+            0,
+            66,
+            464
+          ],
+          "global": [
+            1104,
+            128,
+            66,
+            464
+          ],
+          "minimum": [
+            66,
+            85
+          ],
+          "min_hint": [
+            66,
+            85
+          ],
+          "hint": [
+            436,
+            427
+          ]
+        },
+        "results": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_results",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            100,
+            85
+          ],
+          "global": [
+            -140,
+            128,
+            100,
+            85
+          ],
+          "minimum": [
+            66,
+            85
+          ],
+          "min_hint": [
+            66,
+            85
+          ],
+          "hint": [
+            612,
+            427
+          ]
+        },
+        "logs": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_logs",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            133,
+            208
+          ],
+          "global": [
+            -140,
+            128,
+            133,
+            208
+          ],
+          "minimum": [
+            133,
+            208
+          ],
+          "min_hint": [
+            133,
+            208
+          ],
+          "hint": [
+            272,
+            316
+          ]
+        },
+        "ai": {
+          "class": "WorkspaceDock",
+          "name": "workspaceDock_ai",
+          "accessible": "",
+          "visible": false,
+          "geometry": [
+            0,
+            0,
+            100,
+            54
+          ],
+          "global": [
+            -140,
+            128,
+            100,
+            54
+          ],
+          "minimum": [
+            52,
+            54
+          ],
+          "min_hint": [
+            52,
+            54
+          ],
+          "hint": [
+            297,
+            71
+          ]
+        }
+      },
+      "content_h": [
+        361,
+        770
+      ],
+      "content_v": [
+        0,
+        0
+      ]
+    }
+  ],
+  "deferred_reveals": [
+    {
+      "debug": "arm",
+      "name": "项目名称"
+    },
+    {
+      "debug": "flush",
+      "pending": "<PySide6.QtWidgets.QLineEdit(0x1a294b85170) at 0x000001A2960A2540>",
+      "focus": "<PySide6.QtWidgets.QLineEdit(0x1a294b85170) at 0x000001A2960A2540>",
+      "valid_owner": true
+    },
+    {
+      "debug": "flush",
+      "pending": "<PySide6.QtWidgets.QLineEdit(0x1a294b85170) at 0x000001A2960A2540>",
+      "focus": "<PySide6.QtWidgets.QLineEdit(0x1a294b85170) at 0x000001A2960A2540>",
+      "valid_owner": true
+    },
+    {
+      "name": "项目名称",
+      "before_h": 0,
+      "after_h": 0
+    },
+    {
+      "debug": "arm",
+      "name": "运行"
+    },
+    {
+      "debug": "flush",
+      "pending": "<PySide6.QtWidgets.QToolButton(0x1a2965254f0) at 0x000001A2960B9280>",
+      "focus": "<PySide6.QtWidgets.QToolButton(0x1a2965254f0) at 0x000001A2960B9280>",
+      "valid_owner": true
+    },
+    {
+      "debug": "flush",
+      "pending": "<PySide6.QtWidgets.QToolButton(0x1a2965254f0) at 0x000001A2960B9280>",
+      "focus": "<PySide6.QtWidgets.QToolButton(0x1a2965254f0) at 0x000001A2960B9280>",
+      "valid_owner": true
+    },
+    {
+      "debug": "flush",
+      "pending": "<PySide6.QtWidgets.QToolButton(0x1a2965254f0) at 0x000001A2960B9280>",
+      "focus": "<PySide6.QtWidgets.QToolButton(0x1a2965254f0) at 0x000001A2960B9280>",
+      "valid_owner": true
+    },
+    {
+      "name": "运行",
+      "before_h": 0,
+      "after_h": 0
+    },
+    {
+      "debug": "arm",
+      "name": "刷新预览"
+    },
+    {
+      "debug": "flush",
+      "pending": "<PySide6.QtWidgets.QPushButton(0x1a296ded7e0) at 0x000001A2972A40C0>",
+      "focus": "<PySide6.QtWidgets.QPushButton(0x1a296ded7e0) at 0x000001A2972A40C0>",
+      "valid_owner": true
+    },
+    {
+      "debug": "flush",
+      "pending": "<PySide6.QtWidgets.QPushButton(0x1a296ded7e0) at 0x000001A2972A40C0>",
+      "focus": "<PySide6.QtWidgets.QPushButton(0x1a296ded7e0) at 0x000001A2972A40C0>",
+      "valid_owner": true
+    },
+    {
+      "name": "刷新预览",
+      "before_h": 158,
+      "after_h": 158
+    },
+    {
+      "debug": "arm",
+      "name": "下一步"
+    },
+    {
+      "debug": "flush",
+      "pending": "<PySide6.QtWidgets.QPushButton(0x1a2983b5c90, name=\"__qt__passive_wizardbutton1\") at 0x000001A29A5606C0>",
+      "focus": "<PySide6.QtWidgets.QPushButton(0x1a2983b5c90, name=\"__qt__passive_wizardbutton1\") at 0x000001A29A5606C0>",
+      "valid_owner": true
+    },
+    {
+      "debug": "flush",
+      "pending": "<PySide6.QtWidgets.QPushButton(0x1a2983b5c90, name=\"__qt__passive_wizardbutton1\") at 0x000001A29A5606C0>",
+      "focus": "<PySide6.QtWidgets.QPushButton(0x1a2983b5c90, name=\"__qt__passive_wizardbutton1\") at 0x000001A29A5606C0>",
+      "valid_owner": true
+    },
+    {
+      "debug": "flush",
+      "pending": "<PySide6.QtWidgets.QPushButton(0x1a2983b5c90, name=\"__qt__passive_wizardbutton1\") at 0x000001A29A5606C0>",
+      "focus": "<PySide6.QtWidgets.QPushButton(0x1a2983b5c90, name=\"__qt__passive_wizardbutton1\") at 0x000001A29A5606C0>",
+      "valid_owner": true
+    },
+    {
+      "name": "下一步",
+      "before_h": 158,
+      "after_h": 158
+    },
+    {
+      "debug": "arm",
+      "name": "完成"
+    },
+    {
+      "debug": "flush",
+      "pending": "<PySide6.QtWidgets.QPushButton(0x1a2983b6590, name=\"qt_wizard_finish\") at 0x000001A29A579A80>",
+      "focus": "None",
+      "valid_owner": true
+    },
+    {
+      "debug": "arm",
+      "name": "刷新预览"
+    },
+    {
+      "debug": "flush",
+      "pending": "<PySide6.QtWidgets.QPushButton(0x1a296ded7e0) at 0x000001A2972A40C0>",
+      "focus": "<PySide6.QtWidgets.QPushButton(0x1a296ded7e0) at 0x000001A2972A40C0>",
+      "valid_owner": true
+    },
+    {
+      "debug": "flush",
+      "pending": "<PySide6.QtWidgets.QPushButton(0x1a296ded7e0) at 0x000001A2972A40C0>",
+      "focus": "<PySide6.QtWidgets.QPushButton(0x1a296ded7e0) at 0x000001A2972A40C0>",
+      "valid_owner": true
+    },
+    {
+      "name": "刷新预览",
+      "before_h": 158,
+      "after_h": 158
+    },
+    {
+      "debug": "arm",
+      "name": "项目名称"
+    },
+    {
+      "debug": "flush",
+      "pending": "<PySide6.QtWidgets.QLineEdit(0x1a294b85170) at 0x000001A2960A2540>",
+      "focus": "<PySide6.QtWidgets.QLineEdit(0x1a294b85170) at 0x000001A2960A2540>",
+      "valid_owner": true
+    },
+    {
+      "debug": "flush",
+      "pending": "<PySide6.QtWidgets.QLineEdit(0x1a294b85170) at 0x000001A2960A2540>",
+      "focus": "<PySide6.QtWidgets.QLineEdit(0x1a294b85170) at 0x000001A2960A2540>",
+      "valid_owner": true
+    },
+    {
+      "name": "项目名称",
+      "before_h": 0,
+      "after_h": 361
+    }
+  ],
+  "gui_source_differences": []
+}

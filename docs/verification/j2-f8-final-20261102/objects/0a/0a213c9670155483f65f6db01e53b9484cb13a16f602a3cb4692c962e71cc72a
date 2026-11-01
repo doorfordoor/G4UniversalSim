@@ -1,0 +1,46 @@
+# 下一候选四 workflow 收集复用入口（待新 commit）
+
+状态：仅离线准备。未查询/触发任何远程运行，未重跑旧HEAD，未修改tracked。首候选56b689f的ci目录及所有失败证据保持原样；migration定点闭合见out/collab/j2-migration-final-v2-independent/receipt.json（新SHA909cab4f…，521入口）。
+
+## 触发与精确身份
+
+当前四workflow均只有push/pull_request触发，没有workflow_dispatch。新候选由main提交/推送后观察预期push自动触发；本侧不调用dispatch/rerun/cancel。新40位HEAD尚未给出，不用branch最新值或旧HEAD代替。新HEAD到达后重新核对该commit里的workflow内容，避免把当前读取当成未来事实。
+
+| workflow路径 | 预期job | artifact名称 |
+|---|---|---|
+| .github/workflows/m0-static-gui.yml | Ubuntu/Windows | m0-report-ubuntu-latest；m0-report-windows-latest |
+| .github/workflows/linux-geant4.yml | Geant4 11.3.2/11.4.3 | linux-evidence-11.3.2；linux-evidence-11.4.3 |
+| .github/workflows/full-installation.yml | Linux/Windows，Geant4 11.4.3 | full-installation-Linux；full-installation-Windows |
+| .github/workflows/desktop-package.yml | Linux/Windows | frozen-desktop-Linux；frozen-desktop-Windows |
+
+每份run须核对repository、完整head_sha、event=push、workflow path、branch、run_attempt。缺少/重复run先记录事实，不自动选择或重触发。完成job日志只取一次；运行中日志未生成不推断失败。失败即报告首个实际失败step与原日志，仍继续收集其他原运行。
+
+## 已存在的复用工具
+
+仓库根下运行以下模板；占位符只有main给出新HEAD/身份后才填入执行，**本次未运行这些联网/新候选命令**。新证据根建议out/verification/j2-f8-<新短SHA>/ci，禁止复用首候选目录。
+
+```text
+python out/collab/j2-ci-review/ci_review.py list-runs --head <NEW_FULL_HEAD> --output <NEW_CI_ROOT>/public-push-runs-initial.json
+python out/collab/j2-ci-review/ci_review.py extract --zip <DOWNLOADED_ZIP> --destination <NEW_EMPTY_DESTINATION> --output <NEW_EXTRACTION_RECEIPT>
+python out/collab/j2-ci-review/ci_review.py gate --head <NEW_FULL_HEAD> --source-fingerprint <NEW_SOURCE_FP> --tests-fingerprint <NEW_TESTS_FP> --report <REPORT_JSON> --lane <LANE> --output-dir <NEW_GATE_DIRECTORY>
+```
+
+list-runs用公开GitHub API按精确SHA查push，jobs/logs/artifacts走GitHub connector。连接器调用前从当前工具inventory核对schema。四类现有操作为fetch_workflow_run_jobs、fetch_workflow_run_artifacts、fetch_workflow_job_logs、download_workflow_artifact。签名下载URL只即时使用，不持久化；ZIP大小/SHA与GitHubdigest及workflow_run归属逐项核对，已有且已验证的ZIP不重复下载。完整connector解码job日志单独标记，不冒称原始run logs ZIP。
+
+## 复用前必须重新绑定的参数
+
+- 保存新HEAD的source/tests指纹和精确Git对象身份；把该HEAD的scripts/check_report_evidence.py原字节另存新证据根并记录SHA。ci_review.py的gate/checker()默认导入当前工作树checker；调用前须保证它确属该HEAD，或在新的out适配器中明确使用候选固定副本，不能静默跟随main后续编辑。
+- 首候选analyze_reports.py、verify_installation.py内有固定HEAD/路径，**不能原样用于新候选**。可作为模板，在新out目录适配并逐项绑定新HEAD/新artifact元数据/新checker；不修改首候选工具及收据。
+- 通用receipt-check要求原始run日志ZIP，且要求job有head_sha字段；当前connector jobs不返回head_sha，完整解码job日志也不是ZIP。不能为满足它伪造字段/格式。实际绑定使用run_id→公开API完整HEAD映射及artifact.workflow_run身份，机器收据如实标记日志类型；语义核验与工作流success分别记录。
+
+## 严格门禁与历史逐例比较
+
+历史索引仍为out/collab/j2-f8-baselines.json（18份），归档路线docs/verification/i2-j1-final-20261101/automated-delivery。lane映射：m0-linux、m0-windows、linux113、linux114；每profile匹配同OS/版本历史基线。M0预期static/gui，Linux双版预期static/gui/backend/integration；上游失败而未执行的profile不计通过，不用另一平台代替。
+
+先核对归档manifest/报告/日志SHA并strict验证历史，再用新候选固定checker验证当前。核对head、双指纹、非零逐例assert、总和、原日志字节SHA、旧例不缺失及逐例status/count变化。无legacy/allow-incomplete放宽；缺报告、skip或失败都明确保留。首候选五项失败继续作为历史失败，不追改成新结果。
+
+安装证据另核对delivery身份、阶段exit和原日志SHA、retained index对象、889等源码文件数量以**实际新manifest**为准、候选.gitattributes允许的checkout换行、runtime真实summary与事件数、SDK configure/build/run、工具身份、卸载收据。桌面证据核对delivery/selftest/source stability及正负对照退出码，不把预期负例exit1当失败，也不把GUI启动等价为模拟/物理验证。
+
+终态交付：四run/八job最终状态、全部实际artifacts与日志SHA清单、strict及逐例baseline结果、desktop/installation语义收据、失败首因/原日志路径。按实际生成结果报告，不能为凑预期数量伪造缺项。
+
+下一动作：等待main提供新候选完整HEAD及CI安排，再开始只读观测；当前没有远程请求或运行进程。

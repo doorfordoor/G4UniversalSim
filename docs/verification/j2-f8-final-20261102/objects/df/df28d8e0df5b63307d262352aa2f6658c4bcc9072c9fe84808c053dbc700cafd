@@ -1,0 +1,45 @@
+{
+  "session_id": 19601,
+  "session_exit_code": 1,
+  "confirmed_terminal": true,
+  "runner_pids_confirmed_absent": [
+    16020,
+    19568
+  ],
+  "no_process_stop_performed": true,
+  "no_retry_performed": true,
+  "ending_head": "56b689fb9ac920cbb1203b2b94dae2483d25f622",
+  "ending_source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+  "executable_unchanged": true,
+  "merge_unchanged": true,
+  "profiles": {
+    "backend": {
+      "status": "failed",
+      "runner_exit_code": 1,
+      "gate_exit_code": 1,
+      "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows114-backend\\20261102-012049-57371f8c\\report.json",
+      "report_sha256": "591e52a47535115123eb12468ad886f039e1b6c08dc4a5ba0f4e2e2050ae8759",
+      "actual_cases": 63,
+      "assertion_entrances": 72428,
+      "failures": [
+        "k1_bundle_backend"
+      ]
+    },
+    "integration": {
+      "status": "failed",
+      "runner_exit_code": 1,
+      "gate_exit_code": 1,
+      "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows114-integration\\20261102-015023-8bc66545\\report.json",
+      "report_sha256": "832decccd0c0bfdf9fd9c00555e2f6167409c95035cf316c8f88c04ef8b5da4b",
+      "actual_cases": 31,
+      "assertion_entrances": 6659,
+      "failures": [
+        "gui_f4_inspect_backend",
+        "effective_gdml",
+        "gui_scans_backend"
+      ]
+    }
+  },
+  "f4_diagnosis": "f4-inspect-diagnostic/diagnosis.json",
+  "all_original_failures_preserved": true
+}

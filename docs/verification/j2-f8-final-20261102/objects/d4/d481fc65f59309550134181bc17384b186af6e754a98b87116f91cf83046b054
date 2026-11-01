@@ -1,0 +1,67 @@
+# J2 材料独立审查，交 main
+
+日期：2026-11-02。依据 `out/collab/j2-materials-implementation.md`，只读审查作者Harvey交付的五文件：core/nist_elements.py、editors/material_editor_model.py、parsers/materials_parser.py、widgets/config/materials.py、smoke_tests/smoke_j2_materials.py。前三个已有文件检查Git diff，新catalog及专项检查实际内容；核对真实MaterialIniReader/MaterialManager/MaterialFactory/MaterialCommandParser消费者。没有重复作者全套专项或改产品/STATUS。
+
+结论：**发现2项P2，未证实P1**；均在 `_validate_density`。自建元素优先、volume_fraction材料解析、同位素保留、非法源持续阻断和无源材料草稿保护的针对性检查通过。五文件SHA与作者implementation-receipt一致，独立运行前后及报告前复核均未变。
+
+## P2-M01：合法后端密度语法被GUI拒绝，阻断旧输入编辑往返
+
+定位：`gui/g4usim_gui/editors/material_editor_model.py:322–323`。
+
+复现材料：
+
+```
+[material.Probe]
+mode = mass_fraction
+density = 1 G/CM3
+components = O:1
+```
+
+实际：材料模型报告 `materials.density.invalid`，writer不能生成。替换为 `2.7 * g/cm3` 同样拒绝。独立真实后端对照，两种输入均完成1事件，run_summary `status=completed`、`actual_completed_event_count=1`。
+
+原因：新正则只允许区分大小写的单位且无可选乘号；后端 `MaterialCommandParser::ParseNumberUnit` 对unit转小写并剥离可选`*`，`ParseDensity`接受三类单位及^3别名。大小写单位此前粗校验可通过，新改动形成实际拒绝回归；带乘号同属后端合法语法不一致。不能把后端输入归类为未知密度单位。
+
+建议：GUI与后端共享或精确镜像number/unit词法，接受后端支持的大小写及可选`*`，保留原始输入文本/单位，不通过静默重写源文件修复。定点增加导入→validate→writer和1事件兼容对照即可，无需重跑全部材料矩阵。
+
+## P2-M02：只检查数值字面量有限，未拒绝密度换算后溢出
+
+定位：同文件323行。
+
+复现：`MaterialRow(name='Probe', mode='mass_fraction', density='1e308 g/cm3', components_text='O:1')`。`validate_material_document`返回零errors，字段视图视为可接受；writer复用该校验，不检查后端单位换算后的数值。
+
+真实后端处理相同输入退出1，原始诊断：
+
+```
+G4UniversalSim fatal error: Material 'Probe' requires a finite positive explicit density for mass_fraction/atom_count
+```
+
+没有正常完成摘要，不能把失败记成零沉积或物理结果。Python `float('1e308')`有限不代表乘Geant4密度单位后仍有限。这里违反有限单位链路要求；后端已拒绝，不存在已经观测到的非有限材料进入内核，故定P2而非P1。
+
+建议：在GUI早期校验复用与真实后端一致的单位换算/范围规则，检查换算结果及中间乘法溢出；同时拒绝下溢到零的正数字面量。保留raw draft并定位density，不依赖运行时fatal才发现。不要以放宽后端有限性检查或忽略校验结果修复。
+
+## 独立实际执行，非作者旧日志
+
+脚本 [review_cases.py](review_cases.py)，[完整日志](run.log)，[结构化结果](results.json)。6组针对性观察全部执行，进程退出0；程序完成不代表两项反例行为符合要求。
+
+| 用例 | 结果 |
+| --- | --- |
+| 自建O18/O优先、显式G4_O | `o`解析为自建元素，G4_O显式解析NIST；generator/parser/project保存重载保留O18同位素原文及身份 |
+| 模式分流 | volume_fraction普通O元素拒绝，G4_O密度材料接受；atom_count G4_WATER拒绝；Sii拼写拒绝 |
+| 同名材料/元素的volume_fraction优先级 | 自建材料O与元素O共存时按材料解析，通过，不把元素误作密度材料 |
+| 有限值/单位反例 | nan/1e999/零/负数/未知单位拒绝，kg/m^3合法；另两项P2见上 |
+| 重复源key持续性 | 连续校验3次保留source_errors，writer持续阻断，未被“校验成功”清除 |
+| Qt无来源材料草稿 | 输入nan密度后点击Revert，完整快照指纹和原始非法文本不变；volume_fraction禁用插入元素按钮 |
+
+GUI仅offscreen逻辑验证，不含新的截图/实际窗口、读屏或DPI结论。NIST有限目录只作早期辅助，未将其称为当前所选后端已经构造；也没有重跑作者的全部真实材料/同位素专项。
+
+### 真实后端对照的身份与范围
+
+使用作者记录中第一套11.3.2后端，独立核验exe SHA后实际执行3个新fixture（不是复用作者的5例结果）。exe SHA：`fbb7c56e820d3d36e5f87a3ef2995d55c554d4c5cb38dbaa75191422d4bc37f0`，既有构建source_fingerprint：`c2b575bbb9c594765364aa7c78150e842ffb20ff34b10ad4729720bae2c8c91b`。
+
+runtime目录及三份原始backend.log由results.json列出，uppercase/asterisk的run_summary均保存。该exe不是当前共享C++编辑树新构建，本报告不声称当前C++全构建/完整矩阵通过；两项问题还由当前真实解析器源码交叉支持。1事件仅证明相同材料输入被内核接受及事件完成，不证明材料物理数据准确性。
+
+## 交 main 与定点复测
+
+请main将P2-M01/M02交给材料作者修复，冻结五文件后定点复测：大小写/乘号/三个密度单位别名、正常数量级、字面量与换算溢出/下溢、导入保存及非法草稿保留。无须重复本轮已验证的来源/同位素全链路，除非修复改变那些路径。最终统一门禁和F8实窗由main集成。
+
+资源R01已另行独立复核关闭，见 `out/collab/j2-blank-review/r01-recheck.md`；休眠谱策略已按用户裁决定为完整编辑包严格闭包，不再列疑似缺陷。几何Reload P2仍归对应作者，不与材料结论混同。

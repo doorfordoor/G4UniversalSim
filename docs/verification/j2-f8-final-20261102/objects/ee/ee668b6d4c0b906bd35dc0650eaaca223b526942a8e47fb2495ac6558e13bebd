@@ -1,0 +1,1301 @@
+{
+  "status": "passed",
+  "head": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+  "profile": "integration",
+  "series": "113",
+  "started_utc": "2026-11-01T20:47:36Z",
+  "executable": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\G4UniversalSim.exe",
+    "sha256": "01e0fb795f93772ccfa818d625fee145d8da1ad3ad80894372a9a855f0af108a",
+    "capabilities": {
+      "schema": "G4UniversalSimCapabilities",
+      "version": 1,
+      "launch": {
+        "working_directory": true
+      },
+      "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+      "build_git_commit": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+      "build_git_source_state": "clean",
+      "build_configuration": "Release",
+      "compiler_id": "MSVC",
+      "compiler_version": "19.51.36246.0",
+      "geant4_version_number": 1132,
+      "multithreaded": true,
+      "templates": [
+        {
+          "id": "simple_box",
+          "runtime": true
+        },
+        {
+          "id": "layered_device",
+          "runtime": true
+        },
+        {
+          "id": "hierarchical",
+          "runtime": true
+        },
+        {
+          "id": "array",
+          "runtime": true
+        },
+        {
+          "id": "shielding",
+          "runtime": true
+        },
+        {
+          "id": "gdml",
+          "runtime": true
+        }
+      ],
+      "solid_registry": {
+        "internal_units": {
+          "angle": "rad",
+          "length": "mm"
+        },
+        "schema": "g4usim_solid_registry_v1",
+        "scope": "hierarchical_primitive_solids",
+        "solids": [
+          {
+            "aliases": [
+              "cube"
+            ],
+            "boolean_tool": true,
+            "builder_compatibility": "size is full x,y,z; constructor uses half lengths",
+            "experimental": false,
+            "geant4_class": "G4Box",
+            "name": "box",
+            "parameter_counts": [],
+            "parameters": [],
+            "precompute_volume": false,
+            "properties": [],
+            "uses_size": true
+          },
+          {
+            "aliases": [
+              "tube",
+              "cylinder"
+            ],
+            "boolean_tool": true,
+            "builder_compatibility": "builder accepts >=5 parameters, else positive size x,y,z: rMax=x/2,halfZ=z/2; INI forbids size",
+            "experimental": false,
+            "geant4_class": "G4Tubs",
+            "name": "tubs",
+            "parameter_counts": [
+              5
+            ],
+            "parameters": [
+              {
+                "dimension": "length",
+                "name": "rMin",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "rMax",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "halfZ",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "startPhi",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "deltaPhi",
+                "required": true
+              }
+            ],
+            "precompute_volume": false,
+            "properties": [],
+            "uses_size": false
+          },
+          {
+            "aliases": [],
+            "boolean_tool": true,
+            "builder_compatibility": "builder accepts >=6 parameters; INI requires exactly 6",
+            "experimental": false,
+            "geant4_class": "G4Sphere",
+            "name": "sphere",
+            "parameter_counts": [
+              6
+            ],
+            "parameters": [
+              {
+                "dimension": "length",
+                "name": "rMin",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "rMax",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "startPhi",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "deltaPhi",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "startTheta",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "deltaTheta",
+                "required": true
+              }
+            ],
+            "precompute_volume": false,
+            "properties": [],
+            "uses_size": false
+          },
+          {
+            "aliases": [],
+            "boolean_tool": true,
+            "builder_compatibility": "builder uses first parameter or size.x/2; INI requires exactly 1 parameter and forbids size",
+            "experimental": false,
+            "geant4_class": "G4Orb",
+            "name": "orb",
+            "parameter_counts": [
+              1
+            ],
+            "parameters": [
+              {
+                "dimension": "length",
+                "name": "radius",
+                "required": true
+              }
+            ],
+            "precompute_volume": false,
+            "properties": [],
+            "uses_size": false
+          },
+          {
+            "aliases": [
+              "cons"
+            ],
+            "boolean_tool": true,
+            "builder_compatibility": "builder accepts >=7 parameters; INI requires exactly 7",
+            "experimental": false,
+            "geant4_class": "G4Cons",
+            "name": "cone",
+            "parameter_counts": [
+              7
+            ],
+            "parameters": [
+              {
+                "dimension": "length",
+                "name": "rMin1",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "rMax1",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "rMin2",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "rMax2",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "halfZ",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "startPhi",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "deltaPhi",
+                "required": true
+              }
+            ],
+            "precompute_volume": false,
+            "properties": [],
+            "uses_size": false
+          },
+          {
+            "aliases": [
+              "trapezoid"
+            ],
+            "boolean_tool": true,
+            "builder_compatibility": "explicit half lengths",
+            "experimental": false,
+            "geant4_class": "G4Trd",
+            "name": "trd",
+            "parameter_counts": [],
+            "parameters": [],
+            "precompute_volume": false,
+            "properties": [
+              {
+                "dimension": "length",
+                "name": "dx1",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "dx2",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "dy1",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "dy2",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "dz",
+                "required": true
+              }
+            ],
+            "uses_size": false
+          },
+          {
+            "aliases": [],
+            "boolean_tool": true,
+            "builder_compatibility": "explicit half lengths and angles",
+            "experimental": false,
+            "geant4_class": "G4Trap",
+            "name": "trap",
+            "parameter_counts": [],
+            "parameters": [],
+            "precompute_volume": false,
+            "properties": [
+              {
+                "dimension": "length",
+                "name": "dz",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "theta",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "phi",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "dy1",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "dx1",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "dx2",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "alpha1",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "dy2",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "dx3",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "dx4",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "alpha2",
+                "required": true
+              }
+            ],
+            "uses_size": false
+          },
+          {
+            "aliases": [],
+            "boolean_tool": false,
+            "builder_compatibility": "3 axes or 3 axes + both cuts; omitted cuts use Geant4 defaults",
+            "experimental": true,
+            "geant4_class": "G4Ellipsoid",
+            "name": "ellipsoid",
+            "parameter_counts": [
+              3,
+              5
+            ],
+            "parameters": [
+              {
+                "dimension": "length",
+                "name": "ax",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "by",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "cz",
+                "required": true
+              },
+              {
+                "default": "0",
+                "dimension": "length",
+                "name": "zBottomCut",
+                "required": false
+              },
+              {
+                "default": "0",
+                "dimension": "length",
+                "name": "zTopCut",
+                "required": false
+              }
+            ],
+            "precompute_volume": true,
+            "properties": [],
+            "uses_size": false
+          },
+          {
+            "aliases": [
+              "elliptical_tube"
+            ],
+            "boolean_tool": false,
+            "builder_compatibility": "half lengths",
+            "experimental": true,
+            "geant4_class": "G4EllipticalTube",
+            "name": "eltube",
+            "parameter_counts": [
+              3
+            ],
+            "parameters": [
+              {
+                "dimension": "length",
+                "name": "dx",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "dy",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "dz",
+                "required": true
+              }
+            ],
+            "precompute_volume": true,
+            "properties": [],
+            "uses_size": false
+          },
+          {
+            "aliases": [],
+            "boolean_tool": false,
+            "builder_compatibility": "",
+            "experimental": true,
+            "geant4_class": "G4Torus",
+            "name": "torus",
+            "parameter_counts": [
+              5
+            ],
+            "parameters": [
+              {
+                "dimension": "length",
+                "name": "rMin",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "rMax",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "rTor",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "startPhi",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "deltaPhi",
+                "required": true
+              }
+            ],
+            "precompute_volume": true,
+            "properties": [],
+            "uses_size": false
+          },
+          {
+            "aliases": [
+              "parallelepiped"
+            ],
+            "boolean_tool": false,
+            "builder_compatibility": "half lengths and angles",
+            "experimental": true,
+            "geant4_class": "G4Para",
+            "name": "para",
+            "parameter_counts": [
+              6
+            ],
+            "parameters": [
+              {
+                "dimension": "length",
+                "name": "dx",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "dy",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "dz",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "alpha",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "theta",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "phi",
+                "required": true
+              }
+            ],
+            "precompute_volume": true,
+            "properties": [],
+            "uses_size": false
+          },
+          {
+            "aliases": [],
+            "boolean_tool": false,
+            "builder_compatibility": "",
+            "experimental": true,
+            "geant4_class": "G4Hype",
+            "name": "hype",
+            "parameter_counts": [
+              5
+            ],
+            "parameters": [
+              {
+                "dimension": "length",
+                "name": "innerRadius",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "outerRadius",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "innerStereo",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "outerStereo",
+                "required": true
+              },
+              {
+                "dimension": "length",
+                "name": "halfZ",
+                "required": true
+              }
+            ],
+            "precompute_volume": true,
+            "properties": [],
+            "uses_size": false
+          },
+          {
+            "aliases": [],
+            "boolean_tool": false,
+            "builder_compatibility": "matching lists of >=2 planes; existing relational checks remain in GeometryConfig",
+            "experimental": true,
+            "geant4_class": "G4Polycone",
+            "name": "polycone",
+            "parameter_counts": [
+              2
+            ],
+            "parameters": [
+              {
+                "dimension": "angle",
+                "name": "startPhi",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "deltaPhi",
+                "required": true
+              }
+            ],
+            "precompute_volume": true,
+            "properties": [
+              {
+                "dimension": "length_list",
+                "name": "z_planes",
+                "required": true
+              },
+              {
+                "dimension": "length_list",
+                "name": "r_inner",
+                "required": true
+              },
+              {
+                "dimension": "length_list",
+                "name": "r_outer",
+                "required": true
+              }
+            ],
+            "uses_size": false
+          },
+          {
+            "aliases": [],
+            "boolean_tool": false,
+            "builder_compatibility": "matching lists of >=2 planes; integer numSide>=3",
+            "experimental": true,
+            "geant4_class": "G4Polyhedra",
+            "name": "polyhedra",
+            "parameter_counts": [
+              3
+            ],
+            "parameters": [
+              {
+                "dimension": "angle",
+                "name": "startPhi",
+                "required": true
+              },
+              {
+                "dimension": "angle",
+                "name": "deltaPhi",
+                "required": true
+              },
+              {
+                "dimension": "integer",
+                "name": "numSide",
+                "required": true
+              }
+            ],
+            "precompute_volume": true,
+            "properties": [
+              {
+                "dimension": "length_list",
+                "name": "z_planes",
+                "required": true
+              },
+              {
+                "dimension": "length_list",
+                "name": "r_inner",
+                "required": true
+              },
+              {
+                "dimension": "length_list",
+                "name": "r_outer",
+                "required": true
+              }
+            ],
+            "uses_size": false
+          },
+          {
+            "aliases": [
+              "stl"
+            ],
+            "boolean_tool": false,
+            "builder_compatibility": "closed consistently oriented manifold STL; file.resolved is internal captured input",
+            "experimental": true,
+            "geant4_class": "G4TessellatedSolid",
+            "name": "tessellated",
+            "parameter_counts": [],
+            "parameters": [],
+            "precompute_volume": true,
+            "properties": [
+              {
+                "dimension": "path",
+                "name": "file",
+                "required": true
+              },
+              {
+                "default": "mm",
+                "dimension": "length_unit",
+                "name": "file_unit",
+                "required": false
+              }
+            ],
+            "uses_size": false
+          }
+        ],
+        "validation": "GeometryConfig source-aware checks plus existing constructors; metadata is not full numeric validation"
+      },
+      "solids": [
+        {
+          "contract": "size: three full lengths; ",
+          "id": "box",
+          "parameters": null,
+          "runtime": true
+        },
+        {
+          "contract": "rMin (length); rMax (length); halfZ (length); startPhi (angle); deltaPhi (angle); ",
+          "id": "tubs",
+          "parameters": 5,
+          "runtime": true
+        },
+        {
+          "contract": "rMin (length); rMax (length); startPhi (angle); deltaPhi (angle); startTheta (angle); deltaTheta (angle); ",
+          "id": "sphere",
+          "parameters": 6,
+          "runtime": true
+        },
+        {
+          "contract": "radius (length); ",
+          "id": "orb",
+          "parameters": 1,
+          "runtime": true
+        },
+        {
+          "contract": "rMin1 (length); rMax1 (length); rMin2 (length); rMax2 (length); halfZ (length); startPhi (angle); deltaPhi (angle); ",
+          "id": "cone",
+          "parameters": 7,
+          "runtime": true
+        },
+        {
+          "contract": "dx1 (length); dx2 (length); dy1 (length); dy2 (length); dz (length); ",
+          "id": "trd",
+          "parameters": null,
+          "runtime": true
+        },
+        {
+          "contract": "dz (length); theta (angle); phi (angle); dy1 (length); dx1 (length); dx2 (length); alpha1 (angle); dy2 (length); dx3 (length); dx4 (length); alpha2 (angle); ",
+          "id": "trap",
+          "parameters": null,
+          "runtime": true
+        },
+        {
+          "contract": "ax (length); by (length); cz (length); zBottomCut (length); zTopCut (length); ",
+          "id": "ellipsoid",
+          "parameters": 5,
+          "runtime": true
+        },
+        {
+          "contract": "dx (length); dy (length); dz (length); ",
+          "id": "eltube",
+          "parameters": 3,
+          "runtime": true
+        },
+        {
+          "contract": "rMin (length); rMax (length); rTor (length); startPhi (angle); deltaPhi (angle); ",
+          "id": "torus",
+          "parameters": 5,
+          "runtime": true
+        },
+        {
+          "contract": "dx (length); dy (length); dz (length); alpha (angle); theta (angle); phi (angle); ",
+          "id": "para",
+          "parameters": 6,
+          "runtime": true
+        },
+        {
+          "contract": "innerRadius (length); outerRadius (length); innerStereo (angle); outerStereo (angle); halfZ (length); ",
+          "id": "hype",
+          "parameters": 5,
+          "runtime": true
+        },
+        {
+          "contract": "startPhi (angle); deltaPhi (angle); z_planes (length_list); r_inner (length_list); r_outer (length_list); ",
+          "id": "polycone",
+          "parameters": 2,
+          "runtime": true
+        },
+        {
+          "contract": "startPhi (angle); deltaPhi (angle); numSide (integer); z_planes (length_list); r_inner (length_list); r_outer (length_list); ",
+          "id": "polyhedra",
+          "parameters": 3,
+          "runtime": true
+        },
+        {
+          "contract": "file (path); file_unit (length_unit); ",
+          "id": "tessellated",
+          "parameters": null,
+          "runtime": true
+        }
+      ],
+      "placements": [
+        {
+          "id": "normal",
+          "runtime": true
+        },
+        {
+          "id": "replica",
+          "runtime": true,
+          "contract": "box mother x/y/z or tubs mother phi; only daughter"
+        },
+        {
+          "id": "parameterised",
+          "runtime": true,
+          "contract": "copies_file or copies + copy_step; only daughter"
+        },
+        {
+          "id": "assembly",
+          "runtime": false
+        }
+      ],
+      "materials": [
+        {
+          "id": "nist",
+          "runtime": true
+        },
+        {
+          "id": "isotope",
+          "runtime": true
+        },
+        {
+          "id": "element",
+          "runtime": true
+        },
+        {
+          "id": "mass_fraction",
+          "runtime": true
+        },
+        {
+          "id": "atom_count",
+          "runtime": true
+        },
+        {
+          "id": "volume_fraction",
+          "runtime": true
+        },
+        {
+          "id": "temperature",
+          "runtime": false
+        },
+        {
+          "id": "pressure",
+          "runtime": false
+        }
+      ],
+      "physics": [
+        {
+          "id": "constructor_replacement",
+          "runtime": true,
+          "contract": "replace_modules explicitly replaces existing nonzero physics types; conflicts fail"
+        },
+        {
+          "id": "reference",
+          "runtime": true
+        },
+        {
+          "id": "manual",
+          "runtime": true
+        },
+        {
+          "id": "geometry_region_cuts",
+          "runtime": true
+        },
+        {
+          "id": "physics_region_cuts",
+          "runtime": true,
+          "contract": "[physics.region.<name>] gamma/e-/e+/proton"
+        },
+        {
+          "id": "region_step_limits",
+          "runtime": true,
+          "contract": "max_step, max_track_length, max_time, min_kinetic_energy (G4StepLimiterPhysics)"
+        },
+        {
+          "id": "radioactive_decay",
+          "runtime": true,
+          "contract": "[physics.radioactive_decay] enabled, time_threshold"
+        },
+        {
+          "id": "process_dump",
+          "runtime": true,
+          "contract": "/AIHL/physics/dumpProcesses, g4usim_process_dump_v1"
+        },
+        {
+          "id": "uniform_fields",
+          "runtime": true,
+          "contract": "[field] / [field.<name>] magnetic, electric"
+        },
+        {
+          "id": "field_maps",
+          "runtime": true,
+          "contract": "magnetic_map / electric_map CSV grid, trilinear"
+        },
+        {
+          "id": "local_fields",
+          "runtime": true,
+          "contract": "[field.<name>] volumes"
+        },
+        {
+          "id": "process_xs_biasing",
+          "runtime": true,
+          "physical_validation": false
+        }
+      ],
+      "sources": [
+        {
+          "id": "point_fixed",
+          "runtime": true
+        },
+        {
+          "id": "point_isotropic",
+          "runtime": true
+        },
+        {
+          "id": "plane_circle",
+          "runtime": true
+        },
+        {
+          "id": "rectangle",
+          "runtime": true,
+          "contract": "XY plane, halfx/halfy, center, fixed/isotropic"
+        },
+        {
+          "id": "annulus",
+          "runtime": true
+        },
+        {
+          "id": "ellipse",
+          "runtime": true
+        },
+        {
+          "id": "square",
+          "runtime": true
+        },
+        {
+          "id": "volume",
+          "runtime": true
+        },
+        {
+          "id": "beam_spot",
+          "runtime": true
+        },
+        {
+          "id": "confine",
+          "runtime": true
+        },
+        {
+          "id": "cone",
+          "runtime": true
+        },
+        {
+          "id": "cosine",
+          "runtime": true
+        },
+        {
+          "id": "beam1d",
+          "runtime": true
+        },
+        {
+          "id": "beam2d",
+          "runtime": true
+        },
+        {
+          "id": "focused",
+          "runtime": true
+        },
+        {
+          "id": "energy_spectra",
+          "runtime": true
+        },
+        {
+          "id": "multi_source",
+          "runtime": true,
+          "contract": "intensity-weighted selection by default"
+        },
+        {
+          "id": "multiple_vertex",
+          "runtime": true,
+          "contract": "all named sources per event; flat_sampling=false, intensity does not change vertex weights"
+        },
+        {
+          "id": "surface_sphere",
+          "runtime": true,
+          "contract": "position_type=surface shape=sphere samples the surface; volume/sphere samples the interior"
+        },
+        {
+          "id": "ion",
+          "runtime": true
+        },
+        {
+          "id": "phase_space",
+          "runtime": true
+        }
+      ],
+      "scorers": [
+        {
+          "id": "hits",
+          "runtime": true
+        },
+        {
+          "id": "edep",
+          "runtime": true
+        },
+        {
+          "id": "let",
+          "runtime": true,
+          "validation": "track/dose-averaged unrestricted electronic stopping power per sensitive touchable; proton LET_t checked against Bethe formula"
+        },
+        {
+          "id": "dose",
+          "runtime": true,
+          "validation": "per sensitive touchable, Geant4 mass; no physical benchmark"
+        },
+        {
+          "id": "fluence",
+          "runtime": true,
+          "validation": "per daughter-free sensitive touchable, track length / solid volume; no physical benchmark"
+        },
+        {
+          "id": "displacement",
+          "runtime": true,
+          "validation": "track-length fluence folded with user-supplied NIEL tables per daughter-free sensitive touchable; fold checked against an independent hits recomputation, NIEL data not benchmarked"
+        }
+      ],
+      "outputs": {
+        "schema_version": 3,
+        "run_summary_schema_version": 1,
+        "worker_suffix": "_tN",
+        "subsequent_run_suffix": "_rR",
+        "csv_units_in_header": true,
+        "automatic_merge": false,
+        "formats": [
+          "csv",
+          "root",
+          "both",
+          "auto"
+        ],
+        "default_format": "csv",
+        "auto_rule": "ROOT when scoring is enabled and hits or event_edep is enabled; CSV otherwise",
+        "provenance_schema": "g4usim_provenance_v1",
+        "root": {
+          "schema_version": 4,
+          "file": "g4usim.root",
+          "subsequent_run_file": "g4usim_rR.root",
+          "thread_merge": true,
+          "histograms": [
+            "edep_raw",
+            "edep_weighted"
+          ],
+          "ntuples": [
+            "hits",
+            "events",
+            "edep_volume",
+            "edep_particle",
+            "dose",
+            "fluence",
+            "mesh",
+            "let"
+          ]
+        },
+        "scoring_meshes": {
+          "commands": "/score/",
+          "shapes": [
+            "box",
+            "cylinder"
+          ],
+          "thread_merge": true,
+          "uncertainty": "sum_sq per event, rel_error"
+        },
+        "run_metadata": "run_metadata.json",
+        "scorer_statistics": "scorer_statistics.csv",
+        "phase_space": "phase_space_tN.csv",
+        "trajectories": "trajectories_tN.json (g4usim_trajectories_v1, [output] trajectories = N events)",
+        "geometry_mesh": "g4usim_geometry_mesh_v1"
+      },
+      "validation_scope": "configuration and runtime smoke; not physical benchmark",
+      "geometry_schema_version": null
+    }
+  },
+  "merge": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\mergeHistograms.exe",
+    "sha256": "03bf4d13996aa7b9e100feca4e3ae1579c047419c8c8b4b5f4800a016b8ba089"
+  },
+  "dependencies": {
+    "python": "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+    "PySide6": "6.11.1",
+    "shiboken6": "6.11.1",
+    "pyvista": "0.48.4",
+    "pyvistaqt": "0.11.4",
+    "vtk": "9.6.2",
+    "QtPy": "2.4.3",
+    "uproot": "5.7.7"
+  },
+  "starting_sources": {
+    "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+    "tests_content_fingerprint": "d5a1691bb3ed613faae4db96405167c0f7ea0a35aa465444e2d260a36a7e67a9",
+    "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d"
+  },
+  "child_git_status": "",
+  "child_git_longpaths": "true",
+  "environment": {
+    "removed_keys": [
+      "G4ABLADATA",
+      "G4CHANNELINGDATA",
+      "G4ENSDFSTATEDATA",
+      "G4INCLDATA",
+      "G4LEDATA",
+      "G4LEVELGAMMADATA",
+      "G4NEUTRONHPDATA",
+      "G4PARTICLEXSDATA",
+      "G4PIIDATA",
+      "G4RADIOACTIVEDATA",
+      "G4REALSURFACEDATA",
+      "G4SAIDXSDATA"
+    ],
+    "GEANT4_DATA_DIR": "D:\\ProgramFiles\\Geant4\\share\\Geant4\\data",
+    "G4USIM_EXPECT_GDML": "true",
+    "QT_QPA_PLATFORM": "offscreen",
+    "CXX": null,
+    "compiler_discovered": "D:\\msys64\\ucrt64\\bin\\g++.EXE",
+    "native_subpaths_possible": true
+  },
+  "baseline": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\i2-j1-5fe0a10\\windows113-integration\\20261101-213823-a10c064e\\report.json",
+    "sha256": "193f85ac437775d8c84bd5173d97eea5973c35a70ec12799ca44e498558113de"
+  },
+  "data_discovery": {
+    "schema": "g4usim_geant4_data_v1",
+    "geant4_version": "$Name: geant4-11-03-patch-02 [MT]$",
+    "geant4_data_dir": "D:\\ProgramFiles\\Geant4\\share\\Geant4\\data",
+    "note": "",
+    "datasets": [
+      {
+        "env": "G4LEDATA",
+        "folder": "G4EMLOW8.6.1",
+        "required": true,
+        "found": true,
+        "path": "D:\\ProgramFiles\\Geant4\\share\\Geant4\\data\\G4EMLOW8.6.1"
+      },
+      {
+        "env": "G4LEVELGAMMADATA",
+        "folder": "PhotonEvaporation6.1",
+        "required": true,
+        "found": true,
+        "path": "D:\\ProgramFiles\\Geant4\\share\\Geant4\\data\\PhotonEvaporation6.1"
+      },
+      {
+        "env": "G4RADIOACTIVEDATA",
+        "folder": "RadioactiveDecay6.1.2",
+        "required": true,
+        "found": true,
+        "path": "D:\\ProgramFiles\\Geant4\\share\\Geant4\\data\\RadioactiveDecay6.1.2"
+      },
+      {
+        "env": "G4PARTICLEXSDATA",
+        "folder": "G4PARTICLEXS4.1",
+        "required": true,
+        "found": true,
+        "path": "D:\\ProgramFiles\\Geant4\\share\\Geant4\\data\\G4PARTICLEXS4.1"
+      },
+      {
+        "env": "G4ENSDFSTATEDATA",
+        "folder": "G4ENSDFSTATE3.0",
+        "required": true,
+        "found": true,
+        "path": "D:\\ProgramFiles\\Geant4\\share\\Geant4\\data\\G4ENSDFSTATE3.0"
+      },
+      {
+        "env": "G4NEUTRONHPDATA",
+        "folder": "G4NDL4.7.1",
+        "required": false,
+        "found": true,
+        "path": "D:\\ProgramFiles\\Geant4\\share\\Geant4\\data\\G4NDL4.7.1"
+      },
+      {
+        "env": "G4PIIDATA",
+        "folder": "G4PII1.3",
+        "required": false,
+        "found": true,
+        "path": "D:\\ProgramFiles\\Geant4\\share\\Geant4\\data\\G4PII1.3"
+      },
+      {
+        "env": "G4REALSURFACEDATA",
+        "folder": "RealSurface2.2",
+        "required": false,
+        "found": true,
+        "path": "D:\\ProgramFiles\\Geant4\\share\\Geant4\\data\\RealSurface2.2"
+      },
+      {
+        "env": "G4SAIDXSDATA",
+        "folder": "G4SAIDDATA2.0",
+        "required": false,
+        "found": true,
+        "path": "D:\\ProgramFiles\\Geant4\\share\\Geant4\\data\\G4SAIDDATA2.0"
+      },
+      {
+        "env": "G4ABLADATA",
+        "folder": "G4ABLA3.3",
+        "required": false,
+        "found": true,
+        "path": "D:\\ProgramFiles\\Geant4\\share\\Geant4\\data\\G4ABLA3.3"
+      },
+      {
+        "env": "G4INCLDATA",
+        "folder": "G4INCL1.2",
+        "required": false,
+        "found": true,
+        "path": "D:\\ProgramFiles\\Geant4\\share\\Geant4\\data\\G4INCL1.2"
+      },
+      {
+        "env": "G4CHANNELINGDATA",
+        "folder": "G4CHANNELING1.0",
+        "required": false,
+        "found": true,
+        "path": "D:\\ProgramFiles\\Geant4\\share\\Geant4\\data\\G4CHANNELING1.0"
+      }
+    ],
+    "required_complete": true
+  },
+  "standalone_xerces_helper": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\gdmlInputCaptureCheck.exe",
+    "sha256": "86d9aac227016f946a02724d3b22e2823430b7a0972de7a5e16bf3acc295a39a",
+    "scope": "standalone adapter only; not the selected application GDML capability",
+    "inputs": {
+      "tools/gdmlInputCaptureCheck.cc": "44861cec93a1d1b5f8ca8aebbd40b270453b5e63260fcf8eb9a76b2f1a51c94e",
+      "src/Geometry/GdmlInputCapture.cc": "a0ee9349399e137f3ff34c3ffd2d347e097602d0d63566705b120d9df4fbb855",
+      "include/Geometry/GdmlInputCapture.hh": "454188028b4e7960f191748cdf0a8b1b226d7a9d25fb0459f237c930a1a60891",
+      "src/Config/InputProvenance.cc": "c1051668c8601acac3c1225e7aff3e0f9016496d5afbf39e25dd869d463e810f",
+      "include/Config/InputProvenance.hh": "be541ec48bd7d4d50be804e4f3a538049b1a5339a477e6d1d8c96c07236d012d"
+    },
+    "build_receipt": {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-18c5858\\identity\\build-1132.json",
+      "sha256": "c0acfd79fee854d381411c2512767f894bebc8e6043c214d1daad884e925b0de"
+    }
+  },
+  "expected_identity": {
+    "report": {
+      "git_head": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+      "profile": "integration",
+      "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+      "tests_content_fingerprint": "d5a1691bb3ed613faae4db96405167c0f7ea0a35aa465444e2d260a36a7e67a9",
+      "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+      "backend_executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\G4UniversalSim.exe",
+      "merge_executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\mergeHistograms.exe",
+      "git_dirty": false,
+      "git_status_porcelain": "",
+      "backend_build_identity": {
+        "build_configuration": "Release",
+        "compiler_id": "MSVC",
+        "compiler_version": "19.51.36246.0",
+        "geant4_version_number": 1132,
+        "multithreaded": true
+      }
+    },
+    "ending": {
+      "head": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+      "git_status": "",
+      "exe_sha256": "01e0fb795f93772ccfa818d625fee145d8da1ad3ad80894372a9a855f0af108a",
+      "merge_sha256": "03bf4d13996aa7b9e100feca4e3ae1579c047419c8c8b4b5f4800a016b8ba089",
+      "sources": {
+        "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+        "tests_content_fingerprint": "d5a1691bb3ed613faae4db96405167c0f7ea0a35aa465444e2d260a36a7e67a9",
+        "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d"
+      },
+      "helper_sha256": "86d9aac227016f946a02724d3b22e2823430b7a0972de7a5e16bf3acc295a39a",
+      "helper_inputs": {
+        "tools/gdmlInputCaptureCheck.cc": "44861cec93a1d1b5f8ca8aebbd40b270453b5e63260fcf8eb9a76b2f1a51c94e",
+        "src/Geometry/GdmlInputCapture.cc": "a0ee9349399e137f3ff34c3ffd2d347e097602d0d63566705b120d9df4fbb855",
+        "include/Geometry/GdmlInputCapture.hh": "454188028b4e7960f191748cdf0a8b1b226d7a9d25fb0459f237c930a1a60891",
+        "src/Config/InputProvenance.cc": "c1051668c8601acac3c1225e7aff3e0f9016496d5afbf39e25dd869d463e810f",
+        "include/Config/InputProvenance.hh": "be541ec48bd7d4d50be804e4f3a538049b1a5339a477e6d1d8c96c07236d012d"
+      }
+    }
+  },
+  "command": [
+    "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+    "-u",
+    "-B",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\run_m0_tests.py",
+    "--profile",
+    "integration",
+    "--executable",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\G4UniversalSim.exe",
+    "--merge-executable",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\mergeHistograms.exe",
+    "--report-root",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-18c5858\\windows113-integration",
+    "--require-tracked-sources",
+    "--fail-on-skip"
+  ],
+  "runner_pid": 58820,
+  "runner_exit_code": 0,
+  "gate_command": [
+    "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+    "--report",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-18c5858\\windows113-integration\\20261102-044742-da94814f\\report.json",
+    "--baseline",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\i2-j1-5fe0a10\\windows113-integration\\20261101-213823-a10c064e\\report.json"
+  ],
+  "gate_exit_code": 0,
+  "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-18c5858\\windows113-integration\\20261102-044742-da94814f\\report.json",
+  "report_sha256": "fc49d072e421011e655b59859ede40ab11839e960beca3b793ca206a23a9fbc7",
+  "assertions": 6790,
+  "failures": [],
+  "ending": {
+    "head": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+    "git_status": "",
+    "exe_sha256": "01e0fb795f93772ccfa818d625fee145d8da1ad3ad80894372a9a855f0af108a",
+    "merge_sha256": "03bf4d13996aa7b9e100feca4e3ae1579c047419c8c8b4b5f4800a016b8ba089",
+    "sources": {
+      "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+      "tests_content_fingerprint": "d5a1691bb3ed613faae4db96405167c0f7ea0a35aa465444e2d260a36a7e67a9",
+      "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d"
+    },
+    "helper_sha256": "86d9aac227016f946a02724d3b22e2823430b7a0972de7a5e16bf3acc295a39a",
+    "helper_inputs": {
+      "tools/gdmlInputCaptureCheck.cc": "44861cec93a1d1b5f8ca8aebbd40b270453b5e63260fcf8eb9a76b2f1a51c94e",
+      "src/Geometry/GdmlInputCapture.cc": "a0ee9349399e137f3ff34c3ffd2d347e097602d0d63566705b120d9df4fbb855",
+      "include/Geometry/GdmlInputCapture.hh": "454188028b4e7960f191748cdf0a8b1b226d7a9d25fb0459f237c930a1a60891",
+      "src/Config/InputProvenance.cc": "c1051668c8601acac3c1225e7aff3e0f9016496d5afbf39e25dd869d463e810f",
+      "include/Config/InputProvenance.hh": "be541ec48bd7d4d50be804e4f3a538049b1a5339a477e6d1d8c96c07236d012d"
+    }
+  },
+  "identity_errors": [],
+  "finished_utc": "2026-11-01T21:02:22Z"
+}

@@ -1,0 +1,72 @@
+{
+  "exe": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-2c\\Release\\G4UniversalSim.exe",
+  "exe_sha256": "fbb7c56e820d3d36e5f87a3ef2995d55c554d4c5cb38dbaa75191422d4bc37f0",
+  "cases": [
+    {
+      "case": "g_upper",
+      "density": "1 G/CM3",
+      "exit_code": 0,
+      "valid": true
+    },
+    {
+      "case": "g_power_star",
+      "density": "2.7 * G/CM^3",
+      "exit_code": 0,
+      "valid": true
+    },
+    {
+      "case": "kg_upper_star",
+      "density": "2.7*KG/M3",
+      "exit_code": 0,
+      "valid": true
+    },
+    {
+      "case": "kg_power",
+      "density": "2.7 KG/M^3",
+      "exit_code": 0,
+      "valid": true
+    },
+    {
+      "case": "mg_upper",
+      "density": "2.7 MG/CM3",
+      "exit_code": 0,
+      "valid": true
+    },
+    {
+      "case": "mg_power_star",
+      "density": "2.7 * MG/CM^3",
+      "exit_code": 0,
+      "valid": true
+    },
+    {
+      "case": "overflow_g",
+      "density": "1e308 g/cm3",
+      "exit_code": 1,
+      "valid": false
+    },
+    {
+      "case": "intermediate_g",
+      "density": "1e287 g/cm3",
+      "exit_code": 1,
+      "valid": false
+    },
+    {
+      "case": "overflow_kg",
+      "density": "1e308 kg/m3",
+      "exit_code": 1,
+      "valid": false
+    },
+    {
+      "case": "overflow_mg",
+      "density": "1e308 mg/cm3",
+      "exit_code": 1,
+      "valid": false
+    },
+    {
+      "case": "underflow",
+      "density": "1e-999 g/cm3",
+      "exit_code": 1,
+      "valid": false
+    }
+  ]
+}

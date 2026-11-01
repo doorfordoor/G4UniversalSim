@@ -1,0 +1,27 @@
+# 18c native100实际链路独立纯文件核验
+
+结论：本次必要链路的文件证据一致，通过纯文件核验；没有新执行或独立视觉复验。本任务仅标准库JSON/CSV/INI/文本与hash，不import产品/Qt，不运行后端/native/profile/CLI replay，不改tracked。主线程原session77822的真实终态由launch/exit原件支持（host/application均exit0，窗口visible=false）；AltF4操作方式采用主线程记录，不声称文件单独审计了物理按键。
+
+身份：HEAD18c5858fd6e80a5cb6096beacebfef69c479ad49，113EXE01e0fb795f93772ccfa818d625fee145d8da1ad3ad80894372a9a855f0af108a，C++source9e40e889...；launch起止head/EXE相同、结束git空，identity全部GUI源码当前SHA吻合，host-v2 SHA吻合。Dvenv/Qt6.11.1，qpa=windows；scale_env记录0.8，但全部29条Qt observations实际DPR=1.0，不能把环境倍率误当实际DPR。
+
+生产Save/Open：blank-native.json是v8 generated项目，源INI/macro/材料/几何路径均空，dirty材料文档0行、dirty几何文档1个world。实际文件SHA8c5df19caf29d4e4eed00b818bcd4c3ee1c136ca3b01c8ab738cb8273c09372d。008-save/010-open UIA文本、visual-observations记载及observations.project_file共同指向此文件；并有后续同一配置指纹的K1实际包/执行链。文件核验不替代独立操纵保存/加载，也不声称重新观察截图。
+
+正确计数与语义：
+- K1 record共5条：validate两条（fields与initialization各1）、generate1、run1、export1；均revision4、同session、passed且stale=false。
+- fields记录b7df56ba...仅字段校验通过，不是后端模拟。
+- initialization记录4981ab0a...是独立初始化结果：exit0、result=no_run、run_count0、0/0事件，events=unobserved。其prefix确有/run/initialize、overlap检查及exportMesh，没有beamOn；prefix/原macro/mesh SHA与size另核对通过。不得把summary completed或level passed写成事件模拟成功。
+- generate记录36b94820...生成闭合execution-inputs包，未声称其本身完成运行。
+- 真正run记录5d8358e7...：execution_id8b9d598d404c54e30f6712d8cc5f0ae4，exit0，success，run_count1，计划/完成100/100；metadata、run_summary逐run0与run_status一致，summary_write_status completed、output_failure_status none、macro completed。
+- export记录0a9c3adc...导出blank-native-bundle。History顶级root未展示这些嵌套experiment-record为普通History行，不能把GUI History空列表改算成运行缺失或混同5条K1记录。
+
+实际执行/输出身份：gen/init/run expected_inputs逐项size/SHA匹配，init/run actual backend捕获输入也逐项吻合，统一snapshot_fingerprint与字段记录一致。两个有后端结果record的metadata原SHA匹配；run metadata9项generated_files，8项实际size/SHA全部通过，run_metadata自身明确self_reference_excluded（其整文件SHA由record另绑定）；init共4项输出，3项hash+metadata自身记录。没有把自身排除伪称缺失哈希。
+
+run包实际19文件，output9文件，其中1个线程CSV event_edep_t0.csv：恰100行，runID=0，eventID依次0…99。全部沉积为0符合本例仅world、无敏感体的blank范围；这证明事件完成/输出关联，不是非零探测器响应或物理基准。GUI结果页026/027原UIA文本包含同execution_id、18c build、completed与identity_status verified；纯文件重哈补充验证了其所引用的真实输出。
+
+导出闭包：实际8文件=manifest+7成员，7个manifest成员size/SHA全部一致，其中4个资源main/material/geometry/macro，以及workspace、validation_records、replay入口。main对材料/几何的相对引用闭合于包内，macro为initialize+beamOn100；validation_records恰保留fields/init/generate/run4条，export本身不是第5条历史成员。manifest outputs_included=false、replay_verified=false；没有CLI重放、搬移后运行或独立机器重放claim。
+
+视觉/缓存边界：34张jpg全部仍local-only（可能含QQ）；仅验证其路径均位于native100和30条visual记录中的原SHA覆盖全部原图，不打开、不复制、不上传。29条observations中的focus是host实际QApplication.focusWidget记录，UIA文本旧FOCUSED缓存不能替代它。project_sha来自已存window.project的dataclasses哈希，不是项目文件SHA，也不是实时capture_workspace；edit_history Undo/Redo/modified为cached读数，不能据此证明F5完整快照或所有未提交控件draft不变。visual-observations描述按主线程已有观察归档，未冒称本任务独立看图。
+
+host.stderr的4条Legacy/unverified目录warning原样保留；文件证据不能定位每条警告到哪个初始/临时目录，不把它们改写成当前run最终目录缺metadata。当前run_metadata及记录SHA确已存在并吻合，最终结果身份由上述链支持。
+
+证据：review.py、receipt.json、initialization-extra.json。native100原158文件核验前后字节SHA完全相同，未向该目录写入；独审仅写本out目录。没有运行后台进程或待poll任务，可交main汇总；150/125独审不在此重复。

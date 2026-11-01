@@ -1,0 +1,17 @@
+# F8 applied working-tree verification — 2026-11-02
+
+实际工作树：C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim。
+指定解释器：D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe；Python3.11.9 / PySide6与Qt6.11.1。
+
+直接运行官方 tools/test_assert_probe.py + gui/smoke_tests/smoke_f8_accessibility.py，QT_QPA_PLATFORM=offscreen，分别QT_SCALE_FACTOR=1.25、1.5。没有候选加载器/monkeypatch，没有源码改动、原生输入或构建。
+
+- 125%：scale125.log，G4USIM_ASSERTS=416，exit0，命令进程已结束（exec session83595已返回最终完成）。
+- 150%：scale150.log，G4USIM_ASSERTS=416，exit0，命令进程已结束（exec session50821已返回最终完成）。
+
+前后源码SHA一致，均为LF：
+- core/accessibility.py：631df8861ca70524b3ab9d3941a4e9a263cbd5a017824b7647c64ded90025a37。
+- smoke_f8_accessibility.py：69b11a915a0864110171df75a1a2402ea3025f0a3a01b79d31af8ee26bd9f0e6。
+
+永久入口就是已独审v3，不削弱判据。两档JSON均实证pending Project+timer活动，随后pending变成当前Start且不再指向旧Project；完整field/联合框、retained docks/九页F6、foreign/deleted和F5业务快照由同一永久测试验证。
+
+receipt.json给出原始日志字节SHA、命令、进程完成状态和关键JSON记录；source-before.json/source-after.json核对身份；runtime.json给出运行时。scale125/、scale150/保存原入口输出的JSON和截图（本次仅按测试断言核验几何，不据未单独目视的图片扩张为native验收）。此证据不是正式runner report，未冒充全profile矩阵或真实native。

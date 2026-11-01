@@ -1,0 +1,96 @@
+{
+  "history_trust": "stale_requires_revalidation",
+  "integrity": "sha256_not_signature",
+  "members": [
+    {
+      "bytes": 40,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0000-a.csv",
+      "redistribution_override": false,
+      "role": "spectrum",
+      "sha256": "515ae76c08888930a0bdca25a0dfc77d22a61336325a084d2ab5a6cc632df17d",
+      "source_sha256": "515ae76c08888930a0bdca25a0dfc77d22a61336325a084d2ab5a6cc632df17d"
+    },
+    {
+      "bytes": 1020,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0001-main.ini",
+      "redistribution_override": false,
+      "role": "main",
+      "sha256": "94a46de1d1a223d5f0d978dba51d4bf12e6e2037ce6b91239ee87442fc846a3a",
+      "source_sha256": "1dc305d574a77e5f2555b8d5d266624f8e12c362d70f25f01a22db8b8af61583"
+    },
+    {
+      "bytes": 77,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0002-material.ini",
+      "redistribution_override": false,
+      "role": "materials",
+      "sha256": "1f1d80c69daa3a2a0a0dc8b7f25631c3059cbf644d978704af9fa1eee6cb6a02",
+      "source_sha256": "1f1d80c69daa3a2a0a0dc8b7f25631c3059cbf644d978704af9fa1eee6cb6a02"
+    },
+    {
+      "bytes": 237,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0003-geometry.ini",
+      "redistribution_override": false,
+      "role": "geometry",
+      "sha256": "6749b52bf23fde2e47cad8322cb6a50f6d85bf078bc1c89b065067579400dfb7",
+      "source_sha256": "6749b52bf23fde2e47cad8322cb6a50f6d85bf078bc1c89b065067579400dfb7"
+    },
+    {
+      "bytes": 40,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0004-r0000.csv",
+      "redistribution_override": false,
+      "role": "spectrum",
+      "sha256": "515ae76c08888930a0bdca25a0dfc77d22a61336325a084d2ab5a6cc632df17d",
+      "source_sha256": "515ae76c08888930a0bdca25a0dfc77d22a61336325a084d2ab5a6cc632df17d"
+    },
+    {
+      "bytes": 149,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0005-run.mac",
+      "redistribution_override": false,
+      "role": "macro",
+      "sha256": "ad0cdf210f49ccd8c9c94284d3b89fa3917779bccd13b845ca831532aa8e210e",
+      "source_sha256": "ad0cdf210f49ccd8c9c94284d3b89fa3917779bccd13b845ca831532aa8e210e"
+    },
+    {
+      "bytes": 5407,
+      "path": "workspace.json",
+      "role": "snapshot",
+      "sha256": "f90e5d1cb0fe1748149ca99b62ae7d8e9f042362aecf1a16d855dad775b32a55"
+    },
+    {
+      "bytes": 71,
+      "path": "validation_records.json",
+      "role": "validation_history",
+      "sha256": "e7153946374c1e029196ca4351f9632e5818c56159662d01b4d101b506e50146"
+    },
+    {
+      "bytes": 329,
+      "path": "replay.py",
+      "role": "replay_entry",
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    }
+  ],
+  "outputs_included": false,
+  "replay_entry": "replay.py",
+  "replay_inputs": {
+    "config": "resources/r0001-main.ini",
+    "macro": "resources/r0005-run.mac",
+    "working_directory": "."
+  },
+  "replay_verified": false,
+  "schema": "g4usim_experiment_bundle",
+  "snapshot": "workspace.json",
+  "validation_history": "validation_records.json",
+  "version": 1
+}

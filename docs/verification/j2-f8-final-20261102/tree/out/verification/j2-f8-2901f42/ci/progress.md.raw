@@ -1,0 +1,27 @@
+# 第二候选CI只读收集检查点
+
+## 最终完成
+
+四workflow/8job全部终态。Windows installation124938588360 success；artifact13096708514原ZIP SHA233e47269e0b4066bd2fcdf76e24628081b6bc8ee8a10920cc05cb0a69b21576，9阶段/889源/25保留对象/实际5events/SDK及卸载独立通过，完整joblog已保存。原ZIP8+完整解码joblog8全部收齐，collected-files-final.json离线汇总exit0，strict5pass/3fail，release_accepted=false。最终收据review-final.md；public-push-runs-final.json / jobs-final.json固定终态。无运行进程/待收CI，未dispatch/rerun/cancel或tracked修改。main已分派三处修复，后续可定点审path草案。
+
+最新：Windows M0 job124938588441已GUI failure，static4539 strict pass、GUI8003 strict fail。gui_k1_workflow:175 actual Unused resource policy entries …main.ini；gui_j2_geometry:162 STL路径文本断言。artifact13096301546及完整log已保存核验。8份实际报告5pass/3fail，详见review-current.md/report-gates-current.json。当前7ZIP/7job日志，仅等Windows installation124938588360 lifecycle。
+
+最新首败：Linux11.3.2 job124938588408 GUI失败，gui_start_page/gui_main_window共同accessibility.py:80 QSpacerItem.count AttributeError。原job日志/ZIP13095209403已保存核验；static4547 strict pass、GUI8365 strict fail，backend/integration未跑。详见first-failure.md及report-gates-current.json。其余继续收集，未rerun。
+
+新里程碑：Linux114同两GUI失败，artifact13095793742及job124938588616原证据已齐；M0Ubuntu job124938588306 success，artifact13096021428已齐，static4547/GUI8373均strict pass，无旧例下降。当前共6ZIP/6完整job日志；只剩Windows M0和Windows安装两job。综合报告review-current.md。
+
+HEAD 2901f4254303c3a9089c9025717908c0d77ff190；branch roadmap/J2-F8-editing；source_fp 9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a；tests_fp 385409046e46858cba6d00976d3de681affbd2f251a5e40066d5d28d38982520。
+
+公开API精确HEAD查得4个自动push run，均attempt1。初始无失败，仍运行：
+- M0 41336912651：Ubuntu124938588306 / Windows124938588441。
+- Linux 41336912644：11.3.2=124938588408 / 11.4.3=124938588616。
+- Installation 41336912645：Linux124938588150 / Windows124938588360。
+- Desktop 41336912646：Linux124938588319 / Windows124938588176。
+
+public-push-runs-initial.json及jobs-initial-*.json保存原始身份/状态。checker-2901f42.py从候选Git对象固定；analyze_reports.py、verify_installation.py为本新out根适配，不改旧56b工具/证据。下一步定时只读jobs、完成后只收一次原artifactZIP/完整解码job日志，strict+matching baseline及安装/桌面语义检查。无dispatch/rerun/cancel，无产品/测试修改。
+
+本机初始未显式启用longpaths的Git视图列出73个历史长路径D，原件local-worktree-observation.json保留。经main指正后独立运行git -c core.longpaths=true status确认为tracked clean（local-worktree-longpaths-check.json）。73D不是第二候选实际dirty；后续本机Git读取显式-c或同等childenv，不改全局/仓库config，不重写旧56b证据。远程身份独立以run/artifact/报告核验。main build session55111由main所有，不接管。
+
+Desktop两job已success；两原ZIP13094914600/13095852041大小/SHA对GitHubdigest验证、解压，150GUI源身份、原命令日志SHA、正负例0/1/0/1及frozen自检独立通过（desktop-linux-checked.json、desktop-win32-checked.json）。完整两job解码日志已保存。M0 Ubuntu/Linux双版本static已过进入GUI；Windows M0仍static，安装Linux lifecycle/Windows build，当前无测试失败。两个jobs读取transport send error经核对公开状态后各单次重读恢复，不是CI失败。
+
+Linux installation job124938588150 success；原artifact13095474657 ZIP SHA aaccf3c2e019a70a47b2461ab1250a80148018964e485aa15cb8a4970c66db09已核对、日志已收齐；10stage/889source/实际5events/SDK及卸载独立通过，installation-linux-checked.json。Windows安装仍运行。当前完成原ZIP4份、完整解码job日志4份；剩余M0双平台、Linux114和Windows安装。

@@ -1,0 +1,29 @@
+{
+  "scope": "independent minimal review; original F4 test unmodified; no native UI",
+  "source_sha256": {
+    "gui/g4usim_gui/window/workspace_layout.py": "cd5f7e0c1761085abe5c68a849753f939f965e252a9d46a1c637d9d17f4ef34c",
+    "gui/g4usim_gui/core/accessibility.py": "8f597259072c4ca7c929b6c9021716da5a6011fc6b6d4a4907af96dc8ba89fca",
+    "gui/smoke_tests/smoke_f8_accessibility.py": "7087edc6ae93bb666020eb06fb46bd8a60b2539c0213b5058276daf385d04c8e",
+    "gui/g4usim_gui/window/shell.py": "2bf59c065dee740b03fbc678ed32f787cd0b8c293e92b1fc8d498f80c6b11516",
+    "gui/g4usim_gui/main_window.py": "df76026a347894c617dbca570b4706948b1eed639956fc8c1bcc2f097ca10639",
+    "gui/g4usim_gui/widgets/start_page.py": "b8d8e8b363f7a691e9cec4babe52c4277bc869f82dfca239c90b7c6bffa328ec"
+  },
+  "original_test_sha256": "abc7a3b83a27e01558dae82e1103ee3851dc4dc929bee7bfe1987653079d8cb6",
+  "source_matches_freeze_after": true,
+  "cases": [
+    {
+      "case": "original-f4-layout-default",
+      "exit_code": 0,
+      "assertions_executed": 265,
+      "selected_sources_unchanged": true,
+      "log_sha256": "a87202b5b775531ddc173ce3f5566ffc2daa6b076fc31d72e218fdfeedde54c3"
+    },
+    {
+      "case": "original-f4-layout-125",
+      "exit_code": 0,
+      "assertions_executed": 265,
+      "selected_sources_unchanged": true,
+      "log_sha256": "a87202b5b775531ddc173ce3f5566ffc2daa6b076fc31d72e218fdfeedde54c3"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+# J2 永久端到端集成测试进度
+
+- 允许改动：仅新增gui/smoke_tests/smoke_j2_end_to_end.py与out证据。不改产品、STATUS或runner。
+- 已核对API：MainWindow._experiment_action，现有EditSession/ExperimentWorkflow/G4USimRunner；GUI保存/重载与export dialog；统一experiment_cli；runner的G4USIM_EXE及G4USIM_TEST_EVIDENCE_DIR。
+- 新测试覆盖：无源blank→K1初始化→两命名质子源同发/两敏感体→validate/generate/initialize/run→事件/体积/track关联与region max_step/EM替换实际库存→Qt结果→保存重载→导出搬移→旧runs路径退役→CLI generate/run。后端required，默认源码指纹一致，显式allow-stale仅诊断且不标正式通过。
+- baseline-01：旧1132 EXE缺F1来源，K1初始化unobserved，失败原文保存。
+- baseline-02：旧1143包EXE的blank K1初始化passed；进一步物理库存检查显露旧EXE仅注册阶段库存。基线对照只需构造器名，测试已细化；组合运行仍要求process/region证据。
+- 等main提供P1修复fresh EXE进行完整真实验证。测试尚未报告通过，未请求runner接Case。
+- 同期定点复核：材料M01/M02 6新例匹配真实后端并关闭；原geometry Reload P2保留world/KEEP和指纹、revision，无新Undo，关闭报告另存，不覆盖旧证据。
+- 最终fresh113-final通过，G4USIM_ASSERTS=674；脚本冻结SHA=5b112036e184afac3e97bd9c5257142b197a36c83c119f822318ec972f9b082f。retired映射/test SHA已验证，delivery-receipt.json汇总。main接Case。
+- 114 EXE/SDK已按main给定身份定位；继承环境会错误使用113数据，原始fresh114-data-check保存但不称版本通过。随后发现out/i2-controlled/windows114-data/data现有12套114数据及I2原收据，已发main供Cicero核验。按用户新指令等待数据，不启动114 E2E；等待期间只读F8独审，不争用原生UI。
+- 最新88c32e源码双版新构建，原冻结脚本各完整通过：boolean113-final/receipt.json、boolean114-final/receipt.json，各exit0/G4USIM_ASSERTS=674；源/脚本SHA开末一致。dual-version-final-receipt.json与delivery.md汇总，所有旧失败和149b旧通过原样保留。
+- 114使用已READY的I2数据根，child清G4*DATA后只设GEANT4_DATA_DIR，未修改系统。数据发现版本/hash依据j2-114-data-reuse/receipt.json。
+- main已收到最终冻结SHA/双版证据与Case('gui_j2_end_to_end', integration, ('exe','qt'), timeout600)；本任务未改runner，正式report/门禁交main。
+- F8独立125/150原五文件身份通过6组组件检查，out/collab/f8-independent-review/review.md。main原生label左裁切另交Harvey，保持开放，不继承旧组件通过。
+- 所有本任务运行session已完成；只新增永久E2E脚本与out证据。
+- main通知最终C++sourcefp已9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a（shape schema定点修复）；按明确指令不重复第三套E2E，88c32e双版674保留原身份，下一正式runner覆盖最终字节。永久测试SHA不变，当前转专注F8修后独审。

@@ -1,0 +1,108 @@
+{
+  "schema": "g4usim_ci_pure_arithmetic_sum_v1",
+  "candidate_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+  "binding_gate_sha256": "93939bfe9e6b85adfa2862849ffe0ae837d17ae1788293ca6d01a708ccbbf6ad",
+  "method": "stdlib JSON/arithmetics; only bound report bytes hashed; no checker, CI request, log hashing or product execution",
+  "reports": [
+    {
+      "lane": "linux114",
+      "profile": "backend",
+      "report": "extracted\\linux-evidence-11.4.3-13103140474\\linux-backend\\20261101-214039-f4277fb7\\report.json",
+      "report_sha256": "baf82ed466ccb1522c23902f625cc6d6c094c3000613c84086312648f791d02f",
+      "cases": 63,
+      "actual_assertion_entrances": 72874
+    },
+    {
+      "lane": "linux114",
+      "profile": "gui",
+      "report": "extracted\\linux-evidence-11.4.3-13103140474\\linux-gui\\20261101-213253-d431370f\\report.json",
+      "report_sha256": "b5ce46edd22249a71db4b5fe69ddd01e9d113d13caaaf889d65572d6dc5d7737",
+      "cases": 66,
+      "actual_assertion_entrances": 8615
+    },
+    {
+      "lane": "linux114",
+      "profile": "integration",
+      "report": "extracted\\linux-evidence-11.4.3-13103140474\\linux-integration\\20261101-215424-8887e69e\\report.json",
+      "report_sha256": "3e45a2a8e1be645c493ae344c82a572ec8611c8ad72631fbd530435cebdbf74a",
+      "cases": 31,
+      "actual_assertion_entrances": 6770
+    },
+    {
+      "lane": "linux114",
+      "profile": "static",
+      "report": "extracted\\linux-evidence-11.4.3-13103140474\\linux-static\\20261101-213131-5e8b77d1\\report.json",
+      "report_sha256": "aef1eeec9c93a3cc9f75dd7986730598630b0cefee383506101a6b7a59bf0f28",
+      "cases": 46,
+      "actual_assertion_entrances": 4573
+    },
+    {
+      "lane": "linux113",
+      "profile": "backend",
+      "report": "extracted\\linux-evidence-11.3.2-13102513206\\linux-backend\\20261101-214208-e7433889\\report.json",
+      "report_sha256": "3728dcc60c68ac67f218b48f3af80a846b94826c14a2032647b70ebfaa75040d",
+      "cases": 63,
+      "actual_assertion_entrances": 82020
+    },
+    {
+      "lane": "linux113",
+      "profile": "gui",
+      "report": "extracted\\linux-evidence-11.3.2-13102513206\\linux-gui\\20261101-213257-6a7d8451\\report.json",
+      "report_sha256": "d9222e82079c87f539249a1bec2af02ff27515b840da241e03badfd78d87a94c",
+      "cases": 66,
+      "actual_assertion_entrances": 8615
+    },
+    {
+      "lane": "linux113",
+      "profile": "integration",
+      "report": "extracted\\linux-evidence-11.3.2-13102513206\\linux-integration\\20261101-215736-ac86f816\\report.json",
+      "report_sha256": "f11a6d2e64edd5e0a21cc6194eb79bdab48d4744ac12a6283310e2e7f69e7877",
+      "cases": 31,
+      "actual_assertion_entrances": 6770
+    },
+    {
+      "lane": "linux113",
+      "profile": "static",
+      "report": "extracted\\linux-evidence-11.3.2-13102513206\\linux-static\\20261101-213122-6488715c\\report.json",
+      "report_sha256": "3aa14c18fa61e05c583550be61ce74149084bb16950cb1fd08a0d64b7163306f",
+      "cases": 46,
+      "actual_assertion_entrances": 4573
+    },
+    {
+      "lane": "m0-windows",
+      "profile": "static",
+      "report": "extracted\\m0-report-windows-latest-13102896151\\20261101-212954-d3f500ec\\report.json",
+      "report_sha256": "d3cc0fd8ca2bffc8553b215fdd56383c351e5cd4fcdf81163895451d37f66849",
+      "cases": 46,
+      "actual_assertion_entrances": 4573
+    },
+    {
+      "lane": "m0-windows",
+      "profile": "gui",
+      "report": "extracted\\m0-report-windows-latest-13102896151\\20261101-213444-b4dae0f9\\report.json",
+      "report_sha256": "7de8e4367b7a79cc48978078ef979effbd1730c11ac4cedef1153202d9492fc4",
+      "cases": 66,
+      "actual_assertion_entrances": 8615
+    },
+    {
+      "lane": "m0-linux",
+      "profile": "static",
+      "report": "extracted\\m0-report-ubuntu-latest-13102097206\\20261101-212938-f67e746d\\report.json",
+      "report_sha256": "6fb9e7515443a24c215e5af65473fc409a32da58004fa9f56b1f2d71d748c2b0",
+      "cases": 46,
+      "actual_assertion_entrances": 4573
+    },
+    {
+      "lane": "m0-linux",
+      "profile": "gui",
+      "report": "extracted\\m0-report-ubuntu-latest-13102097206\\20261101-213124-da0a127d\\report.json",
+      "report_sha256": "22e44bdb5d93f70c3916357a40e0fb9c7451f91f54789bebdc842bf9be984daf",
+      "cases": 66,
+      "actual_assertion_entrances": 8615
+    }
+  ],
+  "report_count": 12,
+  "case_executions_total": 636,
+  "actual_assertion_entrances_total": 221186,
+  "counting_scope": "Sum of matrix report executions, including repeated tests across platforms/profiles; not unique test definitions"
+}

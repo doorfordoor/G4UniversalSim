@@ -1,0 +1,30 @@
+# 首候选真实 CI 最终独立收据
+
+精确 HEAD：56b689fb9ac920cbb1203b2b94dae2483d25f622；branch roadmap/J2-F8-editing；四个 push run 均 attempt 1。最终公开 API 身份/状态保存在 public-push-runs-final.json。
+
+| Workflow | Run | 最终结论 |
+|---|---:|---|
+| M0 static and GUI | 41330577407 | failure，两平台 static 各41 pass / 5 fail / 0 skip |
+| Linux Geant4 | 41330577426 | failure，11.3.2/11.4.3 static 各41 pass / 5 fail / 0 skip |
+| Full installation | 41330577328 | success，Linux/Windows 两 job 全部成功 |
+| Desktop package | 41330577359 | success，Linux/Windows 两 job 全部成功 |
+
+**首候选整体严格门禁失败，不能据安装/桌面成功声明可冻结发布。** 四份 static 报告逐例 matching baseline 比较及原始失败日志路径见 report-gates-current.json；首因和文件行号见 review-current.md。同五失败为 k1_bundle、f4_producers、f4_document_diagnostics、doc_links、config_migration。下游未运行的 GUI/backend/integration 不计通过。历史基线先通过 strict；当前 strict 无放宽参数，全部拒绝。当前所有原始逐例日志 SHA 与入口求和另行核验一致。
+
+## Full installation 最终核验
+
+Windows job124919607941 最终 success；最终 connector 解码完整日志 job-124919607941.log。Windows artifact13093324687 原 ZIP 29409361 bytes，SHA256 d957924a50f643b4a3870b5c96168d982bb536c87d66d2930a1bce4c91ba57d6，与 GitHub digest 一致且归属此 HEAD。
+
+独立离线检查 Windows 9阶段全部 exit0，阶段日志原字节SHA、retained evidence索引对象SHA、源码snapshot889文件与候选checkout身份、workflow身份、runtime实际 run_summary completed 5/5、SDK consumer/full application configure-build-run、host tools身份以及 runtime/sdk uninstall 均通过。完整机器收据 installation-windows-checked.json。
+
+Linux job124919608140 success；artifact13093212578 SHA256 8bb396778f082cd0debb31ec921b63c22d64ed36f9b964648a8b502432e14ed8。相同独立检查通过，10阶段、889源码文件、实际5/5 events；机器收据 installation-linux-checked.json。源码checkout仅按该候选.gitattributes处理允许的文本CRLF转换；证据日志始终按落盘原字节哈希。
+
+共收齐8个artifact原ZIP、8个完成job的connector完整解码日志；最终清单 collected-files-final.json。解码job日志不冒称GitHub原始run logs ZIP。无 rerun、取消、产品/测试/workflow修改。
+
+## ignored-out 链接草案
+
+仅 out 草案：out/collab/j2-ci-review/design-link-proposal/README.md、proposal.json、privacy-scan.json、candidate-tree/、outbox-only.patch。拟归档4份完整真实请求/响应/设计/checklist原件，附原字节SHA及稳定文档路径；脚本/progress两处改为纯code provenance。7个断链已在候选中替换，9个相对链接解析通过。
+
+拟发布4份原件未发现凭据字面值或私人绝对路径。脚本含本机凭据定位，排除正文；未读取真实密钥。候选outbox去掉原私人工作区绝对路径。patch SHA256 a1217ca9722693dffa5bc77eca7413f7f87a9a2db9cfd7aa6b8ba81df9f66e1e；候选outbox SHA256 5ecbd4618012024d8e73259efaea5e3c46fd232be3b78813a7c611f5bd6cbc58。
+
+**未 apply、未 stage、未修改 tracked。** patch的minus行保留旧header，不应发布patch本身；main如采用，应纳入candidate-tree完整8文件及raw目录.gitattributes。草案不改变本首候选CI失败事实。

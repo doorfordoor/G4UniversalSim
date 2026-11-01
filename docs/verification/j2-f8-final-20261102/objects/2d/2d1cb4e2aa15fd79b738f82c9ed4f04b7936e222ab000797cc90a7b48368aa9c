@@ -1,0 +1,69 @@
+{
+  "status": "passed",
+  "scope": "actual patched tree; component/geometry only; no backend and no overlays",
+  "source_before": {
+    "gui/g4usim_gui/widgets/run_history_page.py": "cc98442e975cec3f1b33d556a8dabdd7381ec22368e94bd6124178edacb5a463",
+    "gui/g4usim_gui/core/accessibility.py": "c9d87e23c88704fedc2c17a8a954aba9acf365c607ea47fe86b6c56854be2be7",
+    "gui/smoke_tests/smoke_f8_accessibility.py": "943c92a0cdd0650511b7c8ce45378ebcbddc06b7f55b90835317eb44d3a59e95",
+    "gui/smoke_tests/smoke_j2_geometry.py": "579c6a7a00a93a41570aa28357053d3009b1c2758cf005ccf6de78477fb5b671",
+    "gui/g4usim_gui/core/experiment_bundle.py": "4990d9f4439711f96aa5a5475f6f39ea3588b8c1e3fabf7e3e2eca0318a45610",
+    "scripts/test_k1_bundle.py": "80726fb8eeda65700169416b8a9711967ed15283ed8bbc22bbf20b42d8c216f3"
+  },
+  "source_after": {
+    "gui/g4usim_gui/widgets/run_history_page.py": "cc98442e975cec3f1b33d556a8dabdd7381ec22368e94bd6124178edacb5a463",
+    "gui/g4usim_gui/core/accessibility.py": "c9d87e23c88704fedc2c17a8a954aba9acf365c607ea47fe86b6c56854be2be7",
+    "gui/smoke_tests/smoke_f8_accessibility.py": "943c92a0cdd0650511b7c8ce45378ebcbddc06b7f55b90835317eb44d3a59e95",
+    "gui/smoke_tests/smoke_j2_geometry.py": "579c6a7a00a93a41570aa28357053d3009b1c2758cf005ccf6de78477fb5b671",
+    "gui/g4usim_gui/core/experiment_bundle.py": "4990d9f4439711f96aa5a5475f6f39ea3588b8c1e3fabf7e3e2eca0318a45610",
+    "scripts/test_k1_bundle.py": "80726fb8eeda65700169416b8a9711967ed15283ed8bbc22bbf20b42d8c216f3"
+  },
+  "results": [
+    {
+      "name": "k1_bundle",
+      "command": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-B",
+        "tools/test_assert_probe.py",
+        "scripts/test_k1_bundle.py",
+        "--component",
+        "--evidence-root",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\k1-evidence"
+      ],
+      "exit_code": 0,
+      "assertions": 603,
+      "log_sha256": "185a6b196b968d58dd04c996e15376d80a1d094133459f18815ff436921548d2",
+      "log": "out\\collab\\j2-f8-third-repair-applied\\targeted\\k1_bundle.log"
+    },
+    {
+      "name": "j2_geometry",
+      "command": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-B",
+        "tools/test_assert_probe.py",
+        "gui/smoke_tests/smoke_j2_geometry.py"
+      ],
+      "exit_code": 0,
+      "assertions": 212,
+      "log_sha256": "8c3d699ef35873866a5cb1c1d6198c99181fd4acb0887a3cfd4cb0dff4bb378a",
+      "log": "out\\collab\\j2-f8-third-repair-applied\\targeted\\j2_geometry.log"
+    },
+    {
+      "name": "k1_workflow",
+      "command": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-B",
+        "tools/test_assert_probe.py",
+        "scripts/test_k1_workflow.py",
+        "--component",
+        "--report-root",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence"
+      ],
+      "exit_code": 0,
+      "assertions": 260,
+      "log_sha256": "257dae87adc3077bf719aa0eb5ac54626ae5a497781e618bd9ada6fe7f5f90e5",
+      "log": "out\\collab\\j2-f8-third-repair-applied\\targeted\\k1_workflow.log"
+    }
+  ],
+  "compileall_exit_code": 0,
+  "diff_check_exit_code": 0
+}

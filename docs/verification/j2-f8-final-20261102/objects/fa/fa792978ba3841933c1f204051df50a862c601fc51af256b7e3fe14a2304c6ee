@@ -1,0 +1,71 @@
+# J2/F8 最终归档候选计划及本地staging（不是阶段完成）
+
+源冻结HEAD `2901f4254303c3a9089c9025717908c0d77ff190`。本任务仅读既有证据/必要源码，仅写 `out/collab/j2-f8-archive-plan`；不写docs/tracked、不删除原件、不上传、不重新运行产品测试或正式profile、不请求新CI。新CI由Sagan独立收集。本目录不是发布许可，也不主张所有证据永久公开。
+
+## 已物化的本地集合
+
+有效副本：[staging-v2/final-copy-receipt.json](staging-v2/final-copy-receipt.json)。**4269个逻辑文件，2631个去重对象，39.25 MiB**。`objects/`按原始字节SHA256寻址，`tree/`保留原相对路径且只硬链接本staging对象，不链接原来源文件。复制前后逐对象SHA校验，4,269个逻辑文件均按已核对字节进入用户授权的本地归档，不需要因工作树/工具身份路径另行批准。
+
+- [manifest-final.json](manifest-final.json)：原路径、size、原字节SHA、角色、复制/metadata-only决定；每个原报告自己的HEAD/fingerprint/失败状态保留，不用planning HEAD替换。
+- [first-candidate-coverage.json](first-candidate-coverage.json)：首轮6本地原report与全部300个原case log，286 pass / 14 fail / 0 skip、179468断言；另含4份原CI static report及逐case原日志。GUI原report中的git_dirty=true/73项长路径表象仍原样保留。
+- [historical-review-chains.json](historical-review-chains.json)：原review-index10条闭合链及原身份/F4旧开放状态完整引用；补入随后修复独审、migration final-v2闭合、External Inspect、永久E2E、v3 F8真stale覆盖的原收据。旧open不会追改成新closed。
+- 首候选CI完整终态、8个job解码原日志与原collection receipts均保留：M0/Linux失败，installation/desktop成功；缺运行的下游profile不记通过。解码job日志不冒称GitHub原run logs ZIP。
+- 15份applied修复源码/测试及J2永久回归和接口文档，以当前冻结字节单独标识为2901f42源码；不冒充旧执行时的源码。原失败、草案修复、独审和应用收据并存。
+
+## 隐私signal分类：不把路径误报成密钥
+
+[privacy-review-final.json](privacy-review-final.json)、[resolved-credential-signals.json](resolved-credential-signals.json)只记录类型/文件/行号/键名，不输出候选值。
+
+| signal类型 | 次数 |
+| --- | ---: |
+| 本任务工作树路径 | 1149 |
+| 工具/CI/任务身份路径 | 138 |
+| 其它任务产物路径上下文（未见个人正文线索） | 5 |
+| 明确合成的路径测试夹具 | 1 |
+| Authorization变量拼接表达式，无literal key | 1 |
+| 明确负向隐私测试夹具 | 3 |
+| 明确FAKE/合成模式命中 | 8 |
+
+4处credential-like信号已按真实源码上下文归类：设计请求脚本32行是header变量表达式；K1测试226/390/391行为负向隐私夹具。**没有剩余需单列的实际疑似secret文件；没有确认实际密钥或未经授权个人正文。** 这是对已选文本的自动信号与定点上下文核对，不是全面安全认证；`no_signal`不表示安全已审。任务已明示路径、工具身份、FAKE token不新增本地归档批准阻断。未来若发现真正密钥，单独处置对应文件/衍生物，不能篡改原证据。
+
+## 截图与opaque边界
+
+[image-selection.json](image-selection.json)：336图中选92张主native/关键缺陷修复图进入本地staging，244张非必要诊断图只保留路径/size/SHA、排除payload与发布候选。主native100/125/150的66图已与原native-audit记录SHA逐项匹配，引用的是main当时实际观察证据；本任务没有重新看图，不把SHA核对当作视觉验收。其余关键v3/缺陷修复图保留原收据上下文。
+
+未来公开范围仍需按实际画面决定，尤其系统叠层/窗口中的非项目内容；这不是对本地staging新增批准。6个小型官方artifact ZIP作为opaque原件在本地保留SHA；其内容没有由本任务重新展开作发布审查，不能据容器SHA声称内容安全。当前没有公开上传。
+
+## 大体积明确遗漏
+
+[metadata-only-omissions.json](metadata-only-omissions.json)、[dependency-exclusions-supplement.json](dependency-exclusions-supplement.json)：
+
+- 两份hits CSV分别389902472/393457652 bytes，原位置保留；SHA复用各自既有run_metadata生产器记录，本次未重读大CSV正文，也不声称新核验了其当前payload。
+- 两份大型官方installation ZIP（32731076/29409361 bytes）只记录原collection/API digest，不重复入Git或复制。
+- Geant4 data ZIP 1670619843 bytes复用已有收据SHA；43,527项/2180724729 bytes数据树既不遍历也不重哈，依赖既有目录版本/文件清单与I2收据。历史verification不冒充新上游认证。
+- Geant4114 SDK原ZIP73814796 bytes只观察归档文件一次SHA并记录，不复制/解包；SDK113 config保留路径/size/SHA身份，SDK目录不做树级枚举或伪造aggregate SHA。未引用的其它数百MB SDK ZIP不顺带重哈。
+
+两份大CSV共用的20,301-byte `run_metadata.json`原字节也已作为[provenance-supplement.json](provenance-supplement.json)补入，支持复用SHA的来源可在归档内检查；只复制metadata，不读CSV。基础copy-receipt与manifest原件保留，最终封口由final-copy-receipt/manifest-final明确绑定。
+
+这些payload**不在Git候选中**；元数据仍给出本机来源、size、SHA的来源/新旧核验边界。未用原I2/J1脚本硬编码目的地或身份。
+
+## 重定位后的原报告strict验证
+
+[relocated-verification/receipt.json](relocated-verification/receipt.json)：使用归档内原字节`check_report_evidence.py`，逐份标准CLI，无allow-incomplete/legacy参数。10份首候选失败报告仍全部exit1；10份历史baseline全部exit0。另逐报告核对原JSON SHA、所有case log SHA、断言求和，并断言日志解析路径均在staging内，**没有回退读本机原日志**。没有重写原JSON的绝对路径/身份/状态。
+
+隔离的合成篡改控制复制一份通过baseline，修改其衍生日志后标准strict正确exit1；归档原件前后SHA不变。负向副本不是原证据，不入归档payload。原strict失败不是staging完整性失败，更不能被本地对象复制成功改成验收通过。
+
+## 可执行复制计划与当前状态
+
+```powershell
+python -B out/collab/j2-f8-archive-plan/copy_plan.py
+python -B out/collab/j2-f8-archive-plan/copy_plan.py --execute --destination out/collab/j2-f8-archive-plan/staging-v2
+```
+
+默认dry-run。用户已授权execute本地副本，上述第二条已执行。重用已完成目的地只核对staged SHA，不覆盖原件；新manifest必须用新输出目录。路径解析严格限制输出在本archive-plan子目录，不接受docs/tracked目的地，不作任何上传。
+
+首轮复制碰到仍在写的`out/collab/j2-f8-native/launch-v2.py`，复制器正确拒绝；原`staging/`部分副本与[copy-first-failure.json](copy-first-failure.json)保留但不是有效归档。仅将该非必要可变辅助件作为metadata/pending保留，未替换其旧SHA、未涉及300条原case日志；第二轮有效副本为`staging-v2/`。规划r1保留于`planning-revisions/r1/`。
+
+## 尚待回填，不提升为阶段完成
+
+[pending-fill.json](pending-fill.json)：新2901f42 static为独立终态回填槽，main报告46/46、4545、launcher/strict-baseline全0、identity_errors=[]、gitdirtyfalse；原reportSHA及观测计数已登记，不混进旧300原始组。其余新矩阵、native最终身份/实际观察及Sagan收集的新CI终态仍待归档快照；不能从当前staging推出新矩阵完成或发布成功。
+
+未来回填应另开清单版本，保持当前输入快照与首轮原件不可变。`build_plan.py/refine_plan.py`是本轮构造过程，不应直接重跑覆盖既有清单。最终归档目的地、发布范围和阶段结论由main在全部正式证据终态后统一组织；本任务仅交候选计划和本地staging。

@@ -1,0 +1,84 @@
+--- a/gui/g4usim_gui/core/accessibility.py
++++ b/gui/g4usim_gui/core/accessibility.py
+@@ -2,7 +2,9 @@
+ from __future__ import annotations
+ 
+ import re
+-from PySide6.QtCore import QEvent, QObject, QPoint, QRect, Qt
++import weakref
++from shiboken6 import isValid
++from PySide6.QtCore import QEvent, QObject, QPoint, QRect, Qt, QTimer
+ from PySide6.QtWidgets import (
+     QApplication, QAbstractButton, QAbstractItemView, QAbstractSpinBox, QComboBox,
+     QDialog, QFormLayout, QGridLayout, QLabel, QLineEdit, QPlainTextEdit,
+@@ -246,6 +248,12 @@
+     def __init__(self, owner):
+         super().__init__(owner)
+         self.owner = owner
++        self._pending_focus = None
++        self._settle_pass = 0
++        self._reveal_closed = False
++        self._reveal_timer = QTimer(self)
++        self._reveal_timer.setSingleShot(True)
++        self._reveal_timer.timeout.connect(self._reveal_after_layout)
+         QApplication.instance().installEventFilter(self)
+         self.refresh()
+ 
+@@ -255,9 +263,43 @@
+         decorate_accessibility(self.owner)
+ 
+     def close(self):
++        self._reveal_closed = True
++        self._pending_focus = None
++        self._reveal_timer.stop()
+         QApplication.instance().removeEventFilter(self)
+ 
++    def _queue_focus_reveal(self, widget):
++        control = _focus_control(widget)
++        if control is not None and not self._reveal_closed:
++            self._pending_focus = weakref.ref(control)
++            self._settle_pass = 0
++            self._reveal_timer.start(0)
++
++    def _reveal_after_layout(self):
++        control = self._pending_focus() if self._pending_focus else None
++        if (self._reveal_closed or not isValid(self.owner)
++                or getattr(self.owner, '_closing', False)
++                or control is None or not isValid(control)
++                or _focus_control(QApplication.focusWidget()) is not control
++                or not owned_widget(self.owner, control)
++                or not control.isVisible() or not control.isEnabled()):
++            self._pending_focus = None
++            return
++        # QMainWindow may still have its central page parked at (-500,-500,0,0)
++        # during FocusIn. Yield another event-loop turn for its posted relayout.
++        if self._settle_pass == 0:
++            self._settle_pass = 1
++            self._reveal_timer.start(0)
++            return
++        # Clear before scrolling so our own Move events cannot re-arm this task.
++        self._pending_focus = None
++        ensure_focus_visible(control)
++
+     def eventFilter(self, watched, event):  # noqa: N802
++        if isinstance(watched, QWidget) and event.type() == QEvent.FocusIn:
++            # A new focus, including a foreign window, supersedes the old task.
++            self._pending_focus = None
++            self._reveal_timer.stop()
+         if not isinstance(watched, QWidget) or not owned_widget(self.owner, watched):
+             return False
+         content_scroll = getattr(self.owner, 'content_scroll', None)
+@@ -265,6 +307,13 @@
+             self.owner.start_page.adapt_to_width(watched.width())
+         if event.type() == QEvent.FocusIn:
+             ensure_focus_visible(watched)
++            self._queue_focus_reveal(watched)
++        elif self._pending_focus and event.type() in (QEvent.LayoutRequest, QEvent.Resize, QEvent.Move):
++            control = self._pending_focus()
++            if (control is not None and isValid(control)
++                    and (watched is control or watched.isAncestorOf(control))):
++                self._settle_pass = 0
++                self._reveal_timer.start(0)
+         elif event.type() == QEvent.Show and isinstance(watched, QDialog):
+             if isinstance(watched, QWizard):
+                 scroll_wizard_pages(watched)

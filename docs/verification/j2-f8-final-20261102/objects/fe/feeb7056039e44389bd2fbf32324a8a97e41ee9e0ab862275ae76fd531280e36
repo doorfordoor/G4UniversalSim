@@ -1,0 +1,155 @@
+{
+  "records": [
+    {
+      "environment_facts": {
+        "architecture": {
+          "bits": 64,
+          "format": "PE",
+          "machine": "AMD64"
+        },
+        "available": true,
+        "binary": {
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "stable": true
+        },
+        "binary_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "build": {
+          "compiler_id": "MSVC",
+          "compiler_version": "19.50",
+          "geant4_version_number": 1132
+        },
+        "capabilities": {
+          "data": {
+            "compiler_id": "MSVC",
+            "compiler_version": "19.50",
+            "configuration": "Release",
+            "gdml": true,
+            "geant4_version": "11.3.2",
+            "geant4_version_number": 1132,
+            "git_commit": "cccccccccccccccccccccccccccccccccccccccc",
+            "git_source_state": "dirty",
+            "multithreaded": true,
+            "root": false,
+            "schema": "g4usim_capabilities_v1",
+            "source_fingerprint": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "version": 1
+          },
+          "status": "available"
+        },
+        "coverage": "observed_selection_and_presence_not_dataset_bytes",
+        "data": {
+          "datasets": [
+            {
+              "env": "G4NEUTRONHPDATA",
+              "folder": "G4NDL4.7.1",
+              "found": true,
+              "required": true,
+              "selected_path_sha256": "52795b833848ecd38e981b946146151de85bdf0a96c907d0c870850816ea4f47"
+            },
+            {
+              "env": "G4LEDATA",
+              "folder": "G4EMLOW8.6.1",
+              "found": true,
+              "required": true,
+              "selected_path_sha256": "c04ad7a58baad6d926a84a57a1cc98298f4225afd7b23ddfb15676b233846f63"
+            },
+            {
+              "env": "G4PARTICLEHPDATA",
+              "folder": "G4TENDL1.4",
+              "found": false,
+              "required": false,
+              "selected_path_sha256": null
+            }
+          ],
+          "required_complete": true,
+          "status": "available"
+        },
+        "dataset_content_identity": "unknown",
+        "geant4_version": "11.3.2",
+        "platform": "Windows",
+        "schema": "g4usim_environment_probe_v1",
+        "source_fingerprint": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "status": "available",
+        "version": 1
+      },
+      "identity": {
+        "environment": {
+          "architecture": {
+            "bits": 64,
+            "format": "PE",
+            "machine": "AMD64"
+          },
+          "available": true,
+          "binary": {
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "stable": true
+          },
+          "binary_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "build": {
+            "compiler_id": "MSVC",
+            "compiler_version": "19.50",
+            "geant4_version_number": 1132
+          },
+          "capabilities": {
+            "data": {
+              "compiler_id": "MSVC",
+              "compiler_version": "19.50",
+              "configuration": "Release",
+              "gdml": true,
+              "geant4_version": "11.3.2",
+              "geant4_version_number": 1132,
+              "git_commit": "cccccccccccccccccccccccccccccccccccccccc",
+              "git_source_state": "dirty",
+              "multithreaded": true,
+              "root": false,
+              "schema": "g4usim_capabilities_v1",
+              "source_fingerprint": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "version": 1
+            },
+            "status": "available"
+          },
+          "coverage": "observed_selection_and_presence_not_dataset_bytes",
+          "data": {
+            "datasets": [
+              {
+                "env": "G4NEUTRONHPDATA",
+                "folder": "G4NDL4.7.1",
+                "found": true,
+                "required": true,
+                "selected_path_sha256": "52795b833848ecd38e981b946146151de85bdf0a96c907d0c870850816ea4f47"
+              },
+              {
+                "env": "G4LEDATA",
+                "folder": "G4EMLOW8.6.1",
+                "found": true,
+                "required": true,
+                "selected_path_sha256": "c04ad7a58baad6d926a84a57a1cc98298f4225afd7b23ddfb15676b233846f63"
+              },
+              {
+                "env": "G4PARTICLEHPDATA",
+                "folder": "G4TENDL1.4",
+                "found": false,
+                "required": false,
+                "selected_path_sha256": null
+              }
+            ],
+            "required_complete": true,
+            "status": "available"
+          },
+          "dataset_content_identity": "unknown",
+          "geant4_version": "11.3.2",
+          "platform": "Windows",
+          "schema": "g4usim_environment_probe_v1",
+          "source_fingerprint": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "status": "available",
+          "version": 1
+        },
+        "execution_fingerprint": "ecc4b99a5fafbab8243a959766f803b6897850a22303e7449c8193d9aaf34a9d"
+      },
+      "revision": 19,
+      "session_id": "historical-session",
+      "status": "passed"
+    }
+  ],
+  "schema": "g4usim_bundle_validation_history_v1"
+}

@@ -1,0 +1,10 @@
+[world]
+size = 100,100,100 mm
+material = G4_Galactic
+[volume.test]
+parent = world
+shape = tessellated
+material = G4_Si
+file = solid.stl
+placement = parameterised
+copies_file = copies.csv

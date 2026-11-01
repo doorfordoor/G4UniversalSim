@@ -1,0 +1,148 @@
+{
+  "schema": "j2_external_inspect_out_candidate_v1",
+  "created_utc": "2026-11-01T18:18:08.130121+00:00",
+  "head": "56b689fb9ac920cbb1203b2b94dae2483d25f622",
+  "scope": "OUT-only candidate, no tracked edits; original failed formal round retained",
+  "sessions": {
+    "25188": {
+      "exit_code": 0,
+      "purpose": "old smoke113/114 coordinator"
+    },
+    "60366": {
+      "exit_code": 0,
+      "purpose": "registered k1_workflow component candidate"
+    }
+  },
+  "files": {
+    "fix.patch": "37b15980b429fe2e9f39106c164682e885fc449a0204e9725d8a215b1f7ae399",
+    "experiment_workflow.py": "4efcf4f0443fce588780e7cee8ee363a6b62be829c723d4259b101b7ebe26325",
+    "test_k1_workflow.py": "3199dfb3a200516c2605347ee048cf16965bf61548b7ee2176a7b091ef47b9b0",
+    "test_external_inspect_source_scope.py": "c0f000119ffcf33144710e5704afec422a45372963c642967d871a56235ba4e8",
+    "run_overlay.py": "6f19bd4234c7eaff861fd40ffa970890894328cd0039ac7866cdd592c98190bb",
+    "verify_candidate.py": "9e5401cadd59b196d5f0ade574a4409d76e48b9608e11115cb3da8c136d91d47"
+  },
+  "validation": [
+    {
+      "name": "permanent-focused-final",
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-external-inspect-fix\\permanent-regression-v4.log",
+      "exit_code": 0,
+      "assertion_entrances": 30,
+      "log_sha256": "a2bc8f1f93157617b584dbd0fab489828389acccd4b310edb7c9f15801221afe",
+      "expected_outcome": "pass"
+    },
+    {
+      "name": "registered-k1-component",
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-external-inspect-fix\\k1-component-candidate.log",
+      "exit_code": 0,
+      "assertion_entrances": 260,
+      "log_sha256": "75d366f7b25c8db28784210db99e2eed5fb20775add4427b2e3f1b367451cd97",
+      "expected_outcome": "pass"
+    },
+    {
+      "name": "unchanged-product-negative-control",
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-external-inspect-fix\\unchanged-product-counterexample.log",
+      "exit_code": 1,
+      "assertion_entrances": 3,
+      "log_sha256": "06104645883a631bbd787ec62d31353dcc333ac7675656cf276be89718fbf413",
+      "expected_outcome": "red on old external false rejection"
+    },
+    {
+      "name": "windows113-old-f4-inspect",
+      "pid": 47884,
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-external-inspect-fix\\run_overlay.py",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\gui\\smoke_tests\\smoke_f4_inspect_backend.py"
+      ],
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-external-inspect-fix\\windows113-old-f4-inspect.log",
+      "status": "passed",
+      "cleared_data_variables": [
+        "G4ABLADATA",
+        "G4CHANNELINGDATA",
+        "G4ENSDFSTATEDATA",
+        "G4INCLDATA",
+        "G4LEDATA",
+        "G4LEVELGAMMADATA",
+        "G4NEUTRONHPDATA",
+        "G4PARTICLEXSDATA",
+        "G4PIIDATA",
+        "G4RADIOACTIVEDATA",
+        "G4REALSURFACEDATA",
+        "G4SAIDXSDATA"
+      ],
+      "executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\G4UniversalSim.exe",
+      "executable_sha256": "ea4427f57ef65d176144e1ea8f7a5914dff66265b8179989eca851588a2a133f",
+      "sdk_bin": "D:\\ProgramFiles\\Geant4\\bin",
+      "data_root": "D:\\ProgramFiles\\Geant4\\share\\Geant4\\data",
+      "exit_code": 0,
+      "seconds": 83.188,
+      "assertion_entrances": 49,
+      "log_sha256": "e09fc35dd897a3961595e3802f1d63a0f919345440ab470e7088c1f64e48dc2e"
+    },
+    {
+      "name": "windows114-old-f4-inspect",
+      "pid": 40716,
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-external-inspect-fix\\run_overlay.py",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\gui\\smoke_tests\\smoke_f4_inspect_backend.py"
+      ],
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-external-inspect-fix\\windows114-old-f4-inspect.log",
+      "status": "passed",
+      "cleared_data_variables": [
+        "G4ABLADATA",
+        "G4CHANNELINGDATA",
+        "G4ENSDFSTATEDATA",
+        "G4INCLDATA",
+        "G4LEDATA",
+        "G4LEVELGAMMADATA",
+        "G4NEUTRONHPDATA",
+        "G4PARTICLEXSDATA",
+        "G4PIIDATA",
+        "G4RADIOACTIVEDATA",
+        "G4REALSURFACEDATA",
+        "G4SAIDXSDATA"
+      ],
+      "executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-windows114\\Release\\G4UniversalSim.exe",
+      "executable_sha256": "bf75f92288577ed7d7e24163e973de71d81afb79866c9080e588d790bd0e05ec",
+      "sdk_bin": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\dependencies\\geant4-11.4.3\\geant4-11.4.3-win64\\bin",
+      "data_root": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\i2-controlled\\windows114-data\\data",
+      "exit_code": 0,
+      "seconds": 90.578,
+      "assertion_entrances": 49,
+      "log_sha256": "e09fc35dd897a3961595e3802f1d63a0f919345440ab470e7088c1f64e48dc2e"
+    }
+  ],
+  "checks": {
+    "apply --check": {
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "-c core.longpaths=true": {
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  },
+  "original_product_sha256": "9f8f800aee380f8b060b95fcc8d1c776ed580ddbec0bbd398d104bda58156403",
+  "original_smoke_sha256": "c048cb9929a71677b00f2d80e995058970e41b2ff6b2875fdf104da2d5d456cf",
+  "original_product_unchanged": true,
+  "original_smoke_unchanged": true,
+  "first_formal_reports_preserved": {
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows114-backend\\20261102-012049-57371f8c\\report.json": "591e52a47535115123eb12468ad886f039e1b6c08dc4a5ba0f4e2e2050ae8759",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows114-integration\\20261102-015023-8bc66545\\report.json": "832decccd0c0bfdf9fd9c00555e2f6167409c95035cf316c8f88c04ef8b5da4b"
+  },
+  "independent_review": {
+    "agent": "Feynman",
+    "target": "01a197c9-5e75-7413-abcb-991c364d8e4d",
+    "status": "submitted; pending independent verdict"
+  },
+  "boundary": {
+    "external": "only inactive generated editor source checks excluded; actual declared main/macro SHA, command, environment, real backend Inspect and post-check unchanged; recursive closure explicitly unobserved",
+    "generated": "content/path/read_success mismatches still reject; no historical source/document clearing",
+    "complete_editable_bundle": "no product changes: retained resources and restricted distribution opt-in remain strict; missing inactive named GPS spectrum refuses export"
+  }
+}

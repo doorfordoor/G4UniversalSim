@@ -1,0 +1,102 @@
+# J2 Source / Physics 实施证据
+
+工作区 effective-config，roadmap/J2-F8-editing，基线 fc606739。仅修改 include/Source、src/Source、include/Physics、src/Physics 与 scripts/test_j2_sources_physics.py。不构建、不提交。
+
+## 接口约定（2026-11-01）
+- `[source]/multiple_vertex` bool，默认 false，仅命名源模式；false 按强度随机选一个源，true 每事件所有源各一个顶点，intensity 不控制顶点数，沿用 GPS 权重行为。全局只允许 verbose/multiple_vertex。
+- `position_type=surface, shape=sphere, center, radius>0` → GPS Surface/Sphere；volume/sphere 保持球内均匀。sphere 不接受 position、halfx/y/z、inner_radius、beam_sigma*。rot1/rot2、角度及能谱复用。
+- `[physics]/replace_modules` 逗号分隔，规范名/别名复用 PhysicsFactory。只 reference 模式。实际非零 physics type 必须唯一匹配旧构造器；同 type 多次替换、无旧目标、biasing/MicroElec 替换失败。EM replacement 与显式非空 em 冲突。
+- extra_modules 仅附加；实际 type/name 冲突拒绝并提示 replace_modules；manual 同 type 冲突拒绝。radioactive decay 与 decay 按实际 type 区分。
+- region 字段保持，默认 StepLimiter 仅带电粒子。无新增 CLI。主代理同步 schema 中 multiple_vertex、replace_modules 和 surface 枚举，以及文档/runner。
+- GUI 现有能谱/位置/角度/ion/phase_space 字段复用真实解析；phase_space 仍不能与命名 GPS 混合。
+
+## 核对与进度
+已读 AGENTS、A4/A6/M0 源历史与 Q1/完整2C 历史、ROADMAP 指定范围、实施约定。当前源码已有命名源/谱/ion/phase_space、region 限制和 process dump；缺 Surface/Sphere、INI 同发开关和显式 constructor 替换。
+实施中。真实验证尚未执行；旧二进制与旧报告不验证新源码。待主代理统一构建后使用 G4USIM_EXE 且核对指纹。
+
+## 源码就绪（source ready）
+Source/Physics C++ 实现已完成；MSVC /Zs 对六个修改的 .cc 检查通过（退出0），日志 `out/collab/j2-source-physics-syntax.log`。首次 /Zs 少 WIN32 定义导致 Geant4 tls.hh 前置拒绝，保留 `j2-source-physics-syntax-first.log`；补齐与现有 CMake 一致的 WIN32 后通过。这只是语法检查，没有全局构建，没有用旧 EXE 验证。
+- 新增 script `scripts/test_j2_sources_physics.py`，直接要求 G4USIM_EXE，起止核对当前 workspace_source_fingerprint；原始逐case stdout/stderr、初级顶点、process dump、case-receipts 均持久保存到 G4USIM_TEST_EVIDENCE_DIR 的独立子目录或 --evidence-dir。
+- 测试专用 `G4USIM_TEST_PRIMARY_VERTICES=<新JSONL路径>`：PrimaryGeneratorAction 在真实 G4Event 生成后、输运前记录每个 primary 的run/thread/event/vertex/count/PDG/位置/方向/动能/顶点与粒子权重/电荷；含 phase-space 重放。线程互斥；不登记生产输出，不作物理正确性结论。统一测试脚本会自动设置，生产不要设置。
+- ProcessDump 向兼容 v1 添加 physics_list.constructor_details（实际 name/physics_type/cpp_type）；cpp_type 是当前编译器 RTTI 字符串，只诊断而非跨平台稳定标识。已有 constructors 不变。
+- 真实二进制尚待主代理统一构建后提供，尚无新运行通过结论。接下来仅脚本和本证据文件可继续修订；如需变更C++，先明确撤销source ready通知。
+
+## 权重语义补核
+查官方 Geant4 v11.3.2 / v11.4.3 `source/event/src/G4GeneralParticleSourceData.cc` 的 IntensityNormalise 和 `G4GeneralParticleSource.cc` GeneratePrimaryVertex：本接口强制 flat_sampling=false 时 intensity weight=1；同发模式每源一次，intensity不影响次数或权重。GUI已收到明确通知；脚本将对真实初级顶点再次断言，源码查阅不替代新后端执行。
+- https://github.com/Geant4/geant4/blob/v11.3.2/source/event/src/G4GeneralParticleSource.cc#L169-L215
+- https://github.com/Geant4/geant4/blob/v11.4.3/source/event/src/G4GeneralParticleSourceData.cc#L66-L101
+G4RadioactiveDecayPhysics type=0，和常规Decay不同名，附加可用，但作为type0不能replace；不是按宽泛Decay分类互斥。
+
+## 当前交付检查
+- 2026-11-01 最后 /Zs 会话23780退出0，六份.cc全部通过；没有全局编译/链接。
+- Python AST通过，59个静态assert站点（不是已执行断言数）；--help启动通过。
+- `python -B scripts/check_test_platform_paths.py` 实际输出 `test platform paths: OK (200 scripts, no platform assumptions)`。
+- 分配范围git diff --check通过；十个交付文件均UTF-8/LF，逐文件哈希见 `out/collab/j2-source-physics-ready-manifest.json`。
+- 新脚本覆盖：Surface球面与Volume球体独立初级顶点/统计矩；强度选择与同时发射、两轮事件、单命名源；球面+谱+ion及phase-space重放复用；reference EM/hadronic替换的旧实际C++类与旧constructor name消失、新类/模型/过程存在；manual组合；reference/manual各自proton/gamma的region真实径迹限步；新字段及冲突拒绝反例。
+- 运行命令：设置G4USIM_EXE到主代理本轮新构建，再运行 `python -B scripts/test_j2_sources_physics.py --evidence-dir out/collab/j2-sources-physics-runtime-<新标识>`。目录必须为新路径，缺EXE/指纹不符直接失败。全局runner注册、严格证据门禁和Windows/Linux双版本矩阵由主代理处理。
+- 非本轮变更的已知旧路径：SourceMessenger单字段命令拒绝仍经FatalException；本脚本只验证新INI输入和组合冲突受控拒绝，没有把旧SourceMessenger路径说成已修复或已真实验收。
+- 最终剩余：等待主代理提供新EXE后执行并修正真实测试发现的问题；当前未发布通过receipt，也未关闭阶段。
+
+## 2026-11-02 Geant4 11.3.2 首轮真实运行
+主代理新构建out/build-i2-formal113/Release/G4UniversalSim.exe，源码指纹e44d005a039448d083008c0c6ba3f824b2f1b680b8d6b2b63f297137754d76f6，EXE SHA256 d5c179c2540a4f0e7e146bb5faffa39cd718549d11cae0a0bb87e1359e1d740b。
+受控子进程环境前置Geant4/Qt bin，清其他G4*DATA后将GEANT4_DATA_DIR/G4USIM_GEANT4_DATA设为D:/ProgramFiles/Geant4/share/Geant4/data。通过v3探针运行，观测wrapper只保留stdout/stderr与工作目录，未改变测试判定/随机输入。
+首错：新脚本首轮退出1，4452个执行assert入口；log `out/collab/j2-source-physics-113-r1/test_j2_sources_physics/test.log`，逐case原件在同目录evidence/b7b86f688ebc42e39cd28d32caf928a7。球面/体球/选源/同发/单命名源/谱+ion/相空间与源拒绝测试此前已通过。失败是新测试对标准EM基线gamma整体错误断言不含Livermore；实际process dump显示光电与瑞利也用Livermore。只修脚本为精准compt模型集合检查（替换后有LivermoreCompton、基线无），保留constructor/type和过程断言。无需改C++/schema或重编译，未改旧GPS/A6判据。旧失败日志保留。
+GPS/A6仍按顺序执行，结束后单独复跑新脚本。
+
+## 2026-11-02 Geant4 11.3.2 最终真实验证事实
+| 脚本 | 最终退出码 | v3实际执行assert入口 | 证据 |
+| --- | --- | --- | --- |
+| test_j2_sources_physics.py | 0 | 4601 | j2-source-physics-113-r2/test_j2_sources_physics/test.log；41子用例 |
+| test_gps_sources.py | 0 | 219 | j2-source-physics-113-r1/test_gps_sources/test.log |
+| test_physics_a6.py | 0 | 71 | j2-source-physics-113-r1/test_physics_a6/test.log |
+三项共4891入口；最终都无skip。两份旧脚本与原判据未改。新脚本只精准修正前述错误基线断言；首轮exit1及完整log/输出原件保留。第一轮driver总exit1准确保留，不能把它写成全绿；第二轮仅重跑修正的新专项，driver exit0。
+
+- 两轮source_before/source_after始终e44d005a039448d083008c0c6ba3f824b2f1b680b8d6b2b63f297137754d76f6，EXE SHA256始终d5c179c2540a4f0e7e146bb5faffa39cd718549d11cae0a0bb87e1359e1d740b。Source/Physics C++与source-ready清单逐项相同，未改C++/schema、无需重编译。
+- 本次直接脚本运行使用已有v3探针；观测wrapper只拦截cleanup保留独占临时目录，并保存每次后端调用的argv/exit/stdout/stderr。文本捕获日志是测试拿到的UTF-8文本，bytes捕获保持原始字节；各receipt标注text_capture。wrapper没有更改阈值、种子、case输入、返回状态或任何判据。
+- 新专项成功证据：out/collab/j2-source-physics-113-r2/test_j2_sources_physics/evidence/6b216ee9512e4374985434b7ca6f4de6（complete.json、41条case-receipts.json记录、逐用例初级顶点/process dump/摘要/原始日志）。
+- 确认Surface Sphere的2048顶点全部在半径10mm上（最大误差约3.6e-15mm），Volume Sphere对照出现内部顶点；强度1:3选源527:1521；同发2run×32event产生128初级，权重均1。谱、离子电荷与相空间复用通过。
+- 实际已注册列表确认：EM替换后G4EmStandardPhysics类和G4EmStandard名称均消失，G4EmLivermorePhysics/type2和LivermoreCompton出现；optical真实附加，e-有Cerenkov/Scintillation。强子替换后G4HadronPhysicsFTFP_BERT类/旧名称消失、G4HadronPhysicsQGSP_BIC/type6出现，protonInelastic和Binary模型存在。实际class/type/process摘要另存j2-source-physics-113-actual-constructors.json。
+- manual/reference各自proton与gamma的region真实轨迹检查均通过：带电proton步长≤1mm，gamma不被StepLimiter限制；非法组合/参数均在产生初级前拒绝。保持原机制，不扩大为中性粒子限步或一般物理验证。
+- 总收据：out/collab/j2-source-physics-113-validation-receipt.json，含最终三脚本SHA、log SHA、v3入口、源/EXE身份、首错路径。旧GPS/A6的原始逐进程日志及工作目录均保留在r1各脚本目录。
+- 适用边界：这里只完成Windows Geant411.3.2这三项专项。未运行Linux/11.4、全局正式runner和严格证据门禁；阶段验收/这些矩阵仍由主代理统一执行，不以本收据冒充完整阶段报告。
+
+## 2026-11-02 独审P1跨入口物理替换回修（源码ready，待统一重建）
+
+Sagan独审 `out/collab/j2-backend-review/README.md` 的真实em-macro反例有效：INI Penelope replacement会覆盖已成功接受的macro Livermore。本项重新打开，原11.3三专项通过收据仅保留原源码身份，不作为修后验证。
+
+产品修改限定：include/Physics/PhysicsManager.hh、src/Physics/PhysicsManager.cc、src/Physics/PhysicsMessenger.cc。未动Source/main/schema/CMake/GUI，不自行全局构建。
+- Manager在任何字段改变前检查已配置replacement：SetEMOption、SetReferenceEMOption、SetRequestedEMOption；SetReferenceList/SetBaseReferenceList/ClearReferenceList在replacement计划存在时拒绝切换base/mode，避免跨入口重解释旧计划。初始INI仍支持reference suffix+replacement；replacement是在读取初始reference后才加载。
+- AddExtraModule按现有支持分类检查与replacement同类冲突，覆盖addModule/addHadronic/addOther/addExtraModule共享路径。radioactive/optical/generic_biasing/MicroElec独立type0或专属生命周期扩展不误当replacement同类。
+- SetEM及reference派生使用先验证候选、后提交，拒绝时不提前写requestedEMOption或reference/base缓存。
+- PhysicsMessenger捕获setter异常后锁存物理失败，使用G4UIcommand::CommandFailed让ApplyCommand返回非零，再以JustWarning显示原原因；现有main批处理直接停止并记录精确macro来源，不调用成功来源确认，不需改main。避免FatalException原生终止或纯warning后继续。
+- 已按Geant4 11.3.2和11.4.3官方G4UImanager.cc核对CommandFailed的额外错误码会加入ApplyCommand返回值；这不是实际新EXE验证。
+
+永久真实回归在scripts/test_j2_sources_physics.py新增12拒绝+4正对照，默认全量包含；可定向 `python -B scripts/test_j2_sources_physics.py --only-replacement-macros --evidence-dir <新目录>`。支持macro_text将冲突命令置于initialize之前；断言普通exit1、failed摘要、精确命令/第1行/非零可用状态码、0run/0初级、后续dump不存在；configure/finalization的physics requested/resolved/revision/origins完全相等，摘要reference与main_ini来源保持。正对照核对无replacement时Livermore真实构造器、replacement+cuts仍PenCompton、强子replacement+EM合法组合、optical附加后的真实过程。
+
+验证到此：MSVC /Zs PhysicsManager.cc/PhysicsMessenger.cc退出0；Python AST/帮助入口及新增INI/macro字符串真实换行检查通过；git diff --check通过。未跑旧EXE冒充新源码。当前新source_fingerprint与逐文件SHA在out/collab/j2-p1-physics-ready.json。请主代理统一重建113/114后交回新EXE，再跑本专项与Sagan独审复验。代码再次冻结等待构建。
+
+## 2026-11-02 P1 fresh 双版本永久定向真实专项完成
+
+本轮使用主代理out/collab/j2-p1-build-identities.json指定的两个新EXE；均核对实际文件SHA、capabilities Geant4版本/源码指纹，起止源码指纹为149b25dd00773898c324d09a53dd1ef64b0bf37bc105ca0f74d0c4933245756f且不变。测试使用永久入口`tools/test_assert_probe.py scripts/test_j2_sources_physics.py --only-replacement-macros`，未改产品C++或测试文件，也未启动构建。
+
+| 后端 | 新EXE SHA256 | 用例/实际v3入口 | 退出码 |
+| --- | --- | --- | --- |
+| Windows 11.3.2 | 8f7dde9254791d79b5db398fe477fe0fd1e98d012a616af040c04ebb7eb7a7fb | 16 / 257 | 0 |
+| Windows 11.4.3 | 4919f2e62b6c73ef394cd5cc963078dad86eba16dd66d109ba8c967893c22f54 | 16 / 257 | 0 |
+
+两版均完成12类冲突受控exit1、0run/0初级、停止后续宏、正确macro位置和非零返回状态码；初始与收尾physics resolved/requested/revision/origins完全相同，摘要reference仍main_ini。4个合法对照每个8事件，真实构造器/过程符合请求。合计514个v3入口，没有skip，本轮首次执行即通过，没有新首错。原Sagan修前反例和e44d005a身份的初始验证均原样保留，不追改。
+
+113环境：D:/ProgramFiles/Geant4/bin + Qt 5.15.2 bin，数据D:/ProgramFiles/Geant4/share/Geant4/data。114环境：out/dependencies/geant4-11.4.3/geant4-11.4.3-win64/bin + Qt bin，核实已有11.4数据安装out/i2-controlled/windows114-data/data；SDK本身没有data目录，未误用11.3旧数据。两个子进程都清其他G4*DATA再显式设置GEANT4_DATA_DIR/G4USIM_GEANT4_DATA。
+
+- 双版总收据：out/collab/j2-p1-targeted-validation.json。
+- 113原始测试log/身份/逐case输入与stdout/stderr/初级/summary/EffectiveConfig/process dump：out/collab/j2-p1-targeted-1132-r1/。
+- 114同类原件：out/collab/j2-p1-targeted-1143-r1/。
+- 每版receipt.json带log与脚本SHA、命令、环境、实际v3入口；evidence/case-receipts.json各16项，evidence/complete.json通过。记录并复核落盘日志原始字节SHA。
+
+此为作者永久定向回归结果，不冒充Sagan独立复核、全量源/物理回归、Linux矩阵、统一runner严格报告或J2/F8阶段关闭。源码继续冻结，等待主代理集成判定。
+
+## 2026-11-02 11.4数据folder版本补充核对
+
+响应主代理环境核查要求，对本轮同一114EXE/同一显式data根清旧G4*DATA后执行--check-geant4-data退出0。除required_complete外逐一比对当前>=1140分支的12个env/folder/required值，核实实际目录存在及resolve后均在所选root下；EMLOW8.8、PhotonEvaporation6.1.2、PARTICLEXS4.2、INCL1.3、CHANNELING2.0正确，未混用113旧数据。原始discovery.stdout.json与stderr以及data-version-verification.json保存在out/collab/j2-p1-targeted-1143-r1，双版总收据新增该验证路径。不宣称全数据字节已校验。
+
+几何原3P2修后独立定点复核见out/collab/j2-geometry-review/p2-recheck/README.md：原3项修复确认；另保留新Boolean/schema known-key属性丢失的共享集成阻断，已通知主代理，不修改产品。两者结论分开。

@@ -1,0 +1,21 @@
+# Candidate 56b689f CI 独立收集检查点
+
+精确HEAD 56b689fb9ac920cbb1203b2b94dae2483d25f622；只读观测，不rerun、不取消、不改产品/测试/workflows。
+
+- source_fp 9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a；tests_fp a0b6ba859c87e276b2b602040c28376150ef8fa86a24e78e2adacebd9aa0df1e。
+- public push API 身份与结果见 public-push-runs-initial.json、public-push-runs-2.json。4个run全为此HEAD、attempt1。
+- M0 41330577407 已failure，两OS static均41pass/5fail/0skip，46cases。Ubuntu job124919607946、Windows124919608147。artifacts13093800091/13092893947均已下载原ZIP、SHA对GitHubdigest核验、解压并strict检查。
+- Linux 41330577426 已failure，两版static同样5项失败。jobs11.3=124919607906、11.4=124919607744；artifacts13093695553/13092839619已收齐、核验。
+- 四份新static报告均匹配历史v3基线（M0按OS、Linux按版本）。strict全部拒绝，详细逐旧例counts/status与首错在 report-gates-current.json；原始逐例log在 extracted/。未使用allow-incomplete或任何legacyflag。下游GUI/backend/integration未产生报告，不算通过。
+- 同5失败：k1_bundle:592 blocker旧断言；f4_producers:104 manual mode.unsupported；f4_document_diagnostics:100 density位置；doc_links:116 7个out/collab相对链接丢失；config_migration:146 blocker旧断言。已即时向主代理报告原位置，不自行判定全属旧测试问题、不改测试。
+- Desktop 41330577359 两job成功：Windows124919607718/Linux124919607965；artifacts13093860061/13093895065已收齐原ZIP并验证GitHubdigest。delivery passed、frozen GUI selftest ok、source identity stable，150个GUI源hash匹配候选，4条命令日志SHA及正/负例期望exit分别0/1/0/1核验。job原日志已保存；Linux14+52入口/Windows14，仅为探针入口非物理证据。
+- Installation 41330577328：Linux124919608140已success，Windows124919607941仍在full runtime/SDK installation lifecycle（最后观测UTC17:38:09）。Linux artifact13093212578已下载核对ZIP SHA 8bb396778f082cd0debb31ec921b63c22d64ed36f9b964648a8b502432e14ed8，解压保存在extracted/full-installation-Linux-13093212578；delivery-report verified、10stage全部exit0且日志SHA核对、evidence/index23对象SHA核对、runtime实际run_summary completed5/5、SDK consumer/fullapplication configure-build-run全部exit0、两profile卸载uninstalled。
+- Linux安装源889文件与精确HEADcheckout身份核验：887直接匹配git blob，test/scripts/run_tests.bat/.ps1按候选.gitattributes明确CRLF转换后匹配；未归一化任何证据日志。当前工作树文本与HEAD无非EOL变化。完整结果installation-linux-checked.json。下一步仅等待Windows安装完成收其原日志/ZIP/同类收据，再刷新最终public状态形成四workflow汇总。
+- 已存6个完成job的完整connector解码日志：job-<id>.log。connector一次JS输入64KB限制已分块写入，无日志截断。曾有2次read-only jobs请求transport send error，先核对public状态后单次重读成功；不是CI失败。
+- Linux安装完成日志job-124919608140.log也已保存，当前共7个完成job日志。主报告review-current.md已写首错/历史matching比较；最终待更新安装状态。checker-56b689f.py从git对象原字节复制（SHA f9a863e4a20031c46e348f4b0278e4519dda1da07c3fc6825a1f47e123b2e84f），analyze_reports.py固定使用该候选checker，避免主代理后续改动影响旧候选核验。
+- 本机git status显示73个既有超长历史docs文件D，均位于docs/verification/k1-p1-close-20261031/，与此前任务观察一致，其他tracked入口无修改。未作checkout/config修理，见local-worktree-observation.json；远程CI实际checkout身份独立核对。
+
+所有运行继续保留失败原态，等待安装workflow完成，不启动其他远程操作。out内analyze_reports.py为独立收集工具，不属于产品测试。
+
+## 最终完成
+四个push workflow均completed、attempt1。安装Windows job124919607941 success，artifact13093324687 SHA d957924a50f643b4a3870b5c96168d982bb536c87d66d2930a1bce4c91ba57d6，独立核验9阶段/889源文件/实际5事件/SDK与卸载通过。原ZIP与完整解码日志共16文件已收齐，清单collected-files-final.json。最终结论review-final.md；首候选两个回归workflow失败，strict不通过。链接修复仅out草案design-link-proposal，未apply。无运行进程或待收集CI。

@@ -1,0 +1,123 @@
+--- a/gui/smoke_tests/smoke_f8_accessibility.py
++++ b/gui/smoke_tests/smoke_f8_accessibility.py
+@@ -586,6 +586,112 @@
+             close_window(app, window)
+ 
+ 
++def test_history_directory_accessibility(app, output=None):
++    """Bind the explicit History directory label without broad QHBox guessing."""
++    from g4usim_gui.core.accessibility import _reading_anchor, readable_label
++    from g4usim_gui.core.i18n import set_application_language
++
++    def settle():
++        for _ in range(8):
++            app.processEvents()
++        QTest.qWait(30)
++
++    def key(window, code, modifiers=Qt.NoModifier):
++        window.activateWindow()
++        QTest.qWait(20)
++        QTest.keyClick(window, code, modifiers)
++        settle()
++
++    observations = []
++    with tempfile.TemporaryDirectory(prefix='f8-history-label-') as temp:
++        QSettings.setPath(QSettings.IniFormat, QSettings.UserScope, temp)
++        apply_theme(app, 'light')
++        set_application_language(app, 'en')
++        window = MainWindow()
++        runs = Path(temp) / 'long-runs-root-for-history-keyboard-and-accessibility' / 'preserved-run-packages'
++        project = window.project
++        project.runsRoot = str(runs)
++        project.pathSettings.runs_root = project.runsRoot
++        window._set_project(project)
++        window._reset_edit_history()
++        window.config_builder_page._backend_timer.stop()
++        window.config_builder_page.schedule_backend_geometry = lambda *args, **kwargs: None
++        window.resize(760, 640)
++        before = snapshot_fingerprint(window.capture_workspace())
++        history = (window._edit_session.can_undo, window._edit_session.can_redo,
++                   window._edit_session.is_modified)
++        field = window.run_history_page.runs_root
++        label = window.run_history_page.layout().itemAt(0).layout().itemAt(0).widget()
++        try:
++            window.show()
++            window.activateWindow()
++            settle()
++            assert label.buddy() is field
++            assert getattr(field, '_f8_accessible_label', None) is label
++            # Retain the real Config/Preview docks before entering History.
++            key(window, Qt.Key_3, Qt.ControlModifier | Qt.AltModifier)
++            key(window, Qt.Key_F6)
++            docks = dict(window.workspace_layout.docks)
++            assert docks['configuration'].isVisible() and docks['preview'].isVisible()
++            for language in ('en', 'zh_CN', 'en'):
++                window._set_language(language, persist=False)
++                settle()
++                key(window, Qt.Key_8, Qt.ControlModifier | Qt.AltModifier)
++                assert window.page_stack.currentIndex() == 7
++                assert QApplication.focusWidget() is field
++                assert label.text() == ui_text('Runs root')
++                assert field.accessibleName() == readable_label(label.text()) == ui_text('Runs root')
++                assert label.buddy() is field and field._f8_accessible_label is label
++                parent = field.parentWidget()
++                inner_can_fit_union = True
++                details = []
++                while parent is not None:
++                    if isinstance(parent, QScrollArea) and parent.widget() is not None and parent.widget().isAncestorOf(field):
++                        viewport = parent.viewport()
++                        full = QRect(field.mapTo(viewport, QPoint(0, 0)), field.size())
++                        label_rect = QRect(label.mapTo(viewport, QPoint(0, 0)), label.size())
++                        union = full.united(label_rect)
++                        inner_can_fit_union = inner_can_fit_union and union.width() <= viewport.width()
++                        # Once an inner viewport cannot fit the joint, preserve
++                        # label + readable field prefix; do not promise a whole
++                        # field through that narrower clipping ancestor.
++                        prefix = QRect(full)
++                        prefix.setWidth(min(prefix.width(), 128))
++                        context = label_rect.united(prefix)
++                        assert viewport.rect().contains(context), (language, parent.objectName(), context, viewport.rect())
++                        if inner_can_fit_union:
++                            assert viewport.rect().contains(union), (language, parent.objectName(), union)
++                        details.append({'scroll': parent.objectName(), 'viewport': list(viewport.rect().getRect()),
++                                        'field': list(full.getRect()), 'label': list(label_rect.getRect()),
++                                        'joint': list(union.getRect()), 'anchor': list(_reading_anchor(field, viewport).getRect()),
++                                        'h': parent.horizontalScrollBar().value()})
++                    parent = parent.parentWidget()
++                assert details
++                assert field.text() == str(runs)
++                assert not runs.exists()
++                assert all(window.workspace_layout.docks[name] is dock for name, dock in docks.items())
++                assert snapshot_fingerprint(window.capture_workspace()) == before
++                assert (window._edit_session.can_undo, window._edit_session.can_redo,
++                        window._edit_session.is_modified) == history
++                observations.append({'language': language, 'name': field.accessibleName(),
++                                     'label': label.text(), 'viewports': details})
++            # The helper must be idempotent at the readable nonzero pan; the
++            # test never supplies an offset or reveals the field itself.
++            offset = window.content_scroll.horizontalScrollBar().value()
++            assert offset > 0
++            settle()
++            assert window.content_scroll.horizontalScrollBar().value() == offset
++            if output:
++                output.mkdir(parents=True, exist_ok=True)
++                assert window.grab().save(str(output / 'history-label.png'))
++        finally:
++            if output:
++                output.mkdir(parents=True, exist_ok=True)
++                (output / 'history-label.json').write_text(
++                    json.dumps(observations, ensure_ascii=False, indent=2), encoding='utf-8')
++            close_window(app, window)
++
++
+ def main():
+     parser = argparse.ArgumentParser()
+     parser.add_argument('--translations', type=Path)
+@@ -635,6 +741,7 @@
+         finally:
+             close_window(app, window)
+     test_retained_dock_focus(app, args.output)
++    test_history_directory_accessibility(app, args.output)
+     print('F8 keyboard/start/environment/wizard/layout offscreen checks passed')
+ 
+ 

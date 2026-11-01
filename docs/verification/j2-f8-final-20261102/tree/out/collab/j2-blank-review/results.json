@@ -1,0 +1,101 @@
+{
+  "started_source_sha256": {
+    "core/wizard.py": "36d0f4cfb4230907edb2ecc45a1fa1493a1a968f20393941a3b49ead6c3bfcb4",
+    "validators/config_validator.py": "23cc892444316efe659f953e8fb7763c8915d1b4ebc346ad155d1e9cf246759f",
+    "window/project.py": "edd71bce6e2e2d0a1f9bc199cb17156d756a15fd47db2df1d809025ac7bda3b4",
+    "window/content.py": "ed66d77dff5fc99fa1144d0e20696795f64a70ea9a893ba2192c2a10a823117c",
+    "window/shell.py": "2a74cd617040f7432f1f1baf6dc71a11f1d88798816c61e02c531c7d8b40204a",
+    "core/experiment_bundle.py": "9c064905ca911e39afb328c66bcbc9b3a487e5ac45e0ffaac41c1e2aafa246f3",
+    "writers/package_writer.py": "5fe3788a76d66e4968b391eeb648265afef0d0799e50f6f33fc61fc11656ce66",
+    "window/transactions.py": "518b0fc84d03f77089c598fc2d4a2cb1a4c7dca9f240c0e2cf99c8d748f201d0",
+    "window/recovery.py": "c88379ccaf98a958e0e71d437a5ab173b707743123fee9e834a8e1ae1b57010d"
+  },
+  "finished_source_sha256": {
+    "core/wizard.py": "36d0f4cfb4230907edb2ecc45a1fa1493a1a968f20393941a3b49ead6c3bfcb4",
+    "validators/config_validator.py": "23cc892444316efe659f953e8fb7763c8915d1b4ebc346ad155d1e9cf246759f",
+    "window/project.py": "edd71bce6e2e2d0a1f9bc199cb17156d756a15fd47db2df1d809025ac7bda3b4",
+    "window/content.py": "ed66d77dff5fc99fa1144d0e20696795f64a70ea9a893ba2192c2a10a823117c",
+    "window/shell.py": "2a74cd617040f7432f1f1baf6dc71a11f1d88798816c61e02c531c7d8b40204a",
+    "core/experiment_bundle.py": "9c064905ca911e39afb328c66bcbc9b3a487e5ac45e0ffaac41c1e2aafa246f3",
+    "writers/package_writer.py": "5fe3788a76d66e4968b391eeb648265afef0d0799e50f6f33fc61fc11656ce66",
+    "window/transactions.py": "518b0fc84d03f77089c598fc2d4a2cb1a4c7dca9f240c0e2cf99c8d748f201d0",
+    "window/recovery.py": "c88379ccaf98a958e0e71d437a5ab173b707743123fee9e834a8e1ae1b57010d"
+  },
+  "source_unchanged_during_run": true,
+  "utc": "2026-11-01T15:55:29.633654+00:00",
+  "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+  "cases": [
+    {
+      "case": "old-input-isolation",
+      "status": "observed",
+      "detail": {
+        "templates": 5,
+        "old_input_bytes_unchanged": true
+      }
+    },
+    {
+      "case": "source-disappeared-and-cleared",
+      "status": "observed",
+      "detail": {
+        "missing_and_cleared_external_sources_rejected": true
+      }
+    },
+    {
+      "case": "cancel-invalid-draft",
+      "status": "observed",
+      "detail": {
+        "invalid_seed_preserved": "not-an-integer",
+        "revision": 2
+      }
+    },
+    {
+      "case": "new-projection-failure",
+      "status": "observed",
+      "detail": {
+        "returned": false,
+        "old_draft_and_path_restored": true,
+        "discard_flag_before": false,
+        "discard_flag_after": true,
+        "workspace_fault": ""
+      }
+    },
+    {
+      "case": "new-candidate-rejection",
+      "status": "observed",
+      "detail": {
+        "exception_escaped": "ValueError: controlled candidate rejection",
+        "returned": null,
+        "no_prompt_or_mutation": true
+      }
+    },
+    {
+      "case": "wizard-undo-recovery",
+      "status": "observed",
+      "detail": {
+        "undo_invalid_draft": true,
+        "snapshot_codec": true,
+        "recovery_projection": true,
+        "no_stale_source_summaries": true
+      }
+    },
+    {
+      "case": "portable-async-reimport",
+      "status": "observed",
+      "detail": {
+        "moved_bundle_fresh_cwd": true,
+        "actual_async_gui_import": true,
+        "collected_package": true,
+        "source_paths": {}
+      }
+    },
+    {
+      "case": "invalid-draft-export",
+      "status": "observed",
+      "detail": {
+        "export_rejection": null,
+        "published": true,
+        "ordinary_save_preserves_invalid_draft": true
+      }
+    }
+  ]
+}

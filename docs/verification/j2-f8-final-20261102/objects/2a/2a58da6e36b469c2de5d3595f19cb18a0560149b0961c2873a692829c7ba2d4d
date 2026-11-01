@@ -1,0 +1,95 @@
+{
+  "status": "applied_exact_reviewed_bytes",
+  "manifest_sha256": "be34758a76e5af7d69835140441583fc1dee6f62bf17f3a8f70fdac4bdbd930b",
+  "patch_sha256": "721f9bc9a646ebc15524ac68d0dd0080badce7f2454c8d1b5e2b63699cc229f7",
+  "independent_receipt_sha256": "3d2c1552cf1b754a624da22ab3c25d0ebb52a147b2dea230ccc70728f3e3b3de",
+  "files": [
+    {
+      "path": "STATUS.md",
+      "original_sha256": "50fe07c270a9d9077807d81c8f15c230217d0a8da3b9c28e3cb523c53f1ceba5",
+      "candidate_sha256": "6dbd513b352443b66151055a6feb6c3fba7f0a02a137b0a8ae7d73b2074a4e90",
+      "patch": "patches/STATUS.md.patch",
+      "bytes": 39409,
+      "BOM_preserved": false,
+      "line_endings_preserved": true
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "original_sha256": "847626efce5f3683eb068364eba872dc6933516e0397878eab25593bb5882af4",
+      "candidate_sha256": "1082cc0d20f8c9e82e4c4675828acd5266007c07cec14e9ac6f363c10d197806",
+      "patch": "patches/docs__ROADMAP.md.patch",
+      "bytes": 78206,
+      "BOM_preserved": false,
+      "line_endings_preserved": true
+    },
+    {
+      "path": "AGENTS.md",
+      "original_sha256": "a90773593c13d778c29bff4aa409194873b38907e11eb9cba482eb615e52f284",
+      "candidate_sha256": "8f01ba46ebce3ed02f905f90e565fdf00411c1272da75ef15246381705ab23f0",
+      "patch": "patches/AGENTS.md.patch",
+      "bytes": 58230,
+      "BOM_preserved": false,
+      "line_endings_preserved": true
+    },
+    {
+      "path": "gui/AGENTS.md",
+      "original_sha256": "461a276cde56bdfa03f67e51702b35471384459ecc282211726376ae768c6df3",
+      "candidate_sha256": "612345ef6198b92de7b96c0acccb6964b2aec34aacf838c962ddd6a08ad24fe2",
+      "patch": "patches/gui__AGENTS.md.patch",
+      "bytes": 49706,
+      "BOM_preserved": false,
+      "line_endings_preserved": true
+    },
+    {
+      "path": "docs/agent-history.md",
+      "original_sha256": "c4a40aefc6af27cdecc82fe68d2b4494cbe66a2b102a2d0e87513df0a4344930",
+      "candidate_sha256": "c720691a1e7a3fa831158b52b33f9a29f7688ed470788289a1c28bace7c88605",
+      "patch": "patches/docs__agent-history.md.patch",
+      "bytes": 146803,
+      "BOM_preserved": false,
+      "line_endings_preserved": true
+    },
+    {
+      "path": "docs/J2\u7f16\u8f91\u8986\u76d6\u4e0eF8\u9a8c\u6536.md",
+      "original_sha256": "0dcabc185dd5ec6b6b17f9276d18c92d3c09472427d4eea7d3373f75168e1625",
+      "candidate_sha256": "df144f2dc34be5476b714ed18a6c529cde11648e889010c297ae380229c8cdc5",
+      "patch": "patches/docs__J2\u7f16\u8f91\u8986\u76d6\u4e0eF8\u9a8c\u6536.md.patch",
+      "bytes": 8826,
+      "BOM_preserved": false,
+      "line_endings_preserved": true
+    },
+    {
+      "path": "gui/docs/\u4e2d\u6587\u5feb\u901f\u4f7f\u7528\u8bf4\u660e.md",
+      "original_sha256": "911186d8fb8eeb46688b7b368b000f538486d85147cd781615e7869982081ad9",
+      "candidate_sha256": "61f8965df61a3aae8dcb1b36b8c78d8e6949ba92177889c2ed2be74b42d84ba6",
+      "patch": "patches/gui__docs__\u4e2d\u6587\u5feb\u901f\u4f7f\u7528\u8bf4\u660e.md.patch",
+      "bytes": 42322,
+      "BOM_preserved": false,
+      "line_endings_preserved": true
+    },
+    {
+      "path": "docs/\u529f\u80fd\u652f\u6301\u77e9\u9635.md",
+      "original_sha256": "f6dd1c5874e06c377544de186c59a4e1f79c1e135d2e22d4b31df61e2f9adf57",
+      "candidate_sha256": "482aaaa1ef451723477bce8bbba9cefceeca3cf65d8818a99d0ec312edae9c72",
+      "patch": "patches/docs__\u529f\u80fd\u652f\u6301\u77e9\u9635.md.patch",
+      "bytes": 189925,
+      "BOM_preserved": false,
+      "line_endings_preserved": true
+    },
+    {
+      "path": "docs/\u5f00\u53d1\u8def\u7ebf\u56fe.md",
+      "original_sha256": "eda92cfc5f24be3838809061b799ba972d97217cfd0a37347bd295fe14d7da19",
+      "candidate_sha256": "79f715e60ab0ca05488979f4e40b6e1fab9fe3eddfcc20bd60affb5eb022c516",
+      "patch": "patches/docs__\u5f00\u53d1\u8def\u7ebf\u56fe.md.patch",
+      "bytes": 31469,
+      "BOM_preserved": false,
+      "line_endings_preserved": true
+    }
+  ],
+  "code_six_targets_unchanged": true,
+  "git_apply_exit_code": 0,
+  "initial_post_apply_byte_gate": "failed_on_CRLF_conversion",
+  "exact_frozen_bytes_restored": 8,
+  "final_all_nine_sha_match": true,
+  "diagnostic": "out\\collab\\j2-f8-third-repair-applied\\docs-apply-eol-diagnostic\\receipt.json"
+}

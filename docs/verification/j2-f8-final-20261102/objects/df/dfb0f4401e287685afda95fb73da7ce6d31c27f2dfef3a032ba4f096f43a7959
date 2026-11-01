@@ -1,0 +1,14 @@
+# 正式启动器最终定点复核
+
+通过，前轮两项P2身份门禁已闭合。审查最终字节SHA256：
+`4f812f44506e2ea14f03ab49b223ccc0c01b8105c491feaa6dc36095e0c2e1dc`。
+
+只读独立final_check.py提取真实final_identity_errors、source_identities和expected_identity AST；不执行启动器顶层/main、build、profile或UI。
+
+- 语法compile通过，matching身份无错误。
+- 47项错误/缺失身份变种全部被拒绝，覆盖报告HEAD/profile/source/tests/mergefp/backend及merge路径/git状态/5项backend build字段，结束HEAD/git/EXE/merge/helper字节/5helperinputs及3source指纹。等价规范化路径仍接受。
+- 实际Dvenv fresh child两次执行启动器原fingerprint子命令：均exit0、stderr空；runner actual source/tests函数及merge字节hash一致。当前source9e40e889...、tests a0b6ba859c87e276b2b602040c28376150ef8fa86a24e78e2adacebd9aa0df1e、merge49708e1b...。这只是当前读数，新候选启动时仍须重取。
+- 独立提取并执行114数据binding block，实际核验reuse passed/root、SDK配置原字节SHA、两份发布receiptSHA、精确12folder；分别缺一项/多重复/替换错误folder的3反例均拒绝。未调用discovery EXE或重哈43527payload，不把本次binding冒充全payload重新验证。
+- 收尾status已要求runner/gate均0且identity_errors空，merge/helper变化不能再仅记录而继续passed。启动与结束都使用fresh source_identities，未缓存开始结果。
+
+final/receipt.json保存每个身份反例、两个实际child命令及退出/原stdout/stderr。启动器原字节前后SHA一致，所有独立子进程已结束。未改启动器或tracked，未启动任何正式profile。可交main按最终HEAD/EXE身份和原生互斥排程统一启动。

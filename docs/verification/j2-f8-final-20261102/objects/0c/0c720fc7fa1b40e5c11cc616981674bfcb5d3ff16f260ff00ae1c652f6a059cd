@@ -1,0 +1,7 @@
+# F8 独审进度
+
+- 只读五文件及Harvey交接；五文件SHA与作者receipt相同。
+- 独立125-r2/150各6组offscreen反例通过、五文件运行内一致。未操作原生UI。
+- 首轮125快捷键测试在show后未等待active窗口注册，首项失败，其余5项通过；仅修独审脚本事件等待，旧125证据保留。
+- 未确认新增P1/P2；main独立发现的native label左裁切仍开放交Harvey，本报告只验证焦点按钮viewport可见，不覆盖全部静态label。
+- 报告review.md及125-r2/results.json、150/results.json。无运行中的F8进程。

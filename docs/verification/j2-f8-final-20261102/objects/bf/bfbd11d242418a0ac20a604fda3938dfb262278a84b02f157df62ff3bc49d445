@@ -1,0 +1,15 @@
+# Windows geometry reload test最小独审
+
+通过。候选b3fefeac58f044c99021d1caf7812fd66c8fe41bd14fb94ebcf8facf0c1cb6bd，LF patch646d69038b11b24ee59145493de3df0d33ee9f4ae36d32d28ed96e21fdb85930。仅out，未apply/改tracked；指定Dvenv短offscreen组件exit0，未操作native/后端/profile，未占用113integration原生slot。
+
+AST独立证明：把候选成功reload新断言还原为旧literal，并移除新增Path局部值、samefile和SHA两assert后，整个模块AST与冻结原件完全一致；失败read原literal source断言仍唯一保留（原253），无源guard和全部其他旧断言原样。patch --check0。产品成功分支既有expanduser().resolve() source anchor合同未改，失败read继续保留原文档身份。
+
+独立新Qt例（不用作者完整smoke/probe）：自己创建带空格长目录+长文件名，以真实GetShortPathNameW取得不同拼写的8.3路径。长/短路径分别调用实际ConfigBuilderPage.reload_geometry，均得到resolve canonical身份、samefile和SHA一致、Independent体积读入且无source错误。短别名场景旧成功literal比较确为false。
+
+各次成功后将现有source anchor保留为原lexical8.3别名，再实际读取missing geometry.ini：文档source_path仍精确该lexical字符串，明确不同于其resolve拼写，原行/seed及parameters草稿均保留、读失败记录存在，生成确抛ValueError。没有把成功canonical合同套到失败保留分支。
+
+额外身份反例：不同真实文件复制同字节，SHA相同但samefile=false，新成功身份三联判据仍拒绝；没有用存在性/后缀/同内容代替文件身份。
+
+五源码（smoke/product/parser/model/probe）SHA前后不变，作者四原日志SHA与receipt吻合。原完整smoke的195失败、候选214通过由作者原件承载；本独审没有重跑整套或宣称独立214。WindowsCI原trace未打印actual/expected路径，真实8.3本地复现不证明当时CI TEMP具体拼写；新CI仍待实际执行。
+
+证据receipt.json/review.py/review.log。最初out测试器误从editor模块导入writer函数，ImportError保存在harness-import-error.log，修正仅out导入路径；不计产品失败。全部独立Qt进程已退出，无待跑任务。可交main统一集成；Linux Name候选按到件顺序另审。

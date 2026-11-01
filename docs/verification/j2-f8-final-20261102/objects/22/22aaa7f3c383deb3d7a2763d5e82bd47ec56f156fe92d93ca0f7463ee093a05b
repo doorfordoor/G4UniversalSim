@@ -1,0 +1,35 @@
+{
+  "scope": "original frozen formal profile failures, not reclassified",
+  "cases": [
+    {
+      "name": "gui_source",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_source_editor_v2.py",
+      "assert_sites": 39,
+      "status": "fail",
+      "exit_code": 1,
+      "duration_seconds": 0.75,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows-gui\\20261102-012220-a82212ec\\gui_source.log",
+      "log_sha256": "905bcdc025829e97bd4421847dfed833bc4d829ed3f34bf26f7b10dd6f93e97b",
+      "log_digest_algorithm": "sha256_raw_bytes_lf_v2",
+      "assertions_executed": 46,
+      "assert_probe": "settrace_assert_lines_v3",
+      "tail": "G4USIM_ASSERTS=46\nTraceback (most recent call last):\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\tools\\test_assert_probe.py\", line 177, in <module>\n    raise SystemExit(main(sys.argv))\n                     ^^^^^^^^^^^^^^\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\tools\\test_assert_probe.py\", line 153, in main\n    runpy.run_path(str(target), run_name=\"__main__\")\n  File \"<frozen runpy>\", line 291, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\gui\\smoke_tests\\smoke_source_editor_v2.py\", line 188, in <module>\n    test_generated_biasing_hook_is_blocked()\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\gui\\smoke_tests\\smoke_source_editor_v2.py\", line 163, in test_generated_biasing_hook_is_blocked\n    assert any(\"Biasing rules cannot be edited\" in item for item in physics.errors), physics.errors\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: ['J2 invalid field: physics.bias_rules (Biasing requires an enabled process rule)']\n"
+    },
+    {
+      "name": "gui_scans",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_scans.py",
+      "assert_sites": 40,
+      "status": "fail",
+      "exit_code": 1,
+      "duration_seconds": 2.516,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows-gui\\20261102-012220-a82212ec\\gui_scans.log",
+      "log_sha256": "68c0384a4e1aadfd0b1dbc085106a79fb62360c285ded2cdeead03bebe54898b",
+      "log_digest_algorithm": "sha256_raw_bytes_lf_v2",
+      "assertions_executed": 25,
+      "assert_probe": "settrace_assert_lines_v3",
+      "tail": "values\npoints\nG4USIM_ASSERTS=25\nTraceback (most recent call last):\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\tools\\test_assert_probe.py\", line 177, in <module>\n    raise SystemExit(main(sys.argv))\n                     ^^^^^^^^^^^^^^\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\tools\\test_assert_probe.py\", line 153, in main\n    runpy.run_path(str(target), run_name=\"__main__\")\n  File \"<frozen runpy>\", line 291, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\gui\\smoke_tests\\smoke_scans.py\", line 203, in <module>\n    main()\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\gui\\smoke_tests\\smoke_scans.py\", line 88, in main\n    assert len(problems) == 1 and problems[0].startswith(\"lots:\"), problems\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: ['10 MeV: Materials config is required.', \"lots: 'lots' is not a positive energy with a unit (GeV, MeV, TeV, eV, keV)\"]\n"
+    }
+  ]
+}

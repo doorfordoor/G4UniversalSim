@@ -1,0 +1,13 @@
+# 18c5858 窄增量证据登记草案 v4（仅OUT）
+
+这是待合并增量，不是最终验收或可独立搬移的完整包。前缀依赖已封存staging-v3-18c5858；原v2/v3清单、staging、原始失败与passed报告均不覆写。old-prefix-anchor.json固定旧7038条身份/顺序/大小摘要及旧seal/manifest SHA；old-prefix-verification.json逐SHA复核3581旧对象通过。
+
+incremental-manifest.json已登记四份本机终态Windows static/GUI/113backend/114backend：46/4586、66/8574、63/82029、63/72536，launch runner/gate均0且identity_errors=[]。两integration目录未读取为final，仍pending。第三static与旧第二轮完整300组保持独立身份。
+
+第三真实CI四run终态原收据、8 job完整解码日志、8原profile报告及全部逐case日志、原ZIP path/size/producer SHA均保留；现strict4pass/4fail，release_accepted=false。Linux114/113/M0Ubuntu各gui_f8_accessibility:659 QAccessible.Name失败；Windows M0另为smoke_j2_geometry:264 source_path字符串断言失败。trace没打印实际/预期路径或Name，不推断具体根因。Linuxbackend/integration未执行，不算通过。first-failure/windows-m0-failure及历史matching仍原字节，草案没有执行新strict replay；strict-pairs-draft.json记录将来只从合并staging复核的计划，不冒充已重放。
+
+三档native exit/launch均核到正常0；150/125原Harvey纯文件审、scope及限制已纳入，100 Ptolemy文件审handoff仍pending。main-scope-supplement.json按原SHA登记负责人原范围快照，不改写其文字以迎合后续终态。
+
+本增量新复制932文件、引用旧封存对象699条；main scope另外单列1文件。第三native86原图只登记SHA/大小/观察范围，原件留本机，增量staging没有这些raw图。public-raw-image-exclusions.json合并第二轮70张含QQ图与第三轮全部86图的明确排除条目，公开仅metadata/观察文字，不自动把任何含其它应用内容的raw截图塞入Git。不删除/重拍/裁剪原证据，不用containment证明无遮挡；任务窗单独图沿既有选择资格。没有生成公共raw包或上传。
+
+剩余：两Windows integration终态、Ptolemy100独审收据、Harvey OUT LinuxName诊断及第四候选协调、合并后的重定位strict、main最终归档/阶段判断。当前不改docs/tracked，不因等待新收据取消任何命令；不宣告阶段关闭。大SDK/data/二进制与ZIP只元数据，工作树路径/工具身份/FAKE不增加批准阻断。

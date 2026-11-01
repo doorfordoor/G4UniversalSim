@@ -1,0 +1,19 @@
+G4USIM_ASSERTS=27
+Traceback (most recent call last):
+  File "D:\a\G4UniversalSim\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "D:\a\G4UniversalSim\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "D:\a\G4UniversalSim\G4UniversalSim\scripts\test_f4_document_diagnostics.py", line 340, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "D:\a\G4UniversalSim\G4UniversalSim\scripts\test_f4_document_diagnostics.py", line 330, in main
+    check_material_rows()
+  File "D:\a\G4UniversalSim\G4UniversalSim\scripts\test_f4_document_diagnostics.py", line 100, in check_material_rows
+    assert [item.location.row for item in density] == [1, 2]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

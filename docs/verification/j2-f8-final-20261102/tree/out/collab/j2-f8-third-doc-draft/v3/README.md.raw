@@ -1,0 +1,11 @@
+# 第三候选九文件文档冻结 v3（仅OUT，未apply）
+
+v2全目录原字节保留；本版仅合并corrections.json中经main及Feynman集中确认的身份措辞。正文面向统一应用提交后的契约，新候选完整验收待进行，阶段未关闭。本版快照已纳入2901f42六份本机终态passed：300/300、180992入口、local-final-audit errors=[]；旧CI失败保持。其余范围、历史保护、新链接及证据边界沿用v2。
+
+冻结HEAD：`2901f4254303c3a9089c9025717908c0d77ff190`
+
+docs.patch SHA256：`721f9bc9a646ebc15524ac68d0dd0080badce7f2454c8d1b5e2b63699cc229f7`
+
+manifest.json SHA256：`be34758a76e5af7d69835140441583fc1dee6f62bf17f3a8f70fdac4bdbd930b`
+
+validation.json：9源SHA匹配，v2未改，非列出文件候选字节相同，STATUS历史tail及history原prefix保持，git apply --check退出0，九doc来源未改、六已授权main代码/测试diff前后字节不变。未apply，未启动或停止任何产品测试/build/native/正式命令。

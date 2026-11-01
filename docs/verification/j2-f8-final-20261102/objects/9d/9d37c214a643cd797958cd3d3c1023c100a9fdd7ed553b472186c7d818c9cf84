@@ -1,0 +1,45 @@
+{
+  "schema": "g4usim_frozen_desktop_delivery_v1",
+  "status": "passed",
+  "platform": "win32",
+  "package": "D:\\a\\G4UniversalSim\\G4UniversalSim\\out\\frozen-desktop-ci\\desktop",
+  "commands": [
+    {
+      "name": "frozen-gui",
+      "exit_code": 0,
+      "log": "frozen-gui.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "existing-gui-report",
+      "exit_code": 1,
+      "log": "existing-gui-report.log",
+      "log_sha256": "3cb94f533388c0efa77fefdbc1126bcd1e5dd21c4d77cf2c2310e8a83ad7eb39"
+    },
+    {
+      "name": "frozen-python-root",
+      "exit_code": 0,
+      "log": "frozen-python-root.log",
+      "log_sha256": "1112811891fa8a3b24fa57f99831c67f3b9e41c8697d34bf979bbb329aeb9f3a"
+    },
+    {
+      "name": "frozen-gui-import-failure",
+      "exit_code": 1,
+      "log": "frozen-gui-import-failure.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "identities": {
+    "gui": {
+      "receipt_sha256": "66309ab9013ed5fb9e13266bfc0d024a22c5d1691cec22903148a3b6d6a7b6a2",
+      "files": 2483,
+      "source_files": 150
+    },
+    "python": {
+      "receipt_sha256": "ee0ca65443deafdced794a3751276081d1131e86b4608eeb5c9811222cbcbf95",
+      "files": 1690,
+      "source_files": 1
+    }
+  },
+  "scope": "frozen GUI startup/natural exit and Python ROOT read-write; no Geant4 simulation"
+}

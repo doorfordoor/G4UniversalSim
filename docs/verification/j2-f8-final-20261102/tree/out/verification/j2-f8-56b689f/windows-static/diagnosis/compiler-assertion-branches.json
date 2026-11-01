@@ -1,0 +1,253 @@
+{
+  "schema": "j2_f8_compiler_assertion_branch_diagnosis_v1",
+  "candidate": "56b689fb9ac920cbb1203b2b94dae2483d25f622",
+  "baseline": "5fe0a1052e33c96d033375d0920f29b15d432dcc",
+  "probe_unchanged": true,
+  "method": "Read-only AST extraction executes only each script compiler-selection prefix using synthetic CXX-present/absent mappings; no test main body, compiler invocation, product mutation or profile rerun. PATH discovery resolves real g++ via supplied MSYS2 bin.",
+  "historical_environment_limit": "Historical report does not record CXX. PATH-discovery execution is inferred from unchanged sources, exact +1 counts and isolated branch proof; original shell environment is not reconstructed.",
+  "rows": [
+    {
+      "case": "f1_input_provenance",
+      "baseline": 37,
+      "candidate": 36,
+      "candidate_status": "pass",
+      "script": "scripts/test_f1_input_provenance.py",
+      "assertion_line": 18,
+      "assertion_text": "assert found, \"C++17 compiler required (set CXX or configure PATH)\"",
+      "source_identical_to_baseline": true,
+      "source_normalized_sha256": "53922aeaddd23b70d6e22b69fc294c5f5224cb69b613a11d2374490bb8152b39",
+      "isolated_selection_only": {
+        "configured_CXX": {
+          "selected_argv": [
+            "D:/msys64/ucrt64/bin/g++.exe"
+          ],
+          "assertion_line_hits": []
+        },
+        "PATH_discovery": {
+          "selected_argv": [
+            "D:/msys64/ucrt64/bin\\g++.EXE"
+          ],
+          "assertion_line_hits": [
+            18
+          ]
+        }
+      }
+    },
+    {
+      "case": "f1_artifact_model",
+      "baseline": 97,
+      "candidate": 96,
+      "candidate_status": "pass",
+      "script": "scripts/test_f1_output_identity.py",
+      "assertion_line": 145,
+      "assertion_text": "assert found, \"C++17 compiler required (set CXX or initialize compiler PATH)\"",
+      "source_identical_to_baseline": true,
+      "source_normalized_sha256": "87b1cd79f6c34901d0c5f91c1a9d7790cb1de53ff6dba225327c119f0c8f99fd",
+      "isolated_selection_only": {
+        "configured_CXX": {
+          "selected_argv": [
+            "D:/msys64/ucrt64/bin/g++.exe"
+          ],
+          "assertion_line_hits": []
+        },
+        "PATH_discovery": {
+          "selected_argv": [
+            "D:/msys64/ucrt64/bin\\g++.EXE"
+          ],
+          "assertion_line_hits": [
+            145
+          ]
+        }
+      }
+    },
+    {
+      "case": "output_auto_model",
+      "baseline": 4,
+      "candidate": 3,
+      "candidate_status": "pass",
+      "script": "scripts/test_output_auto.py",
+      "assertion_line": 91,
+      "assertion_text": "assert found, \"C++17 compiler required (set CXX or initialize compiler PATH)\"",
+      "source_identical_to_baseline": true,
+      "source_normalized_sha256": "31a85740cf7c212594479e630ee2843ceb15cb32df55f2682c556d89cfbcb96c",
+      "isolated_selection_only": {
+        "configured_CXX": {
+          "selected_argv": [
+            "D:/msys64/ucrt64/bin/g++.exe"
+          ],
+          "assertion_line_hits": []
+        },
+        "PATH_discovery": {
+          "selected_argv": [
+            "D:/msys64/ucrt64/bin\\g++.EXE"
+          ],
+          "assertion_line_hits": [
+            91
+          ]
+        }
+      }
+    },
+    {
+      "case": "effective_config_model",
+      "baseline": 18,
+      "candidate": 17,
+      "candidate_status": "pass",
+      "script": "scripts/test_effective_config_model.py",
+      "assertion_line": 19,
+      "assertion_text": "assert found, \"C++17 compiler required (set CXX or configure PATH)\"",
+      "source_identical_to_baseline": true,
+      "source_normalized_sha256": "e0438e1765d3eb036137ac8d86fe54db8d4a998b3e165af4514b8f22f23504ef",
+      "isolated_selection_only": {
+        "configured_CXX": {
+          "selected_argv": [
+            "D:/msys64/ucrt64/bin/g++.exe"
+          ],
+          "assertion_line_hits": []
+        },
+        "PATH_discovery": {
+          "selected_argv": [
+            "D:/msys64/ucrt64/bin\\g++.EXE"
+          ],
+          "assertion_line_hits": [
+            19
+          ]
+        }
+      }
+    },
+    {
+      "case": "main_config_version_component",
+      "baseline": 4,
+      "candidate": 3,
+      "candidate_status": "pass",
+      "script": "scripts/test_main_config_version.py",
+      "assertion_line": 22,
+      "assertion_text": "assert found, \"C++17 compiler required\"",
+      "source_identical_to_baseline": true,
+      "source_normalized_sha256": "7ec6dafec1d4de7413e5140ca86347e54d85b6bb11d33f8aa5d2092b88201f5b",
+      "isolated_selection_only": {
+        "configured_CXX": {
+          "selected_argv": [
+            "D:/msys64/ucrt64/bin/g++.exe"
+          ],
+          "assertion_line_hits": []
+        },
+        "PATH_discovery": {
+          "selected_argv": [
+            "D:/msys64/ucrt64/bin\\g++.EXE"
+          ],
+          "assertion_line_hits": [
+            22
+          ]
+        }
+      }
+    },
+    {
+      "case": "geometry_diagnostic_identity",
+      "baseline": 4,
+      "candidate": 3,
+      "candidate_status": "pass",
+      "script": "scripts/test_geometry_diagnostic_identity.py",
+      "assertion_line": 15,
+      "assertion_text": "assert located, \"C++17 compiler required\"",
+      "source_identical_to_baseline": true,
+      "source_normalized_sha256": "6f8de28ce51b05783531d7fea808729ea3e50a55bd68c7af224e07b78bd23f3c",
+      "isolated_selection_only": {
+        "configured_CXX": {
+          "selected_argv": [
+            "D:/msys64/ucrt64/bin/g++.exe"
+          ],
+          "assertion_line_hits": []
+        },
+        "PATH_discovery": {
+          "selected_argv": [
+            "D:/msys64/ucrt64/bin\\g++.EXE"
+          ],
+          "assertion_line_hits": [
+            15
+          ]
+        }
+      }
+    },
+    {
+      "case": "input_provenance",
+      "baseline": 15,
+      "candidate": 14,
+      "candidate_status": "pass",
+      "script": "scripts/test_input_provenance.py",
+      "assertion_line": 18,
+      "assertion_text": "assert found, \"C++17 compiler required (set CXX or configure PATH)\"",
+      "source_identical_to_baseline": true,
+      "source_normalized_sha256": "dde5d3ead93049d193959070995ac8cac620945467aaef7422b4077aaf291b9e",
+      "isolated_selection_only": {
+        "configured_CXX": {
+          "selected_argv": [
+            "D:/msys64/ucrt64/bin/g++.exe"
+          ],
+          "assertion_line_hits": []
+        },
+        "PATH_discovery": {
+          "selected_argv": [
+            "D:/msys64/ucrt64/bin\\g++.EXE"
+          ],
+          "assertion_line_hits": [
+            18
+          ]
+        }
+      }
+    },
+    {
+      "case": "effective_consumer_state",
+      "baseline": 3,
+      "candidate": 2,
+      "candidate_status": "pass",
+      "script": "scripts/test_effective_consumer_state.py",
+      "assertion_line": 18,
+      "assertion_text": "assert found, \"C++17 compiler required (set CXX or configure PATH)\"",
+      "source_identical_to_baseline": true,
+      "source_normalized_sha256": "8536653dc1cec78e7755359a8f60aca6821c50cafb8e06aef7a7c7bfc1522bd6",
+      "isolated_selection_only": {
+        "configured_CXX": {
+          "selected_argv": [
+            "D:/msys64/ucrt64/bin/g++.exe"
+          ],
+          "assertion_line_hits": []
+        },
+        "PATH_discovery": {
+          "selected_argv": [
+            "D:/msys64/ucrt64/bin\\g++.EXE"
+          ],
+          "assertion_line_hits": [
+            18
+          ]
+        }
+      }
+    },
+    {
+      "case": "effective_receipt_view",
+      "baseline": 14,
+      "candidate": 13,
+      "candidate_status": "pass",
+      "script": "scripts/test_effective_lifecycle.py",
+      "assertion_line": 51,
+      "assertion_text": "assert found, 'C++17 compiler required (set CXX or configure PATH)'",
+      "source_identical_to_baseline": true,
+      "source_normalized_sha256": "07142e25b73ee5e94765c74e1ec80eecd1b98aba2a22dc9c65b1617d42146aa6",
+      "isolated_selection_only": {
+        "configured_CXX": {
+          "selected_argv": [
+            "D:/msys64/ucrt64/bin/g++.exe"
+          ],
+          "assertion_line_hits": []
+        },
+        "PATH_discovery": {
+          "selected_argv": [
+            "D:/msys64/ucrt64/bin\\g++.EXE"
+          ],
+          "assertion_line_hits": [
+            51
+          ]
+        }
+      }
+    }
+  ]
+}

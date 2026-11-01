@@ -1,0 +1,33 @@
+# 仅 out 的设计证据链接修复草案
+
+状态：draft only / **未apply、未修改tracked、未提交、无外部API调用**。基于首候选56b689fb9ac920cbb1203b2b94dae2483d25f622的outbox原文。主代理决定是否采用，不能把本草案当作已修复的CI结果。
+
+## 建议采用的具体内容
+
+拟将4份原件完整归档至 `docs/collab/reviews/20261101-j2-f8-design-evidence/raw/`，附README、manifest与目录级.gitattributes。`raw/** -text` 保证原字节不因后续checkout换行转换而变动，特别是checklist含原始CRLF。候选树共8个文件，见proposal.json的candidate_files逐项SHA。
+
+| 原件 | 字节数 | SHA-256 |
+|---|---:|---|
+| request.json | 6380 | 3b361668bb30de793b6633cb6d7b0b03f110cf1437af9721254a7b7aa2c94bc0 |
+| response.json | 10625 | adae8b6c1d7cb4a06fea71c1642b8a14c6411bad4f44aa1751f7a286f4a1658c |
+| deepseek-design.md | 9547 | 75efee09a50983edc32f60e56af285d30d1cc462bbc7f23343aa17ecab3bbdee |
+| acceptance-checklist.md | 7619 | 9dec23a2aefb6080aee688df987bbcafd7c9eb28e269e58cbb3b2527ea684c12 |
+
+请求prompt_sha256已独立复算，HTTP200、返回finish_reason=stop；设计正文恰为raw_response.choices[0].message.content加一个末尾LF。4份原件都无需脱敏，candidate-tree内为原字节完整复制。response.json保留既有脚本落盘的API JSON对象与最小元信息，不冒称原始HTTP wire字节。
+
+隐私检查：4份拟发布原件未发现API key字面值、Bearer凭据、secret JSON字段、私人Windows/Unix绝对路径或凭据定位。没有打开任何真实密钥文件。request_design.py含本机凭据文件定位，**不发布脚本正文**；只保留相对路径和SHA。progress.md是临时续接状态，亦仅保留相对provenance与SHA，不新增当前状态文档。
+
+## 七个链接的处理
+
+原outbox对request、response、设计正文、checklist的5处链接（checklist两处）改到拟tracked raw目录。脚本与progress的2处Markdown链接改为纯code provenance与SHA，不再使clean CI去解析ignored out路径。设计正文有稳定source，实际请求/响应也完整保留。
+
+候选outbox第一段的私人绝对工作区路径同时改成仓库名；其余历史审阅正文和责任边界保持。候选文件为 `candidate-tree/docs/collab/outbox/20261101-deepseek-j2-f8-design.md`。候选文档集共9个相对Markdown链接实际解析通过。
+
+- outbox-only.patch SHA：`a1217ca9722693dffa5bc77eca7413f7f87a9a2db9cfd7aa6b8ba81df9f66e1e`。
+- 候选outbox SHA：`5ecbd4618012024d8e73259efaea5e3c46fd232be3b78813a7c611f5bd6cbc58`。
+- `proposal.json`：8文件清单、每文件SHA、原outbox身份、替换数与候选链接验证数。
+- `privacy-scan.json`：无凭据值的扫描结果及排除理由。
+
+`outbox-only.patch`仅供本地审阅，minus行保留旧header，因此**不要把patch本身归档到tracked文档**。拟发布集合仅为candidate-tree内8个文件；patch不含新增原件，若主代理采用须同时纳入对应证据目录及.gitattributes。原脚本、progress和旧out原件都保持不变。
+
+本方案不重写外部设计回信、不回填旧checklist、不修改产品/测试/workflows/STATUS，不关闭首候选的任何失败；采用与新候选归属由主代理决定。

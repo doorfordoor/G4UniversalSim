@@ -1,0 +1,136 @@
+{
+  "status": "frozen_out_candidate_ready_for_independent_review",
+  "head": "2901f4254303c3a9089c9025717908c0d77ff190",
+  "patch_sha256": "f705dc96bcfb4706e03d045a00e281c53ce0e8fe6eb9912c27579188e8a446de",
+  "files": [
+    {
+      "path": "gui/g4usim_gui/core/experiment_bundle.py",
+      "original_sha256": "fd94da357bfc97ffdf53ac9bd0c5c55d480087f6df226b4266449aad12ff068e",
+      "candidate_sha256": "4990d9f4439711f96aa5a5475f6f39ea3588b8c1e3fabf7e3e2eca0318a45610",
+      "original_lines": 896,
+      "candidate_lines": 916,
+      "crlf_count": 0,
+      "compile": "pass"
+    },
+    {
+      "path": "scripts/test_k1_bundle.py",
+      "original_sha256": "e825d4278bd9b59d7ff871c1f2abd39d564b0fc5591de460f784a6d28cb2fa4f",
+      "candidate_sha256": "80726fb8eeda65700169416b8a9711967ed15283ed8bbc22bbf20b42d8c216f3",
+      "original_lines": 779,
+      "candidate_lines": 882,
+      "crlf_count": 0,
+      "compile": "pass"
+    }
+  ],
+  "ci_original_log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-2901f42\\ci\\extracted\\m0-report-windows-latest-13096301546\\20261101-183520-77003a77\\gui_k1_workflow.log",
+  "ci_original_log_sha256": "b68a00eaaa712371b846674902bee6c35ed215249b6bc93c049d5c2bb92aca5d",
+  "packaging": {
+    "head": "2901f4254303c3a9089c9025717908c0d77ff190",
+    "files": [
+      {
+        "path": "gui/g4usim_gui/core/experiment_bundle.py",
+        "original_sha256": "fd94da357bfc97ffdf53ac9bd0c5c55d480087f6df226b4266449aad12ff068e",
+        "candidate_sha256": "4990d9f4439711f96aa5a5475f6f39ea3588b8c1e3fabf7e3e2eca0318a45610",
+        "original_lines": 896,
+        "candidate_lines": 916,
+        "crlf_count": 0,
+        "compile": "pass"
+      },
+      {
+        "path": "scripts/test_k1_bundle.py",
+        "original_sha256": "e825d4278bd9b59d7ff871c1f2abd39d564b0fc5591de460f784a6d28cb2fa4f",
+        "candidate_sha256": "80726fb8eeda65700169416b8a9711967ed15283ed8bbc22bbf20b42d8c216f3",
+        "original_lines": 779,
+        "candidate_lines": 882,
+        "crlf_count": 0,
+        "compile": "pass"
+      }
+    ],
+    "all_original_test_ast_preserved": true,
+    "roundtrip_exact_candidate_bytes": true,
+    "patch_sha256": "f705dc96bcfb4706e03d045a00e281c53ce0e8fe6eb9912c27579188e8a446de",
+    "checks": {
+      "--check": "",
+      "--stat": " gui/g4usim_gui/core/experiment_bundle.py |   28 +++++++-\n scripts/test_k1_bundle.py                |  105 ++++++++++++++++++++++++++++++\n 2 files changed, 128 insertions(+), 5 deletions(-)\n",
+      "--numstat": "24\t4\tgui/g4usim_gui/core/experiment_bundle.py\n104\t1\tscripts/test_k1_bundle.py\n"
+    },
+    "scope": "OUT-only patch packaging verification; tracked not applied"
+  },
+  "results": [
+    {
+      "log": "policy-final.log",
+      "exit_code": 0,
+      "expected": "pass",
+      "assertions_executed": 21,
+      "sha256": "c00bc7f88eb38f031d44b6fad5575eac2fa1efb68863e729131f4425d5b3b2cb",
+      "scope": "Final added permanent alias/case/restricted/allow/unused/duplicate matrix"
+    },
+    {
+      "log": "policy-tail-final-frozen.log",
+      "exit_code": 0,
+      "expected": "pass",
+      "assertions_executed": 20,
+      "sha256": "a711982fd41badb8dbc81cb3c31b8838e275e6cc75c022dcb133fa4c8e1f7ce8",
+      "scope": "Final permanent collect/export original-policy-spelling late-link guards"
+    },
+    {
+      "log": "original-refusals-final.log",
+      "exit_code": 0,
+      "expected": "pass",
+      "assertions_executed": 124,
+      "sha256": "4b9e23bd6d85dc0e6857d369fd6c954dcb4c228e9ada1698657ea2e1a5634b72",
+      "scope": "Unmodified existing bundle refusal group"
+    },
+    {
+      "log": "short-temp-original-candidate-final.log",
+      "exit_code": 0,
+      "expected": "pass",
+      "assertions_executed": 30,
+      "sha256": "a2bc8f1f93157617b584dbd0fab489828389acccd4b310edb7c9f15801221afe",
+      "scope": "Unmodified existing source_capture_scope under actual8.3 TEMP"
+    },
+    {
+      "log": "short-temp-original-baseline.log",
+      "exit_code": 1,
+      "expected": "controlled_counterexample_red",
+      "assertions_executed": 9,
+      "sha256": "e98aa269c4d47ad0382997fd6c5ba3f4967796622c3b8b5efdf68818c93389cf",
+      "scope": "Original product, exact existing source_capture_scope line175 counterexample"
+    },
+    {
+      "log": "pretail-collect-final-test.log",
+      "exit_code": 1,
+      "expected": "controlled_counterexample_red",
+      "assertions_executed": 5,
+      "sha256": "a011a2bac40ea65fc64aa1b922e6e4ebff9a9b4a3e40d04e8a0091df44eea997",
+      "scope": "Unpublished intermediate candidate lacking policy-tail guard, collect wrongly accepted"
+    },
+    {
+      "log": "pretail-export-final-test.log",
+      "exit_code": 1,
+      "expected": "controlled_counterexample_red",
+      "assertions_executed": 5,
+      "sha256": "e1fa7a14bcd11fd6af293a1022a04999a7b2f67c212e7b7d7de5e18deeacd621",
+      "scope": "Unpublished intermediate candidate lacking policy-tail guard, export wrongly published"
+    },
+    {
+      "log": "link-probe.log",
+      "exit_code": 0,
+      "expected": "pass",
+      "assertions_executed": 3,
+      "sha256": "dca2cb5d70795a6e0fc2fd43b6705ec6e2fff698df87c7c47b5b8ced25fc9bd5"
+    },
+    {
+      "log": "late-resource-policy.log",
+      "exit_code": 0,
+      "expected": "pass",
+      "assertions_executed": 5,
+      "sha256": "1069f765d7b492063228f3c8421866c3570ce8e19ec3d8f8eaff9307ef8868bc"
+    }
+  ],
+  "intermediate_counterexample_export_manifest": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-resource-policy-path-review\\focused-pretail-frozenExport\\export\\must-not-publish\\manifest.json",
+  "intermediate_counterexample_export_manifest_sha256": "af35dd376a310892d0747e0d24b1d3825d86bfbcaa26eec53a4ab7e29d064b01",
+  "tracked_status": "",
+  "formal_reexecuted": false,
+  "scope": "Draft/repro only. Current formal113 integration remains original2901f42 and original launch, not this overlay."
+}

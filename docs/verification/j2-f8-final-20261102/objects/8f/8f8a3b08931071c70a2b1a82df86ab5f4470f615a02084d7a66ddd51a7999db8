@@ -1,0 +1,11 @@
+# 第三候选Windows M0 GUI失败追加收据
+
+HEAD18c5858fd6e80a5cb6096beacebfef69c479ad49，run41344573541 attempt1；Windows job124961550970 completed/failure，失败步骤Run offscreen GUI tests。
+
+唯一失败gui_j2_geometry，smoke_j2_geometry.py:264：`assert page.geometry_document.source_path==str(source)`。本轮已越过上一轮第162行STL断言，到195入口失败；原日志没有打印actual/expected路径，不能只凭trace声称已直接观测某个具体8.3拼写。
+
+完整原job日志job-124961550970.log；artifact13099775646原ZIP SHA256 534aca2703b3593b8529d417f59e901490c4c34656c56aaa8157d7dfbf0ffdee，大小479104字节，GitHubdigest及HEAD/run归属独立核验通过。逐例原日志路径及SHA见report-gates-current.json，不改写上一轮失败或本轮Linux首败。
+
+Windows static4573/历史3959入口 strict pass；GUI8536/历史6739 strict fail，只有上述用例失败。K1 workflow和F8 accessibility在该真实Windows报告中通过；不能据此替代Linux三GUI报告的F8:659失败。Linux backend/integration均因GUI失败未执行。
+
+本轮现有8份报告4strictpass/4strictfail，所有HEAD/双指纹/原日志SHA/总和/历史matching逐例已核对，未用allow-incomplete/legacy放宽，未rerun/改tracked。仅Windows fullinstallation仍待终态。

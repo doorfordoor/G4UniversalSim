@@ -1,0 +1,68 @@
+# J2 main共享集成独立审查结论（2026-11-02）
+
+结论：**当前尚有2项P2，不建议作为“独审无未决缺陷”的首冻结候选**。本审查没有修改产品，只在本目录创建脚本/fixture/收据。没有操作native host，也没有启动真实Geant4；占位STL仅用于路径/复制/闭包检查，不是运行或物理证据。
+
+审查范围：main新增F5扩展采集、F4导航/_loading防投影、source stable-ID诊断、旧summary→blank、run_editor_resources与package_writer资源复制，以及必要的project_snapshot/experiment_bundle跨模块闭环。几何作者的3个P2另行修复并交Feynman，不用作者事实替代本次独立观测。
+
+## P2-1：资源复制把迁移严格scanner用于legacy v1 source-copy，误拒合法重复声明
+
+位置：`gui/g4usim_gui/core/run_editor_resources.py:15`，调用链 `writers/package_writer.py:91 -> materialize_geometry_file -> geometry_migration._scan`。
+
+反例：无version的legacy几何在volume.Copy中连续写两条相同`copies_file = copies.csv`，文件实际存在；用户显式选source_copy_mode。GUI正常保留duplicate-key blocker，同时预检`can_run=true`、errors=[]；source-copy本来正用于保留这种不能editable往返的输入。新打包helper调用迁移专用_scan后抛 `empty or duplicate geometry key`，无法生成包。
+
+契约依据：AGENTS保留无版本/v1重复声明兼容；当前`GeometryConfigDiagnostic.cc`的版本检查在无version或version1直接return，仅version2调用RejectStrictDuplicateGeometryDeclarations（296–314附近）。没有要求修改后端或放宽version2。
+
+建议：资源重定位扫描需保留v1重复声明及后值语义，不直接借用强制迁移消歧的scanner；有选择地处理可识别资源字段，同时保持其他行/声明。不应把source-copy直接升级为version2限制。
+
+证据：`resource_cases.py` 的legacy-v1-duplicate-source-copy；`resource-cases-second.log`；`resources-1793551222814213000/receipt.json`。fixture已由脚本移到同目录`original-offline/assets/duplicate-source.ini`，原始输出异常/栈在收据。不是后端实跑证明；这是源码兼容契约与真实GUI预检/打包链反例。
+
+该轮受查run_editor_resources SHA `03fde9cecf88af1cc2f2a0029f3e4bb23a89e17f877a257363fe1ab716fe0a5c`；交接前复读相同，尚未被修复覆盖。
+
+## P2-2：运行包快照加载漏接shape_properties.file，缺失STL仍接受且没有资源收据
+
+位置：`gui/g4usim_gui/core/project_snapshot.py:228` 的_geometry_resources仍只查 `volume.preview_properties['file']`。新几何parser已将实体专用file移到shape_properties。
+
+反例：先用新的package_writer生成含STL+copies_file的包，确认两个副本都在包内、字节与源匹配。正常load_project_snapshot可读取；把包内g0000.stl临时改名后，再加载仍成功，stl_path_exists=false，inputs只有4个主输入和geometry.Copy.copies_file，完全没有STL。恢复STL，再把g0001.csv临时改名的对照则明确拒绝missing copies_file。所有fixture修改都在本审查生成目录且已恢复。
+
+影响：漏掉当前包STL存在性/输入SHA登记，不能据加载成功声称全部当前几何资源已核验。尚未测试STL外部路径/链接逃逸，不将其冒充已证实结果。此项属于新字段容器迁移的共享接线缺口，并非materialize的单行错误。
+
+建议：统一从当前实体属性存储提取file，兼容旧preview投影并处理冲突；按既有_read_inside检查并登记STL，保留copies_file的拒绝对照。
+
+证据：`package_load_cases.py`、`package-load-first.log`、`package-load-resource-receipt.json`。受查project_snapshot SHA `c607d40e4b66ca958efb09dd2260527bb565028c4a4083648cdf90def16cafc0`，交接前复读相同。
+
+## 独立通过的局部链路
+
+- 真实QTest键盘输入的几何详情原文跨选择保留；Undo/Redo可回读非法字符串（本轮按逐键输入观察到逐键撤销粒度，未当作丢失）。
+- 几何选择自身不增加diagnostic generation或revision；旧invalid-alpha诊断能选择正确对象并聚焦原字段。
+- source energy诊断使用editor_id；列表选择不损坏定位；重排后新诊断row改变、entity保持；重排、Undo、Redo后的旧诊断均拒绝。
+- snapshot codec + apply_workspace保留非法原文并恢复相同指纹，旧报告不复活。
+- source文件变化后的恢复明确config.source.geometry.changed/recovered_changed；文件缺失恢复后保留world/OLD与source_path并报missing，不能洗成无源文档。
+- 真正new_blank_project后geometry_summary=None、无raw source/旧captured sources/OLD视图，只有world；旧报告拒绝，blank可正常验证。
+- 常规生成式STL/copies_file包复制，两个文件SHA均与原始相同、目标均在包内、原编辑模型的资源路径不变。
+- CRLF普通source-copy资源重写成功，原源字节未改。包内几何因路径重写不再与原源逐字相同；报告/身份应按此事实表述，不冒充原字节副本。
+- K1 export→将原资源目录改名不可访问→bundle搬移→load→再次生成通过，恢复资源都在新bundle内，无旧目录前缀；trd/trap布尔shape_properties保持。main原已修schema缺命名字段未重复列为新缺陷。
+
+## 观测边界与未提升项
+
+1. programmatic QLineEdit.setText后，若延迟采集前立即切换几何行，原文丢失；真实QTest输入对照不丢。证据workspace-cases-first.log的programmatic-raw-immediate-selection。本轮没有证实普通用户路径会采用这种程序化赋值时序，故列API边界而非第三项P2。main可决定是否扩充同步采集/选择前flush保障。
+2. 第一轮source-copy fixture有UTF-8 BOM，被既有ini_light_parser在打包之前拒绝。第二轮去掉BOM保留CRLF后通过；未把该旧parser边界归责新资源helper。
+3. 本轮没有正式统一矩阵、真实后端几何运行、原生窗口/DPI或native host检查；脚本总体exit0仅表示观测收据写出，含预期不符的反例，不是产品通过标记。
+
+## 证据索引和身份
+
+- `workspace_cases.py` / `workspace-cases-first.log` / `workspace-1793550897069493500/receipt.json`：5组F5/F4/stable ID/恢复。
+- `source_blank_cases.py` / `source-blank-first.log` / `source-blank-1793551149313066900/receipt.json`：3组源变化/缺失/old-summary→blank。
+- `resource_cases.py` / `resource-cases-first.log`与second.log / `resources-1793551222814213000/receipt.json`：4组复制、source-copy、v1反例和搬移闭包。首轮派生warnings改变误记editor_unchanged=false，第二轮精确比较资源路径已为true；没有据此报产品变异。
+- `package_load_cases.py` / `package-load-first.log` / `package-load-resource-receipt.json`：完整/缺STL/缺copies三个对照。
+
+以上各轮被核对源文件before/after SHA相同。不同轮分别有身份，不拿其聚合冒充同时冻结后的完整矩阵。所有脚本均自然退出，无运行中的命令。
+
+## 几何3P2定点作者修复状态（独立审查之外）
+
+已再次冻结，仅model和永久smoke变更；C++未改。作者210断言、compileall/diff通过，真实后端独立复核交Feynman chat `01a197c9-5e75-7413-abcb-991c364d8e4d`（已按用户授权发出，不称已复核通过）。
+
+- `gui/g4usim_gui/editors/geometry_editor_model.py` SHA256 `58f0e82d1508b105e45312c515a5b9b4d64511e19ade5959ff11b10b9ea2115f`
+- `gui/smoke_tests/smoke_j2_geometry.py` SHA256 `091cfffed46daa8473d8021f7ea9e4811e40a2c35b98129a4307da8f1efed489`
+- 作者修复报告：`../j2-geometry-p2-fix.md`；指纹收据：`../j2-geometry-p2-receipt.json`；专项日志：`../j2-geometry-p2-smoke.log`。交接前重新计算与该收据相同。
+
+建议先修上述2项共享接线P2、做定向回归，再由main锁定候选身份运行首冻结正式全矩阵；不以局部通过或作者测试关闭未决审查。

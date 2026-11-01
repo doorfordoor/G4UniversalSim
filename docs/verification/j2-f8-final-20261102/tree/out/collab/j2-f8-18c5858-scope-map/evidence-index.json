@@ -1,0 +1,1107 @@
+{
+  "schema": "j2_f8_18c_scope_map_v1",
+  "created_utc": "2026-11-01T21:13:44.634768+00:00",
+  "head": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+  "activity": "read/hash existing files only; no Qt/backend/native/test/build/launcher; writes only this OUT directory",
+  "phase_status": "not_closed; future candidate CI pending",
+  "pending": [
+    "114 integration terminal not credited by this map",
+    "two test-only repairs not applied here; actual-patched F8 125/150 later",
+    "future candidate CI and main final closure"
+  ],
+  "product_groups": {
+    "blank": [
+      "gui/g4usim_gui/core/project.py",
+      "gui/g4usim_gui/window/project.py",
+      "gui/g4usim_gui/widgets/new_simulation_wizard.py",
+      "gui/g4usim_gui/writers/package_writer.py",
+      "gui/g4usim_gui/core/experiment_bundle.py"
+    ],
+    "materials": [
+      "gui/g4usim_gui/editors/material_editor_model.py",
+      "gui/g4usim_gui/widgets/config/materials.py",
+      "gui/g4usim_gui/parsers/materials_parser.py",
+      "gui/g4usim_gui/core/nist_elements.py",
+      "src/Materials/MaterialManager.cc",
+      "src/Materials/MaterialFactory.cc"
+    ],
+    "sources": [
+      "gui/g4usim_gui/core/run_editor_model.py",
+      "gui/g4usim_gui/widgets/config/j2_run_editors.py",
+      "src/Source/SourceManager.cc",
+      "src/Source/PrimaryGeneratorAction.cc"
+    ],
+    "physics": [
+      "src/Physics/PhysicsFactory.cc",
+      "src/Physics/PhysicsManager.cc"
+    ],
+    "geometry": [
+      "include/Geometry/SolidRegistry.hh",
+      "src/Geometry/SolidRegistry.cc",
+      "gui/g4usim_gui/core/solid_registry_data.py",
+      "gui/g4usim_gui/editors/geometry_editor_model.py"
+    ],
+    "f8": [
+      "gui/g4usim_gui/core/accessibility.py",
+      "gui/g4usim_gui/widgets/start_page.py",
+      "gui/g4usim_gui/main_window.py",
+      "gui/g4usim_gui/window/shell.py",
+      "gui/g4usim_gui/window/workspace_layout.py",
+      "gui/g4usim_gui/widgets/run_history_page.py"
+    ]
+  },
+  "profiles": {
+    "windows-static": {
+      "report_ref": "windows-static-report",
+      "head": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+      "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+      "tests_content_fingerprint": "d5a1691bb3ed613faae4db96405167c0f7ea0a35aa465444e2d260a36a7e67a9",
+      "cases": 46,
+      "assertions_executed_total": 4586,
+      "selected_cases": [
+        {
+          "name": "solid_registry",
+          "script": "scripts/test_solid_registry.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 248,
+          "evidence_directory": null,
+          "log_ref": "windows-static-solid_registry-log",
+          "script_ref": "test-test_solid_registry"
+        },
+        {
+          "name": "j2_resources",
+          "script": "scripts/test_j2_resource_bundle.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 101,
+          "evidence_directory": null,
+          "log_ref": "windows-static-j2_resources-log",
+          "script_ref": "test-test_j2_resource_bundle"
+        },
+        {
+          "name": "k1_bundle",
+          "script": "scripts/test_k1_bundle.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 603,
+          "evidence_directory": "k1_bundle-evidence",
+          "log_ref": "windows-static-k1_bundle-log",
+          "script_ref": "test-test_k1_bundle"
+        }
+      ]
+    },
+    "windows-gui": {
+      "report_ref": "windows-gui-report",
+      "head": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+      "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+      "tests_content_fingerprint": "d5a1691bb3ed613faae4db96405167c0f7ea0a35aa465444e2d260a36a7e67a9",
+      "cases": 66,
+      "assertions_executed_total": 8574,
+      "selected_cases": [
+        {
+          "name": "gui_f4_layout",
+          "script": "gui/smoke_tests/smoke_f4_layout.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 265,
+          "evidence_directory": null,
+          "log_ref": "windows-gui-gui_f4_layout-log",
+          "script_ref": "test-smoke_f4_layout"
+        },
+        {
+          "name": "gui_j2_blank",
+          "script": "gui/smoke_tests/smoke_j2_blank.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 29,
+          "evidence_directory": null,
+          "log_ref": "windows-gui-gui_j2_blank-log",
+          "script_ref": "test-smoke_j2_blank"
+        },
+        {
+          "name": "gui_j2_geometry",
+          "script": "gui/smoke_tests/smoke_j2_geometry.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 212,
+          "evidence_directory": null,
+          "log_ref": "windows-gui-gui_j2_geometry-log",
+          "script_ref": "test-smoke_j2_geometry"
+        },
+        {
+          "name": "gui_j2_materials",
+          "script": "gui/smoke_tests/smoke_j2_materials.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 499,
+          "evidence_directory": null,
+          "log_ref": "windows-gui-gui_j2_materials-log",
+          "script_ref": "test-smoke_j2_materials"
+        },
+        {
+          "name": "gui_j2_run_editors",
+          "script": "gui/smoke_tests/smoke_j2_run_editors.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 223,
+          "evidence_directory": null,
+          "log_ref": "windows-gui-gui_j2_run_editors-log",
+          "script_ref": "test-smoke_j2_run_editors"
+        },
+        {
+          "name": "gui_j2_workspace",
+          "script": "gui/smoke_tests/smoke_j2_workspace.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 21,
+          "evidence_directory": null,
+          "log_ref": "windows-gui-gui_j2_workspace-log",
+          "script_ref": "test-smoke_j2_workspace"
+        },
+        {
+          "name": "gui_j2_current_import",
+          "script": "gui/smoke_tests/smoke_j2_current_import_preview.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 208,
+          "evidence_directory": null,
+          "log_ref": "windows-gui-gui_j2_current_import-log",
+          "script_ref": "test-smoke_j2_current_import_preview"
+        },
+        {
+          "name": "gui_f8_accessibility",
+          "script": "gui/smoke_tests/smoke_f8_accessibility.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 583,
+          "evidence_directory": null,
+          "log_ref": "windows-gui-gui_f8_accessibility-log",
+          "script_ref": "test-smoke_f8_accessibility"
+        }
+      ]
+    },
+    "windows113-backend": {
+      "report_ref": "windows113-backend-report",
+      "head": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+      "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+      "tests_content_fingerprint": "d5a1691bb3ed613faae4db96405167c0f7ea0a35aa465444e2d260a36a7e67a9",
+      "cases": 63,
+      "assertions_executed_total": 82029,
+      "selected_cases": [
+        {
+          "name": "solid_registry_backend",
+          "script": "scripts/test_solid_registry.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 288,
+          "evidence_directory": null,
+          "log_ref": "windows113-backend-solid_registry_backend-log",
+          "script_ref": "test-test_solid_registry"
+        },
+        {
+          "name": "j2_source_physics",
+          "script": "scripts/test_j2_sources_physics.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 4853,
+          "evidence_directory": "j2_source_physics-evidence",
+          "log_ref": "windows113-backend-j2_source_physics-log",
+          "script_ref": "test-test_j2_sources_physics"
+        },
+        {
+          "name": "gps_sources",
+          "script": "scripts/test_gps_sources.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 219,
+          "evidence_directory": null,
+          "log_ref": "windows113-backend-gps_sources-log",
+          "script_ref": "test-test_gps_sources"
+        },
+        {
+          "name": "physics_a6",
+          "script": "scripts/test_physics_a6.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 71,
+          "evidence_directory": null,
+          "log_ref": "windows113-backend-physics_a6-log",
+          "script_ref": "test-test_physics_a6"
+        },
+        {
+          "name": "fields_a7",
+          "script": "scripts/test_fields_a7.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 336,
+          "evidence_directory": null,
+          "log_ref": "windows113-backend-fields_a7-log",
+          "script_ref": "test-test_fields_a7"
+        },
+        {
+          "name": "max_step_scope",
+          "script": "scripts/test_max_step_scope.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 54,
+          "evidence_directory": null,
+          "log_ref": "windows113-backend-max_step_scope-log",
+          "script_ref": "test-test_max_step_scope"
+        },
+        {
+          "name": "material_numeric",
+          "script": "scripts/test_material_numeric.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 66,
+          "evidence_directory": null,
+          "log_ref": "windows113-backend-material_numeric-log",
+          "script_ref": "test-test_material_numeric"
+        },
+        {
+          "name": "biasing_targets",
+          "script": "scripts/test_biasing_target_contract.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 80,
+          "evidence_directory": null,
+          "log_ref": "windows113-backend-biasing_targets-log",
+          "script_ref": "test-test_biasing_target_contract"
+        },
+        {
+          "name": "biasing_worker_runtime",
+          "script": "scripts/test_biasing_worker_runtime.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 3479,
+          "evidence_directory": null,
+          "log_ref": "windows113-backend-biasing_worker_runtime-log",
+          "script_ref": "test-test_biasing_worker_runtime"
+        }
+      ]
+    },
+    "windows114-backend": {
+      "report_ref": "windows114-backend-report",
+      "head": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+      "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+      "tests_content_fingerprint": "d5a1691bb3ed613faae4db96405167c0f7ea0a35aa465444e2d260a36a7e67a9",
+      "cases": 63,
+      "assertions_executed_total": 72536,
+      "selected_cases": [
+        {
+          "name": "solid_registry_backend",
+          "script": "scripts/test_solid_registry.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 288,
+          "evidence_directory": null,
+          "log_ref": "windows114-backend-solid_registry_backend-log",
+          "script_ref": "test-test_solid_registry"
+        },
+        {
+          "name": "j2_source_physics",
+          "script": "scripts/test_j2_sources_physics.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 4853,
+          "evidence_directory": "j2_source_physics-evidence",
+          "log_ref": "windows114-backend-j2_source_physics-log",
+          "script_ref": "test-test_j2_sources_physics"
+        },
+        {
+          "name": "gps_sources",
+          "script": "scripts/test_gps_sources.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 219,
+          "evidence_directory": null,
+          "log_ref": "windows114-backend-gps_sources-log",
+          "script_ref": "test-test_gps_sources"
+        },
+        {
+          "name": "physics_a6",
+          "script": "scripts/test_physics_a6.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 71,
+          "evidence_directory": null,
+          "log_ref": "windows114-backend-physics_a6-log",
+          "script_ref": "test-test_physics_a6"
+        },
+        {
+          "name": "fields_a7",
+          "script": "scripts/test_fields_a7.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 252,
+          "evidence_directory": null,
+          "log_ref": "windows114-backend-fields_a7-log",
+          "script_ref": "test-test_fields_a7"
+        },
+        {
+          "name": "max_step_scope",
+          "script": "scripts/test_max_step_scope.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 54,
+          "evidence_directory": null,
+          "log_ref": "windows114-backend-max_step_scope-log",
+          "script_ref": "test-test_max_step_scope"
+        },
+        {
+          "name": "material_numeric",
+          "script": "scripts/test_material_numeric.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 66,
+          "evidence_directory": null,
+          "log_ref": "windows114-backend-material_numeric-log",
+          "script_ref": "test-test_material_numeric"
+        },
+        {
+          "name": "biasing_targets",
+          "script": "scripts/test_biasing_target_contract.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 80,
+          "evidence_directory": null,
+          "log_ref": "windows114-backend-biasing_targets-log",
+          "script_ref": "test-test_biasing_target_contract"
+        },
+        {
+          "name": "biasing_worker_runtime",
+          "script": "scripts/test_biasing_worker_runtime.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 2947,
+          "evidence_directory": null,
+          "log_ref": "windows114-backend-biasing_worker_runtime-log",
+          "script_ref": "test-test_biasing_worker_runtime"
+        }
+      ]
+    },
+    "windows113-integration": {
+      "report_ref": "windows113-integration-report",
+      "head": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+      "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+      "tests_content_fingerprint": "d5a1691bb3ed613faae4db96405167c0f7ea0a35aa465444e2d260a36a7e67a9",
+      "cases": 31,
+      "assertions_executed_total": 6790,
+      "selected_cases": [
+        {
+          "name": "j2_materials_backend",
+          "script": "gui/smoke_tests/smoke_j2_materials.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 28,
+          "evidence_directory": null,
+          "log_ref": "windows113-integration-j2_materials_backend-log",
+          "script_ref": "test-smoke_j2_materials"
+        },
+        {
+          "name": "gui_j2_end_to_end",
+          "script": "gui/smoke_tests/smoke_j2_end_to_end.py",
+          "status": "pass",
+          "exit_code": 0,
+          "assertions_executed": 674,
+          "evidence_directory": "gui_j2_end_to_end-evidence",
+          "log_ref": "windows113-integration-gui_j2_end_to_end-log",
+          "script_ref": "test-smoke_j2_end_to_end"
+        }
+      ]
+    }
+  },
+  "evidence": {
+    "contract": {
+      "path": "docs/collab/inbox/20261101-j2-f8-execution.md",
+      "sha256": "8051e1952aa12bb761531a7abd5d7f9c78aabdb44b3a2d98c8a321924a2ddd8e",
+      "size": 2433,
+      "kind": "existing_scope_or_receipt"
+    },
+    "roadmap": {
+      "path": "docs/ROADMAP.md",
+      "sha256": "1082cc0d20f8c9e82e4c4675828acd5266007c07cec14e9ac6f363c10d197806",
+      "size": 78206,
+      "kind": "existing_scope_or_receipt"
+    },
+    "guide": {
+      "path": "docs/J2编辑覆盖与F8验收.md",
+      "sha256": "df144f2dc34be5476b714ed18a6c529cde11648e889010c297ae380229c8cdc5",
+      "size": 8826,
+      "kind": "existing_scope_or_receipt"
+    },
+    "main-scope": {
+      "path": "out/collab/j2-f8-18c5858-main-acceptance-scope.md",
+      "sha256": "700e7f3a22915cac1ce28ab44040056a36f562ecda826ba71b5fd9d034d3e69f",
+      "size": 5150,
+      "kind": "existing_scope_or_receipt"
+    },
+    "native100-review": {
+      "path": "out/collab/native100-file-independent/review.md",
+      "sha256": "b748178a1781d7869110c3df3d275829b758e9091127cc0c6061ff0953a7139e",
+      "size": 5130,
+      "kind": "existing_scope_or_receipt"
+    },
+    "native100-receipt": {
+      "path": "out/collab/native100-file-independent/receipt.json",
+      "sha256": "b6d9d52acd3c18684e0c8153d8b1807e3a525740773a7a932ca3f042f9e65b7b",
+      "size": 24726,
+      "kind": "existing_scope_or_receipt"
+    },
+    "native125150-review": {
+      "path": "out/collab/j2-f8-18c5858-native-file-audit/README.md",
+      "sha256": "905e3c0350362b44e6ac1bbed5bdda421fa118fc95befb48096f4f9912a06b5f",
+      "size": 6925,
+      "kind": "existing_scope_or_receipt"
+    },
+    "native125150-receipt": {
+      "path": "out/collab/j2-f8-18c5858-native-file-audit/summary.json",
+      "sha256": "159e17ba68628f91842d42f03150533a741f746092b63a6e9efc3a237e8ac59c",
+      "size": 1049,
+      "kind": "existing_scope_or_receipt"
+    },
+    "builds": {
+      "path": "out/verification/j2-f8-18c5858/identity/build-identities.json",
+      "sha256": "28e587d45128c41023181d075c1136fc98a9a9fcc8057c50170535dd1b0ca315",
+      "size": 64735,
+      "kind": "existing_scope_or_receipt"
+    },
+    "ci-first": {
+      "path": "out/verification/j2-f8-18c5858/ci/first-failure.md",
+      "sha256": "a5340e21290af1fa7549cea1ad94ba4989165c725e8397cf57e778dfa25a0498",
+      "size": 2093,
+      "kind": "existing_scope_or_receipt"
+    },
+    "ci-current": {
+      "path": "out/verification/j2-f8-18c5858/ci/report-gates-current.json",
+      "sha256": "0ae4b2fbb5d208662e7d5fbcd6477762412a9fc61847109aedd9bc0a637f3c45",
+      "size": 82355,
+      "kind": "existing_scope_or_receipt"
+    },
+    "ci-windows": {
+      "path": "out/verification/j2-f8-18c5858/ci/windows-m0-failure.md",
+      "sha256": "8f8a3b08931071c70a2b1a82df86ab5f4470f615a02084d7a66ddd51a7999db8",
+      "size": 1323,
+      "kind": "existing_scope_or_receipt"
+    },
+    "linux-test-fix": {
+      "path": "out/collab/f8-linux-qt-name-18c5858/HANDOFF.md",
+      "sha256": "a606737d55573783fd39fe05ec4f4d223719ef3800397b75b19079850d4624ea",
+      "size": 5519,
+      "kind": "existing_scope_or_receipt"
+    },
+    "linux-test-patch": {
+      "path": "out/collab/f8-linux-qt-name-18c5858/candidate-test-only/fix.patch",
+      "sha256": "09409fa22593aceef84bcbcbed5a232c3eae0b0a6225c328a8ba0ec07c65815b",
+      "size": 4866,
+      "kind": "existing_scope_or_receipt"
+    },
+    "legacy-review-index": {
+      "path": "out/collab/j2-f8-review-index/README.md",
+      "sha256": "5deef3dfaf7d20c591e0187f56c61bd170cd451781ad91f6fa1d5877471d3405",
+      "size": 6368,
+      "kind": "existing_scope_or_receipt"
+    },
+    "blank-product-1": {
+      "path": "gui/g4usim_gui/core/project.py",
+      "sha256": "67e62074806b211331696ef9f345e36cbdfe96b8548e4e247e7d2b2ed93c026e",
+      "size": 13067,
+      "kind": "18c_product_raw_bytes"
+    },
+    "blank-product-2": {
+      "path": "gui/g4usim_gui/window/project.py",
+      "sha256": "c0a6143c082a6bd29ef0094cbf3d3e67bbcb0a349109e09d7e99c914a52b9802",
+      "size": 23110,
+      "kind": "18c_product_raw_bytes"
+    },
+    "blank-product-3": {
+      "path": "gui/g4usim_gui/widgets/new_simulation_wizard.py",
+      "sha256": "5697964118f121b252da420befd5bbbb0cab3a95a45c60ecf8163e70437d1d84",
+      "size": 18742,
+      "kind": "18c_product_raw_bytes"
+    },
+    "blank-product-4": {
+      "path": "gui/g4usim_gui/writers/package_writer.py",
+      "sha256": "a0b79625b19423c64baea0b72b941e9941861e47017f289de2100ac31a49798f",
+      "size": 13802,
+      "kind": "18c_product_raw_bytes"
+    },
+    "blank-product-5": {
+      "path": "gui/g4usim_gui/core/experiment_bundle.py",
+      "sha256": "4990d9f4439711f96aa5a5475f6f39ea3588b8c1e3fabf7e3e2eca0318a45610",
+      "size": 50890,
+      "kind": "18c_product_raw_bytes"
+    },
+    "materials-product-1": {
+      "path": "gui/g4usim_gui/editors/material_editor_model.py",
+      "sha256": "1768ee44ce216fb0d742c650ddefc23b827f9cbf7d79b33e400a66b0cec606cb",
+      "size": 24529,
+      "kind": "18c_product_raw_bytes"
+    },
+    "materials-product-2": {
+      "path": "gui/g4usim_gui/widgets/config/materials.py",
+      "sha256": "54cc30f628acb226e0a7c143b470b4c08e22a4caa0459618224a4f061e61516d",
+      "size": 21520,
+      "kind": "18c_product_raw_bytes"
+    },
+    "materials-product-3": {
+      "path": "gui/g4usim_gui/parsers/materials_parser.py",
+      "sha256": "750101c3336763ae6200df102289bdfa5852d8247b6e52c7e63e9149c21b5dd5",
+      "size": 14286,
+      "kind": "18c_product_raw_bytes"
+    },
+    "materials-product-4": {
+      "path": "gui/g4usim_gui/core/nist_elements.py",
+      "sha256": "fd692f360e536eb47a273c2d0cd4e55642246fd50035587a136629ff557aacec",
+      "size": 9981,
+      "kind": "18c_product_raw_bytes"
+    },
+    "materials-product-5": {
+      "path": "src/Materials/MaterialManager.cc",
+      "sha256": "b49a395218bd1b72fe85b5575f5426f0cb3109b2abe1ffbb9d4a3fa137f0f63d",
+      "size": 27505,
+      "kind": "18c_product_raw_bytes"
+    },
+    "materials-product-6": {
+      "path": "src/Materials/MaterialFactory.cc",
+      "sha256": "eee8b9fa8c8a138c98bcfba02d5ae43ed679fb82dcac17e56c8980cf00fd8db8",
+      "size": 19382,
+      "kind": "18c_product_raw_bytes"
+    },
+    "sources-product-1": {
+      "path": "gui/g4usim_gui/core/run_editor_model.py",
+      "sha256": "97d5855dab85c36fa23b94281f6a0a0f5e3c1b0ead5bad2a3b5ab7eee8fe636a",
+      "size": 26164,
+      "kind": "18c_product_raw_bytes"
+    },
+    "sources-product-2": {
+      "path": "gui/g4usim_gui/widgets/config/j2_run_editors.py",
+      "sha256": "ecd4b703bdc3776db35d3ea4aa2ed35bb03a23c75ed1c808e78795f760fa59a8",
+      "size": 20201,
+      "kind": "18c_product_raw_bytes"
+    },
+    "sources-product-3": {
+      "path": "src/Source/SourceManager.cc",
+      "sha256": "ce2b181c972eb5566aa752d150c13b4cdb21b8e452559470d9988b86f7de3851",
+      "size": 90707,
+      "kind": "18c_product_raw_bytes"
+    },
+    "sources-product-4": {
+      "path": "src/Source/PrimaryGeneratorAction.cc",
+      "sha256": "dab9b2483694264e99098e52b6ca756493d9c710749a8e27d3bb1c82bd3f74b8",
+      "size": 4381,
+      "kind": "18c_product_raw_bytes"
+    },
+    "physics-product-1": {
+      "path": "src/Physics/PhysicsFactory.cc",
+      "sha256": "15a00794fabe91dbda2ed74ecbd0b2ed262db9a55b51e3877a55df5da2bcc323",
+      "size": 23131,
+      "kind": "18c_product_raw_bytes"
+    },
+    "physics-product-2": {
+      "path": "src/Physics/PhysicsManager.cc",
+      "sha256": "9a79a7f16328f376054d0a8079ee3c217c6bbb2fd4f4201d40cbff2035780b4a",
+      "size": 40892,
+      "kind": "18c_product_raw_bytes"
+    },
+    "geometry-product-1": {
+      "path": "include/Geometry/SolidRegistry.hh",
+      "sha256": "245107c43ce261f5801d88a6a125647a02615183759eeda97ef0a8ebb75e95b9",
+      "size": 2240,
+      "kind": "18c_product_raw_bytes"
+    },
+    "geometry-product-2": {
+      "path": "src/Geometry/SolidRegistry.cc",
+      "sha256": "31d2b348be3e1c27926ae35379862b3a41be0fad173bc4b51f0ca9da6b782188",
+      "size": 10719,
+      "kind": "18c_product_raw_bytes"
+    },
+    "geometry-product-3": {
+      "path": "gui/g4usim_gui/core/solid_registry_data.py",
+      "sha256": "1b18673cd1b23e2e6625bbb02a8c69337cd862511959fc159762a38ef231a18f",
+      "size": 15284,
+      "kind": "18c_product_raw_bytes"
+    },
+    "geometry-product-4": {
+      "path": "gui/g4usim_gui/editors/geometry_editor_model.py",
+      "sha256": "58f0e82d1508b105e45312c515a5b9b4d64511e19ade5959ff11b10b9ea2115f",
+      "size": 61808,
+      "kind": "18c_product_raw_bytes"
+    },
+    "f8-product-1": {
+      "path": "gui/g4usim_gui/core/accessibility.py",
+      "sha256": "c9d87e23c88704fedc2c17a8a954aba9acf365c607ea47fe86b6c56854be2be7",
+      "size": 15036,
+      "kind": "18c_product_raw_bytes"
+    },
+    "f8-product-2": {
+      "path": "gui/g4usim_gui/widgets/start_page.py",
+      "sha256": "b8d8e8b363f7a691e9cec4babe52c4277bc869f82dfca239c90b7c6bffa328ec",
+      "size": 12879,
+      "kind": "18c_product_raw_bytes"
+    },
+    "f8-product-3": {
+      "path": "gui/g4usim_gui/main_window.py",
+      "sha256": "df76026a347894c617dbca570b4706948b1eed639956fc8c1bcc2f097ca10639",
+      "size": 12321,
+      "kind": "18c_product_raw_bytes"
+    },
+    "f8-product-4": {
+      "path": "gui/g4usim_gui/window/shell.py",
+      "sha256": "2bf59c065dee740b03fbc678ed32f787cd0b8c293e92b1fc8d498f80c6b11516",
+      "size": 25591,
+      "kind": "18c_product_raw_bytes"
+    },
+    "f8-product-5": {
+      "path": "gui/g4usim_gui/window/workspace_layout.py",
+      "sha256": "cd5f7e0c1761085abe5c68a849753f939f965e252a9d46a1c637d9d17f4ef34c",
+      "size": 21860,
+      "kind": "18c_product_raw_bytes"
+    },
+    "f8-product-6": {
+      "path": "gui/g4usim_gui/widgets/run_history_page.py",
+      "sha256": "cc98442e975cec3f1b33d556a8dabdd7381ec22368e94bd6124178edacb5a463",
+      "size": 14804,
+      "kind": "18c_product_raw_bytes"
+    },
+    "windows-static-report": {
+      "path": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/report.json",
+      "sha256": "e6f47552fb7cf2f22c491802d76f6807cb29bd63bbbf61ec55e953e73c396dd4",
+      "size": 31219,
+      "kind": "existing_formal_report"
+    },
+    "test-test_solid_registry": {
+      "path": "scripts/test_solid_registry.py",
+      "sha256": "2a15d1ac43c5d2913d219793544a074355544c7d01f4e1e03f14483ffdd5f766",
+      "size": 18336,
+      "kind": "18c_permanent_test_raw_bytes"
+    },
+    "windows-static-solid_registry-log": {
+      "path": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/solid_registry.log",
+      "sha256": "276e2cd0ed02d4e6b1df8091b273a00a198ea61986e89ba04dd3c9e5a4d9d721",
+      "size": 125,
+      "kind": "existing_formal_case_log"
+    },
+    "test-test_j2_resource_bundle": {
+      "path": "scripts/test_j2_resource_bundle.py",
+      "sha256": "67bf4ba34658dea6c49a411b0172b1a2b3a175b0c7f294df64625b92ace5d919",
+      "size": 18793,
+      "kind": "18c_permanent_test_raw_bytes"
+    },
+    "windows-static-j2_resources-log": {
+      "path": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/j2_resources.log",
+      "sha256": "74911c8a6240ca1776f6a87033c842ac2bea29fc0566738ade67b168614b79a1",
+      "size": 91,
+      "kind": "existing_formal_case_log"
+    },
+    "test-test_k1_bundle": {
+      "path": "scripts/test_k1_bundle.py",
+      "sha256": "80726fb8eeda65700169416b8a9711967ed15283ed8bbc22bbf20b42d8c216f3",
+      "size": 48418,
+      "kind": "18c_permanent_test_raw_bytes"
+    },
+    "windows-static-k1_bundle-log": {
+      "path": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/k1_bundle.log",
+      "sha256": "db5c38f0ca89d6286d51d064e568597a760b4ea068d17f2375fa4e50564443b7",
+      "size": 646,
+      "kind": "existing_formal_case_log"
+    },
+    "windows-gui-report": {
+      "path": "out/verification/j2-f8-18c5858/windows-gui/20261102-040205-6050a783/report.json",
+      "sha256": "4c91c9f2971ae618821a00d3e22ccc196bbf8ebf9449bd3f7bda2da69ba5ad22",
+      "size": 44110,
+      "kind": "existing_formal_report"
+    },
+    "test-smoke_f4_layout": {
+      "path": "gui/smoke_tests/smoke_f4_layout.py",
+      "sha256": "abc7a3b83a27e01558dae82e1103ee3851dc4dc929bee7bfe1987653079d8cb6",
+      "size": 12953,
+      "kind": "18c_permanent_test_raw_bytes"
+    },
+    "windows-gui-gui_f4_layout-log": {
+      "path": "out/verification/j2-f8-18c5858/windows-gui/20261102-040205-6050a783/gui_f4_layout.log",
+      "sha256": "20545190cbe8dc71f48c1104e1173a26d95c750ce4188277f281aa2ecbf0b63c",
+      "size": 116,
+      "kind": "existing_formal_case_log"
+    },
+    "test-smoke_j2_blank": {
+      "path": "gui/smoke_tests/smoke_j2_blank.py",
+      "sha256": "c2de9e5decfc79356ef8fff05abb341db7d573b018a6f71b980f3c78f02a44bb",
+      "size": 6045,
+      "kind": "18c_permanent_test_raw_bytes"
+    },
+    "windows-gui-gui_j2_blank-log": {
+      "path": "out/verification/j2-f8-18c5858/windows-gui/20261102-040205-6050a783/gui_j2_blank.log",
+      "sha256": "f521a738ba8317483ad9adb5777d67d41a9a14254f5cf63d2c9511057492e44c",
+      "size": 75,
+      "kind": "existing_formal_case_log"
+    },
+    "test-smoke_j2_geometry": {
+      "path": "gui/smoke_tests/smoke_j2_geometry.py",
+      "sha256": "579c6a7a00a93a41570aa28357053d3009b1c2758cf005ccf6de78477fb5b671",
+      "size": 19486,
+      "kind": "18c_permanent_test_raw_bytes"
+    },
+    "windows-gui-gui_j2_geometry-log": {
+      "path": "out/verification/j2-f8-18c5858/windows-gui/20261102-040205-6050a783/gui_j2_geometry.log",
+      "sha256": "7506871db42597929f02673873f42a5bc145ddae46f3bc10ca0f7994b6bfe902",
+      "size": 146,
+      "kind": "existing_formal_case_log"
+    },
+    "test-smoke_j2_materials": {
+      "path": "gui/smoke_tests/smoke_j2_materials.py",
+      "sha256": "2387881c2542fe62e9bfad7316da9f9242a08e038f5598b01d1a8eebe70ccab8",
+      "size": 17040,
+      "kind": "18c_permanent_test_raw_bytes"
+    },
+    "windows-gui-gui_j2_materials-log": {
+      "path": "out/verification/j2-f8-18c5858/windows-gui/20261102-040205-6050a783/gui_j2_materials.log",
+      "sha256": "7f6fa1a705f82a7f0f86952de8c9cb1d262d20882fcdcab91616faa9f5651dde",
+      "size": 79,
+      "kind": "existing_formal_case_log"
+    },
+    "test-smoke_j2_run_editors": {
+      "path": "gui/smoke_tests/smoke_j2_run_editors.py",
+      "sha256": "6fa8cc80d60f53fa9cb61fa647b1ecb3d7c3b6f48ba48493ffe072b59e7bfa9e",
+      "size": 15075,
+      "kind": "18c_permanent_test_raw_bytes"
+    },
+    "windows-gui-gui_j2_run_editors-log": {
+      "path": "out/verification/j2-f8-18c5858/windows-gui/20261102-040205-6050a783/gui_j2_run_editors.log",
+      "sha256": "0975f16937982aeb826dbdcc801e85564cdf9a0ca199b568b16615cae90e8838",
+      "size": 115,
+      "kind": "existing_formal_case_log"
+    },
+    "test-smoke_j2_workspace": {
+      "path": "gui/smoke_tests/smoke_j2_workspace.py",
+      "sha256": "e95c9bef5aef971d94c3955088bd2c97bb3fe4257bb0c0d89c7a2e2e8e12d213",
+      "size": 5976,
+      "kind": "18c_permanent_test_raw_bytes"
+    },
+    "windows-gui-gui_j2_workspace-log": {
+      "path": "out/verification/j2-f8-18c5858/windows-gui/20261102-040205-6050a783/gui_j2_workspace.log",
+      "sha256": "9d4c9fe69ada7a1d6bdb03bcd0aeb59d8cdb13d59666967829ab40d6bc0dc938",
+      "size": 106,
+      "kind": "existing_formal_case_log"
+    },
+    "test-smoke_j2_current_import_preview": {
+      "path": "gui/smoke_tests/smoke_j2_current_import_preview.py",
+      "sha256": "cf87a45ee02fdaae5f172b043f478d037eb0580743f69bf31e2df4fd9a64a014",
+      "size": 15866,
+      "kind": "18c_permanent_test_raw_bytes"
+    },
+    "windows-gui-gui_j2_current_import-log": {
+      "path": "out/verification/j2-f8-18c5858/windows-gui/20261102-040205-6050a783/gui_j2_current_import.log",
+      "sha256": "78dbb9229d55d1fad5455981fde52526dee19e78d7beafaf23ee5064ba36faa5",
+      "size": 70,
+      "kind": "existing_formal_case_log"
+    },
+    "test-smoke_f8_accessibility": {
+      "path": "gui/smoke_tests/smoke_f8_accessibility.py",
+      "sha256": "943c92a0cdd0650511b7c8ce45378ebcbddc06b7f55b90835317eb44d3a59e95",
+      "size": 43976,
+      "kind": "18c_permanent_test_raw_bytes"
+    },
+    "windows-gui-gui_f8_accessibility-log": {
+      "path": "out/verification/j2-f8-18c5858/windows-gui/20261102-040205-6050a783/gui_f8_accessibility.log",
+      "sha256": "89c28fdca6327a0b11f172290c993a7246cddaa82a629142063cb616be968b29",
+      "size": 725,
+      "kind": "existing_formal_case_log"
+    },
+    "windows113-backend-report": {
+      "path": "out/verification/j2-f8-18c5858/windows113-backend/20261102-040211-305d428b/report.json",
+      "sha256": "b967b64baa226e29f9516e0c888b0a5c11f02b6e8dcd1ca90d0111bebb7d530a",
+      "size": 42653,
+      "kind": "existing_formal_report"
+    },
+    "windows113-backend-solid_registry_backend-log": {
+      "path": "out/verification/j2-f8-18c5858/windows113-backend/20261102-040211-305d428b/solid_registry_backend.log",
+      "sha256": "0e0cec7c76d8ed9f47c6661dd289fc34938e88c8de898ad3a8ce6784f10b6310",
+      "size": 1193,
+      "kind": "existing_formal_case_log"
+    },
+    "test-test_j2_sources_physics": {
+      "path": "scripts/test_j2_sources_physics.py",
+      "sha256": "6d3507ff9f358b98d6253ec2c2f1aa2f22a91137deae627bb9ac0e28543cc62a",
+      "size": 23581,
+      "kind": "18c_permanent_test_raw_bytes"
+    },
+    "windows113-backend-j2_source_physics-log": {
+      "path": "out/verification/j2-f8-18c5858/windows113-backend/20261102-040211-305d428b/j2_source_physics.log",
+      "sha256": "0f5fa7a765b817fc18ecaca9697a0418a05d6e3d435de56bf43361f7fc5f807e",
+      "size": 2348,
+      "kind": "existing_formal_case_log"
+    },
+    "test-test_gps_sources": {
+      "path": "scripts/test_gps_sources.py",
+      "sha256": "9a4b2cc215141be10e031bf1aea6839f18e239e8383bd2a9363cba4943888d12",
+      "size": 33969,
+      "kind": "18c_permanent_test_raw_bytes"
+    },
+    "windows113-backend-gps_sources-log": {
+      "path": "out/verification/j2-f8-18c5858/windows113-backend/20261102-040211-305d428b/gps_sources.log",
+      "sha256": "d9027ab3d78abb9e57f68ba54b833e4fec412ebdcdd09809fe5129dc40988ea8",
+      "size": 2774,
+      "kind": "existing_formal_case_log"
+    },
+    "test-test_physics_a6": {
+      "path": "scripts/test_physics_a6.py",
+      "sha256": "eb9cb3431bed1c394706bd6d958e5cf4d19b19f334b63353024203bf467c8882",
+      "size": 16995,
+      "kind": "18c_permanent_test_raw_bytes"
+    },
+    "windows113-backend-physics_a6-log": {
+      "path": "out/verification/j2-f8-18c5858/windows113-backend/20261102-040211-305d428b/physics_a6.log",
+      "sha256": "c82b87bc2d166bb8cd7c3ab85dc47b4561ada6f0b908a9d1909861abfc919207",
+      "size": 1421,
+      "kind": "existing_formal_case_log"
+    },
+    "test-test_fields_a7": {
+      "path": "scripts/test_fields_a7.py",
+      "sha256": "4738641383c2e37672fa38e73b6124d46d70f70378932af903307cfd4c6ae70b",
+      "size": 20317,
+      "kind": "18c_permanent_test_raw_bytes"
+    },
+    "windows113-backend-fields_a7-log": {
+      "path": "out/verification/j2-f8-18c5858/windows113-backend/20261102-040211-305d428b/fields_a7.log",
+      "sha256": "183c4a51cd2e1cb98e2c7ee87213d28e8e82a7a6394d008729ce1c9c86018cf8",
+      "size": 9673,
+      "kind": "existing_formal_case_log"
+    },
+    "test-test_max_step_scope": {
+      "path": "scripts/test_max_step_scope.py",
+      "sha256": "c1699c986caca9f62a93c5906fbbb785e946509ff22983d485e4fbf3636a64ee",
+      "size": 2858,
+      "kind": "18c_permanent_test_raw_bytes"
+    },
+    "windows113-backend-max_step_scope-log": {
+      "path": "out/verification/j2-f8-18c5858/windows113-backend/20261102-040211-305d428b/max_step_scope.log",
+      "sha256": "e04c8d5c77bde6ae52249e7402441dd3ea7668f2ceebfeffcba34e50ef8c956d",
+      "size": 42,
+      "kind": "existing_formal_case_log"
+    },
+    "test-test_material_numeric": {
+      "path": "scripts/test_material_numeric.py",
+      "sha256": "ec151388007bbad6fa5aff673257a3f175a6045e357feae5b21570f14f89f7e0",
+      "size": 6876,
+      "kind": "18c_permanent_test_raw_bytes"
+    },
+    "windows113-backend-material_numeric-log": {
+      "path": "out/verification/j2-f8-18c5858/windows113-backend/20261102-040211-305d428b/material_numeric.log",
+      "sha256": "1b982f3146174f24d692414a9aeb43bc65b83b8233c55dc2e28a94c69616b4ca",
+      "size": 1784,
+      "kind": "existing_formal_case_log"
+    },
+    "test-test_biasing_target_contract": {
+      "path": "scripts/test_biasing_target_contract.py",
+      "sha256": "195a972c378fba24b6a139e11bea87d32930dbc2a5c03988a6983eae054db1bd",
+      "size": 9788,
+      "kind": "18c_permanent_test_raw_bytes"
+    },
+    "windows113-backend-biasing_targets-log": {
+      "path": "out/verification/j2-f8-18c5858/windows113-backend/20261102-040211-305d428b/biasing_targets.log",
+      "sha256": "27e922c562c59f5ef4427f364a93571ff3394aa7f3ac8f4069a9c021151e935d",
+      "size": 66,
+      "kind": "existing_formal_case_log"
+    },
+    "test-test_biasing_worker_runtime": {
+      "path": "scripts/test_biasing_worker_runtime.py",
+      "sha256": "8dcd78ac5d6f977cab1a615b1bfc0d313f17ef19e7a23f41f4fdf1d8868d79c8",
+      "size": 10443,
+      "kind": "18c_permanent_test_raw_bytes"
+    },
+    "windows113-backend-biasing_worker_runtime-log": {
+      "path": "out/verification/j2-f8-18c5858/windows113-backend/20261102-040211-305d428b/biasing_worker_runtime.log",
+      "sha256": "fe899a3daff8932fa4566bbe9355b378e22c81f17d3099a51e3685cc8eafb868",
+      "size": 931,
+      "kind": "existing_formal_case_log"
+    },
+    "windows114-backend-report": {
+      "path": "out/verification/j2-f8-18c5858/windows114-backend/20261102-040210-4adc1efd/report.json",
+      "sha256": "5478271454bf3842d29dd10641ce1df5c2e408c9418619c7313d7dccd6d4a91d",
+      "size": 42661,
+      "kind": "existing_formal_report"
+    },
+    "windows114-backend-solid_registry_backend-log": {
+      "path": "out/verification/j2-f8-18c5858/windows114-backend/20261102-040210-4adc1efd/solid_registry_backend.log",
+      "sha256": "0e0cec7c76d8ed9f47c6661dd289fc34938e88c8de898ad3a8ce6784f10b6310",
+      "size": 1193,
+      "kind": "existing_formal_case_log"
+    },
+    "windows114-backend-j2_source_physics-log": {
+      "path": "out/verification/j2-f8-18c5858/windows114-backend/20261102-040210-4adc1efd/j2_source_physics.log",
+      "sha256": "ee98c74a97937ed7a8c3a9b55532c3c3ed782f6b49311a7c9b9b53612ec8eb8d",
+      "size": 2348,
+      "kind": "existing_formal_case_log"
+    },
+    "windows114-backend-gps_sources-log": {
+      "path": "out/verification/j2-f8-18c5858/windows114-backend/20261102-040210-4adc1efd/gps_sources.log",
+      "sha256": "edf83faf7e32b94adb1df411600b4992eb83f1445dc00010ff0d9af4ccb6548a",
+      "size": 2774,
+      "kind": "existing_formal_case_log"
+    },
+    "windows114-backend-physics_a6-log": {
+      "path": "out/verification/j2-f8-18c5858/windows114-backend/20261102-040210-4adc1efd/physics_a6.log",
+      "sha256": "469a8d30e8d47d1914b0a9f91982f92f6ce4a74acd616fcd89081ded2b0de3f2",
+      "size": 1421,
+      "kind": "existing_formal_case_log"
+    },
+    "windows114-backend-fields_a7-log": {
+      "path": "out/verification/j2-f8-18c5858/windows114-backend/20261102-040210-4adc1efd/fields_a7.log",
+      "sha256": "98747df305d13addadb4a14abe02a463f26fd1cd126cfe7486e9017a4ff4d0bc",
+      "size": 7610,
+      "kind": "existing_formal_case_log"
+    },
+    "windows114-backend-max_step_scope-log": {
+      "path": "out/verification/j2-f8-18c5858/windows114-backend/20261102-040210-4adc1efd/max_step_scope.log",
+      "sha256": "e04c8d5c77bde6ae52249e7402441dd3ea7668f2ceebfeffcba34e50ef8c956d",
+      "size": 42,
+      "kind": "existing_formal_case_log"
+    },
+    "windows114-backend-material_numeric-log": {
+      "path": "out/verification/j2-f8-18c5858/windows114-backend/20261102-040210-4adc1efd/material_numeric.log",
+      "sha256": "1b982f3146174f24d692414a9aeb43bc65b83b8233c55dc2e28a94c69616b4ca",
+      "size": 1784,
+      "kind": "existing_formal_case_log"
+    },
+    "windows114-backend-biasing_targets-log": {
+      "path": "out/verification/j2-f8-18c5858/windows114-backend/20261102-040210-4adc1efd/biasing_targets.log",
+      "sha256": "27e922c562c59f5ef4427f364a93571ff3394aa7f3ac8f4069a9c021151e935d",
+      "size": 66,
+      "kind": "existing_formal_case_log"
+    },
+    "windows114-backend-biasing_worker_runtime-log": {
+      "path": "out/verification/j2-f8-18c5858/windows114-backend/20261102-040210-4adc1efd/biasing_worker_runtime.log",
+      "sha256": "7d02a0c352414752ce43f16885938c97387fc5289b5217610c47d3fb10204ae4",
+      "size": 931,
+      "kind": "existing_formal_case_log"
+    },
+    "windows113-integration-report": {
+      "path": "out/verification/j2-f8-18c5858/windows113-integration/20261102-044742-da94814f/report.json",
+      "sha256": "fc49d072e421011e655b59859ede40ab11839e960beca3b793ca206a23a9fbc7",
+      "size": 22601,
+      "kind": "existing_formal_report"
+    },
+    "windows113-integration-j2_materials_backend-log": {
+      "path": "out/verification/j2-f8-18c5858/windows113-integration/20261102-044742-da94814f/j2_materials_backend.log",
+      "sha256": "27af91c1e07b6456aba6901b2885dfa8bd732d812857e76f775c4d72b528cfcd",
+      "size": 141,
+      "kind": "existing_formal_case_log"
+    },
+    "test-smoke_j2_end_to_end": {
+      "path": "gui/smoke_tests/smoke_j2_end_to_end.py",
+      "sha256": "5b112036e184afac3e97bd9c5257142b197a36c83c119f822318ec972f9b082f",
+      "size": 17916,
+      "kind": "18c_permanent_test_raw_bytes"
+    },
+    "windows113-integration-gui_j2_end_to_end-log": {
+      "path": "out/verification/j2-f8-18c5858/windows113-integration/20261102-044742-da94814f/gui_j2_end_to_end.log",
+      "sha256": "540a66385b51d2c679f4c4797653a9944a463b1c64c40884368149fa86a85814",
+      "size": 1221,
+      "kind": "existing_formal_case_log"
+    },
+    "windows113-integration-terminal": {
+      "path": "out/verification/j2-f8-18c5858/windows113-integration/terminal-sync.json",
+      "sha256": "b5d2e12313f19f18c93818747d5555f566a0be87829ad74f32b10ab300b2b322",
+      "size": 751,
+      "kind": "existing_terminal_receipt"
+    },
+    "windows114-backend-terminal": {
+      "path": "out/verification/j2-f8-18c5858/windows114-backend/terminal-sync.json",
+      "sha256": "c820fcbef0c96c517d4d69b54e1560e7f65e6592f6c97f16cbe1bf94277f1143",
+      "size": 1191,
+      "kind": "existing_terminal_receipt"
+    },
+    "native100-launch.json": {
+      "path": "out/verification/j2-f8-18c5858/native100/launch.json",
+      "sha256": "aaab8f728ab420daeb66c0df9892eec0ee0a7e966f5732cbd461257359f4bd7c",
+      "size": 31282,
+      "kind": "native_raw_local_only_no_new_visual_review"
+    },
+    "native100-identity.json": {
+      "path": "out/verification/j2-f8-18c5858/native100/identity.json",
+      "sha256": "742014c271843a4fa8d000fb255dda723e7f6da762c65e0522d7caa96febd572",
+      "size": 18200,
+      "kind": "native_raw_local_only_no_new_visual_review"
+    },
+    "native100-observations.jsonl": {
+      "path": "out/verification/j2-f8-18c5858/native100/observations.jsonl",
+      "sha256": "3cfd157f43c5562ae935690d8e8c0ae916151fcc42fa3f3c2c0895bcfeacf680",
+      "size": 20974,
+      "kind": "native_raw_local_only_no_new_visual_review"
+    },
+    "native100-visual-observations.json": {
+      "path": "out/verification/j2-f8-18c5858/native100/visual-observations.json",
+      "sha256": "e76ea0e5ff3eb2d510f20318821ecc5883ba73aa069d893176fe018e56cc769d",
+      "size": 27414,
+      "kind": "native_raw_local_only_no_new_visual_review"
+    },
+    "native100-exit.json": {
+      "path": "out/verification/j2-f8-18c5858/native100/exit.json",
+      "sha256": "08128f96f91ce8cbc1d5437ee2658e20a995f7694d8bcb818e35c5dc6a24e13c",
+      "size": 62,
+      "kind": "native_raw_local_only_no_new_visual_review"
+    },
+    "native125-launch.json": {
+      "path": "out/verification/j2-f8-18c5858/native125/launch.json",
+      "sha256": "b4b5453c771c2b8513b4219749aaaf351eccb4447218e16e1a8947e94d4ba27b",
+      "size": 31282,
+      "kind": "native_raw_local_only_no_new_visual_review"
+    },
+    "native125-identity.json": {
+      "path": "out/verification/j2-f8-18c5858/native125/identity.json",
+      "sha256": "b986bbec5b4305d07c1c5a72afe8593771f01081d97ea6a35f2c534e4cd6e85a",
+      "size": 18196,
+      "kind": "native_raw_local_only_no_new_visual_review"
+    },
+    "native125-observations.jsonl": {
+      "path": "out/verification/j2-f8-18c5858/native125/observations.jsonl",
+      "sha256": "3fa99e8b1adf2c9e1dcf428086fad8f6b6d4c167a6313e03e9c19d9447cc244c",
+      "size": 8954,
+      "kind": "native_raw_local_only_no_new_visual_review"
+    },
+    "native125-visual-observations.json": {
+      "path": "out/verification/j2-f8-18c5858/native125/visual-observations.json",
+      "sha256": "f82a6052d5631d23c342130741bf315eaf5ba7d0f2e30b68669e96192171b8e3",
+      "size": 11465,
+      "kind": "native_raw_local_only_no_new_visual_review"
+    },
+    "native125-exit.json": {
+      "path": "out/verification/j2-f8-18c5858/native125/exit.json",
+      "sha256": "813cd84e8a8027bff2ab7ae8409c669e0c0686ed44ebca00fbbf3d662ce82877",
+      "size": 62,
+      "kind": "native_raw_local_only_no_new_visual_review"
+    },
+    "native150-launch.json": {
+      "path": "out/verification/j2-f8-18c5858/native150/launch.json",
+      "sha256": "661103f746fd60a1561de89f10fc8197c474c5b9c7e0da2788350addb905aeeb",
+      "size": 31282,
+      "kind": "native_raw_local_only_no_new_visual_review"
+    },
+    "native150-identity.json": {
+      "path": "out/verification/j2-f8-18c5858/native150/identity.json",
+      "sha256": "b7dcfe38311e480a9f947fa070f22d4e891dacbbed4882320bf66b186c7d87d5",
+      "size": 18200,
+      "kind": "native_raw_local_only_no_new_visual_review"
+    },
+    "native150-observations.jsonl": {
+      "path": "out/verification/j2-f8-18c5858/native150/observations.jsonl",
+      "sha256": "c724f2cd05c0900ba7ffb16bc0d3ae75082f2e857199ae0ae63aa3a324cd4aa6",
+      "size": 18197,
+      "kind": "native_raw_local_only_no_new_visual_review"
+    },
+    "native150-visual-observations.json": {
+      "path": "out/verification/j2-f8-18c5858/native150/visual-observations.json",
+      "sha256": "029c8696df70603cb84d87938fa749f96712159ad8a8dd85ded2a8b0dc010868",
+      "size": 31054,
+      "kind": "native_raw_local_only_no_new_visual_review"
+    },
+    "native150-exit.json": {
+      "path": "out/verification/j2-f8-18c5858/native150/exit.json",
+      "sha256": "8a58aae4e885476bc0522edd05dc3f4ed8bee5116f4e30762ace13ad38a193a6",
+      "size": 62,
+      "kind": "native_raw_local_only_no_new_visual_review"
+    }
+  }
+}

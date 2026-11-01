@@ -1,0 +1,55 @@
+# native150 Project behind retained docks：只读诊断与 out-only 候选（2026-11-02）
+
+状态：确认可复现的 P2；候选仅在独立离屏进程的 Python 模块内加载。所有 tracked GUI 文件 SHA 仍逐项匹配 native150/identity.json。没有改产品/runner/阶段状态，没有操作原生窗口、启动后端或构建。
+
+## 根因实证
+
+已实际打开并观察原生 `native150/012-project-behind-dock150-0.png`：标题/导航为 Project，内容是 Configuration dock。`r2/06-project-final.png` 同字体 Segoe UI/微软雅黑、Fusion、中文、dark、760×640 logical / DPR1.5 复现该画面。
+
+路径：初始 CtrlAlt2 → CtrlAlt3 → F6（刷新预览焦点）→ CtrlN → Return×3 → AltLeft → Esc → dark → CtrlAlt2。测试器仅在离屏窗口激活后发快捷键，没有重置任何滚动条或隐藏/重建 docks。
+
+`r3/results.json` 的 helper 调用跟踪确认：
+
+- 初始 Project，项目名字段相对 content viewport x92，完整可见。
+- 进入 Configuration 后中央 stack 作为 dock 页占位停放在 (-500,-500,0,0)。F6 后 content H=158。
+- 返回 Project 时页索引1与真实焦点“项目名称”已就位，但同步 ensure_focus_visible 仍读到停放 geometry，映射字段为负坐标；最小滚动按当时几何将 H 从158移到0。
+- 随后 QMainWindow 布局才恢复 Project 中央区：stack=(626,0,612,464)，字段相对 content viewport=(711,31,190,32)，viewport=(0,0,540,464)，交集0。保留的 config/preview docks 均存在。等待500ms仍保持H0/max770。
+- 稳定布局后单独调用原有 helper，H仅按必要量0→361；字段变成(350,31,190,32)，完整可见。原联合框算法本身不需要改变。
+
+所以不是选错页、header虚报或第二个编辑器；是 dock→central 延迟布局使同步显露使用过期几何。配置dock按既有契约保留，是 Project 位于右侧的布局背景，不应靠隐藏dock规避。
+
+## out-only 最小候选
+
+- `accessibility.proposed.py`：完整拟议源码，SHA256 `677a7b54c5ce876d663b6d986642ee5393a385b782a29dad695c2ed20d280b39`。
+- `accessibility.patch`：只涉及 core/accessibility.py 的 unified patch，尚未应用。无需改 shell/workspace_layout 或 ownership。
+- `candidate.py`：只在内存中 exec 拟议源码的探针加载器。
+- 保留 FocusIn 同步 ensure_focus_visible，不改 _reading_anchor、_reveal_axis、label+完整field联合框与最小移动合同。
+- 控制器持有单个单次 QTimer；弱引用真实control。先让出两个事件循环轮次；等待中的祖先 LayoutRequest/Resize/Move 会重新去抖，布局后仅补一次既有 helper。
+- 任何新的 QWidget FocusIn（包括foreign）取消并替换旧任务。回调重新核对 owner/control 的C++对象有效性、关闭状态、当前实际焦点的canonical control、owned关系、可见/启用状态。
+- 回调先清pending再滚动，避免自身Move事件重新排队。close停止timer且清pending。没有固定毫秒等待、force-zero或整页居中。
+- 重要实现细节：只用 QWidget 的 FocusIn 替换任务；Qt style/QWindow 也收到非控件FocusIn，不能用它们无条件取消真实控件任务。首个out候选失败已保留。
+
+## 定点与既有验证
+
+四个独立进程均自然exit0：
+
+| 日志 | 内容 | 结果 |
+| --- | --- | --- |
+| regression-final125.log | 下述新定点，DPR1.25 | passed |
+| regression-final150.log | 下述新定点，DPR1.5 | passed |
+| old-smoke-1.25.log | 原 tracked smoke_f8_accessibility.py，未改断言，v3探针 | 280 |
+| old-smoke-1.5.log | 同上 | 280 |
+
+新定点 `probe-regression.py`：保留config/preview dock后走完整自然路径并返回Project；检查label+完整field在所有祖先scroll viewport中可见；九页快捷键与F6逐页验证；dock对象及parent不变；旧焦点任务被新页面焦点替代；foreign窗口焦点不改变主窗口滚动；已删除owned控件不会被待执行回调引用；F5语义指纹、Undo/is_modified不变；复用原test_minimal_scroll覆盖非零手工pan不动与完整联合框5px最小移动。
+
+两档最终Project content H均361/max770，字段在content viewport中为(350,31,190,32)，与其交集完全相同。详见 `regression-final1.25/results.json`、`regression-final1.5/results.json` 及各自07/08图。
+
+`prototype-receipt.json` 保留源码/patch/日志SHA及逐进程退出结果。最初 r1 的模态取消后离屏窗口未激活导致末次快捷键未触发，不作为成功复现；regression150.log 首次探索因测试器漏导入QEvent而exit1，同样原样保留；修正只在out测试器中完成。
+
+## 后续集成 hook（等待 main 的矩阵终态与授权）
+
+1. 应用 accessibility.patch；新定点可移入现有 smoke_f8_accessibility 的 test_retained_dock_focus，不需要新runner Case。
+2. 用真实model snapshot_fingerprint与现有dock实例检查继续约束无业务变动/单实例，保留现有自然导航及union断言。
+3. 按125/150重跑新定点和旧F8/F4布局，再独审、重新冻结。正式native需在重新冻结后的新进程验收；本原型不冒充正式native结果。
+
+无新增翻译。材料numeric/positive与physics code裁决仍等待全部主矩阵终态，未实施。

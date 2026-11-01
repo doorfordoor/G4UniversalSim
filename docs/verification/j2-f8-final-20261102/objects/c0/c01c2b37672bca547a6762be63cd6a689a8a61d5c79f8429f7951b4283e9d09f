@@ -1,0 +1,52 @@
+# 56b689f static 只读首因诊断
+
+本次仅分析冻结候选与历史 baseline，不改产品、测试、门禁或 STATUS；未重跑 profile、编译组件、调用 native 或全局构建。原正式报告及首败日志未覆盖，FAIL 结论不变。
+
+## 9 项 PASS 各少 1 条：CXX 分支差异
+
+**同一种原因，分散在9个脚本；不是共享helper改动，不是运行结果断言被删除，也不是probe版本变化。** 本轮执行收据显式 `CXX=D:/msys64/ucrt64/bin/g++.exe`。9个脚本都先解析该变量，只有没有得到compiler argv时，才通过PATH查找g++/clang++/cl，并执行一条 `assert found/located`。
+
+| 用例 | 历史 → 当前 | 本轮未执行的原断言 |
+| --- | ---: | --- |
+| f1_input_provenance | 37 → 36 | `scripts/test_f1_input_provenance.py:18` |
+| f1_artifact_model | 97 → 96 | `scripts/test_f1_output_identity.py:145` |
+| output_auto_model | 4 → 3 | `scripts/test_output_auto.py:91` |
+| effective_config_model | 18 → 17 | `scripts/test_effective_config_model.py:19` |
+| main_config_version_component | 4 → 3 | `scripts/test_main_config_version.py:22` |
+| geometry_diagnostic_identity | 4 → 3 | `scripts/test_geometry_diagnostic_identity.py:15` |
+| input_provenance | 15 → 14 | `scripts/test_input_provenance.py:18` |
+| effective_consumer_state | 3 → 2 | `scripts/test_effective_consumer_state.py:18` |
+| effective_receipt_view | 14 → 13 | `scripts/test_effective_lifecycle.py:51` |
+
+上表断言均位于 `if not compiler:` 中，只验证PATH找到了编译器。显式CXX使compiler非空，跳过的恰好是这一条。之后编译返回码、组件运行返回码和各结果检查仍由原正式报告覆盖并通过。9个脚本与 `tools/test_assert_probe.py` 经 `git show 5fe0a10:<path>` 对比，除CRLF归一外逐字节相同；v3探针只计目标脚本的assert行入口，不把编译器内的C++判定算入Python数量。
+
+[逐例隔离证据](compiler-assertion-branches.json)读取原AST，只提取每个脚本编译器选择的前缀，在CXX有/无两个合成映射下执行；没有执行测试主体或编译器。9项均为：配置CXX时该断言0次，PATH发现时1次，两条路径都解析到所提供的MSYS2 g++。这解释了整整9条差额，没有新增断言或补计数。
+
+证据限度：旧report没有记录CXX环境值，所以“历史走PATH发现”由相同源代码、历史恰好多1的数量及隔离分支推导，并非声称恢复了旧shell环境。
+
+后续由main统一处理：可以明确选择PATH发现模式（子进程仅移除CXX，PATH首项仍为该MSYS2 bin，并记录实际which/version），使环境与历史计数分支可比；这不会增加产品检查，也不能修复其他4项失败。若工程上要同时保留CXX覆盖，则真实改进是对两条选择路径统一验证所选compiler可用，而非另塞 `assert True` 或重复计数。此项属于测试设计调整，应由main统一授权及验证；当前未作改动，不放宽baseline。首轮失败/身份必须保留。
+
+## F4 code：稳定接口与能力变化分开判定
+
+依据：`docs/结构化诊断与定位.md:21`将code定义为“稳定机器代号”；`gui/g4usim_gui/core/diagnostics.py:153`把code计入identity。机器code变化会改变身份，不只是文案更新。[原code位置](f4-original-code-locations.json)。
+
+### f4_document_diagnostics：应保留原错误类别
+
+原夹具 `scripts/test_f4_document_diagnostics.py:92-93` 的两个启用行密度均为 `bad`。原 `_validate_density` 的 `float(first)` 失败，发 `materials.density.numeric`；当前以更完整的后端密度语法校验，但在 `material_editor_model.py:372-374` 把所有错误折成 `materials.density.invalid`。同一无效数值事实被改名，`selected(...numeric)` 为空导致100行失败，不是实际row偏移。`test_f4_producers.py:265` 还有相同code消费者，被前面的physics首败遮住。
+
+建议保留既有 `materials.density.numeric`/`materials.density.positive` 对仍属于原类别的错误，并为新增的单位/换算溢出等错误使用清晰的新类别。分类必须基于规范解析结果/原因，不可重新引入旧的split/float语法以误拒后端合法紧凑单位、星号或十六进制格式，不解析翻译文案。对 `bad` 的numeric row定位和重复identity测试应保留，不宜只把numeric改成invalid来消除失败。新增合法密度语义仍要保留。
+
+### f4_producers：manual本身已合法，不能保留旧能力判定
+
+`test_f4_producers.py:69` 以 `mode=manual`、空manual_modules期望 `physics.mode.unsupported`。J2在 `core/run_editor_model.py:406-409` 已接受manual；该夹具触发的是 `physics.manual_modules` 缺值。adapter `source_physics_scoring_model.py:208-232`将路径转为field，再统一发 `physics.structured.invalid`。因此当前首败同时存在**旧夹具语义过期**和**未知mode失去原专用code**两个不同问题。
+
+建议：对真正不在reference/manual内的未知mode继续发既有 `physics.mode.unsupported`、定位mode；manual空modules应定位manual_modules并用相应规则code，不能为了保留旧测试而禁止合法manual。更新该夹具为“未知mode”的稳定code反例，另保留“合法manual+模块”的正例和“manual空模块”的错误定位反例。无需把不同事实伪装成同一个旧code。
+
+首个physics断言失败后退出，还遮住了68-78行同组的其他J2前预期：biasing无编辑器、extra_modules不编辑、manual_modules不生成。现在这些能力已有编辑/验证，测试应基于真实冲突（无bias规则、reference/manual模块冲突等）检查code及正确field/severity，不能只把所有预期替换成泛化structured.invalid，也不能恢复旧功能禁令。
+
+## 两个blocker夹具
+
+- `scripts/test_k1_bundle.py:571-597` 使用已可编辑的parameterised/copies_file，并显式source_copy_mode，但没有未知字段；强制source_copy_mode并不意味着应制造blocker。其“保留blocker”目标需要独立的真实未知字段夹具，且保留合法copies资源闭包断言；不能把合法placement重新归为未知。
+- `test_config_migration.py:138-146` 的tessellated/file已是J2可编辑实体；迁移后的blocker非空预期过期。占位mesh字节只用于迁移/资源路径测试，不证明STL物理有效；仍应保留路径迁移和backend输入检查边界，并另用真实未知字段验证blocker闭包。
+
+所有建议仅供main定点修复。本次没有改测试计数、删除断言、提高baseline、降低门禁，或将首轮FAIL改为PASS。

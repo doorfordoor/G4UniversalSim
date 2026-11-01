@@ -1,0 +1,456 @@
+[
+  {
+    "label": "start-zh",
+    "time_ms": 1793564485759,
+    "note_from_main": "150%初始Start：欢迎区与五入口按钮可见。左侧灰色外部浮层与右缘小浮层像素排除，不据此宣称全窗无遮挡。",
+    "preceding_passive_row": 1,
+    "preceding_passive_focus": {
+      "class": "QScrollArea",
+      "object_name": "workspaceShellScroll",
+      "name": ""
+    },
+    "images": [
+      "001-start-zh-0.jpg"
+    ]
+  },
+  {
+    "label": "project-initial",
+    "time_ms": 1793564497077,
+    "note_from_main": "自然CtrlAlt2后项目名称标签和完整输入框均可见，demo有选择/焦点边框；UIA focused_element仍报disabled配置文件，单独记录为缓存滞后，不据此改判实际焦点。",
+    "preceding_passive_row": 3,
+    "preceding_passive_focus": {
+      "class": "QLineEdit",
+      "object_name": "",
+      "name": "项目名称"
+    },
+    "images": [
+      "002-project-initial-0.jpg"
+    ]
+  },
+  {
+    "label": "configuration-transition",
+    "time_ms": 1793564519815,
+    "note_from_main": "CtrlAlt3初始截图：配置/运行区和材料页出现；此截图取于切换过程，不据它宣布材料Name焦点可见。",
+    "preceding_passive_row": 4,
+    "preceding_passive_focus": {
+      "class": "QToolButton",
+      "object_name": "",
+      "name": "运行"
+    },
+    "images": [
+      "003-configuration-transition-0.jpg"
+    ]
+  },
+  {
+    "label": "configuration-settled",
+    "time_ms": 1793564550674,
+    "note_from_main": "配置布局稳定。被动Qt观测确认实际焦点为可见的“运行”QToolButton；UIA仍报材料名称是滞后，不能据此称材料字段不可见缺陷。未写滚动条。",
+    "preceding_passive_row": 4,
+    "preceding_passive_focus": {
+      "class": "QToolButton",
+      "object_name": "",
+      "name": "运行"
+    },
+    "images": [
+      "004-configuration-settled-0.jpg"
+    ]
+  },
+  {
+    "label": "f6-preview-narrow",
+    "time_ms": 1793564560617,
+    "note_from_main": "F6自然进入右侧Preview区：刷新按钮部分文字被最内层窄视口截住，沿已定82>56边界记录，不称整按钮可见；外部右缘浮层像素另排除。未强制滚动归零/ensure。",
+    "preceding_passive_row": 5,
+    "preceding_passive_focus": {
+      "class": "QPushButton",
+      "object_name": "",
+      "name": "刷新预览"
+    },
+    "images": [
+      "005-f6-preview-narrow-0.jpg"
+    ]
+  },
+  {
+    "label": "project-retained",
+    "time_ms": 1793564578840,
+    "note_from_main": "保留Configuration/Preview dock后自然CtrlAlt2：项目名称标签与输入框完整边框可见，焦点/选中文本在demo，字段右缘刚好在内容视口内；右侧外部浮层不覆盖此行。",
+    "preceding_passive_row": 6,
+    "preceding_passive_focus": {
+      "class": "QLineEdit",
+      "object_name": "",
+      "name": "项目名称"
+    },
+    "images": [
+      "006-project-retained-0.jpg"
+    ]
+  },
+  {
+    "label": "project-natural-tab",
+    "time_ms": 1793564595167,
+    "note_from_main": "自然Tab到可执行程序字段，标签与完整控件可见；路径在QLineEdit内部显示末段，控件本身没有外部裁切。UIA focused_element仍有滞后，后续依被动Qt记录定位实际控件。",
+    "preceding_passive_row": 7,
+    "preceding_passive_focus": {
+      "class": "QLineEdit",
+      "object_name": "",
+      "name": "G4UniversalSim 可执行程序"
+    },
+    "images": [
+      "007-project-natural-tab-0.jpg"
+    ]
+  },
+  {
+    "label": "history-zh-labels",
+    "time_ms": 1793564623437,
+    "note_from_main": "History三个真实UIA控件Name分别为运行包根目录/搜索/状态（Edit/Edit/Combo），不再为空。当前超宽联合框下可见root标签和输入阅读前缀，不把不可同容纳的整行称完整可见。",
+    "preceding_passive_row": 8,
+    "preceding_passive_focus": {
+      "class": "QLineEdit",
+      "object_name": "",
+      "name": "运行包根目录"
+    },
+    "images": [
+      "008-history-zh-labels-0.jpg"
+    ]
+  },
+  {
+    "label": "language-menu-zh",
+    "time_ms": 1793564646927,
+    "note_from_main": "语言菜单显示当前中文勾选、English可选，直接观察原生菜单。",
+    "preceding_passive_row": 9,
+    "preceding_passive_focus": {
+      "class": "QScrollArea",
+      "object_name": "workspaceShellScroll",
+      "name": ""
+    },
+    "images": [
+      "009-language-menu-zh-0.jpg",
+      "009-language-menu-zh-1.jpg",
+      "009-language-menu-zh-2.jpg"
+    ]
+  },
+  {
+    "label": "history-en-transition",
+    "time_ms": 1793564824282,
+    "note_from_main": "Actual menu click switched page and labels to English; Runs root/Search visible. Retained dock limits viewport; outer field extends beyond visible area. UIA transition cache not treated as final names.",
+    "preceding_passive_row": 9,
+    "preceding_passive_focus": {
+      "class": "QScrollArea",
+      "object_name": "workspaceShellScroll",
+      "name": ""
+    },
+    "images": [
+      "010-history-en-transition-0.jpg"
+    ]
+  },
+  {
+    "label": "history-en-names",
+    "time_ms": 1793564840728,
+    "note_from_main": "Settled UIA actual Edit Runs root, Edit Search, Combo Status all nonempty and English.",
+    "preceding_passive_row": 9,
+    "preceding_passive_focus": {
+      "class": "QScrollArea",
+      "object_name": "workspaceShellScroll",
+      "name": ""
+    },
+    "images": []
+  },
+  {
+    "label": "history-en-visible",
+    "time_ms": 1793564854877,
+    "note_from_main": "Index477 click rejected outside window bounds (center outside clipped wide control); no UI input dispatched. Fresh observation unchanged; visible Search portion available.",
+    "preceding_passive_row": 9,
+    "preceding_passive_focus": {
+      "class": "QScrollArea",
+      "object_name": "workspaceShellScroll",
+      "name": ""
+    },
+    "images": [
+      "012-history-en-visible-0.jpg"
+    ]
+  },
+  {
+    "label": "history-search-focus",
+    "time_ms": 1793564862462,
+    "note_from_main": "Visible Search label and reading prefix; focus outline on Search. Wide input cannot fully fit retained dock viewport; no full-control claim.",
+    "preceding_passive_row": 10,
+    "preceding_passive_focus": {
+      "class": "QLineEdit",
+      "object_name": "",
+      "name": "Search"
+    },
+    "images": [
+      "013-history-search-focus-0.jpg"
+    ]
+  },
+  {
+    "label": "history-status-tab",
+    "time_ms": 1793564872455,
+    "note_from_main": "Natural Tab from Search pans content; Status label and complete combo box are visible at right, focused outline. No scrollbar setter/ensure used.",
+    "preceding_passive_row": 11,
+    "preceding_passive_focus": {
+      "class": "QComboBox",
+      "object_name": "",
+      "name": "Status"
+    },
+    "images": [
+      "014-history-status-tab-0.jpg"
+    ]
+  },
+  {
+    "label": "history-zh-roundtrip",
+    "time_ms": 1793564890900,
+    "note_from_main": "English→Chinese actual menu click; all three UIA control names update correctly; Status label and complete combo visible.",
+    "preceding_passive_row": 12,
+    "preceding_passive_focus": {
+      "class": "QScrollArea",
+      "object_name": "workspaceShellScroll",
+      "name": ""
+    },
+    "images": [
+      "015-history-zh-roundtrip-0.jpg"
+    ]
+  },
+  {
+    "label": "history-en-roundtrip",
+    "time_ms": 1793564908292,
+    "note_from_main": "Second English switch restores all three English UIA names. View remains at prior horizontal position after language menu; not a focus-reveal claim.",
+    "preceding_passive_row": 12,
+    "preceding_passive_focus": {
+      "class": "QScrollArea",
+      "object_name": "workspaceShellScroll",
+      "name": ""
+    },
+    "images": [
+      "016-history-en-roundtrip-0.jpg"
+    ]
+  },
+  {
+    "label": "navigation-scenario",
+    "time_ms": 1793564920157,
+    "note_from_main": "CtrlAlt4 reaches Scenario and selects output path without editing; narrow viewport shows path suffix and wide form is horizontally clipped. No all-controls-visible claim.",
+    "preceding_passive_row": 13,
+    "preceding_passive_focus": {
+      "class": "QLineEdit",
+      "object_name": "",
+      "name": ""
+    },
+    "images": [
+      "017-navigation-scenario-0.jpg"
+    ]
+  },
+  {
+    "label": "navigation-effective",
+    "time_ms": 1793564927144,
+    "note_from_main": "CtrlAlt5 reaches Effective Configuration; readonly/no snapshot message visible; no edit or run.",
+    "preceding_passive_row": 14,
+    "preceding_passive_focus": {
+      "class": "QPushButton",
+      "object_name": "",
+      "name": "Load snapshot..."
+    },
+    "images": [
+      "018-navigation-effective-0.jpg"
+    ]
+  },
+  {
+    "label": "navigation-run",
+    "time_ms": 1793564937650,
+    "note_from_main": "CtrlAlt6 reaches Run Console; snapshot disclosure and trusted experiment buttons visible, statuses Unobserved; no backend executed.",
+    "preceding_passive_row": 15,
+    "preceding_passive_focus": {
+      "class": "QToolButton",
+      "object_name": "",
+      "name": "Snapshot details"
+    },
+    "images": [
+      "019-navigation-run-0.jpg"
+    ]
+  },
+  {
+    "label": "navigation-results",
+    "time_ms": 1793564947561,
+    "note_from_main": "CtrlAlt7 selects Results; retained dock layout is narrow with horizontally clipped sections, No run/Unknown progress remain. Navigation reached, not full-page visibility acceptance.",
+    "preceding_passive_row": 16,
+    "preceding_passive_focus": {
+      "class": "QPushButton",
+      "object_name": "",
+      "name": "Refresh"
+    },
+    "images": [
+      "020-navigation-results-0.jpg"
+    ]
+  },
+  {
+    "label": "navigation-scans",
+    "time_ms": 1793564957017,
+    "note_from_main": "CtrlAlt9 reaches Scans, Parameter focus outline and label visible; no create/run actions.",
+    "preceding_passive_row": 17,
+    "preceding_passive_focus": {
+      "class": "QComboBox",
+      "object_name": "",
+      "name": "Parameter"
+    },
+    "images": [
+      "021-navigation-scans-0.jpg"
+    ]
+  },
+  {
+    "label": "navigation-start-retained",
+    "time_ms": 1793564968069,
+    "note_from_main": "CtrlAlt1 returns Start with retained docks; New blank simulation button visible.",
+    "preceding_passive_row": 18,
+    "preceding_passive_focus": {
+      "class": "QPushButton",
+      "object_name": "",
+      "name": "New blank simulation"
+    },
+    "images": [
+      "022-navigation-start-retained-0.jpg"
+    ]
+  },
+  {
+    "label": "new-blank-action",
+    "time_ms": 1793564984278,
+    "note_from_main": "New blank simulation is a direct production action, not wizard entry: project becomes new_simulation, Configuration opens with 0 materials/1 volume. Intentional isolated test project replacement; earlier navigation snapshot invariance ends here. No run.",
+    "preceding_passive_row": 19,
+    "preceding_passive_focus": {
+      "class": "QWidget",
+      "object_name": "",
+      "name": ""
+    },
+    "images": [
+      "023-new-blank-action-0.jpg"
+    ]
+  },
+  {
+    "label": "wizard-scenario-en",
+    "time_ms": 1793565006286,
+    "note_from_main": "Create from template opens actual New simulation wizard; Scenario choices, Next and Cancel fully visible, disabled back arrow at top.",
+    "preceding_passive_row": 21,
+    "preceding_passive_focus": {
+      "class": "QPushButton",
+      "object_name": "__qt__passive_wizardbutton1",
+      "name": "Next"
+    },
+    "images": [
+      "024-wizard-scenario-en-0.jpg",
+      "024-wizard-scenario-en-1.jpg"
+    ]
+  },
+  {
+    "label": "wizard-geometry-en",
+    "time_ms": 1793565033943,
+    "note_from_main": "Return advances to Materials and geometry; Back UIA name present, Next/Cancel visible; numeric locale glyphs retain existing zh_HK rendering.",
+    "preceding_passive_row": 22,
+    "preceding_passive_focus": {
+      "class": "QScrollArea",
+      "object_name": "f8WizardPageScroll",
+      "name": ""
+    },
+    "images": [
+      "025-wizard-geometry-en-0.jpg",
+      "025-wizard-geometry-en-1.jpg"
+    ]
+  },
+  {
+    "label": "wizard-source-en",
+    "time_ms": 1793565043566,
+    "note_from_main": "Second Return reaches Source; labels and controls visible, Next/Cancel visible, Back named.",
+    "preceding_passive_row": 23,
+    "preceding_passive_focus": {
+      "class": "QPushButton",
+      "object_name": "__qt__passive_wizardbutton1",
+      "name": "Next"
+    },
+    "images": [
+      "026-wizard-source-en-0.jpg",
+      "026-wizard-source-en-1.jpg"
+    ]
+  },
+  {
+    "label": "wizard-run-en",
+    "time_ms": 1793565053332,
+    "note_from_main": "Third Return reaches Physics outputs and run; Finish/Cancel fully visible and correctly named; Back accessibleName is Back on arrow control. No Finish activation.",
+    "preceding_passive_row": 24,
+    "preceding_passive_focus": {
+      "class": "QScrollArea",
+      "object_name": "wizardRunScroll",
+      "name": ""
+    },
+    "images": [
+      "027-wizard-run-en-0.jpg",
+      "027-wizard-run-en-1.jpg"
+    ]
+  },
+  {
+    "label": "wizard-back-cache-refresh",
+    "time_ms": 1793565074247,
+    "note_from_main": "Back element1000 invocation rejected as unavailable in cached app state; refreshed screenshot still Run page. No input from rejected call.",
+    "preceding_passive_row": 24,
+    "preceding_passive_focus": {
+      "class": "QScrollArea",
+      "object_name": "wizardRunScroll",
+      "name": ""
+    },
+    "images": [
+      "028-wizard-back-cache-refresh-0.jpg",
+      "028-wizard-back-cache-refresh-1.jpg"
+    ]
+  },
+  {
+    "label": "wizard-back-source",
+    "time_ms": 1793565085214,
+    "note_from_main": "Actual visible Back arrow click returns Run→Source, no Finish action.",
+    "preceding_passive_row": 25,
+    "preceding_passive_focus": {
+      "class": "QPushButton",
+      "object_name": "__qt__passive_wizardbutton1",
+      "name": "Next"
+    },
+    "images": [
+      "029-wizard-back-source-0.jpg",
+      "029-wizard-back-source-1.jpg"
+    ]
+  },
+  {
+    "label": "wizard-escape",
+    "time_ms": 1793565096012,
+    "note_from_main": "Escape closes wizard and retains new_simulation project. No template applied; passive snapshots will bound invariance from wizard open to cancel.",
+    "preceding_passive_row": 26,
+    "preceding_passive_focus": {
+      "class": "QPushButton",
+      "object_name": "",
+      "name": "Create from template..."
+    },
+    "images": [
+      "030-wizard-escape-0.jpg"
+    ]
+  },
+  {
+    "label": "theme-dark-transition",
+    "time_ms": 1793565118128,
+    "note_from_main": "Dark menu item clicked; immediate capture still light transition, no settled theme claim yet.",
+    "preceding_passive_row": 27,
+    "preceding_passive_focus": {
+      "class": "QScrollArea",
+      "object_name": "workspaceShellScroll",
+      "name": ""
+    },
+    "images": [
+      "031-theme-dark-transition-0.jpg"
+    ]
+  },
+  {
+    "label": "project-dark-final",
+    "time_ms": 1793565131344,
+    "note_from_main": "Settled dark theme; natural CtrlAlt2 returns Project retaining docks. Project name label and full field visible, remembered EXE field focused and full control visible. No forced scroll reset.",
+    "preceding_passive_row": 29,
+    "preceding_passive_focus": {
+      "class": "QLineEdit",
+      "object_name": "",
+      "name": "G4UniversalSim executable"
+    },
+    "images": [
+      "032-project-dark-final-0.jpg"
+    ]
+  }
+]

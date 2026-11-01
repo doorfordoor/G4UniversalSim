@@ -1,0 +1,172 @@
+{
+  "source_tool": "github_fetch_workflow_run_jobs",
+  "run_id": 41330577359,
+  "result": {
+    "jobs": [
+      {
+        "id": 124919607718,
+        "name": "windows-latest / frozen desktop and ROOT helper",
+        "status": "in_progress",
+        "conclusion": null,
+        "run_id": 41330577359,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Enable long paths in the Windows checkout",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/checkout@v7",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Run actions/setup-python@v7",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Linux desktop runtime dependencies",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 5
+          },
+          {
+            "name": "Install the product Python dependencies and packaging tools",
+            "status": "in_progress",
+            "conclusion": null,
+            "number": 6
+          },
+          {
+            "name": "Diagnose the actual Linux xcb dependencies",
+            "status": "pending",
+            "conclusion": null,
+            "number": 7
+          },
+          {
+            "name": "Build and test real frozen applications",
+            "status": "pending",
+            "conclusion": null,
+            "number": 8
+          },
+          {
+            "name": "Linux real VTK actor checks",
+            "status": "pending",
+            "conclusion": null,
+            "number": 9
+          },
+          {
+            "name": "Retain delivery receipts and build failure diagnostics",
+            "status": "pending",
+            "conclusion": null,
+            "number": 10
+          },
+          {
+            "name": "Post Run actions/setup-python@v7",
+            "status": "pending",
+            "conclusion": null,
+            "number": 19
+          },
+          {
+            "name": "Post Run actions/checkout@v7",
+            "status": "pending",
+            "conclusion": null,
+            "number": 20
+          }
+        ]
+      },
+      {
+        "id": 124919607965,
+        "name": "ubuntu-24.04 / frozen desktop and ROOT helper",
+        "status": "in_progress",
+        "conclusion": null,
+        "run_id": 41330577359,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Enable long paths in the Windows checkout",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 2
+          },
+          {
+            "name": "Run actions/checkout@v7",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Run actions/setup-python@v7",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Linux desktop runtime dependencies",
+            "status": "in_progress",
+            "conclusion": null,
+            "number": 5
+          },
+          {
+            "name": "Install the product Python dependencies and packaging tools",
+            "status": "pending",
+            "conclusion": null,
+            "number": 6
+          },
+          {
+            "name": "Diagnose the actual Linux xcb dependencies",
+            "status": "pending",
+            "conclusion": null,
+            "number": 7
+          },
+          {
+            "name": "Build and test real frozen applications",
+            "status": "pending",
+            "conclusion": null,
+            "number": 8
+          },
+          {
+            "name": "Linux real VTK actor checks",
+            "status": "pending",
+            "conclusion": null,
+            "number": 9
+          },
+          {
+            "name": "Retain delivery receipts and build failure diagnostics",
+            "status": "pending",
+            "conclusion": null,
+            "number": 10
+          },
+          {
+            "name": "Post Run actions/setup-python@v7",
+            "status": "pending",
+            "conclusion": null,
+            "number": 19
+          },
+          {
+            "name": "Post Run actions/checkout@v7",
+            "status": "pending",
+            "conclusion": null,
+            "number": 20
+          }
+        ]
+      }
+    ]
+  }
+}

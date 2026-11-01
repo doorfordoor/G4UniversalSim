@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-f8-public-projection\projection-relocated-proof-v1\tools\check_current_gates.py", line 28, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-f8-public-projection\projection-relocated-proof-v1\tools\check_current_gates.py", line 20, in main
+    if item['expected_exit']==0:assert data['git_head']==plan['tested_build_HEAD'] and not data['git_dirty']
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,29 @@
+# 第三候选真实CI收集检查点
+
+## 最终完成
+
+第三轮四workflow/8job全部终态，Desktop及Fullinstallation双平台success；M0双平台/Linux双版本GUI均failure。Windows安装124961550829最后success，artifact13099083446 ZIP SHA96993a1e8606fbaeacfd9f3a3f49698a711de166798dfaf278f0bbc3ba2a7533，9stage/889源/25保留对象/实际5events/SDK及卸载独立通过，完整日志已齐。
+
+8官方原ZIP+8完整connector解码job日志已收齐，collected-files-final.json含16文件大小/SHA/归属；public-push-runs-final.json、jobs-final.json固定精确HEAD/push/attempt1终态。8实际报告4strictpass/4strictfail；预期12profile中4份Linux backend/integration未执行，missing_profiles明确列出，release_accepted=false。最终报告review-final.md。无待收CI/本侧运行进程，不改tracked、不rerun/取消/dispatch；前两轮及本轮首败原件保持。下方为先前过程检查点，以上述终态为准。
+
+最新：M0 Windows124961550970已GUI failure，唯一gui_j2_geometry在smoke_j2_geometry.py:264 source_path==str(source)断言，195入口；该平台K1/F8 pass。artifact13099775646/完整log已齐。Windows static4573 pass、GUI8536 fail，全8报告4pass/4fail，详见windows-m0-failure.md/report-gates-current.json。当前7ZIP/7job日志，只有Windows installation124961550829未终态。
+
+最新收集：Installation Linux124961550947 success；artifact13099091881 ZIP SHA bf8adcee6f86057650a70dff5524b22b7fe0f8e00013295e96628e062d89923f已收核验，完整job日志已保存，10阶段/889源码/实际5events/SDK及卸载独立通过。当前6ZIP/6job日志，剩M0Windows124961550970和InstallationWindows124961550829。综合review-current.md；三static pass/三GUI同F8:659失败保持。
+
+最新首败：Linux114 job124961551099、Linux113 job124961551454、M0Ubuntu job124961551155均GUI failure，唯一gui_f8_accessibility在smoke_f8_accessibility.py:659 Qt interface Name断言失败；各自原ZIP/完整日志已齐。三static4573 strict pass，三GUI8401 strict fail。详见first-failure.md/report-gates-current.json；首份report-gates-first-failure.json固定。Linux backend/integration均未执行；不改判据/不rerun。当前5原ZIP/5完成job日志，M0Windows及双安装继续收集。
+
+精确HEAD18c5858fd6e80a5cb6096beacebfef69c479ad49；source_fp9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a；tests_fpd5a1691bb3ed613faae4db96405167c0f7ea0a35aa465444e2d260a36a7e67a9。
+
+main freeze.json的15原字节SHA已逐一独立核对，本机git -c core.longpaths=true status tracked clean。freeze-receipt-checked.json保留该核验；CRLF应用首败原件不改。候选checker从新HEAD Git对象固定，四个实际workflow均核对为自动push/pull_request，不dispatch。
+
+四自动push run全精确HEAD、attempt1，初始均运行且无失败：
+- Desktop41344573534：Windows124961550744 / Linux124961550978。
+- M041344573541：Windows124961550970 / Ubuntu124961551155。
+- Installation41344573604：Windows124961550829 / Linux124961550947。
+- Linux41344573528：11.4.3=124961551099 /11.3.2=124961551454。
+
+public-push-runs-initial.json、jobs-initial-*.json为原始身份/状态。analyze_reports、verify_desktop、verify_installation、finalize均新root新HEAD，不混前两轮报告。下一步：只读跟踪终态，完成日志完整保存、原ZIP SHA对GitHubdigest与归属；所有实际profiles独立strict及matching历史逐例比较，再验证桌面/安装语义。失败先报告首因；不rerun/cancel/改tracked。
+
+前两轮8ZIP/8joblogs及原失败保持；第二轮5strictpass/3fail不回填第三轮。当前无本地build/native/测试执行进程，由本侧仅做CI观测和离线证据验证。
+
+Desktop两job success；原ZIP Linux13099021059/Windows13099130875与两完整job日志已齐，150GUI源身份、frozen自检、稳定性和4条正负例命令日志SHA均独立通过。下载引用首请求未返回file_uri，编排器TypeError；检查本地无Windows ZIP后单次重获取引用成功，ZIP文件实际只下载一次，无CI操作。M0双平台/Linux双版static均已过进入GUI，安装双平台lifecycle，尚无失败。

@@ -1,0 +1,13 @@
+G4USIM_ASSERTS=0
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-resource-policy-path-review\run_focused.py", line 24, in <module>
+    raise SystemExit(test_assert_probe.main(['test_assert_probe.py',str(target)]))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-resource-policy-path-review\run_focused.py", line 17, in focused
+    evidence=OUT/('focused-'+mode+suffix);evidence.mkdir(exist_ok=False);namespace['test_resource_policy_path_identity' if kind=='policy' else 'test_resource_policy_paths_late_guard'](evidence, **({'actions': ('export',)} if kind=='late-export' else {}))
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\pathlib.py", line 1116, in mkdir
+    os.mkdir(self, mode)
+FileExistsError: [WinError 183] 当文件已存在时，无法创建该文件。: 'C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-resource-policy-path-review\\focused-candidate-v4final'

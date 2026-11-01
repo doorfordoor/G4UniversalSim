@@ -1,0 +1,35 @@
+{
+  "schema": "G4UniversalSimScan",
+  "version": 1,
+  "name": "thick",
+  "parameter": "geometry.Shield.thickness",
+  "parameter_label": "Shield thickness (z)",
+  "values": [
+    "1 mm",
+    "9 mm"
+  ],
+  "scan_dir": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021150_scan_thick",
+  "created": "2026-11-02T02:11:50",
+  "threads": 2,
+  "seed": 12345,
+  "points": [
+    {
+      "index": 0,
+      "value": "1 mm",
+      "package_dir": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021150_scan_thick\\20261102_021150_thick_p000",
+      "output_dir": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021150_scan_thick\\20261102_021150_thick_p000\\output",
+      "main_ini": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021150_scan_thick\\20261102_021150_thick_p000\\config\\main.ini",
+      "macro": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021150_scan_thick\\20261102_021150_thick_p000\\macros\\run.mac",
+      "seed": 12345
+    },
+    {
+      "index": 1,
+      "value": "9 mm",
+      "package_dir": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021150_scan_thick\\20261102_021150_thick_p001",
+      "output_dir": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021150_scan_thick\\20261102_021150_thick_p001\\output",
+      "main_ini": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021150_scan_thick\\20261102_021150_thick_p001\\config\\main.ini",
+      "macro": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021150_scan_thick\\20261102_021150_thick_p001\\macros\\run.mac",
+      "seed": 12345
+    }
+  ]
+}

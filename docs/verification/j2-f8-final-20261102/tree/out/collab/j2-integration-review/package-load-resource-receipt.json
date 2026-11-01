@@ -1,0 +1,43 @@
+{
+  "snapshot": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-integration-review\\resources-1793551222814213000\\runs\\20261102_004022_new_simulation\\project_snapshot.json",
+  "before": {
+    "core/project_snapshot.py": "c607d40e4b66ca958efb09dd2260527bb565028c4a4083648cdf90def16cafc0",
+    "parsers/geometry_parser.py": "ccb81da48e54bdcf76ec65c351f105ee86fc129e37101eaaf3c4f01f73e5d5cd",
+    "core/run_editor_resources.py": "03fde9cecf88af1cc2f2a0029f3e4bb23a89e17f877a257363fe1ab716fe0a5c"
+  },
+  "after": {
+    "core/project_snapshot.py": "c607d40e4b66ca958efb09dd2260527bb565028c4a4083648cdf90def16cafc0",
+    "parsers/geometry_parser.py": "ccb81da48e54bdcf76ec65c351f105ee86fc129e37101eaaf3c4f01f73e5d5cd",
+    "core/run_editor_resources.py": "03fde9cecf88af1cc2f2a0029f3e4bb23a89e17f877a257363fe1ab716fe0a5c"
+  },
+  "sources_unchanged": true,
+  "results": {
+    "intact-control": {
+      "accepted": true,
+      "input_roles": [
+        "materials_ini_path",
+        "geometry_ini_path",
+        "main_ini_path",
+        "run_macro_path",
+        "geometry.Copy.copies_file"
+      ],
+      "stl_path_exists": true
+    },
+    "missing-STL": {
+      "accepted": true,
+      "input_roles": [
+        "materials_ini_path",
+        "geometry_ini_path",
+        "main_ini_path",
+        "run_macro_path",
+        "geometry.Copy.copies_file"
+      ],
+      "stl_path_exists": false
+    },
+    "missing-copies-control": {
+      "accepted": false,
+      "error": "ValueError('Snapshot package resource is missing: geometry.Copy.copies_file: C:\\\\Users\\\\123\\\\.codex\\\\worktrees\\\\effective-config\\\\G4UniversalSim\\\\out\\\\collab\\\\j2-integration-review\\\\resources-1793551222814213000\\\\runs\\\\20261102_004022_new_simulation\\\\config\\\\geometry-resources\\\\g0001.csv')",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-integration-review\\package_load_cases.py\", line 14, in probe\n    loaded=load_project_snapshot(snapshot)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\gui\\g4usim_gui\\core\\project.py\", line 238, in load_project_snapshot\n    return load_snapshot(path)\n           ^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\gui\\g4usim_gui\\core\\project_snapshot.py\", line 343, in load_snapshot\n    inputs.extend(_geometry_resources(geometry_summary, actual[\"geometry_ini_path\"], root))\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\gui\\g4usim_gui\\core\\project_snapshot.py\", line 244, in _geometry_resources\n    result.append(_read_inside(resource, root, role, text=False))\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\gui\\g4usim_gui\\core\\project_snapshot.py\", line 217, in _read_inside\n    raise ValueError(f\"Snapshot package resource is missing: {role}: {path}\")\nValueError: Snapshot package resource is missing: geometry.Copy.copies_file: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-integration-review\\resources-1793551222814213000\\runs\\20261102_004022_new_simulation\\config\\geometry-resources\\g0001.csv\n"
+    }
+  }
+}

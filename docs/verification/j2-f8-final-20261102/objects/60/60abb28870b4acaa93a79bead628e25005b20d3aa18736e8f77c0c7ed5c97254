@@ -1,0 +1,64 @@
+{
+  "schema": "j2_f8_incremental_review_handoff_supplement",
+  "head": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+  "entries": [
+    {
+      "source": "out/collab/native100-file-independent/initialization-extra.json",
+      "logical_path": "tree/out/collab/native100-file-independent/initialization-extra.json",
+      "bytes": 518,
+      "sha256": "3aa24f9b427e354d77e1402dc515c21931abe105d40dcc6c9d3a54fa126f35cc",
+      "object": "objects/3a/3aa24f9b427e354d77e1402dc515c21931abe105d40dcc6c9d3a54fa126f35cc",
+      "role": "Ptolemy_native100_necessary_chain_pure_file_review"
+    },
+    {
+      "source": "out/collab/native100-file-independent/receipt.json",
+      "logical_path": "tree/out/collab/native100-file-independent/receipt.json",
+      "bytes": 24726,
+      "sha256": "b6d9d52acd3c18684e0c8153d8b1807e3a525740773a7a932ca3f042f9e65b7b",
+      "object": "objects/b6/b6d9d52acd3c18684e0c8153d8b1807e3a525740773a7a932ca3f042f9e65b7b",
+      "role": "Ptolemy_native100_necessary_chain_pure_file_review"
+    },
+    {
+      "source": "out/collab/native100-file-independent/review.md",
+      "logical_path": "tree/out/collab/native100-file-independent/review.md",
+      "bytes": 5130,
+      "sha256": "b748178a1781d7869110c3df3d275829b758e9091127cc0c6061ff0953a7139e",
+      "object": "objects/b7/b748178a1781d7869110c3df3d275829b758e9091127cc0c6061ff0953a7139e",
+      "role": "Ptolemy_native100_necessary_chain_pure_file_review"
+    },
+    {
+      "source": "out/collab/native100-file-independent/review.py",
+      "logical_path": "tree/out/collab/native100-file-independent/review.py",
+      "bytes": 10858,
+      "sha256": "90e7ce8f608a002e946f552d6c03605bac4b9641b65af86d2ce4d6101545db67",
+      "object": "objects/90/90e7ce8f608a002e946f552d6c03605bac4b9641b65af86d2ce4d6101545db67",
+      "role": "Ptolemy_native100_necessary_chain_pure_file_review"
+    }
+  ],
+  "native100_review": {
+    "status": "PASS necessary file chain only",
+    "receipt_sha256": "b6d9d52acd3c18684e0c8153d8b1807e3a525740773a7a932ca3f042f9e65b7b",
+    "initialization": "no_run run_count0 events0/0; events unobserved",
+    "actual_run": "run_count1 planned/completed100/100",
+    "export": "manifest +7 members; resource size/SHA closure; outputs_included=false replay_verified=false",
+    "CLI_replay_executed": false,
+    "record_count": 5,
+    "raw_images_local_only": 34,
+    "independent_visual_or_native_reexecution": false,
+    "cached_focus_or_F5_state_claims": "keep exact review scope; no expanded F5 claim"
+  },
+  "third_CI_failures": {
+    "Linux113_Linux114_M0Ubuntu": "gui_f8_accessibility line659 QAccessible.Name; no inferred string/root cause",
+    "Windows_M0": "gui_j2_geometry line264 successful reload source_path literal equality; 195 assertions; distinct from prior STL line162; open until OUT attribution/minimal candidate reviewed"
+  },
+  "pending_overlay": {
+    "native100_file_review": "resolved by this supplement only; earlier draft snapshot remains unmodified",
+    "windows113_integration": "pending terminal receipt; main declared session60808 owns slot",
+    "windows114_integration": "pending terminal receipt; follows113 slot; no process interrupted",
+    "fourth_candidate_diagnosis_and_docs": "pending coordinated Harvey/main OUT attribution; no docs edits"
+  },
+  "old_prefix_seal_manifest_unchanged": true,
+  "phase_closed": false,
+  "public_raw_image_package_created": false,
+  "tracked_changed": false
+}

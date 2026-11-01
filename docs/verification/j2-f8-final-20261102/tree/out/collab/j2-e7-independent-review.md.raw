@@ -1,0 +1,52 @@
+# J2 前置 E7 后端独立审查
+
+2026-11-02；工作区 effective-config，分支 roadmap/J2-F8-editing；比较基线 fc606739。审查者未实现本次 E7；此前只负责 Source/Physics。此次没有修改产品 C++/schema，没有启动构建，没有重跑作者 test_solid_registry 或 A5 测试。
+
+## 结论
+
+本次范围内**未发现可确认的 P0/P1/P2 缺陷，后端 diff 审查通过**。不据此关闭 E7/J2，不替代 Windows/Linux、11.3/11.4 正式矩阵、统一证据门禁或几何/物理完整验收。
+
+审查对象：新增 include/Geometry/SolidRegistry.hh、src/Geometry/SolidRegistry.cc，修改 include/Geometry/VolumeBuilder.hh、src/Geometry/VolumeBuilder.cc，以及主代理集成的 include/Core/BackendCapabilities.hh。静态对照/身份收据：`out/collab/j2-e7-independent-review-checks.json`（10项比较全部true，逐文件SHA及15路旧/新分派映射）。这是独立代码核验，不冒充运行测试。
+
+## 旧语义与工厂分派
+
+- 独立从基线 VolumeBuilder switch 提取15路factory及PrecomputeVolume策略，与当前表和已读取的真实capabilities逐项对应，含Polycone=false、Polyhedra=true；没有新增或漏掉既有primitive。
+- `src/Geometry/VolumeBuilder.cc:496` 的CreateBoxSolid起至文件结尾与基线逐字相同：真实Geant4构造参数、对象计数、STL输入证据、placement、region、vis及所有权逻辑均未改。BuildWorld/BuildLogicalVolume/BuildVolume/CreateSolid本体也逐字相同。
+- box仍用全长size/2；tubs直接builder保留旧size回退，orb仍可直接builder用size.x/2。严格hierarchical INI仍禁止这些非box size写法，registry的builder_compatibility有明确区分。GeometryConfig/GeometryUtils与基线相同，没有因为元数据而放宽解析。
+- primitive的GDML拒绝仍在VolumeBuilder.cc:361；不把模板级GDML变成每volume factory能力。未知shape仍在factory前失败，错误保留volume名/shapeName；旧未知enum的parsed结果同为unknown。
+
+## 参数与维度元数据
+
+人工按真实构造器和旧parser核对，而非只比较作者预期表：
+
+| 类别 | 核对结果 |
+| --- | --- |
+| box/trd/trap | box只size三全长；trd五个命名半长；trap的7个半长与theta/phi/alpha1/alpha2四角度正确，拒绝parameters的旧契约保持 |
+| tubs/sphere/cone/orb | 数量5/6/7/1正确；半长、半径与角度槽位顺序匹配真实G4构造器，未把Sphere/Orb混同 |
+| ellipsoid/eltube/torus/para/hype | ellipsoid只3或5；eltube三半长；torus的rTor长度和phi角、para的三长度三角、hype的两半径/两stereo角/halfZ都正确 |
+| polycone/polyhedra | phi为角，numSide为整数，z_planes/r_inner/r_outer为长度列表；参数数量2/3且列表依赖由原GeometryConfig保留 |
+| tessellated | file为路径、file_unit为length_unit且默认mm，不能接受parameters；file.resolved仍为内部输入捕获属性 |
+
+别名/规范名与现有GeometryUtils一致。`internal_units`声明mm/rad与UnitParser/Geant4内部单位一致；它描述槽位语义，不声称ParseParameterList已按槽位严格检查单位类别（原通用解析器不在本次归一范围）。
+
+非阻断接入说明：SolidRegistry.cc:101中ellipsoid的两个optional default=0是**构造器的省略哨兵**，不是可直接补齐成五参数INI的有效裁切范围。原GeometryConfig.cc:628对显式五参继续要求bottom<top；普通完整椭球应写三参，不能自动写0,0。当前GUI保留原parameters字符串且没有读取这些default自动补尾，未发现当前可触发的错误生成链路，因此不列为缺陷。后续通用表单若消费default，需保留“两个一起省略”的语义。
+
+## Boolean、线程与缓存
+
+- 旧7类box/tubs/sphere/orb/cone/trd/trap仍可作tool；A5八类仍先拒绝。registry的BooleanTool上下文在factory前执行旧检查，VolumeBuilder.cc:384继续包装owner/boolean index/tool上下文。GeometryConfig.cc:573仍在配置阶段拒绝A5 tool；没有改成创建对象后才发现。
+- ApplyBooleanOperations和MakeBooleanToolTransform与基线逐字相同：工具坐标变换、union/subtraction/intersection构造、对象登记和warning均保持，没有对组合solid新增GetCubicVolume。
+- `SolidRegistry.cc:172`只对原A5八类调用一次GetCubicVolume；旧七类、允许的tool及Boolean组合没有新增调用，避免改变估算/随机流。工厂异常仍直接传播，null不尝试预缓存，没有静默伪造solid。
+- Entries为函数内static const vector，元数据查询只组装Value；不创建Geant4实体、不写store、不调用RNG。实际缓存仍发生在DetectorConstruction::Construct→GeometryManager::BuildWorld的原构建链，worker的ConstructSDandField未增加geometry创建。
+- 保留边界：registry没有新加线程锁或worker拒绝守卫，不能宣称API可从任意worker安全构造几何；头文件明确要求原master-owned构建生命周期。这是既有约束而非本diff新引入并发支持。
+
+## BackendCapabilities与失败证据
+
+- BackendCapabilities.hh:38的solid_registry由Describe直接生成，旧solids数组也从同一Entries派生，未形成第二张独立能力表。与基线比较，旧15项id/runtime/parameters值和顺序完全相同；只扩充了参数维度说明文本和结构化元数据。
+- 多参数数量以新parameter_counts表达（ellipsoid=[3,5]）；旧flat parameters=5保持历史兼容，不能把它解释成只有5才合法。实验标识、boolean资格、cache策略包含在新结构中。
+- CMakeLists.txt:37的CONFIGURE_DEPENDS递归src/*.cc将新SolidRegistry.cc纳入现有构建，无需额外链接旁路；真实capabilities里已出现同一registry。两个新C++文件当前未跟踪，主代理集成提交时应显式收录，不能只提交VolumeBuilder对新符号的调用。
+- 本独审复核了此前本人源/物理真实运行保留的capabilities原件（并未再次执行作者测试）：其source_fingerprint与当前工作区匹配，solid_registry与作者metadata JSON完全相同。当前身份 e44d005a039448d083008c0c6ba3f824b2f1b680b8d6b2b63f297137754d76f6，逐文件SHA见checks.json。比较前后未编辑冻结源码。
+- 作者首轮`out/collab/j2-e7-real113.log`的KeyError: status确实出在测试摘要提取，不能称为后端失败或首轮通过；第二轮`j2-e7-real113-second.log`通过，当前脚本复用read_summary，仍核对status/summary/macro/output失败状态、1run/400事件/2线程及体积质量。两个原日志独立保留，本独审不重跑或追改。
+
+## 审查范围限制
+
+未新增runtime测试，没有重做作者体积/质量/13反例；没有宣称随机流逐种子对照、异常介质、完整Boolean组合、worker竞态压力或跨平台验收已由本审查证明。当前无要求解冻/重编译的代码发现。阶段结论继续由主代理结合正式矩阵和其他独审决定。

@@ -1,0 +1,13 @@
+{
+  "1 G/CM3": {
+    "writer_accepted": false,
+    "error": "Cannot generate materials.ini with validation errors:\nProbe: Density must be finite and positive with a supported unit (g/cm3, kg/m3, mg/cm3): 1 G/CM3"
+  },
+  "2.7 * g/cm3": {
+    "writer_accepted": false,
+    "error": "Cannot generate materials.ini with validation errors:\nProbe: Density must be finite and positive with a supported unit (g/cm3, kg/m3, mg/cm3): 2.7 * g/cm3"
+  },
+  "1e308 g/cm3": {
+    "writer_accepted": true
+  }
+}

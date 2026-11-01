@@ -1,0 +1,102 @@
+{
+  "status": "verified",
+  "base_git_commit": "2901f4254303c3a9089c9025717908c0d77ff190",
+  "patch_count": 5,
+  "target_count": 6,
+  "patches": [
+    {
+      "patch_id": "history_explicit_labels",
+      "apply_count_planned": 1,
+      "file_count": 1,
+      "files": [
+        {
+          "id": "history_explicit_labels",
+          "target": "gui/g4usim_gui/widgets/run_history_page.py",
+          "hunks": 2,
+          "original_matches_commit": true,
+          "projection_matches_candidate": true,
+          "review_identity_matches": true
+        }
+      ]
+    },
+    {
+      "patch_id": "spacer_layout_type_boundary",
+      "apply_count_planned": 1,
+      "file_count": 1,
+      "files": [
+        {
+          "id": "spacer_layout_type_boundary",
+          "target": "gui/g4usim_gui/core/accessibility.py",
+          "hunks": 4,
+          "original_matches_commit": true,
+          "projection_matches_candidate": true,
+          "review_identity_matches": true
+        }
+      ]
+    },
+    {
+      "patch_id": "combined_f8_permanent_tests",
+      "apply_count_planned": 1,
+      "file_count": 1,
+      "files": [
+        {
+          "id": "combined_f8_permanent_tests",
+          "target": "gui/smoke_tests/smoke_f8_accessibility.py",
+          "hunks": 2,
+          "original_matches_commit": true,
+          "projection_matches_candidate": true,
+          "review_identity_matches": true
+        }
+      ]
+    },
+    {
+      "patch_id": "geometry_path_identity_test",
+      "apply_count_planned": 1,
+      "file_count": 1,
+      "files": [
+        {
+          "id": "geometry_path_identity_test",
+          "target": "gui/smoke_tests/smoke_j2_geometry.py",
+          "hunks": 1,
+          "original_matches_commit": true,
+          "projection_matches_candidate": true,
+          "review_identity_matches": true
+        }
+      ]
+    },
+    {
+      "patch_id": "k1_policy_final_v1",
+      "apply_count_planned": 1,
+      "file_count": 2,
+      "files": [
+        {
+          "id": "k1_policy_product",
+          "target": "gui/g4usim_gui/core/experiment_bundle.py",
+          "hunks": 5,
+          "original_matches_commit": true,
+          "projection_matches_candidate": true,
+          "review_identity_matches": true
+        },
+        {
+          "id": "k1_policy_tests",
+          "target": "scripts/test_k1_bundle.py",
+          "hunks": 2,
+          "original_matches_commit": true,
+          "projection_matches_candidate": true,
+          "review_identity_matches": true
+        }
+      ]
+    }
+  ],
+  "K1_multi_file_patch_planned_once": true,
+  "v1_originals_unchanged": true,
+  "patches_applied": false,
+  "qt_or_native_started": false,
+  "tests_rerun": false,
+  "pending_main_additions": [
+    "docs"
+  ],
+  "verified_at_utc": "2026-11-01T19:41:27.573075+00:00",
+  "manifest_sha256": "791a308eecae9d6dce5ba2461b702493a00fa38a2b9a5cd37a6aca1487e55f8e",
+  "verifier_sha256": "d13a1c026f4979df312f56b0935e38cce037c788af3e3a7516810112b86af9cb"
+}

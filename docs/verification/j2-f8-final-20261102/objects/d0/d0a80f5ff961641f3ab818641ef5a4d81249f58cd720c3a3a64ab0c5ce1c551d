@@ -1,0 +1,22 @@
+# Windows GUI正式完整profile：18c5858
+
+PASS：66 pass / 0 fail / 0 skip，8574实际assert，66项均非零。原session12419已结束exit0；严格同历史baseline gate exit0。nativeVTK独占slot已释放并通知main，之后未再启动Qt/native。
+
+身份与执行：HEAD18c5858fd6e80a5cb6096beacebfef69c479ad49，113EXE SHA01e0fb795f93772ccfa818d625fee145d8da1ad3ad80894372a9a855f0af108a，冻结launcher4f812f44506e2ea14f03ab49b223ccc0c01b8105c491feaa6dc36095e0c2e1dc，指定完整Dvenv。require-tracked-sources/fail-on-skip/原strict matching baseline全部启用；同runner环境child longpaths=true，预检git空，最终report git_dirty=false/status空，identity_errors=[]。
+
+- 原历史windows-gui59case/6760断言，报告SHA178d2a42b041fe1ed6018d79d6b7b27a72c73cdc348d7204c20dc2b26d5a1e6c；本轮所有历史case保留，逐项assert不下降。同v3 probe与raw LF digest，无allow/legacy。
+- VTK gui_3d_view35/35，原日志无内部SKIP，真实widget拾取/拖拽/空白清除、可见性/legend/截面/camera及页面双向选择全部执行，正常退出。
+- F8组合正式无--output路径583，通过；组件带--output路径595另有12个可选写图assert（旧3/retained8/History1），本报告按实际583，不冒充595。受控QSpacer invalid-return warning原样保留，不将本地通过称作自然condaCI复现或CI已关闭。
+- F4导航224/layout265、source54/scans58、J2geometry212/materials499/run-editors223/current-import208均通过，完整66明细以原report为准。
+- launcher首尾EXE/merge/helper字节、5helper输入、actual runner source/tests/merge指纹与报告head/profile/路径/5build字段全部匹配。
+
+最终C++sourcefp9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a；tests_contentfp d5a1691bb3ed613faae4db96405167c0f7ea0a35aa465444e2d260a36a7e67a9。
+
+证据：
+- 20261102-040205-6050a783/report.json，SHA4c91c9f2971ae618821a00d3e22ccc196bbf8ebf9449bd3f7bda2da69ba5ad22；新整份报告原字节保留，无拼接。
+- launch.json：命令/环境/依赖/前后源码产物身份、门禁及完整结束收据。
+- runner.log和上述timestamp目录逐用例.log：原始整轮与测试证据。
+- strict-baseline-gate.log：严格门禁OK原输出。
+- delivery-receipt.json：独立终态检查、原报告/VTK raw SHA和历史逐项断言核对。
+
+范围仅本机Windows默认缩放GUI完整profile及明确授权的nativeVTK子路径；不代替main后续三档native、双版本backend/integration或新CI实际运行。未改tracked产品/测试/runner，也不改原56b首败/2901通过报告。所有本任务子进程已结束，等待下一明确授权。

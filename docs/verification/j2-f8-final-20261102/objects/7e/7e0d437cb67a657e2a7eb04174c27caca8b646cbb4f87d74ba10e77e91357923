@@ -1,0 +1,28 @@
+# Windows CI J2 Geometry 路径断言草案（OUT-only）
+
+HEAD `2901f4254303c3a9089c9025717908c0d77ff190`。未修改 tracked，未运行 UI/后端，未重跑已通过的 114 backend，integration 未启动。原 CI `gui_j2_geometry.log` 的第162行失败及88入口记录保留不变。
+
+## 根因边界
+
+`geometry_ini_writer._resource_value()` 第250-256行输出 **native `str(path.resolve())`**，不是 as_posix。旧断言用 `str(folder/'mesh.stl')` 未 resolve。Windows `TemporaryDirectory` 路径若经过8.3目录别名，原拼写与 writer 的规范拼写不同。原 CI traceback 未打印 actual/expected，不能仅凭该日志声称其具体 TEMP 别名已观测。
+
+本机对真实同一 OUT 目录调用 GetShortPathNameW，得到两种确实指向同一目录的路径，完整经过生产 parser → document → writer → parser：长路径旧断言通过，短路径旧断言失败；两种输入的新断言均通过。`path-proof.json` 保存原 spelling、生成 file、samefile 与内容 SHA；`generated-native.ini`、`generated-alias.ini` 保存真实 writer 输出。
+
+## 最小补丁
+
+`fix.patch` 仅目标 `gui/smoke_tests/smoke_j2_geometry.py`：
+
+- 预期 `file` 值加 `.resolve()`，与 writer 的现有契约相同，保持 exact text 检查。
+- parser 恢复后新增 `samefile` 与文件 SHA 相等断言，不靠字符串归一化跳过真实资源身份。
+
+writer、parser、geometry 校验、CURRENT snapshot 身份/包内门禁、运行包与完整编辑包闭包都未变。
+
+## 无界面专项实证
+
+- `path-proof.log`：exit 0，21个 v3 assert 入口。真实短目录复现；生成/恢复/闭包收据指向同一 STL，SHA 一致；移走实际 STL 后严格拒绝；同字节 STL 位于包外也严格拒绝。STL 只是字节闭包 fixture，不作物理形状验证。
+- `original-resource-closure.log`：原 tracked `scripts/test_j2_resource_bundle.py` 完整通过，exit 0，101入口，保留 missing/outside/别名/shape_properties 等既有门禁。
+- `git apply --check fix.patch`：exit 0。
+- 原8个相关产品/测试文件 SHA 前后相同，tracked clean，详见 `source-identity.json` 与 `receipt.json`。
+- 未启动完整 GUI smoke，占用 main 原生 UI slot 的行为没有发生；候选完整 GUI 运行与 CI 复验仍待主线程排程。
+
+114 backend 原报告 SHA `54f8189f412689ae5b6825e53afb72e600c734c8503b33eabc07b7973f49c655` 保持不变，未创建第二轮 backend。

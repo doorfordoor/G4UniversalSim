@@ -1,0 +1,99 @@
+{
+  "schema": "j2_f8_launch_v4_aggregate_independent_file_review_v1",
+  "status": "PASS_pure_file_delta_and_identity_review",
+  "reviewed_utc": "2026-11-01T21:31:50.135310+00:00",
+  "head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+  "preparation": {
+    "path": "out\\collab\\j2-f8-native\\launch-v4-preparation.json",
+    "sha256": "e3cb56fb19770525aa0467c4ea5570ed94389869b5ef6bcbe593e4a8b9eff1ab",
+    "generator_path": "out/collab/j2-f8-native/prepare-v4.py",
+    "generator_sha256": "de232407581d948910c4f9a576e60d6e78270beef4e75333f63af2094ff09ef4",
+    "generator_compiled_not_executed": true
+  },
+  "delta_checks": [
+    {
+      "target": "native",
+      "old": "out\\collab\\j2-f8-native\\launch-v3.py",
+      "old_sha256": "4376022fb76dece56e16ec3a61026b74dc367b35e0f247c8efaceecd1f565ce0",
+      "new": "out\\collab\\j2-f8-native\\launch-v4.py",
+      "new_sha256": "cf06a667d810b1f97b66491ceb274bca279236c8f6488c3f42d659c3638adeec",
+      "literal_changes": [
+        {
+          "old": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+          "new": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+          "occurrences_each": 1
+        },
+        {
+          "old": "out/verification/j2-f8-18c5858",
+          "new": "out/verification/j2-f8-2ec5b14",
+          "occurrences_each": 1
+        },
+        {
+          "old": "01e0fb795f93772ccfa818d625fee145d8da1ad3ad80894372a9a855f0af108a",
+          "new": "fe5d23d309106d9fca7ad179f6c0cb39fa8b98c6ef35286a0b21866b90d89f89",
+          "occurrences_each": 1
+        }
+      ],
+      "exact_forward_bytes": true,
+      "exact_reverse_bytes": true,
+      "restored_ast_equal": true,
+      "compile_only": true,
+      "executed": false
+    },
+    {
+      "target": "six_report_audit",
+      "old": "out\\collab\\j2-f8-final-local-audit-18c5858.py",
+      "old_sha256": "ac0528c6b93adf74c4576598513cfb11ab19238580a608368660bac62c4c33ce",
+      "new": "out\\collab\\j2-f8-final-local-audit-2ec5b14.py",
+      "new_sha256": "b23a88c51cf4c2f86f471d7ca0043d80d938d7faa4f0fd3a549da8015c8e85b9",
+      "literal_changes": [
+        {
+          "old": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+          "new": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+          "occurrences_each": 1
+        },
+        {
+          "old": "out/verification/j2-f8-18c5858",
+          "new": "out/verification/j2-f8-2ec5b14",
+          "occurrences_each": 1
+        }
+      ],
+      "exact_forward_bytes": true,
+      "exact_reverse_bytes": true,
+      "restored_ast_equal": true,
+      "compile_only": true,
+      "executed": false
+    }
+  ],
+  "host": {
+    "path": "out/collab/j2-f8-native/host-v2.py",
+    "sha256": "b9c216045a478a5bffd503371405cf767b290ff87e811da3623dcbc89dad334a",
+    "unchanged_from_reviewed_identity": true,
+    "scope": "bootstrap/passive observations boundary inherited by exact original bytes; no new host actions"
+  },
+  "build": {
+    "receipt": "out/verification/j2-f8-2ec5b14/identity/build-identities.json",
+    "receipt_sha256": "3a64c7da39e719f42830a1c28d59963e9085201a917790710603d0096396c3f4",
+    "version": "1132",
+    "executable_sha256": "fe5d23d309106d9fca7ad179f6c0cb39fa8b98c6ef35286a0b21866b90d89f89",
+    "actual_executable_hash_matches": true,
+    "capabilities_head_matches": true,
+    "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a"
+  },
+  "preserved_contracts": [
+    "launcher rejects existing native evidence folder before writes",
+    "exact HEAD/clean worktree/EXE/host/capabilities guards preserved",
+    "environment cleanup, windows qpa, Dvenv/pythonw, PATH/data and geometry arguments unchanged",
+    "host remains original reviewed b9c passive implementation; no new automatic input/ensure/scroll/collect",
+    "aggregate six profiles/case counts/terminal/exit/gate/source/report/log SHA/baseline/assert-sum criteria byte-identical after identity restoration",
+    "aggregate output still under new BASE only; no audit executed"
+  ],
+  "execution_scope": {
+    "launcher_executed": false,
+    "prepare_executed": false,
+    "aggregate_executed": false,
+    "qt_native_backend_profile_build_executed": false,
+    "compile_uses_builtin_no_execution_or_pyc": true
+  },
+  "pending": "GUI session36751 remains main-owned slot; this review does not poll/release it or authorize immediate native launch. main waits for real release before representative supplemental native. Aggregate not run until all six terminal."
+}

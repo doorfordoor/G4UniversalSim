@@ -1,0 +1,9 @@
+{"case": "old-input-isolation", "status": "observed", "detail": {"templates": 5, "old_input_bytes_unchanged": true}}
+{"case": "source-disappeared-and-cleared", "status": "observed", "detail": {"missing_and_cleared_external_sources_rejected": true}}
+{"case": "cancel-invalid-draft", "status": "observed", "detail": {"invalid_seed_preserved": "not-an-integer", "revision": 2}}
+{"case": "new-projection-failure", "status": "observed", "detail": {"returned": false, "old_draft_and_path_restored": true, "discard_flag_before": false, "discard_flag_after": true, "workspace_fault": ""}}
+{"case": "new-candidate-rejection", "status": "observed", "detail": {"exception_escaped": "ValueError: controlled candidate rejection", "returned": null, "no_prompt_or_mutation": true}}
+{"case": "wizard-undo-recovery", "status": "observed", "detail": {"undo_invalid_draft": true, "snapshot_codec": true, "recovery_projection": true, "no_stale_source_summaries": true}}
+{"case": "portable-async-reimport", "status": "observed", "detail": {"moved_bundle_fresh_cwd": true, "actual_async_gui_import": true, "collected_package": true, "source_paths": {}}}
+{"case": "invalid-draft-export", "status": "observed", "detail": {"export_rejection": null, "published": true, "ordinary_save_preserves_invalid_draft": true}}
+SOURCE_UNCHANGED True

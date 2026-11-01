@@ -1,0 +1,16 @@
+# Read-only external Inspect fields-refusal diagnosis
+
+Original formal failure stays unchanged at windows114-integration/20261102-015023-8bc66545/gui_f4_inspect_backend.log (3 assertion entrances, process never launched). Original formal runner/session 19601 kept running throughout this separate diagnostic. No tracked source/test or assertion was edited.
+
+Reproduced the exact seed-only main `[run] seed=17`, top macro executing the nested Chinese macro, nested `/AIHL/output/setDir old-output`, and explicit output CLI lock, under an isolated offscreen test MainWindow/settings/history. `actual-inspect-record.json` records failed / experiment.fields_rejected, no command and an empty inspection process program.
+
+`captured-field-report.json` contains exactly two errors, both `experiment.captured_source.changed`, for materials_config and geometry_config. There are no raw-draft mismatches (`raw-mismatches.json` is empty). The project is external with materials_config and geometry.config_path both empty. Nevertheless capture retains the old demo material/geometry document paths and source captures, both read_success=true:
+
+- test/materials/test_materials.ini
+- test/geometry/hierarchical_test.ini
+
+`experiment_workflow._field_report` checks these generated-editor sources even for external mode. Empty selected paths become the workspace directory via Path(''), which differs from those demo files, creating false source_changed errors before the real Inspect action. The same captured typed project with empty raw/source capture passes field validation (`same-project-no-raw-field-report.json`). This is not evidence that the original main/macro fixture is invalid.
+
+As an independent discriminator, called the same candidate 114 EXE directly with `--inspect-run` and its actual captured CLI arguments. It exits 1 with the expected real backend preflight refusal: 子文件.mac:2, /aihl/output/setdir conflicts with an explicit CLI lock for output directory. The three fixture inputs stayed byte-identical; no output directory was created. Exact command, exit, stderr, input checks: diagnosis.json and direct-backend.stderr.log.
+
+Conclusion: a real external-path false rejection when unrelated generated-editor captures remain in the workspace. Main should fix capture/field-check scope or explicit empty-selection handling; do not change the old test to treat fields_rejected as the intended backend failure. No proposed patch was applied here, and the separate diagnostic is not substituted into the failed formal report.

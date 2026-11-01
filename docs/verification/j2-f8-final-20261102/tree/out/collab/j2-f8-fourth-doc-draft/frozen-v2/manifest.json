@@ -1,0 +1,70 @@
+{
+  "schema": "j2_f8_fourth_candidate_docs_frozen_v2",
+  "frozen": true,
+  "applied": false,
+  "stage_complete": false,
+  "base_head": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+  "files": [
+    {
+      "path": "STATUS.md",
+      "original_sha256": "6dbd513b352443b66151055a6feb6c3fba7f0a02a137b0a8ae7d73b2074a4e90",
+      "candidate_sha256": "7b297322e3120dfdbf414a91bfccca843617ba6cfe31268280296ab783ecfd64",
+      "bytes": 44062,
+      "patch": "patches/STATUS.md.patch",
+      "BOM_preserved": false,
+      "line_endings": "LF"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "original_sha256": "1082cc0d20f8c9e82e4c4675828acd5266007c07cec14e9ac6f363c10d197806",
+      "candidate_sha256": "6a84486b3d252acc14d1fede072f04ad327411d0e74baeaa2987f763fab69153",
+      "bytes": 78290,
+      "patch": "patches/docs__ROADMAP.md.patch",
+      "BOM_preserved": false,
+      "line_endings": "LF"
+    },
+    {
+      "path": "docs/agent-history.md",
+      "original_sha256": "c720691a1e7a3fa831158b52b33f9a29f7688ed470788289a1c28bace7c88605",
+      "candidate_sha256": "1090ce752438606df3972047c4f4bb2b9b48aef3c7af9e6fe566182e54d3c7b2",
+      "bytes": 149400,
+      "patch": "patches/docs__agent-history.md.patch",
+      "BOM_preserved": false,
+      "line_endings": "LF"
+    },
+    {
+      "path": "docs/J2编辑覆盖与F8验收.md",
+      "original_sha256": "df144f2dc34be5476b714ed18a6c529cde11648e889010c297ae380229c8cdc5",
+      "candidate_sha256": "00f7c6631793f3b8f9987d200e0ca7a0ad83461a3eda1e7d851986a082a119d4",
+      "bytes": 9857,
+      "patch": "patches/docs__J2编辑覆盖与F8验收.md.patch",
+      "BOM_preserved": false,
+      "line_endings": "LF"
+    }
+  ],
+  "docs_patch_sha256": "72550c0fbc577828bc43568f7db66608816f3ef161a29df961156ba1274ba2dc",
+  "docs_patch_bytes": 19182,
+  "evidence_snapshot_sha256": "b87adc7c52db7fcd83d97b13d4c041cb0013be5307b453abeb6c03ebb5615650",
+  "validation_sha256": "b17aefa47a60db431c94ea22f80640db335d27aa7bdf15c57f83c2e4de709c67",
+  "native_existing_scope_only": true,
+  "futureHEAD_mapping": "pending after tests+docs commit; not a docs freeze prerequisite",
+  "representative_new_native": "pending after new GUI terminal; not a docs freeze prerequisite",
+  "new_candidate_HEAD": null,
+  "new_CI_success": false,
+  "original_18c_six_profile_sum": {
+    "cases": 300,
+    "assertions": 181295,
+    "errors": []
+  },
+  "historical_policy": "All old dated history exact; STATUS older current section wrapped unchanged as historical; history append-only; ROADMAP only2 current rows; J2 only active intro/history label",
+  "public_evidence_links": "No new unarchived OUT Markdown public links; raw QQ images excluded",
+  "apply_policy": "Main apply only after Feynman narrow review; verify exact proposed bytes after apply to catch core.autocrlf conversions",
+  "previous_frozen_version": {
+    "path": "frozen-v1",
+    "patch_sha256": "974524c1ea638aa86b2e5ec5357433ff8e8ea2009bf5532b4975299db52138f7",
+    "manifest_sha256": "cf8c7ea667c54f0f299a89828e0f2bde2b80efdf7dc61545bd33b09c1d6b31e1",
+    "all_files_unchanged": true
+  },
+  "delta_patch_sha256": "af82db9b15e4e6ed73fbc716bbf015b3974049e4b26f11ea9cc88ce0eb135482",
+  "correction_origin": "main identified launch vs report field ownership"
+}

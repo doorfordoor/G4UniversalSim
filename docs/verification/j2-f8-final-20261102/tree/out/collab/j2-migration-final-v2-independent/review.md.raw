@@ -1,0 +1,11 @@
+# Migration final-v2 定点独立复核：P2关闭
+
+已独立核对新完整草案SHA256 `909cab4fc3a3f80a6816af0c4ee0e4985970b2f78c06a339cb5ff7edc1989166`、migration单文件patch `a9953013c9dc8a9d6009356604874a730ff2b7843a312b4b24a5ad9abdfa0056`、四脚本tests.patch `b240672c7e1c42b9b54075a7dc9e788a66ecc2ad7aed1237df6e09ee338c200f`，全部匹配main指定身份。
+
+与原独审失败草案逐字节比较，只有两处指定修正：STL夹具 `unit = cm` → `file_unit = cm`，以及对应shape_properties属性键。没有其他测试语义更改。
+
+独立重新执行该migration完整 `__main__` 入口，原仓库 `__file__/ROOT`、标准test_assert_probe；产品v2四模块只在内存加载并逐项核对manifest SHA。结果 **exit0，521断言入口**。涵盖迁移/真实writer再parse保留性、未知字段拒绝、源变更publication拒绝及原项目/原子性契约。未选跑子组，未重复K1/F4，未启动后端/GUI/CI。
+
+机器收据：receipt.json；完整落盘日志：migration-full-main.log，SHA256 `85877cd96c2a1b3e4a77c001b6521f976c73e4f5aa6d4dc782ffa24409a26a5e`。运行器run.py保存此检查方式并拒绝覆盖既有收据。
+
+tracked migration/四产品模块、原失败完整草案、原独审失败日志及收据前后SHA一致；本次只写新的out目录。旧首败保持原状态，不用此通过追改旧报告。此前确认的migration夹具键名P2在本新SHA下关闭，可交main统一应用与新候选正式测试；不是新候选CI或阶段完成证明。

@@ -1,0 +1,29 @@
+{
+  "status": "two_test_changes_reviewed_not_applied",
+  "base_head": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+  "entries": [
+    {
+      "patch": "out/collab/j2-geometry-reload-path-18c5858/fix.patch",
+      "target": "gui/smoke_tests/smoke_j2_geometry.py",
+      "candidate": "out/collab/j2-geometry-reload-path-18c5858/smoke_j2_geometry.py",
+      "after": "b3fefeac58f044c99021d1caf7812fd66c8fe41bd14fb94ebcf8facf0c1cb6bd",
+      "review_sha256": "bfbd11d242418a0ac20a604fda3938dfb262278a84b02f157df62ff3bc49d445",
+      "before": "579c6a7a00a93a41570aa28357053d3009b1c2758cf005ccf6de78477fb5b671",
+      "patch_sha": "646d69038b11b24ee59145493de3df0d33ee9f4ae36d32d28ed96e21fdb85930",
+      "review": "out/collab/j2-geometry-path-independent/review.md"
+    },
+    {
+      "patch": "out/collab/f8-linux-qt-name-18c5858/candidate-test-only/fix.patch",
+      "target": "gui/smoke_tests/smoke_f8_accessibility.py",
+      "candidate": "out/collab/f8-linux-qt-name-18c5858/candidate-test-only/smoke_f8_accessibility.proposed.py",
+      "after": "5f234e69c00d602039cb8f2ebc7daadb4f69edc860e6010989628d06253b3814",
+      "review_sha256": "2e77bd76246b391f45189176c385dd0bbe510d8b382acc259da4857e4fdf039c",
+      "before": "943c92a0cdd0650511b7c8ce45378ebcbddc06b7f55b90835317eb44d3a59e95",
+      "patch_sha": "09409fa22593aceef84bcbcbed5a232c3eae0b0a6225c328a8ba0ec07c65815b",
+      "review": "out/collab/f8-linux-name-independent/review.md"
+    }
+  ],
+  "product_changes": 0,
+  "docs": "pending separate reviewed freeze",
+  "apply_policy": "Wait for original18c six full terminal runs and final local audit, then exact-byte reviewed test+docs integration"
+}

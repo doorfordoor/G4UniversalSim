@@ -700,3 +700,18 @@ K1 final-v1修复以policy规范身份匹配同一普通文件，但不改变clo
 成功reload的实际产品合同是expanduser().resolve()后的来源锚点，失败读取仍保留此前原锚点/文档/非法草稿。测试只改成功分支的精确规范身份预期，并保留失败/无源/非法草稿原判据；真实8.3原195fail与候选长/短各214pass是本机实证，不捏造原CI具体路径拼写。Qt6.11.1/6.11.3的Unix Combo实现说明本轮Linux Name使用currentText（空字符串走Qt回退），Windows Name仍为标签；语义标签由实际Label关系表达。测试仅按本轮Windows/Linux真实provider严格验证Name/Value、Role、interface.object、确切Label/buddy及动态语言，不将其泛化为macOS/所有Unix验收。两端各三类9负向（丢buddy、同文本异label、错误control接口）都拒绝；原property/buddy、F5/完整joint/滚动与spacer断言保留。作者Linux完整655不冒充独审全量重跑，不改正确产品。
 
 现有18c149GUI逐文件/三identity映射已经核对，C++源码指纹按原18c报告保留；新HEAD必须在两test与docs提交后才产生，最终产品/C++映射仍pending，完成后才能映射原三档限定scope，不是docs冻结前置，不伪称新执行、完整视觉或物理基准；新完整真实CI仍须通过。150的九页/模板与125的有限导航范围区分；100生产Save/Open/init no_run/run100/100/export闭包与未CLI replay区分。三档main正常退出，Harvey/Ptolemy只做必要链路纯文件审。86原图含QQ，raw只本地保留，公开仅metadata及观察范围。F6窄dock边界不扩写成已修复。第四候选GUI终态后补一轮100/125择一的代表性native（I1/I2打开取消、Import已有offline包、template Finish及重入Back/Esc）仍pending，须按新HEAD/build单独记录，不扩大原18c三档范围、不重做三档，也不是docs冻结前置。原trace/失败/缓存读数局限均保留；正文不引用未归档OUT为公共链接。
+
+
+## 2026-11-02 J2/F8与E7本轮验收完成（测试冻结2ec5b14）
+
+main接受J2/F8及E7既有15原语/7布尔工具注册与元数据的本轮约定验收。正式构建/测试固定2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8，Windows六份300/300、181357入口，launch gate/runner0、identity_errors=[]、report clean；实际CI四workflow八job attempt1success，12报告636执行/221186入口、strict全部通过。Desktop/Install不伪加case。证据与实际命令见[最终归档](verification/j2-f8-final-20261102/README.md)。后续包含本条的提交仅docs/evidence，不改report/EXE原HEAD，不要求重建/矩阵循环；实际Git树、三锁及main后置字节映射证明交付身份，不自填未来SHA。
+
+CI四M0 clean，Linux八报告原git_dirty=true，原status仅对应版本.g4env-11.3.2或11.4.3、.micromamba、bin三行未跟踪环境目录；tracked_source_gate=pass/untracked_source_files=[]，source/tests/merge与2ec精确匹配。归档按每份原SHA/HEAD/fps及原dirty/status绑定，既不泛称全局clean，也不放任其它dirty。新增归档blanket-notdirty附加检查首败及Sagan独立解释原样保留，原CI checker/报告不改；旧56b/2901/18c红例与本轮12strictpass分开。
+
+E7只完成现有15/7真实factory分派、能力元数据及GUI共源离线表接线；GeometryConfig原数值/关系/来源校验仍在，不冒称全部校验器重写。A5八类只沿原master-owned构建链预计算，旧7类及Boolean不新增GetCubicVolume；查询不构造实体/store/RNG，所有权、单位、生命周期不改。原4registry/VolumeBuilder文件相同与BackendCapabilities整文件后续变化区别保留；构建capabilities及本轮适用组件/双版真实入口分别按其HEAD/源码/EXE证明。关闭不扩实体、assembly、全部Boolean组合、每体积GDML、任意worker安全或科学支持。
+
+两test-only平台接口修复独审通过：成功Reload核对resolve/samefile/SHA，失败分支保留原字面来源/文档/非法草稿；Windows8.3原195红与长短214绿不捏造原CI路径。Windows/Linux真实Combo provider的Name/currentText、Value、Role、interface.object及确切Label关系分开检查，属性/buddy/同文异label/错误接口负向保留；不改正确产品，不泛化所有Unix/macOS，作者655不冒独审全量重跑。
+
+18c三档原生只沿原HEAD/EXE/限定scope映射，149GUI/C++与精确7文件差异byte-map是身份事实，不是新三档执行。2ec125实际I1/I2首屏打开关闭、Import原8文件包/保存、模板Finish/另存/重入NextBackEsc正常退出，main24观察/41JPEG，Ptolemy84原件纯文件核验、Harvey无新增必跑动作合同核对。Import4旧history为stale，当前仅import_history passed imported_count4；没有本轮validate/generate/run新record。取消事件运行后自动几何预览仍会构造后端，不能声称完全没启后端。缓存project/Undo/UIA focus非live F5，文件审非第二次像素审查；18c100的init no_run/run100/100/export未CLI replay及旧scope各自保留。
+
+197张标记local-only原图仅本地，公共objects/tree均排除、只path/size/SHA/范围；opaqueZIP未内容审查只metadata，不能凭SHA判安全。历史Markdown原字节归档为.md.raw及恢复映射，不把旧坏链接或排除图当可读公共入口；原report/log维持可重定位布局并拒绝旧绝对fallback，实际currentWindows6+CI12以原checker和matchingbaseline验证。现有docs/verification/** -text已保证raw，Git blob实测而非新增attrs；最终证据精确清单包含全部文件且不自指。F6内层viewport容不下joint的窄边界、QQ遮挡、物理跨屏/热插拔和H2/H7/Q2等科学基准均不随关闭扩张。dated历史和原独审身份不追改。

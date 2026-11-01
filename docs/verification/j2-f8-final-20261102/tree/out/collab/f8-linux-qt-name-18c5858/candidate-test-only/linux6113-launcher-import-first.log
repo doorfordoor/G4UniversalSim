@@ -1,0 +1,19 @@
+runtime 3.11.18 (main, Oct 26 2026, 11:35:17) [GCC 15.3.0] 6.11.3 /home/u123/venvs/g4-f4-qt-6.11.3-20261030/bin/python
+G4USIM_ASSERTS=0
+Traceback (most recent call last):
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/f8-linux-qt-name-18c5858/candidate-test-only/probe-full.py", line 10, in <module>
+    runpy.run_path(str(ROOT/'tools/test_assert_probe.py'),run_name='__main__')
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/tools/test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/tools/test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/f8-linux-qt-name-18c5858/candidate-test-only/smoke_f8_accessibility.proposed.py", line 22, in <module>
+    from g4usim_gui.core.accessibility import decorate_accessibility, ensure_focus_visible, _focus_control
+ModuleNotFoundError: No module named 'g4usim_gui'

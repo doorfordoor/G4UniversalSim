@@ -1,0 +1,41 @@
+{
+  "frozen_files_match": true,
+  "before": {
+    "gui/g4usim_gui/core/run_editor_resources.py": "51a5e11c53ff9072b5a07b174d24920cb3931c85338b0407d0316a6ea0609c46",
+    "gui/g4usim_gui/core/project_snapshot.py": "ba155ee3acedc5c13b3c7d75d31a7924305b62fc989e2045c668d6ca2fa873b6",
+    "scripts/test_j2_resource_bundle.py": "842b0c516ba20515c37b6fb5f80c216ef1f0a1e77051cc5cb712c7d76a077287"
+  },
+  "after": {
+    "gui/g4usim_gui/core/run_editor_resources.py": "51a5e11c53ff9072b5a07b174d24920cb3931c85338b0407d0316a6ea0609c46",
+    "gui/g4usim_gui/core/project_snapshot.py": "ba155ee3acedc5c13b3c7d75d31a7924305b62fc989e2045c668d6ca2fa873b6",
+    "scripts/test_j2_resource_bundle.py": "842b0c516ba20515c37b6fb5f80c216ef1f0a1e77051cc5cb712c7d76a077287"
+  },
+  "sources_unchanged": true,
+  "snapshot": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-integration-review\\resource-p2-alias-1793552138787128200\\runs\\20261102_005538_new_simulation\\project_snapshot.json",
+  "results": {
+    "parameterized-existing-table": {
+      "accepted": true,
+      "input_roles": [
+        "materials_ini_path",
+        "geometry_ini_path",
+        "main_ini_path",
+        "run_macro_path"
+      ],
+      "table_exists": true
+    },
+    "parameterized-missing-table": {
+      "accepted": true,
+      "input_roles": [
+        "materials_ini_path",
+        "geometry_ini_path",
+        "main_ini_path",
+        "run_macro_path"
+      ],
+      "table_exists": false
+    },
+    "parameterised-missing-table-control": {
+      "accepted": false,
+      "error": "Snapshot package resource is missing: geometry.AliasCopies.copies_file: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-integration-review\\resource-p2-alias-1793552138787128200\\runs\\20261102_005538_new_simulation\\config\\geometry-resources\\g0000.csv"
+    }
+  }
+}

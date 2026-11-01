@@ -1,0 +1,44 @@
+{
+  "scope": "read-only file/metadata inventory, no pip install, no application/native UI started, no import/render acceptance",
+  "historical_route": "out/collab/i2-formal-gui-python-environment.json + out/collab/run-i2-windows-matrix.ps1",
+  "python_executable": "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+  "python_exists": true,
+  "site_packages": "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Lib\\site-packages",
+  "distribution_metadata": {
+    "matplotlib": "3.11.0",
+    "numpy": "2.4.6",
+    "PySide6": "6.11.1",
+    "pyvista": "0.48.4",
+    "pyvistaqt": "0.11.4",
+    "QtPy": "2.4.3",
+    "shiboken6": "6.11.1",
+    "uproot": "5.7.7",
+    "vtk": "9.6.2"
+  },
+  "module_files": {
+    "pyvista/__init__.py": {
+      "path": "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Lib\\site-packages\\pyvista\\__init__.py",
+      "exists": true
+    },
+    "pyvistaqt/__init__.py": {
+      "path": "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Lib\\site-packages\\pyvistaqt\\__init__.py",
+      "exists": true
+    },
+    "vtk.py": {
+      "path": "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Lib\\site-packages\\vtk.py",
+      "exists": true
+    },
+    "PySide6/__init__.py": {
+      "path": "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Lib\\site-packages\\PySide6\\__init__.py",
+      "exists": true
+    }
+  },
+  "requirements": {
+    "gui/requirements.txt": "# Linux CPython 3.11: PySide6/shiboken6 6.12.0 loses None refs on void calls.\n# Keep the verified 6.11 patch line; widen only after binding-lifetime and\n# Windows/Linux GUI + integration acceptance (including natural exits).\nPySide6>=6.11.1,<6.12\nuproot\nnumpy\nmatplotlib\n",
+    "gui/requirements-3d.txt": "pyvista\npyvistaqt\nvtk\n"
+  },
+  "source_sha256": {
+    "gui/smoke_tests/smoke_3d_view.py": "340ffd841091161bce14d1107314c35d2063268d0f5b5dde1e25b073a8c4d8db",
+    "gui/g4usim_gui/preview3d/pyvista_preview_widget.py": "fd3af5dfe75d819bca632c1965d13fae4e72521a2f5be654d51746d94b56c972"
+  }
+}

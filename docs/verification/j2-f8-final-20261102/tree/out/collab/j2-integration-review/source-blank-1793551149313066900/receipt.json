@@ -1,0 +1,52 @@
+{
+  "before": {
+    "widgets/config_builder_page.py": "9cb95ef31d4b3f456529fb637921be6c95c773f6aa848080d676c34700472b3b",
+    "window/transactions.py": "31e6585e448f651a3b34069385326fef90f747fc38ea7a8804c3f78392cc4994",
+    "widgets/diagnostic_navigation.py": "954f0506a77a298cdcff453e10902805466eb2abd1a6ad66d6f3f00a0f262e99"
+  },
+  "after": {
+    "widgets/config_builder_page.py": "9cb95ef31d4b3f456529fb637921be6c95c773f6aa848080d676c34700472b3b",
+    "window/transactions.py": "31e6585e448f651a3b34069385326fef90f747fc38ea7a8804c3f78392cc4994",
+    "widgets/diagnostic_navigation.py": "954f0506a77a298cdcff453e10902805466eb2abd1a6ad66d6f3f00a0f262e99"
+  },
+  "sources_unchanged": true,
+  "results": {
+    "restore_changed_source": {
+      "can_run": false,
+      "codes": [
+        "config.source.geometry.changed",
+        "geometry.visual.alpha_numeric",
+        "config.source.geometry.recovered_changed"
+      ],
+      "raw_kept": " bad ",
+      "source_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-integration-review\\source-blank-1793551149313066900\\geometry.ini",
+      "old_diagnostic_rejected": true
+    },
+    "restore_missing_source": {
+      "can_run": false,
+      "codes": [
+        "config.path.geometry.missing",
+        "config.source.geometry.recovered_changed"
+      ],
+      "names": [
+        "world",
+        "OLD"
+      ],
+      "source_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-integration-review\\source-blank-1793551149313066900\\geometry.ini"
+    },
+    "old_summary_to_new_blank": {
+      "accepted": true,
+      "summary_is_none": true,
+      "source_path": "",
+      "raw_source_empty": true,
+      "captured_sources": [],
+      "names": [
+        "world"
+      ],
+      "source_errors": [],
+      "can_run": true,
+      "old_report_rejected": true,
+      "raw_panel_has_old_volume": false
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "G4UniversalSimScan",
+  "version": 1,
+  "name": "seeds",
+  "parameter": "run.seed",
+  "parameter_label": "random seed",
+  "values": [
+    "11",
+    "22"
+  ],
+  "scan_dir": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021150_scan_seeds",
+  "created": "2026-11-02T02:11:50",
+  "threads": 2,
+  "seed": 12345,
+  "points": [
+    {
+      "index": 0,
+      "value": "11",
+      "package_dir": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021150_scan_seeds\\20261102_021150_seeds_p000",
+      "output_dir": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021150_scan_seeds\\20261102_021150_seeds_p000\\output",
+      "main_ini": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021150_scan_seeds\\20261102_021150_seeds_p000\\config\\main.ini",
+      "macro": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021150_scan_seeds\\20261102_021150_seeds_p000\\macros\\run.mac",
+      "seed": 11
+    },
+    {
+      "index": 1,
+      "value": "22",
+      "package_dir": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021150_scan_seeds\\20261102_021150_seeds_p001",
+      "output_dir": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021150_scan_seeds\\20261102_021150_seeds_p001\\output",
+      "main_ini": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021150_scan_seeds\\20261102_021150_seeds_p001\\config\\main.ini",
+      "macro": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021150_scan_seeds\\20261102_021150_seeds_p001\\macros\\run.mac",
+      "seed": 22
+    }
+  ]
+}

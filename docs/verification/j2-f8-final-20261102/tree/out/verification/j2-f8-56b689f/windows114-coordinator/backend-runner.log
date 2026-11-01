@@ -1,0 +1,92 @@
+PASS solid_registry_backend: asserts=287/58
+PASS j2_source_physics: asserts=4853/78
+FAIL k1_bundle_backend: PASS test_safe_environment_history
+PASS test_build_version_text
+PASS test_reference_source_urls
+PASS test_move_and_history
+PASS test_resource_kinds_and_identity
+PASS test_generated
+PASS test_refusals
+PASS test_atomic_and_tamper
+PASS test_gdml
+G4USIM_ASSERTS=523
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_k1_bundle.py", line 695, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_k1_bundle.py", line 678, in main
+    case(folder)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_k1_bundle.py", line 592, in test_independent_review_regressions
+    assert collected["snapshot"]["project"]["geometryEditor"]["round_trip_blockers"]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+ asserts=523/114
+PASS i1_environment_backend: asserts=145/72
+PASS f1_input_resources: asserts=522/38
+PASS f1_output_identity: asserts=4129/51
+PASS output_auto: asserts=734/41
+PASS main_config_version: asserts=84/27
+PASS field_biasing_schema: asserts=278/49
+PASS field_biasing_schema_review: asserts=18/12
+PASS duplicate_generated_package: asserts=135/42
+PASS effective_geometry_materials: asserts=11/15
+PASS effective_source_physics: asserts=372/59
+PASS effective_output_mesh: asserts=142/25
+PASS effective_biasing: asserts=302/39
+PASS effective_scoring: asserts=57/35
+PASS effective_modules: asserts=136/27
+PASS effective_config_export: asserts=109/41
+PASS merge_histograms: asserts=29/21
+PASS live_progress: asserts=138/36
+PASS backend_capabilities: asserts=21/21
+PASS config_precedence: asserts=24/24
+PASS config_duplicate_declarations: asserts=22/11
+PASS config_value_finiteness: asserts=8/8
+PASS run_summary: asserts=28717/476
+PASS command_state_gating: asserts=23/6
+PASS dose_scoring: asserts=79/46
+PASS fluence_scoring: asserts=96/31
+PASS root_output: asserts=25/20
+PASS scoring_mesh: asserts=623/31
+PASS let_scoring: asserts=36/12
+PASS statistical_uncertainty: asserts=153/18
+PASS scoring_numeric: asserts=457/23
+PASS sd_context_failure: asserts=213/19
+PASS gps_sources: asserts=219/70
+PASS geometry_a5: asserts=4192/56
+PASS physics_a6: asserts=71/27
+PASS fields_a7: asserts=252/24
+PASS max_step_scope: asserts=54/8
+PASS material_numeric: asserts=66/7
+PASS gdml_bias_identity: asserts=49/12
+PASS gdml_touchable_identity: asserts=11/14
+PASS displacement_damage: asserts=73/26
+PASS shielding_coating: asserts=68/25
+PASS scenario_shielding_core: asserts=46/46
+PASS semiconductor_device: asserts=53/10
+PASS detector_response: asserts=19/9
+PASS trajectories: asserts=19196/30
+PASS geant4_data_locator: asserts=12/13
+PASS benchmarks: asserts=1/1
+PASS interactive_commands: asserts=309/168
+PASS unsupported_features: asserts=24/9
+PASS unconsumed_config: asserts=20/12
+PASS material_schema: asserts=85/8
+PASS geometry_safety: asserts=203/15
+PASS geometry_diagnostics: asserts=50/43
+PASS macro_plan: asserts=33/33
+PASS default_geometry: asserts=24/19
+PASS biasing_targets: asserts=80/49
+PASS biasing_worker_runtime: asserts=2947/40
+PASS biasing_step_weight: asserts=79/13
+PASS random_command_semantics: asserts=302/23
+PASS run_reinitialization: asserts=389/29
+Report: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\j2-f8-56b689f\windows114-backend\20261102-012049-57371f8c\report.json
+62 pass / 1 fail / 0 skip of 63 cases; assertions executed 72428 (63 cases reported counts, 0 cases asserted nothing)

@@ -1,0 +1,128 @@
+{
+  "status": "pass",
+  "source_head": "2901f4254303c3a9089c9025717908c0d77ff190",
+  "tracked_status_before": "clean",
+  "tracked_status_after": "clean",
+  "original_9_SHA_pins": true,
+  "v1_artifacts_unchanged": true,
+  "status_historical_tail_exact": true,
+  "agent_history_original_full_prefix_exact": true,
+  "new_lines_no_stale_pending_apply_review_phrases": true,
+  "new_link_checks": [
+    {
+      "file": "STATUS.md",
+      "target": "docs/collab/inbox/20261101-j2-f8-execution.md",
+      "exists": true
+    },
+    {
+      "file": "STATUS.md",
+      "target": "docs/J2编辑覆盖与F8验收.md",
+      "exists": true
+    },
+    {
+      "file": "docs/ROADMAP.md",
+      "target": "配置撤销与恢复.md",
+      "exists": true
+    },
+    {
+      "file": "docs/J2编辑覆盖与F8验收.md",
+      "target": "ROADMAP.md",
+      "exists": true
+    },
+    {
+      "file": "docs/J2编辑覆盖与F8验收.md",
+      "target": "../STATUS.md",
+      "exists": true
+    },
+    {
+      "file": "gui/docs/中文快速使用说明.md",
+      "target": "../../STATUS.md",
+      "exists": true
+    },
+    {
+      "file": "docs/功能支持矩阵.md",
+      "target": "../STATUS.md",
+      "exists": true
+    },
+    {
+      "file": "docs/开发路线图.md",
+      "target": "../STATUS.md",
+      "exists": true
+    },
+    {
+      "file": "docs/开发路线图.md",
+      "target": "ROADMAP.md",
+      "exists": true
+    }
+  ],
+  "patch_apply_check_exit": 0,
+  "added_lines": 54,
+  "deleted_lines": 16,
+  "deleted_lines_for_narrow_review": [
+    {
+      "path": "STATUS.md",
+      "text": "候选尚未验收。工作区 effective-config、分支 roadmap/J2-F8-editing、基线 fc606739；首轮候选已提交为 `56b689f`。D 盘旧检出保持不动。完整实施与模型分工见 [开工契约](docs/collab/inbox/20261101-j2-f8-execution.md)，DeepSeek 已实际参与前端设计并归档原始交付。实际子代理为 6.1 Sol high/medium，工具未提供 Terra/Luna。"
+    },
+    {
+      "path": "STATUS.md",
+      "text": ""
+    },
+    {
+      "path": "STATUS.md",
+      "text": "当前 C++ 双版构建均 exit 0，源码指纹 `9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a`，路径及 EXE SHA 见 `out/collab/j2-shape-schema-build-identities.json`。E7 既有实体与 trd/trap 严格 v2 属性消费已补齐；物理 P1、材料 M01/M02、三项高级几何 P2、无源 Reload 与 phase-space 列表问题均有各自身份的独立关闭证据，旧失败保留。CURRENT 导入原五项及路径顺序已独立关闭，后续资源核验变更另审。"
+    },
+    {
+      "path": "STATUS.md",
+      "text": ""
+    },
+    {
+      "path": "STATUS.md",
+      "text": "永久 E2E 在前一源码身份 88c32e8c 的 11.3.2/11.4.3 均 exit 0、各 674 个 v3 入口，Qt/K1→保存重载→离线搬移→统一 CLI 链路和真实双源/双敏感体通过；汇总 `out/collab/j2-e2e-integration/dual-version-final-receipt.json`。脚本 SHA `5b112036e184afac3e97bd9c5257142b197a36c83c119f822318ec972f9b082f` 冻结，已按 exe/qt、600 秒接入 integration，无 stale fallback；最终源码由正式矩阵再验。114 使用已核验 I2 data 根，清除子进程继承的旧 G4*DATA 后启动。"
+    },
+    {
+      "path": "STATUS.md",
+      "text": ""
+    },
+    {
+      "path": "STATUS.md",
+      "text": "F8 原标签、向导及 workspace_layout 当前页尺寸修复已独立关闭。首轮原生 100%/125%/150% 窗口均正常退出，100% 完成真实100事件与保存重载/导出；150% 保留 dock 后切项目又发现布局完成前焦点显露失效。新增受控延迟显露与永久回归 v3 已独审关闭，125%/150% 作者各416入口，独审确认真实 pending 焦点替换；未改变旧可见性合同、业务快照或 dock 所有权。旧失败、旧限定范围审查与首次原生证据均保留，新冻结仍须正式矩阵及原生复验。"
+    },
+    {
+      "path": "STATUS.md",
+      "text": ""
+    },
+    {
+      "path": "STATUS.md",
+      "text": "首轮本机六份正式报告共300次执行，286通过/14失败/0跳过、179468个v3入口；严格门禁失败，不能称阶段通过。GUI报告自身 git_dirty=true（73条长路径删除表象）保留原件，下一轮对子进程显式配置 longpaths。M0 CI `41330577407` 与 Linux CI `41330577426` 失败；安装 `41330577328`、冻结桌面 `41330577359` 双平台成功。Linux后续profile未执行，不以安装通过代替功能矩阵。"
+    },
+    {
+      "path": "STATUS.md",
+      "text": ""
+    },
+    {
+      "path": "STATUS.md",
+      "text": "已统一应用独审后的定点修复：密度/未知物理模式诊断兼容、NIST真实字段定位、external Inspect只核验实际输入、F8延迟焦点；测试按实际J2能力更新，扫描fixture携带内存材料文档，旧物理和可见性判据保留。诊断分类迁移见[说明](docs/结构化诊断与定位.md)。下一轮完整D盘venv恢复PyVista真实子路径，不拼接旧报告；同v3逐例与总数门禁不放宽。新候选须重新提交、双版构建、六份本机profile、真实CI及原生复验后才可归档关闭。"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "text": "- **F5 Undo/redo and autosave.** 主项目和成功应用向导共用完整快照事务；v7保存材料/几何及原始草稿，独立恢复副本受系统会话锁保护，恢复为未命名、未保存副本。[使用与限制](配置撤销与恢复.md)。"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "text": "| **F8** | 环境设置衔接、空白/模板/导入与向导重入、跨页DPI/键盘/文案一致性与可访问性 | I1/I2提供环境链路；J1实现布局/主题/主要中文及焦点适配；J2实现无源创建和编辑能力；F8做跨项桌面验收 | 2026-11-02 第二候选准备，尚未验收；首轮150% retained-dock焦点缺陷及永久回归已独审修复，须新冻结矩阵和实窗复验；从空白到结果/搬移链路与不同缩放分别留证 |"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "text": "| **J2 编辑覆盖与几何往返** | 原M3余项；空白创建与无已有配置文件输入、NIST元素来源辅助、命名多源及球面源、物理模块组合/替换、多敏感体编辑和高级实体/场/偏置；后端vis属性往返 | E6；实体能力归一相关部分依赖E7，其余不被无关实体重构阻塞；在L1前完成本轮明确范围 | **2026-11-02 实施及专项独审完成，第二候选准备，未验收**：首轮56b689f矩阵失败原件保留，诊断兼容/定位、external Inspect及旧测试语义已定点修复；新冻结须完整Windows/Linux及历史门禁。球面不冒充体源，模块注册不冒充替换 |"
+    },
+    {
+      "path": "docs/J2编辑覆盖与F8验收.md",
+      "text": "当前为实施候选，正式状态见 [ROADMAP](ROADMAP.md)。本页说明接口、使用方法和验收边界，不把组件检查或界面预览当作完整模拟验收。"
+    },
+    {
+      "path": "gui/docs/中文快速使用说明.md",
+      "text": "项目页保存的是 GUI 状态，不是后端仿真的输入格式。保存的 JSON 使用 `G4UniversalSimProject` schema，当前 version 为 6。"
+    }
+  ],
+  "no_product_tests_build_native_or_formal_commands_started": true
+}

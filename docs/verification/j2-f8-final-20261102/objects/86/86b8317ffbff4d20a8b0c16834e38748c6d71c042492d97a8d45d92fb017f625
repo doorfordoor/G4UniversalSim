@@ -1,0 +1,35 @@
+# 56b689f Windows static 首轮正式结果：FAIL
+
+候选 `56b689fb9ac920cbb1203b2b94dae2483d25f622`，113 EXE。完整 static profile 首轮完成，**42 pass / 4 fail / 0 skip，46 用例，3616 已执行断言**。runner exit 1，严格 evidence gate exit 1。没有重跑，没有修改产品/测试/STATUS，没有全局构建或原生窗口操作。
+
+执行时间（UTC）：2026-11-01T17:19:52.436298+00:00 → 2026-11-01T17:25:23.961164+00:00。
+
+## 证据
+
+- [完整 report](20261102-011952-3779ed5f/report.json)、[runner 首轮输出](runner-first.log)、[严格门禁首轮输出](strict-gate-first.log)。
+- [执行及身份收据](execution.json)：实际启动命令、EXE/merge SHA、capabilities、compiler、进程、前后 source/test fingerprints。
+- [每个首败与原日志 SHA](first-failures.json)，[最早首败](first-failure.json)。没有覆盖、补绿或降低判据。
+- [历史 baseline 逐用例只读对比](baseline-comparison.json)。历史 report 身份保留，不修改旧数据。
+
+## 四个首败
+
+| 用例 | 首败位置/实际观察 | 已执行断言 |
+| --- | --- | ---: |
+| k1_bundle | `scripts/test_k1_bundle.py:592`：合法 `parameterised + copies_file` 夹具只强制 source_copy_mode，却要求非空 round_trip_blockers，实际为空 | 523 |
+| f4_producers | `scripts/test_f4_producers.py:104`：`mode=manual` 预期 `physics.mode.unsupported`，实际诊断 code 为 `physics.structured.invalid` | 287 |
+| f4_document_diagnostics | `scripts/test_f4_document_diagnostics.py:100`：筛选 `materials.density.numeric` 后要求 row=[1,2]；当前 density validator 发 `materials.density.invalid` | 27 |
+| config_migration | `scripts/test_config_migration.py:146`：tessellated/file 迁移后的文档被要求有 blocker，实际为空 | 138 |
+
+这些是当前冻结候选与永久测试的可重现契约差异。K1/migration 夹具沿用 J2 前不可编辑的预期，F4 两处诊断 code 预期与现实现不一致；是否修测试或修产品由 main 根据能力/诊断契约决定。本轮没有据此改判，也没有把占位 STL 当成物理有效性证明。失败处之后的断言没有执行，不能视为覆盖。
+
+## 严格历史门禁
+
+匹配历史 `windows113-static`（同 Windows/profile，v3 probe）为 HEAD `5fe0a1052e33c96d033375d0920f29b15d432dcc`、44 用例/3964 断言，report SHA `5b72c84e71c6e1b096ad81566c0adb5d7809fd590506dc9f37559ea8b3526c99`。原始文件实际 SHA 匹配。
+
+官方 checker 使用 `--report <本轮> --baseline <历史>`，首先因 4 个非 pass 用例拒绝发布证据，未使用任何 allow 标志。额外只读对比发现：无旧用例缺失，新增 solid_registry/j2_resources；总数3616低于3964；另有9个当前 PASS 用例各下降1条断言（见 JSON），四个失败用例也下降。该逐项对比是事实清单，不替代官方门禁，也未声称官方已完成其后置 baseline 检查。后续消除4个失败仍须解释并满足逐用例/总断言不下降要求，不能通过放宽门禁处理。
+
+## 冻结与完整性
+
+前后 HEAD、clean、sourcefp、testfp、EXE SHA、merge SHA 均一致；sourcefp `9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a`，testfp `a0b6ba859c87e276b2b602040c28376150ef8fa86a24e78e2adacebd9aa0df1e`。tracked-source gate pass，无零断言用例。
+
+Windows 长路径使默认 Git 状态误报归档删除，本轮仅通过子进程环境启用 `core.longpaths=true`，未修改 Git 配置；在该读取模式下前后状态均 clean。全部46份用例日志的实际字节 SHA 与 report 一致且为LF，断言求和一致。这些完整性检查不改变 FAIL 结论。未执行114 profile、native、全局构建、正式归档；main其他矩阵结果不属于本报告的证明范围。

@@ -1,0 +1,196 @@
+[
+  {
+    "label": "start-initial-occlusion",
+    "time_ms": 1793565211773,
+    "note_from_main": "125 initial Start visible; unrelated QQ mini-window overlays central/lower region. Those pixels excluded and raw image local-only; target window will be moved via its title bar, no other app touched.",
+    "preceding_passive_row": 1,
+    "preceding_passive_focus": {
+      "class": "QScrollArea",
+      "object_name": "workspaceShellScroll",
+      "name": ""
+    },
+    "images": [
+      "001-start-initial-occlusion-0.jpg"
+    ]
+  },
+  {
+    "label": "start-repositioned",
+    "time_ms": 1793565221514,
+    "note_from_main": "Target-only titlebar move shifts external overlay to lower-right; Start primary buttons remain unobscured. Window size not changed.",
+    "preceding_passive_row": 1,
+    "preceding_passive_focus": {
+      "class": "QScrollArea",
+      "object_name": "workspaceShellScroll",
+      "name": ""
+    },
+    "images": [
+      "002-start-repositioned-0.jpg"
+    ]
+  },
+  {
+    "label": "configuration-retained",
+    "time_ms": 1793565234546,
+    "note_from_main": "CtrlAlt3 shows configuration and preview docks; run fields visible, auto backend preview is enabled. External overlay covers preview lower area, excluded from visual acceptance.",
+    "preceding_passive_row": 2,
+    "preceding_passive_focus": {
+      "class": "QToolButton",
+      "object_name": "",
+      "name": "运行"
+    },
+    "images": [
+      "003-configuration-retained-0.jpg"
+    ]
+  },
+  {
+    "label": "preview-f6",
+    "time_ms": 1793565243097,
+    "note_from_main": "F6 reveals/focuses Refresh preview; full button visible at 125% above overlay, unlike 150% narrow inner viewport boundary.",
+    "preceding_passive_row": 3,
+    "preceding_passive_focus": {
+      "class": "QPushButton",
+      "object_name": "",
+      "name": "刷新预览"
+    },
+    "images": [
+      "004-preview-f6-0.jpg"
+    ]
+  },
+  {
+    "label": "project-retained",
+    "time_ms": 1793565253173,
+    "note_from_main": "CtrlAlt2 with config/preview retained shows Project name label+complete field and focus outline above overlay, no forced scrolling.",
+    "preceding_passive_row": 4,
+    "preceding_passive_focus": {
+      "class": "QLineEdit",
+      "object_name": "",
+      "name": "项目名称"
+    },
+    "images": [
+      "005-project-retained-0.jpg"
+    ]
+  },
+  {
+    "label": "project-natural-tab",
+    "time_ms": 1793565264751,
+    "note_from_main": "Natural Tab reaches EXE; full label and complete input boundary visible above unrelated overlay.",
+    "preceding_passive_row": 5,
+    "preceding_passive_focus": {
+      "class": "QLineEdit",
+      "object_name": "",
+      "name": "G4UniversalSim 可执行程序"
+    },
+    "images": [
+      "006-project-natural-tab-0.jpg"
+    ]
+  },
+  {
+    "label": "history-zh-initial",
+    "time_ms": 1793565276244,
+    "note_from_main": "CtrlAlt8 reaches History; root label and field reading portion visible above overlay; transition UIA cached prior page ignored.",
+    "preceding_passive_row": 6,
+    "preceding_passive_focus": {
+      "class": "QLineEdit",
+      "object_name": "",
+      "name": "运行包根目录"
+    },
+    "images": [
+      "007-history-zh-initial-0.jpg"
+    ]
+  },
+  {
+    "label": "history-zh-names",
+    "time_ms": 1793565292940,
+    "note_from_main": "Settled UIA in RunHistoryPage: 416 Runs root/421 Search/423 Status have Chinese names.",
+    "preceding_passive_row": 6,
+    "preceding_passive_focus": {
+      "class": "QLineEdit",
+      "object_name": "",
+      "name": "运行包根目录"
+    },
+    "images": []
+  },
+  {
+    "label": "history-en-transition",
+    "time_ms": 1793565328028,
+    "note_from_main": "Language menu changes visible History labels to English; narrow content row beyond viewport not claimed fully visible.",
+    "preceding_passive_row": 7,
+    "preceding_passive_focus": {
+      "class": "QScrollArea",
+      "object_name": "workspaceShellScroll",
+      "name": ""
+    },
+    "images": [
+      "009-history-en-transition-0.jpg"
+    ]
+  },
+  {
+    "label": "history-search-en",
+    "time_ms": 1793565338700,
+    "note_from_main": "All three English UIA names confirmed; focusing Search pans so label and wide input boundary visible across available viewport; field top is clear of overlay.",
+    "preceding_passive_row": 8,
+    "preceding_passive_focus": {
+      "class": "QLineEdit",
+      "object_name": "",
+      "name": "Search"
+    },
+    "images": [
+      "010-history-search-en-0.jpg"
+    ]
+  },
+  {
+    "label": "history-status-tab",
+    "time_ms": 1793565350246,
+    "note_from_main": "Natural Tab pans to Status; full combo and label above overlay visible, no value change.",
+    "preceding_passive_row": 9,
+    "preceding_passive_focus": {
+      "class": "QComboBox",
+      "object_name": "",
+      "name": "Status"
+    },
+    "images": [
+      "011-history-status-tab-0.jpg"
+    ]
+  },
+  {
+    "label": "history-zh-roundtrip",
+    "time_ms": 1793565368011,
+    "note_from_main": "English→Chinese actual menu: all three control names and labels Chinese.",
+    "preceding_passive_row": 10,
+    "preceding_passive_focus": {
+      "class": "QScrollArea",
+      "object_name": "workspaceShellScroll",
+      "name": ""
+    },
+    "images": [
+      "012-history-zh-roundtrip-0.jpg"
+    ]
+  },
+  {
+    "label": "history-en-roundtrip",
+    "time_ms": 1793565395481,
+    "note_from_main": "Completed English→Chinese→English menu cycle; three actual RunHistoryPage UIA names correct at each settled step.",
+    "preceding_passive_row": 10,
+    "preceding_passive_focus": {
+      "class": "QScrollArea",
+      "object_name": "workspaceShellScroll",
+      "name": ""
+    },
+    "images": [
+      "013-history-en-roundtrip-0.jpg"
+    ]
+  },
+  {
+    "label": "project-final",
+    "time_ms": 1793565413239,
+    "note_from_main": "Natural CtrlAlt2 after language roundtrip restores remembered EXE focus; complete Project name and EXE controls visible in unobscured left region.",
+    "preceding_passive_row": 12,
+    "preceding_passive_focus": {
+      "class": "QLineEdit",
+      "object_name": "",
+      "name": "G4UniversalSim executable"
+    },
+    "images": [
+      "014-project-final-0.jpg"
+    ]
+  }
+]

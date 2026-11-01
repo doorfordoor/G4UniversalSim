@@ -1,0 +1,299 @@
+{
+  "action": "generate",
+  "can_run": true,
+  "command": [
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\G4UniversalSim-component.exe",
+    "--config",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\config\\main.ini",
+    "--macro",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\macros\\run.mac",
+    "--output",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\output",
+    "--threads",
+    "1",
+    "--seed",
+    "4242",
+    "--run-name",
+    "f5-transaction"
+  ],
+  "coverage": "local_source_copy_compatibility",
+  "created_at": "2026-11-01T19:56:44.018158+00:00",
+  "diagnostics": {
+    "can_run": true,
+    "diagnostics": [
+      {
+        "code": "geometry.scoring.not_edited",
+        "identity": "5a26bd552944c262a9392a26b9e11dcce9f9317a2b1315a88a65e110834a650a",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Geometry config mentions LET/Dose/Fluence; those are not edited by this GUI MVP.",
+        "message_key": "",
+        "origin": "config.source",
+        "params": {},
+        "raw_message": "Geometry config mentions LET/Dose/Fluence; those are not edited by this GUI MVP.",
+        "related_locations": [],
+        "severity": "warning",
+        "source": {
+          "filename": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-source-copy\\original-geometry.ini",
+          "key": "",
+          "line": null,
+          "section": "",
+          "text_sha256": "cb56e652467733695ead10caa06a14f3ae0fc42ca37160450250a2038273ce26",
+          "text_snapshot": "# original geometry is never overwritten\n[global]\nversion = 1\n[world]\nshape = box\nsize = 100 mm,100 mm,100 mm\nmaterial = G4_Galactic\n[volume.Target]\nparent = world\nshape = box\nsize = 8 mm,8 mm,8 mm\nmaterial = FirstTarget\nposition = 0 mm,0 mm,0 mm\nsensitive = true\nvis.palette = legacy\n",
+          "value": ""
+        },
+        "unavailable_reason": "source_only"
+      },
+      {
+        "code": "config.geometry.source_copy.active",
+        "identity": "884316ceb5bd10e9e7fbfc2d554020a10cd4ffacd5e5f35eac4ce0fb21245103",
+        "identity_parameters": {},
+        "location": {
+          "collection": "",
+          "editor": "geometry",
+          "entity": "",
+          "field": "source_copy_mode",
+          "row": null,
+          "snapshot_id": ""
+        },
+        "message": "Geometry Editor: original source copy mode is active; blocked fields are preserved but not certified by editor validation.",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Geometry Editor: original source copy mode is active; blocked fields are preserved but not certified by editor validation.",
+        "related_locations": [],
+        "severity": "warning",
+        "source": null,
+        "unavailable_reason": ""
+      },
+      {
+        "code": "config.information.add_editor_summary_info.1",
+        "identity": "076621de6d5f9d1ebd4e62868ccb49f737cba8ce77d8104cc0d1466438feb785",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Source summary: preset=proton_beam, particle=e-, energy=1 MeV",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Source summary: preset=proton_beam, particle=e-, energy=1 MeV",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.add_editor_summary_info.2",
+        "identity": "bec34ce34da794f9ac60aee2015471e1923ef869b68f88d42f016a862efb53d6",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Physics summary: mode=reference, reference=FTFP_BERT, default_cut=0.1 mm, biasing=False",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Physics summary: mode=reference, reference=FTFP_BERT, default_cut=0.1 mm, biasing=False",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.add_editor_summary_info.3",
+        "identity": "d91acc777a7b14b1d3460ae8828b7559d510acd72772d733b727a9e9477cda70",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Scoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Scoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.validate_config_builder.1",
+        "identity": "05dbfe9a24bcea20f94ecc1f5a606036c9e5ccce854fa634adb55aad271f06f4",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Validation passed.",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Validation passed.",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      }
+    ],
+    "errors": [],
+    "info": [
+      "Source summary: preset=proton_beam, particle=e-, energy=1 MeV",
+      "Physics summary: mode=reference, reference=FTFP_BERT, default_cut=0.1 mm, biasing=False",
+      "Scoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100",
+      "Validation passed."
+    ],
+    "schema": "g4usim_diagnostics_v1",
+    "snapshot_id": "49b2f7c4ddd97f438bd0c34cd5084643ddf4f1b84f7be88e53e25282e2de57c5",
+    "warnings": [
+      "Geometry config mentions LET/Dose/Fluence; those are not edited by this GUI MVP.",
+      "Geometry Editor: original source copy mode is active; blocked fields are preserved but not certified by editor validation."
+    ]
+  },
+  "execution_bundle": {
+    "coverage": "local_source_copy_compatibility",
+    "manifest_sha256": null,
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction"
+  },
+  "expected_inputs": {
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\config\\geometry\\geometry.ini": {
+      "role": "geometry",
+      "sha256": "cb56e652467733695ead10caa06a14f3ae0fc42ca37160450250a2038273ce26",
+      "size_bytes": 285
+    },
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\config\\main.ini": {
+      "role": "main",
+      "sha256": "9142e12f7344f716fe993d872529e9bca810ddff38c4f831251ca0061eb9d881",
+      "size_bytes": 1594
+    },
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\config\\materials\\material.ini": {
+      "role": "materials",
+      "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+      "size_bytes": 297
+    },
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\macros\\run.mac": {
+      "role": "macro",
+      "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a",
+      "size_bytes": 147
+    }
+  },
+  "finished_at": "2026-11-01T19:56:44.461611+00:00",
+  "identity": {
+    "backend": {
+      "sha256": "21bb438c0d4a6f1f164b9a646f6ee000340185e5871180aec06db8d3f07c0082",
+      "size_bytes": 274712,
+      "status": "recorded"
+    },
+    "configuration_fingerprint": "49b2f7c4ddd97f438bd0c34cd5084643ddf4f1b84f7be88e53e25282e2de57c5",
+    "coverage": "local_source_copy_compatibility",
+    "coverage_reason": "Unknown resource grammar: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-source-copy\\original-geometry.ini:15 [volume.Target]/vis.palette",
+    "declared_source_receipts": {
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-source-copy\\original-geometry.ini": {
+        "sha256": "cb56e652467733695ead10caa06a14f3ae0fc42ca37160450250a2038273ce26",
+        "size_bytes": 285
+      },
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-source-copy\\original-materials.ini": {
+        "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5",
+        "size_bytes": 249
+      }
+    },
+    "environment": {
+      "reason": "field_validation_only",
+      "status": "not_probed"
+    },
+    "execution_fingerprint": "1680336c5208adf2545846bd4ece66b39b0a55bdb790930ac5914d9e2f37ecdb",
+    "fingerprint": "0c002672cc1b27801fec4f7ead47e99311c032b733532aeeb790a94e7bdda83f",
+    "recursive_closure": "unverified_export_not_qualified",
+    "resource_fingerprint": "ba398ef0ee96eba009f7cf272e04eb11ce5242f0b67428482adac0c97c62195d",
+    "resources": [
+      {
+        "captured_text": false,
+        "distribution": "unknown",
+        "path": "declared/materials",
+        "role": "materials",
+        "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5",
+        "source_sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5"
+      },
+      {
+        "captured_text": false,
+        "distribution": "unknown",
+        "path": "declared/geometry",
+        "role": "geometry",
+        "sha256": "cb56e652467733695ead10caa06a14f3ae0fc42ca37160450250a2038273ce26",
+        "source_sha256": "cb56e652467733695ead10caa06a14f3ae0fc42ca37160450250a2038273ce26"
+      }
+    ],
+    "revision": 0,
+    "schema": "g4usim_experiment_identity_v1",
+    "snapshot_fingerprint": "49b2f7c4ddd97f438bd0c34cd5084643ddf4f1b84f7be88e53e25282e2de57c5"
+  },
+  "identity_after_prepare": {
+    "backend": {
+      "sha256": "21bb438c0d4a6f1f164b9a646f6ee000340185e5871180aec06db8d3f07c0082",
+      "size_bytes": 274712,
+      "status": "recorded"
+    },
+    "configuration_fingerprint": "49b2f7c4ddd97f438bd0c34cd5084643ddf4f1b84f7be88e53e25282e2de57c5",
+    "coverage": "local_source_copy_compatibility",
+    "coverage_reason": "Unknown resource grammar: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-source-copy\\original-geometry.ini:15 [volume.Target]/vis.palette",
+    "declared_source_receipts": {
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-source-copy\\original-geometry.ini": {
+        "sha256": "cb56e652467733695ead10caa06a14f3ae0fc42ca37160450250a2038273ce26",
+        "size_bytes": 285
+      },
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-source-copy\\original-materials.ini": {
+        "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5",
+        "size_bytes": 249
+      }
+    },
+    "environment": {
+      "reason": "field_validation_only",
+      "status": "not_probed"
+    },
+    "execution_fingerprint": "1680336c5208adf2545846bd4ece66b39b0a55bdb790930ac5914d9e2f37ecdb",
+    "fingerprint": "0c002672cc1b27801fec4f7ead47e99311c032b733532aeeb790a94e7bdda83f",
+    "recursive_closure": "unverified_export_not_qualified",
+    "resource_fingerprint": "ba398ef0ee96eba009f7cf272e04eb11ce5242f0b67428482adac0c97c62195d",
+    "resources": [
+      {
+        "captured_text": false,
+        "distribution": "unknown",
+        "path": "declared/materials",
+        "role": "materials",
+        "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5",
+        "source_sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5"
+      },
+      {
+        "captured_text": false,
+        "distribution": "unknown",
+        "path": "declared/geometry",
+        "role": "geometry",
+        "sha256": "cb56e652467733695ead10caa06a14f3ae0fc42ca37160450250a2038273ce26",
+        "source_sha256": "cb56e652467733695ead10caa06a14f3ae0fc42ca37160450250a2038273ce26"
+      }
+    ],
+    "revision": 0,
+    "schema": "g4usim_experiment_identity_v1",
+    "snapshot_fingerprint": "49b2f7c4ddd97f438bd0c34cd5084643ddf4f1b84f7be88e53e25282e2de57c5"
+  },
+  "level": "generation",
+  "package": {
+    "config_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\config",
+    "geometry_ini_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\config\\geometry\\geometry.ini",
+    "logs_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\logs",
+    "macro_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\macros",
+    "main_ini_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\config\\main.ini",
+    "materials_ini_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\config\\materials\\material.ini",
+    "output_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\output",
+    "package_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction",
+    "project_snapshot_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\project_snapshot.json",
+    "run_macro_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\macros\\run.mac",
+    "validation_report_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\validation_report.txt"
+  },
+  "package_report": "can_run = true\n\n[errors]\n<none>\n\n[warnings]\nGeometry config mentions LET/Dose/Fluence; those are not edited by this GUI MVP.\nGeometry Editor: original source copy mode is active; blocked fields are preserved but not certified by editor validation.\n\n[info]\nSource summary: preset=proton_beam, particle=e-, energy=1 MeV\nPhysics summary: mode=reference, reference=FTFP_BERT, default_cut=0.1 mm, biasing=False\nScoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100\nValidation passed.\n[selected input files]\nmaterials = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-source-copy\\original-materials.ini\ngeometry = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-source-copy\\original-geometry.ini\n\n[copied files]\nmaterials_source_mode = generated by Materials Editor\ngeometry_source_mode = copied from source (Geometry Editor validation bypassed)\nmaterials = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\config\\materials\\material.ini\ngeometry = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\config\\geometry\\geometry.ini\nmain_ini = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\config\\main.ini\nrun_macro = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\macros\\run.mac\noutput = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\output\n\n[materials summary]\npath = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\config\\materials\\material.ini\ncount = 2\n- FirstTarget kind=mass_fraction density=2.33 g/cm3 components=1 section=[material.FirstTarget]\n- SecondTarget kind=mass_fraction density=2.7 g/cm3 components=1 section=[material.SecondTarget]\n\n[geometry summary]\npath = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\config\\geometry\\geometry.ini\ntemplate_hint = hierarchical\nvolumes = 2\n- world parent=<none> shape=box material=G4_Galactic boolean_ops=0 \n- Target parent=world shape=box material=FirstTarget boolean_ops=0 sensitive\n\nSensitive volumes:\n- Target\n\nBias volumes:\n- <none>\n\nBoolean operations:\n- <none>",
+  "reason": "experiment.generate_completed",
+  "record_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d",
+  "record_id": "84e96160e35246c69b76e3be1d44537d",
+  "requested_run_name": "f5-transaction",
+  "required_inputs": [
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\config\\main.ini",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\84e96160e35246c69b76e3be1d44537d\\20261102_035644_f5-transaction\\macros\\run.mac"
+  ],
+  "revision": 0,
+  "run_id": "84e96160e35246c69b76e3be1d44537d",
+  "schema": "g4usim_experiment_record_v1",
+  "session_id": "8d861f15c1454d608dbc4cf780c18ef4",
+  "stale": false,
+  "status": "passed"
+}

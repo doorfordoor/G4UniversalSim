@@ -1,0 +1,13 @@
+# J2 几何独审3个P2定点修复（2026-11-02）
+
+按用户回派暂时解冻：仅 editors/geometry_editor_model.py 与 gui/smoke_tests/smoke_j2_geometry.py；其余产品文件/C++/schema未编辑。旧冻结证据保留，新指纹见j2-geometry-p2-receipt.json。
+
+1. 删除正则提取数量片段的_tokenizer。_geometry_tokens逐项复刻GeometryUtils.cc SplitVectorText：逗号仅跳过真正空cell；无逗号ASCII空白分词，6/10个token固定成对拼接，其他数量不配对；参数列表2个token按ParseParameterList特例视为一个quantity。故独审两个tubs格式分别成为3个/1个参数，生成前拒绝，原文不改写。永久对照另保留逗号、10token带单位与5token裸值合法格式。
+2. copies_file分支逐字段拒绝非空position/rotation，使用对应字段的结构化诊断，原始字符串保留；检查单独position、单独rotation、二者共存与无冲突对照。
+3. backend-facing size/replica/copy_step改用_geometry_length_vector，采用同一后端分组和既有config_schema.quantity的ParseLength语义，各分量独立单位、裸值mm，不用preview尾单位传播。独审world size=1,1,2 cm 与1x1x10mm切片通过；10x10mm的错误切片仍拒绝；6token显式单位向量对照通过。
+
+验证：compileall与git diff --check退出0；python -B tools/test_assert_probe.py gui/smoke_tests/smoke_j2_geometry.py退出0，G4USIM_ASSERTS=210。日志out/collab/j2-geometry-p2-smoke.log。新增反例在永久smoke的p2_parser_parity函数，除错误消息/是否接受外还检查validate/writer不修改size/parameters/position/rotation原文。
+
+没有把这些GUI反例送入真实EXE，没有重编译；后端原始对照来自独审r2/details-r2，新的独立Feynman或Sagan复核待main安排。不据作者专项关闭独审。
+
+本轮产品文件再次冻结供复核；共享集成审查从out/collab/j2-integration-review/checkpoint.md恢复。新增copies_file冲突翻译键已补out/collab/j2-geometry-i18n-keys.json。没有运行中的命令。

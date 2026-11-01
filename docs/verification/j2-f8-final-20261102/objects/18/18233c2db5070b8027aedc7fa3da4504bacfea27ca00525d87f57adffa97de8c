@@ -1,0 +1,149 @@
+{
+  "utc": "2026-11-01T16:08:15.595922+00:00",
+  "runtime_root": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-blank-review\\resources-round\\runtime-20261101T160809",
+  "source_sha256_before": {
+    "gui/g4usim_gui/core/run_editor_resources.py": "a66986a6c32df63df60c443c14c5970ae7c42761a34900b99f4fab98f7de6b05",
+    "gui/g4usim_gui/core/run_editor_model.py": "97d5855dab85c36fa23b94281f6a0a0f5e3c1b0ead5bad2a3b5ab7eee8fe636a",
+    "gui/g4usim_gui/core/experiment_bundle.py": "2228f8a067798c29e79e54f96d0640031aee55e4e2c136272e309bd46820df0d",
+    "gui/g4usim_gui/core/edit_snapshot.py": "27bb8185784e0ff3b3559e4e46381c1a13ada098c1f1a17437bba35140f9b182",
+    "gui/g4usim_gui/editors/source_physics_scoring_model.py": "36a46a32e2730be64766e5f19c9e39631446b876ba8ac356a92297d6410b0559",
+    "gui/g4usim_gui/editors/geometry_editor_model.py": "e2c9a3f3b10f056f9d657132d3901141c1f4f1668b6198c1724be494e4d5ae5b",
+    "gui/g4usim_gui/writers/package_writer.py": "91e3130dd26f5d7afc8789b5104bbb0c2e4584a3b86ce7a1d544b858c76b1e3f",
+    "gui/g4usim_gui/writers/main_ini_writer.py": "c5ea5daddcc329c196a2c6541d97cf2a4e767f585517aa7a8054ca27a8b7f505",
+    "scripts/test_j2_resource_bundle.py": "066a96105ab580a7114792990f4fa87adc63f72eb5ac87456d221e3847a563cf"
+  },
+  "source_sha256_after": {
+    "gui/g4usim_gui/core/run_editor_resources.py": "a66986a6c32df63df60c443c14c5970ae7c42761a34900b99f4fab98f7de6b05",
+    "gui/g4usim_gui/core/run_editor_model.py": "97d5855dab85c36fa23b94281f6a0a0f5e3c1b0ead5bad2a3b5ab7eee8fe636a",
+    "gui/g4usim_gui/core/experiment_bundle.py": "2228f8a067798c29e79e54f96d0640031aee55e4e2c136272e309bd46820df0d",
+    "gui/g4usim_gui/core/edit_snapshot.py": "27bb8185784e0ff3b3559e4e46381c1a13ada098c1f1a17437bba35140f9b182",
+    "gui/g4usim_gui/editors/source_physics_scoring_model.py": "36a46a32e2730be64766e5f19c9e39631446b876ba8ac356a92297d6410b0559",
+    "gui/g4usim_gui/editors/geometry_editor_model.py": "e2c9a3f3b10f056f9d657132d3901141c1f4f1668b6198c1724be494e4d5ae5b",
+    "gui/g4usim_gui/writers/package_writer.py": "91e3130dd26f5d7afc8789b5104bbb0c2e4584a3b86ce7a1d544b858c76b1e3f",
+    "gui/g4usim_gui/writers/main_ini_writer.py": "c5ea5daddcc329c196a2c6541d97cf2a4e767f585517aa7a8054ca27a8b7f505",
+    "scripts/test_j2_resource_bundle.py": "066a96105ab580a7114792990f4fa87adc63f72eb5ac87456d221e3847a563cf"
+  },
+  "selected_source_unchanged": true,
+  "cases": [
+    {
+      "case": "provided-resource-test-independent",
+      "status": "observed",
+      "detail": {
+        "independently_executed": true
+      },
+      "selected_source_unchanged": true
+    },
+    {
+      "case": "portable-gps-and-both-field-maps",
+      "status": "observed",
+      "detail": {
+        "deleted_original_resources": 4,
+        "moved_bundle": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-blank-review\\resources-round\\runtime-20261101T160809\\portable-gps\\moved-中文 bundle",
+        "all_snapshot_paths_inside_moved_bundle": true,
+        "copied_resource_count": 4,
+        "original_snapshot_unchanged": true,
+        "main_ini": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-blank-review\\resources-round\\runtime-20261101T160809\\portable-gps\\replayed-runs\\20261102_000812_portable-gps\\config\\main.ini"
+      },
+      "selected_source_unchanged": true
+    },
+    {
+      "case": "portable-single-phase-and-both-field-maps",
+      "status": "observed",
+      "detail": {
+        "deleted_original_resources": 3,
+        "moved_bundle": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-blank-review\\resources-round\\runtime-20261101T160809\\portable-phase\\moved-中文 bundle",
+        "all_snapshot_paths_inside_moved_bundle": true,
+        "copied_resource_count": 3,
+        "original_snapshot_unchanged": true,
+        "main_ini": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-blank-review\\resources-round\\runtime-20261101T160809\\portable-phase\\replayed-runs\\20261102_000813_portable-phase\\config\\main.ini"
+      },
+      "selected_source_unchanged": true
+    },
+    {
+      "case": "comma-separated-phase-space-list",
+      "status": "observed",
+      "detail": {
+        "closure": {
+          "accepted": false,
+          "type": "FileNotFoundError",
+          "message": "[WinError 2] 系统找不到指定的文件。: 'C:\\\\Users\\\\123\\\\.codex\\\\worktrees\\\\effective-config\\\\G4UniversalSim\\\\out\\\\collab\\\\j2-blank-review\\\\resources-round\\\\runtime-20261101T160809\\\\phase-list\\\\original\\\\a.csv, b.csv'"
+        },
+        "export": {
+          "accepted": false,
+          "type": "FileNotFoundError",
+          "message": "[WinError 2] 系统找不到指定的文件。: 'C:\\\\Users\\\\123\\\\.codex\\\\worktrees\\\\effective-config\\\\G4UniversalSim\\\\out\\\\collab\\\\j2-blank-review\\\\resources-round\\\\runtime-20261101T160809\\\\phase-list\\\\original\\\\a.csv, b.csv'"
+        },
+        "materialize": {
+          "accepted": false,
+          "type": "FileNotFoundError",
+          "message": "[WinError 2] 系统找不到指定的文件。: 'C:\\\\Users\\\\123\\\\.codex\\\\worktrees\\\\effective-config\\\\G4UniversalSim\\\\out\\\\collab\\\\j2-blank-review\\\\resources-round\\\\runtime-20261101T160809\\\\phase-list\\\\original\\\\a.csv, b.csv'"
+        },
+        "package": {
+          "accepted": false,
+          "type": "FileNotFoundError",
+          "message": "[WinError 2] 系统找不到指定的文件。: 'C:\\\\Users\\\\123\\\\.codex\\\\worktrees\\\\effective-config\\\\G4UniversalSim\\\\out\\\\collab\\\\j2-blank-review\\\\resources-round\\\\runtime-20261101T160809\\\\phase-list\\\\original\\\\a.csv, b.csv'"
+        },
+        "source_validation_errors": [],
+        "target_published": false
+      },
+      "selected_source_unchanged": true
+    },
+    {
+      "case": "inactive-spectrum-path",
+      "status": "observed",
+      "detail": {
+        "package_accepted": true,
+        "runtime_resources_directory": false,
+        "export_accepted": false,
+        "error": "FileNotFoundError: [WinError 2] 系统找不到指定的文件。: 'C:\\\\Users\\\\123\\\\.codex\\\\worktrees\\\\effective-config\\\\G4UniversalSim\\\\out\\\\collab\\\\j2-blank-review\\\\resources-round\\\\runtime-20261101T160809\\\\inactive\\\\original\\\\previous-hist.csv'",
+        "target_published": false
+      },
+      "selected_source_unchanged": true
+    },
+    {
+      "case": "missing-active-resource-atomic-failure",
+      "status": "observed",
+      "detail": {
+        "error": "FileNotFoundError: [WinError 2] 系统找不到指定的文件。: 'C:\\\\Users\\\\123\\\\.codex\\\\worktrees\\\\effective-config\\\\G4UniversalSim\\\\out\\\\collab\\\\j2-blank-review\\\\resources-round\\\\runtime-20261101T160809\\\\missing\\\\original\\\\absent.csv'",
+        "target_not_published": true,
+        "staging_removed": true,
+        "snapshot_unchanged": true
+      },
+      "selected_source_unchanged": true
+    },
+    {
+      "case": "source-changed-mid-export",
+      "status": "observed",
+      "detail": {
+        "error": "ValueError: Resource changed before publication: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-blank-review\\resources-round\\runtime-20261101T160809\\changed\\original\\a.csv",
+        "target_not_published": true,
+        "staging_removed": true,
+        "snapshot_unchanged": true
+      },
+      "selected_source_unchanged": true
+    },
+    {
+      "case": "invalid-draft-preserved-and-rejected",
+      "status": "observed",
+      "detail": {
+        "invalid_draft_preserved": true,
+        "field_actions_rejected": true,
+        "diagnostic_codes": [
+          "experiment.raw_seed.invalid",
+          "experiment.raw_draft.unaccepted"
+        ],
+        "original_snapshot_unchanged": true
+      },
+      "selected_source_unchanged": true
+    },
+    {
+      "case": "tampered-resource-refused",
+      "status": "observed",
+      "detail": {
+        "rejected": true,
+        "error": "Bundle hash/size mismatch: resources/r0000-a.csv"
+      },
+      "selected_source_unchanged": true
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "checks": [
+    {
+      "path": "scripts/test_k1_bundle.py",
+      "changed_functions": [
+        "test_independent_review_regressions",
+        "main"
+      ],
+      "deleted_functions": [],
+      "new_functions": [
+        "test_unknown_geometry_blocker_controls"
+      ]
+    },
+    {
+      "path": "scripts/test_config_migration.py",
+      "changed_functions": [
+        "geometry_contract"
+      ],
+      "deleted_functions": [],
+      "new_functions": []
+    },
+    {
+      "path": "scripts/test_f4_producers.py",
+      "changed_functions": [
+        "model_cases",
+        "source_cases"
+      ],
+      "deleted_functions": [],
+      "new_functions": []
+    },
+    {
+      "path": "scripts/test_f4_document_diagnostics.py",
+      "changed_functions": [
+        "check_material_rows",
+        "check_geometry_targets",
+        "main"
+      ],
+      "deleted_functions": [],
+      "new_functions": [
+        "check_density_machine_categories",
+        "check_legacy_code_json_unchanged",
+        "check_nist_alias_source"
+      ]
+    }
+  ],
+  "all_proposed_sources_parse": true,
+  "patch_text_matches_exact_difflib_projection": true,
+  "old_resource_refusals_and_atomicity_functions_unchanged": true,
+  "tracked_status": "",
+  "head": "56b689fb9ac920cbb1203b2b94dae2483d25f622"
+}

@@ -1,0 +1,23 @@
+# Geometry Windows 路径草案独立审查：通过
+
+范围为Cicero的out/collab/j2-geometry-ci-path/README.md、receipt.json、fix.patch及对应完整smoke草案。基准HEAD2901f4254303c3a9089c9025717908c0d77ff190。未发现阻止采用此最小测试补丁的P1/P2问题。
+
+独立核对patch SHA256 `2b3f9b12c58c6c2dcc97ac35d9448897fdf6592518639b7aa644296be7ad6a74`，完整候选smoke SHA256 `579c6a7a00a93a41570aa28357053d3009b1c2758cf005ccf6de78477fb5b671`。逐全文对比确认只有：smoke_j2_geometry.py:162的预期file路径加resolve，以及:165–168新增重解析后的samefile和SHA断言。原shape/属性保留性等其他断言未删改。git -c core.longpaths=true apply --check通过，未apply。
+
+生产geometry_ini_writer._resource_value(:250–256)本来输出str(path.resolve())；草案仍使用exact native文本比较，仅让期望遵守同一既有契约，不把路径任意归一化后忽略资源错误。parser恢复后既检查同一物理文件samefile，也复核内容SHA，未触及产品writer/parser/closure或任何missing/outside拒绝分支。
+
+## 实际独立执行
+
+复制作者诊断脚本原字节到本独立out目录，重新创建本目录下的长路径资源并调用真实Windows GetShortPathNameW取得8.3别名；所有生成/移走/恢复夹具均只在本out目录。不是复读作者日志。
+
+- 原断言：长路径输入通过，8.3输入失败；新resolve断言两种输入均通过。生产parser→document→writer→parser重建的STL与原件samefile且SHA一致，资源收据SHA相同。独立path-proof.json保存本目录下实际两种路径和生成值。
+- 缺失资源：移走真实STL后原_geometry_resources拒绝，finally恢复。
+- 包外资源：创建同字节但位于允许根之外的STL，原_geometry_resources仍拒绝；没有以相同内容绕过包内边界。
+- 专项完整入口exit0，标准v3 probe计21断言入口；proof.log。
+- 原tracked scripts/test_j2_resource_bundle.py完整入口独立重跑exit0，101断言入口；临时根仅改为本out temporary，脚本/生产字节未改；closure.log。既有missing/outside/别名/shape_properties等闭包门禁保留。
+
+机器结果receipt.json；八个相关tracked产品/测试及作者既有证据文件前后SHA不变。显式git -c core.longpaths=true status为clean，无全局/仓库Git配置修改。没有QApplication、GUI完整smoke、native窗口或后端启动，没有CI动作。
+
+边界：旧CI仅打印失败断言，未打印expected/actual路径，因此不能声称已直接观测到该CI运行具体TEMP别名；本机真实Windows反例独立证明这一拼写差异可造成旧断言失败，并证明补丁仍校验同一真实STL。STL为字节闭包夹具，不证明物理网格正确性。完整GUI/新候选CI复验仍由main安排，原CI失败日志与门禁保持原态。
+
+结论：测试补丁仅修正展示拼写预期并加强资源身份检查，missing/outside未削弱，可交main采用并排程后续复验。K1 policy不在本次范围。

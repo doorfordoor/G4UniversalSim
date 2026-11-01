@@ -1,0 +1,37 @@
+# 几何3个P2修后独立定点复核（2026-11-02）
+
+**原3项P2的定点修复均确认通过；新增共享schema/Boolean消费问题仍阻断整体验收。** 产品只读；没有运行作者smoke或全局矩阵，没有改代码或覆盖原r1/r2反例。
+
+## 身份
+
+对作者声明冻结的geometry_editor_model.py核对SHA为58f0e82d1508b105e45312c515a5b9b4d64511e19ade5959ff11b10b9ea2115f，和修复收据一致；r3与supplement各自执行前后源码未变化。独立检查实际113/114 capabilities均与当前C++ source_fingerprint=149b25dd00773898c324d09a53dd1ef64b0bf37bc105ca0f74d0c4933245756f匹配，文件SHA与主代理fresh构建身份相同；身份原件identity.json与两版capabilities输出。复核实际调用fresh113 Inspect，没有让陈旧EXE通过指纹门禁。
+
+## 原P2定点结论
+
+1. 参数分组：原`0 10 20 0 360 deg`及`0mm10mm20mm0deg360deg`均变为GUI error、writer拒绝，原文保留；不再将其送往后端触发旧FatalException。逗号合法对照真实Inspect退出0；额外独立10token带单位及5token裸参数对照均writer接受、Inspect退出0。源码采用GeometryUtils固定分组，非正则捡取。该P2关闭。
+2. copies_file冲突：原position反例writer拒绝，额外独立rotation-only/position-only/both三例分别有真实field结构化诊断并保留原文；无冲突CSV对照真实Inspect退出0。未靠清空原字段绕过。该P2关闭。
+3. 混合单位replica：原world size=1,1,2 cm、1x1x10mm切片，GUI errors=[]、writer接受，实际生成的INI交fresh113 Inspect退出0；错误10x10mm横截面仍被拒绝。确认没有使用preview尾单位传播来放宽规则。该P2关闭。
+
+## 新发现：[P2] schema将Boolean形状字段列为known后，后端消费反而丢弃它们
+
+这不是本次GUI两文件修复造成的遗漏，属于主代理共享schema集成边界。原合法Boolean trd对照当前GUI writer接受并写出dx1/dx2/dy1/dy2/dz，但fresh113 Inspect退出1：`key 'dx1', value '1 mm': shape requires this length field`，created_geometry_object_count=0。
+
+实际路径：src/Geometry/GeometryConfig.cc ParseBooleanSection第963行，仅当!IsKnownBooleanKey(item.first)才写op.tool.properties；include/Config/ConfigSchemaTable.hh约470行起已把dx1等11个trd/trap属性加入该Boolean section的known keys。结果已读取值被跳过，ValidateShapeContract读到空properties。
+
+建议主代理在Boolean属性消费时明确保留IsShapeProperty的known字段（同时维持forbidden tool fields拒绝），随后统一重建并独立复验trd/trap工具。单纯重编译相同消费逻辑不会修复。原始新反例：r3/boolean-trd-control/geometry.ini/main.ini/stdout.log/stderr.log。没有为了使3P2复核全绿而删除该合法对照。
+
+## 其他独立对照与证据
+
+r3重放原10case：合法tubs、CSV table、裸rad hype/vis/cuts/metadata、相对资源source_path+字典replay、unknown blocker和资源消失保护均符合预期；Boolean trd是上述唯一新失败。details-r3保留三类offscreen详情set/apply非法raw原文检查（自然退出0）及原replica反例修后结果；supplement另加7case，包含3个真实后端合法Inspect和字段诊断/原文/错误截面对照。
+
+- r3/receipt.json：全部原观察、8文件前后SHA、snapshot；probe-r3.log为观察结果，exit0仅代表审查脚本写出，不是产品整体通过。
+- supplement/receipt.json：7case定向确认通过；supplement.log及实际生成几何/后端stdout/stderr保留。
+- details-r3/receipt.json、detail-probe-r3.log：原混合单位对照及offscreen原文结果。
+- 原r2/details-r2及初审README均保持历史原件，不追改。
+
+仍不把F4/F5/K1/i18n/project迁移等明确主代理待接线当作者漏项。没有完整窗口、真实模拟或跨平台矩阵结论；原三个GUI模型P2的修复通过与共享后端新阻断分开判断。
+
+
+## 主代理接收（2026-11-02）
+
+原3P2已由主代理接收关闭；新known-shape Boolean消费P2由主代理接手GeometryConfig.cc修复及双版重建。独审者不改C++；保留trd/trap真实Inspect复核责任。后续须用修后fingerprint新证据，149b阶段结果不改写或冒充修后正式结果。

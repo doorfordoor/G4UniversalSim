@@ -1,0 +1,151 @@
+{
+  "utc": "2026-11-01T16:16:15.660555+00:00",
+  "runtime_root": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-materials-review\\runtime-20261101T161610",
+  "source_sha256_before": {
+    "gui/g4usim_gui/core/nist_elements.py": "fd692f360e536eb47a273c2d0cd4e55642246fd50035587a136629ff557aacec",
+    "gui/g4usim_gui/editors/material_editor_model.py": "f9c0273d0d5e74ee0ebfd93a2ed3c9fa4756b31a4aebf75b9b172c80ac35ec49",
+    "gui/g4usim_gui/parsers/materials_parser.py": "750101c3336763ae6200df102289bdfa5852d8247b6e52c7e63e9149c21b5dd5",
+    "gui/g4usim_gui/widgets/config/materials.py": "54cc30f628acb226e0a7c143b470b4c08e22a4caa0459618224a4f061e61516d",
+    "gui/smoke_tests/smoke_j2_materials.py": "cb65bc16788847abe855c026b14e9e5f359d9dabab2247596bb39a48e9a64664"
+  },
+  "source_sha256_after": {
+    "gui/g4usim_gui/core/nist_elements.py": "fd692f360e536eb47a273c2d0cd4e55642246fd50035587a136629ff557aacec",
+    "gui/g4usim_gui/editors/material_editor_model.py": "f9c0273d0d5e74ee0ebfd93a2ed3c9fa4756b31a4aebf75b9b172c80ac35ec49",
+    "gui/g4usim_gui/parsers/materials_parser.py": "750101c3336763ae6200df102289bdfa5852d8247b6e52c7e63e9149c21b5dd5",
+    "gui/g4usim_gui/widgets/config/materials.py": "54cc30f628acb226e0a7c143b470b4c08e22a4caa0459618224a4f061e61516d",
+    "gui/smoke_tests/smoke_j2_materials.py": "cb65bc16788847abe855c026b14e9e5f359d9dabab2247596bb39a48e9a64664"
+  },
+  "five_files_unchanged": true,
+  "cases": [
+    {
+      "case": "priority-isotope-roundtrip",
+      "status": "observed",
+      "detail": {
+        "custom_O_priority": true,
+        "explicit_G4_O_NIST": true,
+        "isotope_text_and_save_roundtrip": true,
+        "search_Z8_names": [
+          "G4_O"
+        ]
+      }
+    },
+    {
+      "case": "mode-specific-components",
+      "status": "observed",
+      "detail": {
+        "mode_checks": [
+          {
+            "mode": "volume_fraction",
+            "components": "O:1",
+            "valid": false
+          },
+          {
+            "mode": "volume_fraction",
+            "components": "G4_O:1",
+            "valid": true
+          },
+          {
+            "mode": "atom_count",
+            "components": "G4_WATER:1",
+            "valid": false
+          },
+          {
+            "mode": "mass_fraction",
+            "components": "Sii:1",
+            "valid": false
+          }
+        ],
+        "volume_material_over_same_name_custom_element": true
+      }
+    },
+    {
+      "case": "finite-units-adversarial",
+      "status": "observed",
+      "detail": {
+        "density_errors": {
+          "nan g/cm3": [
+            "Probe: Density must be finite and positive with a supported unit (g/cm3, kg/m3, mg/cm3): nan g/cm3"
+          ],
+          "1e999 g/cm3": [
+            "Probe: Density must be finite and positive with a supported unit (g/cm3, kg/m3, mg/cm3): 1e999 g/cm3"
+          ],
+          "0 mg/cm3": [
+            "Probe: Density must be finite and positive with a supported unit (g/cm3, kg/m3, mg/cm3): 0 mg/cm3"
+          ],
+          "-1 kg/m3": [
+            "Probe: Density must be finite and positive with a supported unit (g/cm3, kg/m3, mg/cm3): -1 kg/m3"
+          ],
+          "1 frobs": [
+            "Probe: Density must be finite and positive with a supported unit (g/cm3, kg/m3, mg/cm3): 1 frobs"
+          ],
+          "1e308 g/cm3": [],
+          "1 G/CM3": [
+            "Probe: Density must be finite and positive with a supported unit (g/cm3, kg/m3, mg/cm3): 1 G/CM3"
+          ],
+          "2.7 * g/cm3": [
+            "Probe: Density must be finite and positive with a supported unit (g/cm3, kg/m3, mg/cm3): 2.7 * g/cm3"
+          ],
+          "1 kg/m^3": []
+        }
+      }
+    },
+    {
+      "case": "source-errors-survive-validation",
+      "status": "observed",
+      "detail": {
+        "source_errors_preserved": true,
+        "writer_blocked": true
+      }
+    },
+    {
+      "case": "memory-draft-controls",
+      "status": "observed",
+      "detail": {
+        "no_source_revert_preserves_invalid_draft": true,
+        "volume_fraction_element_insert_disabled": true
+      }
+    },
+    {
+      "case": "backend-unit-comparison",
+      "status": "observed",
+      "detail": {
+        "backend_sha256": "fbb7c56e820d3d36e5f87a3ef2995d55c554d4c5cb38dbaa75191422d4bc37f0",
+        "source_fingerprint_from_author_identity": "c2b575bbb9c594765364aa7c78150e842ffb20ff34b10ad4729720bae2c8c91b",
+        "not_current_CPP_build": true,
+        "comparisons": [
+          {
+            "case": "uppercase",
+            "density": "1 G/CM3",
+            "backend_exit_code": 0,
+            "backend_completed": true,
+            "gui_accepted": false,
+            "gui_errors": [
+              "Probe: Density must be finite and positive with a supported unit (g/cm3, kg/m3, mg/cm3): 1 G/CM3"
+            ],
+            "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-materials-review\\runtime-20261101T161610\\uppercase\\backend.log"
+          },
+          {
+            "case": "asterisk",
+            "density": "2.7 * g/cm3",
+            "backend_exit_code": 0,
+            "backend_completed": true,
+            "gui_accepted": false,
+            "gui_errors": [
+              "Probe: Density must be finite and positive with a supported unit (g/cm3, kg/m3, mg/cm3): 2.7 * g/cm3"
+            ],
+            "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-materials-review\\runtime-20261101T161610\\asterisk\\backend.log"
+          },
+          {
+            "case": "converted-overflow",
+            "density": "1e308 g/cm3",
+            "backend_exit_code": 1,
+            "backend_completed": false,
+            "gui_accepted": true,
+            "gui_errors": [],
+            "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-materials-review\\runtime-20261101T161610\\converted-overflow\\backend.log"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+# Permanent smoke review (read-only)
+
+Scope: smoke patch f5102d8367bd9779b587294613c5487d5b197c1235ff88a1a2dee6f7ecd2d784; proposed df8db0fe6ce906651f224699de6d360b6f811a6752ae4a32045a4699e97459b2. No apply or tracked edits.
+
+Verified old function AST unchanged; main differs only by appended test call. Both LF patches pass git apply --check. Owner logs' raw SHA and two406 markers match receipt; original-product negative evidence fails exactly at Project field x711 outside viewport540. Independent new-function150 run exit0 (permanent-test-review.json/log).
+
+P2 test coverage gap: proposed lines493-494 claim queued old focus supersession, but first call is same page/current focus with pending_before=None/pending_after=None. Independent traced focus_page events13/14 prove only subsequent Start call queues work. This tests final newest focus but not replacing a real pending Project task. Establish another current page first and settle, then Project→Start without event pumping; assert/observe real old task exists before replacement. Do not change viewport/union assertions or product677a. Main handed fix to Harvey v3; keep406 original evidence. This does not invalidate original retained-dock negative control or prior product review.
+
+Await v3 stale-only review; no need repeat all old eight groups.

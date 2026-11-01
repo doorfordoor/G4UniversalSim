@@ -1,0 +1,17 @@
+{
+  "status": "offline_tool_selftest_passed",
+  "remote_requests": 0,
+  "historical_report": "linux113-static",
+  "historical_report_sha256": "2afda74e1ac4d633e1629fdd4f07f7ba9769e8b600f6ae4dcf144b366288c0e5",
+  "current_candidate_results": false,
+  "checks": [
+    "archive selected report/log byte hashes",
+    "historical strict gate",
+    "same-v3 per-case baseline comparison",
+    "total/per-case/missing-case negative controls",
+    "wrong head/platform refusal",
+    "raw log tampering refusal",
+    "no original-path fallback",
+    "safe extraction and traversal refusal"
+  ]
+}

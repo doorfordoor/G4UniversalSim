@@ -1,0 +1,37 @@
+# F8 给 main 的 Windows 实窗入口
+
+2026-11-02 冻结复核：五文件均与 out/collab/f8-accessibility/receipt.json 所列SHA一致，上一轮交付后未再修改；无后续新增翻译，仍为已合并的15键。没有启动原生窗口或操作原生鼠标键盘，实窗所有权交 main。
+
+## 启动与路径
+
+源码根：C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim
+正常入口：在该根目录执行 python gui/main.py。这是实际 app.run_app → MainWindow，带原 Fusion/theme、语言、workspace/recovery/runner 初始化。不要以 smoke 的 gui_test_window 或 --self-test 代替正常实窗。启动进程勿继承QT_QPA_PLATFORM=offscreen；真实Windows DPI由main验收环境控制，不把QT_SCALE_FACTOR模拟结果当作真实系统缩放。
+
+程序与钩子：
+- gui/g4usim_gui/main_window.py：_setup_accessibility在workspace_layout.restore之后接入；open_new_simulation_wizard为重入保护入口，仍调用ContentMixin原方法；接受关闭时移除AccessibilityController过滤器。
+- gui/g4usim_gui/window/shell.py：focus_page、focus_workspace_region、show_environment_settings、show_environment_installer；_set_language末尾_refresh_accessibility。
+- core/accessibility.py：buddy/名称、Tab离开多行控件、焦点滚动可见、owned-dialog呈现处理；不拥有runner/安装状态。
+
+## 确切可操作入口
+
+开始页：新建空白仿真、从模板创建、打开项目、导入配置包、环境设置五按钮；导航菜单亦可使用。
+Ctrl+Alt+1..9依次为开始/项目/配置/场景/有效配置/运行控制台/结果/运行历史/参数扫描。
+F6下一工作区焦点区域，Shift+F6上一；Ctrl+N模板向导，Ctrl+Shift+N空白，Ctrl+O打开项目；Ctrl+Alt+O配置包导入。
+Ctrl+Alt+E环境设置，Ctrl+Alt+I打开同一I1对话框所拥有的I2安装器。仅打开入口不会安装或运行；I1发现、选择和I2发布重新发现保持原所有者。
+
+建议实窗顺序：九页快捷键与F6/Shift+F6、Tab/buddy/表格名称 → 开始页五入口取消/返回 → 非法草稿下向导前进/后退/取消/重开（按Ctrl+N不能嵌套新向导） → 环境/安装器关闭及名称 → 1024×768、1366×768与Windows125%/150%的动作可见/滚动/floating dock。读屏、物理DPI/多屏、真实安装/模拟均未由本离屏专项验收。
+
+## 已完成证据（全部绝对路径前缀为源码根）
+
+冻结收据：out/collab/f8-accessibility/receipt.json
+完整实现/主集成hook：out/collab/f8-accessibility-implementation.md
+翻译：out/collab/f8-accessibility-i18n.json（15键，无新增）
+
+最终125%：out/collab/f8-accessibility/accepted125.log，实际DPR1.25，142个v3断言入口；图片accepted125/start.png、accepted125/start-zh.png。
+最终150%：out/collab/f8-accessibility/accepted150.log，实际DPR1.5，142个v3断言入口；图片accepted150/start.png、accepted150/start-zh.png。最终150%中文图已实际打开确认五按钮、标题栏项目/空闲状态及主题/语言均可见。
+
+以上图像均为offscreen截图（测试加载Windows系统字体），非正式实窗；虚拟availableGeometry125%=640×640，150%=533×533，测试窗口为1024×700/800×540；另做增加字体压力。不可按截图直接宣称真实桌面验收完成。
+
+关联日志：start_page.log（74）、wizard.log（62）、main-ui-final.log（46）、workspace-final.log（149）、compileall.log。所有对应进程已正常完成；旧失败/探索日志保留，最终使用accepted125/150。
+
+主集成：无需再装一套controller或接一次开始页信号；源码hook已接好。新GUI Case可直接运行 gui/smoke_tests/smoke_f8_accessibility.py（无必须参数）；已合并中央翻译后无需--translations。离屏截图输出用--output <目录>。未提交，未改STATUS/ROADMAP阶段状态，独审/正式实窗交main。

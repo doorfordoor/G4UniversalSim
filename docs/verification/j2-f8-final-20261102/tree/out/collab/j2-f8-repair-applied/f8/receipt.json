@@ -1,0 +1,80 @@
+{
+  "scope": "actual patched working tree; official permanent entry under specified interpreter; no source changes, monkeypatch, native input or build",
+  "worktree": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim",
+  "interpreter": "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+  "probe": "tools/test_assert_probe.py",
+  "probe_id": "settrace_assert_lines_v3",
+  "test": "gui/smoke_tests/smoke_f8_accessibility.py",
+  "source_before_equals_after": true,
+  "source": {
+    "gui/g4usim_gui/core/accessibility.py": {
+      "sha256": "631df8861ca70524b3ab9d3941a4e9a263cbd5a017824b7647c64ded90025a37",
+      "normalized_lf_sha256": "631df8861ca70524b3ab9d3941a4e9a263cbd5a017824b7647c64ded90025a37",
+      "crlf_count": 0,
+      "bytes": 14996
+    },
+    "gui/smoke_tests/smoke_f8_accessibility.py": {
+      "sha256": "69b11a915a0864110171df75a1a2402ea3025f0a3a01b79d31af8ee26bd9f0e6",
+      "normalized_lf_sha256": "69b11a915a0864110171df75a1a2402ea3025f0a3a01b79d31af8ee26bd9f0e6",
+      "crlf_count": 0,
+      "bytes": 31906
+    }
+  },
+  "processes_all_finished": true,
+  "runs": [
+    {
+      "scale": "1.25",
+      "qt_platform": "offscreen",
+      "command": "D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe -B tools/test_assert_probe.py gui/smoke_tests/smoke_f8_accessibility.py --output out/collab/j2-f8-repair-applied/f8/scale125",
+      "log": "scale125.log",
+      "log_sha256_raw_bytes": "2bcd083c657c5242d1debdb61a1fe7e07bca033feb80335a7271f34bb170d290",
+      "assertions_v3": 416,
+      "exit_code": 0,
+      "exec_session": 83595,
+      "exec_session_final_status": "process exited; completion polled",
+      "stale_evidence": [
+        {
+          "stage": "stale-project-queued",
+          "page": 1,
+          "pending_is_project": true,
+          "timer_active": true
+        },
+        {
+          "stage": "stale-start-supersedes",
+          "page": 0,
+          "old_project_pending": false,
+          "pending_is_current_start": true,
+          "pending_cancelled": false
+        }
+      ],
+      "artifacts": "scale125/"
+    },
+    {
+      "scale": "1.5",
+      "qt_platform": "offscreen",
+      "command": "D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe -B tools/test_assert_probe.py gui/smoke_tests/smoke_f8_accessibility.py --output out/collab/j2-f8-repair-applied/f8/scale150",
+      "log": "scale150.log",
+      "log_sha256_raw_bytes": "b22b6c74da6c4e59681d3957cfcc7e9c69727705155739c691af93dfff02e116",
+      "assertions_v3": 416,
+      "exit_code": 0,
+      "exec_session": 50821,
+      "exec_session_final_status": "process exited; completion polled",
+      "stale_evidence": [
+        {
+          "stage": "stale-project-queued",
+          "page": 1,
+          "pending_is_project": true,
+          "timer_active": true
+        },
+        {
+          "stage": "stale-start-supersedes",
+          "page": 0,
+          "old_project_pending": false,
+          "pending_is_current_start": true,
+          "pending_cancelled": false
+        }
+      ],
+      "artifacts": "scale150/"
+    }
+  ]
+}

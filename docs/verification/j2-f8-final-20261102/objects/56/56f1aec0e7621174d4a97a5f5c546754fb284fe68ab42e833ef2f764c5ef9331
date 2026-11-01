@@ -1,0 +1,47 @@
+# Shared resource P2 targeted fix
+
+2026-11-02. Authorized write set only: `gui/g4usim_gui/core/run_editor_resources.py`, `gui/g4usim_gui/core/project_snapshot.py`, `scripts/test_j2_resource_bundle.py`. No changes to other owners, C++, native UI, runner, schema or translations. No commit/global build. Initial review: `out/collab/j2-integration-review/README.md`.
+
+## P2-1
+
+Resource relocation now has its own LF/CRLF-preserving field-span scanner. No-version/v1 permits ordinary duplicate keys/sections, follows normalized key identity and physical last-value semantics, and rewrites only the effective resource declaration. Shadowed missing resources are never opened/copied; their raw lines, comments and whitespace remain intact. Version declaration itself stays unique, and v2 continues through the existing strict `geometry_migration._scan` before copying anything. This changes relocation, not migration/version/backend rules. Source bytes are never rewritten by package generation; only the new package file gets materialized paths.
+
+## P2-2
+
+CURRENT snapshot resource collection reads each explicit field from current `shape_properties` or legacy `preview_properties`. Equal dual representations produce one receipt; different values are explicitly rejected instead of silently choosing. STL/tessellated file presence and SHA now go through the unchanged `_read_inside` gate, as do copy tables. Inline parameterised `copies + copy_step` is preserved as a supported no-table case. Missing resources and outside-root paths still refuse load.
+
+## Permanent evidence
+
+Baseline `baseline.log`: exit 0, original **30 v3 entrances** including main's geometry bundle closure. Candidate `candidate-final.log`: exit 0, **82 v3 entrances**, preserving the original assertions and adding:
+
+- Legacy absent-version and explicit-v1 duplicate copies_file, exact raw-line/CRLF preservation, missing shadowed file, case/repeated-section final-value behavior.
+- Actual source_copy_mode package generation with duplicate copies_file, original source bytes unchanged and effective copied bytes correct.
+- v2 duplicate key/section rejection and duplicate version rejection before any copy; input bytes unchanged on refusal.
+- Current and legacy STL property stores, equal dual values, explicit conflict, missing declaration/file and both current/legacy outside-root rejection.
+- Current/legacy table lookup and inline parameterised no-table compatibility.
+- Actual generated package restore records exactly one expected STL/table role/SHA; temporarily missing STL and missing copy-table each refuse load and fixtures are restored in finally.
+
+These are copying/path/identity and model/package checks. The placeholder STL is deliberately not a physical-solid validation. No new backend/native/scientific acceptance claim.
+
+Required GUI compileall passed (pycache isolated under this evidence directory); affected CURRENT-import smoke passed with 208 entrances. `git diff --check` passed. Product/test identities are recorded in `files.json` and now frozen.
+
+Beauvoir `01a197c9-4e28-7273-b9ce-ec59ebca9b21` received the authorized read-only targeted review handoff (submission `01a19808-0282-75f2-9142-3621ed131182`). Review result is pending; this author receipt does not close either independent finding. Main owns final integration and formal gates.
+
+## Parameterized alias follow-up
+
+Beauvoir's `out/collab/j2-integration-review/resource-p2-recheck.md` closed original P2-1 and the STL counterexample, but identified a further P2: CURRENT snapshot collection skipped the backend-supported `parameterized` spelling and therefore skipped copy-table receipts/missing-file refusal.
+
+Targeted change: `_geometry_resources` accepts both existing backend spellings (`parameterised`, `parameterized`), without rejecting/rewriting a valid alias. No other resource gate was changed. `run_editor_resources.py` remains exactly at its previous frozen SHA.
+
+Permanent test uses the same actual generated package for each spelling: positive unique path/SHA receipt, real table temporarily missing → refusal, CURRENT declaration referencing an existing outside-root table → refusal. Geometry/table files are restored in finally; original package load/closure assertions remain.
+
+- `alias-candidate.log`: exit 0, **101 v3 entrances** (original 82 preserved).
+- `alias-compileall.log`: GUI compileall exit 0 with isolated pycache; diff check exit 0.
+- `alias-files.json`: final three-file SHA/bytes and raw test-log SHA. Old 82-entry `files.json`/logs remain unchanged as history.
+- Product/tests frozen and sent to Beauvoir for closure review (submission `01a19811-2a1e-76c3-9035-ebc756493067`). Awaiting independent conclusion; no commit/global C++ build/native action.
+
+### Final independent closure
+
+Beauvoir independently closed original P2-1, P2-2 and the parameterized alias gap, with no open finding in this bounded scope. Independent permanent test rerun: exit 0 / 101 assertions. The original actual-package fixture passed both spellings' normal receipt, missing-table refusal and outside-root refusal (six controls), all fixtures restored. Three-file SHA/bytes match before and after. Final report: `out/collab/j2-integration-review/resource-p2-final-close/README.md`.
+
+`alias-files.json` now records independently_closed and is the final candidate-commit identity receipt. Product/test bytes remain frozen. This closes only the resource issues; no C++/native/physical or whole-stage acceptance is implied.

@@ -1,0 +1,69 @@
+{
+  "scope": "J2 material implementation component checks, not full stage acceptance",
+  "head": "fc606739b9bb5b381b87d5ffd2870844c10afee2",
+  "files": {
+    "gui/g4usim_gui/editors/material_editor_model.py": "f9c0273d0d5e74ee0ebfd93a2ed3c9fa4756b31a4aebf75b9b172c80ac35ec49",
+    "gui/g4usim_gui/widgets/config/materials.py": "54cc30f628acb226e0a7c143b470b4c08e22a4caa0459618224a4f061e61516d",
+    "gui/g4usim_gui/parsers/materials_parser.py": "750101c3336763ae6200df102289bdfa5852d8247b6e52c7e63e9149c21b5dd5",
+    "gui/g4usim_gui/core/nist_elements.py": "fd692f360e536eb47a273c2d0cd4e55642246fd50035587a136629ff557aacec",
+    "gui/smoke_tests/smoke_j2_materials.py": "cb65bc16788847abe855c026b14e9e5f359d9dabab2247596bb39a48e9a64664"
+  },
+  "checks": [
+    {
+      "check": "j2_materials",
+      "status": "passed",
+      "log": "out\\collab\\j2-materials\\smoke-translations-final.log",
+      "sha256": "c258e193042515e3f536cf868d10f974719be7790a71b46e5992386d627a21e1"
+    },
+    {
+      "check": "j2_materials_preview",
+      "status": "passed",
+      "log": "out\\collab\\j2-materials\\smoke-translations-preview.log",
+      "sha256": "c258e193042515e3f536cf868d10f974719be7790a71b46e5992386d627a21e1"
+    },
+    {
+      "check": "project_io",
+      "status": "passed",
+      "log": "out\\collab\\j2-materials\\project-io.log",
+      "sha256": "7c8e9c14bf8c65352cdaa35d09a46eeab0cd3d5ed2c37d064f653f8e7bde52fc"
+    },
+    {
+      "check": "project_snapshot",
+      "status": "passed",
+      "log": "out\\collab\\j2-materials\\project-snapshot.log",
+      "sha256": "dd40b752cd46357b8252de7cdb43a23a2afb6fe6be883045dc266a3501768729"
+    },
+    {
+      "check": "compileall",
+      "status": "passed",
+      "log": "out\\collab\\j2-materials\\compileall.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "check": "old_materials",
+      "status": "failed_shared_geometry_expectation",
+      "log": "out\\collab\\j2-materials\\existing-materials-final.log",
+      "sha256": "cdd2cd95166bc197fc5bfbcea503bd09dda1220a7b8c370c6bf7af7f14024321"
+    },
+    {
+      "check": "old_config_editors",
+      "status": "failed_shared_run_tabs_expectation",
+      "log": "out\\collab\\j2-materials\\config-editors.log",
+      "sha256": "04c7392b9b67b0c0e3f77a5b9e8e203b56895ed6f4c2130e75bd6e1a88b0f5ca"
+    },
+    {
+      "check": "j2_blank",
+      "status": "failed_shared_geometry_summary",
+      "log": "out\\collab\\j2-materials\\j2-blank-final.log",
+      "sha256": "3927276b0cd6e315b88ae8acc509a548af691b8a540ab81bcf8e5a4da8342e50"
+    }
+  ],
+  "backend_receipts": [
+    "backend-runtime/receipts.json",
+    "backend1143/receipts.json"
+  ],
+  "backend_identities": "backend-identities.json",
+  "catalogs_identical_1132_1143": true,
+  "visual": "materials-zh.png (offscreen; fonts explicitly loaded for preview only)",
+  "translation_keys": 18
+}

@@ -1,0 +1,21 @@
+# Linux Qt Name test-only最终候选独审
+
+结论：通过本次最小独审，未发现本范围P1/P2；无需为当前Windows/Linux provider差异修改产品。完整smoke候选5f234e69c00d602039cb8f2ebc7daadb4f69edc860e6010989628d06253b3814，patch09409fa22593aceef84bcbcbed5a232c3eae0b0a6225c328a8ba0ec07c65815b。没有apply或tracked修改，没有native/backend/profile/full655重跑。作者655是独立原件，不冒称本次再跑。
+
+独立新例：review.py只提取候选精确_assert_history_provider AST，创建真实生产RunHistoryPage，使用真实Qt对象/Label关系/Name/Value，没有覆盖Name getter、伪造接口或改sys.platform。Windows指定Dvenv Qt6.11.1和WSL既有Qt6.11.3各短进程exit0。
+- en→zh_CN→en：两文本框Name仍等于实际标签，Role.EditableText；Combo属性Status/状态/Status不变，Windows interface Name同标签，Linux Name/Value为实际currentText all。两端的真实Label relation都指向该QLabel，Role.StaticText、LabelName分别Status/状态/Status，interface.object()就是原控件。
+- 两端各9负向：每轮实际setBuddy(None)且保留正确accessibleName，确切Label关系消失，候选拒绝；恢复buddy再过完整检查。另传入同文本但不同真实QLabel、另控件真实interface，候选均拒绝。没有property-only或同字符串身份替代。
+- 真实Combo切换其他selection、清selection为空、恢复all，Name/Value按当前provider严格检查都通过；未改变业务模型，仅组件控件状态。
+
+Qt官方源码独立浏览确认：6.11.1与6.11.3的ComboBox Name在Q_OS_UNIX分支使用当前文本，空字符串再走基类回退；语义标签由QAccessibleWidget的Label关系枚举实际QLabel。不是6.11.3新增回归，也不支持仅依locale归因。候选只覆盖当前目标Windows/Linux，不将Linux条件推广为所有Unix/macOS验收。
+- [Qt6.11.3 Combo provider](https://raw.githubusercontent.com/qt/qtbase/v6.11.3/src/widgets/accessible/complexwidgets.cpp) lines381–408。
+- [Qt6.11.1 Combo provider](https://raw.githubusercontent.com/qt/qtbase/v6.11.1/src/widgets/accessible/complexwidgets.cpp) lines381–408。
+- [Qt6.11.3 Label关系](https://raw.githubusercontent.com/qt/qtbase/v6.11.3/src/widgets/accessible/qaccessiblewidget.cpp) lines205–243。Labelled是相反方向，未用其为空制造缺陷。
+
+AST与原证据：除新增helper和目标History的真实provider/丢buddy负向外，其余全部函数（含main）AST不变。独立还原目标函数的两处provider替换与移除新增negative段后，完整History函数AST也与原件相同；再移除helper后整个模块AST与冻结943c原件一致。因此原property/buddy、文本框Name、联合框/最小滚动/F5/原spacer测试等均保留。patch apply-check0，未apply。
+
+作者自然原入口/只读print两份失败日志、候选Linux655/Windows精准History两份通过日志SHA均按原receipt独立核对。原659红与自然detail证明不是Name controlled replay；本次额外micro直接复现真实LinuxName all。候选末尾原QSpacer受控重放与预期warning属于另一专项，不能误说为Name provider故障注入。
+
+149GUI byte map：当前149份GUI原字节逐一与map及native100/125/150三份18c identity匹配，三identity原SHA也匹配。这里只证明相同产品字节，未重审native100或扩充main既有scope；未来新test-only冻结仍须重核这149份字节，再按main限定scope映射，不据本次micro或作者655宣称新CI关闭/新正式矩阵通过。
+
+证据：windows-receipt.json、linux-receipt.json、各原.log、processes.json、static-receipt.json及review.py。两个实际短Qt进程已结束；本任务没有未结束session。原CI红例与所有作者证据保持原字节，等待main统一候选/正式CI裁决。

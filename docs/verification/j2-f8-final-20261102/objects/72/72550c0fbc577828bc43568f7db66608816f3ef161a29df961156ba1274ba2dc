@@ -1,0 +1,96 @@
+--- a/STATUS.md
++++ b/STATUS.md
+@@ -1,6 +1,34 @@
+ # G4UniversalSim 状态（唯一入口页）
+ 
+ 更新：2026-11-02。本页只做导航与快照；**阶段状态以 [docs/ROADMAP.md](docs/ROADMAP.md) 为准，支持等级以 [docs/功能支持矩阵.md](docs/功能支持矩阵.md) 为准**，两者冲突时先改事实再改文档。
++
++## 2026-11-02 第四修复候选：18c5858证据快照
++
++**第四修复候选，两项test-only专项独审已完成；阶段仍未关闭，完整新候选验收待进行。** 第三冻结为 `18c5858fd6e80a5cb6096beacebfef69c479ad49`。本段只登记该身份的Windows、真实CI和原生范围；第四候选针对两个测试平台断言修订，不预写尚不存在的新HEAD、新CI成功或新增运行事实。
++
++| 18c5858本机profile | 通过/用例 | v3入口 | runner / strict / identity_errors |
++| --- | ---: | ---: | --- |
++| windows-static | 46/46 | 4586 | 0 / 0 / [] |
++| windows-gui | 66/66 | 8574 | 0 / 0 / [] |
++| windows113-backend | 63/63 | 82029 | 0 / 0 / [] |
++| windows114-backend | 63/63 | 72536 | 0 / 0 / [] |
++| windows113-integration | 31/31 | 6790 | 0 / 0 / [] |
++| windows114-integration | 31/31 | 6780 | 0 / 0 / [] |
++
++18c六profile均已终态passed，合计300/300、181295入口；local-final-audit的status=passed、errors=[]，六份原report/launch SHA及逐项算术已核对。六份launch的identity_errors=[]，对应report均git_dirty=false；这些是18c冻结的本机结果，不替代第四候选新CI或阶段验收。证据根文字为 `out/verification/j2-f8-18c5858/`，不把未归档OUT作为公共链接。
++
++18c5858四项push/attempt1 CI均终态：Linux Geant4 `41344573528` 与M0 `41344573541`失败，Desktop `41344573534`与Full installation `41344573604`成功；八份profile报告strict4pass/4fail，release_accepted=false。Linux114、113及M0 Ubuntu各仅gui_f8_accessibility在659行QAccessible.Name断言失败；Windows M0另仅gui_j2_geometry在264行成功reload后的source_path字面相等断言失败（195入口），不是上一轮STL162。Linuxbackend/integration因上游GUI失败未执行，不能记为通过。首败、全部原log/ZIP及旧身份保持，专项归因或入口数增加不把原CI改绿。
++
++两项修订只针对真实接口：成功Reload保存resolve后的规范来源锚点，用精确resolve、samefile及内容SHA验证；失败Reload保留此前原字面锚点与非法草稿的判据不删。真实8.3短路径原195fail、候选长/短各214pass提供本机反例，但原CI没打印路径，不能声称已经看见其具体TEMP拼写。Qt6.11.1/6.11.3官方Combo实现的Unix分支解释了本轮Linux Name/currentText行为，Windows Name仍为标签；语义标签由实际Label关系表达，空文本依Qt回退。测试在本次Windows/Linux目标上严格核对角色、真实interface.object、Name/Value、确切Label/buddy及动态语言；丢buddy、同文异label、错误control接口三类负向在两端各9次均须拒绝，不推广为macOS/所有Unix验收。两项test-only专项独审均PASS；Linux作者完整655绿例与独立微Qt检查分开，不为测试改正确产品。
++
++18c三档原生host/application均正常exit0，main实际观察排除QQ像素。150%为760×640下九页快捷键/F6、保留config+preview后Project完整name/Tab EXE、History三名称英/中/英与Search→Status、模板到Run/Back/取消及深色Project；125%为1200×800下F6/retained Project/Tab及History三名称/语言切换，没有扩写成九页或向导全流程。100%为实际新建blank、生产Save/Open、fields、初始化no_run/0事件、generate、run100/100、export及结果身份关联；导出manifest+7成员闭合、outputs_included=false/replay_verified=false，未执行CLI replay，零沉积world不代表物理响应基准。150/125 Harvey与100 Ptolemy均为纯文件审，不替代独立视觉复验或额外运行。
++
++本轮全部86张原生原图仅本地保留，公开仅SHA/大小/观察文字，不把QQ原图带入Git。现有18c149项GUI逐文件映射及三档原identity已核对，C++源码指纹仍按18c冻结报告记录；这只是原身份的相同产品字节证据。两test与本文档提交得到新HEAD后，最终产品/C++身份映射仍为pending，完成后才能按原限定scope映射，不虚构新增操作或重复三档；**新候选完整真实CI仍必须**。第四候选GUI终态后还计划补一轮100%或125%代表性native，覆盖I1/I2打开取消、Import已有offline包、template Finish后再次重入Back/Esc；该项为pending，按届时新HEAD/build独立记录，不提前算作旧三档覆盖，也不作为本文档冻结前置。F6无法容纳完整joint的窄dock边界不在本修复内，不扩大物理/跨屏/热插拔结论。
++
++下方“第三修复候选”实施快照保留原字节，仅作为当时2901f42等历史身份记录，不代表本段的新候选结论。
++
++<details>
++<summary>第三修复候选历史快照（原文保留）</summary>
+ 
+ ## 2026-11-02 J2/F8 当前实施
+ 
+@@ -26,6 +54,8 @@
+ 第三修复候选包含History三显式buddy及动态语言名称、仅真实QLayout的递归兼容、geometry路径测试精确resolve/samefile比较（不改geometry产品）；History、spacer及STL专项独审均通过，History+spacer组合595专项亦已独审，尚不替代新candidate的CI/原生。F6窄dock界限不修改，不声称不可容纳的整组标签/控件可以同时放入窄视口。K1 final-v1 policy规范身份及原拼写首尾guard专项独审已通过603入口／13组，原短路径30入口及junction 3+5反例保留；**完整新候选验收待进行**，专项关闭不等于CI或阶段关闭。
+ 
+ 首轮 `56b689f` 六份本机报告300次执行、286通过/14失败/0跳过、179468入口及严格失败保持原件；GUI自身git_dirty=true/73条长路径表象不追改。原M0 `41330577407`、Linux `41330577426` 失败，安装 `41330577328`、桌面 `41330577359` 成功；本轮新结果不替换原run或旧失败。源码、构建、报告、截图及独审各按原身份保留。完整新候选矩阵/native/CI全部终态并经独审后才考虑阶段关闭；当前归档只是OUT候选，不是最终公开发布。
++
++</details>
+ 
+ ## 一句话定位
+ 
+--- a/docs/ROADMAP.md
++++ b/docs/ROADMAP.md
+@@ -267,7 +267,7 @@
+ | **F5** | 配置事务 undo/redo、自动保存、异常恢复 | 主编辑快照完整；恢复不覆盖原件，撤销后重新验证 | 已完成：5c1eec5，Windows160/50898、双Linux各160、M0双平台各79及F4门禁通过；5d实窗22观察/28截图/退出0经身份映射。[最终证据](verification/f5-final-20261031/README.md) |
+ | **F6** | 实时进度与 sequence | 已完成，Q1 复核解析、取消和失败边界；进度不替代成功证据 | 保持完成 |
+ | **F7** | 二维扫描、线程预算内并发、场景生成器扫描 | 依赖 K1/F3；每点独立 seed/目录/证据，失败/重试不重复发布，缺点可见 | 待开始；已有单参数串行扫描保留 |
+-| **F8** | 环境设置衔接、空白/模板/导入与向导重入、跨页DPI/键盘/文案一致性与可访问性 | I1/I2提供环境链路；J1实现布局/主题/主要中文及焦点适配；J2实现无源创建和编辑能力；F8做跨项桌面验收 | 2026-11-02 第三修复候选，相关专项独审已完成，完整新候选验收待进行；2901f42本机已过范围、CI失败及原生开放边界见STATUS，History/QLayout专项不代替新冻结复验 |
++| **F8** | 环境设置衔接、空白/模板/导入与向导重入、跨页DPI/键盘/文案一致性与可访问性 | I1/I2提供环境链路；J1实现布局/主题/主要中文及焦点适配；J2实现无源创建和编辑能力；F8做跨项桌面验收 | 第四修复候选：18c5858实际Windows/CI/三档原生按原身份登记；两项test-only平台接口断言修订；两项专项独审已PASS；18c本机300/181295，原CI4pass/4fail保留；未来HEAD映射及单轮补native pending，完整新候选验收待进行、阶段未关闭 |
+ 
+ E3 的已完成 Linux CI 基础不重建；Windows 11.4、原生 Linux 桌面、包内 ROOT/Python 辅助工具与干净安装验收归 I2。现有后端 ROOT 输出和新版本源码 CI 仍按 Q1 及各阶段冻结矩阵验证。Geant4 11.2 先在 I1/I2 决定是否进入支持矩阵：不支持则清晰拒绝/说明，不默认承担无限旧版本兼容。
+ 
+@@ -295,7 +295,7 @@
+ | **I1 环境发现与诊断** | 后端/运行时真实查询、SDK/工具链及可选组件候选事实、版本/架构/数据诊断，异步 GUI 显式选择 | Q1；只读发现与运行资格分开，不安装或自动模拟 | **已完成**：第五冻结专项与独立审查通过，第四单候选实窗按未变 I1 字节映射；第七 `2914b39` 五项文件 SHA 再核一致。[证据与限制](verification/k1-final-20261031/README.md#i1-独立验收) |
+ | **I2 辅助安装与双平台交付** | 目标 1；受控安装前缀、下载校验、失败恢复、运行时/SDK 两种方案、当前版本 Windows/Linux 包、诊断包和版本矩阵 | I1 | **2026-11-01 已完成阶段验收**：计划/获取/发布/恢复、runtime/SDK、两平台安装/核验/卸载、SDK consumer 与完整源码构建、冻结工具及实际 CI 均已验证；无匹配清单时明确不可安装，不承诺自动配置任意编译器。最终测试 `6310969` 与产品 `5fe0a10` 的身份及旧失败见[最终证据](verification/i2-j1-final-20261101/README.md)。 |
+ | **J1 可调整工作区** | 配置、3D/结果、日志、AI区可移动/缩放/隐藏/浮动；三种布局及B/K/C主题、明确区域层级与主要中文；本机布局持久化，按体积/材料调整3D颜色和透明度及会话复位 | Q1/K1状态所有权稳定；与I2按文件独占并行 | **2026-11-01 已完成阶段验收**：DeepSeek实际设计协作、单实例dock、本机保存/重启恢复/回退、主题/3D外观与运行中切换经独审及实窗验证；26图、4次正常退出，中英及代表性DPI，未做物理多屏热插拔。显示动作不改配置、不新增run所有者；完整可访问性归F8。[最终证据](verification/i2-j1-final-20261101/README.md)。 |
+-| **J2 编辑覆盖与几何往返** | 原M3余项；空白创建与无已有配置文件输入、NIST元素来源辅助、命名多源及球面源、物理模块组合/替换、多敏感体编辑和高级实体/场/偏置；后端vis属性往返 | E6；实体能力归一相关部分依赖E7，其余不被无关实体重构阻塞；在L1前完成本轮明确范围 | **2026-11-02 第三修复候选，相关专项独审已完成，完整新候选验收待进行**：保留56b689f及2901f42原失败；K1 policy final-v1专项独审已通过603入口，完整新candidate验收仍待进行，几何路径仅修严格同文件测试；不提高物理支持等级 |
++| **J2 编辑覆盖与几何往返** | 原M3余项；空白创建与无已有配置文件输入、NIST元素来源辅助、命名多源及球面源、物理模块组合/替换、多敏感体编辑和高级实体/场/偏置；后端vis属性往返 | E6；实体能力归一相关部分依赖E7，其余不被无关实体重构阻塞；在L1前完成本轮明确范围 | **第四修复候选，阶段未关闭**：18c实际reload来源规范化与Windows264测试断言分开；只调整成功路径测试、不删失败保留判据；两test专项独审已PASS；18c六profile300/181295，未来HEAD原生身份映射及单轮补验pending，新候选完整CI仍必须 |
+ | **K1 可信实验工作流与配置导出** | 统一 inspect/validate/apply/generate/run/evaluate/export，四层验证、输入身份、可移植配置/资源/证据包 | 2C、E6、F1、F4、F5、I1 | **已完成阶段验收**：第七产品 `2914b39` 的 Windows182/182、57181 v3入口与官方CI548/548、133720入口按原身份保留；P1及永久回归P2经独审关闭，`5644e1e` 新单例Windows36/Linux33通过严格门禁。已正常快进集成并推送至 `codex`。[最终证据](verification/k1-final-20261031/README.md) |
+ | **K2 独立 Geant4 工程导出** | 目标 3 的源码部分；可审阅 C++/CMake、配置/资源/许可、扩展点和构建说明；脱离工具可继续开发 | K1、I2；当前支持子集即可，不依赖所有 H 项 | 导出模板/manifest → 生成与构建 → 两平台干净环境构建/运行/二次修改；不能只附 INI 或依赖工具安装目录 |
+ | **L1 配置 Agent 与模型接入** | 目标 4 首版及目标 5 基础；云 API-key/本地模型适配、结构化差异、授权范围内修改、校验、试跑、读证据、确认/导出 | K1、I1；J1承载，J2先交付本轮手工编辑范围，F8跨项验收；provider/API研究可先行 | provider/凭据与动作接口 → 有界任务状态 → 自然语言端到端/取消/恢复/歧义/失败反例。可写边界来自接口白名单，不来自 EffectiveConfig 读回子集 |
+--- a/docs/agent-history.md
++++ b/docs/agent-history.md
+@@ -691,3 +691,12 @@
+ 几何STL file路径回归专项独审已通过；该测试只做规范resolve及samefile的精确同文件断言，不能用endswith/文件名/存在性代替身份，也不为测试改geometry产品语义。当前项目格式v8；普通旧项目及完整v7编辑快照仍按已知枚举迁移，损坏旧字段不泛化默认，有日期历史v7文本不追改。
+ 
+ 证据根文字登记为out/verification/j2-f8-2901f42及out/collab中的各冻结独审目录，尚未归档为公共链接；最终入库后由main另链。Native独立文件审计仅核launch/GUI149/SHA/原图引用/记录/离线manifest，overall=false。旧raw、原CI失败、JPEG编码的原图字节以及旧copy/review首败均保留，不以本段更新历史身份。当前条目是第三候选实施契约，不是阶段状态改为完成。
++
++
++## 2026-11-02 J2/F8 第四修复候选：18c5858平台测试接口与证据映射
++
++18c5858真实CI首败及Windows/原生均按冻结身份保存，不覆盖56b689f/2901f42旧报告或改绿。Linux41344573528/M0 41344573541失败，Desktop41344573534/安装41344573604成功；strict4pass/4fail。Linux三个GUI在F8:659失败，Windows M0是geometry:264成功reload字面锚点断言（195入口），不是旧STL:162；Linuxbackend/integration未执行。18c六份本机均已终态passed，合计300/300、181295入口，原report/launch SHA及算术核对通过，local-final-audit的errors=[]。两项test-only专项独审均已PASS，仍不宣告阶段完成。
++
++成功reload的实际产品合同是expanduser().resolve()后的来源锚点，失败读取仍保留此前原锚点/文档/非法草稿。测试只改成功分支的精确规范身份预期，并保留失败/无源/非法草稿原判据；真实8.3原195fail与候选长/短各214pass是本机实证，不捏造原CI具体路径拼写。Qt6.11.1/6.11.3的Unix Combo实现说明本轮Linux Name使用currentText（空字符串走Qt回退），Windows Name仍为标签；语义标签由实际Label关系表达。测试仅按本轮Windows/Linux真实provider严格验证Name/Value、Role、interface.object、确切Label/buddy及动态语言，不将其泛化为macOS/所有Unix验收。两端各三类9负向（丢buddy、同文本异label、错误control接口）都拒绝；原property/buddy、F5/完整joint/滚动与spacer断言保留。作者Linux完整655不冒充独审全量重跑，不改正确产品。
++
++现有18c149GUI逐文件/三identity映射已经核对，C++源码指纹按原18c报告保留；新HEAD必须在两test与docs提交后才产生，最终产品/C++映射仍pending，完成后才能映射原三档限定scope，不是docs冻结前置，不伪称新执行、完整视觉或物理基准；新完整真实CI仍须通过。150的九页/模板与125的有限导航范围区分；100生产Save/Open/init no_run/run100/100/export闭包与未CLI replay区分。三档main正常退出，Harvey/Ptolemy只做必要链路纯文件审。86原图含QQ，raw只本地保留，公开仅metadata及观察范围。F6窄dock边界不扩写成已修复。第四候选GUI终态后补一轮100/125择一的代表性native（I1/I2打开取消、Import已有offline包、template Finish及重入Back/Esc）仍pending，须按新HEAD/build单独记录，不扩大原18c三档范围、不重做三档，也不是docs冻结前置。原trace/失败/缓存读数局限均保留；正文不引用未归档OUT为公共链接。
+--- a/docs/J2编辑覆盖与F8验收.md
++++ b/docs/J2编辑覆盖与F8验收.md
+@@ -1,8 +1,10 @@
+ # J2 编辑覆盖与 F8 跨页流程
+ 
+-当前为第三修复候选，相关专项独审已完成，完整新候选验收待进行；正式状态见 [ROADMAP](ROADMAP.md)。本页说明接口、使用方法和验收边界，不把组件检查或界面预览当作完整模拟验收。
++第四修复候选按18c5858实际证据与两个test-only平台断言修订收口，阶段仍未关闭；正式状态见 [ROADMAP](ROADMAP.md)。成功Reload核对规范来源身份、失败Reload仍保留原文档和锚点；本轮Windows/Linux ComboBox按各实际Name/currentText及Label关系验证，确切buddy/标签/接口负向不得缺失，不推广为所有Unix/macOS。两项test-only专项独审均PASS；18c六profile已passed300/300、181295入口且原SHA/算术核对通过，原真实CI4pass/4fail保留，新完整CI仍必须。现有18c149GUI原字节映射已核对；两test与docs提交新HEAD后最终产品/C++映射仍pending，只能在精确同字节后映射旧三档原限定scope，不是docs冻结前置；100%初始化no_run、run100/100与导出未CLI replay分别保留，125%不冒充九页/向导全流程，QQ原图不入公开raw包。第四候选GUI终态后计划100/125择一补I1/I2打开取消、Import已有offline包及template Finish后重入Back/Esc，仍pending、按新HEAD/build独立记录，不扩写旧三档覆盖，也不是docs冻结前置。
+ 
+-第三修复候选包含已审History、spacer、STL路径测试与K1 policy修复，J2/F8阶段仍未关闭。2901f42本机已过范围、CI明确失败及原生边界见[状态入口](../STATUS.md)；113 integration已通过31/31、6790入口及gate0，114 integration已通过31/31、6780入口及gate0；本快照2901f42六份本机profile均已通过，合计300/300、180992入口，独立汇总errors=[]。完整新candidate验收待进行。本页不将专项或界面预览升级为整体验收。
++本页说明接口、使用方法和验收边界，不把组件检查或界面预览当作完整模拟验收。
++
++此前第三修复候选历史快照（2901f42原身份）：第三修复候选包含已审History、spacer、STL路径测试与K1 policy修复，J2/F8阶段仍未关闭。2901f42本机已过范围、CI明确失败及原生边界见[状态入口](../STATUS.md)；113 integration已通过31/31、6790入口及gate0，114 integration已通过31/31、6780入口及gate0；本快照2901f42六份本机profile均已通过，合计300/300、180992入口，独立汇总errors=[]。完整新candidate验收待进行。本页不将专项或界面预览升级为整体验收。
+ 
+ ## 从空白开始
+ 

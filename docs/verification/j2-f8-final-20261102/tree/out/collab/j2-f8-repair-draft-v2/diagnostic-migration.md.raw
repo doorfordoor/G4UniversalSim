@@ -1,0 +1,25 @@
+## J2 编辑扩展的诊断兼容与迁移
+
+J2 延续 `g4usim_diagnostics_v1` 及其严格身份校验。旧 JSON 按原 code、severity、location、facts 和 identity 读取，不改写旧记录、不重算旧身份、不额外生成旧 code 的别名记录。以下变化描述新生产器；它不使旧报告重新获得当前快照的验证资格。
+
+密度的原 `materials.density.numeric`（无有效数字前缀）和 `materials.density.positive`（已解析的有限数值非正，包括下溢为零）继续保留。新增的 `materials.density.invalid` 用于有效正数字前缀后的单位、非有限值或内部换算失败；接受逻辑仍采用后端数字前缀、大小写不敏感单位、可选星号及 CLHEP 两步换算。未知物理模式继续使用 `physics.mode.unsupported`，合法 `manual` 模式不再因此被拒绝。
+
+能力开放后，旧的“不可编辑”诊断不再代表真实规则。新生产器的明确映射如下，消费者应按 code 加 location 判断具体事实：
+
+| 旧规则或 code | J2 新规则或 code | 适用条件与位置 |
+| --- | --- | --- |
+| `physics.mode.unsupported` 对所有 manual 的拒绝 | `physics.structured.invalid` | 仅在 manual 缺少构造器时，位置为 `physics/manual_modules`；合法 manual 不发该错误 |
+| `physics.biasing.not_editable` | `physics.structured.invalid` | hook 与启用规则不一致，位置为 `physics/bias_rules`；有效规则不发旧能力拒绝 |
+| `physics.extra_modules.not_editable` | `physics.structured.invalid` | 实际构造器、模式或物理类型冲突，位置为 `physics/extra_modules` 等具体字段 |
+| `physics.manual_modules.not_generated` | `physics.structured.invalid` | reference 与 manual 列表冲突，位置为 `physics/manual_modules` |
+| `materials.nist.unlisted` 的快捷列表 warning | `materials.nist.unknown` 的完整目录 error | 目标确实不在已支持的完整 NIST 目录；目录中但不在旧快捷列表的材料通过。直接目标指向可编辑 `name`，显式别名目标保留真实来源或不可定位原因 |
+| `geometry.shape.not_editable` | `geometry.shape.experimental` | 源文件含 tessellated/STL；可编辑但仍须资源校验和 Geant4 初始化验证，保留原 shape 行位置 |
+| `geometry.placement.not_editable` | `geometry.placement.experimental` | 源文件含 replica/parameterised；仍受放置约束和初始化校验，保留 placement 行位置；assembly 继续拒绝 |
+| `geometry.vector.components` 在 box 的 size 分支 | `geometry.solid.size` | 统一实体登记器产生的 box 尺寸错误，位置仍为体积行 `size`；position/rotation 等其它向量规则不随此改名 |
+| `geometry.trd.length` | `geometry.solid.dx1` / `dx2` / `dy1` / `dy2` / `dz` | 统一实体登记器按缺失或非法参数分别产生错误，位置仍为相应体积行参数 |
+
+可编辑性变化也会改变位置事实：层/体积的 `vis.alpha`、metadata 等已开放详情字段提供实际编辑位置，不再标作 `unsupported_editor`；原规则 code 保持。显式 NIST 别名的目标没有独立编辑控件时仍不可伪装成别名名称的位置。
+
+code 保留不等于新生成记录的 identity 必须等于旧记录。新生产器的结构化原因、精确字段或源事实发生变化时，身份会按既有算法重新产生；同一新输入重复校验、语言切换、保存重载必须稳定。不同输入代际的身份不可互换，旧报告原件及原来的失败判定保持不变。
+
+对应回归覆盖保留的密度类别、实际物理冲突及合法配置、完整 NIST 目录/直接名称与别名位置、统一实体字段、源行和源快照、合成旧 v1 JSON 原样回读以及 identity 篡改拒绝。上述迁移只说明编辑和诊断接口，不提升任何物理验证结论。

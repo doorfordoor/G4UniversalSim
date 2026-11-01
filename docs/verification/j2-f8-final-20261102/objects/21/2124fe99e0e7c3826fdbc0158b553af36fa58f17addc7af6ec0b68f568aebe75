@@ -1,0 +1,17 @@
+G4USIM_ASSERTS=5
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-resource-policy-path-review\run_focused.py", line 24, in <module>
+    raise SystemExit(test_assert_probe.main(['test_assert_probe.py',str(target)]))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-resource-policy-path-review\run_focused.py", line 17, in focused
+    evidence=OUT/('focused-'+mode+suffix);evidence.mkdir(exist_ok=False);namespace['test_resource_policy_path_identity' if kind=='policy' else 'test_resource_policy_paths_late_guard'](evidence)
+                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-resource-policy-path-review\test_k1_bundle.py", line 189, in test_resource_policy_paths_late_guard
+    message = refused(lambda: bundle.collect_bundle_resources(snapshot, resource_policy=policy))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-resource-policy-path-review\test_k1_bundle.py", line 52, in refused
+    assert False, "Expected refusal"
+           ^^^^^
+AssertionError: Expected refusal

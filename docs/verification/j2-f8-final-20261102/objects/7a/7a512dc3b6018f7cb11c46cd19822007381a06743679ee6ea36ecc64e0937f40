@@ -1,0 +1,15 @@
+# F8 retained-dock延迟焦点候选独审
+
+结论：候选源码SHA677a7b54c5ce876d663b6d986642ee5393a385b782a29dad695c2ed20d280b39，本次独立offscreen125/150各8组均通过且自然exit0。未发现本范围可复现的产品P1/P2。仅out加载候选，未apply；四项tracked原件SHA不变。不是新native验收或完整profile通过。
+
+独立review.py没有运行作者probe/candidate loader。读取作者诊断与patch后，以独立新进程直接加载proposed源码，中文/Fusion/760x640、Windows字体，125及150。自然CtrlAlt2→CtrlAlt3→F6→CtrlN→Return×3→AltLeft→Esc→dark→CtrlAlt2，不重置滚动条、不隐藏/重建dock。Project真实焦点在项目名称，label+完整field在所有祖先scroll viewport内；content viewport为540x464，必要H滚动361，联合框右端539（完整可见）。configuration/preview retained可见，dock实例和parent不变。
+
+证据：candidate1.25-r3/receipt.json、candidate1.5-r3/receipt.json、各同名.log、processes-r3.json。每档8组：自然重入/取消返回；九页不同顺序导航及F6；新焦点替换旧Project任务；foreign焦点取消owned待任务且不滚主窗口；C++已删除owned控件不得回调；disabled目标不得被回调与F5 snapshot/Undo/is_modified不变；close停止timer清pending且无后续显露；非零手动pan稳定、联合框仅超5px只移5px且再次调用不动。
+
+静态独立核对_reading_anchor/_reveal_axis/ensure_focus_visible/_focus_control/owned_widget五函数AST与tracked原件完全相同，未用整页居中/归零放宽旧联合框规则。新事件过滤的return False保持原业务事件传递；新队列只弱引用控件并重验currentFocus/owned/valid/visible/enabled，close取消。F5业务快照、撤销/dirty均自然路径前后相同。
+
+首失败与测试器说明：原r1两档到deleted阶段的断言要求“不发生任何显露”过严，删除对话框会将真实焦点转给合法owner控件；不应禁止新焦点任务。r1结果/日志和review-r1.py保留。新断言严格检查已删C++对象无效且该对象不在helper调用中，仍允许合法新焦点；未改候选源码。r2仅out脚本换行转义SyntaxError，日志另存。r3为最终通过身份，未覆盖旧失败。
+
+交付格式问题（非产品运行缺陷）：作者accessibility.patch原字节含84个CRLF，而tracked accessibility.py为LF；原git apply --check退出1。仅在本独审out新建accessibility.lf.patch规范化patch行尾后，git apply --check退出0，未应用。patch-check.json记录原/规范化SHA。main后续应使用明确LF补丁或等价源码变更，并以实际应用后LF源重新冻结SHA；原proposed的677a是CRLF原型身份，不能直接声称等于最终LF tracked SHA。
+
+本轮不操作native窗口、不跑后端、不启动full profile。后续仍需main统一应用/提交/重建身份，独立复核新冻结与正式native150/整份历史严格GUI门禁，不能拼接原64/2报告。

@@ -1,0 +1,42 @@
+# F8 Scan 入口 project SHA 只读解释（2026-11-02）
+
+结论：本次 native125 的原始 project SHA 改变可精确复现为既有表单投影同步，不是业务编辑证据。无产品变更；不操作 native100；不启动后端。
+
+## 复现与证据
+
+- `diagnose.py`：生产 MainWindow、Fusion/light/zh_CN、offscreen DPR1.25，隔离 QSettings/history/recovery。复用 host 的 `_set_project`、exe/runsRoot/outputDir 初始化；project 中 runs 字符串使用历史 native125 路径，未往该原生目录写入。
+- 两个独立进程：`raw_first.log`、`snapshot_first.log` 均 exit0。第二进程逐步跟踪 scan_base；首进程使用原 provider 并通过实际 CtrlAlt9 进入。
+- `raw_first-results.json`、`snapshot_first-results.json`：全部 GUI 源文件 SHA 与 native125/identity.json 相同；前后原始 SHA 均精确匹配历史 passive 记录：
+  - before `73d7024431fb21e1a6aa913da46543f748209c51870a2bf1b1b9ccf706d89025`
+  - after `df1b954a4f541dffc9ad5c7b9625b8e2700c04f364465922b183abb0f7676dd9`
+- F5 `snapshot_fingerprint(capture_workspace())` 前后均为 `eab424f3060a9a005d2990d2f3532a737c1010412059d5ae53c9c6dc5f7d787f`。
+- `snapshot_to_dict` 的完整逐字段差异为空；不只是 fingerprint 对 errors/warnings/selection 的过滤结果。捕获本身对原始 project 无副作用。
+- Undo/Redo/is_modified 前后均 false；第二次离开再进入 Scan，原始 project 差异为空。
+- 前后 project / snapshot 完整 JSON 已分别保留，以 `raw_first-` 和 `snapshot_first-` 开头。最初探索文件 `results.json` 是旧隔离路径试跑，不作为精确 SHA 复现的主证据。
+
+## 九项原始字段变化
+
+1. geometryEditor.mode：preview_only → hierarchical。
+2. geometryEditor.raw_source_text：空 → 已加载几何源全文。
+3. geometryEditor.source_path：空 → test/geometry/hierarchical_test.ini 的绝对路径。
+4. geometryEditor.validation_warnings：空 → 已有 bias hook 未启用提醒。
+5. geometryEditor.volumes：空 → 当前已加载的 15 个体积。
+6. geometryEditor.warnings：空 → 同一已有提醒。
+7. materialEditor：None → 当前已加载材料文档，9 行，保留自定义 element 章节，is_dirty=false。
+8. runSettings.run_name：gui_run → 表单现值 demo_run。
+9. runSettings.seed：12345 → 表单空值对应 None。
+
+geometryEditor.is_dirty 同样保持 false。运行名/seed 的原始嵌套默认值虽变化，但 F5 在进入前已经从实际控件收集得到 demo_run/None；扫描未更改用户输入。
+
+## 调用链与归因
+
+- widgets/scan_page.py:164–180：首次 showEvent → refresh_base → provider。
+- window/content.py:19–26：scan_base → _finish_history_merge → _update_project_from_page_without_preview → config_builder_page.update_project(project) → validate_current。
+- widgets/config_builder_page.py:300–312：把当前 run_settings 和已加载编辑器文档赋给 project。
+- window/transactions.py:278起：capture_workspace 对 project 深拷贝，然后从 Project/Config 表单收集；因此 F5 在扫描前已经表达真实草稿。
+
+第二进程跟踪表明：finish_history_merge、collect_project（此处指 _update_project_from_page_without_preview）、validate_current 本次均无原始字段变化；九项变化全部发生于 update_project 的模型同步。因此更准确是“嵌套模型/加载文档缓存投影补齐”，而不是此次 validate_current 新读源造成变动。
+
+历史 host 未存 payload，本来不能仅凭两个散列反推字段；这里用当前同源码、同初始化和完全相同的前后 SHA 对完成可复现解释。没有据此扩大到任意导航路径或任意用户草稿，也没有把原始 hash 改变直接判为缺陷。
+
+产品仍保持冻结；无新增翻译，无 runner/阶段状态变更。下一步：main 可将此说明与上述 JSON 一并归档到原生验收证据。

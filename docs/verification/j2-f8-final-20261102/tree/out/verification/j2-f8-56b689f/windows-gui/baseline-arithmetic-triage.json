@@ -1,0 +1,25 @@
+{
+  "scope": "read-only arithmetic only, strict release gate still failed before baseline thresholds; no allow-incomplete used",
+  "baseline_cases": 59,
+  "current_cases": 66,
+  "baseline_total": 6760,
+  "current_total": 8178,
+  "missing_baseline_cases": [],
+  "per_case_regressions": [
+    {
+      "name": "gui_source",
+      "baseline": 50,
+      "current": 46
+    },
+    {
+      "name": "gui_scans",
+      "baseline": 58,
+      "current": 25
+    },
+    {
+      "name": "gui_3d_view",
+      "baseline": 35,
+      "current": 18
+    }
+  ]
+}

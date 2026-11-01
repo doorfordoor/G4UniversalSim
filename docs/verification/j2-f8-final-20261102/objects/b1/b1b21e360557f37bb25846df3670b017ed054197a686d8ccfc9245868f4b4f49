@@ -1,0 +1,49 @@
+{
+  "scope": "F8 left-clipping root fix and Qt wizard button translation; candidate freeze",
+  "files": {
+    "gui/g4usim_gui/core/accessibility.py": "8f597259072c4ca7c929b6c9021716da5a6011fc6b6d4a4907af96dc8ba89fca",
+    "gui/g4usim_gui/widgets/start_page.py": "b8d8e8b363f7a691e9cec4babe52c4277bc869f82dfca239c90b7c6bffa328ec",
+    "gui/g4usim_gui/main_window.py": "df76026a347894c617dbca570b4706948b1eed639956fc8c1bcc2f097ca10639",
+    "gui/g4usim_gui/window/shell.py": "2bf59c065dee740b03fbc678ed32f787cd0b8c293e92b1fc8d498f80c6b11516",
+    "gui/smoke_tests/smoke_f8_accessibility.py": "7087edc6ae93bb666020eb06fb46bd8a60b2539c0213b5058276daf385d04c8e"
+  },
+  "changed_this_fix": [
+    "gui/g4usim_gui/core/accessibility.py",
+    "gui/smoke_tests/smoke_f8_accessibility.py"
+  ],
+  "translations": "out/collab/f8-wizard-i18n.json",
+  "new_keys": {
+    "Next": "下一步",
+    "Back": "上一步",
+    "Finish": "完成"
+  },
+  "reused_key": "Cancel",
+  "native_input_used": false,
+  "tests": {
+    "125": {
+      "exit_code": 0,
+      "assertions": 280,
+      "log": "125.log"
+    },
+    "150": {
+      "exit_code": 0,
+      "assertions": 280,
+      "log": "150.log"
+    },
+    "f4_navigation": {
+      "exit_code": 0,
+      "assertions": 224,
+      "log": "f4-navigation.log"
+    },
+    "f4_layout_125": {
+      "exit_code": -1073741819,
+      "first_failure": "smoke_f4_layout.py:173 stdout_view center clipped by ancestors",
+      "log": "f4-layout.log"
+    },
+    "f4_layout_default": {
+      "status": "failed_same_first_assertion",
+      "log": "f4-layout-default.log"
+    }
+  },
+  "formal_or_native_acceptance": false
+}

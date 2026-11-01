@@ -1,0 +1,36 @@
+# External Inspect 定点候选（仅 OUT，待独审/主线程统一 apply）
+
+基于 `56b689fb9ac920cbb1203b2b94dae2483d25f622`。tracked 产品与测试文件未修改，不提交、不构建。原 113/114 正式首轮失败不覆盖、不改判定。
+
+## 草案
+
+`fix.patch` 只涉及两个目标文件：
+
+- `gui/g4usim_gui/core/experiment_workflow.py`：`_field_report` 的 captured editor source 核验限于实际 generated 模式。external 的实际 main/macro 不取自 generated 编辑来源；保留原 identity、pre/post 核验、真实 Inspect、后端 preflight 与递归覆盖未知边界。
+- `scripts/test_k1_workflow.py`：新增 `source_capture_scope()`，由既有 `synthetic()` 入口执行，永久沿已有 k1_workflow component 用例运行，无 runner 注册改动。
+
+不清空 snapshot 历史 sources、document.source_path 或原文；generated 当前选择路径为空/变更、读取失败、源内容变化仍拒绝。external 模式中保留的旧 generated 选择也不充当 actual external 输入。
+
+完整离线可编辑包闭包实现完全未改。回归明确验证原材料/几何仍进入包资源、用户标记 restricted 默认拒绝且显式允许后可继续、保留 mono 命名源的休眠谱文件丢失仍拒绝。不能将本次 Inspect 修复外推为一般运行、离线包或物理正确性通过。
+
+## 实际验证终态
+
+`run_overlay.py` 在独立 Python 子进程中只替换 experiment_workflow 导入，随后由原 v3 assert probe 执行测试；不改原 smoke、断言、fixture 或后端。两个 EXE 都按指定 SHA 核验；child 清空全部 G4*DATA/GEANT4_DATA_DIR，再设置对应版本数据根及 SDK/bin（详见收据）。
+
+| 用例 | 终态 | assert 入口 | 证据 |
+|---|---|---:|---|
+| 原 `smoke_f4_inspect_backend.py`，1132 | exit 0 | 49 | windows113-old-f4-inspect.log |
+| 原 `smoke_f4_inspect_backend.py`，1143 | exit 0 | 49 | windows114-old-f4-inspect.log |
+| 增强专项最终候选 | exit 0 | 30 | permanent-regression-v4.log |
+| 已接永久函数的 k1_workflow component 全用例 | exit 0 | 260 | k1-component-candidate.log |
+| 未修改产品 + 同一专项反例 | 预期 exit 1 | 3 | unchanged-product-counterexample.log，external.can_run 旧误拒绝 |
+
+两版原 smoke 均实际启动 Inspect，保留 nested macro:2 / output CLI lock 后端拒绝诊断，并验证替换 safe macro 后真正 Inspect 成功、execution_performed=false、未启动模拟、未修改原文件。原正式报告仍是失败，以上只是 OUT 修复候选的专项验证。
+
+原 coordinator session `25188` exit 0，component session `60366` exit 0；全部结束，未主动中断任何后端。`final-receipt.json` 记录补丁/候选/日志 SHA、精确 EXE、清理的环境变量、各 session 及原正式报告 SHA。`git apply --check` 退出 0。
+
+## 候选迭代历史与独审
+
+保留最初 22 入口日志 `permanent-regression.log`；补强 fixture 两次失败也保留：v2 中 /control/echo 先被完整包语法拒绝，v3 中测试把 spectrum_file 放在单源对象而非 gps_sources 行，二者均为新增测试错误，未变更产品或既有判据。v4 改正 fixture/真实模型字段，验证具体错误消息及资源路径后通过。正式 smoke 从头到尾保持原字节。
+
+已向 Feynman `01a197c9-5e75-7413-abcb-991c364d8e4d` 提交独立审查，最终判定由其另出收据。主线程统一 apply 前可直接复核 `fix.patch`；两个 tracked 目标文件仍维持原内容。

@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_blank.py", line 112, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_blank.py", line 46, in main
+    result = package(project)
+             ^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_blank.py", line 26, in package
+    return create_run_package(project=project, paths=project.pathSettings, run=project.runSettings,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\writers\package_writer.py", line 71, in create_run_package
+    report = validate_config_builder(
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\validators\config_validator.py", line 257, in validate_config_builder
+    validate_geometry_document(
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\editors\geometry_editor_model.py", line 342, in validate_geometry_document
+    _validate_geometry_document(document, material_names=material_names,
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\editors\geometry_editor_model.py", line 362, in _validate_geometry_document
+    _validate_hierarchical(document, known_materials)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\editors\geometry_editor_model.py", line 576, in _validate_hierarchical
+    _validate_solid(row, document)
+    ^^^^^^^^^^^^^^^
+NameError: name '_validate_solid' is not defined. Did you mean: '_validate_simple'?

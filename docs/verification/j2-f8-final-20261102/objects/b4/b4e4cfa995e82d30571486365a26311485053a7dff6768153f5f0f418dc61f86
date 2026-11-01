@@ -1,0 +1,44 @@
+{
+  "head": "56b689fb9ac920cbb1203b2b94dae2483d25f622",
+  "strict_gate": "failed_original_report_not_release_evidence",
+  "comparison_is_read_only_diagnostic": true,
+  "total_current": 6680,
+  "total_baseline": 6054,
+  "new_cases": [
+    "gui_j2_end_to_end",
+    "j2_materials_backend"
+  ],
+  "missing_cases": [],
+  "regressed_cases": [
+    {
+      "name": "gui_f4_inspect_backend",
+      "current": 3,
+      "baseline": 49,
+      "delta": -46,
+      "status": "fail"
+    },
+    {
+      "name": "gui_scans_backend",
+      "current": 2,
+      "baseline": 18,
+      "delta": -16,
+      "status": "fail"
+    },
+    {
+      "name": "gui_trajectory_view",
+      "current": 23,
+      "baseline": 35,
+      "delta": -12,
+      "status": "pass"
+    },
+    {
+      "name": "gui_source_glyphs",
+      "current": 34,
+      "baseline": 40,
+      "delta": -6,
+      "status": "pass"
+    }
+  ],
+  "case_count_current": 31,
+  "case_count_baseline": 29
+}

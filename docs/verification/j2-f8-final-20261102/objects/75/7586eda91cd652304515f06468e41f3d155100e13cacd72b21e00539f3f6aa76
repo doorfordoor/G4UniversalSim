@@ -1,0 +1,33 @@
+
+[run]
+threads = 2
+seed = 1051
+[output]
+format = csv
+[materials]
+file = C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/config/materials/material.ini
+[geometry]
+template = simple_box
+config = C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/j2-source-physics-113-r1/test_gps_sources/retained-work/g4usim_gps_87bxnqni/case51_geometry.ini
+[physics]
+reference = FTFP_BERT
+default_cut = 1 mm
+
+[scoring]
+enabled = true
+hits = true
+event_edep = false
+edep = false
+auto_create_default_scorers = true
+[source]
+particle=proton
+energy=1 MeV
+position_type=volume
+shape=sphere
+center=0,0,0 mm
+radius=40 mm
+isotropic=true
+confine=Water_PV
+[output]
+trajectories=128
+

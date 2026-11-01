@@ -1,0 +1,45 @@
+F8 window DPR: 1.0 available: PySide6.QtCore.QRect(0, 0, 800, 800)
+G4USIM_ASSERTS=431
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support raise()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support raise()
+This plugin does not support propagateSizeHints()
+This plugin does not support raise()
+This plugin does not support raise()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Traceback (most recent call last):
+  File "/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/runner/work/G4UniversalSim/G4UniversalSim/gui/smoke_tests/smoke_f8_accessibility.py", line 871, in <module>
+    main()
+  File "/home/runner/work/G4UniversalSim/G4UniversalSim/gui/smoke_tests/smoke_f8_accessibility.py", line 865, in main
+    test_history_directory_accessibility(app, args.output)
+  File "/home/runner/work/G4UniversalSim/G4UniversalSim/gui/smoke_tests/smoke_f8_accessibility.py", line 659, in test_history_directory_accessibility
+    assert interface.text(QAccessible.Name) == ui_text(source)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

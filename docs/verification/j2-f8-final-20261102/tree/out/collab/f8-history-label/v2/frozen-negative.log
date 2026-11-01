@@ -1,0 +1,6 @@
+[{"source": "Runs root", "accessible_name": "", "qt_name": "", "buddy": false}, {"source": "Search", "accessible_name": "", "qt_name": "", "buddy": false}, {"source": "Status", "accessible_name": "", "qt_name": "", "buddy": false}]
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\f8-history-label\v2\probe-frozen.py", line 14, in <module>
+    assert all(row['buddy'] and row['qt_name']==row['source'] for row in rows),'frozen product lacks History label/name binding'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: frozen product lacks History label/name binding

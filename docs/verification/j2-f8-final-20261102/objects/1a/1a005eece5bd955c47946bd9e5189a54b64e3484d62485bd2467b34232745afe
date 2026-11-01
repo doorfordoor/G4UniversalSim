@@ -1,0 +1,35 @@
+# F8 原生125%左侧裁切：只读定位与修复建议
+
+未修改产品或测试源码；没有操作原生鼠标键盘。只读看了主线程的两张实际截图、native125/observations.jsonl和当前冻结源码；另用独立offscreen进程量化同一路径。基线索引已另交 out/collab/j2-f8-baselines.json（历史资料，不是新验收）。
+
+## 结论与证据
+
+首要原因已可复现：focus_first把QScrollArea本身当成页面首个可用焦点；ensure_focus_visible随后对每层祖先QScrollArea无条件调用ensureWidgetVisible(整个目标控件,12,12)。当目标是比祖先viewport宽的整块page scroll时，它请求完整显示不可能完整容纳的矩形，实际把共享workspaceContentScroll水平滚到中间，左侧标题/label随整页向左移出。它只保证目标控件某个区域可见，没有保留label的阅读边界。
+
+native125/observations.jsonl第5条明确page=1、实际焦点projectContentScroll；第6条才变成名称为“项目名称”的QLineEdit。开始页第2/4条焦点也是无objectName的QScrollArea。它们是产品passive观察；未以sky tree的滞后一帧判焦点。各条project_sha相同、runner NotRunning，属于视图问题，没有观察到编辑或模拟副作用。
+
+已实际打开001-start-0.png与002-project-shortcut-0.png：sidebar稳定，正文左边缘文字被viewport边界截掉，底部水平滚动位置非左端；不是label文本被改写或翻译缺字。
+
+独立量化：out/collab/f8-native-clipping-readonly.py / .jsonl / .stderr。
+条件与原生相同逻辑尺寸1200×800、DPR1.25，MainWindow、中文、原Fusion/theme，隔离history/recovery/settings、关闭自动backend预览，未改变冻结代码。
+
+| 离屏动作 | workspaceContentScroll H | viewport/content宽 | 项目名label在body内x |
+| --- | --- | --- | --- |
+| 初始无手动归零 | 0/75 | 980/1055 | 未切项目 |
+| focus_page(1) | 37/75 | 980/1055 | -3（已裁） |
+| 所有H归零（仅此独立离屏诊断） | 0/75 | 同上 | 34 |
+| 单独调用ensure_focus_visible(projectContentScroll) | 37/75 | 同上 | -3（确定性重现） |
+| 归零后聚焦实际project_name字段 | 0/75 | 同上 | 34（未裁） |
+
+默认滚动条初值本身是0；发生FocusIn/首焦点处理之后才移到37。开始/项目复用同一个外层workspaceContentScroll，切页没有独立恢复左缘，因此错误偏移会跨页留下。当前StartPage.adapt_to_width限制了内层正文宽度，但inactive页面的minimumSize仍使host为1055，外层H范围75仍存在；这正是上述错误自动平移的条件。
+
+此前离屏专项存在缺口：只断言获焦点控件全矩形可见，没有断言伴随label/说明左缘；截图前还显式将content scroll归零，掩盖了自然FocusIn路径。不能用此前截图复验通过否认本次原生缺陷。
+
+## 精确修改位置与建议（尚未实施）
+
+1. core/accessibility.py的focus_first（约94–110行）：排除QScrollArea、QScrollBar、viewport/普通容器作为页面首焦点，选择真正可操作字段/按钮/表格/页签。保留表格/列表、spin内部focusProxy等合法Qt焦点逻辑，不要用父容器宽度代表控件位置。
+2. ensure_focus_visible（约114–121行）：容器/过宽目标禁止直接对整块widget调用ensureWidgetVisible。对字段选择小而稳定的阅读锚点（label与字段左缘/光标，表格current cell），按“已经可见就不移动，越界才最小移动”计算。label与字段联合矩形能放下时一起保留；联合过宽时对齐label/可编辑部分的左缘，不能居中整块大widget把label推出。保持既有垂直滚动可达与嵌套scroll支持。
+3. shell.py的focus_page及_on_page_changed：显式切页时共享内容scroll可先恢复该页既有视图位置或新页左缘，再聚焦实际控件；这只是补充，不应以“每次FocusIn都无条件H=0”替代根因修复，否则用户手动横向查看宽表会被反复抢回左边。
+4. 永久smoke：去掉场景准备阶段的H归零补救，按自然show→CtrlAlt1→CtrlAlt2→Tab/F6路径检查hint/组标题/label和焦点锚点均可见，并记录各层H值。加入本例1200×800/DPR1.25和长路径/QFormLayout.WrapLongRows；不得再只测button可见。修复前helper_whole_project_scroll的37/-3反例应失败，修复后应保留0/非负label坐标。
+
+产品仍保持Ptolemy正在审查的冻结字节，实施需main协调后另行授权。本记录只提供只读定位，不改变独审/原生验收结果。

@@ -1,0 +1,18 @@
+# Geant4 11.4.3 data readiness receipt
+
+Status: passed; existing I2 installation reused, no download/copy/junction needed. Product and tests stayed frozen. No system/user environment variable was changed.
+
+Data root: `C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\i2-controlled\windows114-data\data`.
+
+Evidence:
+
+- `receipt.json`: all 12 canonical dataset names/versions match the actual 11.4.3 SDK Geant4Config.cmake metadata. All 43,527 published files (43,526 dataset files + notices), 2,180,724,729 bytes, passed per-file SHA-256/size checks against both matching I2 publication receipts. No unregistered files.
+- Original `out/Geant4-11.4.3-data.zip` rehashed: 1,670,619,843 bytes; SHA-256 `a76d36d8ab287598c47c3433f1d4373d14a07cc516bc460335c2901adb0d00b0`, equal to the I2 published artifact record.
+- `discovery.stdout.json` / `discovery.stderr.log`: a child environment removed all inherited G4*DATA and GEANT4_DATA_DIR keys, set only GEANT4_DATA_DIR to this root and prepended 11.4.3 SDK/bin to PATH. `out/build-i2-windows114/Release/G4UniversalSim.exe --check-geant4-data` exited 0, reported actual Geant4 `geant4-11-04-patch-03`, and found all 12 datasets at exactly the verified root. Parent process environment remained unchanged.
+- Required flags are taken from this real backend discovery, not SDK metadata order: G4EMLOW8.8, PhotonEvaporation6.1.2, RadioactiveDecay6.1.2, G4PARTICLEXS4.2, G4ENSDFSTATE3.0. All five and all seven optional datasets were fully hashed.
+
+`required_complete` is an additional completeness check, not the version proof. Version evidence combines the SDK table, canonical versions, published payload/archive hashes and actual backend version. Local receipt/archive hashes are not independent upstream source authentication. No new upstream package was fetched.
+
+Ptolemy `01a197c9-64f5-7521-9ec9-5b63f73c6760` was directly notified that the root is ready for 114 E2E. The discovery executable identity is recorded; this readiness check does not substitute for E2E on Ptolemy's newly built executable. Its E2E must use the same clean environment/root.
+
+The auxiliary script and logs are only under this out directory. `verify_reuse.py` is reproducible; `verify.log` retains the completed verification output. Session 11995 completed with exit 0; no running download or verification process remains.

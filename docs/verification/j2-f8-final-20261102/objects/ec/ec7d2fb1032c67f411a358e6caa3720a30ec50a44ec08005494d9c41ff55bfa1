@@ -1,0 +1,16 @@
+{
+  "status": "source_ready_pending_rebuild_and_runtime",
+  "source_fingerprint": "149b25dd00773898c324d09a53dd1ef64b0bf37bc105ca0f74d0c4933245756f",
+  "files_sha256": {
+    "include/Physics/PhysicsManager.hh": "224103358512c1684d650949c6463c0a92578ca3f00b1c4c0104650008daa6eb",
+    "src/Physics/PhysicsManager.cc": "9a79a7f16328f376054d0a8079ee3c217c6bbb2fd4f4201d40cbff2035780b4a",
+    "src/Physics/PhysicsMessenger.cc": "3ab4e97d36d6d552e6597c09e2328c3cadb80c070901b5c5826e147c42931439",
+    "scripts/test_j2_sources_physics.py": "6d3507ff9f358b98d6253ec2c2f1aa2f22a91137deae627bb9ac0e28543cc62a"
+  },
+  "syntax_check": "MSVC /Zs exit 0, out/collab/j2-p1-physics-syntax.log",
+  "regression": "scripts/test_j2_sources_physics.py --only-replacement-macros",
+  "negative_cases": 12,
+  "positive_controls": 4,
+  "previous_runtime_identity": "e44d005a039448d083008c0c6ba3f824b2f1b680b8d6b2b63f297137754d76f6",
+  "full_build_started": false
+}

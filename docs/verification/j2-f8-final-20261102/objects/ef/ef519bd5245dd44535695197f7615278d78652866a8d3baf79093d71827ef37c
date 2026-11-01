@@ -1,0 +1,31 @@
+G4USIM_ASSERTS=171
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_current_import_preview.py", line 152, in main
+    try: load_snapshot(package.project_snapshot_path)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\project_snapshot.py", line 293, in load_snapshot
+    imported=parse_run_editor_ini(main_text,source_path=actual["main_ini_path"],previous_source=project.sourceEditor)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\run_editor_import.py", line 248, in parse_run_editor_ini
+    if issues: raise RunEditorImportError(source_path,text,issues)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+g4usim_gui.core.run_editor_import.RunEditorImportError: Current INI import blocked: D:\Temp\j2-current-lgif0ueq\runs\20261102_002000_gui_run\config\main.ini:0 [future]/: unsupported section must remain in its source file
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_current_import_preview.py", line 162, in <module>
+    if __name__=="__main__": raise SystemExit(main())
+                                              ^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_current_import_preview.py", line 154, in main
+    assert exc.raw_text==captured
+           ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

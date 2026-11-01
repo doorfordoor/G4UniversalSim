@@ -1,0 +1,72 @@
+{
+  "schema": "j2_four_test_final_draft_validation_v1",
+  "status": "pass",
+  "ready_for_main_application_review": true,
+  "applied": false,
+  "head": "56b689fb9ac920cbb1203b2b94dae2483d25f622",
+  "git_status": "",
+  "selected_full_entries": [
+    {
+      "script": "scripts/test_f4_producers.py",
+      "draft_sha256": "b7a860995370f36e77552da2c990fd8a8deb6e3d2714d2846b64c7fd5e1ebcfa",
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-static-fixture-patch-final\\test_f4_producers-combination-v2.log",
+      "status": "pass",
+      "log_sha256": "4ba1b54bb01206bdd1a349502e8c82745f0d0775da3f4855ade5a57406b2dabb",
+      "receipt": "f4-combination-v2.json"
+    },
+    {
+      "script": "scripts/test_f4_document_diagnostics.py",
+      "draft_sha256": "46e49c4292890aaf95c1a026c58b029a19584c72c39d14e3d9d697a811963330",
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-static-fixture-patch-final\\test_f4_document_diagnostics-combination-v2.log",
+      "status": "pass",
+      "log_sha256": "4ba1b54bb01206bdd1a349502e8c82745f0d0775da3f4855ade5a57406b2dabb",
+      "receipt": "f4-combination-v2.json"
+    },
+    {
+      "script": "scripts/test_k1_bundle.py",
+      "draft_sha256": "e825d4278bd9b59d7ff871c1f2abd39d564b0fc5591de460f784a6d28cb2fa4f",
+      "argv": [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\test_k1_bundle.py",
+        "--component",
+        "--evidence-root",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-static-fixture-patch-final\\runtime-evidence\\k1-v2-r1"
+      ],
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-static-fixture-patch-final\\test_k1_bundle-combination-v2-r1.log",
+      "started_unix": 1793556477.1640565,
+      "status": "pass",
+      "entry_return": null,
+      "duration_seconds": 111.578,
+      "log_sha256": "ce62cd553dbd4f2d8c93df9bc29d83e94663759516daa85d39f9b6aae7ab5ce4",
+      "receipt": "geometry-components-v2-r1.json"
+    },
+    {
+      "script": "scripts/test_config_migration.py",
+      "draft_sha256": "909cab4fc3a3f80a6816af0c4ee0e4985970b2f78c06a339cb5ff7edc1989166",
+      "argv": [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\test_config_migration.py"
+      ],
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-static-fixture-patch-final\\test_config_migration-combination-v2-r2.log",
+      "started_unix": 1793556654.884593,
+      "status": "pass",
+      "entry_return": 0,
+      "duration_seconds": 1.172,
+      "log_sha256": "5f11ff1566ecd8779aa4f93ae0529a887d2950d2ce51f8c60bffaa4d04280338",
+      "receipt": "geometry-components-v2-r2.json"
+    }
+  ],
+  "product_patch": "out\\collab\\j2-f8-repair-draft-v2\\product.patch",
+  "product_patch_sha256": "ba79f819458549eddaa3c595530a5f63601ffc834c2b8ce35b9af15a78f8c71e",
+  "product_manifest_sha256": "41876e67dc331dd4560f5d853f81826b8a7ae4b6d6a5399f4b604114005bff70",
+  "tests_patch_sha256": "b240672c7e1c42b9b54075a7dc9e788a66ecc2ad7aed1237df6e09ee338c200f",
+  "first_failures_preserved": [
+    "../j2-static-fixture-patch-draft/f4-combination-r1.json",
+    "geometry-components-v2-r1.json",
+    "test_config_migration-combination-v2-r1.log",
+    "revisions/r1/test_config_migration.py"
+  ],
+  "draft_fixture_correction": "unit was an author fixture typo; actual backend/registry key file_unit. Only this field and matching assertion changed in out; r1 retained.",
+  "prior_draft_evidence_unchanged": true,
+  "tracked_tests_and_products_unchanged": true,
+  "formal_profile_report": false,
+  "scope": "Four full draft component/editor test entries in memory with same product v2. K1 --component only, no backend/native/global build. Separate run receipts selected by exact script and product SHA; not a formal profile report."
+}

@@ -1,0 +1,20 @@
+# J2/F8 归档新版本 v3-18c5858（本地候选，不是阶段完成）
+
+有效集合：`out/collab/j2-f8-archive-plan/staging-v3-18c5858/`。本版7038个逻辑文件，3581个去重对象，64.45 MiB。`effective-manifest.json`为组合后的最终清单；原v2及初始v3清单、收据、首失败均不覆写。对象是独立复制字节，仅在本staging内建逻辑硬链接，不链接原件/旧staging。仅读源码和终态证据，仅写OUT，不上传、不写tracked，不取消正式命令。
+
+可用组：
+
+- 原v2 4269逻辑文件及首轮300cases/14fails、旧CI、review-index闭合链/未覆盖范围原样继承，取封存对象而非已漂移工作树。
+- 第二候选2901f42六正式profile：300/300、180992入口，全部300个case原log及report、launch、根级gate/runner日志和local-final-audit齐备；各匹配历史baseline与逐case原log独立保存。
+- 第二CI四run全部attempt1终态、Sagan八份完整解码job原log及原收据：Linux/M0失败，desktop/install成功；八份profile strict 5pass/3fail不改绿。ZIP/大型SDK、data及二进制只登记元数据/原收据，不塞入Git候选。
+- 三档第二native原文、83图、149GUI冻结身份、100%实际保存/run100/100/初始化/生成/导出/离线资源SHA及独立audit完整保留。只沿原observed scope，不把SHA/矩形containment当无遮挡/运行或物理证明，原overall=false不改。
+- 第三修复作者/独审/冻结/应用及15个已应用code/doc来源按18c5858独立身份保存。包含K1 final-v1、History/spacer组合595、STL严格samefile测试及其独审、docs v3 exact SHA、CRLF首次门禁失败8原文件与恢复收据。此前中间失败/旧patch并存，不当作最终候选。
+- 第三候选18c5858只补已明确终态static：46/46、4586、launcher/gate0、identity_errors[]，独立group。其余五profile、新CI及新native均待回填，未读取运行中目录作final。
+
+只从本staging重放：25次baseline通过、12次原报告expected-pass通过；13份原失败仍exit1（首轮10+第二CI3），隔离的篡改负例exit1。所有case日志resolve均在staging内，无原路径fallback；未改report绝对路径/JSON字节/身份/状态，无legacy/incomplete放宽参数。以上是归档证据校验，不是产品/profile重新执行。
+
+发布分流：`image-selection.json`逐图登记。70张实际含QQ/其它应用像素的原图仅本地保留，公开metadata-only且禁止raw图进入Git候选；13张仅任务菜单/dialog原图沿用已有选择资格。此分流基于逐图联系表直接查看，边缘不清的一图另打开原图；不提升原生验收。三张联系表只供本地triage，不入公开候选。其它原有/修复图沿已授权任务范围与最终main合并，不等于自动发布许可。
+
+隐私只报告signal类型/计数/位置，不输出值。工作树路径、工具身份、FAKE不加审批；credential变量表达式不当作密钥。未发现配置签名前缀的未解决literal候选，no_signal不等于安全审查；opaque及未逐行人工审查文本边界明确保留。原SDK/data/数百MB CSV不重哈，三旧EXE只登记本机来源、大小、SHA及build receipt绑定。
+
+核对入口：`coverage-final.json`、`relocated-verification/receipt.json`、`third-static-terminal/manifest.json`、`pending-current.json`、`scope-exclusions.json`。后续用新版本清单补槽，不覆写本快照。最终是否入tracked/公开由main在完整验收后合并，当前无阶段完成结论。

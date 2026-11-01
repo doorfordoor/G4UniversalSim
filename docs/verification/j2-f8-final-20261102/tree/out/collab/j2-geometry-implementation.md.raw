@@ -1,0 +1,76 @@
+# J2 高级几何编辑实施交接（文件已冻结）
+
+工作区 `C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim`；分支 `roadmap/J2-F8-editing`。本次仅编辑约定的9个Python文件，不创建分支、不提交、不改C++/schema/全局状态文档。主代理已接E7 capabilities，真实113后端与C++/schema冻结保持。E7后端脚本的小修复/复跑由主代理独占，本任务未重叠。
+
+## 完成范围
+
+- `core/solid_registry_data.py` 由新 `scripts/generate_solid_registry.py` 从编译执行的 production SolidRegistry::Describe 生成，非手写第二实体表。支持 `--check` 和 `--executable`，绑定registry.hh/.cc/GeometryTypes.hh原始字节SHA；真实backend模式另核对workspace source_fingerprint。已与 `out/build-i2-formal113/Release/G4UniversalSim.exe --capabilities` 逐字段一致。
+- model/parser/writer/widgets 接E7参数、量纲、别名、数量、属性白名单与boolean_tool资格。普通实体15类含trap/A5/STL可编辑往返；布尔工具仅旧7类（含trd/trap），A5继续拒绝。没有新增实体/assembly能力。
+- 支持normal、replica与parameterised的已有字段：axis/count/width/offset、copies_file或copies+copy_step；有字段冲突、整数/单位/有限性、母体唯一daughter、形状匹配、count×width/切片尺寸/phi居中等GUI前置检查。copies_file核对已有CSV表头/列数/有限值；STL只做资源存在性与字段检查，封闭/流形/真实导航由后端判定。
+- 普通体积与layer的vis/cuts/metadata有明确的后端配置详情区；vis标明“保存仿真配置”，不混入J1本机外观。参数列与命名字段有字段/单位提示。原17/10/8列保持，敏感性、parent、上下移动仍从既有表格编辑。
+- unknown section/key/shape属性继续保留blocker，源错误不因重复validate消失；不自动启source-copy。既有array/shielding模板仍preview-only，不把草图称运行或物理验证。
+- 无路径Reload与Revert在任何清空/投影前no-op并说明保留编辑；保留体积、source_path、非法草稿，不制造空源。非空路径读取失败时保留原模型与控件，将真实读取错误置入source_errors/来源诊断，阻止writer；明确导入成功才替换文档。
+
+## 模型与schema接口
+
+唯一新增dataclass字段：`BooleanOperationRow.shape_properties: dict[str,str] = {}`。主代理已为v7完整快照精确迁移补此字段；不需要其他新增缺省字段。ordinary loader仍走既有兼容规则。没有修改主INI schema或独立几何version=2规则；这是开放后端既有几何字段的GUI消费。
+
+`shape_properties`是实体专用属性的唯一可编辑事实。parser从E7产生白名单；旧A5快照在 `_volume_from_dict` 将同名 `preview_properties` 值迁入，若新旧两处冲突明确拒绝。`preview_properties`继续承载placement，不继续制造实体属性双投影。scene_builder已有 `{**shape_properties, **preview_properties}` 路径可消费此结构；布尔工具的shape_properties仍需主代理接到其草图入口，不支持草图时应明确不可预览。
+
+## F5 raw / F4 / preview 接线（主代理接手）
+
+ConfigBuilderPage经既有_adopt收到三个 `GeometryDetailsWidget`：`volume_details`、`boolean_details`、`layer_backend_details`。统一接口：`fields: dict[str, QLineEdit|QComboBox|QPlainTextEdit]`、`changed`信号、`set_row(row)`、`apply_row(row)`；metadata现在是QPlainTextEdit多行原文。对象名为 `j2_<volume|boolean|layer>_<field-key>`，label有buddy与控件accessibleName。
+
+字段keys：
+- volume：shape/size/parameters/copy_no/metadata；E7所有properties以`prop.<key>`为字典key；placement/replica_axis/replica_count/replica_width/replica_offset/copies_file/copies/copy_step；vis.color/alpha/visible/wireframe；cut.gamma/e-/e+/proton。
+- boolean：shape/size/parameters/name；E7 boolean_tool=true实体properties的`prop.<key>`；没有material/sensitive/bias/region/placement。
+- layer：vis四项、cut四项、metadata；原layer_copy_no/position/rotation等不变。
+
+实际binding：geometry_table.currentRow / boolean_table.currentRow / _selected_layer_row。handlers分别 `_on_volume_details_changed`、`_on_boolean_details_changed`、`_on_layer_backend_details_changed`，使用已有edit_operation与_mark_geometry_dirty，不建立第二owner。详情写回保存原始字符串，包括纯空白；未知字典项保留以供校验阻断。字段输入期间用 `_sync_details_table` 更新原表列，不重建详情/移动光标。
+
+`set_row`投影期间详情 `_loading=True`；主代理F4/F5监听应忽略_loading（并继续检查page._building），选择行不应产生编辑或让诊断陈旧。F5需要注册详情raw控件、flush/capture/restore与行身份；F4 focus映射如下：
+- 普通shape/size/parameters/copy_no/metadata直接volume_details.fields；实体专用字段如dz映射`prop.dz`；placement/vis/cuts直接key。
+- tool_shape/tool_size/tool_parameters映射boolean_details.fields['shape'/'size'/'parameters']；工具properties映射prop.<field>；name直接key。
+- layer的vis/cuts/metadata映射layer_backend_details；其余保留旧详情。
+model `_issue` 已去掉这些新可编辑字段旧unsupported_editor限制，并从preview_properties中取得placement诊断值；Navigator共享实现由主代理接手。
+
+另：`config_builder_page.set_from_project`原只安装dirty/source-copy的保存文档，需主代理支持显式无源新文档安装，避免跨项目继承旧文档。已提前报告，不越权编辑共享文件。无源Reload no-op不能代替该初始化责任。
+
+翻译缺失keys（按当前core/i18n.py筛选）：`out/collab/j2-geometry-i18n-keys.json`。动态分组/标题已有稳定i18nSource与tabs源，专业backend token不翻译。主代理接词典/运行时语言检查；本任务没有改共享i18n。
+
+## file / copies_file 资源包衔接
+
+writer把导入几何里的相对STL/copies_file按原source_path所在目录解析到绝对路径，避免生成目录改变相对路径含义；无源内存文档的资源必须提供绝对路径。raw源值仍在模型/快照保留。
+
+主代理需将 `shape_properties.file` 与 `preview_properties.copies_file` 两类新可编辑资源纳入K1捕获/复制/重写/来源身份；本任务未修改共享package/export逻辑，不把引用外部绝对路径的配置称为离线可搬移包。
+
+## 验证与首次失败
+
+最终 `python -B -m compileall -q gui scripts/generate_solid_registry.py` 退出0。
+
+`python -B tools/test_assert_probe.py gui/smoke_tests/smoke_j2_geometry.py` 退出0，`G4USIM_ASSERTS=132`，日志 `out/collab/j2-geometry-smoke-final.log`。覆盖15实体/7工具、3/5参数ellipsoid、源定义SHA、源→模型→writer→parser与快照、旧A5属性迁移/冲突拒绝、未知字段与assembly阻断、placement/非法replica尺寸、vis/cuts与多行metadata、nan/纯空白原文、敏感性/父子/上下移动/复制隔离，以及无源两个按钮/缺失来源/重新导入。
+
+真实backend元数据核对：`python -B scripts/generate_solid_registry.py --check --executable out/build-i2-formal113/Release/G4UniversalSim.exe` 退出0；环境为主代理给定Geant4/Qt PATH与GEANT4_DATA_DIR。日志 `out/collab/j2-geometry-generation-backend-check.log`。这只核对定义与指纹，不是新GUI配置的真实模拟。
+
+关联专项已执行：smoke_parsers退出0/8断言；smoke_project_io退出0/6；smoke_hier_boolean_geometry_editor退出0/32（仅writer，明确未运行backend）。日志分别在out/collab/j2-geometry-smoke_*.log。
+
+保留首次失败：
+- `out/collab/j2-geometry-existing-first.log`：旧smoke_geometry_editor在trd正长度错误文本断言失败。其后“selected shape is not trd”和“trd工具不支持”的固定断言也需主代理同步为字段诊断/新支持范围；不要为旧断言重新禁止trd/trap。
+- `out/collab/j2-geometry-smoke_config_editors.log`：旧测试在Run Config只应有Source/Physics/Scoring三页签断言失败，尚未执行到几何段；本轮其他作者已新增高级页签，主代理同步。
+
+九个文件均UTF-8无BOM/LF、AST与新增测试平台路径检查通过；git diff --check通过。SHA及本地验证收据 `out/collab/j2-geometry-local-checks.json`，不是统一runner正式报告。
+
+## 独审P2原样复跑
+
+原 `out/collab/j2-blank-review/reload_cases.py` 复制到独立 `out/collab/j2-geometry-review-rerun/`，未覆盖原审查记录。最终源码下退出0：world/KEEP均保留、revision 1->1、fingerprint_changed=false、明确新来源导入后的REIMPORTED可校验，运行前后受查源SHA相同。见该目录reload.log与reload-results.json。永久回归已进入smoke_j2_geometry。
+
+## 视觉证据与边界
+
+使用offscreen Qt渲染并通过image工具实际检查了 `out/collab/j2-geometry-details-final.png`：字段及单位、参数/placement/后端vis/cuts/metadata分组可读；详情页用滚动容器避免大量字段把最小高度撑满。最初offscreen默认无字体得到方块图，后在QA进程显式加载Windows字体重渲染；不以此替代产品原生字体/DPI/实窗验收，也未改系统或产品字体设置。
+
+## 冻结交接
+
+本次9文件已冻结供主代理F5/F4/i18n/K1集成和交叉独审：
+`editors/geometry_editor_model.py`、`parsers/geometry_parser.py`、`writers/geometry_ini_writer.py`、`widgets/config/geometry.py`、`widgets/config/layers.py`、`widgets/config/booleans.py`、`core/solid_registry_data.py`、`scripts/generate_solid_registry.py`、`gui/smoke_tests/smoke_j2_geometry.py`。
+
+没有运行中的命令；不再编辑这些文件，除非主代理明确回派修复。未执行全局构建/新GUI配置真实模拟/正式矩阵，未关闭E7/J2/F8。

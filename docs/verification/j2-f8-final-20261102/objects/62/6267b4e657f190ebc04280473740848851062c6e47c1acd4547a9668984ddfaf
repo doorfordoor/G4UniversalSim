@@ -1,0 +1,13 @@
+# v5-2ec5b14-r2 归档窄独审
+
+结论：PASS，仅针对已封存本地范围，不是公共发布或阶段关闭。封存final-seal.json SHA256 `29d47ba427b8054321b8f6b5313638141bc1fe1b39ea3a09e61bec060a19d25b`，manifest SHA256 `a1ec8a71c47d2edb4dfe0d92df84ebf99816c5fe4dd87746b7108c4987b14ecb`。
+
+独立读README、构建/追加/重定位脚本、seal/manifest/排除表/待办及原收据。核8428逻辑路径、4163独立对象原始SHA/大小，总95025839字节；所有logical文件只与本staging对象硬链接，4163个对象均与仍存在原件不同inode。7038旧条目身份/大小/顺序精确保持，旧快照更名隔离，无旧层覆盖。
+
+57份报告闭合链、2897日志raw SHA与实际resolve_log返回路径已核，全部位于新staging；2954次仍存在的原report/log字节比较一致。未对原report重写绝对路径或状态。原76次checker执行收据加晚补2次构成39次baseline通过、22次原报告预期通过、17次原失败仍exit1；对应执行log SHA核实，无legacy/incomplete放宽。此处没有重新执行checker CLI，只导入冻结纯文件resolver核路径；没有产品/Qt/backend/profile运行。
+
+156项原图排除表为70张2901继承本地raw与86张18c原生raw：前70在本地继承层均标metadata_only_other_application_pixels_no_raw_Git_image，后86未进入新增payload。没有公共raw包/上传，公开只metadata的声明准确。本审不读图片或确认视觉内容，不把文件核对当视觉通行，也不把容器SHA当opaque内容安全保证。
+
+18c本机300/181295与CI4pass/4fail各按原身份，2ec仅已终态static/已审Desktop/工具准备记录；尚未终态的其余profile、CI和新代表性native明确pending。18c旧native scope不扩写、新映射只文件身份、阶段未关闭。后续终态增量需要另核，不能由本PASS推得。
+
+没有发现新增问题。仅OUT receipt与本报告写入；staging/产品/CI/原件未改。纯文件检查session67412实际exit0；backend原session57367独立继续，未操作或占用native slot。

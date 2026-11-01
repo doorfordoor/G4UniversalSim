@@ -1,0 +1,48 @@
+# K1 policy普通文件别名身份候选：final-v1冻结交接
+
+仅使用本目录fix.patch；父目录fix.patch及中间文件是保留的开发/失败证据，不是交付候选。未改tracked、未提交/构建/重跑formal。
+
+冻结补丁SHA256：`f705dc96bcfb4706e03d045a00e281c53ce0e8fe6eb9912c27579188e8a446de`。
+产品候选：`4990d9f4439711f96aa5a5475f6f39ea3588b8c1e3fabf7e3e2eca0318a45610`。
+测试候选：`80726fb8eeda65700169416b8a9711967ed15283ed8bbc22bbf20b42d8c216f3`。
+
+## 判定与真实路径证据
+
+确认是policy身份匹配缺口，不能把restricted原断言改成接受Unused。原产品保存原policy字符串，而资源add按_no_links返回的词法绝对路径查键；真实NTFS8.3资源拼写与Path.resolve长policy键是同一个普通文件（samefile=True），却把restricted默认拒绝和显式允许都误报Unused。reproduction.json/log记录实际两侧路径，无policy可收集unknown；有canonical policy双反例失败。
+
+原CI日志只展示长policy键，未直接记录资源查键拼写，故“CI临时路径别名来源”不冒称从原日志直接观察；独立使用真实8.3 TEMP，未改的source_capture_scope确实在同一line175、同一Unused→Restricted断言处失败。独立仅调该函数的旧产品9入口red，对应CI完整入口12（还含调用者入口），不是删减原断言。
+
+## 最小产品范围与首尾guard
+
+只修改experiment_bundle.py：
+
+1. 对绝对policy键先检查原词法路径_no_links，再resolve成匹配身份；保存原始policy拼写，不清除其原路径语义。相同文件的duplicate policy入口明确拒绝，不任意选一项覆盖用户裁决；相对/无关unused键仍保持unused拒绝。
+2. 资源方向每次匹配也先_no_links再resolve；closure节点、资源读路径、source_receipts与原输入字节保持原机制。
+3. 必须保留原policy拼写尾部guard：collect返回前、export完成原收据核验后且_publish_directory前，再对原拼写_no_links→resolve→比较身份。只在入口resolve后丢掉原拼写不合格。
+
+尾部新增真实反例只改变policy路径的一个原词法组件；实际main/materials/geometry/macro资源路径和字节均不动。分别在_finish_collection后、inspect_bundle后将该组件变为真实junction，最终稿拒绝，export不发布且清理staging。未带尾guard的OUT中间稿在同一最终测试的collect和export分支均red，export反例确实产生自己OUT目录内manifest，收据保留位置/SHA；该中间稿从未apply。资源自身读取后晚变junction的固定时点负例也拒绝。
+
+这些是确定时点检查，不扩大为任意并发文件系统替换保证。
+
+## 最终实际定点结果（Dvenv，无native）
+
+| 检查 | 退出 | v3断言入口 |
+|---|---:|---:|
+| 新永久真实alias/case/restricted/allow/unused/duplicate组 | 0 | 21 |
+| 新永久原policy拼写collect/export尾guard | 0 | 20 |
+| 原test_refusals完整组（未改任何原判据） | 0 | 124 |
+| 原source_capture_scope真实短TEMP（未改） | 0 | 30 |
+| 真实资源方向/原policy键junction拒绝 | 0 | 3 |
+| 资源读后、policy比较前晚junction拒绝 | 0 | 5 |
+
+receipt.json记录每份最终日志SHA；候选运行时dev两文件字节SHA与此目录冻结副本完全相同。真实8.3/case等价、旧产品red、仅入口resolve的OUT中间稿两个red均有原日志，未用新稿覆写。当前113integration运行的仍是原2901f42，不是此overlay，不拼接报告。
+
+## 测试交付完整性
+
+只向既有scripts/test_k1_bundle.py加入两个函数和原main用例tuple两项，无新全局runner。移除两个新增函数/注册后，整个测试模块AST与原件完全一致，涵盖全部原函数、assert和入口；包装验证packaging.json。
+
+产品896→916真实LF行；测试779→882真实LF行；CRLF计数0；两文件compile通过。最终git apply --numstat：产品24增4删，测试104增1删，总128增5删。--check=0。已实际apply到本目录apply-roundtrip的OUT原文件副本，并逐字节与两份候选匹配，不仅检查补丁可应用。
+
+开发期错误保留在父目录：第一次补丁CRLF格式失败、随后组装diff复用loader变量导致测试大面积删除的错误patch、一次OUT证据目录后缀冲突。最终补丁从两个具名候选分别重读生成，上述LF/AST/compile/stat/check/实际apply字节回比全部通过。错误字节不删除，不作为正式候选。
+
+交接时tracked clean。本K1定点短进程均结束，等待Sagan独审后由main统一apply；本线程另有113 integration原session99237运行，结束后通知释放114 slot。

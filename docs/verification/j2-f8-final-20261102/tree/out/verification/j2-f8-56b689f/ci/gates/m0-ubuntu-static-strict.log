@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-ci-review\ci_review.py", line 206, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-ci-review\ci_review.py", line 205, in main
+    elif args.command=='gate':gate_report(args.report,args.lane,args.head,args.source_fingerprint,args.tests_fingerprint,args.output_dir)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-ci-review\ci_review.py", line 117, in gate_report
+    gate.validate_report(current,report_path=path,baseline=historical)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\check_report_evidence.py", line 163, in validate_report
+    assert not non_pass, (
+           ^^^^^^^^^^^^
+AssertionError: report is not release evidence: 5 case(s) did not pass (['k1_bundle', 'f4_producers', 'f4_document_diagnostics', 'doc_links', 'config_migration']); pass --allow-incomplete only for triage

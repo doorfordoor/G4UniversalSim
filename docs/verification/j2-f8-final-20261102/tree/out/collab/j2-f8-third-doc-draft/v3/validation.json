@@ -1,0 +1,33 @@
+{
+  "status": "pass",
+  "changed_proposals_from_v2": [
+    "STATUS.md",
+    "docs/agent-history.md",
+    "docs/J2编辑覆盖与F8验收.md",
+    "docs/功能支持矩阵.md"
+  ],
+  "all_other_proposed_bytes_identical_to_v2": true,
+  "nine_original_source_SHA_pins": true,
+  "v2_all_files_unchanged": true,
+  "history_prefix_and_STATUS_historical_tail_exact": true,
+  "apply_check_exit": 0,
+  "tracked_before_after": "same six main-authorized code/test diffs; nine doc sources unchanged",
+  "main_authorized_diff_paths": [
+    "gui/g4usim_gui/core/accessibility.py",
+    "gui/g4usim_gui/core/experiment_bundle.py",
+    "gui/g4usim_gui/widgets/run_history_page.py",
+    "gui/smoke_tests/smoke_f8_accessibility.py",
+    "gui/smoke_tests/smoke_j2_geometry.py",
+    "scripts/test_k1_bundle.py"
+  ],
+  "main_diff_SHA_before_after_unchanged": {
+    "gui/smoke_tests/smoke_f8_accessibility.py": "943c92a0cdd0650511b7c8ce45378ebcbddc06b7f55b90835317eb44d3a59e95",
+    "scripts/test_k1_bundle.py": "80726fb8eeda65700169416b8a9711967ed15283ed8bbc22bbf20b42d8c216f3",
+    "gui/g4usim_gui/core/experiment_bundle.py": "4990d9f4439711f96aa5a5475f6f39ea3588b8c1e3fabf7e3e2eca0318a45610",
+    "gui/smoke_tests/smoke_j2_geometry.py": "579c6a7a00a93a41570aa28357053d3009b1c2758cf005ccf6de78477fb5b671",
+    "gui/g4usim_gui/widgets/run_history_page.py": "cc98442e975cec3f1b33d556a8dabdd7381ec22368e94bd6124178edacb5a463",
+    "gui/g4usim_gui/core/accessibility.py": "c9d87e23c88704fedc2c17a8a954aba9acf365c607ea47fe86b6c56854be2be7"
+  },
+  "tests_build_native_formal_commands_started_or_stopped": false,
+  "unchanged_validation_inherited": "v2/validation.json; new corrections limited to listed prose identity replacements"
+}

@@ -1,0 +1,49 @@
+# Linux Qt Name：最终OUT test-only候选（冻结待独审）
+
+## 首因与真实自然复现
+
+18c真实Linux113/114及M0 Ubuntu原CI失败保持原判。WSL现成Python3.11/Qt6.11.3使用未改的原永久入口，真实自然exit1于smoke_f8_accessibility.py:659；linux-original-6113.log保留标准v3轨迹。不是controlled replay。
+
+probe-natural-detail.py在原断言前只插入一条只读打印，原__file__/ROOT与所有输入/断言/生产模块均保留：linux-natural-detail.log/json直接记录失败控件QComboBox、language=en、source=Status、property=Status、interface Name=all、Role.ComboBox、实际label=Status、buddy=true、interface.object就是该控件；runtime完整记PySide/Qt6.11.3与locale=zh_CN。两个QLineEdit Name正常。
+
+该诊断插入造成后续trace行号+1；Python显示物理原文件行文本可能错后一行，原未插桩红例仍准确是659。保存的natural-original-with-readonly-print.py可核实实际执行源；这不是改生产/受控伪造Name provider。
+
+## Qt主线依据与三环境对照
+
+同一真实RunHistoryPage，en→zh_CN→en：Windows Qt6.11.1返回Combo Name Status/状态；Linux Qt6.11.1和6.11.3均返回当前值all。三环境的QWidget属性、label/buddy、interface对象/Role都正确，两个文本框Name均随语言正确更新。
+
+Qt上游两版本的QAccessibleComboBox::text（381–408）明确在Q_OS_UNIX分支让Name使用currentText；qaccessiblewidget.cpp的relations（205–243）以Label关系给出语义标签。实测正确方向是control.interface.relations(QAccessible.Label)，目标就是实际QLabel，Role.StaticText，label接口Name随语言更新；Labelled是反向关系，不能据查询反向为空判产品缺标注。
+
+primary sources：
+- https://raw.githubusercontent.com/qt/qtbase/v6.11.3/src/widgets/accessible/complexwidgets.cpp
+- https://raw.githubusercontent.com/qt/qtbase/v6.11.1/src/widgets/accessible/complexwidgets.cpp
+- https://raw.githubusercontent.com/qt/qtbase/v6.11.3/src/widgets/accessible/qaccessiblewidget.cpp
+
+因此首因是测试把所有平台Combo interface Name都等价于label的错误假设，当前证据不要求改产品或替换Qt provider。不是locale/语言刷新失败，也不是6.11.3才引入的minor差异。原CI trace本身没actual；结论来自上述新自然probe和真实provider对照，不反写原trace。
+
+## 冻结交付（只一个test target）
+
+目录candidate-test-only/：
+- target：gui/smoke_tests/smoke_f8_accessibility.py，原SHA943c92a0cdd0650511b7c8ce45378ebcbddc06b7f55b90835317eb44d3a59e95。
+- 完整candidate SHA：5f234e69c00d602039cb8f2ebc7daadb4f69edc860e6010989628d06253b3814。
+- fix.patch SHA：09409fa22593aceef84bcbcbed5a232c3eae0b0a6225c328a8ba0ec07c65815b。
+
+没有product patch，无新翻译。所有原函数AST除目标History测试外原样（包含main、旧416、spacer联合回归）；只新增_assert_history_provider并在History处使用：
+- 保留已有label/buddy/属性严格相等检查。
+- 额外断言真实interface.object为control，真实Label关系指向确切QLabel，label接口Role/Name严格正确。
+- 两文本框interface Name仍严格等于翻译label，Role.EditableText。
+- Linux Combo Name严格等于当前值（空值依Qt回退标签），Value严格等于currentText，Role.ComboBox；Windows Name继续严格等于label，Value也严格验证。
+- 真实负向：Status属性仍正确时用正常Qt API临时解除buddy，实际Label关系丢失，必须拒绝；finally恢复并再次过完整interface检查。不是property-only，也没有虚构/覆盖Name getter。
+
+保留字段读取上下文、完整可容纳joint、最小滚动、F5不变等全部原判据；不吞旧CI红例。
+
+## 作者证据与范围
+
+- WSL Qt6.11.3完整候选F8：candidate-test-only/linux6113-final.log，exit0/655 v3，session80804已结束。输出模式比正式无截图模式多12个既有写图断言，未借此降低任何阈值。
+- Windows指定Dvenv6.11.1只执行精确候选History函数及真实丢buddy负向：windows-targeted.log，exit0，session19902已结束；未重跑Windows全profile或三档native。
+- 两端history-label.json保留en/zh/en实际Name/LabelName/Role/object match和negative(property正确/rejected=true)。Linux Combo Name=all是规定值、LabelName=Status/状态仍严格验证；其余文本框Name不变。
+- Linux原入口24722、自然打印16766均已自然exit1结束，作为负向；三环境micro日志均exit0。没有Name controlled replay。候选完整F8末段原spacer受控返回值测试及其预期warnings仍原样，不能误说成本次Name重放。
+- 最初candidate loader因标准probe替换sys.path[0]而未找到g4usim_gui，0入口/exit1，另存linux6113-launcher-import-first.log；只修OUT loader的保护路径后才有本次655，未改候选源码、产品或原断言。
+- receipt.json、product-gui-byte-map.json记录原件/候选/日志与149GUI映射。当前149GUI字节逐项等于本轮native100/125/150三个18c identity，未复审100链路。后续新test-only冻结必须再次核149GUI；满足时可按main原scope映射，不无理由重跑三档。本地655不代替新冻结6profile/真实CI终态，阶段仍由main决定。
+
+没有tracked修改、实际native输入或Geant4后端执行。Roadmap native条目scope映射暂后置；参考main限定范围文件out/collab/j2-f8-18c5858-main-acceptance-scope.md，不把125扩成九页/wizard，不把旧Scan投影变更当编辑。

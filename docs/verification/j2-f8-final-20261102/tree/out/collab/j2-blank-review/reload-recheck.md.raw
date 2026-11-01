@@ -1,0 +1,7 @@
+# Geometry no-source Reload P2 独立复核关闭
+
+2026-11-02。原先world/KEEP点击无来源Reload变空的P2，在作者修复后按原独立反例重新执行。
+
+本轮world/KEEP均保留，revision 1→1、fingerprint_changed=false、没有新Undo；说明文字明确没有来源文件并保留编辑。随后真实重新导入REIMPORTED来源文件，路径/捕获原文一致且可校验。源码运行前后SHA见JSON，不改产品。
+
+结论：原Reload清空P2在本轮几何字节上独立关闭。旧失败证据未覆盖。[结果](reload-recheck-results.json)、[脚本](reload_recheck.py)、[日志](reload-recheck.log)。main补充的旧geometry_summary→新blank身份清理将随新E2E链路继续验证；这里不拿旧通过替代后续共享源码正式验收。

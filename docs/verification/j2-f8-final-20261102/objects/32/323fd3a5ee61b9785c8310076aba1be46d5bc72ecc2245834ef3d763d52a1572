@@ -1,0 +1,43 @@
+G4USIM_ASSERTS=16
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_f4_layout.py", line 253, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_f4_layout.py", line 173, in main
+    target_visible_through_ancestors(run.stdout_view, run.stdout_view.rect(), full_cell=False)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_f4_layout.py", line 60, in target_visible_through_ancestors
+    assert clipped.contains(target.center()), (target, clipped)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (PySide6.QtCore.QRect(229, 665, 1538, 87), PySide6.QtCore.QRect(229, 665, 1043, 32))
+Traceback (most recent call last):
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\shutil.py", line 632, in _rmtree_unsafe
+    os.unlink(fullname)
+PermissionError: [WinError 32] 另一个程序正在使用此文件，进程无法访问。: 'D:\\Temp\\g4usim-smoke-recovery-rj83p5bx\\affcbfe684d74e96be02c883b84b34c3.lock'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\weakref.py", line 666, in _exitfunc
+    f()
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\weakref.py", line 590, in __call__
+    return info.func(*info.args, **(info.kwargs or {}))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\tempfile.py", line 933, in _cleanup
+    cls._rmtree(name, ignore_errors=ignore_errors)
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\tempfile.py", line 929, in _rmtree
+    _shutil.rmtree(name, onerror=onerror)
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\shutil.py", line 787, in rmtree
+    return _rmtree_unsafe(path, onerror)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\shutil.py", line 634, in _rmtree_unsafe
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\tempfile.py", line 893, in onerror
+    _os.unlink(path)
+PermissionError: [WinError 32] 另一个程序正在使用此文件，进程无法访问。: 'D:\\Temp\\g4usim-smoke-recovery-rj83p5bx\\affcbfe684d74e96be02c883b84b34c3.lock'

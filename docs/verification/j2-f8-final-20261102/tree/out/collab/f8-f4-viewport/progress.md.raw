@@ -1,0 +1,10 @@
+# F4/workspaceContentScroll 定点修复进度
+
+当前只改 gui/g4usim_gui/window/workspace_layout.py，没有改shell/accessibility/原F4断言；旧冻结与首次失败保留。
+根因：QStackedWidget默认聚合所有inactive页的最大minHint，history/scans令stack min1552×438，加日志dock后host637高而viewport575高，stdout中心被clip。before.log量化；只按current minHint的第一个候选让日志恢复但Project central只剩66px，后续visible_in_scroll原断言失败，f4-default.log/f4-125.log保持。r2按活动scroll内容宽度保留，原F4默认265通过，f4-default-r2.log保留。
+
+最终最小策略：_current_size_hint取super().currentWidget()实际central widget/anchor；minimumSizeHint横向保留当前page.sizeHint.width与当前minHint的较大者（实例Run468，而非66），纵向不传播preferred/content完整高度。切页/restore后updateGeometry。不使用全局硬编码宽度、不隐藏peer docks、不重建dock/业务页面。只改变呈现尺寸建议，不改变F8最小滚动/label策略。
+
+当前workspace_layout SHA cd5f7e0c1761085abe5c68a849753f939f965e252a9d46a1c637d9d17f4ef34c，停止继续编辑待测试结果。最终测试final-f4-default.log、final-f4-125.log、final-f8-125.log、final-f8-150.log进程在运行，尚不冒充全部通过。原F4文件没有diff；py_compile和限定diff-check已通过。无原生UI动作。
+
+最终复验已完成：四个最终测试均退出0，F4默认/125各265，F8 125/150各280；已生成freeze.json并停止编辑。当前未遗留运行测试进程。该修复没有新增翻译键，前次wizard三键保持。

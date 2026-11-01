@@ -1,0 +1,107 @@
+{
+  "schema": "j2_f8_read_only_baseline_comparison_v1",
+  "official_gate_exit_code": 1,
+  "official_gate_stopped_at": "four non-pass cases; no allow-incomplete used",
+  "baseline_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\i2-j1-5fe0a10\\windows-static\\20261101-205231-c62d61cd\\report.json",
+  "baseline_sha256": "5b72c84e71c6e1b096ad81566c0adb5d7809fd590506dc9f37559ea8b3526c99",
+  "baseline_profile": "static",
+  "baseline_platform": "Windows-10-10.0.26200-SP0",
+  "baseline_assert_probe": "settrace_assert_lines_v3",
+  "baseline_cases": 44,
+  "baseline_assertions": 3964,
+  "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows-static\\20261102-011952-3779ed5f\\report.json",
+  "report_sha256": "2063a7dc27ee502cca4660df4d6ba9862149644e3dad2806cba29431cbc07f35",
+  "candidate_cases": 46,
+  "candidate_assertions": 3616,
+  "missing_old_cases": [],
+  "new_cases": [
+    "j2_resources",
+    "solid_registry"
+  ],
+  "case_assertion_decreases": [
+    {
+      "case": "k1_bundle",
+      "baseline": 529,
+      "candidate": 523,
+      "candidate_status": "fail"
+    },
+    {
+      "case": "f4_producers",
+      "baseline": 593,
+      "candidate": 287,
+      "candidate_status": "fail"
+    },
+    {
+      "case": "f4_document_diagnostics",
+      "baseline": 119,
+      "candidate": 27,
+      "candidate_status": "fail"
+    },
+    {
+      "case": "f1_input_provenance",
+      "baseline": 37,
+      "candidate": 36,
+      "candidate_status": "pass"
+    },
+    {
+      "case": "f1_artifact_model",
+      "baseline": 97,
+      "candidate": 96,
+      "candidate_status": "pass"
+    },
+    {
+      "case": "output_auto_model",
+      "baseline": 4,
+      "candidate": 3,
+      "candidate_status": "pass"
+    },
+    {
+      "case": "effective_config_model",
+      "baseline": 18,
+      "candidate": 17,
+      "candidate_status": "pass"
+    },
+    {
+      "case": "main_config_version_component",
+      "baseline": 4,
+      "candidate": 3,
+      "candidate_status": "pass"
+    },
+    {
+      "case": "config_migration",
+      "baseline": 447,
+      "candidate": 138,
+      "candidate_status": "fail"
+    },
+    {
+      "case": "geometry_diagnostic_identity",
+      "baseline": 4,
+      "candidate": 3,
+      "candidate_status": "pass"
+    },
+    {
+      "case": "input_provenance",
+      "baseline": 15,
+      "candidate": 14,
+      "candidate_status": "pass"
+    },
+    {
+      "case": "effective_consumer_state",
+      "baseline": 3,
+      "candidate": 2,
+      "candidate_status": "pass"
+    },
+    {
+      "case": "effective_receipt_view",
+      "baseline": 14,
+      "candidate": 13,
+      "candidate_status": "pass"
+    }
+  ],
+  "independent_log_integrity": {
+    "logs_checked": 46,
+    "all_raw_digests_match": true,
+    "all_lf_only": true,
+    "assertion_sum_matches": true
+  }
+}

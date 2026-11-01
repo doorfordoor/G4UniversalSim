@@ -1,0 +1,28 @@
+# J2 材料实现记录
+
+工作区：C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim；分支 roadmap/J2-F8-editing。未提交、未全局构建、未改 src/Materials，独审由其他人完成。只改约定的五个产品/测试文件及本 out/collab 证据；既有其他任务改动保留。
+
+## 实现与事实链路
+
+已读根/gui AGENTS、相关材料/Q1/F5 历史、ROADMAP 278–289。当前分支没有 ResolveElements；真实链路是 MaterialManager::BuildCustomMaterial/BuildElement/GetElement → MaterialFactory::FindElement/FindMaterial。GetElement 只读已注册对象，不能把它当自动构建入口；组分构造路径才有 NIST 回退。自建元素（大小写不敏感）优先，NIST 符号精确匹配，接受 G4_ 符号别名。volume_fraction 先解析材料，不能以普通 Si 元素代替密度；G4_Si 确实是 SDK 材料名单中的密度材料，允许使用。
+
+- core/nist_elements.py：SDK 有限名单（107 元素、309 材料）、搜索符号/G4_ 别名/Z/自建名称及来源解析。自建 Si 优先，同时可显式选 G4_Si 请求 NIST。11.3.2/11.4.3 两套 SDK API 导出名单完全相同；来源 helper/原件见 j2-materials/catalog*.cc/cmd/txt。helper 首两次编译缺 WIN32 平台定义失败，随后按 SDK 定义编译成功；没有项目构建。
+- material_editor_model.py：三种组分模式分流，未知名称拒绝；校验有限正数/密度单位/atom_count 整数范围/分数总和，按真实自建元素优先级检查材料依赖。原 element/isotope/NIST 源章节保留，生成/项目保存重载后来源仍可重新解释。源无路径、raw 为空且 dirty 的材料文档及空 rows 保持有效。
+- parsers/materials_parser.py：对齐后端的 atom/mass/volume 别名与默认 mass_fraction；不再把未知模式降为有效模式。重复源 section/key 设置生成 blocker，NIST 请求名称按有限名单校验，保留源错误与行号。
+- widgets/config/materials.py：新增搜索、选择、插入及来源说明；volume_fraction/nist 模式不能插入元素。无路径 Reload/Revert 安全无动作并说明，保留文档及非法草稿；有路径仍真实读盘。切到无源新文档时清掉旧材料摘要/预览，避免来源串用。
+
+## 验证结果与边界
+
+证据根 out/collab/j2-materials；实现文件 SHA/日志 SHA、当前 HEAD 见 implementation-receipt.json。专项实际走 model→writer→parser→project save/load→package writer→parser 和 Qt 控件；翻译通过独立 JSON 注入测试，没有改主词典。
+
+通过：smoke_j2_materials（58 个 v3 assert 入口）、smoke_project_io（6）、smoke_project_snapshot_restore（61）、compileall gui。翻译占位符18组一致；离屏材料编辑器截图 materials-zh.png 已实际打开，搜索/插入/来源说明文字清楚。首次离屏截图因平台无字体全是方框，测试预览显式加载 Windows 字体后复验；不冒充原生窗口/DPI 验收。
+
+真实后端：backend-runtime（11.3.2）和 backend1143（11.4.3），各五种 fixture 全部符合预期：免声明 H/G4_O、Si30 自建 Si 优先、volume G4_Si 三种合法场景各完成1事件并核对 kernel_constructed 的材料组成、自建同位素组成与原子量；Sii 拼错、volume Si 元素两种场景受控退出1。exe 路径/SHA/capabilities 保存在 backend-identities.json/capabilities-*.json。使用既有可执行文件，不能据此宣称当前共享 C++ 编辑树构建/全矩阵通过，也不证明材料物理数据正确性。早期仅 dump-effective-config 不构造材料的失败探索保留在 backend-test.log/backend；正式构造证据为上述两组真实 run。
+
+综合旧测试当前有三项外部衔接：旧 smoke_materials_editor 最初通过，其他任务开放几何实体后，其 torus“后端支持但 GUI 不可编辑”的旧断言失败（existing-materials-final.log）；smoke_config_editors 仍断言 Source/Physics/Scoring 三标签，当前其他任务增加运行标签（config-editors.log）；smoke_j2_blank 曾通过，最新失败在复合摘要断言，j2-blank-diagnostic.log 已明确材料摘要 None、材料 source/raw 为空，剩余是 geometry_summary 非 None。没有改几何/运行独占文件或降低旧断言。共享几何曾暂缺 _validate_solid，随后写者补齐，不是材料失败。
+
+## 主代理接手
+
+1. 合并 out/collab/j2-materials-i18n.json 的18个键到集中词典；JSON 占位符已检查。独立后端驱动 out/collab/j2-materials-backend.py（G4USIM_EXE，--output 必须使用全新目录）；产品级 fixture 同时在 smoke_j2_materials.py --backend。
+2. 测试命令：python -B tools/test_assert_probe.py gui/smoke_tests/smoke_j2_materials.py --translations out/collab/j2-materials-i18n.json；后端：设置 G4USIM_EXE 后 python out/collab/j2-materials-backend.py --output <新证据目录>。
+3. 独审与整阶段验收、正式测试登记、统一中文使用说明/支持矩阵/Agent 历史由主代理统筹。材料 GUI 只是早期检查，实际后端再次构建/校验；没有改变自建同位素定义或引入无限名称推断。以上三项共享集成旧测试需各自所有者衔接后复验。

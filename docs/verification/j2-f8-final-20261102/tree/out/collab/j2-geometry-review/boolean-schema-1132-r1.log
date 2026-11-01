@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-geometry-review\verify-boolean-schema.py", line 54, in <module>
+    _,r,_=execute('unrelated-'+shape,WORLD+TARGET+tool(shape)+key+'='+value+'\n');log=(r.stdout+r.stderr).decode('utf-8','replace');assert r.returncode==1 and key in log and 'shape-specific field is not valid' in log and 'created_geometry_object_count=0' in log
+                                                                                                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

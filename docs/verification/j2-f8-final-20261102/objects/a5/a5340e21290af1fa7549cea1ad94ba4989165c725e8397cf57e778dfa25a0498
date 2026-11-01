@@ -1,0 +1,13 @@
+# 第三候选真实 CI 首因（原失败不改判）
+
+精确HEAD18c5858fd6e80a5cb6096beacebfef69c479ad49，push/attempt1。首个观测失败job为Linux11.4.3=124961551099，run41344573528；失败步骤Run offscreen GUI tests on Linux。
+
+真实原日志确认唯一失败用例gui_f8_accessibility：`gui/smoke_tests/smoke_f8_accessibility.py:659`，test_history_directory_accessibility中 `assert interface.text(QAccessible.Name) == ui_text(source)` 失败。前一步控件accessibleName/label绑定断言已执行，原trace未打印实际/预期字符串；不未经独立probe推断具体字符串或平台原因。
+
+随后M0 Ubuntu job124961551155 /run41344573541及Linux11.3.2 job124961551454 /run41344573528也终态失败，同唯一用例、同断言。三份完整connector解码job日志分别job-124961551099.log、job-124961551155.log、job-124961551454.log已保存；各自artifact原ZIP13099380815、13099526165、13098459375大小/SHA与GitHubdigest/HEAD归属分别核验，不拼平台证据。
+
+Linux114原ZIP SHA dbb53208e127698bf7fe7d35334db5272a173c2f000a823d7ce982851229665a；Linux113 SHA8aebd51ab987446edc68db23d6a20c6886b414eafe50778c85bd62902b001f4f；M0Ubuntu SHA b75ab5f7dadb32e94acb8b5958522a15436b7044a330892786f5e1818e624a03。
+
+独立matching历史门禁：三份static各4573/历史3966入口，strict pass；三份GUI各8401/历史6739，strict fail（各1失败）。总数增加不覆盖失败。HEAD/双指纹、tracked-source gate、全部原始逐例日志SHA与总和已核对，matching历史先strict通过。三份失败报告没有旧例入口下降；F8为本轮新增能力专项失败。逐例清单/原日志路径与SHA见report-gates-current.json；首份失败即时快照report-gates-first-failure.json原样保留。
+
+Linux backend/integration因上游GUI失败均未执行，不计通过。桌面两平台成功已另独立核验；M0 Windows与安装两平台继续收集。没有allow-incomplete/legacy放宽、没有rerun/取消CI或产品/测试修改。待main统筹修复及后续候选；本收据不自行改变原判据。

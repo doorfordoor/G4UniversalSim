@@ -1,0 +1,20 @@
+{
+  "Search element symbol, G4_ alias, atomic number or custom name": "搜索元素符号、G4_ 别名、原子序数或自建元素名",
+  "Insert element component": "插入元素组分",
+  "Element catalog: Geant4 {version}; custom definitions take priority. Backend validates again.": "元素目录：Geant4 {version}；优先使用自建定义，后端仍会再次校验。",
+  "This material document is in memory; Reload/Revert needs a source file. Your edits are retained.": "当前材料文档保存在内存中；重新加载或还原需要源文件，已保留您的编辑内容。",
+  "Custom element [{section}] (retained source definition)": "自建元素 [{section}]（保留的源定义）",
+  "NIST element {name} (automatic; no declaration required)": "NIST 元素 {name}（自动解析，无需预先声明）",
+  "Defined material {name} (material density)": "已定义材料 {name}（使用材料密度）",
+  "NIST material {name} (material density)": "NIST 材料 {name}（使用材料密度）",
+  "Unresolved component {name}": "无法解析的组分 {name}",
+  "Select mass_fraction or atom_count to insert elements; volume_fraction requires materials with density.": "选择 mass_fraction 或 atom_count 才能插入元素；volume_fraction 需要有密度的材料。",
+  "No matching element in the catalog or custom definitions.": "元素目录和自建定义中均无匹配项。",
+  "Density must be finite and positive with a supported unit (g/cm3, kg/m3, mg/cm3): {value}": "密度必须是有限正数，并使用支持的单位（g/cm3、kg/m3、mg/cm3）：{value}",
+  "Unknown NIST material in the Geant4 catalog: {name}": "Geant4 目录中没有此 NIST 材料：{name}",
+  "Component {name} requires a finite value.": "组分 {name} 的数值必须有限。",
+  "Component {name} cannot resolve in {mode}; atom_count needs elements and volume_fraction needs materials with density.": "无法在 {mode} 模式下解析组分 {name}；atom_count 需要元素，volume_fraction 需要有密度的材料。",
+  "Material name contains INI delimiters: {name}": "材料名包含 INI 分隔符：{name}",
+  "duplicate section cannot be safely edited": "重复的节无法安全往返编辑，请先消歧并重新加载源文件",
+  "duplicate key cannot be safely edited": "重复的键无法安全往返编辑，请先消歧并重新加载源文件"
+}

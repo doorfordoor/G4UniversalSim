@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_blank.py", line 112, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_blank.py", line 73, in main
+    export_bundle(WorkspaceSnapshot(project), bundle)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\experiment_bundle.py", line 715, in export_bundle
+    geom_base = _resolve(p.geometrySettings.config_path or p.pathSettings.geometry_config, cwd).parent
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\experiment_bundle.py", line 154, in _resolve
+    raise ValueError(f"Unsupported or dynamic resource path: {value!r}")
+ValueError: Unsupported or dynamic resource path: ''

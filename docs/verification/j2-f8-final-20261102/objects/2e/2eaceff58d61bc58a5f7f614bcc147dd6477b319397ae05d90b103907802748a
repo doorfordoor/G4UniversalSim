@@ -1,0 +1,32 @@
+# Native125 数字 spinbox 疑似字形裁切：只读诊断
+
+结论：**未证实产品glyph上下裁切，不建议按此判P2或改padding。实测支持Qt数字locale产生算筹数字，而非ASCII数字被截断。**
+
+只读看了56b689f native125 PID33836的007-wizard-source-1.png与008-wizard-run-0.png；没有操作原生UI，也没有改产品、全局locale或冻结文件。独立offscreen125%进程使用实际Fusion/theme、Segoe UI字体与Windows字体文件、生产NewSimulationWizard/owned辅助处理；theme/wizard/accessibility三文件SHA与该native identity.json逐一匹配。脚本和量测见本目录diagnose.py、125/metrics.json、125.log。
+
+## 数值与矩形事实
+
+Qt/PySide6均6.11.1。CSS为13px；测得Segoe UI 13px，fontMetrics height17/ascent14/descent3。
+
+- QDoubleSpinBox外高35，SC_SpinBoxEditField=[9,1,475,33]，内部QLineEdit geometry相同，高33；SE_LineEditContents高33。实际文本tightBoundingRect高度11，明显有足够垂直空间。
+- Run QSpinBox外高35，编辑区高33；事件数字tight height11，线程数字tight height8。
+- seed QLineEdit外高32，SE_LineEditContents高30，ASCII字形tight height9。
+- 给诊断副本spin的内部QLineEdit清min-height/border/padding，编辑矩形和显示都未改变；125/comparison.png对照无裁切改善，因为它们原本就不是同一组数字字形。
+
+实际spin文本是：
+- 能量：〡〇〇.〇〇〇〇 MeV，首个“1”为U+3021（〡），零为U+3007（〇）；
+- 事件：〡〇〇〇；线程：〢（U+3022）；
+- seed：12345，确实是U+0031…U+0035 ASCII。
+
+这些算筹数字本来就是竖线、横线、圆圈，不能按ASCII 0/1的预期形状判断为上下被切。已实际打开离屏comparison.png，生产样式与nested-editor-reset副本均为完整圆圈/竖线；原生图对应外观一致。原生图还有工具覆盖浮层与截图采样，但无需用抗锯齿猜测解释主要差异。
+
+## Locale来源（locale.json）
+
+当前独立Qt进程的QLocale()和QLocale.system()都报告zh_HK，zeroDigit=〇(U+3007)，toString(1000)=〡,〇〇〇；QDoubleSpinBox(100).text=〡〇〇.〇〇〇〇，value仍是100.0。
+显式QLocale('zh_CN')、QLocale('en_US')及QLocale.c()的zeroDigit均为ASCII 0，显示100.0000，value仍为100.0。界面语言设置zh_CN仅控制ui_text翻译，并没有替换Qt数值locale；seed由str写入QLineEdit，不经过spin数字locale格式化，所以显示ASCII正常。
+
+本诊断只证明此机器Qt所见的locale事实，不推断其设置来源。没有发现数值被改写、圆圈丢失像素或内容矩形高度不足的证据。
+
+## 最小建议（未实施）
+
+本轮冻结继续，先不要改theme padding/min-height。若main要求所有科学配置数值统一ASCII与“.”小数点，可另行明确数值locale策略：在numeric spin控件设置QLocale.c()，或在创建控件前统一选择明确locale；保留与UI翻译语言分离。应另测键盘输入、toString/value与writer往返，不应把这种显示策略更改伪称为修复已证实的glyph clipping。

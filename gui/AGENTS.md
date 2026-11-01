@@ -1,5 +1,7 @@
 # G4UniversalSim GUI Agent 开发约束
 
+2026-11-02 J2/F8与E7本轮约定验收完成：测试冻结2ec5b14，后续仅docs/evidence；History真实Label/buddy/provider、焦点/事务/资源及15/7元数据约定见[最终历史条目](../docs/agent-history.md#2026-11-02-j2f8与e7本轮验收完成测试冻结2ec5b14)和[最终证据](../docs/verification/j2-f8-final-20261102/README.md)。18c三档映射与2ec125补验分开，文件审不冒视觉；旧dated候选原文保留，不扩大科学等级。
+
 2026-11-02 J2/F8第三修复候选：相关专项独审已完成，完整新候选验收待进行；History只用三个明确buddy及既有语言刷新链，真实QLayout才可递归count/itemAt；F6窄dock界限不修、不放宽可容纳joint判据。K1 policy final-v1专项独审已通过603入口，完整新候选验收仍待进行；原拼写安全检查不得被canonical匹配替代。详见 ../docs/agent-history.md 同名条目；2901f42旧raw不改，新修复三档原生补验仍待完成。
 
 2026-11-02 J2/F8候选：高级详情原文使用原F5模型/事务，按当前实体与字段定位F4诊断；无源恢复不清空，已导入来源丢失不洗白。v7完整快照仅枚举迁移至v8，离线完整编辑包闭合休眠资源。修改前读 ../docs/agent-history.md 同日条目与 ../docs/J2编辑覆盖与F8验收.md；尚未正式验收。

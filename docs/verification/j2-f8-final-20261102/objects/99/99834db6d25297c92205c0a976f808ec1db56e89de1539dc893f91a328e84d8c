@@ -1,0 +1,27 @@
+{
+  "scope": "F8 final focus+wizard targeted review only; F4 layout stress clip/AV remains open",
+  "files": {
+    "gui/g4usim_gui/core/accessibility.py": "8f597259072c4ca7c929b6c9021716da5a6011fc6b6d4a4907af96dc8ba89fca",
+    "gui/g4usim_gui/widgets/start_page.py": "b8d8e8b363f7a691e9cec4babe52c4277bc869f82dfca239c90b7c6bffa328ec",
+    "gui/g4usim_gui/main_window.py": "df76026a347894c617dbca570b4706948b1eed639956fc8c1bcc2f097ca10639",
+    "gui/g4usim_gui/window/shell.py": "2bf59c065dee740b03fbc678ed32f787cd0b8c293e92b1fc8d498f80c6b11516",
+    "gui/smoke_tests/smoke_f8_accessibility.py": "7087edc6ae93bb666020eb06fb46bd8a60b2539c0213b5058276daf385d04c8e"
+  },
+  "runs": [
+    {
+      "label": "focus-frozen125-r2",
+      "DPR": 1.25,
+      "cases": 6,
+      "result_sha256": "03231d8fb8d2fc191f26d0e2d98c864647a7c3263849f063d27af1db5552aa4d",
+      "log_sha256": "f986dda1c3c624a782bb26d95b3169c2bc544c2e5b6e0e42eda4885a03fc53df"
+    },
+    {
+      "label": "focus-frozen150-r2",
+      "DPR": 1.5,
+      "cases": 6,
+      "result_sha256": "eee3490aef4eff8655e2094e338d3744fc6813091c5ef68e2e06a483d8fa8b08",
+      "log_sha256": "f986dda1c3c624a782bb26d95b3169c2bc544c2e5b6e0e42eda4885a03fc53df"
+    }
+  ],
+  "review_sha256": "358379e20df07e355d7845983c927f38ec64309875185d48b6780a91d1637f5a"
+}

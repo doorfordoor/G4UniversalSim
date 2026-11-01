@@ -1,0 +1,574 @@
+{
+  "schema": "j2_f8_archived_current18_gate_plan",
+  "ready_for_final_current18": true,
+  "tested_build_HEAD": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+  "checker_sha256": "f9a863e4a20031c46e348f4b0278e4519dda1da07c3fc6825a1f47e123b2e84f",
+  "current": [
+    {
+      "id": "Windows-windows-static",
+      "group": "Windows",
+      "report_path": "tree/out/verification/j2-f8-2ec5b14/windows-static/20261102-052959-87f97644/report.json",
+      "report_sha256": "671986d62bb5ca6af798ac31fbfc9f25dd606f644505a3081ebe13a4c0d7e908",
+      "baseline_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/report.json",
+      "baseline_sha256": "5b72c84e71c6e1b096ad81566c0adb5d7809fd590506dc9f37559ea8b3526c99",
+      "expected_exit": 0,
+      "cases": 46,
+      "assertions": 4586,
+      "original_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "identity_exact": {
+        "git_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+        "git_dirty": false,
+        "git_status_porcelain": "",
+        "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+        "tests_content_fingerprint": "ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8",
+        "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+        "tracked_source_gate": "pass",
+        "untracked_source_files": []
+      }
+    },
+    {
+      "id": "Windows-windows-gui",
+      "group": "Windows",
+      "report_path": "tree/out/verification/j2-f8-2ec5b14/windows-gui/20261102-053011-53d49584/report.json",
+      "report_sha256": "eb6044415c756c675e2bab56e4f842bbd5c63e60da1defd459694ad38aa50c26",
+      "baseline_path": "tree/out/verification/i2-j1-5fe0a10/windows-gui/20261101-205241-d4aff2d8/report.json",
+      "baseline_sha256": "178d2a42b041fe1ed6018d79d6b7b27a72c73cdc348d7204c20dc2b26d5a1e6c",
+      "expected_exit": 0,
+      "cases": 66,
+      "assertions": 8636,
+      "original_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "identity_exact": {
+        "git_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+        "git_dirty": false,
+        "git_status_porcelain": "",
+        "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+        "tests_content_fingerprint": "ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8",
+        "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+        "tracked_source_gate": "pass",
+        "untracked_source_files": []
+      }
+    },
+    {
+      "id": "Windows-windows113-backend",
+      "group": "Windows",
+      "report_path": "tree/out/verification/j2-f8-2ec5b14/windows113-backend/20261102-053015-033f0a7f/report.json",
+      "report_sha256": "d62dd3f7fd25d91552f6f674429c15bbc6857254f491bde5a7dbe017fbaad75b",
+      "baseline_path": "tree/out/verification/i2-j1-5fe0a10/windows113-backend/20261101-205411-0e9901a5/report.json",
+      "baseline_sha256": "2735fc3250511af3ac8db604f5a33ddba848676496a3027c05ece520a5d93536",
+      "expected_exit": 0,
+      "cases": 63,
+      "assertions": 82029,
+      "original_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "identity_exact": {
+        "git_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+        "git_dirty": false,
+        "git_status_porcelain": "",
+        "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+        "tests_content_fingerprint": "ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8",
+        "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+        "tracked_source_gate": "pass",
+        "untracked_source_files": []
+      }
+    },
+    {
+      "id": "Windows-windows114-backend",
+      "group": "Windows",
+      "report_path": "tree/out/verification/j2-f8-2ec5b14/windows114-backend/20261102-053010-077a8457/report.json",
+      "report_sha256": "72241f990734e6ef6694f1a3bc25ffddbb144f775d9513fb6cb595c75b3e9ee9",
+      "baseline_path": "tree/out/verification/i2-j1-5fe0a10/windows114-backend/20261101-205411-79e165c8/report.json",
+      "baseline_sha256": "c0de0742a3ec2b2cdafbaf7b0d79cf58e489737a3479001c621b76f4607426df",
+      "expected_exit": 0,
+      "cases": 63,
+      "assertions": 72536,
+      "original_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "identity_exact": {
+        "git_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+        "git_dirty": false,
+        "git_status_porcelain": "",
+        "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+        "tests_content_fingerprint": "ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8",
+        "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+        "tracked_source_gate": "pass",
+        "untracked_source_files": []
+      }
+    },
+    {
+      "id": "Windows-windows113-integration",
+      "group": "Windows",
+      "report_path": "tree/out/verification/j2-f8-2ec5b14/windows113-integration/20261102-060158-291be458/report.json",
+      "report_sha256": "47a54dceb0cc575a25f2283d8e745e48d51bbcada16d61bbbb8b1293bf2df088",
+      "baseline_path": "tree/out/verification/i2-j1-5fe0a10/windows113-integration/20261101-213823-a10c064e/report.json",
+      "baseline_sha256": "193f85ac437775d8c84bd5173d97eea5973c35a70ec12799ca44e498558113de",
+      "expected_exit": 0,
+      "cases": 31,
+      "assertions": 6790,
+      "original_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "identity_exact": {
+        "git_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+        "git_dirty": false,
+        "git_status_porcelain": "",
+        "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+        "tests_content_fingerprint": "ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8",
+        "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+        "tracked_source_gate": "pass",
+        "untracked_source_files": []
+      }
+    },
+    {
+      "id": "Windows-windows114-integration",
+      "group": "Windows",
+      "report_path": "tree/out/verification/j2-f8-2ec5b14/windows114-integration/20261102-061507-7d5768e9/report.json",
+      "report_sha256": "a09dadd089cb63f5837dadb56901a8cdc8137b3fb3021ebe309277c051ffb46b",
+      "baseline_path": "tree/out/verification/i2-j1-03d2c48/windows114-integration/20261101-221315-6389b5dd/report.json",
+      "baseline_sha256": "2b6031df0b82040afc5d0b050c4dd62cf2744e18f2cb0a7dc6dc5fb9c49e1a47",
+      "expected_exit": 0,
+      "cases": 31,
+      "assertions": 6780,
+      "original_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "identity_exact": {
+        "git_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+        "git_dirty": false,
+        "git_status_porcelain": "",
+        "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+        "tests_content_fingerprint": "ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8",
+        "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+        "tracked_source_gate": "pass",
+        "untracked_source_files": []
+      }
+    },
+    {
+      "id": "CI-linux-evidence-11.4.3-backend",
+      "group": "CI",
+      "report_path": "tree/out/verification/j2-f8-2ec5b14/ci/extracted/linux-evidence-11.4.3-13103140474/linux-backend/20261101-214039-f4277fb7/report.json",
+      "report_sha256": "baf82ed466ccb1522c23902f625cc6d6c094c3000613c84086312648f791d02f",
+      "baseline_path": "tree/out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.4.3-13087926895/linux-backend/20261101-142038-73ddc795/report.json",
+      "baseline_sha256": "9821147d634e0bd5b0fd8878c1a55c45b59399c399dfea723893f720473b5e64",
+      "expected_exit": 0,
+      "cases": 63,
+      "assertions": 72874,
+      "original_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "identity_exact": {
+        "git_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+        "git_dirty": true,
+        "git_status_porcelain": "?? .g4env-11.4.3/\n?? .micromamba/\n?? bin/",
+        "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+        "tests_content_fingerprint": "ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8",
+        "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+        "tracked_source_gate": "pass",
+        "untracked_source_files": []
+      }
+    },
+    {
+      "id": "CI-linux-evidence-11.4.3-gui",
+      "group": "CI",
+      "report_path": "tree/out/verification/j2-f8-2ec5b14/ci/extracted/linux-evidence-11.4.3-13103140474/linux-gui/20261101-213253-d431370f/report.json",
+      "report_sha256": "b5ce46edd22249a71db4b5fe69ddd01e9d113d13caaaf889d65572d6dc5d7737",
+      "baseline_path": "tree/out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.4.3-13087926895/linux-gui/20261101-141602-5d59f966/report.json",
+      "baseline_sha256": "91d55d0745de3c56bdb7fae632ae13a11c984fdd013ea079ca9d0544ed921caa",
+      "expected_exit": 0,
+      "cases": 66,
+      "assertions": 8615,
+      "original_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "identity_exact": {
+        "git_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+        "git_dirty": true,
+        "git_status_porcelain": "?? .g4env-11.4.3/\n?? .micromamba/\n?? bin/",
+        "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+        "tests_content_fingerprint": "ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8",
+        "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+        "tracked_source_gate": "pass",
+        "untracked_source_files": []
+      }
+    },
+    {
+      "id": "CI-linux-evidence-11.4.3-integration",
+      "group": "CI",
+      "report_path": "tree/out/verification/j2-f8-2ec5b14/ci/extracted/linux-evidence-11.4.3-13103140474/linux-integration/20261101-215424-8887e69e/report.json",
+      "report_sha256": "3e45a2a8e1be645c493ae344c82a572ec8611c8ad72631fbd530435cebdbf74a",
+      "baseline_path": "tree/out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.4.3-13087926895/linux-integration/20261101-143513-c440e9a9/report.json",
+      "baseline_sha256": "9d7c3bc095f356de17a57fbe2e487f22491beb6b9b81b5fd71fa2b92012127a0",
+      "expected_exit": 0,
+      "cases": 31,
+      "assertions": 6770,
+      "original_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "identity_exact": {
+        "git_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+        "git_dirty": true,
+        "git_status_porcelain": "?? .g4env-11.4.3/\n?? .micromamba/\n?? bin/",
+        "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+        "tests_content_fingerprint": "ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8",
+        "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+        "tracked_source_gate": "pass",
+        "untracked_source_files": []
+      }
+    },
+    {
+      "id": "CI-linux-evidence-11.4.3-static",
+      "group": "CI",
+      "report_path": "tree/out/verification/j2-f8-2ec5b14/ci/extracted/linux-evidence-11.4.3-13103140474/linux-static/20261101-213131-5e8b77d1/report.json",
+      "report_sha256": "aef1eeec9c93a3cc9f75dd7986730598630b0cefee383506101a6b7a59bf0f28",
+      "baseline_path": "tree/out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.4.3-13087926895/linux-static/20261101-141435-fe86f483/report.json",
+      "baseline_sha256": "61b64854609752c8e58892179276eac5ca88b6eff4f29d09b0ebeaf86d614806",
+      "expected_exit": 0,
+      "cases": 46,
+      "assertions": 4573,
+      "original_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "identity_exact": {
+        "git_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+        "git_dirty": true,
+        "git_status_porcelain": "?? .g4env-11.4.3/\n?? .micromamba/\n?? bin/",
+        "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+        "tests_content_fingerprint": "ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8",
+        "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+        "tracked_source_gate": "pass",
+        "untracked_source_files": []
+      }
+    },
+    {
+      "id": "CI-linux-evidence-11.3.2-backend",
+      "group": "CI",
+      "report_path": "tree/out/verification/j2-f8-2ec5b14/ci/extracted/linux-evidence-11.3.2-13102513206/linux-backend/20261101-214208-e7433889/report.json",
+      "report_sha256": "3728dcc60c68ac67f218b48f3af80a846b94826c14a2032647b70ebfaa75040d",
+      "baseline_path": "tree/out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.3.2-13087921872/linux-backend/20261101-142031-b85b3b32/report.json",
+      "baseline_sha256": "4115a80ed9994870fc1e52e21b570cf2e4db749765806bc9939aea2677456382",
+      "expected_exit": 0,
+      "cases": 63,
+      "assertions": 82020,
+      "original_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "identity_exact": {
+        "git_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+        "git_dirty": true,
+        "git_status_porcelain": "?? .g4env-11.3.2/\n?? .micromamba/\n?? bin/",
+        "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+        "tests_content_fingerprint": "ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8",
+        "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+        "tracked_source_gate": "pass",
+        "untracked_source_files": []
+      }
+    },
+    {
+      "id": "CI-linux-evidence-11.3.2-gui",
+      "group": "CI",
+      "report_path": "tree/out/verification/j2-f8-2ec5b14/ci/extracted/linux-evidence-11.3.2-13102513206/linux-gui/20261101-213257-6a7d8451/report.json",
+      "report_sha256": "d9222e82079c87f539249a1bec2af02ff27515b840da241e03badfd78d87a94c",
+      "baseline_path": "tree/out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.3.2-13087921872/linux-gui/20261101-141600-27d9f9ea/report.json",
+      "baseline_sha256": "fdf42185f92f698ce714254552509b2b3f1e43848d5545efd786c9e7f9821f11",
+      "expected_exit": 0,
+      "cases": 66,
+      "assertions": 8615,
+      "original_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "identity_exact": {
+        "git_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+        "git_dirty": true,
+        "git_status_porcelain": "?? .g4env-11.3.2/\n?? .micromamba/\n?? bin/",
+        "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+        "tests_content_fingerprint": "ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8",
+        "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+        "tracked_source_gate": "pass",
+        "untracked_source_files": []
+      }
+    },
+    {
+      "id": "CI-linux-evidence-11.3.2-integration",
+      "group": "CI",
+      "report_path": "tree/out/verification/j2-f8-2ec5b14/ci/extracted/linux-evidence-11.3.2-13102513206/linux-integration/20261101-215736-ac86f816/report.json",
+      "report_sha256": "f11a6d2e64edd5e0a21cc6194eb79bdab48d4744ac12a6283310e2e7f69e7877",
+      "baseline_path": "tree/out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.3.2-13087921872/linux-integration/20261101-143523-ce41a587/report.json",
+      "baseline_sha256": "218dccca25449f764fc236da45e7dd1f3cd7064acffe39f132245a0d0c3ba5ed",
+      "expected_exit": 0,
+      "cases": 31,
+      "assertions": 6770,
+      "original_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "identity_exact": {
+        "git_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+        "git_dirty": true,
+        "git_status_porcelain": "?? .g4env-11.3.2/\n?? .micromamba/\n?? bin/",
+        "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+        "tests_content_fingerprint": "ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8",
+        "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+        "tracked_source_gate": "pass",
+        "untracked_source_files": []
+      }
+    },
+    {
+      "id": "CI-linux-evidence-11.3.2-static",
+      "group": "CI",
+      "report_path": "tree/out/verification/j2-f8-2ec5b14/ci/extracted/linux-evidence-11.3.2-13102513206/linux-static/20261101-213122-6488715c/report.json",
+      "report_sha256": "3aa14c18fa61e05c583550be61ce74149084bb16950cb1fd08a0d64b7163306f",
+      "baseline_path": "tree/out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.3.2-13087921872/linux-static/20261101-141435-473d56e4/report.json",
+      "baseline_sha256": "2afda74e1ac4d633e1629fdd4f07f7ba9769e8b600f6ae4dcf144b366288c0e5",
+      "expected_exit": 0,
+      "cases": 46,
+      "assertions": 4573,
+      "original_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "identity_exact": {
+        "git_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+        "git_dirty": true,
+        "git_status_porcelain": "?? .g4env-11.3.2/\n?? .micromamba/\n?? bin/",
+        "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+        "tests_content_fingerprint": "ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8",
+        "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+        "tracked_source_gate": "pass",
+        "untracked_source_files": []
+      }
+    },
+    {
+      "id": "CI-m0-report-windows-latest-static",
+      "group": "CI",
+      "report_path": "tree/out/verification/j2-f8-2ec5b14/ci/extracted/m0-report-windows-latest-13102896151/20261101-212954-d3f500ec/report.json",
+      "report_sha256": "d3cc0fd8ca2bffc8553b215fdd56383c351e5cd4fcdf81163895451d37f66849",
+      "baseline_path": "tree/out/verification/i2-j1-6310969/ci/extracted/m0-report-windows-latest-13088128041/20261101-144208-6260dda6/report.json",
+      "baseline_sha256": "7df971949de5806c10127bc50db3abf9be0c89eb21a5b6b257c1e3911f74c857",
+      "expected_exit": 0,
+      "cases": 46,
+      "assertions": 4573,
+      "original_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "identity_exact": {
+        "git_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+        "git_dirty": false,
+        "git_status_porcelain": "",
+        "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+        "tests_content_fingerprint": "ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8",
+        "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+        "tracked_source_gate": "pass",
+        "untracked_source_files": []
+      }
+    },
+    {
+      "id": "CI-m0-report-windows-latest-gui",
+      "group": "CI",
+      "report_path": "tree/out/verification/j2-f8-2ec5b14/ci/extracted/m0-report-windows-latest-13102896151/20261101-213444-b4dae0f9/report.json",
+      "report_sha256": "7de8e4367b7a79cc48978078ef979effbd1730c11ac4cedef1153202d9492fc4",
+      "baseline_path": "tree/out/verification/i2-j1-6310969/ci/extracted/m0-report-windows-latest-13088128041/20261101-144550-80bc5c13/report.json",
+      "baseline_sha256": "59dbd5060da518458185c2d323518ea01ab3b98644e5637e56b095f1c1de2e9e",
+      "expected_exit": 0,
+      "cases": 66,
+      "assertions": 8615,
+      "original_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "identity_exact": {
+        "git_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+        "git_dirty": false,
+        "git_status_porcelain": "",
+        "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+        "tests_content_fingerprint": "ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8",
+        "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+        "tracked_source_gate": "pass",
+        "untracked_source_files": []
+      }
+    },
+    {
+      "id": "CI-m0-report-ubuntu-latest-static",
+      "group": "CI",
+      "report_path": "tree/out/verification/j2-f8-2ec5b14/ci/extracted/m0-report-ubuntu-latest-13102097206/20261101-212938-f67e746d/report.json",
+      "report_sha256": "6fb9e7515443a24c215e5af65473fc409a32da58004fa9f56b1f2d71d748c2b0",
+      "baseline_path": "tree/out/verification/i2-j1-6310969/ci/extracted/m0-report-ubuntu-latest-13087119373/20261101-144135-4d7ff67f/report.json",
+      "baseline_sha256": "665b8bdaab8eb061a751d82690bbe0a3a4d64b1875b9fbfba1c78d86c6ab5a15",
+      "expected_exit": 0,
+      "cases": 46,
+      "assertions": 4573,
+      "original_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "identity_exact": {
+        "git_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+        "git_dirty": false,
+        "git_status_porcelain": "",
+        "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+        "tests_content_fingerprint": "ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8",
+        "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+        "tracked_source_gate": "pass",
+        "untracked_source_files": []
+      }
+    },
+    {
+      "id": "CI-m0-report-ubuntu-latest-gui",
+      "group": "CI",
+      "report_path": "tree/out/verification/j2-f8-2ec5b14/ci/extracted/m0-report-ubuntu-latest-13102097206/20261101-213124-da0a127d/report.json",
+      "report_sha256": "22e44bdb5d93f70c3916357a40e0fb9c7451f91f54789bebdc842bf9be984daf",
+      "baseline_path": "tree/out/verification/i2-j1-6310969/ci/extracted/m0-report-ubuntu-latest-13087119373/20261101-144310-866ffdc4/report.json",
+      "baseline_sha256": "485ab4beadc3f7dedb4ab8f430e12e6371d2312f2ed262f48792da52e82a1827",
+      "expected_exit": 0,
+      "cases": 66,
+      "assertions": 8615,
+      "original_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "identity_exact": {
+        "git_head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+        "git_dirty": false,
+        "git_status_porcelain": "",
+        "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+        "tests_content_fingerprint": "ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8",
+        "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+        "tracked_source_gate": "pass",
+        "untracked_source_files": []
+      }
+    }
+  ],
+  "historical_failure_control": {
+    "id": "old-first-windows-static",
+    "group": "Historical",
+    "report_path": "tree/out/verification/j2-f8-56b689f/windows-static/20261102-011952-3779ed5f/report.json",
+    "report_sha256": "2063a7dc27ee502cca4660df4d6ba9862149644e3dad2806cba29431cbc07f35",
+    "baseline_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/report.json",
+    "baseline_sha256": "5b72c84e71c6e1b096ad81566c0adb5d7809fd590506dc9f37559ea8b3526c99",
+    "expected_exit": 1
+  },
+  "historical_failures": [
+    {
+      "id": "old-second-ci-linux-evidence-11.4.3-gui",
+      "group": "Historical",
+      "report_path": "tree/out/verification/j2-f8-2901f42/ci/extracted/linux-evidence-11.4.3-13095793742/linux-gui/20261101-183416-0f304e02/report.json",
+      "report_sha256": "c30c6cee001de83820f35b121efe5a225c2b8ec22e7c7c7d21df480324881996",
+      "baseline_path": "tree/out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.4.3-13087926895/linux-gui/20261101-141602-5d59f966/report.json",
+      "baseline_sha256": "91d55d0745de3c56bdb7fae632ae13a11c984fdd013ea079ca9d0544ed921caa",
+      "expected_exit": 1
+    },
+    {
+      "id": "old-second-ci-linux-evidence-11.3.2-gui",
+      "group": "Historical",
+      "report_path": "tree/out/verification/j2-f8-2901f42/ci/extracted/linux-evidence-11.3.2-13095209403/linux-gui/20261101-183305-8caf9b13/report.json",
+      "report_sha256": "0b6f2b47fc56e8c891d140834ffb56d90b1f000686b16a603711f712531779d6",
+      "baseline_path": "tree/out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.3.2-13087921872/linux-gui/20261101-141600-27d9f9ea/report.json",
+      "baseline_sha256": "fdf42185f92f698ce714254552509b2b3f1e43848d5545efd786c9e7f9821f11",
+      "expected_exit": 1
+    },
+    {
+      "id": "old-second-ci-m0-report-windows-latest-gui",
+      "group": "Historical",
+      "report_path": "tree/out/verification/j2-f8-2901f42/ci/extracted/m0-report-windows-latest-13096301546/20261101-183520-77003a77/report.json",
+      "report_sha256": "6671ef97a44583608a2d329bb1616981dbaf50f895d8f6f932dc2ed2f06898c6",
+      "baseline_path": "tree/out/verification/i2-j1-6310969/ci/extracted/m0-report-windows-latest-13088128041/20261101-144550-80bc5c13/report.json",
+      "baseline_sha256": "59dbd5060da518458185c2d323518ea01ab3b98644e5637e56b095f1c1de2e9e",
+      "expected_exit": 1
+    },
+    {
+      "id": "old-first-windows-gui",
+      "group": "Historical",
+      "report_path": "tree/out/verification/j2-f8-56b689f/windows-gui/20261102-012220-a82212ec/report.json",
+      "report_sha256": "8e337085204426fde696e2011717e85ef2167687b3529bbea53408179199cb13",
+      "baseline_path": "tree/out/verification/i2-j1-5fe0a10/windows-gui/20261101-205241-d4aff2d8/report.json",
+      "baseline_sha256": "178d2a42b041fe1ed6018d79d6b7b27a72c73cdc348d7204c20dc2b26d5a1e6c",
+      "expected_exit": 1
+    },
+    {
+      "id": "old-first-windows-static",
+      "group": "Historical",
+      "report_path": "tree/out/verification/j2-f8-56b689f/windows-static/20261102-011952-3779ed5f/report.json",
+      "report_sha256": "2063a7dc27ee502cca4660df4d6ba9862149644e3dad2806cba29431cbc07f35",
+      "baseline_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/report.json",
+      "baseline_sha256": "5b72c84e71c6e1b096ad81566c0adb5d7809fd590506dc9f37559ea8b3526c99",
+      "expected_exit": 1
+    },
+    {
+      "id": "old-first-windows113-backend",
+      "group": "Historical",
+      "report_path": "tree/out/verification/j2-f8-56b689f/windows113-backend/20261102-011748-9a34c5d0/report.json",
+      "report_sha256": "feab350843b18576909153690c66a84cc3d09f7c4f8753b8b389787a3a639086",
+      "baseline_path": "tree/out/verification/i2-j1-5fe0a10/windows113-backend/20261101-205411-0e9901a5/report.json",
+      "baseline_sha256": "2735fc3250511af3ac8db604f5a33ddba848676496a3027c05ece520a5d93536",
+      "expected_exit": 1
+    },
+    {
+      "id": "old-first-windows113-integration",
+      "group": "Historical",
+      "report_path": "tree/out/verification/j2-f8-56b689f/windows113-integration/20261102-014658-5f26cf76/report.json",
+      "report_sha256": "36607e1994f6bd050bc0ea6ec37fc7d9a0cac4857b7787f6363a2776f85078a6",
+      "baseline_path": "tree/out/verification/i2-j1-5fe0a10/windows113-integration/20261101-213823-a10c064e/report.json",
+      "baseline_sha256": "193f85ac437775d8c84bd5173d97eea5973c35a70ec12799ca44e498558113de",
+      "expected_exit": 1
+    },
+    {
+      "id": "old-first-windows114-backend",
+      "group": "Historical",
+      "report_path": "tree/out/verification/j2-f8-56b689f/windows114-backend/20261102-012049-57371f8c/report.json",
+      "report_sha256": "591e52a47535115123eb12468ad886f039e1b6c08dc4a5ba0f4e2e2050ae8759",
+      "baseline_path": "tree/out/verification/i2-j1-5fe0a10/windows114-backend/20261101-205411-79e165c8/report.json",
+      "baseline_sha256": "c0de0742a3ec2b2cdafbaf7b0d79cf58e489737a3479001c621b76f4607426df",
+      "expected_exit": 1
+    },
+    {
+      "id": "old-first-windows114-integration",
+      "group": "Historical",
+      "report_path": "tree/out/verification/j2-f8-56b689f/windows114-integration/20261102-015023-8bc66545/report.json",
+      "report_sha256": "832decccd0c0bfdf9fd9c00555e2f6167409c95035cf316c8f88c04ef8b5da4b",
+      "baseline_path": "tree/out/verification/i2-j1-03d2c48/windows114-integration/20261101-221315-6389b5dd/report.json",
+      "baseline_sha256": "2b6031df0b82040afc5d0b050c4dd62cf2744e18f2cb0a7dc6dc5fb9c49e1a47",
+      "expected_exit": 1
+    },
+    {
+      "id": "old-first-linux113",
+      "group": "Historical",
+      "report_path": "tree/out/verification/j2-f8-56b689f/ci/extracted/linux-evidence-11.3.2-13093695553/linux-static/20261101-171806-f37917ae/report.json",
+      "report_sha256": "90f146754ef3a91e837c55e3505f96a3e4779a692ffccd5d5fbdaacfa105b907",
+      "baseline_path": "tree/out/verification/j2-f8-56b689f/ci/historical/linux113-static/report.json",
+      "baseline_sha256": "2afda74e1ac4d633e1629fdd4f07f7ba9769e8b600f6ae4dcf144b366288c0e5",
+      "expected_exit": 1
+    },
+    {
+      "id": "old-first-linux114",
+      "group": "Historical",
+      "report_path": "tree/out/verification/j2-f8-56b689f/ci/extracted/linux-evidence-11.4.3-13092839619/linux-static/20261101-171938-c32708b9/report.json",
+      "report_sha256": "39da8fa9162a4acce54b403d43504c88b7874c711ca4fab0a6eb83829e1b6269",
+      "baseline_path": "tree/out/verification/j2-f8-56b689f/ci/historical/linux114-static/report.json",
+      "baseline_sha256": "61b64854609752c8e58892179276eac5ca88b6eff4f29d09b0ebeaf86d614806",
+      "expected_exit": 1
+    },
+    {
+      "id": "old-first-m0-linux",
+      "group": "Historical",
+      "report_path": "tree/out/verification/j2-f8-56b689f/ci/extracted/m0-report-ubuntu-latest-13093800091/20261101-171631-fa098b72/report.json",
+      "report_sha256": "42aeacc5d6ccdfc09eee04af661b99dee2fb66a4b84e6a15ae56e908524d2b7a",
+      "baseline_path": "tree/out/verification/j2-f8-56b689f/ci/gates/m0-ubuntu-static/historical/report.json",
+      "baseline_sha256": "665b8bdaab8eb061a751d82690bbe0a3a4d64b1875b9fbfba1c78d86c6ab5a15",
+      "expected_exit": 1
+    },
+    {
+      "id": "old-first-m0-windows",
+      "group": "Historical",
+      "report_path": "tree/out/verification/j2-f8-56b689f/ci/extracted/m0-report-windows-latest-13092893947/20261101-171724-98f36bb8/report.json",
+      "report_sha256": "20c35508388e50b68dc1559730c537762b7e84dc0318c92657427bea72a423e5",
+      "baseline_path": "tree/out/verification/j2-f8-56b689f/ci/historical/windows-m0-6310969-static/report.json",
+      "baseline_sha256": "7df971949de5806c10127bc50db3abf9be0c89eb21a5b6b257c1e3911f74c857",
+      "expected_exit": 1
+    },
+    {
+      "id": "old-18c-ci-linux-evidence-11.4.3-gui",
+      "group": "Historical",
+      "report_path": "tree/out/verification/j2-f8-18c5858/ci/extracted/linux-evidence-11.4.3-13099380815/linux-gui/20261101-200429-80406e4b/report.json",
+      "report_sha256": "05eeb770d8c8e20c545835e057edd3b22ec98ba1ab3010c4b8427b5414a2d6ea",
+      "baseline_path": "tree/out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.4.3-13087926895/linux-gui/20261101-141602-5d59f966/report.json",
+      "baseline_sha256": "91d55d0745de3c56bdb7fae632ae13a11c984fdd013ea079ca9d0544ed921caa",
+      "expected_exit": 1
+    },
+    {
+      "id": "old-18c-ci-linux-evidence-11.3.2-gui",
+      "group": "Historical",
+      "report_path": "tree/out/verification/j2-f8-18c5858/ci/extracted/linux-evidence-11.3.2-13098459375/linux-gui/20261101-200520-d6c095f6/report.json",
+      "report_sha256": "87372a01cb444bdfff586509fc2f3a6fcc4d065a3204c45c9ca4b34fc12f6bd9",
+      "baseline_path": "tree/out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.3.2-13087921872/linux-gui/20261101-141600-27d9f9ea/report.json",
+      "baseline_sha256": "fdf42185f92f698ce714254552509b2b3f1e43848d5545efd786c9e7f9821f11",
+      "expected_exit": 1
+    },
+    {
+      "id": "old-18c-ci-m0-report-windows-latest-gui",
+      "group": "Historical",
+      "report_path": "tree/out/verification/j2-f8-18c5858/ci/extracted/m0-report-windows-latest-13099775646/20261101-200537-064d6571/report.json",
+      "report_sha256": "d0575bce30f90f181edbfd7f01c49fdeaf06473202622684565a8ab5d1b1c6e3",
+      "baseline_path": "tree/out/verification/i2-j1-6310969/ci/extracted/m0-report-windows-latest-13088128041/20261101-144550-80bc5c13/report.json",
+      "baseline_sha256": "59dbd5060da518458185c2d323518ea01ab3b98644e5637e56b095f1c1de2e9e",
+      "expected_exit": 1
+    },
+    {
+      "id": "old-18c-ci-m0-report-ubuntu-latest-gui",
+      "group": "Historical",
+      "report_path": "tree/out/verification/j2-f8-18c5858/ci/extracted/m0-report-ubuntu-latest-13099526165/20261101-200301-162564be/report.json",
+      "report_sha256": "967b2fb3c27b4d32559ec366dda4b5a5436fee6523fd5bd35f4c7faf151604ca",
+      "baseline_path": "tree/out/verification/i2-j1-6310969/ci/extracted/m0-report-ubuntu-latest-13087119373/20261101-144310-866ffdc4/report.json",
+      "baseline_sha256": "485ab4beadc3f7dedb4ab8f430e12e6371d2312f2ed262f48792da52e82a1827",
+      "expected_exit": 1
+    }
+  ],
+  "Windows_aggregate_sha256": "a701f34fc2d3e9bd2d0aec9fc833d249179fc76ad5de873f8c42011e665ec73c",
+  "CI_arithmetic_sha256": "edcbb7859c33c28ebf522c1345e8b83f21867e47e779b3c121da55e1ea250773",
+  "documentation_commit": "containing Git tree; later docs/evidence-only, never retag original report/build",
+  "directory_relocation_required": true,
+  "CI_dirty_supplement_sha256": "e9ff850a95cb45080765cc32772b681eeb575a577050fc63509625a9cac84f34",
+  "identity_policy": "exact original SHA/HEAD/fingerprints/tracked gate and dirty/status; no blanketclean or arbitrarydirty exception"
+}

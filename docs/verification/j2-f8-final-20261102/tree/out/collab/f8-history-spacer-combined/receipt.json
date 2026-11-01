@@ -1,0 +1,70 @@
+{
+  "scope": "out-only combination, unchanged two product proposals loaded in memory; not actual patched working tree/native or formal profile",
+  "interpreter": "D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe",
+  "probe_id": "settrace_assert_lines_v3",
+  "identities_unchanged": true,
+  "identities": {
+    "gui/g4usim_gui/core/accessibility.py": {
+      "sha256": "631df8861ca70524b3ab9d3941a4e9a263cbd5a017824b7647c64ded90025a37",
+      "bytes": 14996
+    },
+    "gui/g4usim_gui/widgets/run_history_page.py": {
+      "sha256": "c84990c20b6af4aa727bc38d49b7e2106025ddf192673fdefcc31bb568369005",
+      "bytes": 14502
+    },
+    "gui/smoke_tests/smoke_f8_accessibility.py": {
+      "sha256": "69b11a915a0864110171df75a1a2402ea3025f0a3a01b79d31af8ee26bd9f0e6",
+      "bytes": 31906
+    },
+    "out/collab/f8-layout-item-compat/accessibility.proposed.py": {
+      "sha256": "c9d87e23c88704fedc2c17a8a954aba9acf365c607ea47fe86b6c56854be2be7",
+      "bytes": 15036
+    },
+    "out/collab/f8-history-label/v2/run_history_page.proposed.py": {
+      "sha256": "cc98442e975cec3f1b33d556a8dabdd7381ec22368e94bd6124178edacb5a463",
+      "bytes": 14804
+    },
+    "out/collab/f8-history-spacer-combined/smoke_f8_accessibility.proposed.py": {
+      "sha256": "943c92a0cdd0650511b7c8ce45378ebcbddc06b7f55b90835317eb44d3a59e95",
+      "bytes": 43976
+    },
+    "out/collab/f8-history-spacer-combined/smoke_f8_accessibility.patch": {
+      "sha256": "0f8f8fd2f73fb9cbd7636259cb059c2652fdc041637754d1027db63b7b07f548",
+      "bytes": 12778
+    }
+  },
+  "AST_checks": {
+    "old_416_function_AST_unchanged": true,
+    "both_added_functions_match_independently_reviewed_drafts": true,
+    "main_only_adds_two_calls": true,
+    "calls": [
+      "test_history_directory_accessibility(app, args.output)",
+      "test_layout_item_compatibility(app)"
+    ]
+  },
+  "runs": [
+    {
+      "scale": "1.25",
+      "qpa": "offscreen",
+      "exec_session": 82896,
+      "process_ended": true,
+      "exit_code": 0,
+      "assertions_v3": 595,
+      "log": "scale1.25.log",
+      "log_sha256_raw_bytes": "ba04382eaef3ed19644cf1100b0e9eacb5971d8a739647b77ffea1f603cf9fad",
+      "artifacts": "scale1.25/"
+    },
+    {
+      "scale": "1.5",
+      "qpa": "offscreen",
+      "exec_session": 10809,
+      "process_ended": true,
+      "exit_code": 0,
+      "assertions_v3": 595,
+      "log": "scale1.5.log",
+      "log_sha256_raw_bytes": "16a7c958782253b73f71247f40e34198a48f73ac92c808b01b8bcb2d2077a5eb",
+      "artifacts": "scale1.5/"
+    }
+  ],
+  "old_519_492_log_identities_preserved": true
+}

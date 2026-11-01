@@ -1,0 +1,322 @@
+[
+  {
+    "version": "1132",
+    "conflict": {
+      "name": "conflict",
+      "exit_code": 1,
+      "argv": [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\G4UniversalSim.exe",
+        "--config",
+        "main.ini",
+        "--macro",
+        "run.mac",
+        "--output",
+        "output"
+      ],
+      "status": "failed",
+      "completed": "0",
+      "output_failure": "none",
+      "rows": 0,
+      "worker_ids": [],
+      "vertex_counts": [],
+      "constructors": null,
+      "stdout_sha256": "47bc33aa6f9a772669c8dca948dd5dd7581fab27f0222419b4d30329f083b5cd",
+      "stderr_sha256": "57db7bc8c6df359b55b6e1b1ae6a481b9e95515d3851cff343fa6fd6a0972f28",
+      "manager_unchanged": true
+    },
+    "no_replacement": {
+      "name": "no-replacement",
+      "exit_code": 0,
+      "argv": [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\G4UniversalSim.exe",
+        "--config",
+        "main.ini",
+        "--macro",
+        "run.mac",
+        "--output",
+        "output"
+      ],
+      "status": "completed",
+      "completed": "8",
+      "output_failure": "none",
+      "rows": 8,
+      "worker_ids": [
+        1
+      ],
+      "vertex_counts": [
+        1
+      ],
+      "constructors": [
+        {
+          "name": "G4EmLivermore",
+          "physics_type": 2,
+          "cpp_type": "class G4EmLivermorePhysics"
+        },
+        {
+          "name": "G4GammaLeptoNuclearPhys",
+          "physics_type": 3,
+          "cpp_type": "class G4EmExtraPhysics"
+        },
+        {
+          "name": "Decay",
+          "physics_type": 4,
+          "cpp_type": "class G4DecayPhysics"
+        },
+        {
+          "name": "hElasticWEL_CHIPS_XS",
+          "physics_type": 5,
+          "cpp_type": "class G4HadronElasticPhysics"
+        },
+        {
+          "name": "hInelastic FTFP_BERT",
+          "physics_type": 6,
+          "cpp_type": "class G4HadronPhysicsFTFP_BERT"
+        },
+        {
+          "name": "stopping",
+          "physics_type": 7,
+          "cpp_type": "class G4StoppingPhysics"
+        },
+        {
+          "name": "ionInelasticFTFP_BIC",
+          "physics_type": 8,
+          "cpp_type": "class G4IonPhysics"
+        },
+        {
+          "name": "neutronTrackingCut",
+          "physics_type": 0,
+          "cpp_type": "class G4NeutronTrackingCut"
+        }
+      ],
+      "stdout_sha256": "6ee38ea1a5b76356d0b4c34f1e9aff29e3465e3321de9910f474fdff81c8be1a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "replacement_only": {
+      "name": "replacement-only",
+      "exit_code": 0,
+      "argv": [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\G4UniversalSim.exe",
+        "--config",
+        "main.ini",
+        "--macro",
+        "run.mac",
+        "--output",
+        "output"
+      ],
+      "status": "completed",
+      "completed": "8",
+      "output_failure": "none",
+      "rows": 8,
+      "worker_ids": [
+        0
+      ],
+      "vertex_counts": [
+        1
+      ],
+      "constructors": [
+        {
+          "name": "G4EmPenelope",
+          "physics_type": 2,
+          "cpp_type": "class G4EmPenelopePhysics"
+        },
+        {
+          "name": "G4GammaLeptoNuclearPhys",
+          "physics_type": 3,
+          "cpp_type": "class G4EmExtraPhysics"
+        },
+        {
+          "name": "Decay",
+          "physics_type": 4,
+          "cpp_type": "class G4DecayPhysics"
+        },
+        {
+          "name": "hElasticWEL_CHIPS_XS",
+          "physics_type": 5,
+          "cpp_type": "class G4HadronElasticPhysics"
+        },
+        {
+          "name": "hInelastic FTFP_BERT",
+          "physics_type": 6,
+          "cpp_type": "class G4HadronPhysicsFTFP_BERT"
+        },
+        {
+          "name": "stopping",
+          "physics_type": 7,
+          "cpp_type": "class G4StoppingPhysics"
+        },
+        {
+          "name": "ionInelasticFTFP_BIC",
+          "physics_type": 8,
+          "cpp_type": "class G4IonPhysics"
+        },
+        {
+          "name": "neutronTrackingCut",
+          "physics_type": 0,
+          "cpp_type": "class G4NeutronTrackingCut"
+        }
+      ],
+      "stdout_sha256": "dd04edbef7a6cb74bc06fabd2c5e0c2064db4d037635c990e3f50ede177ed25b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  {
+    "version": "1143",
+    "conflict": {
+      "name": "conflict",
+      "exit_code": 1,
+      "argv": [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-windows114\\Release\\G4UniversalSim.exe",
+        "--config",
+        "main.ini",
+        "--macro",
+        "run.mac",
+        "--output",
+        "output"
+      ],
+      "status": "failed",
+      "completed": "0",
+      "output_failure": "none",
+      "rows": 0,
+      "worker_ids": [],
+      "vertex_counts": [],
+      "constructors": null,
+      "stdout_sha256": "57fe213ae3282b5e4718ee067b811da1f149a2efdf4d10e65ca5b0c6a8b33217",
+      "stderr_sha256": "c7b367f4a4531d1f116ab62d723717c0026c072cda57fbe0b6db0d18fd4d6429",
+      "manager_unchanged": true
+    },
+    "no_replacement": {
+      "name": "no-replacement",
+      "exit_code": 0,
+      "argv": [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-windows114\\Release\\G4UniversalSim.exe",
+        "--config",
+        "main.ini",
+        "--macro",
+        "run.mac",
+        "--output",
+        "output"
+      ],
+      "status": "completed",
+      "completed": "8",
+      "output_failure": "none",
+      "rows": 8,
+      "worker_ids": [
+        1
+      ],
+      "vertex_counts": [
+        1
+      ],
+      "constructors": [
+        {
+          "name": "G4EmLivermore",
+          "physics_type": 2,
+          "cpp_type": "class G4EmLivermorePhysics"
+        },
+        {
+          "name": "G4GammaLeptoNuclearPhys",
+          "physics_type": 3,
+          "cpp_type": "class G4EmExtraPhysics"
+        },
+        {
+          "name": "Decay",
+          "physics_type": 4,
+          "cpp_type": "class G4DecayPhysics"
+        },
+        {
+          "name": "hElasticWEL_CHIPS_XS",
+          "physics_type": 5,
+          "cpp_type": "class G4HadronElasticPhysics"
+        },
+        {
+          "name": "hInelastic FTFP_BERT",
+          "physics_type": 6,
+          "cpp_type": "class G4HadronPhysicsFTFP_BERT"
+        },
+        {
+          "name": "stopping",
+          "physics_type": 7,
+          "cpp_type": "class G4StoppingPhysics"
+        },
+        {
+          "name": "ionInelasticFTFP_BIC",
+          "physics_type": 8,
+          "cpp_type": "class G4IonPhysics"
+        },
+        {
+          "name": "neutronTrackingCut",
+          "physics_type": 0,
+          "cpp_type": "class G4NeutronTrackingCut"
+        }
+      ],
+      "stdout_sha256": "76cf4f75ac69e3bfe7d73f10e0e2499eb5317d3965f599861f224e397aaf77a4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "replacement_only": {
+      "name": "replacement-only",
+      "exit_code": 0,
+      "argv": [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-windows114\\Release\\G4UniversalSim.exe",
+        "--config",
+        "main.ini",
+        "--macro",
+        "run.mac",
+        "--output",
+        "output"
+      ],
+      "status": "completed",
+      "completed": "8",
+      "output_failure": "none",
+      "rows": 8,
+      "worker_ids": [
+        1
+      ],
+      "vertex_counts": [
+        1
+      ],
+      "constructors": [
+        {
+          "name": "G4EmPenelope",
+          "physics_type": 2,
+          "cpp_type": "class G4EmPenelopePhysics"
+        },
+        {
+          "name": "G4GammaLeptoNuclearPhys",
+          "physics_type": 3,
+          "cpp_type": "class G4EmExtraPhysics"
+        },
+        {
+          "name": "Decay",
+          "physics_type": 4,
+          "cpp_type": "class G4DecayPhysics"
+        },
+        {
+          "name": "hElasticWEL_CHIPS_XS",
+          "physics_type": 5,
+          "cpp_type": "class G4HadronElasticPhysics"
+        },
+        {
+          "name": "hInelastic FTFP_BERT",
+          "physics_type": 6,
+          "cpp_type": "class G4HadronPhysicsFTFP_BERT"
+        },
+        {
+          "name": "stopping",
+          "physics_type": 7,
+          "cpp_type": "class G4StoppingPhysics"
+        },
+        {
+          "name": "ionInelasticFTFP_BIC",
+          "physics_type": 8,
+          "cpp_type": "class G4IonPhysics"
+        },
+        {
+          "name": "neutronTrackingCut",
+          "physics_type": 0,
+          "cpp_type": "class G4NeutronTrackingCut"
+        }
+      ],
+      "stdout_sha256": "8204019b8c6413dc77535447b7d87e96a5f846c3392dc9773fa6efb5d1f0941f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+]

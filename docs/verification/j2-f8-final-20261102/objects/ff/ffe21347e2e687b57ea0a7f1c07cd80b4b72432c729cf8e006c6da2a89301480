@@ -1,0 +1,24 @@
+{
+  "schema": "j2_f8_fourth_docs_authoritative_freeze_sequence",
+  "authority": "main explicit correction; overrides earlier initial draft gating notes",
+  "frozen": false,
+  "two_test_independent_reviews": "already PASS; exact identities recorded separately",
+  "only_remaining_docs_freeze_inputs": [
+    "18c5858 windows114-integration terminal report/launch SHA and runner/gate0 identity_errors[]",
+    "six18c profile terminal aggregate with exact arithmetic and original identity checks"
+  ],
+  "not_a_docs_freeze_prerequisite": "FutureHEAD final product/native mapping. This cannot be checked until tests+docs are committed into a new HEAD.",
+  "document_wording": {
+    "existing18c_GUI149_map": "state existing exact-byte checks against18c native identity honestly and in original scope",
+    "futureHEAD_final_mapping": "pending; must run after newHEAD exists",
+    "stage_closure": "pending later full acceptance; not in fourth candidate docs"
+  },
+  "execution_order": [
+    "final114 + sixaggregate",
+    "freeze four docs and Feynman narrow review",
+    "main apply two tests + docs, commit newHEAD",
+    "execute fresh futureHEAD mapping and required newCI/acceptance",
+    "separate later stage-closure documentation if actually accepted"
+  ],
+  "source_and_old_drafts_modified": false
+}

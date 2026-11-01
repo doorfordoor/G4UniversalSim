@@ -1,0 +1,3 @@
+# 当前审查检查点
+
+2026-11-02：第三身份9e40e889 shape schema定点独审完成。113/114各30检查，8个真实run fixture/32事件；实际G4Trd/G4Trap/G4SubtractionSolid、网格积分、轨迹、strict forbidden具体诊断及旧metadata兼容均通过。身份SHA见shape-schema-recheck.md与两版r3 receipt；运行前后源码/二进制一致，无运行会话遗留。产品只读，未构建/提交/跑全局矩阵。113 r1/r2探针预期错误原件保留；旧fp88和fp149b证据不重贴新身份。原3P2已关闭。下一步主线程统一收验，若源码或binary再变更须按新身份另验。

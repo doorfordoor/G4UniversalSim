@@ -1,0 +1,186 @@
+[
+  {
+    "name": "surface-sphere",
+    "exit_code": 0,
+    "expect_rejection": null,
+    "observed_primaries": 2048,
+    "stdout_sha256": "d72b431e66a0587125feb7c9a4d13d7fc3da74d9113e5046e7c0acd537115aa9",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "volume-sphere-control",
+    "exit_code": 0,
+    "expect_rejection": null,
+    "observed_primaries": 2048,
+    "stdout_sha256": "860719cadaf0a31ec49ce18e3b94b00aa9ab63bce0a3374e67ef3b5ac90aeea9",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "named-selection",
+    "exit_code": 0,
+    "expect_rejection": null,
+    "observed_primaries": 2048,
+    "stdout_sha256": "78c8ce10b0135ba02052f5b9264cb7d5e609570d1c57a1f9bf61c79a15aa9c7a",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "named-simultaneous",
+    "exit_code": 0,
+    "expect_rejection": null,
+    "observed_primaries": 128,
+    "stdout_sha256": "387850fde073deb2fb10568b5a72edadd1390f25b65fb9d10c9a7ea0cb407f9d",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "weights_by_pdg": {
+      "2212": [
+        1
+      ],
+      "22": [
+        1
+      ]
+    }
+  },
+  {
+    "name": "single-named-intensity",
+    "exit_code": 0,
+    "expect_rejection": null,
+    "observed_primaries": 8,
+    "stdout_sha256": "40f158c020a04827432203ab3592b0747fb8a5ca7f43fcf535718fc2c640f580",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "named-surface-spectrum-ion",
+    "exit_code": 0,
+    "expect_rejection": null,
+    "observed_primaries": 128,
+    "stdout_sha256": "1fc4b545213833d7a47ae1469e2313c21092cb9cc023f618b741d3a5b01099e4",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "phase-space-reuse",
+    "exit_code": 0,
+    "expect_rejection": null,
+    "observed_primaries": 12,
+    "stdout_sha256": "50dba67775e63f8066016d12462e70f3c386b9cd051d72a751be34ea8f2bcb4f",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "bad-surface-shape",
+    "exit_code": 1,
+    "expect_rejection": "requires shape = sphere",
+    "observed_primaries": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "eb62841d6e6f8576ccbea144d05a372b111ce889d44ca0dd41fca1a045722f6b"
+  },
+  {
+    "name": "bad-surface-zero",
+    "exit_code": 1,
+    "expect_rejection": "positive length",
+    "observed_primaries": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "aadb7aafacd6f9d8b097b0714c8c06cf868396325609e7589b5760280fc192bc"
+  },
+  {
+    "name": "bad-surface-halfz",
+    "exit_code": 1,
+    "expect_rejection": "Surface Sphere",
+    "observed_primaries": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "ff9be63258806f0fe18c2e2294196970ee4e79a5d920ae0cdeaee468c122da04"
+  },
+  {
+    "name": "bad-surface-position",
+    "exit_code": 1,
+    "expect_rejection": "use center",
+    "observed_primaries": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "81029eec82dc8acb611ab5829ebd96133d0c4e25a7c5a60df02adb6c015528a4"
+  },
+  {
+    "name": "bad-surface-nan",
+    "exit_code": 1,
+    "expect_rejection": "finite",
+    "observed_primaries": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "423ac78a14aea13285d442b7600253161bd87f1ff7b1dcd741d06ceaf6dd1021"
+  },
+  {
+    "name": "bad-surface-confine",
+    "exit_code": 1,
+    "expect_rejection": "requires position_type = volume",
+    "observed_primaries": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "f8731a295539bd5624e741827c42492a1550599d3a5b3ff010e8de66b085604d"
+  },
+  {
+    "name": "bad-single-multiple",
+    "exit_code": 1,
+    "expect_rejection": "requires [source.<name>]",
+    "observed_primaries": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "f6edd967fd00bada971c1759e341faaf95b1d1729a0d66a83111cf57dbc44c2b"
+  },
+  {
+    "name": "bad-named-global",
+    "exit_code": 1,
+    "expect_rejection": "cannot be combined",
+    "observed_primaries": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "59121e3fd03c1c1be003a7e463fae5f50b6b76fb9115262a248077784f782341"
+  },
+  {
+    "name": "bad-named-intensity",
+    "exit_code": 1,
+    "expect_rejection": "positive number",
+    "observed_primaries": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "447b4f28c37e6b5ac2f178cab28eab473a22f0f8bc766c35335d7a674e12fdd5"
+  },
+  {
+    "name": "bad-named-overflow",
+    "exit_code": 1,
+    "expect_rejection": "intensity sum",
+    "observed_primaries": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "ea309c098ebc1fe93fec32d92cf957d27c2861f4df19fb7196b76721c451af77"
+  },
+  {
+    "name": "bad-named-phase-space",
+    "exit_code": 1,
+    "expect_rejection": "cannot be combined",
+    "observed_primaries": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "2adcbedd32504fad137e3095e607bf5750bc43ce7403b20d20d84ee9e35920e6"
+  },
+  {
+    "name": "bad-named-key",
+    "exit_code": 1,
+    "expect_rejection": "unknown key",
+    "observed_primaries": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "d3f5bddea71dbaab9f527595aeef2d421f6ba975fedc687043f09a69ec0578f1"
+  },
+  {
+    "name": "bad-multiple-boolean",
+    "exit_code": 1,
+    "expect_rejection": "bool",
+    "observed_primaries": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "23b8cab6526ad15a47f1def892a366ed5c48e67e7ad9b9dfd89cbcdaa8af03ae"
+  },
+  {
+    "name": "reference-baseline",
+    "exit_code": 0,
+    "expect_rejection": null,
+    "observed_primaries": 8,
+    "stdout_sha256": "0c84853a3a2008256af77867e9b64339f9feea50d91e254f992322a9ae82869b",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "reference-replace-em",
+    "exit_code": 0,
+    "expect_rejection": null,
+    "observed_primaries": 8,
+    "stdout_sha256": "2a5d7cf0fd388e2a76895633da69f8839edf1fb8950b7352f0ae0db9d3d180ca",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

@@ -1,0 +1,29 @@
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:104: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "scorer_statistics*.csv")):
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:113: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "scoring_mesh*.csv")):
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:119: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "g4usim*.root")):
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:140: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  runs = sorted({_run_of(p.stem) for p in output_files(output, f"{stem}_t*.csv")})
+G4USIM_ASSERTS=345
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_end_to_end.py", line 326, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_end_to_end.py", line 312, in main
+    execute(app, executable, root, receipt)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_end_to_end.py", line 223, in execute
+    receipt["physics"] = check_physics(output, baseline_inventory)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_end_to_end.py", line 160, in check_physics
+    assert any(isinstance(row["observed"], (int, float))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: []

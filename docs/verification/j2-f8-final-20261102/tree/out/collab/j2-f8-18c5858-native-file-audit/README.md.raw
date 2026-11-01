@@ -1,0 +1,44 @@
+# 18c native150 / native125 纯文件核验（有限事实，不作whole-native passed）
+
+基准18c5858fd6e80a5cb6096beacebfef69c479ad49。原始证据分别在out/verification/j2-f8-18c5858/native150与native125。本审仅读文件；没有Qt/native/profile/build/launcher执行，没有新截图/图像渲染、源文件或原证据写入。main已经实际查看各图，本文把其视觉记录与被动Qt/原字节身份核对，不冒称本审重新目视原图。含QQ/边缘浮层的raw全部local-only，不复制/上传/内嵌图片，外部浮层像素不纳入产品验收。
+
+## 文件与关闭链
+
+- 150：32条visual、30条被动Qt、39张图；125：14条visual、13条被动Qt、13张图。全部52张实际MIME均image/jpeg（按magic/SOF读取），原始SHA、MIME、像素尺寸均与visual记录一致，无缺图/未引用图/元数据不符。
+- 两档launch.status=exited、process_exit_code=0；exit.json均exit_code=0/visible=false；ending HEAD仍18c、ending_git_status为空、EXE原/末SHA均01e0fb795f93772ccfa818d625fee145d8da1ad3ad80894372a9a855f0af108a。
+- host SHA均b9c216...，当次runtime记录Dvenv prefix、Python3.11.9、PySide/shiboken/Qt6.11.1及PyVista等模块路径；host与launch解释器目录一致，模块均在记录的venv内。149份host GUI源SHA与当前冻结字节逐项一致。本审不重新导入库或执行capabilities。
+- main提供原session68494/17970均exit0；本审没有跨线程poll这些session，以文件launch/exit链作独立核对。
+
+## 150：严格三段，不能写成整轮project hash不变
+
+1. 导航/语言/焦点段：Qt行1–16维持demo/raw efbab6b06986...、cached Undo/Redo/modified全false；行17进入Scan(page8)后raw变48dafe6d2367...，行18返回Start仍48da...，cached三属性全false。这里只记录raw投影同步兼容的变化，不凭hash变更认定用户编辑；本轮host未存完整payload，不能重新证明具体字段差异。此前已关闭的Scan缓存解释不被这次新hash重新翻案。
+2. **New blank是直接生产动作**：主线程点击New blank simulation，Qt行19切Configuration、标题new_simulation，raw变d9faaad86551...；主线程图023记录0材料/1体积。行20已回Start且保持新项目。该有意创建/替换切断此前导航不变性范围；其历史重置为false不等于没有发生项目替换。023对应UIA txt为空，不能拿它证明创建前后控件细节，照片/主观察与Qt标题/页面/hash变化另计。
+3. **随后才从Create from template进入wizard**：行21–25 modal=New simulation，行26无modal、焦点Create from template。以开前行20至关后行26为边界：raw唯一d9faaad86551b43e8e9f21945af8e1ebebb8b1a45253d824cf36482484926f90，标题一直new_simulation，cached Undo/Redo/modified唯一false/false/false。视觉记录为Scenario→三次Return到Geometry/Source/Run，先有一次Back缓存调用被拒（不派发输入），随后实际Back返回Source、Esc关闭。没有Finish或模板应用记录；不能把前面的New blank算成wizard结果。
+
+150被动记录到达0–8全部页索引，支持九页导航到达，**不等于九页所有控件/全部业务完整验收**。F6焦点为刷新预览，主图仍按已定82>56窄dock边界记录，不能称整按钮可见。最后dark/Project返回及自然Tab的视觉范围以main标明的无遮挡区域为准。没有保存/打开/导出/结果/K1运行链路验收。
+
+## 125：仅本档定点范围
+
+- 初始/全程DPR1.25、size1200×800，所有13条记录raw唯一0865886785aa...、cached三属性全false、标题demo；没有modal，也未到Scan，不套用150九页/wizard/New blank结论。
+- main记录只移动目标标题栏避QQ，未resize/未碰QQ；Qt尺寸始终不变支持“未resize”，文件审没有完整输入事件轨迹独立证明所有鼠标动作。
+- 到达的页索引仅0/1/2/7：Config+Preview→F6，Qt焦点刷新预览；main图记录125此按钮完整可见。保留dock→Project name→自然Tab EXE；History语言/Name与Search→Tab Status自然pan；最后Project。没有125独立9页/wizard/Finish/Run验收。
+- 主线程原图上边缘/QQ遮挡区全部排除。本审的hash/MIME核验不把遮挡图提升成全窗无遮挡通过。
+
+## 两档共同可支持的焦点与标注事实
+
+- 以被动Qt focus为实际焦点依据，不以UIA focused_element旧缓存推翻它。150 Config过渡材料Name缓存、History语言过渡、Back拒绝均按visual说明保留，未作为新产品故障。
+- History已保存的实际UIA树文本可读到三**控件**名称（Edit/Edit/Combo，非只看标签文字）：运行包根目录/搜索/状态，以及Runs root/Search/Status；两档均有中/英往返稳定样本。对应文件和提取Name见每档receipt.recorded_History_UIA_names；main视觉记录负责可见范围。
+- Project页被动project_viewports固定测的是**project_name**及其label。该目标采样矩形均contained；但焦点在EXE时仍测project_name，不能拿此数据单独证明EXE完整矩形，EXE可见范围来自main实际图片观察。
+- 两档所有被动主runner状态均NotRunning，且无Finish/人工Run记录；此字段只监测主runner，不排除自动preview/helper进程。125主观察明确自动后端预览启用，因此不把“无人工模拟run”写成“未启动任何后端初始化进程”。100真实K1链路另审。
+
+## 疑点/证据边界（不直接判新增产品P2）
+
+- launcher记录pid与host identity pid不同：150为23984/57396，125为62724/7320。两档命令、唯一输出根、源码/解释器/EXE/退出记录一致；本文件审未取进程父子树，不能额外认证PID祖先链，也不据此误判venv错误。
+- 150的023-new-blank-action.txt、031-theme-dark-transition.txt为空，其对应JPEG存在且hash/MIME正确。031即刻主题过渡不能替代032稳定dark记录。
+- 缓存F5只含Undo/Redo/is_modified，**没有完整F5 snapshot或其fingerprint**。只能确认这些缓存属性与raw hash在指定向导段不变，不能声称本轮完整F5快照字节已独立比对。
+- 最后临近关闭的Qt焦点可不同于最终截图时焦点：150末行focus=None；125末行Browse，均仅距exit约8/13ms。不得用关闭瞬间焦点覆盖此前截图和较早Qt EXE焦点。
+- 被动300ms采样不是完整事件轨迹；QQ浮层/边缘像素不作产品判据；本审不做新像素分析。文件完整性无矛盾，不代表whole native passed、物理/后端或阶段验收。
+
+## 本地索引
+
+summary.json为两档摘要；native150/、native125/各含file-index.json（所有原件SHA）、image-index.json（每图SHA/真实MIME/尺寸/原记录匹配）、visual-passive-links.json（每观察与最近此前Qt样本的关联，异步采样不等同逐帧同步）及receipt.json（阶段/关闭/标注/限制）。原文件前后摘要均保持；没有raw图拷贝。

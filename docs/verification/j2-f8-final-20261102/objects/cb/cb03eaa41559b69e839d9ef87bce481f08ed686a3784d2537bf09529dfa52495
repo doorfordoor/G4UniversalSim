@@ -1,0 +1,32 @@
+# 2901f42 第二候选 CI 独立收集（仅等待Windows安装）
+
+精确HEAD2901f4254303c3a9089c9025717908c0d77ff190，全部push/attempt1。源码指纹9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a，测试指纹385409046e46858cba6d00976d3de681affbd2f251a5e40066d5d28d38982520。独立门禁使用固定于该Git对象的checker-2901f42.py，不随工作树漂移。
+
+| Workflow/run | 当前状态 |
+|---|---|
+| M0 /41336912651 | Ubuntu成功，Windows124938588441 GUI failure |
+| Linux /41336912644 | 11.3.2/11.4.3均failure，GUI同首因 |
+| Desktop /41336912646 | 两平台success，原ZIP/完整日志/独立收据已齐 |
+| Installation /41336912645 | Linux成功且独立核验，Windows124938588360仍lifecycle |
+
+确认首因见first-failure.md：Linux两版本gui_start_page/gui_main_window切语言，accessibility.py:80对QSpacerItem调用count，AttributeError。两个GUI报告strict fail；backend/integration未执行不计通过。未rerun、修改判据或产品。M0 Ubuntu在其实际环境两profile均通过，不能代替conda Linux双版本失败。
+
+首批6份实际profile报告全部核对精确HEAD、双指纹、tracked-source gate、每份原始逐例日志SHA及入口总和；matching历史归档manifest/原件SHA核对且历史先过strict。逐旧例比较见report-gates-current.json：M0 Ubuntu static4547/历史3966，GUI8373/6739均strict pass，无旧例缺失/入口下降；Linux双版static4547/3966均pass，GUI8365/6739均fail，只有上述两旧例入口下降（72<74，40<46）。没有allow-incomplete/legacy放宽。
+
+已收原artifactZIP：Desktop Linux13094914600 /Windows13095852041、Linux11.3.2=13095209403 /11.4.3=13095793742、M0Ubuntu13096021428、Installation Linux13095474657。对应6份完成job完整connector解码日志已保存，ZIP大小/SHA对GitHubdigest与HEAD归属核验；解码job日志不冒称GitHub原始run logs ZIP。
+
+Desktop两平台delivery passed、frozen自检、150GUI源身份、4条命令原日志SHA与预期正负例0/1/0/1独立通过。范围是冻结GUI启动/自然退出与Python ROOT读写，不是Geant4模拟验收。机器结果desktop-linux-checked.json、desktop-win32-checked.json。
+
+Installation Linux delivery verified、10stage exit0及日志SHA、retained index对象SHA、889源码checkout身份、候选workflow身份、runtime真实summary5/5、SDK consumer/full application configure-build-run、工具身份与两profile卸载独立通过。源码仅按候选.gitattributes处理允许的checkout换行；证据日志原字节哈希。见installation-linux-checked.json。
+
+本机显式git -c core.longpaths=true status已独立确认tracked clean（local-worktree-longpaths-check.json）。原73D观察文件保留，它是未启用longpaths的视图差异，不是第二候选实际dirty。后续本机Git读取显式-c或等价childenv；无全局/仓库配置修改。
+
+## Windows M0终态追加
+
+Windows job124938588441 GUI failure；原artifact13096301546 ZIP SHA256 9c5241267ce289062c444a22fcde0ce3f6eb0f87c79ce6b5d3b4d7e5bc2c3484，完整job日志job-124938588441.log。static4539/历史3959 strict pass；GUI8003/历史6739 strict fail。两失败：
+- gui_k1_workflow，test_k1_workflow.py:175预期Restricted resource requires explicit redistribution policy；实际先由experiment_bundle.py:632抛Unused resource policy entries: …main.ini。原日志extracted/m0-report-windows-latest-13096301546/20261101-183520-77003a77/gui_k1_workflow.log，SHA b68a00eaaa712371b846674902bee6c35ed215249b6bc93c049d5c2bb92aca5d；旧例入口12<230。
+- gui_j2_geometry，smoke_j2_geometry.py:162中 `assert f'file = {folder / "mesh.stl"}' in generated` 失败。原日志同目录gui_j2_geometry.log，SHA ae1e7fd614f2e0d8fe0f14b0a1208e21b8000052c0271315be1c37b251d7e130；新J2例88入口。当前仅报告已证实的原异常，不未经定点反例归因或改断言。
+
+已收共7ZIP/7完整job日志。现有8份报告全部完成身份/原日志SHA/总和/历史matching核验：5 strict pass、3 strict fail。Windows two GUI问题独立于Linux QSpacerItem异常；不相互替代。
+
+结论：第二候选当前已确定整体strict失败；仅继续只读收集Windows安装终态和证据。旧56b失败、草案首败及已关闭migration收据保持原样，不追改历史。

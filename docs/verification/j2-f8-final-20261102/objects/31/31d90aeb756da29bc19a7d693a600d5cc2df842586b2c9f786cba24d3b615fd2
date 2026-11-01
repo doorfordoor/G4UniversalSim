@@ -1,0 +1,68 @@
+# J2 schema 与 CURRENT followup 最终独立复核
+
+审查者：当前独审代理 Sagan。范围仅为本轮 J2 schema 的 GUI 覆盖说明、run_editor_model / main_ini_writer / run_editor_import 实际边界，以及 CURRENT followup 收据身份与完成状态。未修改产品、未构建、未扩展 H2/Q2；原 P1 的 149b25dd 双版本身份与证据保持不变，不用后续最终 C++ 指纹替换旧实证。
+
+## 最终定点复核结论
+
+本次限定的 schema / GUI 覆盖独审：**未关闭的确认 P1 为0、确认 P2 为0**。下文原 Surface/Sphere center 文案 P2 已由主代理修复，本代理独立核对两处规则均改为“center 缺省为原点，radius 必须为正”，与实际后端和 importer 一致；`python -B scripts/generate_config_schema.py --check` 本次退出0，生成产物一致。
+
+修后 schema 身份：278381 bytes，SHA-256 `72414d47485bd6b362c945e6b39a7856ddfc5b3fa47c462600e4f6b5fe8b51c5`。本轮仅检查该文案与 generated 一致性，未重跑十文件或窗口测试。旧 snapshot 提示语断言由主代理更新并定点运行，其最新结果由主代理登记，本文不冒称已独立复跑。project_snapshot 后续资源改动由 Beauvoir 独审，原 followup 文件身份记录保持原样。此结论不替代正式冻结与阶段验收。
+
+## CURRENT followup 收据确认
+
+已实际读取 `out/collab/j2-run-editors/followup-review.md` 与 `followup-files.json`。收据中的“五项关闭”及追加 CURRENT 路径声明顺序关闭，确为本代理此前独立运行新 smoke、原五项反例、同 section / 跨 section 路径顺序窄检查后给出的结论，不只是转述作者日志。未代替主代理评定阶段完成。
+
+本次逐文件重算 SHA-256 与字节数：清单共10项，9项与当前文件完全一致；唯一变化为 `gui/g4usim_gui/core/project_snapshot.py`：
+
+| 身份 | 字节数 | SHA-256 |
+|---|---:|---|
+| followup-files.json 记录 | 19487 | c607d40e4b66ca958efb09dd2260527bb565028c4a4083648cdf90def16cafc0 |
+| 本次当前文件 | 20205 | ba155ee3acedc5c13b3c7d75d31a7924305b62fc989e2045c668d6ca2fa873b6 |
+
+当前该文件增加了 shape_properties / preview_properties 资源获取与冲突检查等后续代码；旧清单不能据此称为当前十文件全部同身份。本文不追改作者原清单，不将这项变动推断为原五项重新出现。
+
+辅助身份：
+
+- followup-review.md：2456 bytes，`fdf6ebbace4080271fb1b1e1ba77b310adb00288faf51ffdc2ad72b552619f03`。
+- followup-files.json：1622 bytes，`7a7a99789d545249000ef6af5e19e99ed4c92b6e656f21aec151ff13ef226fbe`。
+- 当前 run_editor_import.py 仍与清单一致：18409 bytes，`e33bbb0391aa5984da16024227b6b4a1e562c35713b17ffe376cb469b57c1c15`。
+- 历史 import-path-order-final.log：含通过文本与 `G4USIM_ASSERTS=208`，原始字节 SHA `67f3d3fbbfa7324af9fa150feb9379792dc871c8d5fea737f4c4ee865b1e0145`。
+- 历史 current-snapshot-legacy.log：含 `smoke_project_snapshot_restore: ok` 与 `G4USIM_ASSERTS=61`，SHA `dd40b752cd46357b8252de7cdb43a23a2afb6fe6be883045dc266a3501768729`。这些是历史日志内容；退出0由原收据记录，本文不由尾行补造独立历史进程收据。
+
+## schema 发现（历史，已关闭）
+
+### [P2] Surface/Sphere 的 center 被错误写成必填
+
+位置：`schema/config_schema.json:307` 和 `:787`，source / source.<name> 两处规则均写“surface/sphere 必须 center、正 radius”。
+
+实际 `src/Source/SourceManager.cc:927–929` 对 surface / volume / beam 先取原点，仅在声明 center 时读取该字段。CURRENT importer 同样允许缺省 center 并补原点；本次独立窄反例：
+
+```ini
+[source.shell]
+particle=gamma
+energy=1 MeV
+position_type=surface
+shape=sphere
+radius=1 mm
+angular=isotropic
+[physics]
+reference=FTFP_BERT
+```
+
+`parse_run_editor_ini` 与实际 main writer 均接受，重建后 center 为 `0,0,0 mm`。因此 schema 的后端规则说明不应宣称必须显式提供 center。建议两处改为“center 缺省原点，radius 必须为正”；保留其他形状互斥约束，并按仓库要求运行 schema generator，同步生成产物。不要通过收紧产品校验来迎合错误文案。
+
+除此以外，本轮未发现过度 generated/editable 标记：
+
+- 命名源34项 generated 字段均有 GPSDefinition 或显式 position/ion 编解码；preset/isotropic/z 未被误提升为命名源可直接编辑字段。
+- region9项、局部field9项、逐process bias10项 generated 字段与对应模型及 section writer 映射一致；全局 field 不包含 volumes。
+- legacy [source] 与命名源/回放采用不同写出路径；multiple_vertex 限命名源，回放与命名源互斥。inactive 草稿保存在项目，不等于 INI 全量输出。
+- physics modules/extra_modules/replace_modules 标记为 generated_subset，而非任意 PhysicsFactory token 全量编辑承诺；GUI MODULES/别名表、reference/manual、非零 type replacement 与上下文校验仍是实际边界。em/list 保持 external_only，不冒称有逐字段 GUI writer。
+- section 级 external_only 与字段级 generated_subset 的描述分层由 core/config_schema.spec 的字段覆盖规则解释，不能单凭 section 标签认定全部字段不可编辑，也不能把 generated_subset 当作当前 importer 对所有手写 INI 的无损承诺。
+
+## 当前执行与剩余检查
+
+- `python -B scripts/generate_config_schema.py --check`：退出0，generated files are up to date。说明生成产物与当前schema一致，不代表上述规则文案正确。
+- `python -B gui/smoke_tests/smoke_j2_current_import_preview.py`：本次重跑退出0。原五项与路径顺序关闭结论保持。
+- `python -B gui/smoke_tests/smoke_project_snapshot_restore.py`：本次补验退出1，第一处断言失败在第150行：仍要求提示包含旧字符串“主配置/宏文件”。当前 `window/project.py:323` 已改成 CURRENT source/physics/field/bias 恢复的新语义。此前第149行通过，故不是旧项目未恢复或材料/几何流程失败的证据。需由拥有测试/窗口职责的主代理更新断言并重跑，不能将历史61入口日志当作当前树已重跑通过。异常退出时还出现临时 recovery lock 的 WinError32 清理告警；不是新的CURRENT导入失败首因。本文不修改测试，也不自动反复启动窗口测试。
+
+上一轮检查时 schema/config_schema.json 身份：278337 bytes，SHA-256 `f6cd7361889b880d1c026849529a330a2437507ebe4604f1d0e13b5f73f35471`。当时结论为：followup 原五项及路径顺序逻辑已独立关闭；原清单有1项后续身份漂移；schema有1项可操作规则文案错误；snapshot窗口提示测试有1个旧断言待主代理对齐。此段保留历史检查事实，最终当前结论以上方定点复核为准。完整正式冻结、最终源指纹和阶段完成仍归主代理。

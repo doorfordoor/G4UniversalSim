@@ -1,0 +1,43 @@
+# J2/F8 主任务接续点（2026-11-02，第二候选已apply）
+
+**最新冻结/运行（优先于下文）：** 新HEAD `2901f4254303c3a9089c9025717908c0d77ff190` 已commit/push，33文件，tracked clean。out/collab/j2-f8-repair-applied/freeze.json。git cached whitespace仅raw保真CR-at-EOL允许，原日志保留，原4份raw字节未改。实际patched F8两档416均exit0（Harvey已释放），compileall0、doclinks862/0；8设计字节与4+4源码独立比对通过。
+
+build-v2 session55111已exit0：113EXE `ad0864cba780d66c6046cb709a2fabd43262f31c8382f50f88ccb6df5c55a137`，114 `cbe73ff941ee1e1b8abc541cc31d03b953fb3aadc3cb4ac78f93861c84124ac1`；双sourcefp仍9e40e889...，capcommit均2901f42/clean。身份out/verification/j2-f8-2901f42/identity。已用冻结launcher4f812f...启动4profile：main static session18386（runnerPID47816）；PtolemyGUI session50264（runner8512）；Feynman113backend（runner61140）；Cicero114backend（runner54804）。全部完整Dvenv/childlongpaths空status，启动时无失败；保持原session poll，不重复run。GUI含native VTK专属slot至终态，其间main不UI，两integration尚未启动。Sagan跟新push四实际CI，不手动dispatch。
+
+原生待GUIslot释放后按main排程，不可同时integration。out/collab/j2-f8-native/host-v2.py SHA b9c216045a478a5bffd503371405cf767b290ff87e811da3623dcbc89dad334a 已Harvey只读通过：只bootstrap生产MainWindow+300ms被动读状态/几何，无capture_workspace/ensure/scrollsetter/输入。launch-v2.py准备未运行，采完整Dvenv模块路径/版本并监督pythonw至退出，--scale100/125/150（env .8/none/1.2乘OS1.25）；150为760x640/x945避QQ。新证据root同2901f42/native100等，拒绝覆盖。用node_repl+sky唯一Windows输入工具；skill+guidance+api+confirmations已完整读，需fresh list_windows不能复用旧tw/st。所有旧native hosts退出0。原宿主缺PyVista、旧rawprojecthash解释仍按旧范围。
+
+Beauvoir正在out/collab/j2-f8-archive-plan准备旧首轮/闭合独审归档清单，仅out不改tracked；最终新矩阵/native须回填。永久E2E脚本不变。阶段未完成，继续直到完整验收/归档/正常集成。
+
+以下最新段覆盖下方较早快照的进程/未apply状态；原件证据各自保留。目标仍为完整J2/F8，不在第二候选准备阶段停下。
+
+当前worktree C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim、branch roadmap/J2-F8-editing、HEAD仍56b689fb9ac920cbb1203b2b94dae2483d25f622，tracked现有已审修复和配套文档变更，等待新提交。D盘检出不改，只复用完整venv。Git必须core.longpaths=true（含child GIT_CONFIG_COUNT）。
+
+首轮全部terminal：本机6报告300执行286pass14fail0skip、179468v3，audit first-candidate-local-summary.json；GUI真实report git_dirty=true/73条D保留，不改原件。CI M0 41330577407/Linux 41330577426失败，Linux后续profile未跑；installation41330577328/desktop41330577359两平台成功。原生100/125/150 hosts全exit0；100真实100events/保存重载/离线包，150新增retained-dock焦点P2不能报全过。
+
+已统一apply的15源码/测试：main product-v2四文件（密度分类不改接受逻辑、未知mode旧code、NIST位置、STL/placement实验文案）；F8 accessibility.lf+v3 smoke（LF smoke69b11a...、真实stale pending覆盖、作者两档416）；source/scans三fixture修正（scans原全部assert AST不变）；static final-v2四文件（migration file_unit修正后独审521，其他K1562/F4624/187已过）；external Inspect五行模式守卫+test_k1_workflow永久反例（作者真实双版各49、K1260，独审额外10）。全部独审已闭合且身份窗口释放；统一apply收据 out/collab/j2-f8-repair-applied/receipt.json。永久J2E2E SHA5b1120...未改，runner未改。8个DeepSeek candidate-tree文件已精确落docs，raw -text；doc_links初验0broken。兼容迁移文档/AGENTS/history/STATUS/ROADMAP已同步，阶段仍未验收。
+
+最终launcher out/collab/j2-f8-formal-launch.py SHA4f812f44506e2ea14f03ab49b223ccc0c01b8105c491feaa6dc36095e0c2e1dc；独审final/review.md：47错误身份拒绝、matching通过、实际Dvenv fresh runner指纹两次稳定、114版本绑定12folders+SDK+2receiptSHA通过。未运行launcher。build-v2.py也未运行，需新cleancommit后重配双版得到exact buildcommit。114显式用当轮113 Xerces helper及5inputs/buildreceipt，不冒充114appGDML。
+
+正在进行：Harvey仅复验实际applied F8 125/150（out/collab/j2-f8-repair-applied/f8）；Beauvoir只读核对4static+4main产品SHA/文档；Sagan核对8designSHA。main compileall gui已exit0，doclinks861/0（新增说明链接后需最终再检查）。无native输入/窗口，无正式profile。其余agent待新身份。
+
+下一步：检查applied复验收据→显式范围git add/commit/push→build-v2双版→新launcher六profile（static/gui一次113、backend/integration双版），完整Dvenv，去CXX及4Qt缩放，113GDMLtrue/114false、正确data、长路径child；GUI/integration含原生VTK子路径必须彼此及main UI排他。Sagan跟新push四实际CI。正式期间冻结源码；最终原生150 P2路径以及100/125/150可见性与业务链路按新身份补验；全部门禁过后归档/独审/正常快进集成codex。旧报告/失败/首次反例不可追改，不能拼接报告或allow/stale/legacy。原raw“扫描hash”不等于业务编辑、zh_HK数字不是已证裁切，已有只读诊断保持。
+
+---
+
+## 较早快照（进程和apply状态已由上文替代）
+
+目标仍为完整实现、独审与正式验收；当前未完成，不能将首轮候选写为通过。工作树 C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim，branch roadmap/J2-F8-editing，HEAD 56b689fb9ac920cbb1203b2b94dae2483d25f622；git 必须 -c core.longpaths=true。D盘检出不改。
+
+首轮源码仍 tracked clean、未解除冻结。Windows static 42/46、4fail、3616；GUI 64/66、2fail、8178，strict/baseline均失败。四项static为K1 parameterised旧blocker、F4物理旧unsupported、F4密度numeric代码改变、迁移STL旧blocker；GUI为旧空hook错误文本、scan helper漏dirty材料文档。真实GUI scan链路正确。CI四份static同失败再加DeepSeek out链接缺失；Linux/M0后续profile未跑。CI fullinstallation尚在收集，frozen desktop两OS成功，均保留原身份。
+
+113/114 backend各63、integration各31仍由Feynman/Cicero原协调器执行（114 backend已62pass1fail，K1同旧blocker）。各profile输出out/verification/j2-f8-56b689f。结束后保留strict失败，不改原报告，不拼接，不allow/stale/legacy。九个static pass各-1已证是显式CXX跳过compiler-discovery assert；下一轮删子进程CXX并保留编译器PATH。GUI_3d_view 18<历史35因为基础Python缺PyVista；已只读核验D:/Geant4/G4UniversalSim/gui/.venv（Qt6.11.1/PyVista0.48.4/VTK9.6.2），原脚本独立native复跑35/exit0/无SKIP。下轮整份GUI用此完整venv，3D含原生子路径，需与main UI排他。
+
+原生100/125/150全部结束exit0，审计native-audit.json。100实际blank保存重载→K1 validate/init/gen/run100events→export→Results，包7成员SHA核对通过。125九页/F6与wizard已检查；spin圈字来自zh_HK locale，不是已证裁切；Scan raw hash变更为文档缓存补齐，F5业务快照不变。相关独立报告f8-spin-glyph与f8-scan-hash。
+
+150新增确证P2尚开放：760x640/DPR1.5，CtrlAlt2初始正常；CtrlAlt3/F6保持config+preview docks→wizard取消→dark→CtrlAlt2，焦点项目名称但Project stack在x626，field x711/viewport540完全不可见，H0/max770。独立复现out/collab/f8-project-dock150/r2。Harvey只写out原型/patch，考虑布局完成后对仍当前owned焦点补既有最小显露，禁止force-zero/居中/抢新焦点。需独审、原生重验。
+
+未apply草案：Ptolemy windows-gui/test-fix-draft/tests.patch修source与两scan fixtures（原scan assert AST不变），等待独审；Beauvoir准备K1/migration/F4两测试草案；Sagan准备DeepSeek文档链接/归档草案。main out/collab/j2-f8-repair-draft/product.patch共4文件：密度numeric/positive分类兼容（density_internal_value AST不变）、未知physics.mode保留旧code、STL/replica过时不可编辑提示改experimental+2翻译键。out/probe已通过，Ptolemy正独审新例。真正NIST未知现在全catalog错误与旧quicklist警告语义不同，F4用例及迁移说明需明确，不读旧JSON改code或重算identity。
+
+所有首轮终态后再应用通过审查的定点修复；按完整venv、同v3逐例/总数门禁、新clean commit重建身份启动第二轮与实际CI。当前C++fp9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a；113EXEea4427...，114bf75f9...，build commitclean均56b689f。永久J2 E2E冻结SHA5b1120...不改，原双版本674链路证据保留，不将其冒充当前全部formal通过。
+
+主线程未运行原生窗口或主测试session。subagent UUID见环境：Beauvoir静态草案；Feynman113矩阵；Ptolemy GUI/密度独审；Cicero114矩阵；Harvey焦点P2；Sagan CI/文档草案。后续继续自动推进，不要求用户逐小项确认。

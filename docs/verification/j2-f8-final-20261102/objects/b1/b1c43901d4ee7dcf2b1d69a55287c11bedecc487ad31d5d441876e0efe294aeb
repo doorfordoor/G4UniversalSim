@@ -1,0 +1,131 @@
+PASS solid_registry: asserts=247/58
+PASS j2_resources: asserts=101/51
+PASS platform_install_layout: asserts=9/7
+PASS frozen_startup: asserts=33/32
+PASS install_plan: asserts=65/34
+PASS install_service: asserts=70/54
+PASS run_summary_mt_observation: asserts=11/12
+PASS ci_geant4_data: asserts=106/39
+PASS install_ci_delivery: asserts=46/17
+PASS backend_launch: asserts=151/35
+FAIL k1_bundle: PASS test_safe_environment_history
+PASS test_build_version_text
+PASS test_reference_source_urls
+PASS test_move_and_history
+PASS test_resource_kinds_and_identity
+PASS test_generated
+PASS test_refusals
+PASS test_atomic_and_tamper
+PASS test_gdml
+G4USIM_ASSERTS=523
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_k1_bundle.py", line 695, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_k1_bundle.py", line 678, in main
+    case(folder)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_k1_bundle.py", line 592, in test_independent_review_regressions
+    assert collected["snapshot"]["project"]["geometryEditor"]["round_trip_blockers"]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+ asserts=523/114
+PASS k1_staging_alias: asserts=36/39
+PASS i1_environment: asserts=142/72
+PASS f5_source_snapshots: asserts=84/7
+PASS f5_project_receipts: asserts=22/19
+PASS f5_transactions: asserts=345/138
+PASS f5_recovery: asserts=119/48
+PASS f4_diagnostics: asserts=48/26
+FAIL f4_producers: G4USIM_ASSERTS=287
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_f4_producers.py", line 292, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_f4_producers.py", line 281, in main
+    model_cases()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_f4_producers.py", line 104, in model_cases
+    assert item is not None, (editor,values,code,tuple(by_code))
+           ^^^^^^^^^^^^^^^^
+AssertionError: ('physics', {'mode': 'manual'}, 'mode.unsupported', ('physics.structured.invalid',))
+ asserts=287/62
+FAIL f4_document_diagnostics: G4USIM_ASSERTS=27
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_f4_document_diagnostics.py", line 340, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_f4_document_diagnostics.py", line 330, in main
+    check_material_rows()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_f4_document_diagnostics.py", line 100, in check_material_rows
+    assert [item.location.row for item in density] == [1, 2]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+ asserts=27/100
+PASS build_identity: asserts=47/16
+PASS f1_input_provenance: asserts=36/7
+PASS f1_artifact_model: asserts=96/51
+PASS output_auto_model: asserts=3/41
+PASS merge_outputs: asserts=18/12
+PASS output_extensions: asserts=25/21
+PASS runner_contract: asserts=31/31
+PASS doc_links: asserts=11/11
+PASS platform_paths: asserts=3/3
+PASS platform_path_fixture_policy: asserts=51/13
+PASS ci_annotations: asserts=12/13
+PASS report_evidence: asserts=77/21
+PASS writer_boundary: asserts=24/7
+PASS shielding_scenario_model: asserts=93/61
+PASS shielding_analysis: asserts=113/73
+PASS effective_config_model: asserts=17/18
+PASS main_config_version_component: asserts=3/27
+PASS main_ini_migration: asserts=60/22
+FAIL config_migration: G4USIM_ASSERTS=138
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_config_migration.py", line 333, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_config_migration.py", line 324, in main
+    geometry_contract(work)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_config_migration.py", line 146, in geometry_contract
+    assert doc.round_trip_blockers  # migration cannot confer J2 editing support
+           ^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+ asserts=138/53
+PASS project_snapshot_compat: asserts=80/34
+PASS duplicate_generated_package_model: asserts=128/42
+PASS geometry_diagnostic_identity: asserts=3/4
+PASS input_provenance: asserts=14/5
+PASS effective_consumer_state: asserts=2/3
+PASS effective_receipt_view: asserts=13/45
+PASS output_provenance: asserts=46/26
+Report: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\j2-f8-56b689f\windows-static\20261102-011952-3779ed5f\report.json
+42 pass / 4 fail / 0 skip of 46 cases; assertions executed 3616 (46 cases reported counts, 0 cases asserted nothing)

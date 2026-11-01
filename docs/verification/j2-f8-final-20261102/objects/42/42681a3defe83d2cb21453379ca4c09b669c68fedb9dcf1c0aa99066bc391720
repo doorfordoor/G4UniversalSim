@@ -1,0 +1,12 @@
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\f8-layout-item-compat-independent\review.py:40: RuntimeWarning: Invalid return value in function 'QSpacerItem.layout', expected PySide6.QtWidgets.QLayout, got PySide6.QtWidgets.QSpacerItem.
+  else:api.decorate_accessibility(root)
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\f8-layout-item-compat-independent\review.py", line 48, in <module>
+    replay(mode.removeprefix('frozen-'))
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\f8-layout-item-compat-independent\review.py", line 40, in replay
+    else:api.decorate_accessibility(root)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\accessibility.py", line 80, in decorate_accessibility
+    for i in range(current.count()):
+                   ^^^^^^^^^^^^^
+AttributeError: 'PySide6.QtWidgets.QSpacerItem' object has no attribute 'count'

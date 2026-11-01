@@ -1,0 +1,52 @@
+# J2 永久Qt/K1端到端测试交付
+
+2026-11-02。只新增 `gui/smoke_tests/smoke_j2_end_to_end.py`，其他产物仅out；未改产品C++、GUI、runner或阶段状态。
+
+## 最终冻结与验证
+
+脚本SHA256：`5b112036e184afac3e97bd9c5257142b197a36c83c119f822318ec972f9b082f`。
+
+在Boolean消费修复后的两个新EXE上使用同一脚本、默认严格模式完成：
+
+| Geant4 | EXE SHA256 | C++源码指纹 | 结果 |
+| --- | --- | --- | --- |
+| 11.3.2 | 1bb85ddbbd4c9690b86f14176b1173445e106789a7d49391ed1f137c97c6bbd1 | 88c32e8c7ae6052083f975b710d91625e0bf9ed5239f86d6624b961cf3f42488 | exit0，674执行断言 |
+| 11.4.3 | eafe9aa121bbbf4d737a611ae1c57f4ca63804a387727874d20e35cd196aa82e | 同上 | exit0，674执行断言 |
+
+[双版最终收据](dual-version-final-receipt.json)，[113原始运行收据](boolean113-final/receipt.json)/[日志](boolean113-final.log)，[114原始运行收据](boolean114-final/receipt.json)/[日志](boolean114-final.log)。每个receipt包含可定位到retired-runs的archived_record_path和qt_output_archived；历史原始record内容不重写。脚本自校验开始/结束源码指纹、脚本SHA及实际EXE身份。
+
+## 永久覆盖
+
+1. 真MainWindow进入无来源blank，材料和几何文档均无已有源文件；Reload保留原编辑快照。
+2. K1真实空白初始化作构造器基线，沿现有服务apply两命名源/两敏感体候选；没有另造runner、EditSession或模拟owner。
+3. 真实Qt入口validate→generate→initialize→run，记录落盘且终态passed，正事件4个。
+4. 每个run/event在event_edep中唯一，hits都引用本轮完成事件；每个事件在Upstream与Downstream都有两个初级质子，能量10/20MeV、track集合相互关联。两次实际运行各64 hits。
+5. 实际库存确认Livermore出现、基线Standard_opt4消失；proton StepLimiter存在、两体积kernel_constructed到ActiveRegion，每个真实hit步长≤0.5mm。没有凭INI或注册调用宣称替换/region生效。
+6. Qt结果标签/结果summary和文件树有实际结果，保存/重载保留源ID、同发和无来源身份。
+7. Qt/K1离线导出，搬移到新目录；旧runs整体退役（保留证据但原路径不再存在），原项目文件也退役，再从异cwd调用包内统一replay.py generate与run。CLI实际再次完成4事件，并复核同样的hits/物理组合证据。
+
+只选无源blank代表路径；五模板普通生成仍由原smoke_j2_blank承担，不在这里重复所有模板真实运行。vacuum质子用于事件/体积/限制机制的确定性验证，不是独立辐射物理基准，也不把两个敏感体称为已校准独立探测器响应。Qt是offscreen组件，未做原生视觉验收，不争用main实窗。
+
+## runner接入（main所有权）
+
+已将最终SHA、双版收据和Case建议经native消息交main：
+
+```python
+Case('gui_j2_end_to_end', 'gui/smoke_tests/smoke_j2_end_to_end.py',
+     'integration', ('exe', 'qt'), timeout=600)
+```
+
+默认必须由runner注入G4USIM_EXE，无盘符/构建目录fallback，不缺后端skip。使用runner现有G4USIM_TEST_EVIDENCE_DIR；直接调用也可给全新 `--evidence-dir`，未指定时使用临时目录。main正式Case不要添加 `--allow-stale-backend`；该显式选项只留作本地旧EXE诊断，收据不会将不匹配源标为正式passed。
+
+本轮通过是直接assert_probe执行，不冒充已经生成统一runner完整report或严格check_report_evidence门禁。Case登记、正式矩阵及最终阶段判定由main完成。
+
+## 环境与失败证据保留
+
+114 child清空所有G4*DATA与GEANT4_DATA_DIR，仅设置已READY的 `out/i2-controlled/windows114-data/data`，PATH前置114SDK/bin；[launch收据](boolean114-launch.json)。版本与字节依据main/Cicero的 `out/collab/j2-114-data-reuse/receipt.json`（SDK逐项版本、43527项payload SHA/size、原ZIP哈希、实际114发现），没有把required_complete独作版本证明，也未重复下载/改系统环境。
+
+- baseline-01旧113 EXE缺F1，K1按unobserved拒绝；baseline-02旧114包只具有旧库存层次。二者原始证据保留，不算当前失败或通过。
+- fresh113-01已完成Qt运行后，测试误要求reference链路提供未承诺的cuts receipt。已仅修新测试，改验真实region绑定、StepLimiter和步长；不修改产品、不称它为产品cuts缺陷。
+- fresh113-02及fresh113-final在原149b源码/EXE身份通过（665/674），分别保留旧收据；它们不替代本次88c32e新字节双版结果。
+- fresh114-final在数据ready后发现源码已88c32e而旧EXE仍149b，严格启动门禁拒绝、actions为空；这是正确stale反例。新双版重建后按原冻结脚本重新通过，没有使用stale开关。
+
+并行独审结论另存：材料M01/M02密度修复已定点复核关闭，`out/collab/j2-materials-review/density-recheck.md`；几何Reload P2已独立关闭，`out/collab/j2-blank-review/reload-recheck.md`；F8原身份offscreen独审 `out/collab/f8-independent-review/review.md` 通过其组件边界，main原生label左裁切仍开放归Harvey，不被本E2E或旧offscreen结果覆盖。

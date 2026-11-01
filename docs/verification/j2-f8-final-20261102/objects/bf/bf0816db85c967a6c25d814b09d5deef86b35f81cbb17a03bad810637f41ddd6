@@ -1,0 +1,32 @@
+
+[run]
+threads = 2
+seed = 4242
+[output]
+format = csv
+[materials]
+file = C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/config/materials/material.ini
+[geometry]
+template = hierarchical
+config = C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/j2-source-physics-113-r1/test_physics_a6/retained-work/g4usim_a6_onm6v74h/case02_geometry.ini
+[physics]
+reference = FTFP_BERT
+default_cut = 1 mm
+em = option3
+[scoring]
+enabled = true
+hits = false
+event_edep = false
+edep = false
+auto_create_default_scorers = true
+[source]
+particle = gamma
+energy = 1 MeV
+position_type = point
+position = 0,0,-200 mm
+direction = +z
+[phase_space]
+volume = Plane_PV
+particles = gamma
+kill = true
+

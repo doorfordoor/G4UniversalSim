@@ -1,0 +1,56 @@
+{
+  "passed": true,
+  "scope": "minimal actual offscreen reload + real Windows8.3 alias, no full smoke/native/backend/profile",
+  "candidate_sha256": "b3fefeac58f044c99021d1caf7812fd66c8fe41bd14fb94ebcf8facf0c1cb6bd",
+  "patch_sha256": "646d69038b11b24ee59145493de3df0d33ee9f4ae36d32d28ed96e21fdb85930",
+  "AST_only_success_branch_change_proven": true,
+  "failed_literal_assert_preserved": true,
+  "patch_check_exit": 0,
+  "cases": [
+    {
+      "case": "successful_read",
+      "requested": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-geometry-path-independent\\independent geometry folder with spaces\\long sample geometry source.ini",
+      "canonical": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-geometry-path-independent\\independent geometry folder with spaces\\long sample geometry source.ini",
+      "old_literal_assert_would_pass": true,
+      "samefile": true,
+      "sha256": "7788e291ee1bff7f60135be8c756b79946d66f909a8b44d049b869f4a7d1f20b"
+    },
+    {
+      "case": "failed_read_preserves_lexical",
+      "retained": "C:\\Users\\123\\CODEX~1\\WORKTR~1\\EFFECT~1\\G4UNIV~1\\out\\collab\\J2E5C2~1\\INDEPE~1\\LONGSA~1.INI",
+      "canonical_differs": true,
+      "rows_drafts_preserved": true,
+      "generation_rejected": true
+    },
+    {
+      "case": "successful_read",
+      "requested": "C:\\Users\\123\\CODEX~1\\WORKTR~1\\EFFECT~1\\G4UNIV~1\\out\\collab\\J2E5C2~1\\INDEPE~1\\LONGSA~1.INI",
+      "canonical": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-geometry-path-independent\\independent geometry folder with spaces\\long sample geometry source.ini",
+      "old_literal_assert_would_pass": false,
+      "samefile": true,
+      "sha256": "7788e291ee1bff7f60135be8c756b79946d66f909a8b44d049b869f4a7d1f20b"
+    },
+    {
+      "case": "failed_read_preserves_lexical",
+      "retained": "C:\\Users\\123\\CODEX~1\\WORKTR~1\\EFFECT~1\\G4UNIV~1\\out\\collab\\J2E5C2~1\\INDEPE~1\\LONGSA~1.INI",
+      "canonical_differs": true,
+      "rows_drafts_preserved": true,
+      "generation_rejected": true
+    },
+    {
+      "case": "same_bytes_different_file_negative",
+      "content_equal": true,
+      "samefile": false,
+      "candidate_identity_would_reject": true
+    }
+  ],
+  "tracked_unchanged": true,
+  "source_sha256_before": {
+    "gui/smoke_tests/smoke_j2_geometry.py": "579c6a7a00a93a41570aa28357053d3009b1c2758cf005ccf6de78477fb5b671",
+    "gui/g4usim_gui/widgets/config/geometry.py": "0a4e7ec31371e39ca087cd65cca1255a5ac3d0359eee629b5c9267fbba1e4700",
+    "gui/g4usim_gui/parsers/geometry_parser.py": "ccb81da48e54bdcf76ec65c351f105ee86fc129e37101eaaf3c4f01f73e5d5cd",
+    "gui/g4usim_gui/editors/geometry_editor_model.py": "58f0e82d1508b105e45312c515a5b9b4d64511e19ade5959ff11b10b9ea2115f",
+    "tools/test_assert_probe.py": "fd6515504cdec5ab86046e53e390cb366f49ee5facbf7acbe21314943ad8568c"
+  },
+  "actual_CI_TEMP_spelling_not_proven": true
+}

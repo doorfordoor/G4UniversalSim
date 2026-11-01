@@ -1,0 +1,995 @@
+{
+  "group": "third-candidate-18c5858-static-only",
+  "status": "terminal_passed",
+  "cases": 46,
+  "assertions": 4586,
+  "launcher_exit": 0,
+  "gate_exit": 0,
+  "identity_errors": [],
+  "report_sha256": "e6f47552fb7cf2f22c491802d76f6807cb29bd63bbbf61ec55e953e73c396dd4",
+  "launch_sha256": "166fbbfbc0e1ab9b060df955d2020669767a94a92cc9ba377f18f0a33f84d49a",
+  "entries": [
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/report.json",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/report.json",
+      "object": "objects/e6/e6f47552fb7cf2f22c491802d76f6807cb29bd63bbbf61ec55e953e73c396dd4",
+      "sha256": "e6f47552fb7cf2f22c491802d76f6807cb29bd63bbbf61ec55e953e73c396dd4",
+      "bytes": 31219,
+      "role": "third_static_terminal_report",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/solid_registry.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/solid_registry.log",
+      "object": "objects/27/276e2cd0ed02d4e6b1df8091b273a00a198ea61986e89ba04dd3c9e5a4d9d721",
+      "sha256": "276e2cd0ed02d4e6b1df8091b273a00a198ea61986e89ba04dd3c9e5a4d9d721",
+      "bytes": 125,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/j2_resources.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/j2_resources.log",
+      "object": "objects/74/74911c8a6240ca1776f6a87033c842ac2bea29fc0566738ade67b168614b79a1",
+      "sha256": "74911c8a6240ca1776f6a87033c842ac2bea29fc0566738ade67b168614b79a1",
+      "bytes": 91,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/platform_install_layout.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/platform_install_layout.log",
+      "object": "objects/d5/d599e0834b7b5742ceb0aec740e1e84b4c91fdae438177729507ee28f129a0c4",
+      "sha256": "d599e0834b7b5742ceb0aec740e1e84b4c91fdae438177729507ee28f129a0c4",
+      "bytes": 88,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/frozen_startup.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/frozen_startup.log",
+      "object": "objects/54/54466222cb7269eee61bdcad8eaad88ddcc278cc65b063e351d57a40ca21d4e8",
+      "sha256": "54466222cb7269eee61bdcad8eaad88ddcc278cc65b063e351d57a40ca21d4e8",
+      "bytes": 94,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/install_plan.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/install_plan.log",
+      "object": "objects/8c/8c085410871e4b0b64f168a0329ea605632e7aa27471a5025314b877c3d05a52",
+      "sha256": "8c085410871e4b0b64f168a0329ea605632e7aa27471a5025314b877c3d05a52",
+      "bytes": 55,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/install_service.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/install_service.log",
+      "object": "objects/a1/a16b06743e52d723bc43cafff18ba615fe427c01c5c8c7580e78d7992984f146",
+      "sha256": "a16b06743e52d723bc43cafff18ba615fe427c01c5c8c7580e78d7992984f146",
+      "bytes": 54,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/run_summary_mt_observation.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/run_summary_mt_observation.log",
+      "object": "objects/98/982c789db1f2e443a888eadc521c877e1a30c4115145483d7347a1e34b8331c5",
+      "sha256": "982c789db1f2e443a888eadc521c877e1a30c4115145483d7347a1e34b8331c5",
+      "bytes": 1253,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/ci_geant4_data.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/ci_geant4_data.log",
+      "object": "objects/52/52547c7b626b7c27fdb6f7dcad49d02ac6e17caa266703ce7bb71a569eb407bb",
+      "sha256": "52547c7b626b7c27fdb6f7dcad49d02ac6e17caa266703ce7bb71a569eb407bb",
+      "bytes": 129,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/install_ci_delivery.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/install_ci_delivery.log",
+      "object": "objects/48/48cfeb6491e68e92c052a0cd4f44a76e4c8e0005b2854aa86d960e490e057aaf",
+      "sha256": "48cfeb6491e68e92c052a0cd4f44a76e4c8e0005b2854aa86d960e490e057aaf",
+      "bytes": 70,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/backend_launch.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/backend_launch.log",
+      "object": "objects/a2/a2e45d2fb1fbba67f28cd401423ace191b8959dd5bb4489dc45e044d226219bc",
+      "sha256": "a2e45d2fb1fbba67f28cd401423ace191b8959dd5bb4489dc45e044d226219bc",
+      "bytes": 132,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/k1_bundle.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/k1_bundle.log",
+      "object": "objects/db/db5c38f0ca89d6286d51d064e568597a760b4ea068d17f2375fa4e50564443b7",
+      "sha256": "db5c38f0ca89d6286d51d064e568597a760b4ea068d17f2375fa4e50564443b7",
+      "bytes": 646,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/k1_staging_alias.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/k1_staging_alias.log",
+      "object": "objects/67/67b1a8db69e1164adef1238679e90aa8b0e93c89a2e0e8eb2e079241e17b7cae",
+      "sha256": "67b1a8db69e1164adef1238679e90aa8b0e93c89a2e0e8eb2e079241e17b7cae",
+      "bytes": 313,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/i1_environment.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/i1_environment.log",
+      "object": "objects/ca/caa04d743318a537394af1091904eaab1ce2adb796c996a7db9b6cefd1f40763",
+      "sha256": "caa04d743318a537394af1091904eaab1ce2adb796c996a7db9b6cefd1f40763",
+      "bytes": 74,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/f5_source_snapshots.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/f5_source_snapshots.log",
+      "object": "objects/ac/ac21ceca4bf0bccf7fe7fcd670a9b9d6c39ea3de9864137a81f642e78248bb6c",
+      "sha256": "ac21ceca4bf0bccf7fe7fcd670a9b9d6c39ea3de9864137a81f642e78248bb6c",
+      "bytes": 103,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/f5_project_receipts.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/f5_project_receipts.log",
+      "object": "objects/1e/1e75653553dc930d64885572f0594f31536a249d26dfe4fb925ad0efedacacef",
+      "sha256": "1e75653553dc930d64885572f0594f31536a249d26dfe4fb925ad0efedacacef",
+      "bytes": 99,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/f5_transactions.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/f5_transactions.log",
+      "object": "objects/02/0201dd15aecb61667871ac1255fab1afcc1fca283932b56dfa2e0933cf84a9e4",
+      "sha256": "0201dd15aecb61667871ac1255fab1afcc1fca283932b56dfa2e0933cf84a9e4",
+      "bytes": 116,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/f5_recovery.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/f5_recovery.log",
+      "object": "objects/61/613af52fff2eb43c15ed7a78c91924e54bf7026858658e541b32f652e89e8fcb",
+      "sha256": "613af52fff2eb43c15ed7a78c91924e54bf7026858658e541b32f652e89e8fcb",
+      "bytes": 557,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/f4_diagnostics.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/f4_diagnostics.log",
+      "object": "objects/8e/8e84c9a21395ca85de684507d433f52a5cfeb3048d0fb6100a271086a8181fa9",
+      "sha256": "8e84c9a21395ca85de684507d433f52a5cfeb3048d0fb6100a271086a8181fa9",
+      "bytes": 103,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/f4_producers.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/f4_producers.log",
+      "object": "objects/55/5547efe297c3a0eac3da06f38cc43d5574ce6ab5ac582877ddd5fbd7d96cccfe",
+      "sha256": "5547efe297c3a0eac3da06f38cc43d5574ce6ab5ac582877ddd5fbd7d96cccfe",
+      "bytes": 115,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/f4_document_diagnostics.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/f4_document_diagnostics.log",
+      "object": "objects/ae/ae00dc84466ac65a918d2245c52466a82c5fbc1ff832000e7db853003c2da426",
+      "sha256": "ae00dc84466ac65a918d2245c52466a82c5fbc1ff832000e7db853003c2da426",
+      "bytes": 52,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/build_identity.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/build_identity.log",
+      "object": "objects/af/afaa448bf65a2f39ea7598c2363d1d7a5eaaa5b2753cf2a0acb71a3a0d143a71",
+      "sha256": "afaa448bf65a2f39ea7598c2363d1d7a5eaaa5b2753cf2a0acb71a3a0d143a71",
+      "bytes": 126,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/f1_input_provenance.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/f1_input_provenance.log",
+      "object": "objects/8d/8d1bfa462c6f331c333c115c755dfc46e5664d602718b75864270f71c98f50ea",
+      "sha256": "8d1bfa462c6f331c333c115c755dfc46e5664d602718b75864270f71c98f50ea",
+      "bytes": 76,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/f1_artifact_model.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/f1_artifact_model.log",
+      "object": "objects/08/0834f84d106153f19cd21e59312dfe396b9bacfcc36a939d8e45ca59b7596b07",
+      "sha256": "0834f84d106153f19cd21e59312dfe396b9bacfcc36a939d8e45ca59b7596b07",
+      "bytes": 132,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/output_auto_model.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/output_auto_model.log",
+      "object": "objects/af/af817c26a4b658e2808180cbb0447799f10340fa90a52cd438b554e0ab323a3d",
+      "sha256": "af817c26a4b658e2808180cbb0447799f10340fa90a52cd438b554e0ab323a3d",
+      "bytes": 64,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/merge_outputs.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/merge_outputs.log",
+      "object": "objects/66/66b9a1b563455abd9e61f68c310a970c64996cd50e4d343a2c4b3da700e499a9",
+      "sha256": "66b9a1b563455abd9e61f68c310a970c64996cd50e4d343a2c4b3da700e499a9",
+      "bytes": 147,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/output_extensions.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/output_extensions.log",
+      "object": "objects/56/56e904249f47f9be0e53928f7f48c5a06d662593e9f9d41ffada8e219e521791",
+      "sha256": "56e904249f47f9be0e53928f7f48c5a06d662593e9f9d41ffada8e219e521791",
+      "bytes": 45,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/runner_contract.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/runner_contract.log",
+      "object": "objects/ce/ce9ec1cce72a0433e4dae40370635401f13aa2a994d1d2db46cd0af2cf0b6e26",
+      "sha256": "ce9ec1cce72a0433e4dae40370635401f13aa2a994d1d2db46cd0af2cf0b6e26",
+      "bytes": 37,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/doc_links.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/doc_links.log",
+      "object": "objects/d1/d15d09eb84199127db4181242161c007b520bb3cc97b40dbf30da056ffe3efda",
+      "sha256": "d15d09eb84199127db4181242161c007b520bb3cc97b40dbf30da056ffe3efda",
+      "bytes": 71,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/platform_paths.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/platform_paths.log",
+      "object": "objects/f7/f7968452f96e3c1904096e43fec1bb697609f72da838170f4fa20cd46006f126",
+      "sha256": "f7968452f96e3c1904096e43fec1bb697609f72da838170f4fa20cd46006f126",
+      "bytes": 80,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/platform_path_fixture_policy.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/platform_path_fixture_policy.log",
+      "object": "objects/37/379f0547a1037dc5007153f918910021fc2212f157d0e4605c19b37961612701",
+      "sha256": "379f0547a1037dc5007153f918910021fc2212f157d0e4605c19b37961612701",
+      "bytes": 122,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/ci_annotations.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/ci_annotations.log",
+      "object": "objects/e6/e6f1720d56cf90165af33e5c8850e7e912b46b12140baccf41cc974aae9f8336",
+      "sha256": "e6f1720d56cf90165af33e5c8850e7e912b46b12140baccf41cc974aae9f8336",
+      "bytes": 42,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/report_evidence.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/report_evidence.log",
+      "object": "objects/51/51e7563874211bcddaaa5384ce34c6cea8ada5e21889c1ae92e31478efa7490e",
+      "sha256": "51e7563874211bcddaaa5384ce34c6cea8ada5e21889c1ae92e31478efa7490e",
+      "bytes": 43,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/writer_boundary.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/writer_boundary.log",
+      "object": "objects/c6/c692fbbffedc2dfb1462d91a5c50592ebd92cbb09eb02e331f2e3b35158e59c0",
+      "sha256": "c692fbbffedc2dfb1462d91a5c50592ebd92cbb09eb02e331f2e3b35158e59c0",
+      "bytes": 85,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/shielding_scenario_model.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/shielding_scenario_model.log",
+      "object": "objects/2e/2e7263c0759b3d11a04bc0f0bfdf3a42e0009761ba5505552c852c50fcf0b615",
+      "sha256": "2e7263c0759b3d11a04bc0f0bfdf3a42e0009761ba5505552c852c50fcf0b615",
+      "bytes": 138,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/shielding_analysis.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/shielding_analysis.log",
+      "object": "objects/ee/eea30185f373f1418469885b72d4577f2b2283a3a79144ec465f494817214aa8",
+      "sha256": "eea30185f373f1418469885b72d4577f2b2283a3a79144ec465f494817214aa8",
+      "bytes": 19,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/effective_config_model.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/effective_config_model.log",
+      "object": "objects/0d/0d15697820772d53853ad6ff81ab78caec5280c9c22049233e434c8de8e176db",
+      "sha256": "0d15697820772d53853ad6ff81ab78caec5280c9c22049233e434c8de8e176db",
+      "bytes": 58,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/main_config_version_component.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/main_config_version_component.log",
+      "object": "objects/7f/7fdd0a724827b7f91af0dbb33282a4c50d277a6aef2fcec17950b8bd1debef99",
+      "sha256": "7fdd0a724827b7f91af0dbb33282a4c50d277a6aef2fcec17950b8bd1debef99",
+      "bytes": 17,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/main_ini_migration.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/main_ini_migration.log",
+      "object": "objects/d6/d614f49467ed3c26847f1450093c96f8b5f7838306ff14d2736f364b27b5675c",
+      "sha256": "d614f49467ed3c26847f1450093c96f8b5f7838306ff14d2736f364b27b5675c",
+      "bytes": 54,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/config_migration.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/config_migration.log",
+      "object": "objects/d1/d193e71e82368dbbdea4ff09b27683d6968b09c279f4c79313eac29bb0bfb531",
+      "sha256": "d193e71e82368dbbdea4ff09b27683d6968b09c279f4c79313eac29bb0bfb531",
+      "bytes": 54,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/project_snapshot_compat.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/project_snapshot_compat.log",
+      "object": "objects/30/301d9504b8b00cf697859b369947561732fd6e3c71869dcd94849828c947b9d2",
+      "sha256": "301d9504b8b00cf697859b369947561732fd6e3c71869dcd94849828c947b9d2",
+      "bytes": 124,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/duplicate_generated_package_model.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/duplicate_generated_package_model.log",
+      "object": "objects/5a/5af9531995ec8eb868f6f048d10ab69810cb5aaa107f615e71c1226999017ee0",
+      "sha256": "5af9531995ec8eb868f6f048d10ab69810cb5aaa107f615e71c1226999017ee0",
+      "bytes": 86,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/geometry_diagnostic_identity.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/geometry_diagnostic_identity.log",
+      "object": "objects/98/98f5cabd0b9f4eda66e87be165f46220a0ff10faf89c682bd62f14b0ae184310",
+      "sha256": "98f5cabd0b9f4eda66e87be165f46220a0ff10faf89c682bd62f14b0ae184310",
+      "bytes": 63,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/input_provenance.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/input_provenance.log",
+      "object": "objects/76/768b631b76e4d32750e764251d71f55405983233c058ca19c222a0a73d9205a1",
+      "sha256": "768b631b76e4d32750e764251d71f55405983233c058ca19c222a0a73d9205a1",
+      "bytes": 64,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/effective_consumer_state.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/effective_consumer_state.log",
+      "object": "objects/d4/d47da3ba00a4b25a2fa3034dd314e364e3ccf4c1b1d4376bb75be2c1b3d7e031",
+      "sha256": "d47da3ba00a4b25a2fa3034dd314e364e3ccf4c1b1d4376bb75be2c1b3d7e031",
+      "bytes": 61,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/effective_receipt_view.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/effective_receipt_view.log",
+      "object": "objects/7b/7b735b89fb1ad1709d6840a0bba0cdcaf5b98cb4ee39096bd9885d7621c082da",
+      "sha256": "7b735b89fb1ad1709d6840a0bba0cdcaf5b98cb4ee39096bd9885d7621c082da",
+      "bytes": 154,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/output_provenance.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/output_provenance.log",
+      "object": "objects/8b/8b883d184d51f046d0851f43748b6e7b3b04d57be51350de109686eb7f8f29be",
+      "sha256": "8b883d184d51f046d0851f43748b6e7b3b04d57be51350de109686eb7f8f29be",
+      "bytes": 1482,
+      "role": "third_static_original_case_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/launch.json",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/launch.json",
+      "object": "objects/16/166fbbfbc0e1ab9b060df955d2020669767a94a92cc9ba377f18f0a33f84d49a",
+      "sha256": "166fbbfbc0e1ab9b060df955d2020669767a94a92cc9ba377f18f0a33f84d49a",
+      "bytes": 42443,
+      "role": "third_static_terminal_launcher_gate_receipt",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/runner.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/runner.log",
+      "object": "objects/ca/cac4815585eb1536170e8e63faeb6b3383b2cdcfcccad03b4f5b055b7e9730e5",
+      "sha256": "cac4815585eb1536170e8e63faeb6b3383b2cdcfcccad03b4f5b055b7e9730e5",
+      "bytes": 2050,
+      "role": "third_static_terminal_launcher_gate_receipt",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/j2-f8-18c5858/windows-static/strict-baseline-gate.log",
+      "logical_path": "tree/out/verification/j2-f8-18c5858/windows-static/strict-baseline-gate.log",
+      "object": "objects/24/2491c4830ae64ad7f40636196ff53e1906871859495d9c25697a886b917de15c",
+      "sha256": "2491c4830ae64ad7f40636196ff53e1906871859495d9c25697a886b917de15c",
+      "bytes": 369,
+      "role": "third_static_terminal_launcher_gate_receipt",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/report.json",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/report.json",
+      "object": "objects/5b/5b72c84e71c6e1b096ad81566c0adb5d7809fd590506dc9f37559ea8b3526c99",
+      "sha256": "5b72c84e71c6e1b096ad81566c0adb5d7809fd590506dc9f37559ea8b3526c99",
+      "bytes": 26726,
+      "role": "matching_historical_static_baseline",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/platform_install_layout.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/platform_install_layout.log",
+      "object": "objects/d5/d599e0834b7b5742ceb0aec740e1e84b4c91fdae438177729507ee28f129a0c4",
+      "sha256": "d599e0834b7b5742ceb0aec740e1e84b4c91fdae438177729507ee28f129a0c4",
+      "bytes": 88,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/frozen_startup.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/frozen_startup.log",
+      "object": "objects/54/54466222cb7269eee61bdcad8eaad88ddcc278cc65b063e351d57a40ca21d4e8",
+      "sha256": "54466222cb7269eee61bdcad8eaad88ddcc278cc65b063e351d57a40ca21d4e8",
+      "bytes": 94,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/install_plan.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/install_plan.log",
+      "object": "objects/8c/8c085410871e4b0b64f168a0329ea605632e7aa27471a5025314b877c3d05a52",
+      "sha256": "8c085410871e4b0b64f168a0329ea605632e7aa27471a5025314b877c3d05a52",
+      "bytes": 55,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/install_service.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/install_service.log",
+      "object": "objects/a1/a16b06743e52d723bc43cafff18ba615fe427c01c5c8c7580e78d7992984f146",
+      "sha256": "a16b06743e52d723bc43cafff18ba615fe427c01c5c8c7580e78d7992984f146",
+      "bytes": 54,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/run_summary_mt_observation.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/run_summary_mt_observation.log",
+      "object": "objects/78/788e648c8650e37adbac950c8fe84309ccd02e52ee5f45ab5304428d4c4cb1a3",
+      "sha256": "788e648c8650e37adbac950c8fe84309ccd02e52ee5f45ab5304428d4c4cb1a3",
+      "bytes": 1253,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/ci_geant4_data.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/ci_geant4_data.log",
+      "object": "objects/52/52547c7b626b7c27fdb6f7dcad49d02ac6e17caa266703ce7bb71a569eb407bb",
+      "sha256": "52547c7b626b7c27fdb6f7dcad49d02ac6e17caa266703ce7bb71a569eb407bb",
+      "bytes": 129,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/install_ci_delivery.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/install_ci_delivery.log",
+      "object": "objects/48/48cfeb6491e68e92c052a0cd4f44a76e4c8e0005b2854aa86d960e490e057aaf",
+      "sha256": "48cfeb6491e68e92c052a0cd4f44a76e4c8e0005b2854aa86d960e490e057aaf",
+      "bytes": 70,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/backend_launch.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/backend_launch.log",
+      "object": "objects/a2/a2e45d2fb1fbba67f28cd401423ace191b8959dd5bb4489dc45e044d226219bc",
+      "sha256": "a2e45d2fb1fbba67f28cd401423ace191b8959dd5bb4489dc45e044d226219bc",
+      "bytes": 132,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/k1_bundle.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/k1_bundle.log",
+      "object": "objects/6f/6f0ff8b1c608ff32bcee66c5f835a218ab6c275e0df7fbb73de7ee54ae265cd0",
+      "sha256": "6f0ff8b1c608ff32bcee66c5f835a218ab6c275e0df7fbb73de7ee54ae265cd0",
+      "bytes": 519,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/k1_staging_alias.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/k1_staging_alias.log",
+      "object": "objects/67/67b1a8db69e1164adef1238679e90aa8b0e93c89a2e0e8eb2e079241e17b7cae",
+      "sha256": "67b1a8db69e1164adef1238679e90aa8b0e93c89a2e0e8eb2e079241e17b7cae",
+      "bytes": 313,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/i1_environment.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/i1_environment.log",
+      "object": "objects/ca/caa04d743318a537394af1091904eaab1ce2adb796c996a7db9b6cefd1f40763",
+      "sha256": "caa04d743318a537394af1091904eaab1ce2adb796c996a7db9b6cefd1f40763",
+      "bytes": 74,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/f5_source_snapshots.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/f5_source_snapshots.log",
+      "object": "objects/ac/ac21ceca4bf0bccf7fe7fcd670a9b9d6c39ea3de9864137a81f642e78248bb6c",
+      "sha256": "ac21ceca4bf0bccf7fe7fcd670a9b9d6c39ea3de9864137a81f642e78248bb6c",
+      "bytes": 103,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/f5_project_receipts.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/f5_project_receipts.log",
+      "object": "objects/1e/1e75653553dc930d64885572f0594f31536a249d26dfe4fb925ad0efedacacef",
+      "sha256": "1e75653553dc930d64885572f0594f31536a249d26dfe4fb925ad0efedacacef",
+      "bytes": 99,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/f5_transactions.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/f5_transactions.log",
+      "object": "objects/31/31857ac40fde90151c8c98397f61d0a35d700278d1fcc011ea5dd9b0042a0ec1",
+      "sha256": "31857ac40fde90151c8c98397f61d0a35d700278d1fcc011ea5dd9b0042a0ec1",
+      "bytes": 116,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/f5_recovery.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/f5_recovery.log",
+      "object": "objects/29/29a34d12e5e711cdf3641e44e33067f1d04c447b166964719df7ad492ed7425d",
+      "sha256": "29a34d12e5e711cdf3641e44e33067f1d04c447b166964719df7ad492ed7425d",
+      "bytes": 557,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/f4_diagnostics.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/f4_diagnostics.log",
+      "object": "objects/8e/8e84c9a21395ca85de684507d433f52a5cfeb3048d0fb6100a271086a8181fa9",
+      "sha256": "8e84c9a21395ca85de684507d433f52a5cfeb3048d0fb6100a271086a8181fa9",
+      "bytes": 103,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/f4_producers.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/f4_producers.log",
+      "object": "objects/af/af8813ee0e48818180b68e3d675b194025f509af400c0cc8d53dcd466c295132",
+      "sha256": "af8813ee0e48818180b68e3d675b194025f509af400c0cc8d53dcd466c295132",
+      "bytes": 115,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/f4_document_diagnostics.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/f4_document_diagnostics.log",
+      "object": "objects/aa/aaf2d8afc6d0867fe1c691f3bd48289301a4482824b0bd7135b614b95835609e",
+      "sha256": "aaf2d8afc6d0867fe1c691f3bd48289301a4482824b0bd7135b614b95835609e",
+      "bytes": 52,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/build_identity.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/build_identity.log",
+      "object": "objects/af/afaa448bf65a2f39ea7598c2363d1d7a5eaaa5b2753cf2a0acb71a3a0d143a71",
+      "sha256": "afaa448bf65a2f39ea7598c2363d1d7a5eaaa5b2753cf2a0acb71a3a0d143a71",
+      "bytes": 126,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/f1_input_provenance.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/f1_input_provenance.log",
+      "object": "objects/8d/8d1bfa462c6f331c333c115c755dfc46e5664d602718b75864270f71c98f50ea",
+      "sha256": "8d1bfa462c6f331c333c115c755dfc46e5664d602718b75864270f71c98f50ea",
+      "bytes": 76,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/f1_artifact_model.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/f1_artifact_model.log",
+      "object": "objects/08/0834f84d106153f19cd21e59312dfe396b9bacfcc36a939d8e45ca59b7596b07",
+      "sha256": "0834f84d106153f19cd21e59312dfe396b9bacfcc36a939d8e45ca59b7596b07",
+      "bytes": 132,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/output_auto_model.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/output_auto_model.log",
+      "object": "objects/af/af817c26a4b658e2808180cbb0447799f10340fa90a52cd438b554e0ab323a3d",
+      "sha256": "af817c26a4b658e2808180cbb0447799f10340fa90a52cd438b554e0ab323a3d",
+      "bytes": 64,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/merge_outputs.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/merge_outputs.log",
+      "object": "objects/66/66b9a1b563455abd9e61f68c310a970c64996cd50e4d343a2c4b3da700e499a9",
+      "sha256": "66b9a1b563455abd9e61f68c310a970c64996cd50e4d343a2c4b3da700e499a9",
+      "bytes": 147,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/output_extensions.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/output_extensions.log",
+      "object": "objects/56/56e904249f47f9be0e53928f7f48c5a06d662593e9f9d41ffada8e219e521791",
+      "sha256": "56e904249f47f9be0e53928f7f48c5a06d662593e9f9d41ffada8e219e521791",
+      "bytes": 45,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/runner_contract.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/runner_contract.log",
+      "object": "objects/ce/ce9ec1cce72a0433e4dae40370635401f13aa2a994d1d2db46cd0af2cf0b6e26",
+      "sha256": "ce9ec1cce72a0433e4dae40370635401f13aa2a994d1d2db46cd0af2cf0b6e26",
+      "bytes": 37,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/doc_links.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/doc_links.log",
+      "object": "objects/96/96e88dbad7a5465986263ed68a225252ea49ae44931e7cf223471cc875bac4d5",
+      "sha256": "96e88dbad7a5465986263ed68a225252ea49ae44931e7cf223471cc875bac4d5",
+      "bytes": 71,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/platform_paths.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/platform_paths.log",
+      "object": "objects/17/1760e0e3b2190623d837b90ac9510644b294167651f358e9ac818c01063eb48d",
+      "sha256": "1760e0e3b2190623d837b90ac9510644b294167651f358e9ac818c01063eb48d",
+      "bytes": 80,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/platform_path_fixture_policy.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/platform_path_fixture_policy.log",
+      "object": "objects/37/379f0547a1037dc5007153f918910021fc2212f157d0e4605c19b37961612701",
+      "sha256": "379f0547a1037dc5007153f918910021fc2212f157d0e4605c19b37961612701",
+      "bytes": 122,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/ci_annotations.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/ci_annotations.log",
+      "object": "objects/e6/e6f1720d56cf90165af33e5c8850e7e912b46b12140baccf41cc974aae9f8336",
+      "sha256": "e6f1720d56cf90165af33e5c8850e7e912b46b12140baccf41cc974aae9f8336",
+      "bytes": 42,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/report_evidence.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/report_evidence.log",
+      "object": "objects/51/51e7563874211bcddaaa5384ce34c6cea8ada5e21889c1ae92e31478efa7490e",
+      "sha256": "51e7563874211bcddaaa5384ce34c6cea8ada5e21889c1ae92e31478efa7490e",
+      "bytes": 43,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/writer_boundary.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/writer_boundary.log",
+      "object": "objects/c6/c692fbbffedc2dfb1462d91a5c50592ebd92cbb09eb02e331f2e3b35158e59c0",
+      "sha256": "c692fbbffedc2dfb1462d91a5c50592ebd92cbb09eb02e331f2e3b35158e59c0",
+      "bytes": 85,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/shielding_scenario_model.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/shielding_scenario_model.log",
+      "object": "objects/36/3685730f6a35742a4fcfa40828dd6c0a710982bf4938488e2ea068e9557b051e",
+      "sha256": "3685730f6a35742a4fcfa40828dd6c0a710982bf4938488e2ea068e9557b051e",
+      "bytes": 138,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/shielding_analysis.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/shielding_analysis.log",
+      "object": "objects/ee/eea30185f373f1418469885b72d4577f2b2283a3a79144ec465f494817214aa8",
+      "sha256": "eea30185f373f1418469885b72d4577f2b2283a3a79144ec465f494817214aa8",
+      "bytes": 19,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/effective_config_model.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/effective_config_model.log",
+      "object": "objects/0d/0d15697820772d53853ad6ff81ab78caec5280c9c22049233e434c8de8e176db",
+      "sha256": "0d15697820772d53853ad6ff81ab78caec5280c9c22049233e434c8de8e176db",
+      "bytes": 58,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/main_config_version_component.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/main_config_version_component.log",
+      "object": "objects/7f/7fdd0a724827b7f91af0dbb33282a4c50d277a6aef2fcec17950b8bd1debef99",
+      "sha256": "7fdd0a724827b7f91af0dbb33282a4c50d277a6aef2fcec17950b8bd1debef99",
+      "bytes": 17,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/main_ini_migration.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/main_ini_migration.log",
+      "object": "objects/d6/d614f49467ed3c26847f1450093c96f8b5f7838306ff14d2736f364b27b5675c",
+      "sha256": "d614f49467ed3c26847f1450093c96f8b5f7838306ff14d2736f364b27b5675c",
+      "bytes": 54,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/config_migration.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/config_migration.log",
+      "object": "objects/a5/a597e2d26065ca0a07a3f0f63da34c9504e2f2d7c73764e88ccff35fac6e236b",
+      "sha256": "a597e2d26065ca0a07a3f0f63da34c9504e2f2d7c73764e88ccff35fac6e236b",
+      "bytes": 54,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/project_snapshot_compat.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/project_snapshot_compat.log",
+      "object": "objects/c7/c717ee5a4674dcb23b34fe6a5e8dc2e7e660ed7d6cd24d59701ab468eea08b1d",
+      "sha256": "c717ee5a4674dcb23b34fe6a5e8dc2e7e660ed7d6cd24d59701ab468eea08b1d",
+      "bytes": 124,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/duplicate_generated_package_model.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/duplicate_generated_package_model.log",
+      "object": "objects/5a/5af9531995ec8eb868f6f048d10ab69810cb5aaa107f615e71c1226999017ee0",
+      "sha256": "5af9531995ec8eb868f6f048d10ab69810cb5aaa107f615e71c1226999017ee0",
+      "bytes": 86,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/geometry_diagnostic_identity.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/geometry_diagnostic_identity.log",
+      "object": "objects/98/98f5cabd0b9f4eda66e87be165f46220a0ff10faf89c682bd62f14b0ae184310",
+      "sha256": "98f5cabd0b9f4eda66e87be165f46220a0ff10faf89c682bd62f14b0ae184310",
+      "bytes": 63,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/input_provenance.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/input_provenance.log",
+      "object": "objects/76/768b631b76e4d32750e764251d71f55405983233c058ca19c222a0a73d9205a1",
+      "sha256": "768b631b76e4d32750e764251d71f55405983233c058ca19c222a0a73d9205a1",
+      "bytes": 64,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/effective_consumer_state.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/effective_consumer_state.log",
+      "object": "objects/d4/d47da3ba00a4b25a2fa3034dd314e364e3ccf4c1b1d4376bb75be2c1b3d7e031",
+      "sha256": "d47da3ba00a4b25a2fa3034dd314e364e3ccf4c1b1d4376bb75be2c1b3d7e031",
+      "bytes": 61,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/effective_receipt_view.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/effective_receipt_view.log",
+      "object": "objects/7b/7b735b89fb1ad1709d6840a0bba0cdcaf5b98cb4ee39096bd9885d7621c082da",
+      "sha256": "7b735b89fb1ad1709d6840a0bba0cdcaf5b98cb4ee39096bd9885d7621c082da",
+      "bytes": 154,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    },
+    {
+      "source": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/output_provenance.log",
+      "logical_path": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/output_provenance.log",
+      "object": "objects/8b/8b883d184d51f046d0851f43748b6e7b3b04d57be51350de109686eb7f8f29be",
+      "sha256": "8b883d184d51f046d0851f43748b6e7b3b04d57be51350de109686eb7f8f29be",
+      "bytes": 1482,
+      "role": "matching_historical_static_raw_log",
+      "candidate": "18c5858",
+      "original_state_unmodified": true
+    }
+  ],
+  "kept_separate_from_2901f42_complete_300": true,
+  "other_third_profile_directories_read": false,
+  "strict_relocation_runs": [
+    {
+      "kind": "historical-baseline",
+      "exit": 0,
+      "log_sha256": "f0f54bc8d6f503630bb8086d0eefbe6e25055d819ed221af838bad8acc69715d",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows-static\\20261101-205231-c62d61cd\\report.json"
+      ]
+    },
+    {
+      "kind": "third-static-original",
+      "exit": 0,
+      "log_sha256": "a017a6752267e8a7699c492f30e6de131c0daef91ba92f6447989b3c36b1928e",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-18c5858\\windows-static\\20261102-040156-d08e6301\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows-static\\20261101-205231-c62d61cd\\report.json"
+      ]
+    }
+  ],
+  "all_logs_resolve_inside_staging": true,
+  "product_tests_or_formal_profiles_started": false
+}

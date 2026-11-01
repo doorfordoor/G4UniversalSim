@@ -1,0 +1,25 @@
+docs/collab/outbox/20261101-deepseek-j2-f8-design.md:19: broken relative link '../../../out/collab/j2-f8-design/request.json'
+docs/collab/outbox/20261101-deepseek-j2-f8-design.md:20: broken relative link '../../../out/collab/j2-f8-design/response.json'
+docs/collab/outbox/20261101-deepseek-j2-f8-design.md:21: broken relative link '../../../out/collab/j2-f8-design/deepseek-design.md'
+docs/collab/outbox/20261101-deepseek-j2-f8-design.md:22: broken relative link '../../../out/collab/j2-f8-design/request_design.py'
+docs/collab/outbox/20261101-deepseek-j2-f8-design.md:23: broken relative link '../../../out/collab/j2-f8-design/acceptance-checklist.md'
+docs/collab/outbox/20261101-deepseek-j2-f8-design.md:24: broken relative link '../../../out/collab/j2-f8-design/progress.md'
+docs/collab/outbox/20261101-deepseek-j2-f8-design.md:95: broken relative link '../../../out/collab/j2-f8-design/acceptance-checklist.md'
+doc_links: 859 relative links in 251 files, 7 broken
+G4USIM_ASSERTS=11
+Traceback (most recent call last):
+  File "D:\a\G4UniversalSim\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "D:\a\G4UniversalSim\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "D:\a\G4UniversalSim\G4UniversalSim\scripts\check_doc_links.py", line 121, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "D:\a\G4UniversalSim\G4UniversalSim\scripts\check_doc_links.py", line 116, in main
+    assert not broken, f"doc_links: {len(broken)} broken relative link(s); see the lines above"
+           ^^^^^^^^^^
+AssertionError: doc_links: 7 broken relative link(s); see the lines above

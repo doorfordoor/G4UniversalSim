@@ -1,0 +1,79 @@
+{
+  "schema": "g4usim_historical_design_evidence_v1",
+  "historical_only": true,
+  "implementation_acceptance": false,
+  "source_candidate_head": "56b689fb9ac920cbb1203b2b94dae2483d25f622",
+  "source_document": "docs/collab/outbox/20261101-deepseek-j2-f8-design.md",
+  "started_utc": "2026-11-01T15:47:10.538780+00:00",
+  "finished_utc": "2026-11-01T15:47:27.644231+00:00",
+  "http_status": 200,
+  "requested_model": "deepseek-flash",
+  "returned_model": "deepseek-flash",
+  "response_id": "71afe251-f7e3-4e72-9e69-5201ef842583",
+  "finish_reason": "stop",
+  "prompt_sha256": "1e78a46a2f243959f1075fb5341dab0d8de57766c8b858b811e8400b3521bef2",
+  "design_text_relation": "Exact choices[0].message.content plus one trailing LF",
+  "byte_scope": "Byte-identical existing request/response/design/checklist files; not a claim to original HTTP wire serialization",
+  "files": [
+    {
+      "source": "out/collab/j2-f8-design/request.json",
+      "target": "docs/collab/reviews/20261101-j2-f8-design-evidence/raw/request.json",
+      "bytes": 6380,
+      "sha256": "3b361668bb30de793b6633cb6d7b0b03f110cf1437af9721254a7b7aa2c94bc0"
+    },
+    {
+      "source": "out/collab/j2-f8-design/response.json",
+      "target": "docs/collab/reviews/20261101-j2-f8-design-evidence/raw/response.json",
+      "bytes": 10625,
+      "sha256": "adae8b6c1d7cb4a06fea71c1642b8a14c6411bad4f44aa1751f7a286f4a1658c"
+    },
+    {
+      "source": "out/collab/j2-f8-design/deepseek-design.md",
+      "target": "docs/collab/reviews/20261101-j2-f8-design-evidence/raw/deepseek-design.md",
+      "bytes": 9547,
+      "sha256": "75efee09a50983edc32f60e56af285d30d1cc462bbc7f23343aa17ecab3bbdee"
+    },
+    {
+      "source": "out/collab/j2-f8-design/acceptance-checklist.md",
+      "target": "docs/collab/reviews/20261101-j2-f8-design-evidence/raw/acceptance-checklist.md",
+      "bytes": 7619,
+      "sha256": "9dec23a2aefb6080aee688df987bbcafd7c9eb28e269e58cbb3b2527ea684c12"
+    }
+  ],
+  "excluded_local_only": [
+    {
+      "source": "out/collab/j2-f8-design/request_design.py",
+      "bytes": 7996,
+      "sha256": "4a8e471792b758315153c06c3bb99e89b411b9e9622e90d1fea7c520822c3a6a",
+      "reason": "Local credential-file locator is present; publish only relative code provenance and SHA, never its body."
+    },
+    {
+      "source": "out/collab/j2-f8-design/progress.md",
+      "bytes": 1901,
+      "sha256": "105e0278b1cedb1d3fc62206de78bf3ab38eacd1e96ccafbf7fdd070ec020459",
+      "reason": "Ephemeral resumable task state is not publication evidence; preserve only relative provenance and SHA."
+    }
+  ],
+  "privacy_scan": [
+    {
+      "file": "request.json",
+      "pattern_hits": {},
+      "credential_json_fields": []
+    },
+    {
+      "file": "response.json",
+      "pattern_hits": {},
+      "credential_json_fields": []
+    },
+    {
+      "file": "deepseek-design.md",
+      "pattern_hits": {},
+      "credential_json_fields": []
+    },
+    {
+      "file": "acceptance-checklist.md",
+      "pattern_hits": {},
+      "credential_json_fields": []
+    }
+  ]
+}

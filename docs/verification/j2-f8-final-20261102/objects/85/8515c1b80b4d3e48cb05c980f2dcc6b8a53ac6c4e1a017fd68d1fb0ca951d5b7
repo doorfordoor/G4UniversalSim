@@ -1,0 +1,213 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "Action completed."
+    }
+  ],
+  "structuredContent": {
+    "jobs": [
+      {
+        "id": 124938588150,
+        "name": "ubuntu-24.04 / Geant4 11.4.3 installation",
+        "status": "in_progress",
+        "conclusion": null,
+        "run_id": 41336912645,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Enable long paths in the Windows checkout",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 2
+          },
+          {
+            "name": "Run actions/checkout@v7",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Run actions/setup-python@v7",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Linux desktop and build prerequisites",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Install isolated packaging dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Prepare Linux Geant4 SDK and its actual datasets",
+            "status": "in_progress",
+            "conclusion": null,
+            "number": 7
+          },
+          {
+            "name": "Configure and compile Linux backend",
+            "status": "pending",
+            "conclusion": null,
+            "number": 8
+          },
+          {
+            "name": "Prepare hash-verified official Windows SDK",
+            "status": "pending",
+            "conclusion": null,
+            "number": 9
+          },
+          {
+            "name": "Configure and compile Windows backend",
+            "status": "pending",
+            "conclusion": null,
+            "number": 10
+          },
+          {
+            "name": "Linux full runtime and SDK installation lifecycle",
+            "status": "pending",
+            "conclusion": null,
+            "number": 11
+          },
+          {
+            "name": "Windows full runtime and SDK installation lifecycle",
+            "status": "pending",
+            "conclusion": null,
+            "number": 12
+          },
+          {
+            "name": "Retain actual runner and installation evidence",
+            "status": "pending",
+            "conclusion": null,
+            "number": 13
+          },
+          {
+            "name": "Post Run actions/setup-python@v7",
+            "status": "pending",
+            "conclusion": null,
+            "number": 25
+          },
+          {
+            "name": "Post Run actions/checkout@v7",
+            "status": "pending",
+            "conclusion": null,
+            "number": 26
+          }
+        ]
+      },
+      {
+        "id": 124938588360,
+        "name": "windows-latest / Geant4 11.4.3 installation",
+        "status": "in_progress",
+        "conclusion": null,
+        "run_id": 41336912645,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Enable long paths in the Windows checkout",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/checkout@v7",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Run actions/setup-python@v7",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Linux desktop and build prerequisites",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 5
+          },
+          {
+            "name": "Install isolated packaging dependencies",
+            "status": "in_progress",
+            "conclusion": null,
+            "number": 6
+          },
+          {
+            "name": "Prepare Linux Geant4 SDK and its actual datasets",
+            "status": "pending",
+            "conclusion": null,
+            "number": 7
+          },
+          {
+            "name": "Configure and compile Linux backend",
+            "status": "pending",
+            "conclusion": null,
+            "number": 8
+          },
+          {
+            "name": "Prepare hash-verified official Windows SDK",
+            "status": "pending",
+            "conclusion": null,
+            "number": 9
+          },
+          {
+            "name": "Configure and compile Windows backend",
+            "status": "pending",
+            "conclusion": null,
+            "number": 10
+          },
+          {
+            "name": "Linux full runtime and SDK installation lifecycle",
+            "status": "pending",
+            "conclusion": null,
+            "number": 11
+          },
+          {
+            "name": "Windows full runtime and SDK installation lifecycle",
+            "status": "pending",
+            "conclusion": null,
+            "number": 12
+          },
+          {
+            "name": "Retain actual runner and installation evidence",
+            "status": "pending",
+            "conclusion": null,
+            "number": 13
+          },
+          {
+            "name": "Post Run actions/setup-python@v7",
+            "status": "pending",
+            "conclusion": null,
+            "number": 25
+          },
+          {
+            "name": "Post Run actions/checkout@v7",
+            "status": "pending",
+            "conclusion": null,
+            "number": 26
+          }
+        ]
+      }
+    ]
+  },
+  "isError": false
+}

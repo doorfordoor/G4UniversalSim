@@ -1,0 +1,76 @@
+{
+  "history_trust": "stale_requires_revalidation",
+  "integrity": "sha256_not_signature",
+  "members": [
+    {
+      "bytes": 1284,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0000-main.ini",
+      "redistribution_override": false,
+      "role": "main",
+      "sha256": "c6ea69d9d32c1aa66946462aec5fb1610030bd3bba0c86f4f242d9e683500c53",
+      "source_sha256": "d1ae21dd57515dd2b349aa69109c71bd6a44e36794d25f116ef758b687a4bfdf"
+    },
+    {
+      "bytes": 77,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0001-material.ini",
+      "redistribution_override": false,
+      "role": "materials",
+      "sha256": "1f1d80c69daa3a2a0a0dc8b7f25631c3059cbf644d978704af9fa1eee6cb6a02",
+      "source_sha256": "1f1d80c69daa3a2a0a0dc8b7f25631c3059cbf644d978704af9fa1eee6cb6a02"
+    },
+    {
+      "bytes": 500,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0002-geometry.ini",
+      "redistribution_override": false,
+      "role": "geometry",
+      "sha256": "77fd03c325194e3cfe79e5de920a0f94e03a6c2e95b82fe79cb448e5c758cc3e",
+      "source_sha256": "77fd03c325194e3cfe79e5de920a0f94e03a6c2e95b82fe79cb448e5c758cc3e"
+    },
+    {
+      "bytes": 147,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0003-run.mac",
+      "redistribution_override": false,
+      "role": "macro",
+      "sha256": "9ad9383d5c386bd45621c1f1b1bf113c8c475c55aca2197cef6f844e7f2cdd02",
+      "source_sha256": "9ad9383d5c386bd45621c1f1b1bf113c8c475c55aca2197cef6f844e7f2cdd02"
+    },
+    {
+      "bytes": 11777,
+      "path": "workspace.json",
+      "role": "snapshot",
+      "sha256": "807198274402de3bb91d174ddda3000e09735bd4e64ab521031802fac7bcede3"
+    },
+    {
+      "bytes": 32906,
+      "path": "validation_records.json",
+      "role": "validation_history",
+      "sha256": "0378ed4c650f29233c43bd5bf68e7035f4e8597ba70b3af450c195b54281fac3"
+    },
+    {
+      "bytes": 329,
+      "path": "replay.py",
+      "role": "replay_entry",
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    }
+  ],
+  "outputs_included": false,
+  "replay_entry": "replay.py",
+  "replay_inputs": {
+    "config": "resources/r0000-main.ini",
+    "macro": "resources/r0003-run.mac",
+    "working_directory": "."
+  },
+  "replay_verified": false,
+  "schema": "g4usim_experiment_bundle",
+  "snapshot": "workspace.json",
+  "validation_history": "validation_records.json",
+  "version": 1
+}

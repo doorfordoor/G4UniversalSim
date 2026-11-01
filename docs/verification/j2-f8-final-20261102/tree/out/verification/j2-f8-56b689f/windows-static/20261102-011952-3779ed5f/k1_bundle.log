@@ -1,0 +1,27 @@
+PASS test_safe_environment_history
+PASS test_build_version_text
+PASS test_reference_source_urls
+PASS test_move_and_history
+PASS test_resource_kinds_and_identity
+PASS test_generated
+PASS test_refusals
+PASS test_atomic_and_tamper
+PASS test_gdml
+G4USIM_ASSERTS=523
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_k1_bundle.py", line 695, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_k1_bundle.py", line 678, in main
+    case(folder)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_k1_bundle.py", line 592, in test_independent_review_regressions
+    assert collected["snapshot"]["project"]["geometryEditor"]["round_trip_blockers"]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

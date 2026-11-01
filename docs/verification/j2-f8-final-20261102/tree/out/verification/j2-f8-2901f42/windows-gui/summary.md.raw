@@ -1,0 +1,25 @@
+# Windows GUI正式完整profile交付
+
+结论：PASS。HEAD2901f4254303c3a9089c9025717908c0d77ff190，113真实后端配套完整Dvenv，冻结launcher4f812f44506e2ea14f03ab49b223ccc0c01b8105c491feaa6dc36095e0c2e1dc。原session50264已结束exit0；原生VTK专属时段已释放并通知main，无重复进程或其他profile由本任务启动。
+
+- 66 pass / 0 fail / 0 skip，8394已执行assert，66项均非零；runner exit0。
+- 严格matching历史baseline门禁exit0：原windows-gui59case/6760，同settrace_assert_lines_v3/sha256_raw_bytes_lf_v2；原59case全部保留且逐项断言不下降，未使用allow/legacy/拼接。
+- gui_3d_view35/35，原日志无内部SKIP，真实widget拾取/拖拽/空白清除、hide/isolate/show/legend/section/cameras及页面双向选择路径完成，正常进程退出。不是仅18模型路径。
+- 本轮source54、scans58，首轮两处失败均通过；F4navigation224/layout265、J2blank29/geometry210/materials499/run_editors223/current_import208、F8 accessibility405均通过。
+- F8作者--output路径416与本runner不带--output的405相差11个可选写图assert（原3+新增8），未修改断言来降低计数；本轮405为实际v3 probe计数，不冒充416。
+- 同runner子进程env预检core.longpaths=true/status空，最终report git_dirty=false、git_status_porcelain=''，identity_errors=[]。报告HEAD/profile/C++source/tests/mergefp/路径/5build字段和首尾EXE/merge/helper/5inputs/3source指纹全匹配。
+
+核心身份：
+- EXE SHA256 ad0864cba780d66c6046cb709a2fabd43262f31c8382f50f88ccb6df5c55a137。
+- C++sourcefp 9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a。
+- tests_contentfp 385409046e46858cba6d00976d3de681affbd2f251a5e40066d5d28d38982520。
+- report SHA256 09de9901db5821230f8b83b491f9b97198e61d85d7da35b46e504f2c57a533de。
+
+证据：
+- 20261102-023116-d6e6dd42/report.json：完整新报告，原字节不追改。
+- launch.json：启动命令、环境、源码/编译产物/历史baseline身份、runner/gate退出及最终identity_errors。
+- runner.log：完整整轮控制台；20261102-023116-d6e6dd42/*.log逐项原日志。
+- strict-baseline-gate.log：严格同历史基线门禁原输出。
+- delivery-receipt.json：独立终态核对、原报告/VTK日志SHA与历史逐项计数复核。
+
+范围：本机Windows默认缩放GUI完整profile，包含明确授权的Windows原生VTK子路径。本报告不替代main后续原生手工验收或双版本backend/integration，也不重写原56b首轮64/2/dirty=true证据。全程未改tracked产品/测试/runner。

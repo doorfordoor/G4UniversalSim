@@ -1,0 +1,35 @@
+{
+  "schema": "G4UniversalSimScan",
+  "version": 1,
+  "name": "materials",
+  "parameter": "geometry.Detector.material",
+  "parameter_label": "Detector material",
+  "values": [
+    "G4_Si",
+    "G4_Ge"
+  ],
+  "scan_dir": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021151_scan_materials",
+  "created": "2026-11-02T02:11:51",
+  "threads": 2,
+  "seed": 12345,
+  "points": [
+    {
+      "index": 0,
+      "value": "G4_Si",
+      "package_dir": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021151_scan_materials\\20261102_021151_materials_p000",
+      "output_dir": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021151_scan_materials\\20261102_021151_materials_p000\\output",
+      "main_ini": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021151_scan_materials\\20261102_021151_materials_p000\\config\\main.ini",
+      "macro": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021151_scan_materials\\20261102_021151_materials_p000\\macros\\run.mac",
+      "seed": 12345
+    },
+    {
+      "index": 1,
+      "value": "G4_Ge",
+      "package_dir": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021151_scan_materials\\20261102_021151_materials_p001",
+      "output_dir": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021151_scan_materials\\20261102_021151_materials_p001\\output",
+      "main_ini": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021151_scan_materials\\20261102_021151_materials_p001\\config\\main.ini",
+      "macro": "D:\\Temp\\g4usim-scans-olgsi1t7\\20261102_021151_scan_materials\\20261102_021151_materials_p001\\macros\\run.mac",
+      "seed": 12345
+    }
+  ]
+}

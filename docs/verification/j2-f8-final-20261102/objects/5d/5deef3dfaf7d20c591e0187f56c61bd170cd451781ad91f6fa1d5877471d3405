@@ -1,0 +1,41 @@
+# J2/F8 已关闭发现与交付准备索引
+
+本索引仅引用历史报告和小型身份收据，供main最终归档。**不更新旧身份、不执行归档、不宣称新候选/正式矩阵/阶段通过。**
+
+[机器可读JSON索引](../j2-f8-review-index.json)
+
+下表的“关闭”仅指各报告记载的定点范围。源/EXE身份均来自当轮收据；Python-only专项未记录C++指纹时明确留空，不挂接9e40。
+
+| 项目 | 原报告 → fix → 独审确认 | 身份与边界 |
+|---|---|---|
+| 跨入口 EM replacement 覆盖成功 setEM | [原报告](../j2-backend-review/README.md) → [fix/收据](../j2-source-physics-implementation.md) → [独审关闭](../j2-backend-review/p1-recheck-149b25dd/README.md) | e44原反例 → **149b**双版关闭；不回填9e40。 |
+| 材料密度词法与CLHEP换算有限性 | [原报告](../j2-materials-review/review.md) → [fix/收据](../j2-materials/density-fix-identity.json) → [独审关闭](../j2-materials-review/density-recheck.md) | 原材料模型f9c027… → **f931ce…**；后端仍c2b575…/fbb7c56…，非新C++构建。 |
+| 几何模型原3项P2 | [原报告](../j2-geometry-review/README.md) → [fix/收据](../j2-geometry-p2-fix.md) → [独审关闭](../j2-geometry-review/p2-recheck/README.md) | 原r2 → 模型**58f0e8…**、smoke091cff…；独审运行身份**149b**。其后Boolean阻断另链关闭。 |
+| Boolean named fields消费与strict shape schema | [原报告](../j2-geometry-review/p2-recheck/README.md) → [fix/收据](../j2-boolean-build-identities.json) → [独审关闭](../j2-geometry-review/shape-schema-recheck.md) | **149b失败 → 88c32e实际CSG → 9e40 strict/schema独审**；113/114各30检查，不是全矩阵。 |
+| legacy source-copy、STL收据与parameterized别名 | [原报告](../j2-integration-review/README.md) → [fix/收据](../j2-resource-p2-fix/README.md) → [独审关闭](../j2-integration-review/resource-p2-final-close/README.md) | 原03fde9/c607d4 → 82时alias未闭 → **101最终关闭**（core51a5e1/daed5d，test67bf4b）。字节闭包，不是STL物理证明。 |
+| CURRENT INI导入、默认语义与最终路径聚合 | [原报告](../j2-run-editors/followup-review.md) → [fix/收据](../j2-run-editors-implementation.md) → [独审关闭](../j2-run-editors/followup-review.md) | 原报告未赋逐项P等级；followup-files.json为当轮Python身份。208入口，不是模拟证明。 |
+| 运行编辑器初始三项独审 | [原报告](../j2-run-editors/review.md) → [fix/收据](../j2-run-editors-implementation.md) → [独审关闭](../j2-run-editors/review.md) | P1单位/P2大小写碰撞/P2向量溢出；own-files.json当轮8文件，修前SHA未记录。 |
+| F8自然焦点/label完整框与向导按钮定点关闭 | [原报告](../f8-native-clipping-analysis.md) → [fix/收据](../f8-leftfix-final/handoff.md) → [独审关闭](../f8-independent-review/focus-fix-final-review.md) | 783b原身份 → 9759候选5px → 15ab定点 → **8f597最终独审**。仅offscreen自然焦点/按钮；不关闭F4layout。 |
+| 多文件phase-space闭包与顺序/重复项 | [原报告](../j2-blank-review/resource-review.md) → [fix/收据](../j2-blank-review/r01-recheck.md) → [独审关闭](../j2-blank-review/r01-recheck.md) | 原资源多路径失败 → helper **7d73e2…**等4文件独审关闭；仅路径/CLI生成校验。 |
+| 无来源Geometry Reload/Revert清空 | [原报告](../j2-blank-review/review.md) → [fix/收据](../j2-geometry-implementation.md) → [独审关闭](../j2-blank-review/reload-recheck.md) | world/KEEP清空 → widget **0a4e7e…**等当轮身份；不冒充后续main共享全验收。 |
+
+## 必须保留的开放项
+
+**F4 layout仍开放**：125%及默认缩放的stdout_view中心clip是首败；异常清理AV/recovery lock另记，不用后者覆盖首因。[失败交接](../f8-leftfix-final/handoff.md)、[原冻结/失败日志索引](../f8-leftfix-final/freeze.json)。F8 focus8f597的通过不能关闭该项。
+
+程序化setText后立即换行的采集边界仍按[共享独审](../j2-integration-review/README.md)记为未确认用户P2；真实键盘对照保留，不在此补定级或补称已修。
+
+## 原身份、首败和未覆盖范围
+
+- 详细历史文件SHA、EXE SHA、fingerprint和原收据路径均在JSON的historical_identities；它们不是当前HEAD认证。缺少的修前SHA明确标记未记录。
+- Boolean作者r1–r4、独审r1/r2和F8旧候选/首败原件全部保留。各自包含夹具预期错误或真实产品反例，按原报告区分，不能统一改称夹具错误。
+- 材料既有c2b575后端、physics/geometry149b、Boolean88c32e与9e40、F8各helper SHA分别保留。旧E2E88c32e/674不提升为9e40全量验收。
+- CURRENT恢复窗口说明和集中i18n接线由main持有；该子任务独审未代替main窗口或正式平台门禁。
+- fixture谱/相空间/场图及占位STL的字节/闭包检查不构成物理输入格式、输运分布或科学正确性证明。
+- 本次只验证索引结构和引用文件存在，没有新跑产品测试或查看native。
+
+## 归档与后续static任务
+
+当前**不归档**。最终归档仅在全部冻结矩阵完成后由main组织；[旧I2/J1脚本](../archive-i2-j1-final-candidate.py)只作策略参考，旧目的地和身份不可直接套用。未复制大证据。source-physics113r1据main说明有两份约375MB原始hits CSV；本索引不读取或计算它们的SHA。后续可记录逐文件SHA/大小/本机来源和明确遗漏，不必放入Git。
+
+Windows static完整profile首轮已结束（42 pass / 4 fail / 0 skip，3616断言，严格门禁FAIL），详见`out/verification/j2-f8-56b689f/windows-static/README.md`。已由main授权在正式候选`56b689fb9ac920cbb1203b2b94dae2483d25f622`上执行，使用113 EXE与同目录merge。报告根为`out/verification/j2-f8-56b689f/windows-static`，启用`--require-tracked-sources`/`--fail-on-skip`并与matchingWindows113-static历史baseline严格门禁。compiler为`D:/msys64/ucrt64/bin/g++.exe`。执行进度和首轮结果见该目录`execution.json`；冻结期间不改产品/测试，保留首失败，不操作main原生UI。本段仅更新执行安排，以上历史关闭身份和F4历史开放结论未重写。[历史baseline索引](../j2-f8-baselines.json)。

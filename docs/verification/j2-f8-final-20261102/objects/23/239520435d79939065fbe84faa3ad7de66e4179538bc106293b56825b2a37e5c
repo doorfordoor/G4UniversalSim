@@ -1,0 +1,32 @@
+{
+  "head": "2901f4254303c3a9089c9025717908c0d77ff190",
+  "files": [
+    {
+      "path": "gui/g4usim_gui/core/experiment_bundle.py",
+      "original_sha256": "fd94da357bfc97ffdf53ac9bd0c5c55d480087f6df226b4266449aad12ff068e",
+      "candidate_sha256": "4990d9f4439711f96aa5a5475f6f39ea3588b8c1e3fabf7e3e2eca0318a45610",
+      "original_lines": 896,
+      "candidate_lines": 916,
+      "crlf_count": 0,
+      "compile": "pass"
+    },
+    {
+      "path": "scripts/test_k1_bundle.py",
+      "original_sha256": "e825d4278bd9b59d7ff871c1f2abd39d564b0fc5591de460f784a6d28cb2fa4f",
+      "candidate_sha256": "80726fb8eeda65700169416b8a9711967ed15283ed8bbc22bbf20b42d8c216f3",
+      "original_lines": 779,
+      "candidate_lines": 882,
+      "crlf_count": 0,
+      "compile": "pass"
+    }
+  ],
+  "all_original_test_ast_preserved": true,
+  "roundtrip_exact_candidate_bytes": true,
+  "patch_sha256": "f705dc96bcfb4706e03d045a00e281c53ce0e8fe6eb9912c27579188e8a446de",
+  "checks": {
+    "--check": "",
+    "--stat": " gui/g4usim_gui/core/experiment_bundle.py |   28 +++++++-\n scripts/test_k1_bundle.py                |  105 ++++++++++++++++++++++++++++++\n 2 files changed, 128 insertions(+), 5 deletions(-)\n",
+    "--numstat": "24\t4\tgui/g4usim_gui/core/experiment_bundle.py\n104\t1\tscripts/test_k1_bundle.py\n"
+  },
+  "scope": "OUT-only patch packaging verification; tracked not applied"
+}

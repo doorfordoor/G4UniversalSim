@@ -1,0 +1,763 @@
+﻿2026-11-01T21:28:45.5047125Z Current runner version: '2.338.2'
+2026-11-01T21:28:45.5082822Z ##[group]Runner Image Provisioner
+2026-11-01T21:28:45.5084339Z Hosted Compute Agent
+2026-11-01T21:28:45.5085333Z Version: 20261021.618
+2026-11-01T21:28:45.5086343Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-11-01T21:28:45.5087771Z Build Date: 2026-10-21T00:45:21Z
+2026-11-01T21:28:45.5089029Z Worker ID: {9e55c929-1db8-475d-99c6-81fd4cb3e4fc}
+2026-11-01T21:28:45.5090487Z Region: eastus
+2026-11-01T21:28:45.5091755Z Cloud: Azure
+2026-11-01T21:28:45.5092699Z ##[endgroup]
+2026-11-01T21:28:45.5095520Z ##[group]Operating System
+2026-11-01T21:28:45.5096753Z Ubuntu
+2026-11-01T21:28:45.5097903Z 24.04.5
+2026-11-01T21:28:45.5098883Z LTS
+2026-11-01T21:28:45.5099846Z ##[endgroup]
+2026-11-01T21:28:45.5100875Z ##[group]Runner Image
+2026-11-01T21:28:45.5102242Z Image: ubuntu-24.04
+2026-11-01T21:28:45.5103522Z Version: 20261025.353.1
+2026-11-01T21:28:45.5105954Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261025.353/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-01T21:28:45.5108966Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261025.353
+2026-11-01T21:28:45.5110937Z ##[endgroup]
+2026-11-01T21:28:45.5113362Z ##[group]GITHUB_TOKEN Permissions
+2026-11-01T21:28:45.5116184Z Contents: read
+2026-11-01T21:28:45.5117193Z Metadata: read
+2026-11-01T21:28:45.5118348Z ##[endgroup]
+2026-11-01T21:28:45.5122312Z Secret source: Actions
+2026-11-01T21:28:45.5124003Z Cache mode: write
+2026-11-01T21:28:45.5125566Z Prepare workflow directory
+2026-11-01T21:28:45.5600173Z Prepare all required actions
+2026-11-01T21:28:45.5648084Z Getting action download info
+2026-11-01T21:28:45.7164231Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-11-01T21:28:45.8358673Z Download action repository 'actions/setup-python@v7' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+2026-11-01T21:28:46.0072688Z Download action repository 'actions/upload-artifact@v6' (SHA:b7c566a772e6b6bfb58ed0dc250532a479d7789f)
+2026-11-01T21:28:46.3053473Z Complete job name: ubuntu-24.04 / frozen desktop and ROOT helper
+2026-11-01T21:28:46.4263477Z ##[group]Run actions/checkout@v7
+2026-11-01T21:28:46.4264878Z with:
+2026-11-01T21:28:46.4265668Z   repository: doorfordoor/G4UniversalSim
+2026-11-01T21:28:46.4275237Z   token: ***
+2026-11-01T21:28:46.4275965Z   ssh-strict: true
+2026-11-01T21:28:46.4276712Z   ssh-user: git
+2026-11-01T21:28:46.4277468Z   persist-credentials: true
+2026-11-01T21:28:46.4278313Z   clean: true
+2026-11-01T21:28:46.4279074Z   sparse-checkout-cone-mode: true
+2026-11-01T21:28:46.4279993Z   fetch-depth: 1
+2026-11-01T21:28:46.4280724Z   fetch-tags: false
+2026-11-01T21:28:46.4282026Z   show-progress: true
+2026-11-01T21:28:46.4282821Z   lfs: false
+2026-11-01T21:28:46.4283558Z   submodules: false
+2026-11-01T21:28:46.4284345Z   set-safe-directory: true
+2026-11-01T21:28:46.4285237Z   allow-unsafe-pr-checkout: false
+2026-11-01T21:28:46.4286471Z ##[endgroup]
+2026-11-01T21:28:46.7093814Z Syncing repository: doorfordoor/G4UniversalSim
+2026-11-01T21:28:46.7097649Z ##[group]Getting Git version info
+2026-11-01T21:28:46.7099391Z Working directory is '/home/runner/work/G4UniversalSim/G4UniversalSim'
+2026-11-01T21:28:46.7102309Z [command]/usr/bin/git version
+2026-11-01T21:28:46.7188848Z git version 2.56.0
+2026-11-01T21:28:46.7220320Z ##[endgroup]
+2026-11-01T21:28:46.7228760Z Temporarily overriding HOME='/home/runner/work/_temp/0f12afc8-e455-41dc-933a-3517a337ea47' before making global git config changes
+2026-11-01T21:28:46.7233278Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-01T21:28:46.7242700Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/G4UniversalSim/G4UniversalSim
+2026-11-01T21:28:46.7296854Z Deleting the contents of '/home/runner/work/G4UniversalSim/G4UniversalSim'
+2026-11-01T21:28:46.7300647Z ##[group]Determining repository object format
+2026-11-01T21:28:46.7304238Z ##[endgroup]
+2026-11-01T21:28:46.7306627Z ##[group]Initializing the repository
+2026-11-01T21:28:46.7309535Z [command]/usr/bin/git init /home/runner/work/G4UniversalSim/G4UniversalSim
+2026-11-01T21:28:46.7432599Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-01T21:28:46.7435447Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-01T21:28:46.7437815Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-01T21:28:46.7440120Z hint: call:
+2026-11-01T21:28:46.7441509Z hint:
+2026-11-01T21:28:46.7442957Z hint: 	git config --global init.defaultBranch <name>
+2026-11-01T21:28:46.7444234Z hint:
+2026-11-01T21:28:46.7445441Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-01T21:28:46.7448105Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-01T21:28:46.7449507Z hint:
+2026-11-01T21:28:46.7450200Z hint: 	git branch -m <name>
+2026-11-01T21:28:46.7450986Z hint:
+2026-11-01T21:28:46.7452416Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-01T21:28:46.7455336Z Initialized empty Git repository in /home/runner/work/G4UniversalSim/G4UniversalSim/.git/
+2026-11-01T21:28:46.7458574Z [command]/usr/bin/git remote add origin https://github.com/doorfordoor/G4UniversalSim
+2026-11-01T21:28:46.7514381Z ##[endgroup]
+2026-11-01T21:28:46.7516474Z ##[group]Disabling automatic garbage collection
+2026-11-01T21:28:46.7518723Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-01T21:28:46.7558734Z ##[endgroup]
+2026-11-01T21:28:46.7561411Z ##[group]Setting up auth
+2026-11-01T21:28:46.7562954Z Removing SSH command configuration
+2026-11-01T21:28:46.7567055Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-01T21:28:46.7612711Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-01T21:28:46.8077334Z Removing HTTP extra header
+2026-11-01T21:28:46.8083597Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-01T21:28:46.8133251Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-01T21:28:46.8375835Z Removing includeIf entries pointing to credentials config files
+2026-11-01T21:28:46.8380519Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-01T21:28:46.8437718Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-01T21:28:46.8686589Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-7f36e0c4-f59a-4eff-821f-5fa85b4c0bcb.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-01T21:28:46.8738428Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git.path /home/runner/work/_temp/git-credentials-7f36e0c4-f59a-4eff-821f-5fa85b4c0bcb.config
+2026-11-01T21:28:46.8782085Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-7f36e0c4-f59a-4eff-821f-5fa85b4c0bcb.config
+2026-11-01T21:28:46.8837241Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-7f36e0c4-f59a-4eff-821f-5fa85b4c0bcb.config
+2026-11-01T21:28:46.8880742Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-7f36e0c4-f59a-4eff-821f-5fa85b4c0bcb.config
+2026-11-01T21:28:46.8922064Z ##[endgroup]
+2026-11-01T21:28:46.8923414Z ##[group]Fetching the repository
+2026-11-01T21:28:46.8929360Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8:refs/remotes/origin/roadmap/J2-F8-editing
+2026-11-01T21:28:54.4966059Z From https://github.com/doorfordoor/G4UniversalSim
+2026-11-01T21:28:54.4968700Z  * [new ref]         2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8 -> origin/roadmap/J2-F8-editing
+2026-11-01T21:28:54.4975984Z [command]/usr/bin/git branch --list --remote origin/roadmap/J2-F8-editing
+2026-11-01T21:28:54.5016755Z   origin/roadmap/J2-F8-editing
+2026-11-01T21:28:54.5026432Z [command]/usr/bin/git rev-parse refs/remotes/origin/roadmap/J2-F8-editing
+2026-11-01T21:28:54.5062587Z 2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8
+2026-11-01T21:28:54.5067921Z ##[endgroup]
+2026-11-01T21:28:54.5069306Z ##[group]Determining the checkout info
+2026-11-01T21:28:54.5070867Z ##[endgroup]
+2026-11-01T21:28:54.5074018Z [command]/usr/bin/git sparse-checkout disable
+2026-11-01T21:28:54.5139633Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-01T21:28:54.5184975Z ##[group]Checking out the ref
+2026-11-01T21:28:54.5188989Z [command]/usr/bin/git checkout --progress --force -B roadmap/J2-F8-editing refs/remotes/origin/roadmap/J2-F8-editing
+2026-11-01T21:28:56.1867041Z Updating files:  57% (12162/21318)
+2026-11-01T21:28:56.2201002Z Updating files:  58% (12365/21318)
+2026-11-01T21:28:56.4241823Z Updating files:  59% (12578/21318)
+2026-11-01T21:28:56.4312544Z Updating files:  60% (12791/21318)
+2026-11-01T21:28:56.4555549Z Updating files:  61% (13004/21318)
+2026-11-01T21:28:56.5026463Z Updating files:  62% (13218/21318)
+2026-11-01T21:28:56.5094933Z Updating files:  63% (13431/21318)
+2026-11-01T21:28:56.5163771Z Updating files:  64% (13644/21318)
+2026-11-01T21:28:56.5426679Z Updating files:  65% (13857/21318)
+2026-11-01T21:28:56.5485848Z Updating files:  65% (14006/21318)
+2026-11-01T21:28:56.5754024Z Updating files:  66% (14070/21318)
+2026-11-01T21:28:56.5960285Z Updating files:  67% (14284/21318)
+2026-11-01T21:28:56.6888638Z Updating files:  68% (14497/21318)
+2026-11-01T21:28:56.7007566Z Updating files:  69% (14710/21318)
+2026-11-01T21:28:56.7080673Z Updating files:  70% (14923/21318)
+2026-11-01T21:28:56.7646463Z Updating files:  71% (15136/21318)
+2026-11-01T21:28:56.8009053Z Updating files:  72% (15349/21318)
+2026-11-01T21:28:56.8224546Z Updating files:  73% (15563/21318)
+2026-11-01T21:28:56.9399899Z Updating files:  74% (15776/21318)
+2026-11-01T21:28:56.9579937Z Updating files:  75% (15989/21318)
+2026-11-01T21:28:56.9592544Z Updating files:  76% (16202/21318)
+2026-11-01T21:28:57.0305129Z Updating files:  77% (16415/21318)
+2026-11-01T21:28:57.0547421Z Updating files:  78% (16629/21318)
+2026-11-01T21:28:57.0642881Z Updating files:  79% (16842/21318)
+2026-11-01T21:28:57.0839047Z Updating files:  80% (17055/21318)
+2026-11-01T21:28:57.0936924Z Updating files:  81% (17268/21318)
+2026-11-01T21:28:57.1009018Z Updating files:  82% (17481/21318)
+2026-11-01T21:28:57.1088453Z Updating files:  83% (17694/21318)
+2026-11-01T21:28:57.1165942Z Updating files:  84% (17908/21318)
+2026-11-01T21:28:57.1236324Z Updating files:  85% (18121/21318)
+2026-11-01T21:28:57.1337921Z Updating files:  86% (18334/21318)
+2026-11-01T21:28:57.1423733Z Updating files:  87% (18547/21318)
+2026-11-01T21:28:57.1527278Z Updating files:  88% (18760/21318)
+2026-11-01T21:28:57.1652611Z Updating files:  89% (18974/21318)
+2026-11-01T21:28:57.1729701Z Updating files:  90% (19187/21318)
+2026-11-01T21:28:57.1806410Z Updating files:  91% (19400/21318)
+2026-11-01T21:28:57.1879899Z Updating files:  92% (19613/21318)
+2026-11-01T21:28:57.1947604Z Updating files:  93% (19826/21318)
+2026-11-01T21:28:57.2017042Z Updating files:  94% (20039/21318)
+2026-11-01T21:28:57.2085088Z Updating files:  95% (20253/21318)
+2026-11-01T21:28:57.2288942Z Updating files:  96% (20466/21318)
+2026-11-01T21:28:57.2430434Z Updating files:  97% (20679/21318)
+2026-11-01T21:28:57.2559623Z Updating files:  98% (20892/21318)
+2026-11-01T21:28:57.2723286Z Updating files:  99% (21105/21318)
+2026-11-01T21:28:57.2723899Z Updating files: 100% (21318/21318)
+2026-11-01T21:28:57.2724428Z Updating files: 100% (21318/21318), done.
+2026-11-01T21:28:57.2964414Z Switched to a new branch 'roadmap/J2-F8-editing'
+2026-11-01T21:28:57.2971057Z branch 'roadmap/J2-F8-editing' set up to track 'origin/roadmap/J2-F8-editing'.
+2026-11-01T21:28:57.3118696Z ##[endgroup]
+2026-11-01T21:28:57.3186357Z [command]/usr/bin/git log -1 --format=%H
+2026-11-01T21:28:57.3227891Z 2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8
+2026-11-01T21:28:57.3515882Z ##[group]Run actions/setup-python@v7
+2026-11-01T21:28:57.3516204Z with:
+2026-11-01T21:28:57.3516414Z   python-version: 3.11
+2026-11-01T21:28:57.3516662Z   check-latest: false
+2026-11-01T21:28:57.3519178Z   token: ***
+2026-11-01T21:28:57.3519504Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+2026-11-01T21:28:57.3519903Z   update-environment: true
+2026-11-01T21:28:57.3520153Z   allow-prereleases: false
+2026-11-01T21:28:57.3520384Z   freethreaded: false
+2026-11-01T21:28:57.3520614Z ##[endgroup]
+2026-11-01T21:28:57.4701450Z ##[group]Installed versions
+2026-11-01T21:28:57.4815805Z Successfully set up CPython (3.11.17)
+2026-11-01T21:28:57.4816938Z ##[endgroup]
+2026-11-01T21:28:57.4977399Z ##[group]Run sudo apt-get update
+2026-11-01T21:28:57.4977811Z [36;1msudo apt-get update[0m
+2026-11-01T21:28:57.4978912Z [36;1msudo apt-get install --yes --no-install-recommends libegl1 libgl1 libopengl0 libxkbcommon0 libdbus-1-3 libfontconfig1 libxcb-cursor0 libxcb-icccm4 libxcb-keysyms1 libxcb-shape0 libxcb-xkb1 libxkbcommon-x11-0 xvfb xauth patchelf fonts-noto-cjk[0m
+2026-11-01T21:28:57.5015777Z shell: /usr/bin/bash -e {0}
+2026-11-01T21:28:57.5016049Z env:
+2026-11-01T21:28:57.5016334Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:28:57.5016820Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-11-01T21:28:57.5017281Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:28:57.5017689Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:28:57.5018103Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:28:57.5018579Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-11-01T21:28:57.5018925Z ##[endgroup]
+2026-11-01T21:28:57.5891131Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-11-01T21:28:57.6143475Z Get:6 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+2026-11-01T21:28:57.6252683Z Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+2026-11-01T21:28:57.6266751Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2026-11-01T21:28:57.6352360Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2026-11-01T21:28:57.6356178Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+2026-11-01T21:28:57.6975984Z Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [682 kB]
+2026-11-01T21:28:57.7222248Z Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [617 kB]
+2026-11-01T21:28:57.8160371Z Get:9 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1408 kB]
+2026-11-01T21:28:57.8258217Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [311 kB]
+2026-11-01T21:28:57.8285090Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1707 kB]
+2026-11-01T21:28:57.8380538Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [343 kB]
+2026-11-01T21:28:57.8411015Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [1813 kB]
+2026-11-01T21:28:57.8512783Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [412 kB]
+2026-11-01T21:28:57.8536956Z Get:15 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [14.3 kB]
+2026-11-01T21:28:57.9288764Z Get:16 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Packages [1146 kB]
+2026-11-01T21:28:57.9354763Z Get:17 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [231 kB]
+2026-11-01T21:28:57.9376577Z Get:18 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1223 kB]
+2026-11-01T21:28:57.9876929Z Get:19 http://azure.archive.ubuntu.com/ubuntu noble-security/universe Translation-en [246 kB]
+2026-11-01T21:29:01.0621888Z Fetched 10.5 MB in 1s (9579 kB/s)
+2026-11-01T21:29:02.1491560Z Reading package lists...
+2026-11-01T21:29:02.1885666Z Reading package lists...
+2026-11-01T21:29:02.4041089Z Building dependency tree...
+2026-11-01T21:29:02.4048312Z Reading state information...
+2026-11-01T21:29:02.5500808Z libgl1 is already the newest version (1.7.0-1build1).
+2026-11-01T21:29:02.5502069Z libgl1 set to manually installed.
+2026-11-01T21:29:02.5503054Z libxkbcommon0 is already the newest version (1.6.0-1build1).
+2026-11-01T21:29:02.5504149Z libxkbcommon0 set to manually installed.
+2026-11-01T21:29:02.5505191Z libdbus-1-3 is already the newest version (1.14.10-4ubuntu4.1).
+2026-11-01T21:29:02.5506288Z libdbus-1-3 set to manually installed.
+2026-11-01T21:29:02.5507882Z libfontconfig1 is already the newest version (2.15.0-1.1ubuntu2).
+2026-11-01T21:29:02.5508591Z libfontconfig1 set to manually installed.
+2026-11-01T21:29:02.5509195Z xvfb is already the newest version (2:21.1.12-1ubuntu1.9).
+2026-11-01T21:29:02.5509849Z xauth is already the newest version (1:1.1.2-1build1).
+2026-11-01T21:29:02.5510442Z xauth set to manually installed.
+2026-11-01T21:29:02.5510994Z patchelf is already the newest version (0.18.0-1.1build1).
+2026-11-01T21:29:02.5512610Z The following additional packages will be installed:
+2026-11-01T21:29:02.5513791Z   libegl-mesa0 libxcb-image0 libxcb-render-util0 libxcb-util1
+2026-11-01T21:29:02.5514821Z Suggested packages:
+2026-11-01T21:29:02.5515456Z   fonts-noto-cjk-extra
+2026-11-01T21:29:02.5730048Z The following NEW packages will be installed:
+2026-11-01T21:29:02.5734565Z   fonts-noto-cjk libegl-mesa0 libegl1 libopengl0 libxcb-cursor0 libxcb-icccm4
+2026-11-01T21:29:02.5735483Z   libxcb-image0 libxcb-keysyms1 libxcb-render-util0 libxcb-shape0 libxcb-util1
+2026-11-01T21:29:02.5737050Z   libxcb-xkb1 libxkbcommon-x11-0
+2026-11-01T21:29:02.5947555Z 0 upgraded, 13 newly installed, 0 to remove and 6 not upgraded.
+2026-11-01T21:29:02.5948487Z Need to get 61.5 MB of archives.
+2026-11-01T21:29:02.5949340Z After this operation, 94.4 MB of additional disk space will be used.
+2026-11-01T21:29:02.5950334Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-11-01T21:29:02.6288186Z Get:2 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 fonts-noto-cjk all 1:20230817+repack1-3 [61.2 MB]
+2026-11-01T21:29:02.9984567Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libegl-mesa0 amd64 25.2.8-0ubuntu0.24.04.4 [117 kB]
+2026-11-01T21:29:03.0133979Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-shape0 amd64 1.15-1ubuntu2 [6100 B]
+2026-11-01T21:29:03.0280104Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-xkb1 amd64 1.15-1ubuntu2 [32.3 kB]
+2026-11-01T21:29:03.0426711Z Get:6 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libxkbcommon-x11-0 amd64 1.6.0-1build1 [14.5 kB]
+2026-11-01T21:29:03.0573771Z Get:7 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libegl1 amd64 1.7.0-1build1 [28.7 kB]
+2026-11-01T21:29:03.0722333Z Get:8 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libopengl0 amd64 1.7.0-1build1 [32.8 kB]
+2026-11-01T21:29:03.0870618Z Get:9 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-util1 amd64 0.4.0-1build3 [10.7 kB]
+2026-11-01T21:29:03.1014906Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-image0 amd64 0.4.0-2build1 [10.8 kB]
+2026-11-01T21:29:03.1159723Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-render-util0 amd64 0.3.9-1build4 [9608 B]
+2026-11-01T21:29:03.1304033Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libxcb-cursor0 amd64 0.1.4-1build1 [10.7 kB]
+2026-11-01T21:29:03.1448823Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-icccm4 amd64 0.4.1-1.1build3 [10.8 kB]
+2026-11-01T21:29:03.1594024Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-keysyms1 amd64 0.4.0-1build4 [7956 B]
+2026-11-01T21:29:03.4348291Z Fetched 61.5 MB in 1s (106 MB/s)
+2026-11-01T21:29:03.4600267Z Selecting previously unselected package fonts-noto-cjk.
+2026-11-01T21:29:03.4954185Z (Reading database ... 
+2026-11-01T21:29:03.4954860Z (Reading database ... 5%
+2026-11-01T21:29:03.4955609Z (Reading database ... 10%
+2026-11-01T21:29:03.4956192Z (Reading database ... 15%
+2026-11-01T21:29:03.4956812Z (Reading database ... 20%
+2026-11-01T21:29:03.4957383Z (Reading database ... 25%
+2026-11-01T21:29:03.4957916Z (Reading database ... 30%
+2026-11-01T21:29:03.4958492Z (Reading database ... 35%
+2026-11-01T21:29:03.4959085Z (Reading database ... 40%
+2026-11-01T21:29:03.4959672Z (Reading database ... 45%
+2026-11-01T21:29:03.4960024Z (Reading database ... 50%
+2026-11-01T21:29:03.5002081Z (Reading database ... 55%
+2026-11-01T21:29:03.6817018Z (Reading database ... 60%
+2026-11-01T21:29:03.8326602Z (Reading database ... 65%
+2026-11-01T21:29:04.0753966Z (Reading database ... 70%
+2026-11-01T21:29:04.2822598Z (Reading database ... 75%
+2026-11-01T21:29:04.4248605Z (Reading database ... 80%
+2026-11-01T21:29:04.5820150Z (Reading database ... 85%
+2026-11-01T21:29:04.7260265Z (Reading database ... 90%
+2026-11-01T21:29:04.9382889Z (Reading database ... 95%
+2026-11-01T21:29:04.9383660Z (Reading database ... 100%
+2026-11-01T21:29:04.9384337Z (Reading database ... 215504 files and directories currently installed.)
+2026-11-01T21:29:04.9438448Z Preparing to unpack .../00-fonts-noto-cjk_1%3a20230817+repack1-3_all.deb ...
+2026-11-01T21:29:04.9548951Z Unpacking fonts-noto-cjk (1:20230817+repack1-3) ...
+2026-11-01T21:29:05.4044050Z Selecting previously unselected package libegl-mesa0:amd64.
+2026-11-01T21:29:05.4187930Z Preparing to unpack .../01-libegl-mesa0_25.2.8-0ubuntu0.24.04.4_amd64.deb ...
+2026-11-01T21:29:05.4207844Z Unpacking libegl-mesa0:amd64 (25.2.8-0ubuntu0.24.04.4) ...
+2026-11-01T21:29:05.4482023Z Selecting previously unselected package libxcb-shape0:amd64.
+2026-11-01T21:29:05.4628007Z Preparing to unpack .../02-libxcb-shape0_1.15-1ubuntu2_amd64.deb ...
+2026-11-01T21:29:05.4636572Z Unpacking libxcb-shape0:amd64 (1.15-1ubuntu2) ...
+2026-11-01T21:29:05.4891128Z Selecting previously unselected package libxcb-xkb1:amd64.
+2026-11-01T21:29:05.5035932Z Preparing to unpack .../03-libxcb-xkb1_1.15-1ubuntu2_amd64.deb ...
+2026-11-01T21:29:05.5045496Z Unpacking libxcb-xkb1:amd64 (1.15-1ubuntu2) ...
+2026-11-01T21:29:05.5298661Z Selecting previously unselected package libxkbcommon-x11-0:amd64.
+2026-11-01T21:29:05.5442987Z Preparing to unpack .../04-libxkbcommon-x11-0_1.6.0-1build1_amd64.deb ...
+2026-11-01T21:29:05.5451111Z Unpacking libxkbcommon-x11-0:amd64 (1.6.0-1build1) ...
+2026-11-01T21:29:05.5741575Z Selecting previously unselected package libegl1:amd64.
+2026-11-01T21:29:05.5883726Z Preparing to unpack .../05-libegl1_1.7.0-1build1_amd64.deb ...
+2026-11-01T21:29:05.5893289Z Unpacking libegl1:amd64 (1.7.0-1build1) ...
+2026-11-01T21:29:05.6136648Z Selecting previously unselected package libopengl0:amd64.
+2026-11-01T21:29:05.6281413Z Preparing to unpack .../06-libopengl0_1.7.0-1build1_amd64.deb ...
+2026-11-01T21:29:05.6290386Z Unpacking libopengl0:amd64 (1.7.0-1build1) ...
+2026-11-01T21:29:05.6536276Z Selecting previously unselected package libxcb-util1:amd64.
+2026-11-01T21:29:05.6678417Z Preparing to unpack .../07-libxcb-util1_0.4.0-1build3_amd64.deb ...
+2026-11-01T21:29:05.6689288Z Unpacking libxcb-util1:amd64 (0.4.0-1build3) ...
+2026-11-01T21:29:05.6945141Z Selecting previously unselected package libxcb-image0:amd64.
+2026-11-01T21:29:05.7090044Z Preparing to unpack .../08-libxcb-image0_0.4.0-2build1_amd64.deb ...
+2026-11-01T21:29:05.7097905Z Unpacking libxcb-image0:amd64 (0.4.0-2build1) ...
+2026-11-01T21:29:05.7334081Z Selecting previously unselected package libxcb-render-util0:amd64.
+2026-11-01T21:29:05.7477187Z Preparing to unpack .../09-libxcb-render-util0_0.3.9-1build4_amd64.deb ...
+2026-11-01T21:29:05.7485977Z Unpacking libxcb-render-util0:amd64 (0.3.9-1build4) ...
+2026-11-01T21:29:05.7728996Z Selecting previously unselected package libxcb-cursor0:amd64.
+2026-11-01T21:29:05.7871719Z Preparing to unpack .../10-libxcb-cursor0_0.1.4-1build1_amd64.deb ...
+2026-11-01T21:29:05.7880175Z Unpacking libxcb-cursor0:amd64 (0.1.4-1build1) ...
+2026-11-01T21:29:05.8121590Z Selecting previously unselected package libxcb-icccm4:amd64.
+2026-11-01T21:29:05.8267712Z Preparing to unpack .../11-libxcb-icccm4_0.4.1-1.1build3_amd64.deb ...
+2026-11-01T21:29:05.8282450Z Unpacking libxcb-icccm4:amd64 (0.4.1-1.1build3) ...
+2026-11-01T21:29:05.8538257Z Selecting previously unselected package libxcb-keysyms1:amd64.
+2026-11-01T21:29:05.8688280Z Preparing to unpack .../12-libxcb-keysyms1_0.4.0-1build4_amd64.deb ...
+2026-11-01T21:29:05.8695575Z Unpacking libxcb-keysyms1:amd64 (0.4.0-1build4) ...
+2026-11-01T21:29:05.9152151Z Setting up fonts-noto-cjk (1:20230817+repack1-3) ...
+2026-11-01T21:29:05.9223752Z Setting up libxcb-keysyms1:amd64 (0.4.0-1build4) ...
+2026-11-01T21:29:05.9246252Z Setting up libxcb-shape0:amd64 (1.15-1ubuntu2) ...
+2026-11-01T21:29:05.9265801Z Setting up libxcb-render-util0:amd64 (0.3.9-1build4) ...
+2026-11-01T21:29:05.9295601Z Setting up libxcb-icccm4:amd64 (0.4.1-1.1build3) ...
+2026-11-01T21:29:05.9318118Z Setting up libopengl0:amd64 (1.7.0-1build1) ...
+2026-11-01T21:29:05.9339688Z Setting up libxcb-util1:amd64 (0.4.0-1build3) ...
+2026-11-01T21:29:05.9361419Z Setting up libxcb-xkb1:amd64 (1.15-1ubuntu2) ...
+2026-11-01T21:29:05.9381485Z Setting up libxcb-image0:amd64 (0.4.0-2build1) ...
+2026-11-01T21:29:05.9401813Z Setting up libegl-mesa0:amd64 (25.2.8-0ubuntu0.24.04.4) ...
+2026-11-01T21:29:05.9421608Z Setting up libxcb-cursor0:amd64 (0.1.4-1build1) ...
+2026-11-01T21:29:05.9445301Z Setting up libxkbcommon-x11-0:amd64 (1.6.0-1build1) ...
+2026-11-01T21:29:05.9467162Z Setting up libegl1:amd64 (1.7.0-1build1) ...
+2026-11-01T21:29:05.9493756Z Processing triggers for libc-bin (2.39-0ubuntu8.9) ...
+2026-11-01T21:29:06.0180813Z Processing triggers for fontconfig (2.15.0-1.1ubuntu2) ...
+2026-11-01T21:29:06.8894826Z 
+2026-11-01T21:29:06.8895468Z Running kernel seems to be up-to-date.
+2026-11-01T21:29:06.8896104Z 
+2026-11-01T21:29:06.8896404Z No services need to be restarted.
+2026-11-01T21:29:06.8896921Z 
+2026-11-01T21:29:06.8897125Z No containers need to be restarted.
+2026-11-01T21:29:06.8897448Z 
+2026-11-01T21:29:06.8897672Z No user sessions are running outdated binaries.
+2026-11-01T21:29:06.8898050Z 
+2026-11-01T21:29:06.8898394Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2026-11-01T21:29:07.8272672Z ##[group]Run python -m pip install -r gui/requirements.txt -r gui/requirements-3d.txt pyinstaller
+2026-11-01T21:29:07.8273547Z [36;1mpython -m pip install -r gui/requirements.txt -r gui/requirements-3d.txt pyinstaller[0m
+2026-11-01T21:29:07.8294509Z shell: /usr/bin/bash -e {0}
+2026-11-01T21:29:07.8294783Z env:
+2026-11-01T21:29:07.8295074Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:29:07.8295581Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-11-01T21:29:07.8296068Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:29:07.8296490Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:29:07.8296908Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:29:07.8297345Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-11-01T21:29:07.8297725Z ##[endgroup]
+2026-11-01T21:29:10.8308798Z Collecting pyinstaller
+2026-11-01T21:29:10.9230150Z   Downloading pyinstaller-6.22.3-py3-none-manylinux2014_x86_64.whl.metadata (8.5 kB)
+2026-11-01T21:29:11.0373095Z Collecting PySide6<6.12,>=6.11.1 (from -r gui/requirements.txt (line 4))
+2026-11-01T21:29:11.0558082Z   Downloading pyside6-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (5.2 kB)
+2026-11-01T21:29:11.1880473Z Collecting uproot (from -r gui/requirements.txt (line 5))
+2026-11-01T21:29:11.2068827Z   Downloading uproot-5.7.7-py3-none-any.whl.metadata (36 kB)
+2026-11-01T21:29:11.6123152Z Collecting numpy (from -r gui/requirements.txt (line 6))
+2026-11-01T21:29:11.6304158Z   Downloading numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+2026-11-01T21:29:11.8313018Z Collecting matplotlib (from -r gui/requirements.txt (line 7))
+2026-11-01T21:29:11.8492979Z   Downloading matplotlib-3.11.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (80 kB)
+2026-11-01T21:29:11.9726799Z Collecting pyvista (from -r gui/requirements-3d.txt (line 1))
+2026-11-01T21:29:11.9913793Z   Downloading pyvista-0.49.2-py3-none-any.whl.metadata (14 kB)
+2026-11-01T21:29:12.0770733Z Collecting pyvistaqt (from -r gui/requirements-3d.txt (line 2))
+2026-11-01T21:29:12.1005889Z   Downloading pyvistaqt-0.13.1-py3-none-any.whl.metadata (5.3 kB)
+2026-11-01T21:29:12.2102594Z Collecting vtk (from -r gui/requirements-3d.txt (line 3))
+2026-11-01T21:29:12.2317645Z   Downloading vtk-9.7.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.6 kB)
+2026-11-01T21:29:12.3255489Z Collecting shiboken6==6.11.3 (from PySide6<6.12,>=6.11.1->-r gui/requirements.txt (line 4))
+2026-11-01T21:29:12.3457414Z   Downloading shiboken6-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (2.4 kB)
+2026-11-01T21:29:12.4372416Z Collecting PySide6_Essentials==6.11.3 (from PySide6<6.12,>=6.11.1->-r gui/requirements.txt (line 4))
+2026-11-01T21:29:12.4549155Z   Downloading pyside6_essentials-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (3.6 kB)
+2026-11-01T21:29:12.5634584Z Collecting PySide6_Addons==6.11.3 (from PySide6<6.12,>=6.11.1->-r gui/requirements.txt (line 4))
+2026-11-01T21:29:12.5859079Z   Downloading pyside6_addons-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (4.0 kB)
+2026-11-01T21:29:12.6712764Z Collecting altgraph (from pyinstaller)
+2026-11-01T21:29:12.6903052Z   Downloading altgraph-0.17.5-py2.py3-none-any.whl.metadata (7.5 kB)
+2026-11-01T21:29:12.7746008Z Collecting packaging>=22.0 (from pyinstaller)
+2026-11-01T21:29:12.7929189Z   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+2026-11-01T21:29:12.8799907Z Collecting pyinstaller-hooks-contrib>=2026.7 (from pyinstaller)
+2026-11-01T21:29:12.8995285Z   Downloading pyinstaller_hooks_contrib-2026.9-py3-none-any.whl.metadata (16 kB)
+2026-11-01T21:29:12.9035300Z Requirement already satisfied: setuptools>=42.0.0 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from pyinstaller) (79.0.1)
+2026-11-01T21:29:13.0362606Z Collecting awkward>=2.8.2 (from uproot->-r gui/requirements.txt (line 5))
+2026-11-01T21:29:13.0567728Z   Downloading awkward-2.14.0-py3-none-any.whl.metadata (7.1 kB)
+2026-11-01T21:29:13.2955821Z Collecting cramjam>=2.5.0 (from uproot->-r gui/requirements.txt (line 5))
+2026-11-01T21:29:13.3141122Z   Downloading cramjam-2.14.0-cp311-cp311-manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+2026-11-01T21:29:13.4054195Z Collecting fsspec!=2026.2.0 (from uproot->-r gui/requirements.txt (line 5))
+2026-11-01T21:29:13.4258405Z   Downloading fsspec-2026.9.0-py3-none-any.whl.metadata (10 kB)
+2026-11-01T21:29:13.7162238Z Collecting xxhash (from uproot->-r gui/requirements.txt (line 5))
+2026-11-01T21:29:13.7354529Z   Downloading xxhash-4.0.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (17 kB)
+2026-11-01T21:29:13.8686364Z Collecting contourpy>=1.0.1 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T21:29:13.8882664Z   Downloading contourpy-1.3.3-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (5.5 kB)
+2026-11-01T21:29:13.9710003Z Collecting cycler>=0.10 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T21:29:13.9900905Z   Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+2026-11-01T21:29:14.2127907Z Collecting fonttools>=4.28.2 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T21:29:14.2305895Z   Downloading fonttools-4.68.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (139 kB)
+2026-11-01T21:29:14.3802965Z Collecting kiwisolver>=1.3.1 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T21:29:14.3982888Z   Downloading kiwisolver-1.5.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.2 kB)
+2026-11-01T21:29:14.6684210Z Collecting pillow>=9 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T21:29:14.6892398Z   Downloading pillow-13.0.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+2026-11-01T21:29:14.7827998Z Collecting pyparsing>=3 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T21:29:14.8028366Z   Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+2026-11-01T21:29:14.8862007Z Collecting python-dateutil>=2.7 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T21:29:14.9039850Z   Downloading python_dateutil-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+2026-11-01T21:29:15.0014879Z Collecting cyclopts>=4.0.0 (from pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T21:29:15.0198424Z   Downloading cyclopts-5.3.2-py3-none-any.whl.metadata (12 kB)
+2026-11-01T21:29:15.1115403Z Collecting pooch (from pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T21:29:15.1296280Z   Downloading pooch-1.9.0-py3-none-any.whl.metadata (10 kB)
+2026-11-01T21:29:15.2170734Z Collecting pyvista-validation==0.2.2 (from pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T21:29:15.2373341Z   Downloading pyvista_validation-0.2.2-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (8.7 kB)
+2026-11-01T21:29:15.3220247Z Collecting scooby>=0.5.1 (from pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T21:29:15.3430943Z   Downloading scooby-0.12.1-py3-none-any.whl.metadata (16 kB)
+2026-11-01T21:29:15.4309681Z Collecting typing-extensions>=4.10 (from pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T21:29:15.4489635Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-11-01T21:29:15.5431328Z Collecting QtPy>=1.9.0 (from pyvistaqt->-r gui/requirements-3d.txt (line 2))
+2026-11-01T21:29:15.5628125Z   Downloading QtPy-2.4.3-py3-none-any.whl.metadata (12 kB)
+2026-11-01T21:29:15.7649575Z Collecting awkward-cpp==57 (from awkward>=2.8.2->uproot->-r gui/requirements.txt (line 5))
+2026-11-01T21:29:15.7838082Z   Downloading awkward_cpp-57-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (2.1 kB)
+2026-11-01T21:29:15.8786402Z Collecting importlib-metadata>=4.13.0 (from awkward>=2.8.2->uproot->-r gui/requirements.txt (line 5))
+2026-11-01T21:29:15.8966613Z   Downloading importlib_metadata-10.1.0-py3-none-any.whl.metadata (4.5 kB)
+2026-11-01T21:29:15.9854985Z Collecting attrs>=23.1.0 (from cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T21:29:16.0039620Z   Downloading attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+2026-11-01T21:29:16.0867816Z Collecting docstring-parser<4.0,>=0.15 (from cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T21:29:16.1135754Z   Downloading docstring_parser-0.18.0-py3-none-any.whl.metadata (3.5 kB)
+2026-11-01T21:29:16.1972779Z Collecting rich-rst<3,>=2.0.1 (from cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T21:29:16.2151795Z   Downloading rich_rst-2.2.0-py3-none-any.whl.metadata (5.0 kB)
+2026-11-01T21:29:16.3124162Z Collecting rich>=13.6.0 (from cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T21:29:16.3317765Z   Downloading rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+2026-11-01T21:29:16.4263965Z Collecting pygments>=2.0.0 (from rich-rst<3,>=2.0.1->cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T21:29:16.4455356Z   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+2026-11-01T21:29:16.5336462Z Collecting zipp>=3.20 (from importlib-metadata>=4.13.0->awkward>=2.8.2->uproot->-r gui/requirements.txt (line 5))
+2026-11-01T21:29:16.5544067Z   Downloading zipp-4.1.2-py3-none-any.whl.metadata (3.6 kB)
+2026-11-01T21:29:16.6432200Z Collecting tzdata (from python-dateutil>=2.7->matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T21:29:16.6612488Z   Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+2026-11-01T21:29:16.7455197Z Collecting markdown-it-py>=2.2.0 (from rich>=13.6.0->cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T21:29:16.7629253Z   Downloading markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+2026-11-01T21:29:16.8465656Z Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=13.6.0->cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T21:29:16.8657268Z   Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+2026-11-01T21:29:16.9680926Z Collecting platformdirs>=2.5.0 (from pooch->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T21:29:16.9879954Z   Downloading platformdirs-4.14.3-py3-none-any.whl.metadata (5.4 kB)
+2026-11-01T21:29:17.0789641Z Collecting requests>=2.19.0 (from pooch->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T21:29:17.0969122Z   Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+2026-11-01T21:29:17.3219697Z Collecting charset_normalizer<4,>=2 (from requests>=2.19.0->pooch->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T21:29:17.3408996Z   Downloading charset_normalizer-3.5.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (46 kB)
+2026-11-01T21:29:17.4282907Z Collecting idna<4,>=2.5 (from requests>=2.19.0->pooch->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T21:29:17.4581868Z   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+2026-11-01T21:29:17.5496848Z Collecting urllib3<3,>=1.26 (from requests>=2.19.0->pooch->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T21:29:17.5673582Z   Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+2026-11-01T21:29:17.6584675Z Collecting certifi>=2023.5.7 (from requests>=2.19.0->pooch->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T21:29:17.6763856Z   Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+2026-11-01T21:29:17.7072558Z Downloading pyside6-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl (572 kB)
+2026-11-01T21:29:17.7320838Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 572.1/572.1 kB 18.1 MB/s  0:00:00
+2026-11-01T21:29:17.7596832Z Downloading pyside6_addons-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl (175.3 MB)
+2026-11-01T21:29:19.7904772Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 175.3/175.3 MB 86.5 MB/s  0:00:02
+2026-11-01T21:29:19.8107458Z Downloading pyside6_essentials-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl (80.3 MB)
+2026-11-01T21:29:20.3793453Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 80.3/80.3 MB 141.6 MB/s  0:00:00
+2026-11-01T21:29:20.3989632Z Downloading shiboken6-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl (272 kB)
+2026-11-01T21:29:20.4226482Z Downloading pyinstaller-6.22.3-py3-none-manylinux2014_x86_64.whl (764 kB)
+2026-11-01T21:29:20.4280574Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 765.0/765.0 kB 151.0 MB/s  0:00:00
+2026-11-01T21:29:20.4512864Z Downloading uproot-5.7.7-py3-none-any.whl (441 kB)
+2026-11-01T21:29:20.4726730Z Downloading numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.9 MB)
+2026-11-01T21:29:20.5268825Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.9/16.9 MB 322.6 MB/s  0:00:00
+2026-11-01T21:29:20.5450538Z Downloading matplotlib-3.11.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (9.9 MB)
+2026-11-01T21:29:20.5786827Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.9/9.9 MB 307.3 MB/s  0:00:00
+2026-11-01T21:29:20.5974506Z Downloading pyvista-0.49.2-py3-none-any.whl (2.7 MB)
+2026-11-01T21:29:20.6153109Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.7/2.7 MB 162.4 MB/s  0:00:00
+2026-11-01T21:29:20.6382346Z Downloading pyvista_validation-0.2.2-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (261 kB)
+2026-11-01T21:29:20.6613904Z Downloading vtk-9.7.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (139.6 MB)
+2026-11-01T21:29:22.3424261Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 139.6/139.6 MB 83.0 MB/s  0:00:01
+2026-11-01T21:29:22.3620331Z Downloading pyvistaqt-0.13.1-py3-none-any.whl (141 kB)
+2026-11-01T21:29:22.4542927Z Downloading awkward-2.14.0-py3-none-any.whl (1.0 MB)
+2026-11-01T21:29:22.5788724Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.0/1.0 MB 6.1 MB/s  0:00:00
+2026-11-01T21:29:22.5982381Z Downloading awkward_cpp-57-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (696 kB)
+2026-11-01T21:29:22.7317630Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 696.6/696.6 kB 3.3 MB/s  0:00:00
+2026-11-01T21:29:22.7501074Z Downloading contourpy-1.3.3-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (355 kB)
+2026-11-01T21:29:22.7780115Z Downloading cramjam-2.14.0-cp311-cp311-manylinux_2_28_x86_64.whl (2.0 MB)
+2026-11-01T21:29:22.7899979Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 190.9 MB/s  0:00:00
+2026-11-01T21:29:22.8082534Z Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+2026-11-01T21:29:22.8432366Z Downloading cyclopts-5.3.2-py3-none-any.whl (297 kB)
+2026-11-01T21:29:23.6436576Z Downloading docstring_parser-0.18.0-py3-none-any.whl (22 kB)
+2026-11-01T21:29:23.8492452Z Downloading rich_rst-2.2.0-py3-none-any.whl (279 kB)
+2026-11-01T21:29:24.1410389Z Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+2026-11-01T21:29:24.1608222Z Downloading fonttools-4.68.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.5 MB)
+2026-11-01T21:29:24.1949134Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.5/5.5 MB 164.6 MB/s  0:00:00
+2026-11-01T21:29:24.2126590Z Downloading fsspec-2026.9.0-py3-none-any.whl (221 kB)
+2026-11-01T21:29:24.2328538Z Downloading importlib_metadata-10.1.0-py3-none-any.whl (32 kB)
+2026-11-01T21:29:24.2538260Z Downloading kiwisolver-1.5.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.4 MB)
+2026-11-01T21:29:24.2644472Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 169.4 MB/s  0:00:00
+2026-11-01T21:29:24.2841744Z Downloading packaging-26.3-py3-none-any.whl (129 kB)
+2026-11-01T21:29:24.3040830Z Downloading pillow-13.0.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (7.1 MB)
+2026-11-01T21:29:24.3260694Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.1/7.1 MB 350.0 MB/s  0:00:00
+2026-11-01T21:29:24.3439689Z Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-11-01T21:29:24.3503544Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 244.6 MB/s  0:00:00
+2026-11-01T21:29:24.3685763Z Downloading pyinstaller_hooks_contrib-2026.9-py3-none-any.whl (462 kB)
+2026-11-01T21:29:24.3897531Z Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+2026-11-01T21:29:24.4204791Z Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+2026-11-01T21:29:24.4412565Z Downloading QtPy-2.4.3-py3-none-any.whl (95 kB)
+2026-11-01T21:29:24.4613530Z Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+2026-11-01T21:29:24.4816438Z Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+2026-11-01T21:29:24.5069892Z Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+2026-11-01T21:29:24.5283202Z Downloading scooby-0.12.1-py3-none-any.whl (21 kB)
+2026-11-01T21:29:24.5477334Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-11-01T21:29:24.5670777Z Downloading zipp-4.1.2-py3-none-any.whl (10 kB)
+2026-11-01T21:29:24.5867694Z Downloading altgraph-0.17.5-py2.py3-none-any.whl (21 kB)
+2026-11-01T21:29:24.6064633Z Downloading pooch-1.9.0-py3-none-any.whl (67 kB)
+2026-11-01T21:29:24.6273354Z Downloading platformdirs-4.14.3-py3-none-any.whl (35 kB)
+2026-11-01T21:29:24.6470534Z Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+2026-11-01T21:29:24.6670270Z Downloading charset_normalizer-3.5.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (269 kB)
+2026-11-01T21:29:24.6872311Z Downloading idna-3.20-py3-none-any.whl (69 kB)
+2026-11-01T21:29:24.7125007Z Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+2026-11-01T21:29:24.7326609Z Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+2026-11-01T21:29:24.7525996Z Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+2026-11-01T21:29:24.7750170Z Downloading xxhash-4.0.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (260 kB)
+2026-11-01T21:29:25.5444922Z Installing collected packages: altgraph, zipp, xxhash, urllib3, tzdata, typing-extensions, shiboken6, scooby, pyparsing, pygments, platformdirs, pillow, packaging, numpy, mdurl, kiwisolver, idna, fsspec, fonttools, docstring-parser, cycler, cramjam, charset_normalizer, certifi, attrs, requests, QtPy, pyvista-validation, python-dateutil, PySide6_Essentials, pyinstaller-hooks-contrib, markdown-it-py, importlib-metadata, contourpy, awkward-cpp, rich, PySide6_Addons, pyinstaller, pooch, matplotlib, awkward, vtk, uproot, rich-rst, PySide6, cyclopts, pyvista, pyvistaqt
+2026-11-01T21:29:39.1140020Z 
+2026-11-01T21:29:39.1166510Z Successfully installed PySide6-6.11.3 PySide6_Addons-6.11.3 PySide6_Essentials-6.11.3 QtPy-2.4.3 altgraph-0.17.5 attrs-26.1.0 awkward-2.14.0 awkward-cpp-57 certifi-2026.10.23 charset_normalizer-3.5.2 contourpy-1.3.3 cramjam-2.14.0 cycler-0.12.1 cyclopts-5.3.2 docstring-parser-0.18.0 fonttools-4.68.0 fsspec-2026.9.0 idna-3.20 importlib-metadata-10.1.0 kiwisolver-1.5.1 markdown-it-py-4.2.0 matplotlib-3.11.2 mdurl-0.1.2 numpy-2.4.6 packaging-26.3 pillow-13.0.0 platformdirs-4.14.3 pooch-1.9.0 pygments-2.21.0 pyinstaller-6.22.3 pyinstaller-hooks-contrib-2026.9 pyparsing-3.3.3 python-dateutil-4.0.0 pyvista-0.49.2 pyvista-validation-0.2.2 pyvistaqt-0.13.1 requests-2.34.2 rich-15.0.0 rich-rst-2.2.0 scooby-0.12.1 shiboken6-6.11.3 typing-extensions-4.16.0 tzdata-2026.6 uproot-5.7.7 urllib3-2.8.0 vtk-9.7.1 xxhash-4.0.2 zipp-4.1.2
+2026-11-01T21:29:39.2817076Z ##[group]Run python - <<'PY'
+2026-11-01T21:29:39.2817460Z [36;1mpython - <<'PY'[0m
+2026-11-01T21:29:39.2817731Z [36;1mfrom pathlib import Path[0m
+2026-11-01T21:29:39.2818012Z [36;1mimport subprocess[0m
+2026-11-01T21:29:39.2818250Z [36;1mimport PySide6[0m
+2026-11-01T21:29:39.2818521Z [36;1mroot = Path(PySide6.__file__).parent / 'Qt'[0m
+2026-11-01T21:29:39.2818825Z [36;1moutputs = [][0m
+2026-11-01T21:29:39.2819049Z [36;1mfailed = False[0m
+2026-11-01T21:29:39.2819432Z [36;1mfor relative in ('plugins/platforms/libqxcb.so', 'lib/libQt6XcbQpa.so.6'):[0m
+2026-11-01T21:29:39.2819972Z [36;1m    result = subprocess.run(['ldd', str(root / relative)], capture_output=True)[0m
+2026-11-01T21:29:39.2820511Z [36;1m    outputs.append(relative.encode() + b'\n' + result.stdout + result.stderr)[0m
+2026-11-01T21:29:39.2821072Z [36;1m    failed |= result.returncode != 0 or b'not found' in result.stdout + result.stderr[0m
+2026-11-01T21:29:39.2822081Z [36;1mpath = Path('out/xcb-runtime-dependencies.log')[0m
+2026-11-01T21:29:39.2822467Z [36;1mpath.parent.mkdir(parents=True, exist_ok=True)[0m
+2026-11-01T21:29:39.2822806Z [36;1mpath.write_bytes(b'\n'.join(outputs))[0m
+2026-11-01T21:29:39.2823102Z [36;1mprint(path.read_text())[0m
+2026-11-01T21:29:39.2823521Z [36;1massert not failed, 'xcb native dependencies are incomplete; see retained ldd evidence'[0m
+2026-11-01T21:29:39.2823949Z [36;1mPY[0m
+2026-11-01T21:29:39.2844584Z shell: /usr/bin/bash -e {0}
+2026-11-01T21:29:39.2844997Z env:
+2026-11-01T21:29:39.2845264Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:29:39.2845719Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-11-01T21:29:39.2846160Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:29:39.2846547Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:29:39.2846936Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:29:39.2847321Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-11-01T21:29:39.2847639Z ##[endgroup]
+2026-11-01T21:29:39.5900936Z plugins/platforms/libqxcb.so
+2026-11-01T21:29:39.5901938Z 	linux-vdso.so.1 (0x00007f0a06b1e000)
+2026-11-01T21:29:39.5903670Z 	libQt6XcbQpa.so.6 => /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PySide6/Qt/plugins/platforms/../../lib/libQt6XcbQpa.so.6 (0x00007f0a06a50000)
+2026-11-01T21:29:39.5906729Z 	libQt6Gui.so.6 => /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PySide6/Qt/plugins/platforms/../../lib/libQt6Gui.so.6 (0x00007f0a05e00000)
+2026-11-01T21:29:39.5908827Z 	libGL.so.1 => /lib/x86_64-linux-gnu/libGL.so.1 (0x00007f0a069bf000)
+2026-11-01T21:29:39.5910671Z 	libQt6Core.so.6 => /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PySide6/Qt/plugins/platforms/../../lib/libQt6Core.so.6 (0x00007f0a05600000)
+2026-11-01T21:29:39.5912827Z 	libxkbcommon.so.0 => /lib/x86_64-linux-gnu/libxkbcommon.so.0 (0x00007f0a06976000)
+2026-11-01T21:29:39.5913621Z 	libxkbcommon-x11.so.0 => /lib/x86_64-linux-gnu/libxkbcommon-x11.so.0 (0x00007f0a0696a000)
+2026-11-01T21:29:39.5914393Z 	libxcb-cursor.so.0 => /lib/x86_64-linux-gnu/libxcb-cursor.so.0 (0x00007f0a06963000)
+2026-11-01T21:29:39.5915130Z 	libxcb-icccm.so.4 => /lib/x86_64-linux-gnu/libxcb-icccm.so.4 (0x00007f0a0695c000)
+2026-11-01T21:29:39.5915881Z 	libxcb-util.so.1 => /lib/x86_64-linux-gnu/libxcb-util.so.1 (0x00007f0a06954000)
+2026-11-01T21:29:39.5916578Z 	libxcb-image.so.0 => /lib/x86_64-linux-gnu/libxcb-image.so.0 (0x00007f0a0694e000)
+2026-11-01T21:29:39.5917317Z 	libxcb-keysyms.so.1 => /lib/x86_64-linux-gnu/libxcb-keysyms.so.1 (0x00007f0a06949000)
+2026-11-01T21:29:39.5918041Z 	libxcb-randr.so.0 => /lib/x86_64-linux-gnu/libxcb-randr.so.0 (0x00007f0a06936000)
+2026-11-01T21:29:39.5918813Z 	libxcb-render-util.so.0 => /lib/x86_64-linux-gnu/libxcb-render-util.so.0 (0x00007f0a0692f000)
+2026-11-01T21:29:39.5919402Z 	libxcb-shm.so.0 => /lib/x86_64-linux-gnu/libxcb-shm.so.0 (0x00007f0a0692a000)
+2026-11-01T21:29:39.5920313Z 	libxcb-sync.so.1 => /lib/x86_64-linux-gnu/libxcb-sync.so.1 (0x00007f0a06921000)
+2026-11-01T21:29:39.5920872Z 	libxcb-xfixes.so.0 => /lib/x86_64-linux-gnu/libxcb-xfixes.so.0 (0x00007f0a06917000)
+2026-11-01T21:29:39.5921962Z 	libxcb-render.so.0 => /lib/x86_64-linux-gnu/libxcb-render.so.0 (0x00007f0a05df1000)
+2026-11-01T21:29:39.5922527Z 	libxcb-shape.so.0 => /lib/x86_64-linux-gnu/libxcb-shape.so.0 (0x00007f0a06910000)
+2026-11-01T21:29:39.5923051Z 	libxcb-xkb.so.1 => /lib/x86_64-linux-gnu/libxcb-xkb.so.1 (0x00007f0a05dd3000)
+2026-11-01T21:29:39.5923534Z 	libxcb.so.1 => /lib/x86_64-linux-gnu/libxcb.so.1 (0x00007f0a05daa000)
+2026-11-01T21:29:39.5924003Z 	libX11-xcb.so.1 => /lib/x86_64-linux-gnu/libX11-xcb.so.1 (0x00007f0a05da5000)
+2026-11-01T21:29:39.5924459Z 	libX11.so.6 => /lib/x86_64-linux-gnu/libX11.so.6 (0x00007f0a054c2000)
+2026-11-01T21:29:39.5924908Z 	libstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f0a05200000)
+2026-11-01T21:29:39.5925364Z 	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f0a05117000)
+2026-11-01T21:29:39.5925795Z 	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f0a05d77000)
+2026-11-01T21:29:39.5926224Z 	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f0a04e00000)
+2026-11-01T21:29:39.5926667Z 	libglib-2.0.so.0 => /lib/x86_64-linux-gnu/libglib-2.0.so.0 (0x00007f0a04cb7000)
+2026-11-01T21:29:39.5927187Z 	libgthread-2.0.so.0 => /lib/x86_64-linux-gnu/libgthread-2.0.so.0 (0x00007f0a05d72000)
+2026-11-01T21:29:39.5927870Z 	libEGL.so.1 => /lib/x86_64-linux-gnu/libEGL.so.1 (0x00007f0a05d60000)
+2026-11-01T21:29:39.5928357Z 	libfontconfig.so.1 => /lib/x86_64-linux-gnu/libfontconfig.so.1 (0x00007f0a050c6000)
+2026-11-01T21:29:39.5929200Z 	libQt6DBus.so.6 => /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PySide6/Qt/plugins/platforms/../../lib/libQt6DBus.so.6 (0x00007f0a04bdc000)
+2026-11-01T21:29:39.5929930Z 	libz.so.1 => /lib/x86_64-linux-gnu/libz.so.1 (0x00007f0a05d44000)
+2026-11-01T21:29:39.5930367Z 	libfreetype.so.6 => /lib/x86_64-linux-gnu/libfreetype.so.6 (0x00007f0a04b10000)
+2026-11-01T21:29:39.5930872Z 	libGLdispatch.so.0 => /lib/x86_64-linux-gnu/libGLdispatch.so.0 (0x00007f0a04a58000)
+2026-11-01T21:29:39.5931689Z 	libGLX.so.0 => /lib/x86_64-linux-gnu/libGLX.so.0 (0x00007f0a0548f000)
+2026-11-01T21:29:39.5932852Z 	libicui18n.so.73 => /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PySide6/Qt/plugins/platforms/../../lib/libicui18n.so.73 (0x00007f0a04600000)
+2026-11-01T21:29:39.5934687Z 	libicuuc.so.73 => /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PySide6/Qt/plugins/platforms/../../lib/libicuuc.so.73 (0x00007f0a04200000)
+2026-11-01T21:29:39.5936472Z 	libicudata.so.73 => /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PySide6/Qt/plugins/platforms/../../lib/libicudata.so.73 (0x00007f0a02200000)
+2026-11-01T21:29:39.5937725Z 	libzstd.so.1 => /lib/x86_64-linux-gnu/libzstd.so.1 (0x00007f0a0499e000)
+2026-11-01T21:29:39.5938347Z 	/lib64/ld-linux-x86-64.so.2 (0x00007f0a06b20000)
+2026-11-01T21:29:39.5938947Z 	libXau.so.6 => /lib/x86_64-linux-gnu/libXau.so.6 (0x00007f0a05d3a000)
+2026-11-01T21:29:39.5939711Z 	libXdmcp.so.6 => /lib/x86_64-linux-gnu/libXdmcp.so.6 (0x00007f0a05487000)
+2026-11-01T21:29:39.5940556Z 	libpcre2-8.so.0 => /lib/x86_64-linux-gnu/libpcre2-8.so.0 (0x00007f0a0502c000)
+2026-11-01T21:29:39.5941087Z 	libexpat.so.1 => /lib/x86_64-linux-gnu/libexpat.so.1 (0x00007f0a04970000)
+2026-11-01T21:29:39.5941851Z 	libdbus-1.so.3 => /lib/x86_64-linux-gnu/libdbus-1.so.3 (0x00007f0a045b1000)
+2026-11-01T21:29:39.5942314Z 	libbz2.so.1.0 => /lib/x86_64-linux-gnu/libbz2.so.1.0 (0x00007f0a05018000)
+2026-11-01T21:29:39.5942752Z 	libpng16.so.16 => /lib/x86_64-linux-gnu/libpng16.so.16 (0x00007f0a04579000)
+2026-11-01T21:29:39.5943228Z 	libbrotlidec.so.1 => /lib/x86_64-linux-gnu/libbrotlidec.so.1 (0x00007f0a04962000)
+2026-11-01T21:29:39.5943716Z 	libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007f0a05482000)
+2026-11-01T21:29:39.5944372Z 	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007f0a05013000)
+2026-11-01T21:29:39.5944823Z 	libbsd.so.0 => /lib/x86_64-linux-gnu/libbsd.so.0 (0x00007f0a04563000)
+2026-11-01T21:29:39.5945259Z 	libsystemd.so.0 => /lib/x86_64-linux-gnu/libsystemd.so.0 (0x00007f0a04483000)
+2026-11-01T21:29:39.5945771Z 	libbrotlicommon.so.1 => /lib/x86_64-linux-gnu/libbrotlicommon.so.1 (0x00007f0a04460000)
+2026-11-01T21:29:39.5946256Z 	libmd.so.0 => /lib/x86_64-linux-gnu/libmd.so.0 (0x00007f0a04953000)
+2026-11-01T21:29:39.5946665Z 	libcap.so.2 => /lib/x86_64-linux-gnu/libcap.so.2 (0x00007f0a04453000)
+2026-11-01T21:29:39.5947112Z 	libgcrypt.so.20 => /lib/x86_64-linux-gnu/libgcrypt.so.20 (0x00007f0a040b7000)
+2026-11-01T21:29:39.5947552Z 	liblz4.so.1 => /lib/x86_64-linux-gnu/liblz4.so.1 (0x00007f0a04431000)
+2026-11-01T21:29:39.5947965Z 	liblzma.so.5 => /lib/x86_64-linux-gnu/liblzma.so.5 (0x00007f0a021ce000)
+2026-11-01T21:29:39.5948437Z 	libgpg-error.so.0 => /lib/x86_64-linux-gnu/libgpg-error.so.0 (0x00007f0a04092000)
+2026-11-01T21:29:39.5948740Z 
+2026-11-01T21:29:39.5948839Z lib/libQt6XcbQpa.so.6
+2026-11-01T21:29:39.5949076Z 	linux-vdso.so.1 (0x00007f3519e59000)
+2026-11-01T21:29:39.5949462Z 	libxcb-cursor.so.0 => /lib/x86_64-linux-gnu/libxcb-cursor.so.0 (0x00007f3519d80000)
+2026-11-01T21:29:39.5949964Z 	libxcb-icccm.so.4 => /lib/x86_64-linux-gnu/libxcb-icccm.so.4 (0x00007f3519d79000)
+2026-11-01T21:29:39.5950543Z 	libxcb-util.so.1 => /lib/x86_64-linux-gnu/libxcb-util.so.1 (0x00007f3519d71000)
+2026-11-01T21:29:39.5951057Z 	libxcb-image.so.0 => /lib/x86_64-linux-gnu/libxcb-image.so.0 (0x00007f3519d6b000)
+2026-11-01T21:29:39.5952173Z 	libxcb-keysyms.so.1 => /lib/x86_64-linux-gnu/libxcb-keysyms.so.1 (0x00007f3519d66000)
+2026-11-01T21:29:39.5952710Z 	libxcb-randr.so.0 => /lib/x86_64-linux-gnu/libxcb-randr.so.0 (0x00007f3519d53000)
+2026-11-01T21:29:39.5953218Z 	libxcb-render.so.0 => /lib/x86_64-linux-gnu/libxcb-render.so.0 (0x00007f3519d44000)
+2026-11-01T21:29:39.5953772Z 	libxcb-render-util.so.0 => /lib/x86_64-linux-gnu/libxcb-render-util.so.0 (0x00007f3519d3d000)
+2026-11-01T21:29:39.5954322Z 	libxcb-shape.so.0 => /lib/x86_64-linux-gnu/libxcb-shape.so.0 (0x00007f3519d38000)
+2026-11-01T21:29:39.5954804Z 	libxcb-shm.so.0 => /lib/x86_64-linux-gnu/libxcb-shm.so.0 (0x00007f3519d33000)
+2026-11-01T21:29:39.5955289Z 	libxcb-sync.so.1 => /lib/x86_64-linux-gnu/libxcb-sync.so.1 (0x00007f3519d2a000)
+2026-11-01T21:29:39.5955739Z 	libxcb.so.1 => /lib/x86_64-linux-gnu/libxcb.so.1 (0x00007f3519cff000)
+2026-11-01T21:29:39.5956197Z 	libxcb-xfixes.so.0 => /lib/x86_64-linux-gnu/libxcb-xfixes.so.0 (0x00007f3519cf5000)
+2026-11-01T21:29:39.5956687Z 	libxcb-xkb.so.1 => /lib/x86_64-linux-gnu/libxcb-xkb.so.1 (0x00007f3519cd7000)
+2026-11-01T21:29:39.5957167Z 	libxkbcommon.so.0 => /lib/x86_64-linux-gnu/libxkbcommon.so.0 (0x00007f3519c8e000)
+2026-11-01T21:29:39.5957654Z 	libglib-2.0.so.0 => /lib/x86_64-linux-gnu/libglib-2.0.so.0 (0x00007f3519b45000)
+2026-11-01T21:29:39.5958113Z 	libX11-xcb.so.1 => /lib/x86_64-linux-gnu/libX11-xcb.so.1 (0x00007f3519b40000)
+2026-11-01T21:29:39.5959091Z 	libX11.so.6 => /lib/x86_64-linux-gnu/libX11.so.6 (0x00007f3519a00000)
+2026-11-01T21:29:39.5959976Z 	libxkbcommon-x11.so.0 => /lib/x86_64-linux-gnu/libxkbcommon-x11.so.0 (0x00007f35199f6000)
+2026-11-01T21:29:39.5961025Z 	libQt6Gui.so.6 => /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PySide6/Qt/lib/libQt6Gui.so.6 (0x00007f3518e00000)
+2026-11-01T21:29:39.5962003Z 	libGL.so.1 => /lib/x86_64-linux-gnu/libGL.so.1 (0x00007f351996f000)
+2026-11-01T21:29:39.5962663Z 	libQt6Core.so.6 => /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PySide6/Qt/lib/libQt6Core.so.6 (0x00007f3518600000)
+2026-11-01T21:29:39.5963389Z 	libgthread-2.0.so.0 => /lib/x86_64-linux-gnu/libgthread-2.0.so.0 (0x00007f3519968000)
+2026-11-01T21:29:39.5963888Z 	libstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f3518200000)
+2026-11-01T21:29:39.5964321Z 	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f3518517000)
+2026-11-01T21:29:39.5964728Z 	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f351993a000)
+2026-11-01T21:29:39.5965328Z 	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f3517e00000)
+2026-11-01T21:29:39.5965747Z 	libXau.so.6 => /lib/x86_64-linux-gnu/libXau.so.6 (0x00007f3519932000)
+2026-11-01T21:29:39.5966325Z 	libXdmcp.so.6 => /lib/x86_64-linux-gnu/libXdmcp.so.6 (0x00007f351992a000)
+2026-11-01T21:29:39.5966808Z 	libpcre2-8.so.0 => /lib/x86_64-linux-gnu/libpcre2-8.so.0 (0x00007f3518d66000)
+2026-11-01T21:29:39.5967250Z 	libEGL.so.1 => /lib/x86_64-linux-gnu/libEGL.so.1 (0x00007f3519918000)
+2026-11-01T21:29:39.5967720Z 	libfontconfig.so.1 => /lib/x86_64-linux-gnu/libfontconfig.so.1 (0x00007f35184c6000)
+2026-11-01T21:29:39.5968453Z 	libQt6DBus.so.6 => /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PySide6/Qt/lib/libQt6DBus.so.6 (0x00007f3518125000)
+2026-11-01T21:29:39.5969099Z 	libz.so.1 => /lib/x86_64-linux-gnu/libz.so.1 (0x00007f3518d4a000)
+2026-11-01T21:29:39.5969532Z 	libfreetype.so.6 => /lib/x86_64-linux-gnu/libfreetype.so.6 (0x00007f3518059000)
+2026-11-01T21:29:39.5970038Z 	libGLdispatch.so.0 => /lib/x86_64-linux-gnu/libGLdispatch.so.0 (0x00007f3517d48000)
+2026-11-01T21:29:39.5970497Z 	libGLX.so.0 => /lib/x86_64-linux-gnu/libGLX.so.0 (0x00007f3518493000)
+2026-11-01T21:29:39.5971160Z 	libicui18n.so.73 => /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PySide6/Qt/lib/libicui18n.so.73 (0x00007f3517800000)
+2026-11-01T21:29:39.5972349Z 	libicuuc.so.73 => /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PySide6/Qt/lib/libicuuc.so.73 (0x00007f3517400000)
+2026-11-01T21:29:39.5973401Z 	libicudata.so.73 => /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PySide6/Qt/lib/libicudata.so.73 (0x00007f3515400000)
+2026-11-01T21:29:39.5974075Z 	libzstd.so.1 => /lib/x86_64-linux-gnu/libzstd.so.1 (0x00007f3517c8e000)
+2026-11-01T21:29:39.5974461Z 	/lib64/ld-linux-x86-64.so.2 (0x00007f3519e5b000)
+2026-11-01T21:29:39.5974828Z 	libbsd.so.0 => /lib/x86_64-linux-gnu/libbsd.so.0 (0x00007f3518043000)
+2026-11-01T21:29:39.5975255Z 	libexpat.so.1 => /lib/x86_64-linux-gnu/libexpat.so.1 (0x00007f3518015000)
+2026-11-01T21:29:39.5975705Z 	libdbus-1.so.3 => /lib/x86_64-linux-gnu/libdbus-1.so.3 (0x00007f3517c3f000)
+2026-11-01T21:29:39.5976148Z 	libbz2.so.1.0 => /lib/x86_64-linux-gnu/libbz2.so.1.0 (0x00007f3518d36000)
+2026-11-01T21:29:39.5976590Z 	libpng16.so.16 => /lib/x86_64-linux-gnu/libpng16.so.16 (0x00007f3517c07000)
+2026-11-01T21:29:39.5977069Z 	libbrotlidec.so.1 => /lib/x86_64-linux-gnu/libbrotlidec.so.1 (0x00007f3518485000)
+2026-11-01T21:29:39.5977567Z 	libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007f3518480000)
+2026-11-01T21:29:39.5978029Z 	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007f3517c02000)
+2026-11-01T21:29:39.5978428Z 	libmd.so.0 => /lib/x86_64-linux-gnu/libmd.so.0 (0x00007f3517bf3000)
+2026-11-01T21:29:39.5978858Z 	libsystemd.so.0 => /lib/x86_64-linux-gnu/libsystemd.so.0 (0x00007f3517720000)
+2026-11-01T21:29:39.5979382Z 	libbrotlicommon.so.1 => /lib/x86_64-linux-gnu/libbrotlicommon.so.1 (0x00007f3517bd0000)
+2026-11-01T21:29:39.5979881Z 	libcap.so.2 => /lib/x86_64-linux-gnu/libcap.so.2 (0x00007f3517bc3000)
+2026-11-01T21:29:39.5980329Z 	libgcrypt.so.20 => /lib/x86_64-linux-gnu/libgcrypt.so.20 (0x00007f35172b7000)
+2026-11-01T21:29:39.5980768Z 	liblz4.so.1 => /lib/x86_64-linux-gnu/liblz4.so.1 (0x00007f3517ba1000)
+2026-11-01T21:29:39.5981523Z 	liblzma.so.5 => /lib/x86_64-linux-gnu/liblzma.so.5 (0x00007f3517b6f000)
+2026-11-01T21:29:39.5982005Z 	libgpg-error.so.0 => /lib/x86_64-linux-gnu/libgpg-error.so.0 (0x00007f35176fb000)
+2026-11-01T21:29:39.5982313Z 
+2026-11-01T21:29:39.6046524Z ##[group]Run python -B tools/test_assert_probe.py scripts/test_frozen_desktop.py --directory out/frozen-desktop-ci
+2026-11-01T21:29:39.6047440Z [36;1mpython -B tools/test_assert_probe.py scripts/test_frozen_desktop.py --directory out/frozen-desktop-ci[0m
+2026-11-01T21:29:39.6068392Z shell: /usr/bin/bash -e {0}
+2026-11-01T21:29:39.6068665Z env:
+2026-11-01T21:29:39.6068956Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:29:39.6069451Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-11-01T21:29:39.6069938Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:29:39.6070365Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:29:39.6070787Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:29:39.6071526Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-11-01T21:29:39.6071917Z ##[endgroup]
+2026-11-01T21:29:39.7289617Z [package] freezing the GUI with PyInstaller (this takes a few minutes)
+2026-11-01T21:30:55.2496461Z [package] freezing Python scientific helper
+2026-11-01T21:31:45.8249440Z Frozen desktop and scientific helper delivery passed
+2026-11-01T21:31:45.8251983Z G4USIM_ASSERTS=14
+2026-11-01T21:31:45.8426624Z ##[group]Run xvfb-run -a python -B tools/test_assert_probe.py gui/smoke_tests/smoke_j1_appearance.py --renderer
+2026-11-01T21:31:45.8427627Z [36;1mxvfb-run -a python -B tools/test_assert_probe.py gui/smoke_tests/smoke_j1_appearance.py --renderer[0m
+2026-11-01T21:31:45.8448316Z shell: /usr/bin/bash -e {0}
+2026-11-01T21:31:45.8448601Z env:
+2026-11-01T21:31:45.8448907Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:31:45.8449427Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-11-01T21:31:45.8449938Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:31:45.8450386Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:31:45.8451034Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:31:45.8451698Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-11-01T21:31:45.8452095Z   QT_QPA_PLATFORM: xcb
+2026-11-01T21:31:45.8452393Z   LIBGL_ALWAYS_SOFTWARE: 1
+2026-11-01T21:31:45.8452655Z ##[endgroup]
+2026-11-01T21:31:55.1556221Z real PyVista/VTK actor properties and geometry identity: OK
+2026-11-01T21:31:55.1557206Z smoke_j1_appearance: OK (theme, exact-copy precedence, atomic validation, Qt controls, fallback)
+2026-11-01T21:31:55.1557974Z G4USIM_ASSERTS=52
+2026-11-01T21:31:55.5620366Z ##[group]Run actions/upload-artifact@v6
+2026-11-01T21:31:55.5620689Z with:
+2026-11-01T21:31:55.5620899Z   name: frozen-desktop-Linux
+2026-11-01T21:31:55.5622212Z   path: out/xcb-runtime-dependencies.log
+out/frozen-desktop-ci/*.json
+out/frozen-desktop-ci/*.log
+out/frozen-desktop-ci/*-build/freeze.log
+out/frozen-desktop-ci/*-build/binary-sources.json
+out/frozen-desktop-ci/*-build/source-identity.json
+
+2026-11-01T21:31:55.5623212Z   if-no-files-found: error
+2026-11-01T21:31:55.5623462Z   compression-level: 6
+2026-11-01T21:31:55.5623677Z   overwrite: false
+2026-11-01T21:31:55.5623895Z   include-hidden-files: false
+2026-11-01T21:31:55.5624131Z env:
+2026-11-01T21:31:55.5624388Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:31:55.5624820Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-11-01T21:31:55.5625244Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:31:55.5625671Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:31:55.5626052Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T21:31:55.5626455Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-11-01T21:31:55.5626782Z ##[endgroup]
+2026-11-01T21:31:55.7516117Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-11-01T21:31:55.7518888Z The least common ancestor is /home/runner/work/G4UniversalSim/G4UniversalSim/out. This will be the root directory of the artifact
+2026-11-01T21:31:55.7520166Z With the provided path, there will be 12 files uploaded
+2026-11-01T21:31:55.7524674Z Artifact name is valid!
+2026-11-01T21:31:55.7525340Z Root directory input is valid!
+2026-11-01T21:31:55.9630543Z Beginning upload of artifact content to blob storage
+2026-11-01T21:31:56.0508894Z Uploaded bytes 23680
+2026-11-01T21:31:56.0650652Z Finished uploading artifact content to blob storage!
+2026-11-01T21:31:56.0652281Z SHA256 digest of uploaded artifact zip is 243576d836270e70a9e7c870b29173052e4890626a0acb64d2dec0567add888c
+2026-11-01T21:31:56.0653886Z Finalizing artifact upload
+2026-11-01T21:31:56.5284332Z Artifact frozen-desktop-Linux.zip successfully finalized. Artifact ID 13101732052
+2026-11-01T21:31:56.5285472Z Artifact frozen-desktop-Linux has been successfully uploaded! Final size is 23680 bytes. Artifact ID is 13101732052
+2026-11-01T21:31:56.5290078Z Artifact download URL: https://github.com/doorfordoor/G4UniversalSim/actions/runs/41352200727/artifacts/13101732052
+2026-11-01T21:31:56.5490191Z Post job cleanup.
+2026-11-01T21:31:56.6768906Z Post job cleanup.
+2026-11-01T21:31:56.7738451Z [command]/usr/bin/git version
+2026-11-01T21:31:56.7788506Z git version 2.56.0
+2026-11-01T21:31:56.7828918Z Temporarily overriding HOME='/home/runner/work/_temp/85839faf-73ee-4d5f-823a-00af593edd01' before making global git config changes
+2026-11-01T21:31:56.7830203Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-01T21:31:56.7835650Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/G4UniversalSim/G4UniversalSim
+2026-11-01T21:31:56.7873702Z Removing SSH command configuration
+2026-11-01T21:31:56.7881446Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-01T21:31:56.7925277Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-01T21:31:56.8250503Z Removing HTTP extra header
+2026-11-01T21:31:56.8256461Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-01T21:31:56.8307319Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-01T21:31:56.8673009Z Removing includeIf entries pointing to credentials config files
+2026-11-01T21:31:56.8673786Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-01T21:31:56.8711511Z includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git.path
+2026-11-01T21:31:56.8712838Z includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path
+2026-11-01T21:31:56.8713615Z includeif.gitdir:/github/workspace/.git.path
+2026-11-01T21:31:56.8714029Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-11-01T21:31:56.8733871Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git.path
+2026-11-01T21:31:56.8778529Z /home/runner/work/_temp/git-credentials-7f36e0c4-f59a-4eff-821f-5fa85b4c0bcb.config
+2026-11-01T21:31:56.8789655Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-7f36e0c4\-f59a\-4eff\-821f\-5fa85b4c0bcb\.config
+2026-11-01T21:31:56.8843369Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path
+2026-11-01T21:31:56.8890889Z /home/runner/work/_temp/git-credentials-7f36e0c4-f59a-4eff-821f-5fa85b4c0bcb.config
+2026-11-01T21:31:56.8904175Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-7f36e0c4\-f59a\-4eff\-821f\-5fa85b4c0bcb\.config
+2026-11-01T21:31:56.8952905Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-11-01T21:31:56.8988591Z /github/runner_temp/git-credentials-7f36e0c4-f59a-4eff-821f-5fa85b4c0bcb.config
+2026-11-01T21:31:56.8998327Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-7f36e0c4\-f59a\-4eff\-821f\-5fa85b4c0bcb\.config
+2026-11-01T21:31:56.9046915Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-11-01T21:31:56.9084434Z /github/runner_temp/git-credentials-7f36e0c4-f59a-4eff-821f-5fa85b4c0bcb.config
+2026-11-01T21:31:56.9093730Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-7f36e0c4\-f59a\-4eff\-821f\-5fa85b4c0bcb\.config
+2026-11-01T21:31:56.9143733Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-01T21:31:56.9429987Z Removing credentials config '/home/runner/work/_temp/git-credentials-7f36e0c4-f59a-4eff-821f-5fa85b4c0bcb.config'
+2026-11-01T21:31:56.9595027Z Cleaning up orphan processes

@@ -1,0 +1,141 @@
+{
+  "scope": "independent offscreen component review, no native UI or actual install/backend",
+  "DPR": 1.25,
+  "available_geometry": [
+    640,
+    640
+  ],
+  "author_hashes_match": true,
+  "source_sha256_before": {
+    "gui/g4usim_gui/core/accessibility.py": "783b0c6184f5ff26b12a00c951e92bd912571dd9eb7be8168d0ce430c75902ac",
+    "gui/g4usim_gui/widgets/start_page.py": "b8d8e8b363f7a691e9cec4babe52c4277bc869f82dfca239c90b7c6bffa328ec",
+    "gui/g4usim_gui/main_window.py": "df76026a347894c617dbca570b4706948b1eed639956fc8c1bcc2f097ca10639",
+    "gui/g4usim_gui/window/shell.py": "2bf59c065dee740b03fbc678ed32f787cd0b8c293e92b1fc8d498f80c6b11516",
+    "gui/smoke_tests/smoke_f8_accessibility.py": "46d57a99aece59c5b8f64aa43863faacc9074124ec1904a6de0dee7d4ca72ec0"
+  },
+  "source_sha256_after": {
+    "gui/g4usim_gui/core/accessibility.py": "783b0c6184f5ff26b12a00c951e92bd912571dd9eb7be8168d0ce430c75902ac",
+    "gui/g4usim_gui/widgets/start_page.py": "b8d8e8b363f7a691e9cec4babe52c4277bc869f82dfca239c90b7c6bffa328ec",
+    "gui/g4usim_gui/main_window.py": "df76026a347894c617dbca570b4706948b1eed639956fc8c1bcc2f097ca10639",
+    "gui/g4usim_gui/window/shell.py": "2bf59c065dee740b03fbc678ed32f787cd0b8c293e92b1fc8d498f80c6b11516",
+    "gui/smoke_tests/smoke_f8_accessibility.py": "46d57a99aece59c5b8f64aa43863faacc9074124ec1904a6de0dee7d4ca72ec0"
+  },
+  "five_files_unchanged": true,
+  "cases": [
+    {
+      "case": "keyboard-navigation-business-isolation",
+      "status": "observed",
+      "detail": {
+        "visited": [
+          8,
+          0,
+          6,
+          2,
+          7,
+          1,
+          4,
+          3,
+          5
+        ],
+        "same_snapshot_runner_session_workflow": true
+      }
+    },
+    {
+      "case": "event-filter-owned-scope",
+      "status": "observed",
+      "detail": {
+        "unowned_multiline_untouched": true,
+        "owned_dialog_named_without_value_mutation": true
+      }
+    },
+    {
+      "case": "multiline-tab-and-busy-guard",
+      "status": "observed",
+      "detail": {
+        "tab_changes_focus_not_text": true,
+        "busy_guard_no_mutation_no_stuck_reentry_flag": true
+      }
+    },
+    {
+      "case": "environment-installer-singletons",
+      "status": "observed",
+      "detail": {
+        "same_visible_I1_and_I2_instances": true,
+        "no_install_plan_run_or_snapshot_mutation": true
+      }
+    },
+    {
+      "case": "wizard-nesting-back-esc-reopen",
+      "status": "observed",
+      "detail": {
+        "modal_reentry_keeps_one_instance": true,
+        "back_keeps_local_draft": true,
+        "esc_and_reopen_keep_project_invalid_draft": true
+      }
+    },
+    {
+      "case": "760x480-nested-scroll-focus",
+      "status": "observed",
+      "detail": {
+        "window_size": [
+          760,
+          480
+        ],
+        "focused_full_rect_visible": [
+          {
+            "button": "New blank simulation",
+            "scroll_ancestors": [
+              "",
+              "workspaceContentScroll",
+              "workspaceShellScroll"
+            ]
+          },
+          {
+            "button": "Create from template...",
+            "scroll_ancestors": [
+              "",
+              "workspaceContentScroll",
+              "workspaceShellScroll"
+            ]
+          },
+          {
+            "button": "Open project...",
+            "scroll_ancestors": [
+              "",
+              "workspaceContentScroll",
+              "workspaceShellScroll"
+            ]
+          },
+          {
+            "button": "Import configuration bundle...",
+            "scroll_ancestors": [
+              "",
+              "workspaceContentScroll",
+              "workspaceShellScroll"
+            ]
+          },
+          {
+            "button": "Environment setup...",
+            "scroll_ancestors": [
+              "",
+              "workspaceContentScroll",
+              "workspaceShellScroll"
+            ]
+          },
+          {
+            "button": "Theme",
+            "scroll_ancestors": [
+              "workspaceShellScroll"
+            ]
+          },
+          {
+            "button": "Language",
+            "scroll_ancestors": [
+              "workspaceShellScroll"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "j2_f8_archive_metadata_supplement_v1",
+  "head": "2901f4254303c3a9089c9025717908c0d77ff190",
+  "receipt": "out/verification/j2-f8-2901f42/identity/frozen-binaries/receipt.json",
+  "receipt_sha256": "e226656e077f7633f0dcdbdc0a3626a2bff0b0fd0bae9b10ef55388fc5dbd41b",
+  "receipt_bytes": 1298,
+  "bound_build_receipt": "out/verification/j2-f8-2901f42/identity/build-identities.json",
+  "bound_build_receipt_sha256": "2271c5ee08b221ff680260a15c15c521332a73b413e88e6e9df116961eff781e",
+  "file_count": 3,
+  "binary_total_bytes": 4997632,
+  "copied_binary_size_SHA_verified": true,
+  "files": [
+    {
+      "version": "1132",
+      "source": "out\\build-i2-formal113\\Release\\G4UniversalSim.exe",
+      "copy": "out\\verification\\j2-f8-2901f42\\identity\\frozen-binaries\\1132\\G4UniversalSim.exe",
+      "bytes": 2466304,
+      "sha256": "ad0864cba780d66c6046cb709a2fabd43262f31c8382f50f88ccb6df5c55a137"
+    },
+    {
+      "version": "1132",
+      "source": "out\\build-i2-formal113\\Release\\gdmlInputCaptureCheck.exe",
+      "copy": "out\\verification\\j2-f8-2901f42\\identity\\frozen-binaries\\1132\\gdmlInputCaptureCheck.exe",
+      "bytes": 99328,
+      "sha256": "86d9aac227016f946a02724d3b22e2823430b7a0972de7a5e16bf3acc295a39a"
+    },
+    {
+      "version": "1143",
+      "source": "out\\build-i2-windows114\\Release\\G4UniversalSim.exe",
+      "copy": "out\\verification\\j2-f8-2901f42\\identity\\frozen-binaries\\1143\\G4UniversalSim.exe",
+      "bytes": 2432000,
+      "sha256": "cbe73ff941ee1e1b8abc541cc31d03b953fb3aadc3cb4ac78f93861c84124ac1"
+    }
+  ],
+  "archive_policy": "Include receipt/metadata in future archive candidate; binary payloads remain local and excluded from Git candidate. Preserve originals; no SDK/runtime or physics acceptance claim. This supplement does not mutate frozen archive manifests or documentation v2."
+}

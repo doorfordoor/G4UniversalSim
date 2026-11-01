@@ -1,0 +1,45 @@
+# CI layout-item 类型兼容最小候选（独立 out-only）
+
+## 原因与范围
+
+原2901f42 CI run41336912644的Linux11.3.2/11.4.3原始gui_start_page/gui_main_window日志真实失败于core/accessibility.py:80：current为QSpacerItem，却调用count。原证据见out/verification/j2-f8-2901f42/ci/first-failure.md与review-current.md，保持原件，不改成通过。
+
+源码三处把“layout getter非None”等价于“可遍历QLayout”。候选仅导入QLayout，并在_item_field递归、根layout队列、子layout入队处改为isinstance(value,QLayout)。QSpacerItem是QLayoutItem而非QLayout，本身不承载子控件，应跳过；实际嵌套QForm/Grid/HBox/VBox布局仍遍历。不是捕获所有异常后继续，更不是猜QHBox标签。
+
+_reading_anchor/_reveal_axis/ensure_focus_visible/focus_first/AccessibilityController整棵AST与冻结源码一致；不改延迟显露、union、滚动、History标注、翻译、业务动作或runner。
+
+## 交付SHA256（LF，未apply）
+
+- accessibility.proposed.py：c9d87e23c88704fedc2c17a8a954aba9acf365c607ea47fe86b6c56854be2be7
+- accessibility.patch：697cbc1f7d615bfaf1e2a1448095aa2dd49e8077861497b0d2f0c7ae8a33c7d2
+- smoke_f8_accessibility.proposed.py：2ee062333cb4724512ce040a8f84d210dc76cad5e9030a971794c5fe07fd9ff3
+- smoke_f8_accessibility.patch：68e939f1f55c76ae8edd045730333f05a88299b5d41aa4c4b81a36b790229cbf
+
+两patch组合git apply --check通过，未改tracked。旧416测试函数AST不变，main只追加test_layout_item_compatibility。
+
+## 永久Qt反例与严格证据边界
+
+新增函数使用真实QWidget/QFormLayout/QGridLayout/QHBoxLayout/QVBoxLayout/QSpacerItem和真实StartPage：
+
+1. stock Qt对象分支：嵌套布局含spacing/stretch；真实空spacer不得误当field；有效嵌套表单仍正确buddy/Name，控件草稿不变；en/zh/en。
+2. 明确受控的provider值重放：仅对真实QSpacerItem临时覆盖Python layout accessor，使其返回同一真实QSpacerItem，重放原CI已观察到的非QLayout返回值。没有伪Qt类/模拟layout。finally恢复accessor再销毁C++ owner。此分支故意产生Qt invalid-return RuntimeWarning，原样留日志、不屏蔽。
+3. 真实StartPage响应式宽760/1200重排、en/zh/en、实际decorate调用；此部分没有patched accessor，也无backend。
+
+必须如实区分：本机WSL Qt6.11.3上的冻结smoke_start_page自然通过74，未自然复现conda CI故障；因此不能把controlled replay称为自然CI复现。受控重放的冻结Windows/Linux均在同一accessibility.py:80真实触发QSpacerItem.count AttributeError并exit1；候选在相同重放和stock真实Qt组件中通过。新CI是否关闭仍需main后续实际运行，不用本地WSL代替。
+
+## 作者验证（均进程结束）
+
+| 日志 | 环境/范围 | 结果 |
+| --- | --- | --- |
+| windows-full-1.25.log | 指定Dvenv6.11.1，完整F8+新Qt反例 | exit0 / v3 492 |
+| windows-full-1.5.log | 同上 | exit0 / v3 492 |
+| linux-candidate-smoke_start_page.py.log | WSL Python3.11/Qt6.11.3，原永久入口，禁自动后端 | exit0 / v3 74 |
+| linux-candidate-smoke_main_window_ui.py.log | 同上 | exit0 / v3 46 |
+| linux-component-candidate.log | stock/replay/真实StartPage新组件 | exit0 |
+| windows-frozen-negative.log | 受控返回值重放，冻结产品 | 预期exit1，同CI异常 |
+| linux-frozen-replay-negative.log | 同上 | 预期exit1，同CI异常 |
+| linux-original-start6113.log | 冻结产品自然原入口，仅环境对照 | exit0 / v3 74 |
+
+receipt.json记录实际进程终态、日志/提案SHA及自然/故障重放的区别。Windows单独组件也有通过marker，但组合shell没有单独采其退出码；以已单独确认exit0的完整Windows492为正式作者证据，不冒称该组件单独退出收据。
+
+未运行backend/构建或native，tracked GUI/永久smoke仍匹配冻结2901f42身份。History三标签候选在out/collab/f8-history-label/v2独立保存；其完整519两档验证不混入本492。两个smoke patch都基于冻结69b11a，未来合并要保留两个新增函数/调用，不能覆盖掉任何一组回归。

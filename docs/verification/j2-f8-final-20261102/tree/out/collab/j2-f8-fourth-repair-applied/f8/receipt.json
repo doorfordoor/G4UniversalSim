@@ -1,0 +1,205 @@
+{
+  "scope": "actual tracked permanent F8 under original v3 probe; no outloader or external monkeypatch; offscreen only; not formal/native/backend acceptance",
+  "created_utc": "2026-11-01T21:23:34.791792+00:00",
+  "source_before_equals_after": true,
+  "test_sha256": "5f234e69c00d602039cb8f2ebc7daadb4f69edc860e6010989628d06253b3814",
+  "gui149_unchanged": true,
+  "gui149_count": 149,
+  "processes_all_finished": true,
+  "runs": [
+    {
+      "scale": "1.25",
+      "qt_platform": "offscreen",
+      "command": [
+        "D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe",
+        "-B",
+        "tools/test_assert_probe.py",
+        "gui/smoke_tests/smoke_f8_accessibility.py",
+        "--output",
+        "out/collab/j2-f8-fourth-repair-applied/f8/scale125"
+      ],
+      "exit_code": 0,
+      "assertions_v3": 655,
+      "log": "scale125.log",
+      "log_raw_sha256": "108b54ff588633eec2bdc6766ea14a9b057c721657348778da8235bd79038be0",
+      "log_encoding": "utf-8-sig",
+      "exec_session": 38339,
+      "exec_session_completion": "polled process exit0",
+      "finished_utc": "2026-11-01T21:22:53.4140763Z",
+      "artifacts": [
+        {
+          "path": "scale125/history-label.json",
+          "sha256": "ba5c77638e3b9f5e2a839cd92ab89256d85adb589a3519f1159cce34d9135167",
+          "size": 6409
+        },
+        {
+          "path": "scale125/history-label.png",
+          "sha256": "c08d1495b5594e2718045e006d33153136ac82a8cdd365c5c8f089d262b45454",
+          "size": 102215
+        },
+        {
+          "path": "scale125/natural-navigation.json",
+          "sha256": "8df667588f8649c3540a258efefda5340b07ad8dace5372b845e0ff15d345738",
+          "size": 834
+        },
+        {
+          "path": "scale125/natural-start.png",
+          "sha256": "38b3c83a06f0f2c7e9fcfde31f8a30c12c235a81e0b548ed9375e03a234e9477",
+          "size": 149775
+        },
+        {
+          "path": "scale125/retained-01-project-initial.png",
+          "sha256": "f753b4badaa33866561f6ec0df41ee3d5a6829f5364475583abc315ffe5a5e99",
+          "size": 140017
+        },
+        {
+          "path": "scale125/retained-02-config.png",
+          "sha256": "28cda3d1e97f513a536f17c48df42c7ecfd62dbe463ba53600aae1c207869719",
+          "size": 143584
+        },
+        {
+          "path": "scale125/retained-03-f6-preview.png",
+          "sha256": "2b0481fd2b954a3a797243f67cd21e35442873eab36de22c055337c6a19d0870",
+          "size": 137611
+        },
+        {
+          "path": "scale125/retained-04-wizard-cancel.png",
+          "sha256": "491ef8531a6ebc9033fa8c17a06c0c9b5e1501ccced1b8c4b81003c291f995a8",
+          "size": 137412
+        },
+        {
+          "path": "scale125/retained-05-dark.png",
+          "sha256": "71521d7e5a8d5d8bb8c4ee17a3d0c1029f70805d661b8778f10b65aa36119f6a",
+          "size": 136470
+        },
+        {
+          "path": "scale125/retained-06-project-return.png",
+          "sha256": "1f5965080f251ba1397fd4c5d415d679a10dd11a032b214cbc38895eee2abe8a",
+          "size": 134723
+        },
+        {
+          "path": "scale125/retained-07-project-settled.png",
+          "sha256": "1f5965080f251ba1397fd4c5d415d679a10dd11a032b214cbc38895eee2abe8a",
+          "size": 134723
+        },
+        {
+          "path": "scale125/retained-08-ninepage-return.png",
+          "sha256": "f00f1e869bdfdc2ab13c9c03b0e2a8d23a6218e32ec09d23ddac42dcbc6e3d95",
+          "size": 131266
+        },
+        {
+          "path": "scale125/retained-dock-focus.json",
+          "sha256": "07a3050ccd5471834c04756360f247834cbad99fbe4ce94c923bba2cf55e0164",
+          "size": 13368
+        },
+        {
+          "path": "scale125/start-zh.png",
+          "sha256": "f3f6a67120b9a799d7ffcdb30ac91dfe943570db0c4c63762df49274f4541f2e",
+          "size": 143763
+        },
+        {
+          "path": "scale125/start.png",
+          "sha256": "ff600601471628401aed839fc0ea9457102ce7df6769bcd2974bc2bf1886a4d7",
+          "size": 113155
+        }
+      ]
+    },
+    {
+      "scale": "1.5",
+      "qt_platform": "offscreen",
+      "command": [
+        "D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe",
+        "-B",
+        "tools/test_assert_probe.py",
+        "gui/smoke_tests/smoke_f8_accessibility.py",
+        "--output",
+        "out/collab/j2-f8-fourth-repair-applied/f8/scale150"
+      ],
+      "exit_code": 0,
+      "assertions_v3": 655,
+      "log": "scale150.log",
+      "log_raw_sha256": "b0263b3391e336ef9cf8da05b463d9d4bd6e3b58f5f92d09543e6920368181cb",
+      "log_encoding": "utf-8-sig",
+      "exec_session": 27515,
+      "exec_session_completion": "polled process exit0",
+      "finished_utc": "2026-11-01T21:23:30.1810621Z",
+      "artifacts": [
+        {
+          "path": "scale150/history-label.json",
+          "sha256": "ba5c77638e3b9f5e2a839cd92ab89256d85adb589a3519f1159cce34d9135167",
+          "size": 6409
+        },
+        {
+          "path": "scale150/history-label.png",
+          "sha256": "4c86bdbfaa2b37ea72a921336aeead7ec74b725613d150808e8509e422ec46ca",
+          "size": 122315
+        },
+        {
+          "path": "scale150/natural-navigation.json",
+          "sha256": "8df667588f8649c3540a258efefda5340b07ad8dace5372b845e0ff15d345738",
+          "size": 834
+        },
+        {
+          "path": "scale150/natural-start.png",
+          "sha256": "b2d74b804b1c9c1ff5627558c9919850aba5b9025ee21ed125ff42b2656391b1",
+          "size": 181907
+        },
+        {
+          "path": "scale150/retained-01-project-initial.png",
+          "sha256": "628746003ad0fb50905a50dcc9f6437f25849ae3f799593569eb4aac1c09ea12",
+          "size": 172748
+        },
+        {
+          "path": "scale150/retained-02-config.png",
+          "sha256": "4c7a14c971300f3cfa18ebdb833965621546e4631b49bb37f1326b5d79d44420",
+          "size": 177725
+        },
+        {
+          "path": "scale150/retained-03-f6-preview.png",
+          "sha256": "84285ffe9b434a2e73aa2fb93fe19fdad6c1bf9665cf21e9a38841aee35feebc",
+          "size": 169825
+        },
+        {
+          "path": "scale150/retained-04-wizard-cancel.png",
+          "sha256": "61e54e0da37373eba91c300ee1d4216a592a2bd452833195dcb97831f7adceb8",
+          "size": 169469
+        },
+        {
+          "path": "scale150/retained-05-dark.png",
+          "sha256": "7f92426cdf7f679e2109c9fccd2b61dd6b4ba07fc0c08901502ce573bf200f4e",
+          "size": 168372
+        },
+        {
+          "path": "scale150/retained-06-project-return.png",
+          "sha256": "07d78f5472ed7dc75c741988185d61087db491f78a37480cc36e2868636a9a6a",
+          "size": 167643
+        },
+        {
+          "path": "scale150/retained-07-project-settled.png",
+          "sha256": "07d78f5472ed7dc75c741988185d61087db491f78a37480cc36e2868636a9a6a",
+          "size": 167643
+        },
+        {
+          "path": "scale150/retained-08-ninepage-return.png",
+          "sha256": "0dc5d3395ed5759ccfdb6e44dfa53f31ff8364cd7c306fcd318d6890fbb99769",
+          "size": 161920
+        },
+        {
+          "path": "scale150/retained-dock-focus.json",
+          "sha256": "07a3050ccd5471834c04756360f247834cbad99fbe4ce94c923bba2cf55e0164",
+          "size": 13368
+        },
+        {
+          "path": "scale150/start-zh.png",
+          "sha256": "a16a7276f203535a7ddcf8affebec7dd31c082b7a9d8dbeba3acf738fd5a3bfa",
+          "size": 178958
+        },
+        {
+          "path": "scale150/start.png",
+          "sha256": "c5a5263ab919fe0fec299fb905413d206003d81e4b6d22dccd80fd3e32e2e80f",
+          "size": 138109
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "omissions": [
+    {
+      "local_source_path": "C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/j2-f8-56b689f/ci/artifacts/full-installation-Linux-13093212578.zip",
+      "bytes": 32731076,
+      "recorded_bytes": 32731076,
+      "sha256_from_existing_receipt": "8bb396778f082cd0debb31ec921b63c22d64ed36f9b964648a8b502432e14ed8",
+      "sha256_provenance": "out/verification/j2-f8-56b689f/ci/collected-files-final.json",
+      "fresh_payload_hash_performed": false,
+      "include_raw_payload": false,
+      "reason": "large official CI artifact ZIP; retain original collection receipt/digest, not raw ZIP in Git",
+      "publication_scope": "not_in_git_candidate"
+    },
+    {
+      "local_source_path": "C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/j2-f8-56b689f/ci/artifacts/full-installation-Windows-13093324687.zip",
+      "bytes": 29409361,
+      "recorded_bytes": 29409361,
+      "sha256_from_existing_receipt": "d957924a50f643b4a3870b5c96168d982bb536c87d66d2930a1bce4c91ba57d6",
+      "sha256_provenance": "out/verification/j2-f8-56b689f/ci/collected-files-final.json",
+      "fresh_payload_hash_performed": false,
+      "include_raw_payload": false,
+      "reason": "large official CI artifact ZIP; retain original collection receipt/digest, not raw ZIP in Git",
+      "publication_scope": "not_in_git_candidate"
+    },
+    {
+      "local_source_path": "C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/j2-source-physics-113-r1/test_physics_a6/retained-work/g4usim_a6_onm6v74h/case06/hits_t0.csv",
+      "bytes": 389902472,
+      "recorded_bytes": null,
+      "sha256_from_existing_receipt": "56147b71916312e512408c825bcf86e2b51555c7db18c87d78db948a396b2d62",
+      "sha256_provenance": "out/collab/j2-source-physics-113-r1/test_physics_a6/retained-work/g4usim_a6_onm6v74h/case06/run_metadata.json",
+      "fresh_payload_hash_performed": false,
+      "include_raw_payload": false,
+      "reason": "large supplemental output; not copied to Git candidate",
+      "publication_scope": "not_in_git_candidate",
+      "sha256_status": "reused_producer_receipt_not_rehashed"
+    },
+    {
+      "local_source_path": "C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/j2-source-physics-113-r1/test_physics_a6/retained-work/g4usim_a6_onm6v74h/case06/hits_t1.csv",
+      "bytes": 393457652,
+      "recorded_bytes": null,
+      "sha256_from_existing_receipt": "cf77d427e98ea403d8c7115b5396d851d9e5c3b7a47b9af02ca64b6f44dd08e3",
+      "sha256_provenance": "out/collab/j2-source-physics-113-r1/test_physics_a6/retained-work/g4usim_a6_onm6v74h/case06/run_metadata.json",
+      "fresh_payload_hash_performed": false,
+      "include_raw_payload": false,
+      "reason": "large supplemental output; not copied to Git candidate",
+      "publication_scope": "not_in_git_candidate",
+      "sha256_status": "reused_producer_receipt_not_rehashed"
+    },
+    {
+      "local_source_path": "C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/Geant4-11.4.3-data.zip",
+      "bytes": 1670619843,
+      "recorded_bytes": 1670619843,
+      "sha256_from_existing_receipt": "a76d36d8ab287598c47c3433f1d4373d14a07cc516bc460335c2901adb0d00b0",
+      "sha256_provenance": "out/collab/j2-114-data-reuse/receipt.json",
+      "fresh_payload_hash_performed": false,
+      "include_raw_payload": false,
+      "reason": "Geant4 data archive; large external dependency, not Git evidence",
+      "publication_scope": "not_in_git_candidate"
+    },
+    {
+      "local_source_path": "C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/i2-controlled/windows114-data/data",
+      "directory": true,
+      "files_reported_by_existing_receipt": 43527,
+      "bytes_reported_by_existing_receipt": 2180724729,
+      "sha256": "directory aggregate not defined; use existing receipt and published manifests",
+      "sha256_provenance": "out/collab/j2-114-data-reuse/receipt.json",
+      "payload_files_walked_or_hashed_this_task": 0,
+      "include_raw_payload": false,
+      "reason": "43,527-file data dependency excluded; prior payload verification is historical provenance, not new hash verification"
+    },
+    {
+      "local_source_path": "C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/i2-controlled/windows114-data/.g4usim-install.json",
+      "bytes": 7365226,
+      "recorded_bytes": null,
+      "sha256_from_existing_receipt": "f05cda1f8545bf138671aebaf83d255bcb58a278d5cd4cb2d99471cc2ae78bad",
+      "sha256_provenance": "out/collab/j2-114-data-reuse/receipt.json",
+      "fresh_payload_hash_performed": false,
+      "include_raw_payload": false,
+      "reason": "dependency published file-manifest reference only; no dataset payload copy",
+      "publication_scope": "not_in_git_candidate"
+    },
+    {
+      "local_source_path": "C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/i2-windows114-data-install.json",
+      "bytes": 9454875,
+      "recorded_bytes": null,
+      "sha256_from_existing_receipt": "3acfe21333f94eac217fe053e2e0089ee6e39430ffb4d10ee4c6f12761fe01f7",
+      "sha256_provenance": "out/collab/j2-114-data-reuse/receipt.json",
+      "fresh_payload_hash_performed": false,
+      "include_raw_payload": false,
+      "reason": "dependency published file-manifest reference only; no dataset payload copy",
+      "publication_scope": "not_in_git_candidate"
+    },
+    {
+      "local_source_path": "C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/dependencies/geant4-11.4.3/geant4-11.4.3-win64",
+      "directory": true,
+      "bytes": null,
+      "sha256": "SDK tree aggregate not enumerated",
+      "sdk_config_sha256": "a085301e9c9f409d4ab8b4fbcb5ec8780f36849f608602c809f50e8cd02a8d22",
+      "sha256_provenance": "out/collab/j2-114-data-reuse/receipt.json",
+      "payload_files_walked_or_hashed_this_task": 0,
+      "include_raw_payload": false,
+      "reason": "SDK binary tree excluded; package-size/hash reuse requires original SDK distribution receipt if later needed"
+    }
+  ],
+  "no_dataset_payload_scan": true,
+  "no_giant_csv_payload_hash": true
+}

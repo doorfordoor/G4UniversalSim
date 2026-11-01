@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-static-fixture-patch-final\run_geometry_components.py", line 27, in <module>
+    value=ns['main']();entry['status']='pass';entry['entry_return']=value
+          ^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-static-fixture-patch-final\proposed\scripts\test_config_migration.py", line 374, in main
+    geometry_contract(work)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-static-fixture-patch-final\proposed\scripts\test_config_migration.py", line 145, in geometry_contract
+    plan = plan_geometry_migration(source, "hierarchical")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\geometry_migration.py", line 138, in plan_geometry_migration
+    raise ValueError(f"{where}: unknown field; explicit legacy metadata mapping required where supported")
+ValueError: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-static-fixture-patch-final\runtime-work\e6-migration-e3p20fnr\geometry.ini:10 [volume.Target]/unit: unknown field; explicit legacy metadata mapping required where supported
+

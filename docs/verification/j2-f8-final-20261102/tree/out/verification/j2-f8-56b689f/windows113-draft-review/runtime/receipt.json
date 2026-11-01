@@ -1,0 +1,81 @@
+{
+  "python": "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+  "head_before": "56b689fb9ac920cbb1203b2b94dae2483d25f622",
+  "source_fp_before": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+  "exe": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\G4UniversalSim.exe",
+  "exe_sha256": "ea4427f57ef65d176144e1ea8f7a5914dff66265b8179989eca851588a2a133f",
+  "merge_sha256": "03bf4d13996aa7b9e100feca4e3ae1579c047419c8c8b4b5f4800a016b8ba089",
+  "sdk_config": "D:\\ProgramFiles\\Geant4\\lib\\cmake\\Geant4\\Geant4Config.cmake",
+  "sdk_config_sha256": "852b0efdbb8d4ed3e08c16e6822a7cdd78aa1c4e38809bad3e7dca3fb50e8bca",
+  "cache_sha256": "437a29f3d8989b5edc695c3dfca8cc00af5e7081754a80c373bf9be9f76b7bfb",
+  "geant4_expected_gdml": true,
+  "qt_qpa": "offscreen",
+  "qt_plugins": "D:/Geant4/G4UniversalSim/gui/.venv/Lib/site-packages/PySide6/plugins",
+  "tracked_tests_before": {
+    "gui/smoke_tests/smoke_source_editor_v2.py": "899db4d192bc5ef9f55c5953ef2ff11c734f897f352ce2d4a97b0bc6256e0805",
+    "gui/smoke_tests/smoke_scans.py": "57ab2163b4b68f0049de0462fd8cab6ad4bc870422d1039c84979cbbfb48ee43",
+    "gui/smoke_tests/smoke_scans_backend.py": "f63898caae7db539d5facdc71962b18bfaa0a9bd863f7151ec210cff8c68385c"
+  },
+  "cases": [
+    {
+      "name": "smoke_source_editor_v2.py",
+      "command": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows113-draft-review\\out_candidate_entry.py",
+        "smoke_source_editor_v2.py",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows113-draft-review\\runtime\\smoke_source_editor_v2"
+      ],
+      "exit_code": 0,
+      "assertions_executed": 54,
+      "duration_seconds": 1.203,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows113-draft-review\\runtime\\smoke_source_editor_v2.py.log",
+      "log_sha256": "f4f40925336cbd4f9a69c5c3b5b5fa8d16cae221d180c207f5c9ae57db55582f",
+      "dependencies_unchanged": true
+    },
+    {
+      "name": "smoke_scans.py",
+      "command": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows113-draft-review\\out_candidate_entry.py",
+        "smoke_scans.py",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows113-draft-review\\runtime\\smoke_scans"
+      ],
+      "exit_code": 0,
+      "assertions_executed": 58,
+      "duration_seconds": 4.859,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows113-draft-review\\runtime\\smoke_scans.py.log",
+      "log_sha256": "4b40337cf264211079db5f9c342b6145de0cb0a3554224f5b9f2507b357f5ddc",
+      "dependencies_unchanged": true
+    },
+    {
+      "name": "smoke_scans_backend.py",
+      "command": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows113-draft-review\\out_candidate_entry.py",
+        "smoke_scans_backend.py",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows113-draft-review\\runtime\\smoke_scans_backend"
+      ],
+      "exit_code": 0,
+      "assertions_executed": 18,
+      "duration_seconds": 18.563,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows113-draft-review\\runtime\\smoke_scans_backend.py.log",
+      "log_sha256": "685a26888016a26f29d3a0507bab5afb46928ea0921c994cf10093152ab15cd5",
+      "dependencies_unchanged": true
+    }
+  ],
+  "scope": "Independent out-only patch validation; separate from original failed formal profiles",
+  "stage": "complete",
+  "tracked_tests_after": {
+    "gui/smoke_tests/smoke_source_editor_v2.py": "899db4d192bc5ef9f55c5953ef2ff11c734f897f352ce2d4a97b0bc6256e0805",
+    "gui/smoke_tests/smoke_scans.py": "57ab2163b4b68f0049de0462fd8cab6ad4bc870422d1039c84979cbbfb48ee43",
+    "gui/smoke_tests/smoke_scans_backend.py": "f63898caae7db539d5facdc71962b18bfaa0a9bd863f7151ec210cff8c68385c"
+  },
+  "head_after": "56b689fb9ac920cbb1203b2b94dae2483d25f622",
+  "source_fp_after": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+  "exe_sha256_after": "ea4427f57ef65d176144e1ea8f7a5914dff66265b8179989eca851588a2a133f",
+  "identity_unchanged": true,
+  "status": "passed"
+}

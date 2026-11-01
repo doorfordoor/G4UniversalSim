@@ -1,0 +1,56 @@
+{
+  "not_a_safety_certification": true,
+  "local_archive_user_authorized": true,
+  "signal_type_counts": {
+    "explicit_FAKE_or_synthetic_pattern_occurrences": 8,
+    "authorized_task_worktree_path": 1149,
+    "authorized_tool_CI_or_task_identity_path": 138,
+    "authorization_header_symbolic_expression_no_literal_key": 1,
+    "task_artifact_path_context_no_personal_content_detected": 5,
+    "declared_negative_privacy_fixture_not_live_credential": 3,
+    "declared_synthetic_path_fixture": 1
+  },
+  "actual_unresolved_secret_candidates": [],
+  "actual_confirmed_live_secrets": 0,
+  "no_automated_text_signal_is_not_safety_review": true,
+  "images": {
+    "total": 336,
+    "selected_key_images": 92,
+    "metadata_only_nonessential_images": 244,
+    "new_visual_privacy_review_performed": false
+  },
+  "opaque_boundaries": [
+    {
+      "source": "out/verification/j2-f8-56b689f/ci/artifacts/frozen-desktop-Linux-13093895065.zip",
+      "sha256": "b478b6c39b4415b34fdaf4709a70885cc66eac23ac503448336644e32f351438",
+      "bytes": 23795
+    },
+    {
+      "source": "out/verification/j2-f8-56b689f/ci/artifacts/frozen-desktop-Windows-13093860061.zip",
+      "sha256": "785bdfbe364c8cf7f66f2dbd68ec8527141dfc60780d65c138c568364114ea47",
+      "bytes": 27232
+    },
+    {
+      "source": "out/verification/j2-f8-56b689f/ci/artifacts/linux-evidence-11.3.2-13093695553.zip",
+      "sha256": "ee10045c60041fd2b076648a80327be61f0659ef90c626808ac075ecd72a4951",
+      "bytes": 153336
+    },
+    {
+      "source": "out/verification/j2-f8-56b689f/ci/artifacts/linux-evidence-11.4.3-13092839619.zip",
+      "sha256": "2201f5f8d3d6d91aec07fc73825733019d95e1004a0bc157b2e296877a88e0a9",
+      "bytes": 153382
+    },
+    {
+      "source": "out/verification/j2-f8-56b689f/ci/artifacts/m0-report-ubuntu-latest-13093800091.zip",
+      "sha256": "58a4707d685ca283da0c62e9a6d650492a9c68d962addb6292e67ee5063dea16",
+      "bytes": 146405
+    },
+    {
+      "source": "out/verification/j2-f8-56b689f/ci/artifacts/m0-report-windows-latest-13092893947.zip",
+      "sha256": "dec2a13e2bad6e530d4724d2ac81c8d1e96571153b7edf0dd763f6fa3f481d76",
+      "bytes": 146029
+    }
+  ],
+  "release_policy": "No new approval barrier for authorized local staging; no public upload; any real unresolved secret excluded from staged payload pending handling. No values disclosed.",
+  "producer_receipt_supplement_files_scanned": 1
+}

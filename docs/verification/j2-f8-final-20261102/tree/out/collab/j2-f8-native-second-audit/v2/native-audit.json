@@ -1,0 +1,1908 @@
+{
+  "schema": "j2_f8_second_candidate_native_file_audit_v1",
+  "candidate_head": "2901f4254303c3a9089c9025717908c0d77ff190",
+  "audit_integrity_status": "verified",
+  "audit_errors": [],
+  "observed_groups": {
+    "native100": {
+      "recorded_host_exited_zero": true,
+      "head": "2901f4254303c3a9089c9025717908c0d77ff190",
+      "exe_sha256": "ad0864cba780d66c6046cb709a2fabd43262f31c8382f50f88ccb6df5c55a137",
+      "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+      "GUI_file_count": 149,
+      "GUI_map_matches_current_source": true,
+      "host_sha256": "b9c216045a478a5bffd503371405cf767b290ff87e811da3623dcbc89dad334a",
+      "launch_supervisor_pid": 55876,
+      "actual_python_host_pid": 45964,
+      "PID_boundary": "venv redirector/child PIDs kept distinct; not assumed equal",
+      "runtime_prefix": "D:\\Geant4\\G4UniversalSim\\gui\\.venv",
+      "runtime_modules": [
+        {
+          "name": "PySide6",
+          "recorded_version": "6.11.1",
+          "installed_metadata_version": "6.11.1",
+          "recorded_file_exists_in_full_venv": true
+        },
+        {
+          "name": "shiboken6",
+          "recorded_version": "6.11.1",
+          "installed_metadata_version": "6.11.1",
+          "recorded_file_exists_in_full_venv": true
+        },
+        {
+          "name": "pyvista",
+          "recorded_version": "0.48.4",
+          "installed_metadata_version": "0.48.4",
+          "recorded_file_exists_in_full_venv": true
+        },
+        {
+          "name": "pyvistaqt",
+          "recorded_version": "0.11.4",
+          "installed_metadata_version": "0.11.4",
+          "recorded_file_exists_in_full_venv": true
+        },
+        {
+          "name": "vtk",
+          "recorded_version": "9.6.2",
+          "installed_metadata_version": "9.6.2",
+          "recorded_file_exists_in_full_venv": true
+        },
+        {
+          "name": "qtpy",
+          "recorded_version": "2.4.3",
+          "installed_metadata_version": "2.4.3",
+          "recorded_file_exists_in_full_venv": true
+        }
+      ],
+      "observed_effective_DPR": [
+        1.0
+      ],
+      "scale_environment": "0.8",
+      "passive_rows": 24,
+      "observed_pages": [
+        0,
+        2,
+        5,
+        6
+      ],
+      "project_raw_hash_count": 5,
+      "edit_history_states": [
+        "{\"modified\": false, \"redo\": false, \"undo\": false}"
+      ],
+      "visual_items": [
+        {
+          "label": "start",
+          "main_observation_note": "100% start page visible; QQ lower-right overlay excluded.",
+          "recorded_time": 1793560339125,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/001-start-0.png",
+              "sha256": "dc2fbf058528b73c15f0d9786bd3d7b4c4a9d79f47815014475c39be32032968",
+              "bytes": 73923,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "blank-created",
+          "main_observation_note": "Actual Start New blank creates 0 custom materials and one world, new_simulation; preview construction underway.",
+          "recorded_time": 1793560352227,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/002-blank-created-0.png",
+              "sha256": "4e6aa8dceb8ab084c35b786491da122470d8b2254d265bdeffaf01911c8e8723",
+              "bytes": 93345,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "blank-initialized",
+          "main_observation_note": "Production backend preview reports one world volume; Save menu exposes CtrlS.",
+          "recorded_time": 1793560361182,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/003-blank-initialized-0.png",
+              "sha256": "1419b3e2dd071b9e0816944449b4f326bbdb9d92cb6a3fbc6a6801e5a320a430",
+              "bytes": 90951,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            },
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/003-blank-initialized-1.png",
+              "sha256": "b3d1fba85df8b4e15f01f6f3bfc1bffd7b61067a03b7e9e1c189b19d4dea9336",
+              "bytes": 12710,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            },
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/003-blank-initialized-2.png",
+              "sha256": "221c87f7e8468f262076e9668b8ef58460bbcf304fa5ee248061031155034e93",
+              "bytes": 11491,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "save-dialog",
+          "main_observation_note": "Actual Save dialog open; blank filename input visible.",
+          "recorded_time": 1793560388214,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/004-save-dialog-0.png",
+              "sha256": "7b6a96860228675005c02369652ca920a64514efc20acc483ee40c8604259920",
+              "bytes": 77872,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            },
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/004-save-dialog-1.png",
+              "sha256": "931abe8514f2e69efe6fb2b6c08f573a000ed9d3e33adaabf0a950cc4fb216e0",
+              "bytes": 77376,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "save-path",
+          "main_observation_note": "Entered new blank-native.json under current native100 evidence directory.",
+          "recorded_time": 1793560410106,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/005-save-path-0.png",
+              "sha256": "5ef57952e69e229270ceea4606a0a145bfbac3a335b3eea680deddfef0891588",
+              "bytes": 82476,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            },
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/005-save-path-1.png",
+              "sha256": "16c21935d304e2e681b6b17d34102442579b0caf5b9283236b732a2a0a7ebc98",
+              "bytes": 81530,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "blank-saved",
+          "main_observation_note": "Status bar confirms saved project at native100/blank-native.json; file exists.",
+          "recorded_time": 1793560420962,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/006-blank-saved-0.png",
+              "sha256": "9f6e8f4c3503cae7d6c5b34358501784ea4b5cb5bc9bcb98c0f97cf028fb449c",
+              "bytes": 94052,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "open-path",
+          "main_observation_note": "Open dialog points at saved blank-native.json.",
+          "recorded_time": 1793560449337,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/007-open-path-0.png",
+              "sha256": "b409f290d39c0e019a7a42b4d8f76e9c228bca559cf679d882c1349b8d903396",
+              "bytes": 82165,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            },
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/007-open-path-1.png",
+              "sha256": "b8cdcac44dfb7332098cccf11f686ff11323c974bf9989af2d88b030eec769fa",
+              "bytes": 81408,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "blank-reloaded",
+          "main_observation_note": "Status confirms Load Project from blank-native.json; 0 materials/one world retained, generated state stale pending validation.",
+          "recorded_time": 1793560465951,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/008-blank-reloaded-0.png",
+              "sha256": "cd158d6ba69844ab98004d530e40a61df01334cbacc747b613d6316a1c94375a",
+              "bytes": 94914,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "actions-visible",
+          "main_observation_note": "Natural wheel reaches full Validate and Generate and Run actions, no API scroll setters.",
+          "recorded_time": 1793560496096,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/009-actions-visible-0.png",
+              "sha256": "fcb5c8b737d3652ee5e9716136aee0431796a911d0792ffa2e08dc20350a3045",
+              "bytes": 90893,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "validate-observation",
+          "main_observation_note": "Validate UIA click returned without modal or visible state transition; no validation pass claimed from this input alone.",
+          "recorded_time": 1793560537204,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/010-validate-observation-0.png",
+              "sha256": "58e3e19460a1f1ef06eae12f6dd1f74fe78484063a6ff82e05a8e0ccb70f198e",
+              "bytes": 90686,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "fields-passed",
+          "main_observation_note": "Trusted experiment panel explicitly shows Fields and dependencies Passed; original validation records retained, no modal required.",
+          "recorded_time": 1793560596820,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/011-fields-passed-0.png",
+              "sha256": "b0bbe86ed1ee9b4ebf3fc51138ddfdbe7a36320933d0d97d1da0b11031342e6f",
+              "bytes": 92356,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "initialization-pending",
+          "main_observation_note": "Clicked Check initialization: trusted panel explicitly shows backend initialization In progress.",
+          "recorded_time": 1793560614623,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/012-initialization-pending-0.png",
+              "sha256": "8bf1016e7d00dd015a8e4d063e85b3eaaebd6f5988a40aab75d74a2b942522f3",
+              "bytes": 90424,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "initialization-passed",
+          "main_observation_note": "Trusted fields+backend initialization both Passed; initialization alone shows no_run, event completion Unobserved (correct boundary).",
+          "recorded_time": 1793560625052,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/013-initialization-passed-0.png",
+              "sha256": "38a5ec6da596910537f99624492ef2dd090d3c304908f52d5e25d484040846b8",
+              "bytes": 103214,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "generate-passed",
+          "main_observation_note": "Actual generated package path shown; independent raw record generation passed.",
+          "recorded_time": 1793560645435,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/014-generate-passed-0.png",
+              "sha256": "b4207c6bc3aaa271846e10e7d33cce8bbe158fe1be01a8e2561dcbc31f21cca4",
+              "bytes": 103145,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "run-pending",
+          "main_observation_note": "Single Run dispatched; event completion In progress and action buttons disabled.",
+          "recorded_time": 1793560656663,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/015-run-pending-0.png",
+              "sha256": "38c895e3084912b5ccb9c5163d555f24f84b13709068b1f8f5e70867e8f015d3",
+              "bytes": 91519,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "run-passed",
+          "main_observation_note": "Actual run completed: trusted fields/init/event all Passed, 100/100 events, success; physics comparison remains Unobserved.",
+          "recorded_time": 1793560672684,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/016-run-passed-0.png",
+              "sha256": "201c7bf60170113cfff8f368ab8c899f4f9deb882038bb13025f932463730426",
+              "bytes": 103383,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "export-parent-dialog",
+          "main_observation_note": "Export parent folder dialog opened from production experiment panel.",
+          "recorded_time": 1793560685474,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/017-export-parent-dialog-0.png",
+              "sha256": "5011396f5e8abd6fc00d23a7bc7168d0961c64815059713f5966dad398a48e07",
+              "bytes": 79157,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            },
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/017-export-parent-dialog-1.png",
+              "sha256": "73169a23d0059067e37991a86326cb2238a7dca0c72b511648443c1d34fcef45",
+              "bytes": 78650,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "export-name-dialog",
+          "main_observation_note": "Selected parent via natural Tab/Space after UIA cached-index rejection; name dialog opens, no export performed before now.",
+          "recorded_time": 1793560788771,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/018-export-name-dialog-0.png",
+              "sha256": "469c2f78a71746790ce7a5af2402e2b5eeae13a262678f19a67a49c72e077f32",
+              "bytes": 101270,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            },
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/018-export-name-dialog-1.png",
+              "sha256": "4f4878f854cba4dc013be3142a1eb7f58609228cb23640bc498e433d8200e088",
+              "bytes": 5506,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "export-name",
+          "main_observation_note": "New offline-native bundle name entered.",
+          "recorded_time": 1793560810322,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/019-export-name-0.png",
+              "sha256": "80ed3b5c5b78de3398d4235c8e0a46f23f3e7245b528e275d0af8a5ebd7ae8e4",
+              "bytes": 101834,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            },
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/019-export-name-1.png",
+              "sha256": "a3eeb1e3a006da2599b769e94108fd99d38fd05c626362e62037047ded195f16",
+              "bytes": 6223,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "export-returned",
+          "main_observation_note": "Export dialog returned to completed experiment; filesystem verification follows.",
+          "recorded_time": 1793560825902,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/020-export-returned-0.png",
+              "sha256": "6793e67be124e50ba2d26745fd301dea84d2a7a3e9d188f1e54e03837c0aa4c1",
+              "bytes": 103015,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "results",
+          "main_observation_note": "Results page references current run output; execution logs visibly100/100 and success. QQ over lower-right results excluded; actual records/summary audited separately.",
+          "recorded_time": 1793560845756,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native100/021-results-0.png",
+              "sha256": "6c1f575b7a89989102b6cb0d8206247330685ec6c4f4039ff3710deefefdef22",
+              "bytes": 101111,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        }
+      ],
+      "filename_png_count": 29,
+      "codec_boundary": "Original .png names preserved; actual JPEG encoding recorded per image; no re-encoding",
+      "referenced_PNG_count": 29,
+      "passive_viewport_geometry_rows": 0,
+      "geometry_is_not_unobscured_visual_proof": true,
+      "QQ_overlay_pixels_excluded": true,
+      "observed_scope_only": true
+    },
+    "native125": {
+      "recorded_host_exited_zero": true,
+      "head": "2901f4254303c3a9089c9025717908c0d77ff190",
+      "exe_sha256": "ad0864cba780d66c6046cb709a2fabd43262f31c8382f50f88ccb6df5c55a137",
+      "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+      "GUI_file_count": 149,
+      "GUI_map_matches_current_source": true,
+      "host_sha256": "b9c216045a478a5bffd503371405cf767b290ff87e811da3623dcbc89dad334a",
+      "launch_supervisor_pid": 10136,
+      "actual_python_host_pid": 59908,
+      "PID_boundary": "venv redirector/child PIDs kept distinct; not assumed equal",
+      "runtime_prefix": "D:\\Geant4\\G4UniversalSim\\gui\\.venv",
+      "runtime_modules": [
+        {
+          "name": "PySide6",
+          "recorded_version": "6.11.1",
+          "installed_metadata_version": "6.11.1",
+          "recorded_file_exists_in_full_venv": true
+        },
+        {
+          "name": "shiboken6",
+          "recorded_version": "6.11.1",
+          "installed_metadata_version": "6.11.1",
+          "recorded_file_exists_in_full_venv": true
+        },
+        {
+          "name": "pyvista",
+          "recorded_version": "0.48.4",
+          "installed_metadata_version": "0.48.4",
+          "recorded_file_exists_in_full_venv": true
+        },
+        {
+          "name": "pyvistaqt",
+          "recorded_version": "0.11.4",
+          "installed_metadata_version": "0.11.4",
+          "recorded_file_exists_in_full_venv": true
+        },
+        {
+          "name": "vtk",
+          "recorded_version": "9.6.2",
+          "installed_metadata_version": "9.6.2",
+          "recorded_file_exists_in_full_venv": true
+        },
+        {
+          "name": "qtpy",
+          "recorded_version": "2.4.3",
+          "installed_metadata_version": "2.4.3",
+          "recorded_file_exists_in_full_venv": true
+        }
+      ],
+      "observed_effective_DPR": [
+        1.25
+      ],
+      "scale_environment": null,
+      "passive_rows": 16,
+      "observed_pages": [
+        0,
+        1,
+        2,
+        7
+      ],
+      "project_raw_hash_count": 1,
+      "edit_history_states": [
+        "{\"modified\": false, \"redo\": false, \"undo\": false}"
+      ],
+      "visual_items": [
+        {
+          "label": "start",
+          "main_observation_note": "125% English start observed; QQ overlay obscures lower central examples, those pixels excluded.",
+          "recorded_time": 1793560128838,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/001-start-0.png",
+              "sha256": "548e6e484bec9ceeb04805038fc961676344ea63d25656034cbf9f6bed736fc2",
+              "bytes": 104144,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "project",
+          "main_observation_note": "Natural CtrlAlt2: Project name label and entire field visible at 125%; UIA focused_element differs from Qt visual focus, passive Qt record retained.",
+          "recorded_time": 1793560135629,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/002-project-0.png",
+              "sha256": "19d0dcf74b0b1c413a968d8d93d7e5ba275832268b9a9bde41df2286b445af0d",
+              "bytes": 101970,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "configuration",
+          "main_observation_note": "125% Configuration page; real PyVista preview visible at right; lower middle covered by QQ excluded.",
+          "recorded_time": 1793560144934,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/003-configuration-0.png",
+              "sha256": "44b30d87d374b7b7dddb4f1026ecccc7e17b9a53f0493cfee0cb312c233c998c",
+              "bytes": 125125,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "f6-preview",
+          "main_observation_note": "125% width1200: F6 visibly focuses Refresh Preview and full button text/border fits; native backend preview status 15 volume copies. This is separate from 150% narrow56 viewport boundary.",
+          "recorded_time": 1793560152406,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/004-f6-preview-0.png",
+              "sha256": "ec4feb1f84380fb9c889fd30d82eca0efe531351a2a54dd5eec41ebb5e96adc9",
+              "bytes": 124801,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "history",
+          "main_observation_note": "125% natural History entry: physical Runs root label and focused path shown. QAccessible name omission remains independently documented, no annotation pass claim.",
+          "recorded_time": 1793560165365,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/005-history-0.png",
+              "sha256": "721507c48183969b8deb4925ba426dec54d77cfcc7f7d8320a1cc33948d9baa7",
+              "bytes": 104509,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "retained-project",
+          "main_observation_note": "After Config/F6/History with retained docks, Project name full field+label visible at 125% without scrollbar forcing.",
+          "recorded_time": 1793560177545,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/006-retained-project-0.png",
+              "sha256": "ba9a78712e54f208bf957ea9d81d274488b6ef6972b20d75b913373571d6b01f",
+              "bytes": 131541,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "retained-start",
+          "main_observation_note": "Start remains reachable by CtrlAlt1 with docks retained.",
+          "recorded_time": 1793560187241,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/007-retained-start-0.png",
+              "sha256": "7135122e3c70abd5a9650e419a7d788959c9477db57f8c230823801b68aaece0",
+              "bytes": 130490,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "template-focus",
+          "main_observation_note": "Natural Tab visibly focuses full template button; no forced scroll.",
+          "recorded_time": 1793560192801,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/008-template-focus-0.png",
+              "sha256": "275a93e92f07efa12991f8b2ba0f7d77829052c07f1820bd90dc29e128d88559",
+              "bytes": 130592,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "wizard-start",
+          "main_observation_note": "125% English Scenario step, Next/Cancel native roles; central lower overlay excluded.",
+          "recorded_time": 1793560221220,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/009-wizard-start-0.png",
+              "sha256": "d134dd8b8b6ceb5dd0c48efd8fcce4aaa8fea6294b65ab641c4a7f625a8d3508",
+              "bytes": 119810,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            },
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/009-wizard-start-1.png",
+              "sha256": "77a0e673a6a18269a13a55aa21b934654f1f5de4c1f5f3977b072fc6e892c7e6",
+              "bytes": 46249,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "wizard-geometry-before-move",
+          "main_observation_note": "Geometry step reached with Return; QQ overlay blocks bottom central button view.",
+          "recorded_time": 1793560233097,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/010-wizard-geometry-before-move-0.png",
+              "sha256": "8149ccdcfa4acdaaa30329be4182abc543cd7ae3da6bef51bed4e27d721a49e0",
+              "bytes": 105045,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            },
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/010-wizard-geometry-before-move-1.png",
+              "sha256": "46db8548e86681534e56f9cc9ba45a74a73748434d52049a1f7a35af48510ae6",
+              "bytes": 36193,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "wizard-geometry-moved",
+          "main_observation_note": "Dialog moved by native titlebar drag; Next and Cancel fully visible, left labels still partly behind existing QQ overlay.",
+          "recorded_time": 1793560243412,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/011-wizard-geometry-moved-0.png",
+              "sha256": "53fe9f5cab62b69919595dedcc90548dd1b69a1605b3da0d228b7c6fd306f80c",
+              "bytes": 115763,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            },
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/011-wizard-geometry-moved-1.png",
+              "sha256": "8a753333a750ef7318b6f3d456f90edb51773c0a5826f817ca20c8b34d3f4bd5",
+              "bytes": 30755,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "wizard-geometry-clear",
+          "main_observation_note": "Whole 125% English geometry dialog now unobscured; labels, spin boundaries, Back arrow, Next/Cancel visible. Locale glyphs retained as numeric locale behavior.",
+          "recorded_time": 1793560252737,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/012-wizard-geometry-clear-0.png",
+              "sha256": "7e318b41dff6f99bc901eedd0a44ad66ce82eb06e5b15e4ab1d8c84568cfdfa4",
+              "bytes": 119695,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            },
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/012-wizard-geometry-clear-1.png",
+              "sha256": "3d806e64387248d57cd82380e05e3c2d7d25e2621fd74ae34de347e74d92eb7b",
+              "bytes": 29546,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "wizard-source",
+          "main_observation_note": "125% English Source labels and Next/Cancel unobscured; Back role supplied by native arrow.",
+          "recorded_time": 1793560262184,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/013-wizard-source-0.png",
+              "sha256": "10726e6d3ae5728b6603ad597352f22741fead271b54bd6bebf8e8e3c36f93ae",
+              "bytes": 117358,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            },
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/013-wizard-source-1.png",
+              "sha256": "555646bc185365afb5e09193d3aa4e53ce79e426c396db445d9673863cefc88c",
+              "bytes": 24521,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "wizard-run",
+          "main_observation_note": "125% English Run page unobscured: Finish/Cancel visible, Back accessible role present, summary visible.",
+          "recorded_time": 1793560270571,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/014-wizard-run-0.png",
+              "sha256": "5817c0d473da2b2bf2ec24976dc1dff7bdb2af4be211e81821136f94b70774a4",
+              "bytes": 133303,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            },
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/014-wizard-run-1.png",
+              "sha256": "403850806d2870262fc48769a7394aff537544544edf1c44ad08598e6d72dd05",
+              "bytes": 40687,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "wizard-back",
+          "main_observation_note": "Actual AltLeft returned Run→Source; Next replaces Finish.",
+          "recorded_time": 1793560278032,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/015-wizard-back-0.png",
+              "sha256": "fd97ab4e6aa429f01ac9b884021e9ea429faddd53c1c60fe2cedc525daf94a46",
+              "bytes": 118634,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            },
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/015-wizard-back-1.png",
+              "sha256": "0115660b5ca44c08a9ce74f606736f2ee5b1d424eb493d1da5452722f69ac28b",
+              "bytes": 23543,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "wizard-cancel",
+          "main_observation_note": "Escape dismissed wizard; original demo remains, recovery reports no unsaved changes.",
+          "recorded_time": 1793560287260,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native125/016-wizard-cancel-0.png",
+              "sha256": "22def207ec28c9013277b6581b1dece45d3f370de30f6f2361533489d2608c51",
+              "bytes": 130432,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        }
+      ],
+      "filename_png_count": 23,
+      "codec_boundary": "Original .png names preserved; actual JPEG encoding recorded per image; no re-encoding",
+      "referenced_PNG_count": 23,
+      "passive_viewport_geometry_rows": 9,
+      "geometry_is_not_unobscured_visual_proof": true,
+      "QQ_overlay_pixels_excluded": true,
+      "observed_scope_only": true
+    },
+    "native150": {
+      "recorded_host_exited_zero": true,
+      "head": "2901f4254303c3a9089c9025717908c0d77ff190",
+      "exe_sha256": "ad0864cba780d66c6046cb709a2fabd43262f31c8382f50f88ccb6df5c55a137",
+      "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+      "GUI_file_count": 149,
+      "GUI_map_matches_current_source": true,
+      "host_sha256": "b9c216045a478a5bffd503371405cf767b290ff87e811da3623dcbc89dad334a",
+      "launch_supervisor_pid": 33712,
+      "actual_python_host_pid": 53136,
+      "PID_boundary": "venv redirector/child PIDs kept distinct; not assumed equal",
+      "runtime_prefix": "D:\\Geant4\\G4UniversalSim\\gui\\.venv",
+      "runtime_modules": [
+        {
+          "name": "PySide6",
+          "recorded_version": "6.11.1",
+          "installed_metadata_version": "6.11.1",
+          "recorded_file_exists_in_full_venv": true
+        },
+        {
+          "name": "shiboken6",
+          "recorded_version": "6.11.1",
+          "installed_metadata_version": "6.11.1",
+          "recorded_file_exists_in_full_venv": true
+        },
+        {
+          "name": "pyvista",
+          "recorded_version": "0.48.4",
+          "installed_metadata_version": "0.48.4",
+          "recorded_file_exists_in_full_venv": true
+        },
+        {
+          "name": "pyvistaqt",
+          "recorded_version": "0.11.4",
+          "installed_metadata_version": "0.11.4",
+          "recorded_file_exists_in_full_venv": true
+        },
+        {
+          "name": "vtk",
+          "recorded_version": "9.6.2",
+          "installed_metadata_version": "9.6.2",
+          "recorded_file_exists_in_full_venv": true
+        },
+        {
+          "name": "qtpy",
+          "recorded_version": "2.4.3",
+          "installed_metadata_version": "2.4.3",
+          "recorded_file_exists_in_full_venv": true
+        }
+      ],
+      "observed_effective_DPR": [
+        1.5
+      ],
+      "scale_environment": "1.2",
+      "passive_rows": 29,
+      "observed_pages": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "project_raw_hash_count": 2,
+      "edit_history_states": [
+        "{\"modified\": false, \"redo\": false, \"undo\": false}"
+      ],
+      "visual_items": [
+        {
+          "label": "start-zh",
+          "main_observation_note": "150% startup; welcome/actions readable. Unrelated QQ overlay on far-left sidebar excluded.",
+          "recorded_time": 1793559040711,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/001-start-zh-0.png",
+              "sha256": "9bc87dd0dd48194494ff601cec963bc477eb1a1dc38ade66503d3124b1e09b3f",
+              "bytes": 80810,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "project-initial",
+          "main_observation_note": "Natural CtrlAlt2: project-name label and complete field visible; demo selected.",
+          "recorded_time": 1793559055042,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/002-project-initial-0.png",
+              "sha256": "b409c4a48c53cfc0fd6a711d20b2abbbe62be1146ef074de9c0232dc29f26572",
+              "bytes": 94475,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "config-docks",
+          "main_observation_note": "Natural CtrlAlt3: configuration and preview docks retained; run-name label/control readable.",
+          "recorded_time": 1793559065612,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/003-config-docks-0.png",
+              "sha256": "01cf359293ccbdc9a6f7e89183f37baa981aa8d7c0f272cfbd86821ff31f7e1b",
+              "bytes": 94317,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "config-f6",
+          "main_observation_note": "F6 moved into the preview region and minimally scrolled the shared workspace; retained docks remain present.",
+          "recorded_time": 1793559091888,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/004-config-f6-0.png",
+              "sha256": "68e4b3781c4cf0ab58b2750fdeb3de2003606684cc22ad1ebdad8ddc568b6e5c",
+              "bytes": 91680,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "start-retained",
+          "main_observation_note": "Natural CtrlAlt1 with retained docks: first Start action visible; other content remains scrollable.",
+          "recorded_time": 1793559108091,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/005-start-retained-0.png",
+              "sha256": "fd5ba5512f5a51bc492177961473aea357bd686f4c96384edab9c933926d85fc",
+              "bytes": 90632,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "template-tab",
+          "main_observation_note": "Natural Tab reveals the complete template button using minimal horizontal movement.",
+          "recorded_time": 1793559117164,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/006-template-tab-0.png",
+              "sha256": "725fb8d71fd5188af50a71be0f56b1b296bba4668269d29544ba706a063c305d",
+              "bytes": 79144,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "wizard-start",
+          "main_observation_note": "Wizard reentry by Space; Chinese Next and Cancel visible and named, retained background unchanged.",
+          "recorded_time": 1793559135676,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/007-wizard-start-0.png",
+              "sha256": "9a4d4965cb7c5bffd7b93a22f21108941ffdf36236c42927caa68ef8b1b9581a",
+              "bytes": 67561,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            },
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/007-wizard-start-1.png",
+              "sha256": "8172b3526ec144b4014f8d3055b8b36ddc17d6f0aa138f63726322051de9ddbe",
+              "bytes": 52005,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "wizard-geometry",
+          "main_observation_note": "Geometry page: material fields and numeric control borders visible; Back accessible name present on native arrow, Next/Cancel Chinese. Locale glyphs retain prior documented meaning.",
+          "recorded_time": 1793559149122,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/008-wizard-geometry-0.png",
+              "sha256": "b15d12b96a02687fec9d75848c5ff65144c26595e09781c567fc813241ff5abd",
+              "bytes": 58449,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            },
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/008-wizard-geometry-1.png",
+              "sha256": "9c804703dd5a9444042e1e663c92fbdb4952ffce52b671f8f1a9d5a78b0441dc",
+              "bytes": 38080,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "wizard-source",
+          "main_observation_note": "Source page labels and full controls visible; natural Enter progression.",
+          "recorded_time": 1793559156526,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/009-wizard-source-0.png",
+              "sha256": "587f0f41e24509ad220a67c46224650c1cdd86d7bf7edb6acb07cca1ec15ce61",
+              "bytes": 50885,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            },
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/009-wizard-source-1.png",
+              "sha256": "109cf155f54dd54f87cf9062dc025cf4432e5c14ac11c44084682e56dbc613e5",
+              "bytes": 30866,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "wizard-run",
+          "main_observation_note": "Run page: Chinese Finish/Cancel visible, Back role named; fields and summary readable at 150%.",
+          "recorded_time": 1793559169503,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/010-wizard-run-0.png",
+              "sha256": "b87e114cec0c421d0031dff2892548389c5ef845f5c132778cb545e822b0dcfd",
+              "bytes": 74073,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            },
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/010-wizard-run-1.png",
+              "sha256": "da74a28c36d7a4ef96110776d5640e2c8fa7ca7720a364d7bc0a45e2e5313b25",
+              "bytes": 53968,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "wizard-back",
+          "main_observation_note": "Alt+Left actually returned from Run to Source. Earlier accessibility-index click was unavailable before dispatch; refreshed state and used the native shortcut.",
+          "recorded_time": 1793559215814,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/011-wizard-back-0.png",
+              "sha256": "b565895a47bee5ac503081d73d0328c49ad2f0d5098e165236634a158fc73d6f",
+              "bytes": 52245,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            },
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/011-wizard-back-1.png",
+              "sha256": "6565d8709299263f8602265ea226aa9957545ced8597cecbd1c71d6dab64a461",
+              "bytes": 31208,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "wizard-cancel",
+          "main_observation_note": "Escape cancels wizard; original demo remains, undo/redo remain disabled in visible toolbar.",
+          "recorded_time": 1793559228211,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/012-wizard-cancel-0.png",
+              "sha256": "d361df927deea50e0e19fccbaaf0a097bd76351d8214aa7d2be825f64b4fb9b0",
+              "bytes": 79104,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "dark-retained",
+          "main_observation_note": "Dark theme settled after menu selection, retained docks still present; theme did not create dirty state.",
+          "recorded_time": 1793559262099,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/013-dark-retained-0.png",
+              "sha256": "81ed892b51b49a82e5438d4a9583af82541534c4535ce625df7215e70f909fb6",
+              "bytes": 80103,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "project-retained-fixed",
+          "main_observation_note": "Natural retained Config/Preview → F6 → wizard Enter/Back/Escape → dark → CtrlAlt2: project-name label and entire field visible, focus remains on demo. No scrollbar write or ensure call by harness.",
+          "recorded_time": 1793559275794,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/014-project-retained-fixed-0.png",
+              "sha256": "7efb786de2ae7ab211e0fae6953e6010ac194be8fbac7ef470dc7e8f752ad884",
+              "bytes": 94660,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "project-tab",
+          "main_observation_note": "Natural Tab moves to executable field; its label and control are visible. Passive all-ancestor project rectangles contained; business raw hash and cached Undo/Redo/dirty unchanged.",
+          "recorded_time": 1793559308902,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/015-project-tab-0.png",
+              "sha256": "21b2f5177453cbd044d6fbbc81b2db1ba52f3bdb82fdc290dec5828cb739fde0",
+              "bytes": 94870,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "config-dark",
+          "main_observation_note": "CtrlAlt3 resets navigation by current focus; run-name label/full field visible in dark theme.",
+          "recorded_time": 1793559318455,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/016-config-dark-0.png",
+              "sha256": "b4103c822e0685ecea3fdc946391d046bccc6023a304ffd4968e92f5dfb99b84",
+              "bytes": 94679,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "f6-preview-observation",
+          "main_observation_note": "Settled F6 preview focus is Refresh Preview; screenshot appears to cut its right edge/text at workspace boundary. Candidate observation for independent measurement, not yet classified.",
+          "recorded_time": 1793559390399,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/017-f6-preview-observation-0.png",
+              "sha256": "d8f9d5c4bf98386174f0e06ed7a2c22d9c9dd9e99103d33a987436d5b773f605",
+              "bytes": 92693,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "project-shift-tab",
+          "main_observation_note": "Shift+Tab naturally reveals project-name complete label and border; no forced zero scroll.",
+          "recorded_time": 1793559431047,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/018-project-shift-tab-0.png",
+              "sha256": "0a8908178edfbcb9f30df5bb8859ea006363576a3392d990bc0d264e7fb0e56c",
+              "bytes": 95880,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "page4-scenario",
+          "main_observation_note": "CtrlAlt4: scenario working-directory focus and its label/full field visible; wide remaining form scrolls.",
+          "recorded_time": 1793559442008,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/019-page4-scenario-0.png",
+              "sha256": "4a0ebc635276f08423c7c7d8961d42dd41c8df7b604aec939fddbdb5bc3fd5af",
+              "bytes": 102845,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "page5-effective",
+          "main_observation_note": "CtrlAlt5: read-only effective configuration title, load control and empty-state message visible.",
+          "recorded_time": 1793559453027,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/020-page5-effective-0.png",
+              "sha256": "020624a4a80bde7beae9dc3616952723b1c5726719e1e852029970b31e06c663",
+              "bytes": 101805,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "page6-run",
+          "main_observation_note": "CtrlAlt6: focus on snapshot details, action area reachable; no run started by navigation.",
+          "recorded_time": 1793559464551,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/021-page6-run-0.png",
+              "sha256": "5137f5043f18ab46fd48aa0a509ec3f10c740e2f0c880b56dda298c8c930ff53",
+              "bytes": 98765,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "page7-results",
+          "main_observation_note": "CtrlAlt7 brings result dock and its Refresh button into focus; no evidence loaded or fabricated.",
+          "recorded_time": 1793559480536,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/022-page7-results-0.png",
+              "sha256": "8de42101ccc9fd5d3dcbb899bf552f74169971d1794d077c53d52dc2516b5aa0",
+              "bytes": 92972,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "page8-history",
+          "main_observation_note": "CtrlAlt8 focuses result-directory field; complete field visible, preceding label appears partly outside viewport. Joint label+field may exceed available width; candidate policy observation, not asserted passed.",
+          "recorded_time": 1793559516661,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/023-page8-history-0.png",
+              "sha256": "0f7ccd93ee9b866a21684b3d29fbc83044d7813ff5344acdb9cb3666610cae8a",
+              "bytes": 70284,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "page9-scan",
+          "main_observation_note": "CtrlAlt9: focused scan parameter selector and label visible; navigation alone does not start a scan.",
+          "recorded_time": 1793559537659,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/024-page9-scan-0.png",
+              "sha256": "c7668b1241b0784b72abac7c3d822e9d7af88ac8a073aa04c24aecb0a9a85dac",
+              "bytes": 87563,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "project-after-nine",
+          "main_observation_note": "After all nine pages, project-name full label and field remain visible.",
+          "recorded_time": 1793559554870,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/025-project-after-nine-0.png",
+              "sha256": "35a00d6de69cbb7b33cdac5c1ffab417f9909a51fcf3ec1c816fc8cace940ac0",
+              "bytes": 88354,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        },
+        {
+          "label": "project-english",
+          "main_observation_note": "English Project label/full name control visible after language switch; known narrow preview and History observations remain pending classification.",
+          "recorded_time": 1793559689452,
+          "image_files": [
+            {
+              "path": "out/verification/j2-f8-2901f42/native150/026-project-english-0.png",
+              "sha256": "a240d18a4db6786594d10b5f38bce8808a052447e598b740ef2017f8888def64",
+              "bytes": 90622,
+              "actual_encoding": "JPEG",
+              "extension_is_not_codec_assertion": true
+            }
+          ],
+          "observed_by": "main direct screenshot inspection as explicitly supplied by user",
+          "auditor_new_pixel_inspection": false
+        }
+      ],
+      "filename_png_count": 31,
+      "codec_boundary": "Original .png names preserved; actual JPEG encoding recorded per image; no re-encoding",
+      "referenced_PNG_count": 31,
+      "passive_viewport_geometry_rows": 27,
+      "geometry_is_not_unobscured_visual_proof": true,
+      "QQ_overlay_pixels_excluded": true,
+      "observed_scope_only": true
+    }
+  },
+  "same_GUI_identity_all_three": true,
+  "passive_host_scope": [
+    {
+      "host": "out/collab/j2-f8-native/host-v2.py",
+      "sha256": "b9c216045a478a5bffd503371405cf767b290ff87e811da3623dcbc89dad334a",
+      "observer_method_names": {
+        "project_viewports": [
+          "append",
+          "contains",
+          "getRect",
+          "horizontalScrollBar",
+          "isAncestorOf",
+          "mapTo",
+          "objectName",
+          "parentWidget",
+          "rect",
+          "size",
+          "value",
+          "verticalScrollBar",
+          "viewport",
+          "widget"
+        ],
+        "observe": [
+          "accessibleName",
+          "activeModalWidget",
+          "asdict",
+          "currentIndex",
+          "devicePixelRatioF",
+          "dumps",
+          "encode",
+          "focusWidget",
+          "height",
+          "hexdigest",
+          "isVisible",
+          "objectName",
+          "open",
+          "sha256",
+          "state",
+          "time",
+          "topLevelWidgets",
+          "width",
+          "windowTitle",
+          "write"
+        ]
+      },
+      "setup_boundary": "Before show, sets actual MainWindow executable/runs paths, isolated settings/history/recovery, initial project, edit-history reset, language/theme/position/size. This setup is not a user-action test. After show observer/timer reads only; external real UI inputs are main-owned.",
+      "direct_run_generate_export_focus_or_scroll_dispatch_from_observer": false
+    }
+  ],
+  "native100_saved_blank": {
+    "path": "out/verification/j2-f8-2901f42/native100/blank-native.json",
+    "sha256": "e63fe5eb63c835b923a0cbbb324f577ec3c5c2688513f715155e82fa93f524d0",
+    "projectName": "new_simulation",
+    "schema_version": 8,
+    "custom_material_rows": 0,
+    "world_only": true,
+    "planned_events": 100
+  },
+  "native100_actual_record_chain": [
+    {
+      "action": "validate",
+      "level": "fields",
+      "record_id": "40b075a789974ab194d2ac9c2057b236",
+      "revision": 4,
+      "session_id": "67a66051cf9849e182b67f033d5872f7",
+      "status": "passed",
+      "stale": false,
+      "can_run": true,
+      "events": null,
+      "execution_id": null,
+      "result": null,
+      "exit_code": null,
+      "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/40b075a789974ab194d2ac9c2057b236/record.json",
+      "sha256": "ec3a7e355c976a1b2cc371e4647ce5c891dc7f1861b79376631339be24e6e67b",
+      "expected_inputs_checked": []
+    },
+    {
+      "action": "validate",
+      "level": "fields",
+      "record_id": "6a8e8a2fe7c042ce96df162daa6271e4",
+      "revision": 4,
+      "session_id": "67a66051cf9849e182b67f033d5872f7",
+      "status": "passed",
+      "stale": false,
+      "can_run": true,
+      "events": null,
+      "execution_id": null,
+      "result": null,
+      "exit_code": null,
+      "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/6a8e8a2fe7c042ce96df162daa6271e4/record.json",
+      "sha256": "2a2867816bd51d6956efba95c7949b9fd0142765a5eef4221143564b10177098",
+      "expected_inputs_checked": []
+    },
+    {
+      "action": "validate",
+      "level": "initialization",
+      "record_id": "7867ccbaa73c48d8877574794d7be0b8",
+      "revision": 4,
+      "session_id": "67a66051cf9849e182b67f033d5872f7",
+      "status": "passed",
+      "stale": false,
+      "can_run": true,
+      "events": "unobserved",
+      "execution_id": "fbb8a85cfa0a827196cb76bcf786929e",
+      "result": {
+        "completed_events": 0,
+        "planned_events": 0,
+        "reason": "Process completed but no Geant4 run occurred.",
+        "run_count": 0,
+        "state": "no_run",
+        "summary_status": "completed"
+      },
+      "exit_code": 0,
+      "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/7867ccbaa73c48d8877574794d7be0b8/record.json",
+      "sha256": "a5de928a6725daf8beaac4369b479187e81bcc08c8f1dd6cad7316c19144270c",
+      "expected_inputs_checked": [
+        {
+          "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/7867ccbaa73c48d8877574794d7be0b8/execution-inputs/resources/r0000-main.ini",
+          "sha256": "ddbae92fdb5399c66e933ed28d99c2c981b8c6da53f065f2295e0a89002c54aa",
+          "bytes": 937
+        },
+        {
+          "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/7867ccbaa73c48d8877574794d7be0b8/execution-inputs/resources/r0001-material.ini",
+          "sha256": "1f1d80c69daa3a2a0a0dc8b7f25631c3059cbf644d978704af9fa1eee6cb6a02",
+          "bytes": 77
+        },
+        {
+          "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/7867ccbaa73c48d8877574794d7be0b8/execution-inputs/resources/r0002-geometry.ini",
+          "sha256": "6749b52bf23fde2e47cad8322cb6a50f6d85bf078bc1c89b065067579400dfb7",
+          "bytes": 237
+        },
+        {
+          "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/7867ccbaa73c48d8877574794d7be0b8/execution-inputs/resources/r0003-run.mac",
+          "sha256": "ad0cdf210f49ccd8c9c94284d3b89fa3917779bccd13b845ca831532aa8e210e",
+          "bytes": 149
+        },
+        {
+          "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/7867ccbaa73c48d8877574794d7be0b8/initialize-prefix.mac",
+          "sha256": "7121430736a21ccb90ecad45a9abeeaacbf2a6971abc07c6a621be4f4180e2ac",
+          "bytes": 318
+        }
+      ],
+      "execution_bundle_checked": {
+        "manifest": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/7867ccbaa73c48d8877574794d7be0b8/execution-inputs/manifest.json",
+        "sha256": "5e9a4a7180fc8bf715f65e35dc0f131002e401e5efe23d0fe8e1909630e47c2e",
+        "members": [
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/7867ccbaa73c48d8877574794d7be0b8/execution-inputs/resources/r0000-main.ini",
+            "role": "main",
+            "bytes": 937,
+            "sha256": "ddbae92fdb5399c66e933ed28d99c2c981b8c6da53f065f2295e0a89002c54aa"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/7867ccbaa73c48d8877574794d7be0b8/execution-inputs/resources/r0001-material.ini",
+            "role": "materials",
+            "bytes": 77,
+            "sha256": "1f1d80c69daa3a2a0a0dc8b7f25631c3059cbf644d978704af9fa1eee6cb6a02"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/7867ccbaa73c48d8877574794d7be0b8/execution-inputs/resources/r0002-geometry.ini",
+            "role": "geometry",
+            "bytes": 237,
+            "sha256": "6749b52bf23fde2e47cad8322cb6a50f6d85bf078bc1c89b065067579400dfb7"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/7867ccbaa73c48d8877574794d7be0b8/execution-inputs/resources/r0003-run.mac",
+            "role": "macro",
+            "bytes": 149,
+            "sha256": "ad0cdf210f49ccd8c9c94284d3b89fa3917779bccd13b845ca831532aa8e210e"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/7867ccbaa73c48d8877574794d7be0b8/execution-inputs/workspace.json",
+            "role": "snapshot",
+            "bytes": 8443,
+            "sha256": "b593c783b1f9b7c8e87a949737abb1da6cebdbdfc589fd75f14fefdbe76db2b2"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/7867ccbaa73c48d8877574794d7be0b8/execution-inputs/validation_records.json",
+            "role": "validation_history",
+            "bytes": 71,
+            "sha256": "e7153946374c1e029196ca4351f9632e5818c56159662d01b4d101b506e50146"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/7867ccbaa73c48d8877574794d7be0b8/execution-inputs/replay.py",
+            "role": "replay_entry",
+            "bytes": 329,
+            "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+          }
+        ],
+        "history_trust": "stale_requires_revalidation",
+        "replay_verified": false,
+        "outputs_included": false
+      },
+      "run_summary_facts": {
+        "status": "completed",
+        "run_count": "0",
+        "run_0_planned_events": null,
+        "run_0_completed_events": null,
+        "summary_write_status": "completed",
+        "output_failure_status": "none"
+      }
+    },
+    {
+      "action": "run",
+      "level": "execution",
+      "record_id": "ad87175c2e59495aa13a168b70d7af1c",
+      "revision": 4,
+      "session_id": "67a66051cf9849e182b67f033d5872f7",
+      "status": "passed",
+      "stale": false,
+      "can_run": true,
+      "events": null,
+      "execution_id": "1c647056f4fd788e16e97604979eb748",
+      "result": {
+        "completed_events": 100,
+        "planned_events": 100,
+        "reason": "Events completed as planned.",
+        "run_count": 1,
+        "state": "success",
+        "summary_status": "completed"
+      },
+      "exit_code": 0,
+      "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/ad87175c2e59495aa13a168b70d7af1c/record.json",
+      "sha256": "96594e2a5cfcd220237c25a20a76f411f2bd563a70cfbd169588c1374c0491c5",
+      "expected_inputs_checked": [
+        {
+          "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/ad87175c2e59495aa13a168b70d7af1c/execution-inputs/resources/r0000-main.ini",
+          "sha256": "ddbae92fdb5399c66e933ed28d99c2c981b8c6da53f065f2295e0a89002c54aa",
+          "bytes": 937
+        },
+        {
+          "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/ad87175c2e59495aa13a168b70d7af1c/execution-inputs/resources/r0001-material.ini",
+          "sha256": "1f1d80c69daa3a2a0a0dc8b7f25631c3059cbf644d978704af9fa1eee6cb6a02",
+          "bytes": 77
+        },
+        {
+          "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/ad87175c2e59495aa13a168b70d7af1c/execution-inputs/resources/r0002-geometry.ini",
+          "sha256": "6749b52bf23fde2e47cad8322cb6a50f6d85bf078bc1c89b065067579400dfb7",
+          "bytes": 237
+        },
+        {
+          "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/ad87175c2e59495aa13a168b70d7af1c/execution-inputs/resources/r0003-run.mac",
+          "sha256": "ad0cdf210f49ccd8c9c94284d3b89fa3917779bccd13b845ca831532aa8e210e",
+          "bytes": 149
+        }
+      ],
+      "execution_bundle_checked": {
+        "manifest": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/ad87175c2e59495aa13a168b70d7af1c/execution-inputs/manifest.json",
+        "sha256": "2948392ba4a36fcfb44cf6c80038a5c9f1997ceacd860dd3b0cadfe924c22814",
+        "members": [
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/ad87175c2e59495aa13a168b70d7af1c/execution-inputs/resources/r0000-main.ini",
+            "role": "main",
+            "bytes": 937,
+            "sha256": "ddbae92fdb5399c66e933ed28d99c2c981b8c6da53f065f2295e0a89002c54aa"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/ad87175c2e59495aa13a168b70d7af1c/execution-inputs/resources/r0001-material.ini",
+            "role": "materials",
+            "bytes": 77,
+            "sha256": "1f1d80c69daa3a2a0a0dc8b7f25631c3059cbf644d978704af9fa1eee6cb6a02"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/ad87175c2e59495aa13a168b70d7af1c/execution-inputs/resources/r0002-geometry.ini",
+            "role": "geometry",
+            "bytes": 237,
+            "sha256": "6749b52bf23fde2e47cad8322cb6a50f6d85bf078bc1c89b065067579400dfb7"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/ad87175c2e59495aa13a168b70d7af1c/execution-inputs/resources/r0003-run.mac",
+            "role": "macro",
+            "bytes": 149,
+            "sha256": "ad0cdf210f49ccd8c9c94284d3b89fa3917779bccd13b845ca831532aa8e210e"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/ad87175c2e59495aa13a168b70d7af1c/execution-inputs/workspace.json",
+            "role": "snapshot",
+            "bytes": 8443,
+            "sha256": "b593c783b1f9b7c8e87a949737abb1da6cebdbdfc589fd75f14fefdbe76db2b2"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/ad87175c2e59495aa13a168b70d7af1c/execution-inputs/validation_records.json",
+            "role": "validation_history",
+            "bytes": 71,
+            "sha256": "e7153946374c1e029196ca4351f9632e5818c56159662d01b4d101b506e50146"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/ad87175c2e59495aa13a168b70d7af1c/execution-inputs/replay.py",
+            "role": "replay_entry",
+            "bytes": 329,
+            "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+          }
+        ],
+        "history_trust": "stale_requires_revalidation",
+        "replay_verified": false,
+        "outputs_included": false
+      },
+      "run_summary_facts": {
+        "status": "completed",
+        "run_count": "1",
+        "run_0_planned_events": "100",
+        "run_0_completed_events": "100",
+        "summary_write_status": "completed",
+        "output_failure_status": "none"
+      }
+    },
+    {
+      "action": "export",
+      "level": "export",
+      "record_id": "b4969edc52dc4f17b12ef306851def80",
+      "revision": 4,
+      "session_id": "67a66051cf9849e182b67f033d5872f7",
+      "status": "passed",
+      "stale": false,
+      "can_run": null,
+      "events": null,
+      "execution_id": null,
+      "result": null,
+      "exit_code": null,
+      "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/b4969edc52dc4f17b12ef306851def80/record.json",
+      "sha256": "d7faa39eed538debae059f746c3bb3d6fb4e127f8ba28f6413bbdb6ecd6b1412",
+      "expected_inputs_checked": [],
+      "export_checked": {
+        "manifest": "out/verification/j2-f8-2901f42/native100/offline-native/manifest.json",
+        "sha256": "aec447305fc69558b3134973ada6b5608fdc64a08bf4891d3b3e94f72193cbde",
+        "members": [
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/offline-native/resources/r0000-main.ini",
+            "role": "main",
+            "bytes": 937,
+            "sha256": "ddbae92fdb5399c66e933ed28d99c2c981b8c6da53f065f2295e0a89002c54aa"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/offline-native/resources/r0001-material.ini",
+            "role": "materials",
+            "bytes": 77,
+            "sha256": "1f1d80c69daa3a2a0a0dc8b7f25631c3059cbf644d978704af9fa1eee6cb6a02"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/offline-native/resources/r0002-geometry.ini",
+            "role": "geometry",
+            "bytes": 237,
+            "sha256": "6749b52bf23fde2e47cad8322cb6a50f6d85bf078bc1c89b065067579400dfb7"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/offline-native/resources/r0003-run.mac",
+            "role": "macro",
+            "bytes": 149,
+            "sha256": "ad0cdf210f49ccd8c9c94284d3b89fa3917779bccd13b845ca831532aa8e210e"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/offline-native/workspace.json",
+            "role": "snapshot",
+            "bytes": 8443,
+            "sha256": "b593c783b1f9b7c8e87a949737abb1da6cebdbdfc589fd75f14fefdbe76db2b2"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/offline-native/validation_records.json",
+            "role": "validation_history",
+            "bytes": 23291,
+            "sha256": "70aad108ae6af0c8720e313e9c60c648885679a46d7cbfc602cadd43fc0b1e67"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/offline-native/replay.py",
+            "role": "replay_entry",
+            "bytes": 329,
+            "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+          }
+        ],
+        "history_trust": "stale_requires_revalidation",
+        "replay_verified": false,
+        "outputs_included": false
+      }
+    },
+    {
+      "action": "generate",
+      "level": "generation",
+      "record_id": "c50d6847b5fb486eb66249d45aff0bfd",
+      "revision": 4,
+      "session_id": "67a66051cf9849e182b67f033d5872f7",
+      "status": "passed",
+      "stale": false,
+      "can_run": true,
+      "events": null,
+      "execution_id": null,
+      "result": null,
+      "exit_code": null,
+      "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/c50d6847b5fb486eb66249d45aff0bfd/record.json",
+      "sha256": "e76aea50bc2ee666a9bffce2d6841d410cb7eb36bca1c417107ecf1e82ba50ab",
+      "expected_inputs_checked": [
+        {
+          "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/c50d6847b5fb486eb66249d45aff0bfd/execution-inputs/resources/r0000-main.ini",
+          "sha256": "ddbae92fdb5399c66e933ed28d99c2c981b8c6da53f065f2295e0a89002c54aa",
+          "bytes": 937
+        },
+        {
+          "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/c50d6847b5fb486eb66249d45aff0bfd/execution-inputs/resources/r0001-material.ini",
+          "sha256": "1f1d80c69daa3a2a0a0dc8b7f25631c3059cbf644d978704af9fa1eee6cb6a02",
+          "bytes": 77
+        },
+        {
+          "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/c50d6847b5fb486eb66249d45aff0bfd/execution-inputs/resources/r0002-geometry.ini",
+          "sha256": "6749b52bf23fde2e47cad8322cb6a50f6d85bf078bc1c89b065067579400dfb7",
+          "bytes": 237
+        },
+        {
+          "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/c50d6847b5fb486eb66249d45aff0bfd/execution-inputs/resources/r0003-run.mac",
+          "sha256": "ad0cdf210f49ccd8c9c94284d3b89fa3917779bccd13b845ca831532aa8e210e",
+          "bytes": 149
+        }
+      ],
+      "execution_bundle_checked": {
+        "manifest": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/c50d6847b5fb486eb66249d45aff0bfd/execution-inputs/manifest.json",
+        "sha256": "7db8c153870d9f53cdc81fc5811bfa0379a7509f01e4645cef158e13b67fe095",
+        "members": [
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/c50d6847b5fb486eb66249d45aff0bfd/execution-inputs/resources/r0000-main.ini",
+            "role": "main",
+            "bytes": 937,
+            "sha256": "ddbae92fdb5399c66e933ed28d99c2c981b8c6da53f065f2295e0a89002c54aa"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/c50d6847b5fb486eb66249d45aff0bfd/execution-inputs/resources/r0001-material.ini",
+            "role": "materials",
+            "bytes": 77,
+            "sha256": "1f1d80c69daa3a2a0a0dc8b7f25631c3059cbf644d978704af9fa1eee6cb6a02"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/c50d6847b5fb486eb66249d45aff0bfd/execution-inputs/resources/r0002-geometry.ini",
+            "role": "geometry",
+            "bytes": 237,
+            "sha256": "6749b52bf23fde2e47cad8322cb6a50f6d85bf078bc1c89b065067579400dfb7"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/c50d6847b5fb486eb66249d45aff0bfd/execution-inputs/resources/r0003-run.mac",
+            "role": "macro",
+            "bytes": 149,
+            "sha256": "ad0cdf210f49ccd8c9c94284d3b89fa3917779bccd13b845ca831532aa8e210e"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/c50d6847b5fb486eb66249d45aff0bfd/execution-inputs/workspace.json",
+            "role": "snapshot",
+            "bytes": 8443,
+            "sha256": "b593c783b1f9b7c8e87a949737abb1da6cebdbdfc589fd75f14fefdbe76db2b2"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/c50d6847b5fb486eb66249d45aff0bfd/execution-inputs/validation_records.json",
+            "role": "validation_history",
+            "bytes": 71,
+            "sha256": "e7153946374c1e029196ca4351f9632e5818c56159662d01b4d101b506e50146"
+          },
+          {
+            "path": "out/verification/j2-f8-2901f42/native100/runs/experiment-records/c50d6847b5fb486eb66249d45aff0bfd/execution-inputs/replay.py",
+            "role": "replay_entry",
+            "bytes": 329,
+            "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+          }
+        ],
+        "history_trust": "stale_requires_revalidation",
+        "replay_verified": false,
+        "outputs_included": false
+      }
+    }
+  ],
+  "open_items": [
+    {
+      "id": "F6_narrow_preview_dock_boundary",
+      "status": "open",
+      "evidence": "native150/017-f6-preview-observation-0.png",
+      "note": "Main reports right-edge/text clipping. No rect-containment shortcut or overall pass."
+    },
+    {
+      "id": "History_name_label_accessibility_omission",
+      "status": "open",
+      "evidence": [
+        "native125/005-history-0.png",
+        "native150/023-page8-history-0.png"
+      ],
+      "note": "Main reports missing History name/label/accessibility coverage; retain open."
+    }
+  ],
+  "overall_native_acceptance": false,
+  "stage_complete": false,
+  "visual_evidence_attribution": "Main explicitly directly inspected each supplied observation screenshot; this agent only audits files, hashes, recorded scope and actual records. Does not re-inspect pixels or assert unobscured from rectangle containment.",
+  "native125_QQ_boundary": "before-move and moved observations still partly occluded; only wizard-geometry-clear and subsequent explicit notes claim unobscured dialog after natural drag. QQ pixels excluded.",
+  "native150_project_retained": "Main directly observes fixed Project label/full field at retained-dock steps; does not close the distinct F6 or History issues.",
+  "followup_all_three_effective_DPRs": [
+    {
+      "DPR": 1.0,
+      "status": "pending_after_new_repair",
+      "scope": [
+        "three explicit History buddies and dynamic language",
+        "real-layout-only QLayout traversal",
+        "F6 narrow-dock limitation observed, no claim repaired"
+      ]
+    },
+    {
+      "DPR": 1.25,
+      "status": "pending_after_new_repair",
+      "scope": [
+        "three explicit History buddies and dynamic language",
+        "real-layout-only QLayout traversal",
+        "F6 narrow-dock limitation observed, no claim repaired"
+      ]
+    },
+    {
+      "DPR": 1.5,
+      "status": "pending_after_new_repair",
+      "scope": [
+        "three explicit History buddies and dynamic language",
+        "real-layout-only QLayout traversal",
+        "F6 narrow-dock limitation observed, no claim repaired"
+      ]
+    }
+  ],
+  "offline_bundle_boundary": "Export member SHA and stale history checked only; no offline replay or transport physics validation performed.",
+  "native_actions_by_this_auditor": false,
+  "product_or_tracked_changes_by_this_auditor": false,
+  "head_before": "2901f4254303c3a9089c9025717908c0d77ff190",
+  "head_after": "2901f4254303c3a9089c9025717908c0d77ff190",
+  "git_status_after": "",
+  "audit_finished_utc": "2026-11-01T19:30:52Z"
+}

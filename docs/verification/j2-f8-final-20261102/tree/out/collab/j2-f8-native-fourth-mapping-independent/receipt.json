@@ -1,0 +1,69 @@
+{
+  "status": "prepared_checker_review_passed_only",
+  "actual_future_mapping_executed": false,
+  "future_head": null,
+  "original_native_head": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+  "original_exe_sha256": "01e0fb795f93772ccfa818d625fee145d8da1ad3ad80894372a9a855f0af108a",
+  "checker_sha256": "549dd0b1916032085ed8da2059cce8c23d2fea820e1387a3699d30d84a1a1cd6",
+  "anchor_sha256": "946d8262ec404178e9f08d18c1619192f06f9fdacb66d079ed6221f5e9a5e3ae",
+  "preparation_sha256": "ecd60093beac41aa37fb902938f13c80509d7ad74a151e20c87e4984771071fe",
+  "author_artifacts_sha_verified": {
+    "check_mapping.py": "549dd0b1916032085ed8da2059cce8c23d2fea820e1387a3699d30d84a1a1cd6",
+    "selftest.py": "8ce4898b264601880b243453003b05e6edd07b223bb664935b2896c98b8b47a4",
+    "README.md": "6e6f6a0a83b63e64d9de0c5b7b25bf88c5aa75fb49b3dc0f95f50086602b6fa6",
+    "origin-anchor.json": "946d8262ec404178e9f08d18c1619192f06f9fdacb66d079ed6221f5e9a5e3ae",
+    "allowlist.template.json": "474e217e8146ab8cad15b9ca441176f83ae789dc9d17fee49d640cc8e24ad776"
+  },
+  "native_original_files_verified": 12,
+  "scope_sha256": "700e7f3a22915cac1ce28ab44040056a36f562ecda826ba71b5fd9d034d3e69f",
+  "native": [
+    {
+      "scale": "100",
+      "identity_sha256": "742014c271843a4fa8d000fb255dda723e7f6da762c65e0522d7caa96febd572",
+      "launch_sha256": "aaab8f728ab420daeb66c0df9892eec0ee0a7e966f5732cbd461257359f4bd7c",
+      "exit_sha256": "08128f96f91ce8cbc1d5437ee2658e20a995f7694d8bcb818e35c5dc6a24e13c",
+      "raw_scale_factor": "0.8",
+      "gui_file_count": 149
+    },
+    {
+      "scale": "125",
+      "identity_sha256": "b986bbec5b4305d07c1c5a72afe8593771f01081d97ea6a35f2c534e4cd6e85a",
+      "launch_sha256": "b4b5453c771c2b8513b4219749aaaf351eccb4447218e16e1a8947e94d4ba27b",
+      "exit_sha256": "813cd84e8a8027bff2ab7ae8409c669e0c0686ed44ebca00fbbf3d662ce82877",
+      "raw_scale_factor": "",
+      "gui_file_count": 149
+    },
+    {
+      "scale": "150",
+      "identity_sha256": "b7dcfe38311e480a9f947fa070f22d4e891dacbbed4882320bf66b186c7d87d5",
+      "launch_sha256": "661103f746fd60a1561de89f10fc8197c474c5b9c7e0da2788350addb905aeeb",
+      "exit_sha256": "8a58aae4e885476bc0522edd05dc3f4ed8bee5116f4e30762ace13ad38a193a6",
+      "raw_scale_factor": "1.2",
+      "gui_file_count": 149
+    }
+  ],
+  "gui_original_git_blob_sha_verified": 149,
+  "logic_scope": {
+    "status": "synthetic_logic_only_passed",
+    "actual_future_head_used": false,
+    "actual_mapping_run": false,
+    "git_calls": 0,
+    "qt_or_runtime_imports": 0,
+    "groups": [
+      "explicit_docs_add_delete",
+      "root_anchored_docs",
+      "no_glob_expansion",
+      "fixed_smokes_and_fields",
+      "old_new_object_modes",
+      "unlisted_runtime_deletion",
+      "missing_or_tampered",
+      "pending_template_and_identity_syntax"
+    ]
+  },
+  "logic_log_sha256": "593324aa3af53518b17ffd3d3407a6b75232dfb039f06be81de59418c8fddf1a",
+  "no_qt_runtime_native_build_or_profile": true,
+  "screenshots_read_or_copied": 0,
+  "docs_freeze_is_not_gated_by_future_mapping": true,
+  "additional_native_plan_separate_pending": true,
+  "findings": []
+}

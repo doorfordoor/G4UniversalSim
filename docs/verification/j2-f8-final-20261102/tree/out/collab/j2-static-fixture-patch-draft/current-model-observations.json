@@ -1,0 +1,276 @@
+{
+  "unknown_mode": [
+    {
+      "code": "physics.structured.invalid",
+      "severity": "error",
+      "field": "mode",
+      "collection": "",
+      "row": null,
+      "entity": "",
+      "source": null,
+      "unavailable_reason": "",
+      "identity_parameters": {
+        "reason": "Unsupported selection",
+        "value": "future"
+      }
+    }
+  ],
+  "manual_empty": [
+    {
+      "code": "physics.structured.invalid",
+      "severity": "error",
+      "field": "manual_modules",
+      "collection": "",
+      "row": null,
+      "entity": "",
+      "source": null,
+      "unavailable_reason": "",
+      "identity_parameters": {
+        "reason": "A value is required",
+        "value": []
+      }
+    }
+  ],
+  "bias_hook_empty": [
+    {
+      "code": "physics.structured.invalid",
+      "severity": "error",
+      "field": "bias_rules",
+      "collection": "",
+      "row": null,
+      "entity": "",
+      "source": null,
+      "unavailable_reason": "",
+      "identity_parameters": {
+        "reason": "Biasing requires an enabled process rule",
+        "value": []
+      }
+    }
+  ],
+  "extra_em": [
+    {
+      "code": "physics.structured.invalid",
+      "severity": "error",
+      "field": "extra_modules",
+      "collection": "",
+      "row": null,
+      "entity": "",
+      "source": null,
+      "unavailable_reason": "",
+      "identity_parameters": {
+        "reason": "Unsupported physics constructor",
+        "value": [
+          "em"
+        ]
+      }
+    }
+  ],
+  "reference_manual": [
+    {
+      "code": "physics.structured.invalid",
+      "severity": "error",
+      "field": "manual_modules",
+      "collection": "",
+      "row": null,
+      "entity": "",
+      "source": null,
+      "unavailable_reason": "",
+      "identity_parameters": {
+        "reason": "Manual modules conflict with reference mode",
+        "value": [
+          "em"
+        ]
+      }
+    },
+    {
+      "code": "physics.structured.invalid",
+      "severity": "error",
+      "field": "manual_modules",
+      "collection": "",
+      "row": null,
+      "entity": "",
+      "source": null,
+      "unavailable_reason": "",
+      "identity_parameters": {
+        "reason": "Unsupported physics constructor",
+        "value": [
+          "em"
+        ]
+      }
+    }
+  ],
+  "manual_valid": [],
+  "extra_valid": [],
+  "nist_unknowns": [
+    {
+      "code": "materials.nist.unknown",
+      "severity": "error",
+      "field": null,
+      "collection": null,
+      "row": null,
+      "entity": null,
+      "source": null,
+      "unavailable_reason": "unsupported_editor",
+      "identity_parameters": {
+        "value": "Unknown",
+        "field": "nist_name",
+        "collection": "rows",
+        "row": 0,
+        "entity": "Alias"
+      }
+    },
+    {
+      "code": "materials.nist.unknown",
+      "severity": "error",
+      "field": null,
+      "collection": null,
+      "row": null,
+      "entity": null,
+      "source": null,
+      "unavailable_reason": "unsupported_editor",
+      "identity_parameters": {
+        "value": "",
+        "field": "nist_name",
+        "collection": "rows",
+        "row": 1,
+        "entity": "Unknown"
+      }
+    },
+    {
+      "code": "materials.nist.unknown",
+      "severity": "error",
+      "field": "name",
+      "collection": "rows",
+      "row": 2,
+      "entity": "G4_UNKNOWN_F4",
+      "source": null,
+      "unavailable_reason": "",
+      "identity_parameters": {
+        "value": "G4_UNKNOWN_F4"
+      }
+    }
+  ],
+  "nist_catalog": [],
+  "geometry": [
+    {
+      "code": "geometry.solid.size",
+      "severity": "error",
+      "field": "size",
+      "collection": "volumes",
+      "row": 1,
+      "entity": "badbox",
+      "source": null,
+      "unavailable_reason": "",
+      "identity_parameters": {
+        "value": "bad"
+      }
+    },
+    {
+      "code": "geometry.solid.dx1",
+      "severity": "error",
+      "field": "dx1",
+      "collection": "volumes",
+      "row": 2,
+      "entity": "shape",
+      "source": null,
+      "unavailable_reason": "",
+      "identity_parameters": {
+        "value": null
+      }
+    },
+    {
+      "code": "geometry.solid.dx2",
+      "severity": "error",
+      "field": "dx2",
+      "collection": "volumes",
+      "row": 2,
+      "entity": "shape",
+      "source": null,
+      "unavailable_reason": "",
+      "identity_parameters": {
+        "value": null
+      }
+    },
+    {
+      "code": "geometry.solid.dy1",
+      "severity": "error",
+      "field": "dy1",
+      "collection": "volumes",
+      "row": 2,
+      "entity": "shape",
+      "source": null,
+      "unavailable_reason": "",
+      "identity_parameters": {
+        "value": null
+      }
+    },
+    {
+      "code": "geometry.solid.dy2",
+      "severity": "error",
+      "field": "dy2",
+      "collection": "volumes",
+      "row": 2,
+      "entity": "shape",
+      "source": null,
+      "unavailable_reason": "",
+      "identity_parameters": {
+        "value": null
+      }
+    },
+    {
+      "code": "geometry.solid.dz",
+      "severity": "error",
+      "field": "dz",
+      "collection": "volumes",
+      "row": 2,
+      "entity": "shape",
+      "source": null,
+      "unavailable_reason": "",
+      "identity_parameters": {
+        "value": null
+      }
+    },
+    {
+      "code": "geometry.visual.alpha_range",
+      "severity": "error",
+      "field": "vis.alpha",
+      "collection": "volumes",
+      "row": 2,
+      "entity": "shape",
+      "source": null,
+      "unavailable_reason": "",
+      "identity_parameters": {
+        "value": "2"
+      }
+    }
+  ],
+  "layers": [
+    {
+      "code": "geometry.layer.alpha_range",
+      "severity": "error",
+      "field": "vis.alpha",
+      "collection": "layers",
+      "row": 1,
+      "entity": "a",
+      "source": null,
+      "unavailable_reason": "",
+      "identity_parameters": {
+        "value": "2"
+      }
+    },
+    {
+      "code": "geometry.metadata.syntax",
+      "severity": "error",
+      "field": "metadata",
+      "collection": "layers",
+      "row": 1,
+      "entity": "a",
+      "source": null,
+      "unavailable_reason": "",
+      "identity_parameters": {
+        "value": "not a metadata line",
+        "line": 1
+      }
+    }
+  ]
+}

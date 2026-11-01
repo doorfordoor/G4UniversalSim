@@ -1,0 +1,88 @@
+{
+  "status": "pass",
+  "frozen_receipt_sha256": "0694e3b124de56832146d28ba9607072077df4a0782e25f1c624507b2fd76952",
+  "patch_sha256": "f705dc96bcfb4706e03d045a00e281c53ce0e8fe6eb9912c27579188e8a446de",
+  "files": [
+    {
+      "path": "gui/g4usim_gui/core/experiment_bundle.py",
+      "original_sha256": "fd94da357bfc97ffdf53ac9bd0c5c55d480087f6df226b4266449aad12ff068e",
+      "candidate_sha256": "4990d9f4439711f96aa5a5475f6f39ea3588b8c1e3fabf7e3e2eca0318a45610",
+      "original_lines": 896,
+      "candidate_lines": 916,
+      "crlf_count": 0,
+      "compile": "pass"
+    },
+    {
+      "path": "scripts/test_k1_bundle.py",
+      "original_sha256": "e825d4278bd9b59d7ff871c1f2abd39d564b0fc5591de460f784a6d28cb2fa4f",
+      "candidate_sha256": "80726fb8eeda65700169416b8a9711967ed15283ed8bbc22bbf20b42d8c216f3",
+      "original_lines": 779,
+      "candidate_lines": 882,
+      "crlf_count": 0,
+      "compile": "pass"
+    }
+  ],
+  "original_test_functions_ast_unchanged": true,
+  "results": [
+    {
+      "mode": "short-baseline",
+      "exit_code": 1,
+      "expected": 1,
+      "assertions": 9,
+      "log": "short-baseline.log",
+      "log_sha256": "af65cad4eae5316f15601c72263ff8f7e0c5a0e2cbf9d97e4663817ae76639f7"
+    },
+    {
+      "mode": "short-candidate",
+      "exit_code": 0,
+      "expected": 0,
+      "assertions": 30,
+      "log": "short-candidate.log",
+      "log_sha256": "a2bc8f1f93157617b584dbd0fab489828389acccd4b310edb7c9f15801221afe"
+    },
+    {
+      "mode": "full",
+      "exit_code": 0,
+      "expected": 0,
+      "assertions": 603,
+      "log": "full.log",
+      "log_sha256": "66bcbad3181dabe876d755daa276b9b444e1df37e1f7936c150f2c3fba39f039"
+    }
+  ],
+  "tracked_author_and_original_ci_log_bytes_unchanged": true,
+  "unchanged_sha256": {
+    "gui\\g4usim_gui\\core\\experiment_bundle.py": "fd94da357bfc97ffdf53ac9bd0c5c55d480087f6df226b4266449aad12ff068e",
+    "scripts\\test_k1_bundle.py": "e825d4278bd9b59d7ff871c1f2abd39d564b0fc5591de460f784a6d28cb2fa4f",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\ci-original-gui-k1-workflow.log": "b68a00eaaa712371b846674902bee6c35ed215249b6bc93c049d5c2bb92aca5d",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\experiment_bundle-v3-before-policy-tail.py": "fdb836d609349ab23a320a0ef08ca642bbccd18ca39140f4810c0ac2be7c4287",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\experiment_bundle.py": "4990d9f4439711f96aa5a5475f6f39ea3588b8c1e3fabf7e3e2eca0318a45610",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\fix.patch": "f705dc96bcfb4706e03d045a00e281c53ce0e8fe6eb9912c27579188e8a446de",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\git-apply-check.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\git-apply-numstat.log": "e8c5453913b6489eac2ebaa2d04c0bc1a5ed291f1082d7f326e8b3b98740ec74",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\git-apply-stat.log": "05dc0fabd69ca7bae8db685b05fba8c5f00ec279da19815d74a897b4408e9fae",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\late-resource-policy-final.json": "d10d5949afbf956c4896fecba8590a0cf19d74d1b80212a80f8230d028d58691",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\late-resource-policy.log": "1069f765d7b492063228f3c8421866c3570ce8e19ec3d8f8eaff9307ef8868bc",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\late_resource_policy_probe.py": "6484381f404c53d0aba0c4f46e0b2d8b526068b9b08b3cfa7a423c379d747c72",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\link-facts.json": "b4e7fbf286e4a63d051d05a482f082d548b718c4026e0c642e973ac7bde5cb72",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\link-probe.log": "dca2cb5d70795a6e0fc2fd43b6705ec6e2fff698df87c7c47b5b8ced25fc9bd5",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\link_probe.py": "8a5aa85059640b20e46843673047bb359a434f2d088f3525acb6c4709ab09606",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\original-refusals-final.log": "4b9e23bd6d85dc0e6857d369fd6c954dcb4c228e9ada1698657ea2e1a5634b72",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\packaging.json": "239520435d79939065fbe84faa3ad7de66e4179538bc106293b56825b2a37e5c",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\policy-final.log": "c00bc7f88eb38f031d44b6fad5575eac2fa1efb68863e729131f4425d5b3b2cb",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\policy-tail-final-frozen.log": "a711982fd41badb8dbc81cb3c31b8838e275e6cc75c022dcb133fa4c8e1f7ce8",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\pretail-collect-final-test.log": "a011a2bac40ea65fc64aa1b922e6e4ebff9a9b4a3e40d04e8a0091df44eea997",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\pretail-export-final-test.log": "e1fa7a14bcd11fd6af293a1022a04999a7b2f67c212e7b7d7de5e18deeacd621",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\README.md": "bed425e58152d9e2738d99d8c0d8322d55497a43142b08d3304b416ad7dbfbd2",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\receipt.json": "0694e3b124de56832146d28ba9607072077df4a0782e25f1c624507b2fd76952",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\reproduce.py": "88eb5f00c68fe338dc0c4803b47f368971dc6f125b4929304e1c51aa8be2cc92",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\reproduction.json": "dabb747ae175b5ea060c1e3fad1d82f5587e629d5716a8b94872f76a7cf0eee0",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\reproduction.log": "a72a2323d3f7440d461fcfb0d4d56b7d616c318cf9fd5713c54e05785a05ed32",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\run_focused.py": "803a7bc9fdac454236f57f0cb73f146b90e98c246398bd41c015db8ba16e141a",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\short-temp-identity.json": "53f49415680a95f532b38ebc4306cad5d63801efffb8cfdb6c4a8b17c97a9490",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\short-temp-original-baseline.log": "e98aa269c4d47ad0382997fd6c5ba3f4967796622c3b8b5efdf68818c93389cf",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\short-temp-original-candidate-final.log": "a2bc8f1f93157617b584dbd0fab489828389acccd4b310edb7c9f15801221afe",
+    "out\\collab\\j2-resource-policy-path-review\\final-v1\\test_k1_bundle.py": "80726fb8eeda65700169416b8a9711967ed15283ed8bbc22bbf20b42d8c216f3",
+    "out\\verification\\j2-f8-2901f42\\ci\\extracted\\m0-report-windows-latest-13096301546\\20261101-183520-77003a77\\gui_k1_workflow.log": "b68a00eaaa712371b846674902bee6c35ed215249b6bc93c049d5c2bb92aca5d"
+  },
+  "method": "Original source_capture_scope under real Windows 8.3 TEMP baseline red/candidate green; final draft full original __main__ --component with standard assert probe and in-memory candidate product only. All fixtures under independent out root; no GUI/backend/CI."
+}

@@ -1,0 +1,21 @@
+solid_registry: production C++ component dispatch, cache/rejection policy and parser metadata parity PASS
+solids: analytic volumes and masses
+  Ell      volume     25132.74 mm3 (analytic     25132.74, -7.30e-13); mass 25.1327 g
+  ElCut    volume     20502.03 mm3 (analytic     20502.03, -1.32e-12); mass 20.5020 g
+  ElTube   volume     18849.56 mm3 (analytic     18849.56, -2.06e-12); mass 18.8496 g
+  Torus    volume     44413.22 mm3 (analytic     44413.22, -4.75e-14); mass 44.4132 g
+  Para     volume     48000.00 mm3 (analytic     48000.00, +0.00e+00); mass 48.0000 g
+  Hype     volume     26047.53 mm3 (analytic     26047.53, +7.37e-13); mass 26.0475 g
+  Pcone    volume     28274.33 mm3 (analytic     28274.33, -2.88e-13); mass 28.2743 g
+  Phedra   volume      6928.20 mm3 (analytic      6928.20, +6.48e-13); mass 6.9282 g
+  Octa     volume      4500.00 mm3 (analytic      4500.00, +0.00e+00); mass 4.5000 g
+  StlCube  volume      8000.00 mm3 (analytic      8000.00, +0.00e+00); mass 8.0000 g
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_solid_registry.py", line 285, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_solid_registry.py", line 281, in main
+    backend(metadata)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_solid_registry.py", line 254, in backend
+    assert facts["status"] == "completed", facts
+           ~~~~~^^^^^^^^^^
+KeyError: 'status'

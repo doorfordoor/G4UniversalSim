@@ -1,0 +1,576 @@
+{
+  "scope": "natural Qt shortcuts/focus; no scrollbar writes/forced-zero/explicit ensureWidgetVisible; no native UI",
+  "DPR": 1.25,
+  "window": [
+    1200,
+    800
+  ],
+  "source_sha256_before": {
+    "gui/g4usim_gui/core/accessibility.py": "9759bee2b76449d74c999a9db301ce39526ffc69651cceae266df720cb805f90",
+    "gui/g4usim_gui/window/shell.py": "2bf59c065dee740b03fbc678ed32f787cd0b8c293e92b1fc8d498f80c6b11516",
+    "gui/smoke_tests/smoke_f8_accessibility.py": "86ef550dedebc83ed57023413fca1e0064395d04b82c738aa47dc76cdaacb16c",
+    "gui/g4usim_gui/main_window.py": "df76026a347894c617dbca570b4706948b1eed639956fc8c1bcc2f097ca10639",
+    "gui/g4usim_gui/widgets/start_page.py": "b8d8e8b363f7a691e9cec4babe52c4277bc869f82dfca239c90b7c6bffa328ec"
+  },
+  "source_sha256_after": {
+    "gui/g4usim_gui/core/accessibility.py": "9759bee2b76449d74c999a9db301ce39526ffc69651cceae266df720cb805f90",
+    "gui/g4usim_gui/window/shell.py": "2bf59c065dee740b03fbc678ed32f787cd0b8c293e92b1fc8d498f80c6b11516",
+    "gui/smoke_tests/smoke_f8_accessibility.py": "86ef550dedebc83ed57023413fca1e0064395d04b82c738aa47dc76cdaacb16c",
+    "gui/g4usim_gui/main_window.py": "df76026a347894c617dbca570b4706948b1eed639956fc8c1bcc2f097ca10639",
+    "gui/g4usim_gui/widgets/start_page.py": "b8d8e8b363f7a691e9cec4babe52c4277bc869f82dfca239c90b7c6bffa328ec"
+  },
+  "source_unchanged": true,
+  "cases": [
+    {
+      "case": "natural-CtrlAlt2-project-label",
+      "status": "observed",
+      "detail": {
+        "page": 1,
+        "focus_type": "QLineEdit",
+        "focus_is_scroll_container": false,
+        "field_is_focused": true,
+        "rows": [
+          {
+            "role": "label",
+            "control_type": "QLineEdit",
+            "control_name": "项目名称",
+            "label_text": "项目名称",
+            "scroll": "projectContentScroll",
+            "rect": [
+              34,
+              83,
+              52,
+              29
+            ],
+            "viewport": [
+              1055,
+              624
+            ],
+            "horizontal_value": 0,
+            "fits": true,
+            "visible": true
+          },
+          {
+            "role": "label",
+            "control_type": "QLineEdit",
+            "control_name": "项目名称",
+            "label_text": "项目名称",
+            "scroll": "workspaceContentScroll",
+            "rect": [
+              34,
+              83,
+              52,
+              29
+            ],
+            "viewport": [
+              980,
+              624
+            ],
+            "horizontal_value": 0,
+            "fits": true,
+            "visible": true
+          },
+          {
+            "role": "label",
+            "control_type": "QLineEdit",
+            "control_name": "项目名称",
+            "label_text": "项目名称",
+            "scroll": "workspaceShellScroll",
+            "rect": [
+              254,
+              149,
+              52,
+              29
+            ],
+            "viewport": [
+              1200,
+              700
+            ],
+            "horizontal_value": 0,
+            "fits": true,
+            "visible": true
+          },
+          {
+            "role": "control",
+            "control_type": "QLineEdit",
+            "control_name": "项目名称",
+            "label_text": "项目名称",
+            "scroll": "projectContentScroll",
+            "rect": [
+              118,
+              83,
+              309,
+              32
+            ],
+            "viewport": [
+              1055,
+              624
+            ],
+            "horizontal_value": 0,
+            "fits": true,
+            "visible": true
+          },
+          {
+            "role": "control",
+            "control_type": "QLineEdit",
+            "control_name": "项目名称",
+            "label_text": "项目名称",
+            "scroll": "workspaceContentScroll",
+            "rect": [
+              118,
+              83,
+              309,
+              32
+            ],
+            "viewport": [
+              980,
+              624
+            ],
+            "horizontal_value": 0,
+            "fits": true,
+            "visible": true
+          },
+          {
+            "role": "control",
+            "control_type": "QLineEdit",
+            "control_name": "项目名称",
+            "label_text": "项目名称",
+            "scroll": "workspaceShellScroll",
+            "rect": [
+              338,
+              149,
+              309,
+              32
+            ],
+            "viewport": [
+              1200,
+              700
+            ],
+            "horizontal_value": 0,
+            "fits": true,
+            "visible": true
+          }
+        ]
+      }
+    },
+    {
+      "case": "natural-CtrlAlt3-config-label",
+      "status": "observed",
+      "detail": {
+        "page": 2,
+        "focus_type": "QToolButton",
+        "focus_is_scroll_container": false,
+        "field_is_focused": false,
+        "rows": [
+          {
+            "role": "label",
+            "control_type": "QLineEdit",
+            "control_name": "运行名称",
+            "label_text": "运行名称",
+            "scroll": "",
+            "rect": [
+              30,
+              102,
+              52,
+              29
+            ],
+            "viewport": [
+              290,
+              581
+            ],
+            "horizontal_value": 0,
+            "fits": true,
+            "visible": true
+          },
+          {
+            "role": "label",
+            "control_type": "QLineEdit",
+            "control_name": "运行名称",
+            "label_text": "运行名称",
+            "scroll": "workspaceContentScroll",
+            "rect": [
+              42,
+              133,
+              52,
+              29
+            ],
+            "viewport": [
+              980,
+              634
+            ],
+            "horizontal_value": 0,
+            "fits": true,
+            "visible": true
+          },
+          {
+            "role": "label",
+            "control_type": "QLineEdit",
+            "control_name": "运行名称",
+            "label_text": "运行名称",
+            "scroll": "workspaceShellScroll",
+            "rect": [
+              262,
+              199,
+              52,
+              29
+            ],
+            "viewport": [
+              1200,
+              700
+            ],
+            "horizontal_value": 0,
+            "fits": true,
+            "visible": true
+          },
+          {
+            "role": "control",
+            "control_type": "QLineEdit",
+            "control_name": "运行名称",
+            "label_text": "运行名称",
+            "scroll": "",
+            "rect": [
+              88,
+              102,
+              190,
+              32
+            ],
+            "viewport": [
+              290,
+              581
+            ],
+            "horizontal_value": 0,
+            "fits": true,
+            "visible": true
+          },
+          {
+            "role": "control",
+            "control_type": "QLineEdit",
+            "control_name": "运行名称",
+            "label_text": "运行名称",
+            "scroll": "workspaceContentScroll",
+            "rect": [
+              100,
+              133,
+              190,
+              32
+            ],
+            "viewport": [
+              980,
+              634
+            ],
+            "horizontal_value": 0,
+            "fits": true,
+            "visible": true
+          },
+          {
+            "role": "control",
+            "control_type": "QLineEdit",
+            "control_name": "运行名称",
+            "label_text": "运行名称",
+            "scroll": "workspaceShellScroll",
+            "rect": [
+              320,
+              199,
+              190,
+              32
+            ],
+            "viewport": [
+              1200,
+              700
+            ],
+            "horizontal_value": 0,
+            "fits": true,
+            "visible": true
+          }
+        ]
+      }
+    },
+    {
+      "case": "all-nine-and-F6",
+      "status": "observed",
+      "detail": {
+        "visited": [
+          0,
+          8,
+          1,
+          6,
+          2,
+          7,
+          3,
+          5,
+          4
+        ]
+      }
+    },
+    {
+      "case": "natural-Tab-label-bounds",
+      "status": "failure",
+      "error": "AssertionError: [{'role': 'label', 'control_type': 'QLineEdit', 'control_name': '项目名称', 'label_text': '项目名称', 'scroll': 'projectContentScroll', 'rect': [34, 83, 52, 29], 'viewport': [872, 695], 'horizontal_value': 0, 'fits': True, 'visible': True}, {'role': 'label', 'control_type': 'QLineEdit', 'control_name': '项目名称', 'label_text': '项目名称', 'scroll': 'workspaceContentScroll', 'rect': [660, 12, 52, 29], 'viewport': [970, 624], 'horizontal_value': 0, 'fits': True, 'visible': True}, {'role': 'label', 'control_type': 'QLineEdit', 'control_name': '项目名称', 'label_text': '项目名称', 'scroll': 'workspaceShellScroll', 'rect': [880, 78, 52, 29], 'viewport': [1200, 700], 'horizontal_value': 0, 'fits': True, 'visible': True}, {'role': 'control', 'control_type': 'QLineEdit', 'control_name': '项目名称', 'label_text': '项目名称', 'scroll': 'projectContentScroll', 'rect': [92, 83, 257, 32], 'viewport': [872, 695], 'horizontal_value': 0, 'fits': True, 'visible': True}, {'role': 'control', 'control_type': 'QLineEdit', 'control_name': '项目名称', 'label_text': '项目名称', 'scroll': 'workspaceContentScroll', 'rect': [718, 12, 257, 32], 'viewport': [970, 624], 'horizontal_value': 0, 'fits': True, 'visible': False}, {'role': 'control', 'control_type': 'QLineEdit', 'control_name': '项目名称', 'label_text': '项目名称', 'scroll': 'workspaceShellScroll', 'rect': [938, 78, 257, 32], 'viewport': [1200, 700], 'horizontal_value': 0, 'fits': True, 'visible': True}]"
+    },
+    {
+      "case": "foreign-boundary",
+      "status": "observed",
+      "detail": {
+        "foreign_scope_untouched": true
+      }
+    }
+  ],
+  "measurements": [
+    {
+      "page": 1,
+      "focus_type": "QLineEdit",
+      "focus_is_scroll_container": false,
+      "field_is_focused": true,
+      "rows": [
+        {
+          "role": "label",
+          "control_type": "QLineEdit",
+          "control_name": "项目名称",
+          "label_text": "项目名称",
+          "scroll": "projectContentScroll",
+          "rect": [
+            34,
+            83,
+            52,
+            29
+          ],
+          "viewport": [
+            1055,
+            624
+          ],
+          "horizontal_value": 0,
+          "fits": true,
+          "visible": true
+        },
+        {
+          "role": "label",
+          "control_type": "QLineEdit",
+          "control_name": "项目名称",
+          "label_text": "项目名称",
+          "scroll": "workspaceContentScroll",
+          "rect": [
+            34,
+            83,
+            52,
+            29
+          ],
+          "viewport": [
+            980,
+            624
+          ],
+          "horizontal_value": 0,
+          "fits": true,
+          "visible": true
+        },
+        {
+          "role": "label",
+          "control_type": "QLineEdit",
+          "control_name": "项目名称",
+          "label_text": "项目名称",
+          "scroll": "workspaceShellScroll",
+          "rect": [
+            254,
+            149,
+            52,
+            29
+          ],
+          "viewport": [
+            1200,
+            700
+          ],
+          "horizontal_value": 0,
+          "fits": true,
+          "visible": true
+        },
+        {
+          "role": "control",
+          "control_type": "QLineEdit",
+          "control_name": "项目名称",
+          "label_text": "项目名称",
+          "scroll": "projectContentScroll",
+          "rect": [
+            118,
+            83,
+            309,
+            32
+          ],
+          "viewport": [
+            1055,
+            624
+          ],
+          "horizontal_value": 0,
+          "fits": true,
+          "visible": true
+        },
+        {
+          "role": "control",
+          "control_type": "QLineEdit",
+          "control_name": "项目名称",
+          "label_text": "项目名称",
+          "scroll": "workspaceContentScroll",
+          "rect": [
+            118,
+            83,
+            309,
+            32
+          ],
+          "viewport": [
+            980,
+            624
+          ],
+          "horizontal_value": 0,
+          "fits": true,
+          "visible": true
+        },
+        {
+          "role": "control",
+          "control_type": "QLineEdit",
+          "control_name": "项目名称",
+          "label_text": "项目名称",
+          "scroll": "workspaceShellScroll",
+          "rect": [
+            338,
+            149,
+            309,
+            32
+          ],
+          "viewport": [
+            1200,
+            700
+          ],
+          "horizontal_value": 0,
+          "fits": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "page": 2,
+      "focus_type": "QToolButton",
+      "focus_is_scroll_container": false,
+      "field_is_focused": false,
+      "rows": [
+        {
+          "role": "label",
+          "control_type": "QLineEdit",
+          "control_name": "运行名称",
+          "label_text": "运行名称",
+          "scroll": "",
+          "rect": [
+            30,
+            102,
+            52,
+            29
+          ],
+          "viewport": [
+            290,
+            581
+          ],
+          "horizontal_value": 0,
+          "fits": true,
+          "visible": true
+        },
+        {
+          "role": "label",
+          "control_type": "QLineEdit",
+          "control_name": "运行名称",
+          "label_text": "运行名称",
+          "scroll": "workspaceContentScroll",
+          "rect": [
+            42,
+            133,
+            52,
+            29
+          ],
+          "viewport": [
+            980,
+            634
+          ],
+          "horizontal_value": 0,
+          "fits": true,
+          "visible": true
+        },
+        {
+          "role": "label",
+          "control_type": "QLineEdit",
+          "control_name": "运行名称",
+          "label_text": "运行名称",
+          "scroll": "workspaceShellScroll",
+          "rect": [
+            262,
+            199,
+            52,
+            29
+          ],
+          "viewport": [
+            1200,
+            700
+          ],
+          "horizontal_value": 0,
+          "fits": true,
+          "visible": true
+        },
+        {
+          "role": "control",
+          "control_type": "QLineEdit",
+          "control_name": "运行名称",
+          "label_text": "运行名称",
+          "scroll": "",
+          "rect": [
+            88,
+            102,
+            190,
+            32
+          ],
+          "viewport": [
+            290,
+            581
+          ],
+          "horizontal_value": 0,
+          "fits": true,
+          "visible": true
+        },
+        {
+          "role": "control",
+          "control_type": "QLineEdit",
+          "control_name": "运行名称",
+          "label_text": "运行名称",
+          "scroll": "workspaceContentScroll",
+          "rect": [
+            100,
+            133,
+            190,
+            32
+          ],
+          "viewport": [
+            980,
+            634
+          ],
+          "horizontal_value": 0,
+          "fits": true,
+          "visible": true
+        },
+        {
+          "role": "control",
+          "control_type": "QLineEdit",
+          "control_name": "运行名称",
+          "label_text": "运行名称",
+          "scroll": "workspaceShellScroll",
+          "rect": [
+            320,
+            199,
+            190,
+            32
+          ],
+          "viewport": [
+            1200,
+            700
+          ],
+          "horizontal_value": 0,
+          "fits": true,
+          "visible": true
+        }
+      ]
+    }
+  ]
+}

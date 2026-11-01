@@ -1,0 +1,158 @@
+--- a/scripts/test_f4_document_diagnostics.py
++++ b/scripts/test_f4_document_diagnostics.py
+@@ -28,7 +28,8 @@
+ )
+ from g4usim_gui.parsers.geometry_parser import parse_geometry
+ from g4usim_gui.parsers.ini_light_parser import parse_ini_light
+-from g4usim_gui.parsers.materials_parser import parse_materials
++from g4usim_gui.parsers.materials_parser import parse_materials, NIST_QUICK_LIST
++from g4usim_gui.core.nist_elements import NIST_MATERIALS
+ from g4usim_gui.validators.config_validator import ValidationReport, _include_messages
+ 
+ 
+@@ -117,12 +118,26 @@
+     assert record.location.field == "components_text" and record.location.row == 1
+     assert record.message in cycle.errors
+     nist = MaterialDocument(rows=[MaterialRow(name="Alias", mode="nist", nist_name="Unknown"),
+-                                 MaterialRow(name="Unknown", mode="nist")])
++                                 MaterialRow(name="Unknown", mode="nist"),
++                                 MaterialRow(name="G4_F4_UNKNOWN", mode="nist")])
+     validate_material_document(nist)
+-    targets = selected(nist, "materials.nist.unlisted")
++    targets = selected(nist, "materials.nist.unknown")
++    assert len(targets) == 3 and all(item.severity == "error" for item in targets)
++    assert not selected(nist, "materials.nist.unlisted")
+     assert targets[0].location is None and targets[0].unavailable_reason == "unsupported_editor"
+     assert targets[0].identity_parameters["field"] == "nist_name"
++    # Keep the original non-prefixed editable-name case; do not mask its current
++    # missing-location regression by renaming the fixture to start with G4_.
++    assert targets[1].location is not None
+     assert targets[1].location.field == "name" and targets[1].location.row == 1
++    assert targets[2].location.field == "name" and targets[2].location.row == 2
++    catalog_name = "G4_A-150_TISSUE"
++    assert catalog_name in NIST_MATERIALS and catalog_name not in NIST_QUICK_LIST
++    accepted = MaterialDocument(rows=[MaterialRow(name=catalog_name, mode="nist"),
++        MaterialRow(name="Alias", mode="nist", nist_name=catalog_name)])
++    validate_material_document(accepted)
++    assert not accepted.errors and not selected(accepted, "materials.nist.unknown")
++    assert not selected(accepted, "materials.nist.unlisted")
+ 
+ 
+ def check_geometry_sources(temp: Path) -> None:
+@@ -183,8 +198,13 @@
+     assert all(item.location.collection == "layers" and item.location.editor == "layers" for item in thickness)
+     alpha = selected(layered, "geometry.layer.alpha_range")
+     assert len(alpha) == 2 and len({item.identity for item in alpha}) == 2
+-    assert all(item.location is None and item.unavailable_reason == "unsupported_editor" for item in alpha)
+-    assert all(item.location is None for item in selected(layered, "geometry.metadata.syntax"))
++    assert [item.location.row for item in alpha] == [1, 2]
++    assert all(item.location.editor == "layers" and item.location.collection == "layers"
++               and item.location.field == "vis.alpha" and not item.unavailable_reason for item in alpha)
++    metadata = selected(layered, "geometry.metadata.syntax")
++    assert [item.location.row for item in metadata] == [1, 2]
++    assert all(item.location.field == "metadata" and item.location.collection == "layers"
++               and not item.unavailable_reason for item in metadata)
+     assert selected(layered, "geometry.layered.axis")[0].location.collection == "layered_device"
+     assert all(not any(key.startswith("_f4") for key in vars(row)) for row in layered.layered_device.layers)
+     assert LayerRow(**vars(layered.layered_device.layers[1])).name == "same"
+@@ -201,7 +221,7 @@
+     duplicate = selected(geometry, "geometry.volume.duplicate_name")
+     assert {item.location.row for item in duplicate} == {2, 3}
+     assert len({item.identity for item in duplicate}) == 2
+-    size = selected(geometry, "geometry.vector.components")
++    size = selected(geometry, "geometry.solid.size")
+     assert [item.location.row for item in size] == [2, 3]
+     operation = selected(geometry, "geometry.boolean.operation")[0]
+     assert (operation.location.editor, operation.location.collection, operation.location.row, operation.location.entity) == ("booleans", "boolean_ops", 1, "same[0]")
+@@ -210,10 +230,16 @@
+     geometry.volumes = [world, trd]
+     geometry.boolean_ops = []
+     validate_geometry_document(geometry)
+-    assert {item.location.field for item in selected(geometry, "geometry.trd.length")} == {"dx1", "dx2", "dy1", "dy2", "dz"}
++    required_fields = {"dx1", "dx2", "dy1", "dy2", "dz"}
++    required = [item for item in collect_diagnostics(geometry)
++                if item.code in {"geometry.solid." + field for field in required_fields}]
++    assert len(required) == 5 and {item.location.field for item in required} == required_fields
++    assert all(item.location.collection == "volumes" and item.location.row == 1
++               and item.code == "geometry.solid." + item.location.field for item in required)
+     visual = selected(geometry, "geometry.visual.alpha_range")[0]
+-    assert visual.location is None and visual.identity_parameters["field"] == "vis.alpha"
+-    assert visual.unavailable_reason == "unsupported_editor"
++    assert visual.location.field == "vis.alpha" and visual.location.collection == "volumes"
++    assert visual.location.row == 1 and visual.location.entity == "shape"
++    assert not visual.unavailable_reason
+     identities = [item.identity for item in collect_diagnostics(geometry)]
+     with patch("g4usim_gui.editors.geometry_editor_model.ui_text", lambda value: "translated:" + value), patch(
+             "g4usim_gui.editors.geometry_editor_model.ui_format", lambda value, **kwargs: "translated:" + value.format(**kwargs)):
+@@ -322,12 +348,71 @@
+     assert all(item.source is None or item.source.text_snapshot is None for item in collect_diagnostics(denied))
+ 
+ 
++def check_density_machine_categories() -> None:
++    # Every invalid density has one category and one identity at the real row.
++    for value, suffix in (("bad", "numeric"), ("0 g/cm3", "positive"),
++                          ("-1 G/CM3", "positive"), ("-0x1p0 * g/cm3", "positive"),
++                          ("1e-999 g/cm3", "positive"), ("1 unknown", "invalid"),
++                          ("1e309 g/cm3", "invalid"), ("1e308 g/cm3", "invalid")):
++        document = MaterialDocument(rows=[MaterialRow(name="M", density=value, components_text="Si:1")])
++        validate_material_document(document)
++        records = [item for item in collect_diagnostics(document) if item.code.startswith("materials.density.")]
++        assert [item.code for item in records] == ["materials.density." + suffix], (value, records)
++        assert len({item.identity for item in records}) == 1
++        record = records[0]
++        assert record.severity == "error" and record.location.field == "density"
++        assert record.location.row == 0 and record.location.collection == "rows"
++        validate_material_document(document)
++        assert [item.identity for item in collect_diagnostics(document) if item.code.startswith("materials.density.")] == [record.identity]
++    for value in ("1 G/CM3", "2.7 * g/cm3", "0x1p0 * G/CM3"):
++        document = MaterialDocument(rows=[MaterialRow(name="M", density=value, components_text="Si:1")])
++        validate_material_document(document)
++        assert not document.errors, (value, document.errors)
++        assert not [item for item in collect_diagnostics(document) if item.code.startswith("materials.density.")]
++
++
++def check_legacy_code_json_unchanged() -> None:
++    # Golden synthesized with 5fe0a10's serializer, not a claimed old run receipt.
++    # Changing today's capability must not rewrite yesterday's code or identity.
++    payload = json.loads('{"schema":"g4usim_diagnostics_v1","snapshot_id":"historical-code-golden","can_run":false,"errors":["legacy numeric","legacy positive","legacy manual unsupported"],"warnings":[],"info":[],"diagnostics":[{"identity":"825163aaecb59795030073ce1be05176f120e5430079ba8b1a6d65cfe5151214","code":"materials.density.numeric","severity":"error","origin":"materials.editor","message":"legacy numeric","message_key":"","params":{},"identity_parameters":{"value":"bad"},"raw_message":"","unavailable_reason":"","location":{"editor":"materials","field":"density","collection":"rows","row":0,"entity":"M","snapshot_id":""},"source":null,"related_locations":[]},{"identity":"8846271706903ded5fe458a8c514e5176e73992916457aa0f53a96e6a95bd486","code":"materials.density.positive","severity":"error","origin":"materials.editor","message":"legacy positive","message_key":"","params":{},"identity_parameters":{"value":"0 g/cm3"},"raw_message":"","unavailable_reason":"","location":{"editor":"materials","field":"density","collection":"rows","row":1,"entity":"N","snapshot_id":""},"source":null,"related_locations":[]},{"identity":"3e1098535a7dd5c237ab6f509ea127267212aba88776537e6131316198491abe","code":"physics.mode.unsupported","severity":"error","origin":"physics.editor","message":"legacy manual unsupported","message_key":"","params":{},"identity_parameters":{"value":"manual"},"raw_message":"","unavailable_reason":"","location":{"editor":"physics","field":"mode","collection":"","row":null,"entity":"","snapshot_id":""},"source":null,"related_locations":[]}]}')
++    original = copy.deepcopy(payload)
++    loaded = diagnostics_from_dict(payload)
++    assert [item.code for item in loaded.diagnostics] == ["materials.density.numeric", "materials.density.positive", "physics.mode.unsupported"]
++    assert diagnostics_to_dict(loaded.diagnostics, snapshot_id=loaded.snapshot_id) == original
++    assert payload == original
++
++
++def check_nist_alias_source(temp: Path) -> None:
++    path = temp / "nist-alias.ini"
++    text = "[Alias]\nmaterial = G4_F4_UNKNOWN\n"
++    path.write_text(text, encoding="utf-8")
++    document = material_document_from_summary(parse_materials(path))
++    validate_material_document(document)
++    records = selected(document, "materials.nist.unknown")
++    assert len(records) == 1 and records[0].severity == "error"
++    record = records[0]
++    assert record.location is None and record.unavailable_reason == "unsupported_editor"
++    assert record.identity_parameters["field"] == "nist_name" and record.identity_parameters["row"] == 0
++    assert record.source.filename == str(path.resolve()) and record.source.line is None
++    assert record.source.text_snapshot == text
++    path.write_text("[Alias]\nmaterial = G4_Si\n", encoding="utf-8")
++    validate_material_document(document)
++    assert selected(document, "materials.nist.unknown")[0].identity == record.identity
++    assert selected(document, "materials.nist.unknown")[0].source.text_snapshot == text
++    refreshed = material_document_from_summary(parse_materials(path))
++    validate_material_document(refreshed)
++    assert not selected(refreshed, "materials.nist.unknown")
++
++
+ def main() -> int:
+     with tempfile.TemporaryDirectory(prefix="g4usim-f4-documents-") as raw:
+         temp = Path(raw)
+         check_source_reads(temp)
+         check_material_sources(temp)
+         check_material_rows()
++        check_density_machine_categories()
++        check_legacy_code_json_unchanged()
++        check_nist_alias_source(temp)
+         check_geometry_sources(temp)
+         check_geometry_targets()
+         check_cut_region_identities()

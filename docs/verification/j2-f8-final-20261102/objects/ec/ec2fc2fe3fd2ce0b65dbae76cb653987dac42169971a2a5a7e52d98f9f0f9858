@@ -1,0 +1,50 @@
+# J2 GPS / 相空间 / 场图资源补充独审
+
+日期：2026-11-02。范围为 main 新增的 core/run_editor_resources.py、experiment_bundle._snapshot_paths 资源入口、package_writer衔接及 scripts/test_j2_resource_bundle.py；不以开发中的 source/physics GUI 定最终缺陷，不修改产品或STATUS。
+
+结论：**确认1项P2：逗号分隔的多文件phase-space列表被按一个文件路径处理。未证实P1。** 单文件phase-space、histogram/points和磁/电场图的丢原资源搬移、重新生成和统一CLI字段校验均有独立正例。非活动谱路径的导出策略分歧另列待裁决。
+
+## P2-R01：phase_space_file 多文件列表不能生成或导出
+
+定位：`gui/g4usim_gui/core/run_editor_resources.py:26–27,37` 将整个phase_space_file加入单个待拷贝路径；`experiment_bundle.py:403–405` 也把resource_fields返回的整个字符串交给单文件resource解析。
+
+复现：创建真实 `a.csv`、`b.csv`，设置 `sourceEditor.phase_space_file='a.csv, b.csv'`，不设置named GPS sources。源模型校验无错误，但collect_bundle_resources、export_bundle、materialize_run_resources、create_run_package均抛FileNotFoundError，试图读取名为 `a.csv, b.csv` 的单个文件；导出目标未发布。
+
+这不是未完成UI的问题：后端 `src/Source/SourceManager.cc:553` 已明确按逗号分割后逐文件解析，编辑模型 `source_physics_scoring_model.py:217` 同样接受列表；闭包旧有main INI解析也逐文件处理。因此有效的后端/编辑模型输入在新资源链路被拒绝。
+
+建议：把逻辑“字段”与“逐个文件引用”分开，两个入口都按同一列表语法逐项trim/解析/复制/重定位，按原顺序重新连接；不要只修materialize而漏掉snapshot闭包，也不要把验证器改为拒绝既有后端支持的列表来掩盖。覆盖重复文件、两文件顺序、列表空项拒绝、第二个文件缺失、丢原资源搬移与重放。
+
+证据：[resources-round/results.json](resources-round/results.json)，case `comma-separated-phase-space-list`；脚本 [resource_cases.py](resource_cases.py)。本轮有关源文件SHA在该用例前后相同，问题仍定位到完成的main资源实现。
+
+## 实际执行证据与正反边界
+
+| 检查 | 实际结果 |
+| --- | --- |
+| 独立执行作者test_j2_resource_bundle.py | 本轮亲自执行通过，未复用作者旧日志 |
+| histogram+points+磁图+电图 | 删除4个原文件，搬移到含中文/空格的新目录，从异cwd重新生成；4份资源字节集合一致，快照路径在新包内 |
+| 单phase-space+磁图+电图 | 删除3个原文件后同样搬移、加载、重新生成通过，资源字节保留 |
+| 两个搬移包的replay.py generate / validate | 4条统一CLI实际退出0、passed；无需原资源 |
+| 活动资源缺失 | FileNotFoundError；无发布目标、无残留staging，输入快照不变 |
+| 收集后、发布前原资源变化 | 最终复核拒绝Resource changed before publication；清理staging，快照不变 |
+| 第二份资源复制写入受控异常 | 实际触发一次OSError；导出未发布且staging清理；原资源字节与快照均不变 |
+| 已有导出目标 | 拒绝覆盖，sentinel与目录内容保留 |
+| 包内资源字节篡改 | load_bundle拒绝hash/size mismatch |
+| 非法seed草稿携带资源导出/加载 | 草稿保留，丢原谱后仍可加载；_field_report以raw_seed.invalid拒绝后续字段动作，不洗白草稿 |
+
+主脚本9组观察全部完成，程序退出0；包括P2复现和待裁决观察，不是“全部产品通过”。[resources-run.log](resources-run.log) / [结构化结果](resources-round/results.json)。
+
+[CLI脚本](resource_cli_cases.py)、[CLI摘要](resources-round/cli-results.json)及各stdout/stderr保留完整原始结果。[受控IO脚本](resource_io_failure.py)、[IO结果](resources-round/io-failure-results.json)。测试产生的新文件仅在本审查目录；没有修改产品。
+
+本轮只验证路径、字节、快照及字段/生成行为。谱、相空间、场图文件是独立资源fixture；未运行Geant4读取这些fixture，不宣称场图网格、谱分布、相空间物理格式或物理结果正确。Python executable仅作路径存在性fixture。受控写入异常不是实测磁盘满/断连。
+
+## 非活动谱路径：待main裁决，不计确认P2
+
+`GPSDefinition(energy_type='mono', spectrum_file='previous-hist.csv')` 中非活动路径不存在时：create_run_package成功，materialize按energy_type不复制该谱；export_bundle却通过resource_fields无条件解析该路径而失败。
+
+因此“实际运行资源”和“保留的非活动编辑字段”当前使用不同规则。如果离线包明确承诺也闭合所有休眠草稿资源，严格拒绝可以是有意边界，但应说明失败原因；如果只闭合实际生成配置所消费的资源，这就是需要修复的P2候选。任何修复都不能静默清空spectrum_file或丢掉F5草稿。建议main冻结策略：保留休眠路径及不可解析状态，或显式区分活动资源和完整编辑包要求，并配套诊断。此观察来自core模型，无需依赖未完成UI。
+
+## 源码身份与剩余验证
+
+resources-round/results.json记录9个相关文件运行前后SHA；主资源脚本整个运行内和每用例均一致。后续CLI与IO完成后，资源helper、bundle、writer、run_editor_model及作者专项字节仍相同；geometry_editor_model.py已继续被并行任务修改。故不外推全仓库冻结/正式矩阵通过。此前几何helper缺失的旧失败没有在本轮重现，但不拿本轮资源通过替代那项几何组合回归。
+
+建议main修复P2-R01后只重跑多文件列表反例及丢原资源后的多文件搬移/CLI检查，再由统一正式门禁与后端测试汇总；非活动谱策略先裁决再定缺陷。未完成source/physics GUI和正在更新的STATUS均不作为本报告缺陷。

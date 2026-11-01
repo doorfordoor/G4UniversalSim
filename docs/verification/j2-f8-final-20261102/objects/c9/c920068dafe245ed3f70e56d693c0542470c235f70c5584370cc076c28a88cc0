@@ -1,0 +1,12 @@
+G4USIM_GDML_CAPTURE_EVIDENCE={"scope": "standalone native Xerces exact-byte adapter; not selected application GDML support", "selection": "adjacent", "helper": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\gdmlInputCaptureCheck.exe", "helper_sha256": "86d9aac227016f946a02724d3b22e2823430b7a0972de7a5e16bf3acc295a39a", "selected_application": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\G4UniversalSim.exe", "current_source_sha256": {"tools/gdmlInputCaptureCheck.cc": "44861cec93a1d1b5f8ca8aebbd40b270453b5e63260fcf8eb9a76b2f1a51c94e", "src/Geometry/GdmlInputCapture.cc": "a0ee9349399e137f3ff34c3ffd2d347e097602d0d63566705b120d9df4fbb855", "include/Geometry/GdmlInputCapture.hh": "454188028b4e7960f191748cdf0a8b1b226d7a9d25fb0459f237c930a1a60891", "src/Config/InputProvenance.cc": "c1051668c8601acac3c1225e7aff3e0f9016496d5afbf39e25dd869d463e810f", "include/Config/InputProvenance.hh": "be541ec48bd7d4d50be804e4f3a538049b1a5339a477e6d1d8c96c07236d012d"}}
+INPUT D:\Temp\g4usim-gdml-capture-zpj586zu\replace.xml 37c803bf4b77306bb6b8cf59a197cd7e923967afcaacbaac4b8763b53f5447e6
+INPUT D:\Temp\g4usim-gdml-capture-zpj586zu\main.xml 5d839f3336775755b5130477e728272f0c824950b75bd0fa3cd61db72339055a
+INPUT D:\Temp\g4usim-gdml-capture-zpj586zu\schema.xsd 922d6d68d939f598f1c5fb0716bf755b5845fa9bcb9a207d5dfe36c1340150e4
+INPUT D:\Temp\g4usim-gdml-capture-zpj586zu\entity.txt a98391239ba585d8fa513edf9c635176571aa02b3565da3da2ce320166fc7eb4
+FAULT FileBuffer opens=4 closes=4 refused=1
+PASS allocation fault checks opens=5 closes=5 adapter_restored=true
+INPUT http://example.test/schema.xsd 42a6a84e2799eba1b5eeffc5c0b08be2abc01e919475929861cf33864a6fce6c
+UNKNOWN http://example.test/partial (stream did not reach EOF)
+PASS native capture
+
+G4USIM_ASSERTS=12

@@ -1,0 +1,321 @@
+{
+  "schema": "j2_geant4_114_data_reuse_v1",
+  "status": "passed",
+  "started_utc": "2026-11-01T16:42:50Z",
+  "prefix": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\i2-controlled\\windows114-data",
+  "data_root": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\i2-controlled\\windows114-data\\data",
+  "sdk_config": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\dependencies\\geant4-11.4.3\\geant4-11.4.3-win64\\lib\\cmake\\Geant4\\Geant4Config.cmake",
+  "dataset_matching_basis": "SDK dataset versions/canonical folders AND full published payload hashes; required_complete is not the version proof",
+  "source_authentication": "Local I2 published artifact/receipt reuse; observed hashes are not independent upstream source authentication",
+  "steps": [
+    {
+      "stage": "sdk_folder_versions",
+      "status": "passed",
+      "count": 12
+    },
+    {
+      "stage": "full_published_payload",
+      "status": "passed",
+      "files": 43527,
+      "size_bytes": 2180724729
+    }
+  ],
+  "sdk_config_sha256": "a085301e9c9f409d4ab8b4fbcb5ec8780f36849f608602c809f50e8cd02a8d22",
+  "published_receipts": [
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\i2-controlled\\windows114-data\\.g4usim-install.json",
+      "sha256": "f05cda1f8545bf138671aebaf83d255bcb58a278d5cd4cb2d99471cc2ae78bad"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\i2-windows114-data-install.json",
+      "sha256": "3acfe21333f94eac217fe053e2e0089ee6e39430ffb4d10ee4c6f12761fe01f7"
+    }
+  ],
+  "datasets": [
+    {
+      "name": "G4NDL",
+      "environment": "G4NEUTRONHPDATA",
+      "version": "4.7.1",
+      "folder": "G4NDL4.7.1",
+      "declared_sdk_path": "D:/G4/11.4.p03/install/share/Geant4/data/G4NDL4.7.1",
+      "archive": "G4NDL.4.7.1.tar.gz",
+      "upstream_md5": "54f0ed3995856f02433d42ec96d70bc6",
+      "source": "https://geant4-data.web.cern.ch/datasets/G4NDL.4.7.1.tar.gz",
+      "required": false,
+      "present": true
+    },
+    {
+      "name": "G4EMLOW",
+      "environment": "G4LEDATA",
+      "version": "8.8",
+      "folder": "G4EMLOW8.8",
+      "declared_sdk_path": "D:/G4/11.4.p03/install/share/Geant4/data/G4EMLOW8.8",
+      "archive": "G4EMLOW.8.8.tar.gz",
+      "upstream_md5": "328330009df633f7e9b3a9f445745298",
+      "source": "https://geant4-data.web.cern.ch/datasets/G4EMLOW.8.8.tar.gz",
+      "required": true,
+      "present": true
+    },
+    {
+      "name": "PhotonEvaporation",
+      "environment": "G4LEVELGAMMADATA",
+      "version": "6.1.2",
+      "folder": "PhotonEvaporation6.1.2",
+      "declared_sdk_path": "D:/G4/11.4.p03/install/share/Geant4/data/PhotonEvaporation6.1.2",
+      "archive": "G4PhotonEvaporation.6.1.2.tar.gz",
+      "upstream_md5": "d80ba9bdefcf9e23487a26adfa273304",
+      "source": "https://geant4-data.web.cern.ch/datasets/G4PhotonEvaporation.6.1.2.tar.gz",
+      "required": true,
+      "present": true
+    },
+    {
+      "name": "RadioactiveDecay",
+      "environment": "G4RADIOACTIVEDATA",
+      "version": "6.1.2",
+      "folder": "RadioactiveDecay6.1.2",
+      "declared_sdk_path": "D:/G4/11.4.p03/install/share/Geant4/data/RadioactiveDecay6.1.2",
+      "archive": "G4RadioactiveDecay.6.1.2.tar.gz",
+      "upstream_md5": "20d494f73d4bddabd7fab5c06a58895c",
+      "source": "https://geant4-data.web.cern.ch/datasets/G4RadioactiveDecay.6.1.2.tar.gz",
+      "required": true,
+      "present": true
+    },
+    {
+      "name": "G4PARTICLEXS",
+      "environment": "G4PARTICLEXSDATA",
+      "version": "4.2",
+      "folder": "G4PARTICLEXS4.2",
+      "declared_sdk_path": "D:/G4/11.4.p03/install/share/Geant4/data/G4PARTICLEXS4.2",
+      "archive": "G4PARTICLEXS.4.2.tar.gz",
+      "upstream_md5": "b63341cc97a472b04ff607b094493174",
+      "source": "https://geant4-data.web.cern.ch/datasets/G4PARTICLEXS.4.2.tar.gz",
+      "required": true,
+      "present": true
+    },
+    {
+      "name": "G4PII",
+      "environment": "G4PIIDATA",
+      "version": "1.3",
+      "folder": "G4PII1.3",
+      "declared_sdk_path": "D:/G4/11.4.p03/install/share/Geant4/data/G4PII1.3",
+      "archive": "G4PII.1.3.tar.gz",
+      "upstream_md5": "05f2471dbcdf1a2b17cbff84e8e83b37",
+      "source": "https://geant4-data.web.cern.ch/datasets/G4PII.1.3.tar.gz",
+      "required": false,
+      "present": true
+    },
+    {
+      "name": "RealSurface",
+      "environment": "G4REALSURFACEDATA",
+      "version": "2.2",
+      "folder": "RealSurface2.2",
+      "declared_sdk_path": "D:/G4/11.4.p03/install/share/Geant4/data/RealSurface2.2",
+      "archive": "G4RealSurface.2.2.tar.gz",
+      "upstream_md5": "ea8f1cfa8d8aafd64b71fb30b3e8a6d9",
+      "source": "https://geant4-data.web.cern.ch/datasets/G4RealSurface.2.2.tar.gz",
+      "required": false,
+      "present": true
+    },
+    {
+      "name": "G4SAIDDATA",
+      "environment": "G4SAIDXSDATA",
+      "version": "2.0",
+      "folder": "G4SAIDDATA2.0",
+      "declared_sdk_path": "D:/G4/11.4.p03/install/share/Geant4/data/G4SAIDDATA2.0",
+      "archive": "G4SAIDDATA.2.0.tar.gz",
+      "upstream_md5": "d5d4e9541120c274aeed038c621d39da",
+      "source": "https://geant4-data.web.cern.ch/datasets/G4SAIDDATA.2.0.tar.gz",
+      "required": false,
+      "present": true
+    },
+    {
+      "name": "G4ABLA",
+      "environment": "G4ABLADATA",
+      "version": "3.3",
+      "folder": "G4ABLA3.3",
+      "declared_sdk_path": "D:/G4/11.4.p03/install/share/Geant4/data/G4ABLA3.3",
+      "archive": "G4ABLA.3.3.tar.gz",
+      "upstream_md5": "b25d093339e1e4532e31038653580ca6",
+      "source": "https://geant4-data.web.cern.ch/datasets/G4ABLA.3.3.tar.gz",
+      "required": false,
+      "present": true
+    },
+    {
+      "name": "G4INCL",
+      "environment": "G4INCLDATA",
+      "version": "1.3",
+      "folder": "G4INCL1.3",
+      "declared_sdk_path": "D:/G4/11.4.p03/install/share/Geant4/data/G4INCL1.3",
+      "archive": "G4INCL.1.3.tar.gz",
+      "upstream_md5": "72c3ff5f7f1e6f727f2ebf3b11ce784f",
+      "source": "https://geant4-data.web.cern.ch/datasets/G4INCL.1.3.tar.gz",
+      "required": false,
+      "present": true
+    },
+    {
+      "name": "G4ENSDFSTATE",
+      "environment": "G4ENSDFSTATEDATA",
+      "version": "3.0",
+      "folder": "G4ENSDFSTATE3.0",
+      "declared_sdk_path": "D:/G4/11.4.p03/install/share/Geant4/data/G4ENSDFSTATE3.0",
+      "archive": "G4ENSDFSTATE.3.0.tar.gz",
+      "upstream_md5": "c500728534ce3e9fb2fefa0112eb3a74",
+      "source": "https://geant4-data.web.cern.ch/datasets/G4ENSDFSTATE.3.0.tar.gz",
+      "required": true,
+      "present": true
+    },
+    {
+      "name": "G4CHANNELING",
+      "environment": "G4CHANNELINGDATA",
+      "version": "2.0",
+      "folder": "G4CHANNELING2.0",
+      "declared_sdk_path": "D:/G4/11.4.p03/install/share/Geant4/data/G4CHANNELING2.0",
+      "archive": "G4CHANNELING.2.0.tar.gz",
+      "upstream_md5": "e853fbcba1e8640f7c3a437253955482",
+      "source": "https://geant4-data.web.cern.ch/datasets/G4CHANNELING.2.0.tar.gz",
+      "required": false,
+      "present": true
+    }
+  ],
+  "canonical_folder_versions_match_sdk": true,
+  "verified_datasets": [
+    {
+      "folder": "G4NDL4.7.1",
+      "version": "4.7.1",
+      "file_count": 16092,
+      "size_bytes": 1134642394,
+      "manifest_payload_sha256_verified": true,
+      "ordered_tree_sha256": "3fff16fcdaf51bbcb2839d1b2f0326a8594cc63dfe6508fe14eed9977dfbbe29"
+    },
+    {
+      "folder": "G4EMLOW8.8",
+      "version": "8.8",
+      "file_count": 11424,
+      "size_bytes": 731046315,
+      "manifest_payload_sha256_verified": true,
+      "ordered_tree_sha256": "a3f99e04e95bc0dd31f07ee136ca6f9152379c0b22f9cb5c501e10394dff106a"
+    },
+    {
+      "folder": "PhotonEvaporation6.1.2",
+      "version": "6.1.2",
+      "file_count": 3366,
+      "size_bytes": 41533573,
+      "manifest_payload_sha256_verified": true,
+      "ordered_tree_sha256": "be64b9cf61138b4e87cb45b7f441315023d430052a2c31137d326da248a1c539"
+    },
+    {
+      "folder": "RadioactiveDecay6.1.2",
+      "version": "6.1.2",
+      "file_count": 2965,
+      "size_bytes": 6316723,
+      "manifest_payload_sha256_verified": true,
+      "ordered_tree_sha256": "405b856045e536445b3bfd924064486474594b2458c6ef161259d87a74337a5f"
+    },
+    {
+      "folder": "G4PARTICLEXS4.2",
+      "version": "4.2",
+      "file_count": 3362,
+      "size_bytes": 44373661,
+      "manifest_payload_sha256_verified": true,
+      "ordered_tree_sha256": "215183f1b10e44ccc4b123f2b8b59021dccf1f3579e01f3c71f15c79e39c039f"
+    },
+    {
+      "folder": "G4PII1.3",
+      "version": "1.3",
+      "file_count": 6189,
+      "size_bytes": 15116889,
+      "manifest_payload_sha256_verified": true,
+      "ordered_tree_sha256": "0cbb7ee95db2a7079818145824968e024cca6f5b41ecd51748e4c68060ed470c"
+    },
+    {
+      "folder": "RealSurface2.2",
+      "version": "2.2",
+      "file_count": 41,
+      "size_bytes": 133318147,
+      "manifest_payload_sha256_verified": true,
+      "ordered_tree_sha256": "16a81298ac85af1e72067a6ba18a5292a367eb942014331f21bd3b9e068b4130"
+    },
+    {
+      "folder": "G4SAIDDATA2.0",
+      "version": "2.0",
+      "file_count": 37,
+      "size_bytes": 111295,
+      "manifest_payload_sha256_verified": true,
+      "ordered_tree_sha256": "b9c5c772e8ed7e9fdce17e0df2d9250125eeb37a9640bc5a644110760c4ca16e"
+    },
+    {
+      "folder": "G4ABLA3.3",
+      "version": "3.3",
+      "file_count": 10,
+      "size_bytes": 1379864,
+      "manifest_payload_sha256_verified": true,
+      "ordered_tree_sha256": "d54e6b2c8ebe810d13cb5319c37714687e93692f93086f592d36792c16aee645"
+    },
+    {
+      "folder": "G4INCL1.3",
+      "version": "1.3",
+      "file_count": 16,
+      "size_bytes": 254193,
+      "manifest_payload_sha256_verified": true,
+      "ordered_tree_sha256": "5f378a62f491f438c3ffc8b485006381ed16438854f505a281d531657305a470"
+    },
+    {
+      "folder": "G4ENSDFSTATE3.0",
+      "version": "3.0",
+      "file_count": 3,
+      "size_bytes": 1964837,
+      "manifest_payload_sha256_verified": true,
+      "ordered_tree_sha256": "ec7b0cc97a83a7816a2818358454109c7fe57a1079637127881cce8fff882b1d"
+    },
+    {
+      "folder": "G4CHANNELING2.0",
+      "version": "2.0",
+      "file_count": 21,
+      "size_bytes": 70665651,
+      "manifest_payload_sha256_verified": true,
+      "ordered_tree_sha256": "019d9eb704661bc990688fdf3b5ec22cccdeac9db845bd90f09194cdb602acfe"
+    }
+  ],
+  "verified_files": 43527,
+  "verified_bytes": 2180724729,
+  "full_payload_verified": true,
+  "unregistered_files": [],
+  "artifact": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\Geant4-11.4.3-data.zip",
+    "expected_sha256": "a76d36d8ab287598c47c3433f1d4373d14a07cc516bc460335c2901adb0d00b0",
+    "expected_size_bytes": 1670619843,
+    "available": true,
+    "observed_sha256": "a76d36d8ab287598c47c3433f1d4373d14a07cc516bc460335c2901adb0d00b0",
+    "observed_size_bytes": 1670619843
+  },
+  "discovery_launch": {
+    "executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-windows114\\Release\\G4UniversalSim.exe",
+    "executable_sha256": "4919f2e62b6c73ef394cd5cc963078dad86eba16dd66d109ba8c967893c22f54",
+    "removed_keys": [
+      "G4ABLADATA",
+      "G4CHANNELINGDATA",
+      "G4ENSDFSTATEDATA",
+      "G4INCLDATA",
+      "G4LEDATA",
+      "G4LEVELGAMMADATA",
+      "G4NEUTRONHPDATA",
+      "G4PARTICLEXSDATA",
+      "G4PIIDATA",
+      "G4RADIOACTIVEDATA",
+      "G4REALSURFACEDATA",
+      "G4SAIDXSDATA"
+    ],
+    "only_data_setting": {
+      "GEANT4_DATA_DIR": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\i2-controlled\\windows114-data\\data"
+    },
+    "path_prefix": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\dependencies\\geant4-11.4.3\\geant4-11.4.3-win64\\bin"
+  },
+  "discovery_exit_code": 0,
+  "discovery_geant4_version": "$Name: geant4-11-04-patch-03 [MT]$",
+  "discovery_required_complete": true,
+  "discovery_folder_versions_match_sdk": true,
+  "parent_environment_unchanged": true,
+  "finished_utc": "2026-11-01T16:43:19Z",
+  "required_flags_source": "actual backend discovery, not SDK declaration order",
+  "discovery_paths_all_under_verified_root": true
+}

@@ -1,0 +1,26 @@
+# source/scans tests.patch 独立静态审查
+
+后续真实独审已完成：见runtime/README.md与runtime/receipt.json，三候选exit0（54/58/18断言），5轮各400事件；原文下述“尚未运行”描述静态审查时点。
+
+结论：当前三文件草案未发现需要阻止应用的确认缺陷；修正与J2已实现契约一致，未以放宽扫描物理/完成判据换通过。本结论仅静态审查，不宣称真实scans已复验。尚未启动草案运行，避免在主线程收敛所有源码读取进程/统一解冻前新增占用。
+
+审查对象：`../windows-gui/test-fix-draft/tests.patch`，SHA256 `25179e23dbe4fd34c4123dde747832fc07c01c18cb7d260f90e9aacb8f9bda0f`。基于HEAD56b689fb9ac920cbb1203b2b94dae2483d25f622。三原文件/草案SHA逐项匹配manifest，git apply --check退出0；未apply。完整机器证据static-audit.json。
+
+## source
+
+原断言将所有generated biasing规则编辑视为不支持；J2已经提供bias_rules编辑、验证和writer接口，该断言已过时。validate_physics_extensions的active_rules仅计算enabled行；启用hook且空列表或只有disabled行均产生physics.bias_rules错误。新测试恰好覆盖这两个拒绝，检查人类错误及physics.structured.invalid/error/editor=physics/field=bias_rules机器位置。有效enabled proton/hIoni规则、volumes=Detector为编辑器合法对照，不声称真实wrapped process存在或偏置物理验证。
+
+source原39个assert AST节点，草案41个；除重命名替换的hook测试外，所有同名函数AST完全一致。既有square/annulus/cone基础模式拒绝、能量/角度/有限性及项目save/load未删改。高级GPS通过另一模型入口，不能据此删除基础模式边界。
+
+## scans
+
+两文件只增加deepcopy导入及ScanBase(materials=deepcopy(project.materialEditor))。wizard.apply_to_project明确清除旧材料/几何来源路径并创建dirty MaterialDocument，ScanBase.materials默认None；原fixture因此漏掉真实模型链路所需文档。生产window/content.py::_scan_base已传入deepcopy(page.material_document) if dirty，与草案一致。scan.apply_value逐点deepcopy(base)，验证/写包都把dirty point.materials交给config builder；补齐文档不回填已清空的旧材料来源，不绕过字段校验。
+
+独立AST比对：smoke_scans原/草案40个assert完全一致且顺序不变；smoke_scans_backend原/草案14个assert完全一致且顺序不变。因此lots错误数量、队列/生成结果、400事件/点、能量3点、PSTAR 6%+3σ、CSV行数、seed101/202及收尾断言均保留。
+
+## 运行边界及下一步
+
+作者out生成验证仅作为交付材料阅读，未冒充独审执行。完整D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe已只读核对PySide6/pyvista/pyvistaqt/vtk/uproot存在；该短命令已退出，无测试进程遗留。
+真实scans尚待独立out加载运行：__file__绑定C工作区原测试位置、代码来源保持草案、注入现有113精确EXE与正确SDK/data/Qt，G4USIM_EXPECT_GDML=true；保留原PSTAR/完成数/seed断言及真实摘要。该补跑独立于正式首轮，绝不拼接替换旧report或称完整profile通过。若主线程先解冻并改变相关产品/测试，须重新记录对应源码/测试身份后再执行。
+
+F4 Inspect fields_rejected由Cicero诊断，不在本草案中混修。当前没有产品或tracked测试修改，也没有仍运行的113或草案测试。

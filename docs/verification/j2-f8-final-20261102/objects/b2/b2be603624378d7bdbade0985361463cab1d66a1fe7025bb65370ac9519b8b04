@@ -1,0 +1,18 @@
+# final-v2：仅迁移入口作者复测通过，待Sagan定点复核
+
+仅写新out目录，未覆盖旧final任何文件。旧final共227个文件逐SHA核对原字节保留；旧draft及独审原unit失败均保留。本次没有修改tracked源/测试，没有apply。
+
+## 新交付身份
+
+- [四测试patch](tests.patch)，SHA `b240672c7e1c42b9b54075a7dc9e788a66ecc2ad7aed1237df6e09ee338c200f`。
+- [migration单文件patch](test_config_migration.patch)，SHA `a9953013c9dc8a9d6009356604874a730ff2b7843a312b4b24a5ad9abdfa0056`。
+- [完整migration草案](proposed/scripts/test_config_migration.py)，SHA `909cab4fc3a3f80a6816af0c4ee0e4985970b2f78c06a339cb5ff7edc1989166`。
+- [manifest](manifest.json)、[作者完整入口收据](migration-full-entry.json)、[完整日志](test_config_migration-full-v2.log)。
+
+fixture真实字段为 `file_unit = cm`，匹配属性断言为 `shape_properties["file_unit"] == "cm"`。不放宽strict migration未知键拒绝。该修正此前已在旧final的r2落盘；为响应本次独审收敛，单独发行新final-v2并实际重新执行migration完整main入口，退出0。没有复用旧fail为pass，初败保持可追溯。
+
+执行：`python -B out/collab/j2-static-fixture-patch-final-v2/run_migration_full.py`。四个main产品v2模块仅在内存加载；测试__file__/ROOT仍为冻结仓库，临时夹具/日志都在out。完整main包括原项目类型/资源/未知键/并发发布/故障原子性与新增迁移field/writer路径断言。无后端/native/全局构建。
+
+K1及两个F4脚本字节未变，按main确认的独审562/624/187 PASS收据引用，不重复运行。此前正式候选的失败、旧草案unit失败、旧v1 NIST定位失败原件均不覆盖；本次不改写正式profile报告或旧JSON identity。
+
+目前作者结果PASS，等待Sagan仅对migration完整入口的独立复核后由main决定应用。STL仍为迁移路径契约占位字节，不构成STL几何或物理验证。其它vector code不泛改、不增加旧JSON alias。正式应用后仍需main统一新身份与正式回归。

@@ -1,0 +1,1238 @@
+2026-10-31 F5：**已完成**。冻结验收5c1eec5；Windows160/160、50898个v3入口，Linux11.3.2/11.4.3各160、M0两平台各79，原F4逐例与总量门禁通过。原生22份观察/28截图/真实退出0保持5d身份，经明确映射关联新冻结；不新增物理验证结论。[最终证据](verification/f5-final-20261031/README.md)。下方带日期的旧状态保留其历史范围。
+
+# G4UniversalSim 功能支持矩阵
+
+当前为第三修复候选，相关专项独审已完成，完整新候选验收待进行，阶段状态未关闭：2901f42已有本机通过范围但M0/Linux CI仍失败；在2901f42原生观察范围内，Project retained缺陷已消失；当时F6窄dock与History遗漏仍不升该次overall。History／真实QLayout、STL路径测试及K1 policy final-v1修复专项独审均通过；完整新candidate验收待进行；本段不提高任何后端或物理支持等级。见[状态入口](../STATUS.md)。
+
+2026-11-02 J2/F8实施候选：空白／模板独立内存输入、NIST来源辅助、命名GPS与球面源、reference显式构造器替换、高级几何／场／偏置编辑已接入。E7复用既有实体，不扩大物理支持等级；首轮冻结矩阵存在失败，已独审的诊断、external Inspect及焦点修复进入第二候选，尚未整体验收。准确接口和边界见[J2/F8说明](J2编辑覆盖与F8验收.md)。
+
+
+2026-11-01 I2/J1：**已完成约定范围的阶段验收**。I2安装/恢复、runtime与SDK双平台实际交付，J1本机停靠布局、B/K/C主题与3D会话外观已验证；Windows QtCore依赖污染及关闭收尾已修。原生代表性DPI、恢复回退、中英和运行中切换已验，未做物理多屏跨屏/热插拔或完整可访问性。官方Windows Geant411.4.3 SDK仍GDML OFF，不因独立Xerces测试升级能力；原Windows11.3/Linux GDML ON判据保留。原件、实际CI身份和限制见[最终证据](verification/i2-j1-final-20261101/README.md)。
+
+2026-10-31：I1 只读环境发现、真实后端能力/数据查询与异步选择已独立验收；候选元数据不等于编译、导入或数据内容验证。K1 共享工作流及约定范围内的配置/资源包导出已完成验收；第七冻结 `2914b39` 的原矩阵保持，资源路径 P1 及永久回归 P2 经独审关闭，`5644e1e` 新专项 Windows/Linux 通过严格门禁。[范围与证据](verification/k1-final-20261031/README.md)；K2 工程、I2 安装及 Q2 科研验证保持独立，不增加通用物理正确性或性能保证。
+
+2026-10-30 F5正在实现、交叉审查与准备完整验收。范围为主项目配置事务、撤销/重做及独立自动恢复；新增测试通过记录不代替冻结矩阵。状态以 [ROADMAP](ROADMAP.md) 为准，契约见 [配置撤销与恢复](配置撤销与恢复.md)。下方F4及更早记录保留各自日期边界。
+
+2026-10-30 当前状态：F4 已完成。产品 `7d718d038a00d89995ea773b4772764116b620c3`；Windows 152/152、49913 个 v3 入口与 F1 原始143/48511同代基线门禁；Linux11.3.2 为 152 项、11.4.3 为 152 项（run 41056994075），M0 Windows 为 72 项、Ubuntu 为 72 项（run 41056993987）。CI实际提交 `a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9`，与产品的关系见[提交身份映射](verification/f4-final-20261030/identity/identity-map.json)。Windows原生 13 态、19 次实际观察与进程退出 0；[最终证据](verification/f4-final-20261030/README.md)，[独立审查](collab/reviews/20261030-astra-f4-close-review.md)。下方带日期的候选表述保留为当时实现记录；不扩张物理支持等级。F5待开始。
+
+2026-10-30 F4实现候选：共享 `g4usim_diagnostics_v1` 记录规则代号、严重度、真实字段/行/来源；现有编辑器与项目/运行/向导/扫描/屏蔽场景接入列表，定位不改配置，旧快照失效，源文本只读。无控件或后端未给结构化位置时明确不可定位，不推断自由文本行号；不增加高级字段编辑或物理能力。运行包新增 `validation_diagnostics.json`，保留旧文本报告。范围见 [结构化诊断与定位](结构化诊断与定位.md)，正式验收状态以ROADMAP为准。
+
+2026-10-30 F1已验收：在R27名单规则之上新增`g4usim_provenance_v1`内容身份扩展，记录构建commit/源码状态、实际输入读字节、进程ID与显式产物归属/SHA；旧metadata仍无内容哈希保证，新扩展缺损不得降级。GUI后台重验、搬移当前根、运行状态与字节身份分开。显式`format=auto`依最终计分标志选ROOT/CSV，默认CSV不变；72次格式/缓冲对照支持撤回无稳定收益的256KiB候选。产品f176d0e的Windows143项及Linux双版本/M0双OS矩阵、14次Windows实窗观察与正常关闭证据独立核验通过，见[最终验收](verification/f1-visible-20261030/README.md)；[自动归档](verification/f1-automated-20261030/README.md)保留当时pending。范围见[输出身份与来源](输出身份与来源.md)，正式状态以ROADMAP为准。不提升任何物理功能等级。
+
+2026-10-29 R32 原生交互入口：执行会话仅支持显式 `--ui --ui-session csh`；裸 `--ui` 与 INI `interactive=true` 未选择 csh 时，在初始化及 macro 执行前非零拒绝并写 failed 摘要，避免绕过 R26/R30 守卫，不自动降级。dry-run 不启动会话，仍允许裸 `--ui`。Python 桌面 GUI 的 batch Run/后端几何预览保留；非 csh 原生 Qt UI 执行会话明确不支持。本入口已在8ecad66的Windows及Linux双版本真实回归通过。
+
+2026-10-29 Q1 已完成冻结验收：R25–R30 已形成 worker 偏置生命周期、随机恢复守卫、manifest 来源、探针 v3、步前权重及多 run 生命周期修复。当次 `scripts/run_m0_tests.py` 登记 105 组（static 11 / backend 46 / gui 31 / integration 17）；8ecad66干净Windows与Linux11.3.2/11.4.3每组均105/105通过，实窗和同v3基线严格门禁通过，见[最终报告](verification/q1-final-20261029/README.md)。旧历史完成记录不覆盖新反例，阶段状态及证据见 [ROADMAP](ROADMAP.md) 和 [审查检查点](collab/reviews/20261029-q1-core.md)。本次工程验收不等于全自动物理验证，不提升各能力的实验性等级。
+
+当前输出来源规则（R27）：GUI 结果、绘图与目录后处理在存在 `run_metadata.json` 时，以合法 `generated_files` 为唯一自动文件来源；自身/摘要须登记，缺失、重复、路径逃逸、错误 run 归属拒绝，搬移目录按原清单根重定位。无 metadata 才保留 legacy/unverified 提示；显式文件/list 离线分析仍可用，但无效清单不能降级冒充可信来源。清单不是内容完整性哈希或物理正确性证明；`mergeHistograms --input` 对有 metadata 的目录明确拒绝，改用 GUI 或显式列表。R28 探针 v3 按 AST 作用域和入口保守计数，不能与 v1/v2 报告直接比较。
+
+当前随机与 run 边界（R26/R30）：`setSeeds` 严格接受 2–99 个完整非零有符号 long，拒绝 LONG_MIN；restore 在执行点用独立引擎验证快照后提交，仅支持当前 MixMax/James 原生格式，坏文件不触碰当前状态，其他格式明确拒绝并提示 setSeeds。每事件 restore enable 拒绝，MT 仅证明 master 恢复。已有 run 后直接 initialize/reinitializeGeometry/physicsModified/geometryModified 拒绝，batch/csh 失败并停止后续命令，首轮证据保留；普通连续 run 使用真实 master/worker ID 0、1。其他原生 UI/动态路径不在此次保证内。
+
+2026-10-28 屏蔽/涂层场景端到端（路线图 2B）：`scenarios/shielding_coating` 的生成逻辑提炼为可导入模型 `scenario_model.py`（`ShieldingSpec.problems()/render()/generate()`），`make_scenario.py` 成为保持 CLI 逐字节兼容的薄包装；分析侧 `analyze.py` 提供 `analyze(output_dir)` 供 GUI 复用，命令行行为不变，D-7 的五种证据反例继续由 `scripts/test_shielding_coating.py` 覆盖。GUI 新增 **Scenario** 页（`widgets/scenario_page.py` + 无 Qt 的 `core/scenario_shielding.py`）：15 个字段（基础 7 + 高级 8）三层校验（字段解析 → `problems()` → 配置 schema）、生成 → QProcess 真后端运行 → 读取摘要 → 分析 → 结果表，结果表逐行标注证据来源（`scorer_statistics.csv` / 相空间 / `no_statistics_file_zero_deposition`），DDD 行携带 NIEL 表路径与 sha256（`scenario.json` 的 `niel` 段）；运行未完成或事件数不符时显示失败原因而不是空结果。回归：`scripts/test_shielding_scenario_model.py`（static，105 断言，含同 seed 逐字节确定性与 CLI/模型一致）、`scripts/test_shielding_analysis.py`（static，113 断言）、`scripts/test_scenario_shielding_core.py`（backend，200 事件真跑）、`gui/smoke_tests/smoke_scenario_page.py`（Qt，47 断言）、`gui/smoke_tests/smoke_scenario_backend.py`（integration，12 步 200 事件）。本页只暴露 15 个字段，其余场景参数仍走命令行；角度分布、非平板几何、光核/中子活化与 DDD 的 NIEL 数据来源仍未验证；GUI 生成能力就此对屏蔽场景闭环，但不是新的物理基准。契约见 docs/屏蔽涂层场景端到端.md。
+
+2026-10-27 B1 位移损伤粒子名：`[scoring.displacement]` 的键是 Geant4 粒子名，而 INI 读取器把所有键转小写，旧实现按小写键查表使 `He3`/`GenericIon` 一类名字永不匹配、DDD 静默为 0 且退出码 0。现在按 `G4ParticleTable` 大小写不敏感解析为规范名；粒子表在 physics list 构造后才存在，因此名字校验在 `BeginRun()`（首个事件前）完成，未知名字报出主 INI 文件、行号与候选并使 run 失败。DDD 的物理定义、NIEL 表来源和 `部分支持` 状态不变；回归 `scripts/test_displacement_damage.py`。
+
+2026-10-27 B2/B3/B4 配置重复声明与命令生命周期：主 INI 的重复 section 头与重复键此前被 `IniReader` 静默覆盖；现在记录首次声明行号并在配置收尾输出 `[ConfigWarning] duplicate declaration`（保留最后值生效的兼容行为），摘要新增 `config_duplicate_count`。`/AIHL/detector/enableSD`、`/AIHL/detector/setSDName` 与 `/AIHL/app/setSeed` 此前在 `/run/initialize` 之后只记 warning 并改动 Manager 缓存，Geant4 内核仍用旧状态而进程返回 0；现在三条命令仅在 `G4State_PreInit` 可用，batch 非法状态非零退出、写 `status=failed`、停止后续命令。`DetectorConstruction` 改为通过工厂按配置的敏感探测器名创建 `SensitiveDetector`（原先硬编码 `AIHLParticleSD`，改名后会重复注册）；`SimulationManager::SetSeed` 另加初始化后守卫，属 UI 不可达的防御性代码，未单独覆盖。回归 `scripts/test_config_duplicate_declarations.py`、`scripts/test_command_state_gating.py`；本项只覆盖主 INI 与上述三条命令，其他 Messenger 命令族的动态路径仍未全部审计。
+
+2026-10-27 F6 实时运行进度：后端版本化消息汇总 worker 事件处理计数，GUI 按 run 显示进度、平均速率与 ETA，并处理分块、旧后端、坏消息和退出后的终态显示。真实 1/2/4 worker、多 run、失败/强杀及摘要对账已通过；进度 end/100% 不等于进程成功，最终判定仍以新摘要为准。2026-10-28 追加：协议新增可选 `sequence`（进程级单调、跨 run 不重置），GUI 拒绝重复/回退的进度行，旧后端不写该字段时仍可解析。此项不新增物理能力或实时部分剂量。协议、验证范围及整阶段验收见 [实时运行进度](实时运行进度.md) 和 [F6接续检查点](F6接续检查点.md)。
+
+2026-10-21 Source 位置/角分布字段冲突处理：后台拒绝 `isotropic=true` + 显式 `direction`、`point` + `center/radius`、`plane` + `position`、无 `position_type` 却存在 `center/radius` 四类此前可通过运行计划检查的错误组合；GUI 生成 isotropic 源时不再附带固定方向。原平面 center/radius 缺省值及旧点源未写类型保持兼容。真实 Geant4 在敏感硅体内各运行 64 个点源/平面源事件，逐事件读取主粒子方向且各轴有正负方向采样；这是有限采样回归，不是角分布统计均匀性证明。该增量不新增物理分布能力；高级 GPS 和完整 schema 仍为**部分支持**，M0 未通过总验收。
+
+2026-10-21 源配置失败边界增量：显式为空的 `[source]/preset`、`particle`、`energy` 由后端在配置时拒绝，字段缺失仍采用原默认值或 preset；此前空 `energy` 被静默接受。Windows Release 真实后端 `scripts/test_run_summary.py` 负向回归通过，GUI 原有对应空值校验保持一致。仅加强已支持的源配置输入校验；高级 GPS、原生 GPS 与 Manager 状态一致性、完整闭合 schema 及物理基准仍有缺口，M0 保持未验收。
+
+2026-10-19 M0 浮点输入安全补充：`UnitParser` 统一拒绝非有限普通浮点及带单位数值，`SourceManager` setter 也拒绝非法能量、坐标、方向和圆盘半径，GUI Source Editor 对相关字段提前拦截。原 Release `--inspect-run` 曾接受 `direction=NaN,0,1`，后端负向回归要求事件前失败；该项不扩大原生 GPS、完整来源和物理支持范围，M0 尚未验收。
+
+2026-10-19 固定方向语义修复：旧后端将方向传入 GPS `beam1d` 后仍按 -Z 发射，真实首步 hits 证实 `[source]/direction=0,0,1` 被忽略。现使用 GPS `planar` 执行固定向量，对 +Z、-Z 和斜向做真实 hits 检查；`isotropic_neutron` 预设后显式 `isotropic=false` 且未提供 `direction` 应报错。涉及既有模拟方向语义的**行为修正**，使用旧结果做物理对比时必须复查方向。尚未完成高级角分布与全部物理基准，不据此升级 M0 总状态。
+
+2026-10-19 M0 平面圆形源校准：`[source]/center` 原先仅消费 z，成功运行时仍把 x/y 固定为 0。现由 `SetPlaneBeamAt` 向 GPS 应用 x/y/z，GUI generated 配置把 plane 的 Position 正确写为 `center`。真实 Geant4 12/12 事件的初级 hits 显示源中心偏移 x=4 mm、y=0、z=-9 mm；专项测试覆盖随机圆盘半径。支持等级只针对圆形平面源的位置映射，高级 GPS 分布与源配置闭合校验仍未完成，M0 尚未验收。
+
+2026-10-19 M0 源配置前置校验增量：`[source]/position_type` 的合法值限定为 `point`、`plane`，前者需要非空 `[source]/position`。真实后端反例 `unsupported_ellipsoid` 此前被忽略，随后成功执行 2 个事件；现初始化前报错并非零退出，避免把 preset 旧位置当作指定的新几何。尚未审完 `[source]` 所有组合，配置支持仍为**部分支持**。
+
+2026-10-19 M0 GPS 混合命令：真实硅敏感体三轮运行复现原生 `/gps/ene/mono 2 MeV` 后仅用 `/AIHL/source/particle proton` 改粒子却将采样能量回退至旧的 1 MeV。`SourceManager` 现只向已实例化 GPS 同步被明确修改的字段，首次惰性创建仍整体应用缓存。双线程三轮实际首步命中回归证明能量为 1/2/2 MeV，最后一轮为质子；`effective_source_energy_MeV` 只表示 Manager 缓存，不代表原生 `/gps/*` 之后的实际采样状态。高级 GPS 来源与完整 Geant4 应用追踪依然**部分支持**；M0 未完成。
+
+2026-10-19 M0 线程生命周期：真实 Geant4 曾在 `/run/initialize` 后拒绝 `setNumThreads 3`（`Run0112`，实际仍为 1 线程），但 Manager 来源被误报为 macro 且返回成功。现 `AppMessenger` 只在 `PreInit` 接受该命令，Manager setter 也检查 Geant4 状态；batch 和脚本化 `csh` 的非法状态会失败、停止后续输入、保留原来源，初始化前设置 2 线程则经实际 run 验证。GUI generated 未提供初始化后改变线程数的入口；external macro 受后端约束。此项不代表全生命周期、MT 数据合并或物理基准完成。
+
+2026-10-28 命令失败传播（Astra 审查 D-4/D-5/D-6）：交互会话内被拒绝的 `/AIHL/biasing/*` 修改命令现在计入交互失败（`interactive_command_failure_kind = biasing`）、停止会话、写 `status=failed` 并以非零码退出；此前只 `JustWarning`，会话继续跑未偏置物理却退出 0（反例：`--ui --ui-session csh` 输入 `/AIHL/biasing/enable true` 后 `/control/echo BIASING_CONTINUED`、`/run/initialize`、`/run/beamOn 1`，旧版退出 0 且 `interactive_command_failure_kind = none`）。`/AIHL/material/*` 的 9 个修改命令现在只在 Geant4 `PreInit` 可用（`print`/`list` 只读不受限），初始化后调用由 Geant4 拒绝，会话以 `geant4_illegal_application_state` 失败（此前 `addNist` 静默成功、`effective_materials_source_status = non_file_mutation`、退出 0，而新材质不被任何体积使用）。`ParseStrictDouble` 现在拒绝 `inf`/`nan`/溢出值（`Config value '<v>' is not a finite double`），`[biasing.xs.*]` 的 `factor`/`min_weight` 与 `visual.alpha` 不再接受非有限值。回归 `scripts/test_interactive_commands.py`（`biasing_interactive_reject`、`material_after_initialize`）、新增 `scripts/test_config_value_finiteness.py`；证据等级仍为自测（命令生命周期与配置解析，不涉及物理结果）。
+
+基线日期：2026-07-11。判定依据是当前后端实际实现和仓库中的可运行测试，不依据旧文档、GUI 控件名称或类名。
+
+2026-10-28 屏蔽场景 `analyze.py` 证据语义（Astra 审查 D-7）：缺失文件不再被当作零结果。运行事实（`status`/`summary_write_status`/`output_failure_status`/`run_count`/`completed_events`）不满足即退出码 3 且不写报告；统计文件用 `run_metadata.json` 的 `generated_files` 区分"被删"（退出码 3）与"这一轮确实没统计"（按零报告但带 `evidence = no_statistics_file_zero_deposition`）；相空间缺失/为空/跨轮次/事件号超出完成事件数均为证据错误；报告新增 `evidence` 段。回归 `scripts/test_shielding_coating.py` 覆盖五种反例。
+
+## 1. 支持等级定义
+
+证据类型（本文件统一口径，用于说明“凭什么认为它成立”）：
+
+| 证据类型 | 含义 |
+| --- | --- |
+| 外部表 | 与仓库外的独立权威数据比较：NIST PSTAR/ESTAR/XCOM、SR-NIEL、PDG、NNDC。 |
+| 解析式 | 与解析公式或解析解比较：Bethe、Klein–Nishina、圆轨迹、实体体积公式、GPS 抽样统计期望。 |
+| 同源自洽 | 两个实现互相验证：ROOT 与同 run CSV、Geant4 原生 scorer 与项目 scorer、独立重算 hits、相空间重放。它证明实现一致，不证明物理正确。 |
+| 自测 | 只有本仓库的自动化断言：配置校验、命令状态门禁、文件数据契约、生命周期、GUI round-trip。不含外部物理参考。 |
+| 未验证 | 运行时路径存在，但物理效果或实际偏差尚未观测（例如未观测到偏置权重、未与实测效率比较）。 |
+
+第 2–3 节每条功能的事实列末尾标出它的证据类型；只给“完整支持/部分支持”而不给证据类型时，不得据此推断物理已验证。
+
+| 等级 | 判定规则 |
+| --- | --- |
+| 完整支持 | 后端完成配置/命令解析、校验和运行时行为，结果或状态有明确输出，并有相应测试或 smoke 证据。 |
+| 部分支持 | 只完成部分入口或运行路径，存在实验性限制、未闭合依赖、有限形状/分布、手工后处理或物理结果尚未验证。 |
+| 未支持 | 后端没有运行时实现，或者只是占位/空实现；解析成功、GUI 显示或类已注册不改变此等级。 |
+
+GUI 的“可编辑”不提升后端支持等级；GUI 只支持后端已经实现且 writer/validator 能正确闭环的子集。
+
+2026-10-19 M0 交互错误审计增量：`csh` 的直接 Geant4 UI 命令现由派生终端执行并逐条取得 `ApplyCommand()` 数值返回码，已有错误文本分类继续保留，其他非零返回码以 `geant4_command_status` 报告。真实 `/gps/pos/type InvalidCandidate` 的状态码 500 可被记录，摘要中的多行诊断已归一化；新增受控 shell 在已识别失败后立即停止读取后续命令。仍仅**部分支持**，未覆盖 Qt UI、动态嵌套执行和所有未被明确识别的失败，M0 未验收。证据见 `scripts/test_interactive_commands.py`、`docs/测试平台说明.md`。
+
+2026-10-19 源应用回归增量：真实 Geant4 的单线程双 run 通过敏感体首步记录验证同一进程由 `e-`/1 MeV 切换到 `proton`/3 MeV，并与最终来源摘要比对。该观测只覆盖这一点源、单能、硅敏感目标的受控路径；`effective_config_geant4_applied=unknown` 的整体判定不变，其他 GPS 分布和物理正确性仍未验证。
+
+2026-10-03 状态补充：Git HEAD 为 `018345c`，B2B2 已提交；GUI 展示和 C0A 为尚未提交的工作区实现。下表明确区分 Git 基线与工作区验证，未跟踪源码的全新检出验证仍未完成。阶段证据见 `docs/archive/开发审计与阶段目标.md`。
+
+## 2. 核心后端
+
+| 领域 | 功能 | 等级 | 当前事实和边界 |
+| --- | --- | --- | --- |
+| 配置 | INI section/key 读取、注释、基本类型和单位解析 | 完整支持 | 由 IniReader、ConfigManager、UnitParser 等实现；不同模块仍有各自校验。 证据：自测。|
+| 配置 | 主 INI 字段消费追踪和未消费字段 warning | 部分支持 | M0-3B1 保留主配置字段的文件、行号、原始值和消费状态；配置完成后报告未知 section 和未消费 key，并写入 `run_summary.txt`。材料文件和几何文件仍使用独立解析器。 证据：自测。|
+| 配置 | 材料独立文件闭合 schema | 完整支持 | M0-3B2A 对允许 section、动态名称后缀和字段执行后端校验；未知 section/key、隐式 `global` 字段和空后缀在 Geant4 初始化前失败，并保留 temperature/pressure 专用错误。旧 GUI 的 `[material.<name>] type = material` 作为已弃用输入兼容，新 writer 不再生成。 证据：自测。|
+| 配置/几何 | M0-3B2B1 几何安全契约 | 部分支持 | production cut、固定模板 shape、hierarchical/boolean shape 参数、`copyNo` 和 placement 已在首个 geometry object 创建前校验；GUI 对不能无损保存的源字段设置 round-trip blocker。来源诊断和兼容 warning 由 M0-3B2B2 补充。 证据：自测。|
+| 配置/几何 | M0-3B2B2 来源诊断与兼容 warning | 部分支持 | 几何诊断保留原始来源并输出 `unknown_section`、`unconsumed_key`、`legacy_metadata`、`ignored_boolean_key`；兼容 warning 同步控制台和 `run_summary.txt`，canonical metadata 只保存不参与运行。B3 工作区 `[global] version = 2` 可将现有诊断及重复 section/key 前置拒绝，GUI 已在当前可编辑子集保留并写回标记；空未知 section、孤立 layer 和重复声明阻断可编辑生成。自动迁移和完整 round-trip 仍未完成。 证据：自测。|
+| 配置 | CLI、主 INI、macro 的统一优先级和来源追踪 | 部分支持 | M0-1/M0-1b 已将启动流程统一为“默认值 < 主配置文件 < macro 运行时命令 < 显式 CLI 参数”，并对已知项目命令、`/run/numberOfThreads` 和 `/random/...` 做递归 preflight；动态 alias/loop/foreach 不支持。旧effective_*文本摘要仅记录六个启动字段、三个几何字段及源粒子/单能和物理reference的最终来源；完整2C另有全消费者JSON快照与独立应用证据（见下行），任意未识别Geant4命令仍不得视为已保护。 证据：自测。|
+| 配置/材料 | 旧文本摘要的最终Manager子集与材料来源 | 部分支持（工作区） | 最终摘要以 `manager_state_subset` 标记可读取的当前值，六个启动字段、三个几何字段及源粒子/单能与物理 reference 字段的来源覆盖为 `startup_geometry_source_and_physics_reference`（历史摘要可为 `startup_fields_only`、`startup_and_geometry_fields` 、`startup_geometry_and_source_particle` 或 `startup_geometry_and_source_particle_energy`），新增世界默认材料的 Manager 值；Geant4 已应用状态仍为 `unknown`。材料配置文件的成功加载历史可追溯；多文件加载、显式宏修改、部分失败均不冒充单一有效文件。batch 初始化后的材料修改在事件前拒绝；交互会话的材料修改命令只在 `PreInit` 可用（初始化后由 Geant4 拒绝并让会话以 `geant4_illegal_application_state` 失败），完整2C工程契约已另行验收，不扩大该旧摘要范围。 证据：自测。|
+| 配置/GUI | 完整2C有效配置与独立应用证据 | 已支持（所列工程契约，2026-10-29） | 产品f4770b0：11消费者、稳定对象/输入身份、事务来源与generation、三阶段run/thread收据、模块off/auto/on、只读集合/差异。Windows118、真实双版本Linux各118、同口径门禁及可见GUI通过；无getter/原生命令盲区保持unknown，不证明物理正确或完整GUI编辑。证据：[最终报告](verification/2c-full-20261029/README.md)。 |
+| 配置 | `--inspect-macro` 只读运行前查询 | 部分支持（未提交） | 工作区通过同一个 `PreflightMacro` 输出递归展开命令、文件、行号和类别；能拒绝已知 CLI 锁冲突与动态命令。该接口不评估主配置或命令运行结果，GUI 使用下列联合查询入口。 证据：自测。|
+| 配置/GUI | `--inspect-run` 联合运行前清单 | 部分支持（运行前范围） | 复用实际 Configure 与 macro preflight，报告 macro 执行前启动字段、材料/几何输入和来源；外部 GUI Run 异步检查成功后启动，失败或失效清单阻断。尚非全模块 EffectiveConfig，不证明运行或物理正确；需匹配新版可执行文件。 证据：自测。|
+| 材料 | NIST 材料和旧式 [Alias] material = G4_* | 完整支持 | 通过 G4NistManager 构建或查找。 证据：自测。|
+| 材料 | 自定义元素、同位素、质量分数、原子计数 | 完整支持 | MaterialIniReader 和 MaterialFactory 有实际构建与依赖校验。 证据：自测。|
+| 材料 | 材料体积分数混合 | 完整支持 | 仅接受材料组分；支持 density = auto 或显式密度，并转换为质量分数。 证据：自测。|
+| 材料 | 材料 temperature、pressure | 未支持 | 配置和 Messenger 明确拒绝；暂时使用 density、state 和 composition。 证据：自测（仅拒绝路径）。|
+| 几何 | simple_box、layered_device、hierarchical、shielding 模板 | 完整支持 | 后端可构建；layered_device 和 shielding 当前只沿 z 轴工作。 证据：自测。|
+| 几何 | 初始化后修改与重建生命周期 | 部分支持 | 真实 Geant4 回归曾复现 `/run/initialize` 后 `/AIHL/geometry/setTemplate` 修改 Manager 并继续运行却无已应用证明。现在几何修改命令和 `/AIHL/app/setCheckOverlaps` 只接受 `PreInit`，初始化后由 Geant4 返回 200；batch 保留失败命令和摘要，`csh` 停止后续输入并标记失败，只读几何查询仍允许。GUI generated 的编辑生成发生在初始化前；external macro 受同一后端约束。安全的初始化后几何重建、biasing operator 重挂接及其他 UI 路径仍未验证，切换几何请启动新进程。 证据：自测。|
+| 几何 | array 模板 | 部分支持 | 可生成规则阵列，但模板逻辑和参数主要围绕盒状阵元；其他 shape 组合需单独验证。 证据：自测。|
+| 几何 | box、tubs、sphere、orb、cone、trd、trap | 完整支持 | VolumeBuilder 有对应 Geant4 solid 创建器；各实体参数契约不同。 证据：自测。|
+| 几何 | ellipsoid、eltube、torus、para、hype、polycone、polyhedra（路线图 A5） | 部分支持（实验性，2026-10-22） | hierarchical 普通体积可用，参数契约在创建几何对象前校验；`scripts/test_geometry_a5.py` 中 Geant4 体积与解析公式相差 ≤ 1e-12，质量 = 密度 × 体积。不能作为布尔工具；GUI 编辑器不能生成。 证据：解析式。|
+| 几何 | 后端几何导出 `/AIHL/geometry/exportMesh`（路线图 A5） | 部分支持（实验性，2026-10-22） | 初始化后把 Geant4 实际世界（每个 replica/parameterised 副本、布尔与 STL 结果）以世界坐标多边形网格写入 `g4usim_geometry_mesh_v1` JSON；实测嵌套旋转体的世界坐标、逐副本位置/旋转/材料、phi 扇区范围正确。曲面为 `G4Polyhedron` 近似。 证据：自测。|
+| 几何 | 层级树、位置、旋转、敏感体、bias 体、copy number、可视化属性 | 完整支持 | 普通层级体积走 G4PVPlacement，并注册到 GeometryRegistry。 证据：自测。|
+| 几何 | placement = replica / parameterised（路线图 A5） | 部分支持（实验性，2026-10-22） | `G4PVReplica`（box 母体 x/y/z 轴，tubs 母体 phi 轴）与 `G4PVParameterised`（`copies_file` 逐副本位置/旋转/材料，或 `copies` + `copy_step`）；母体须只含该子体积，切片尺寸、`count × width`、phi 中心与 offset 在创建几何对象前校验。`scripts/test_geometry_a5.py`：replica 逐片剂量与显式平板一致（5σ），phi 扇区束流只计入对应 copy，逐副本材料质量正确。`assembly` 仍拒绝；macro `/AIHL/geometry/add*` 仍只支持 normal；GUI 编辑器不能编辑这些体积（validator 只警告）。 证据：同源自洽（逐片与显式平板对照）。|
+| 几何 | subtraction、union、intersection 布尔实体 | 部分支持 | 后端实际创建 CSG solid；union/intersection 会警告，仍需 overlap 和场景级结果验证。 证据：自测。|
+| 几何/偏置 | 默认复杂几何批处理场景 | 部分支持（工作区验证） | `test/macros/run_hierarchical_batch.mac` 用真实后端完成 1 run、3/3 事件；`cooling_pipe` overlap OK，旧坐标反例触发报警，示例颜色不再回退灰色。GUI 生成包也完成 3/3。`test/main_hierarchical.ini` 改用两条显式 process 规则和真实体积后，与 batch/full macro 分别完成 3/3、100/100 事件，目标匹配 2/2；实际偏置效果仍为 `unknown`，非物理验证。 证据：自测（偏置效果未验证）。|
+| 几何/物理 | production cut、区域步长限制与用户特殊截断（路线图 A6） | 部分支持（实验性，2026-10-22） | 几何体积 `cut.*` 与 `[physics.region.<名称>]`（gamma/e-/e+/proton、`max_step`、`max_track_length`、`max_time`、`min_kinetic_energy`、`volumes`）作用于 G4Region，限制经 `G4StepLimiterPhysics`；同一区域 cut 只能设一处，未知区域在配置/构建阶段报错。`scripts/test_physics_a6.py`：1 µm cut 换算为 990 eV 并产生 δ 电子（1 mm 时为 0），步长、最小动能、径迹长度限制均按 Geant4 语义生效。GUI 不能编辑。 证据：解析式。|
+| 几何 | GDML 导入/导出（路线图 A5） | 部分支持（实验性，2026-10-22） | 后端链接带 GDML 的 Geant4 时，`template = gdml` + `[gdml] file/validate/sensitive_volumes/bias_volumes` 用 `G4GDMLParser` 导入（支持 `SensDet` auxiliary、读取时 overlap 检查），`/AIHL/geometry/exportGDML` 导出。`scripts/test_geometry_a5.py`：含 polycone、STL、布尔、replica、parameterised 的几何往返后 solid、材料、网格、质量完全一致，逐片剂量 5σ 一致。GDML 不保存 world/replica/parameterised 物理体名（touchable 路径改名）与逐副本材料；region、cut、vis 不导出。Geant4 无 GDML 时仍在配置阶段拒绝。Q1 SD 绑定保留实际 LV 身份，精确名称多对象歧义拒绝；biasing 无法安全表达大小写碰撞时明确拒绝；同母普通 PV 的重复 (name,copyNo) 及 daughter 名含路径分隔符拒绝，避免计分路径合并。GUI 不能生成 GDML 运行包（external 模式可运行）。 证据：同源自洽（往返对照）。|
+| 几何 | STL/CAD 导入（tessellated，路线图 A5） | 部分支持（实验性，2026-10-22） | `shape = tessellated`、`file`、`file_unit` 读取 ASCII/二进制 STL 为 `G4TessellatedSolid`；非封闭、非流形、退化或零体积网格在创建几何对象前拒绝，内外颠倒自动翻转。实测体积精确，2000 条 geantino 轨迹均在 STL 表面准确离开。仅三角形 STL，无 STEP/IGES；不能作布尔工具；大网格性能未评估。 证据：解析式。|
+| 物理 | Geant4 reference physics list | 完整支持 | 通过 G4PhysListFactory 创建，并可应用 EM 后缀和额外模块。 证据：自测。|
+| 物理 | EM 选项预设（路线图 A6） | 部分支持（实验性，2026-10-22） | `[physics] em = standard/option1-4/livermore/penelope/dna` 映射为参考列表后缀；`dumpProcesses` 显示对应构造器与模型，五种预设的 1 MeV 光子水中窄束透射与 NIST XCOM 在 1σ 内一致。其他能量与材料的基准属 Phase B。 证据：外部表（NIST XCOM）。|
+| 物理 | 放射性衰变设置（路线图 A6） | 部分支持（实验性，2026-10-22） | `[physics.radioactive_decay] enabled/time_threshold`；不重复注册已有的衰变物理，阈值写入 `G4HadronicParameters`。实测默认 1 年阈值下 Co-60 不衰变，1000 y 时能级分支与 β 平均能量与 NNDC 一致。 证据：外部表（NNDC）。|
+| 物理 | 活动过程导出 `/AIHL/physics/dumpProcesses`（路线图 A6） | 部分支持（实验性，2026-10-22） | 初始化后写 `g4usim_process_dump_v1`：构造器、各粒子过程与模型能量范围、区域 cut/限制、材料-cut 组合能量阈值。只读，PreInit 时被 Geant4 拒绝。 证据：自测。|
+| 物理 | 电磁场：均匀 / 场图 / 局部（路线图 A7） | 部分支持（实验性，2026-10-22） | `[field]` 全局与 `[field.<名称>]`（`volumes`）局部场，`magnetic`/`electric` 均匀值或 `magnetic_map`/`electric_map` 规则网格 CSV（三线性插值），积分精度可调；每线程构建。`scripts/test_fields_a7.py`：均匀磁场圆轨迹、电场做功、Wien 速度选择器、常数与梯度场图（正则动量守恒）、局部场盒均与解析解一致。Q1 局部场按最近显式祖先继承，与 section 名和顺序无关；显式/共享 LV 继承冲突及完全同名 LV 歧义拒绝。无柱坐标场图、无时间相关场，GUI 不能编辑。 证据：解析式。|
+| 物理基准 | 探测器响应（路线图 Phase B4） | 已验证（所列条件，2026-10-22） | `scenarios/benchmarks/detector_response`：小塑料闪烁体中 662/1332 keV 康普顿边与 Klein–Nishina 相差 +0.07/+0.03 %，HPGe 4.44 MeV 单/双逃逸峰在 1 keV 箱内，300 µm 硅中 4 GeV μ⁻、300 MeV 与 1 GeV 质子最概然沉积比 PDG LVB 公式高 +2.7/+0.1/+0.4 %（容差 3% + 3σ；100 µm 约 +5 %）。没有与实测效率比较。 证据：解析式（Klein–Nishina / PDG LVB）。|
+| 场景包 | 探测器响应（γ 谱仪、硅探测器） | 部分支持（实验性，2026-10-22） | `scenarios/detector_response`：`make_detector.py` 生成带外壳的圆柱晶体（NaI、CsI、BGO、LaBr3、HPGe、塑料、CZT）+ 圆锥抽样点源，或硅片 + 平行束；`analyze_detector.py` 由 `event_edep` 得脉冲幅度谱，施加 GEB 高斯分辨率，给出本征/绝对探测与全能峰效率、峰总比、康普顿边、逃逸峰、硅最概然沉积。`scripts/test_detector_response.py` 真实验证全吸收 BGO 的绝对效率与立体角（−1.4 %）、能量守恒、分辨率模型、硅 MPV。无闪烁光产额、猝灭、光/电荷收集与电子学；GUI 不能生成。 证据：同源自洽（参考值来自项目自身 response_physics.py）。|
+| 物理基准 | 硅器件剂量与位移损伤（路线图 Phase B3） | 已验证（所列条件，2026-10-22） | `scenarios/benchmarks/device_dose`：δ 电子平衡的硅薄层中 10–200 MeV 质子剂量/注量与 PSTAR 硅电子阻止本领相差 −0.38…+0.14 %（容差 2 %，仅电磁 option4，cut 10 µm）；质子 10/100 MeV 与 14 MeV 中子的 DDD/注量与 SR-NIEL 表相差 +0.67/−0.22/+0.01 %（检验注量与折积，不检验 NIEL 数据）。SiO2 剂量无参考表，未比较。 证据：外部表（PSTAR、SR-NIEL）。|
+| 场景包 | 半导体器件剂量与位移损伤 | 部分支持（实验性，2026-10-22） | `scenarios/semiconductor`：`make_device.py` 生成盖板 + BEOL + 栅氧 + 有源硅 + replica 衬底切片，单能/能谱/混合/中子源；`analyze_device.py` 给出各层 TID、DDD、1 MeV 中子等效注量（ASTM 95 MeV·mb）、法向入射年剂量与深度剖面。`scripts/test_semiconductor_device.py` 真实验证逐层 DDD 与 SR-NIEL 表、衬底剂量与 cut 无关（0.2%）、中子 DDD、混合能谱与非法参数。器件电学响应、全向环境、薄栅氧界面剂量未验证，GUI 不能生成。 证据：外部表（SR-NIEL）+ 自测。|
+| 物理基准 | Al/Si 中的 CSDA 射程与质子剩余能量（路线图 Phase B2） | 已验证（所列条件，2026-10-22） | `scenarios/benchmarks/shielding_range`（NIST PSTAR/ESTAR 原表在 `nist/`）：质子 10/100 MeV、电子 1/5 MeV 的 Al/Si CSDA 射程偏差 −0.2…+1.0 %，质子穿过 1–20 mm Al、2 mm Si 后的平均能量与 PSTAR CSDA 射程反演相差 −0.15…+0.57 %（容差 1 %）；仅电磁 option4。涂层材料（B4C、W、HEB）无参考表，未比较。 证据：外部表（NIST PSTAR/ESTAR）。|
+| 场景包 | 屏蔽 / 复合涂层（CoatingSimulation 移植） | 部分支持（实验性，2026-10-22） | `scenarios/shielding_coating`：`make_scenario.py` 生成多层涂层 + 硅器件、积分通量能谱源（质子/电子/混合）、界面降密度薄层、parameterised 真空孔隙、区域 cut/步长；`analyze.py` 给出 TID/DDD（每初级、每注量、法向入射剂量率）和透射/反照能谱。`scripts/test_shielding_coating.py` 真实验证源份额与能谱、W/B4C 反照率差异、孔隙副本与能损比例（0.793 vs 0.800）、薄层厚度/材料/密度及归一化一致性，并覆盖 `analyze.py` 的五种证据反例（2026-10-28：统计文件被删、`status = failed`、零事件、陈旧相空间、真零沉积按显式证据标签接受）。`analyze.py` 不做缺证据即零的推断：运行未完成/事件数为零/`output_failure_status` 非 none 一律退出码 3 且不写报告，统计文件是否在 `generated_files` 中决定"证据缺失"与"确实没有统计"。全向环境、涂层材料阻止本领与 NIEL 数据未验证；GUI 自 2026-10-28 起可用 Scenario 页生成/运行/分析该场景（15 个字段，见上一行），命令行仍是完整参数入口。 证据：自测。|
+| 物理基准 | 水中 CSDA 射程、布拉格峰 R80、光子窄束衰减（路线图 Phase B） | 已验证（所列条件，2026-10-22） | `scenarios/benchmarks` + `scripts/run_benchmarks.py`：质子 10–200 MeV 与电子 1/10 MeV 的 CSDA 射程与 NIST PSTAR/ESTAR 偏差 +0.2–+0.95 %（`G4_WATER` I = 78 eV 对 PSTAR 75 eV 引起约 +0.5 %），150 MeV 质子 R80 偏差 +0.84 %，0.1–10 MeV 光子在水/Al/Pb 中的 μ/ρ 与 NIST XCOM 在 1.7σ 内。仅覆盖所列粒子、能量、材料与物理列表。 证据：外部表（NIST PSTAR/ESTAR/XCOM）。|
+| 物理 | 手动物理模块、默认 cut、粒子 cut | 完整支持 | PhysicsList、PhysicsFactory 和 PhysicsManager 有运行时路径。 证据：自测。|
+| 物理 | MicroElec 和 ElectronCapture | 部分支持 | 有构造、区域和阈值配置；依赖 Geant4 构建能力，仍属于实验路径，需场景基准。 证据：未验证。|
+| 源 | GPS 粒子、单能、点位置、固定方向、各向同性 | 完整支持 | SourceManager 配置后驱动 G4GeneralParticleSource。 证据：自测。|
+| 源 | 平面圆形源 | 完整支持 | 后端生成 Plane + Circle；方向和位置参数有有限语义。 证据：自测。|
+| 源 | 矩形平面源（rectangle） | 部分支持（实验性原型） | `[source] position_type=plane`、`shape=rectangle`、`center`、`halfx`、`halfy` 在 C++ 中映射 GPS `Plane` + `Rectangle`；限制为 XY 平面，支持固定方向和 isotropic，GUI generated writer 可输出；真实采样和非法输入专项见 `scripts/test_run_summary.py`，尚无旋转平面或独立源统计基准。 证据：自测。|
+| 源 | 高级 GPS 源（路线图 A4）：能谱、体源/束斑/旋转/环形等平面、confine、余弦/圆锥/beam1d/beam2d/聚焦角分布 | 部分支持（实验性，2026-10-22） | `energy_type`（gauss/uniform/power/exp/histogram/points 文件）、`position_type=volume/beam`、plane `annulus/ellipse/square`、`rot1/rot2`、`confine`、`angular` 映射到 GPS；`scripts/test_gps_sources.py` 以真实首步初级粒子把每种分布与解析期望比对（5σ），confine 体名错误在事件前非零失败，冲突字段配置时拒绝。仅验证配置映射与 GPS 抽样统计；GUI 未提供编辑器；GPS 偏置抽样未覆盖。 证据：解析式（抽样统计期望）。|
+| 源 | 多个加权源 `[source.<名称>]` | 部分支持（实验性，2026-10-22） | 每节一个 GPS 源，`intensity` 决定选中概率；实测 1:3 加权得到 0.746（期望 0.75）及各源独立能谱；与 `[source]` 源字段混用、未知字段、缺粒子/能量/位置/方向均拒绝；多源时 `/AIHL/source/*` 单字段命令拒绝。 证据：解析式（加权概率期望）。|
+| 源 | 离子与放射源 | 部分支持（实验性，2026-10-22） | `particle = ion` + `ion = Z A [Q [E*]]`，`energy = 0 keV` 为静止衰变源（需 `extra_modules = radioactive_decay`）。Na-24：99.9% 衰变至 Mg-24 4122.9 keV 能级、β⁻ 平均 551 keV（NNDC 554 keV）；12C 束流初级粒子正确。Geant4 ≥ 11.2 默认 1 年时间阈值会跳过长寿命核素（如 Co-60），阈值配置留待 A6。 证据：外部表（NNDC）。|
+| 输出 | 粒子径迹导出（路线图 H1） | 部分支持（实验性，2026-10-23） | `[output] trajectories = N`（可选 `trajectory_min_energy`、`trajectory_max_points`）写每个 worker 的 `trajectories_tN[_rR].json`（`g4usim_trajectories_v1`：粒子、父径迹、产生/终止过程、初始能量、长度、逐步终点坐标/动能/所在体积）。`scripts/test_trajectories.py` 真实运行验证：7657 段线段均在所标体积内、初级长度等于 hits 步长之和、父径迹齐全、过滤与点数上限、多轮文件，100 MeV 质子在水中初级路径长度与 PSTAR CSDA 射程相差 +0.58 %（容差 1.5 % + 3σ）。GUI（路线图 G6）：Run Config 的“前若干事件的粒子径迹”写 `trajectories = N`，3D 视图叠加显示（按粒子配色与图例、逐事件/全部事件、仅初级、次级最低能量），运行完成后自动加载；`trajectory_min_energy`/`trajectory_max_points` 只能手写。只适合少量事件，文件随次级数快速增大。 证据：外部表（PSTAR）+ 同源自洽。|
+| 源/输出 | 相空间读写 | 部分支持（实验性，2026-10-22） | `[phase_space] volume/particles/kill` 写 `phase_space_tN[_rR].csv`（`phase_space_csv_v1`，穿入边界状态）；`[source] phase_space_file` 重放（事件 k = 历史 k，可 `phase_space_recycle`）。实测重放与记录逐粒子一致（5e-12）、平均沉积能一致，kill 有效，多粒子/权重历史正确，文件过短等在事件前失败。未验证偏置权重与大文件性能（文件整体读入内存）。 证据：同源自洽（重放逐粒子一致）。|
+| 探测 | sensitive logical volume 到 SensitiveDetector 的绑定 | 完整支持 | DetectorConstruction 根据 GeometryRegistry 绑定 hit 链路。 证据：自测。|
+| 计分 | hits、raw/weighted event edep、Edep 直方图和分体积/分粒子汇总 | 完整支持 | EdepScorer、OutputManager 和线程本地 context 有实际输出。 证据：自测。|
+| 计分 | MT worker 计分命令的初始化生命周期 | 部分支持 | 真实双线程曾在 `/run/initialize` 后接受 `/AIHL/scoring/eventEdep false`，但 worker 仍写 `event_edep_tN.csv`；两次 run 之间亦存在静默失效。全部修改型 `/AIHL/scoring/*` 命令现限 Geant4 `PreInit`；`print` 保持只读可查询，batch/csh 错误状态、既有 run 保留及初始化前合法关闭 event CSV 经专项测试。其他动态命令路径、worker 内核状态与完整物理标定仍待验证。 证据：自测。|
+| 计分 | Geant4 原生打分网格（`/score/` box/cylinder、全部 primitive scorer 与过滤器） | 部分支持（2026-10-22） | `G4ScoringManager` 在 RunManager 创建后实例化；结果按 run 写入 ROOT `mesh` ntuple（每 worker 一行，可相加）与 master 合并的 `scoring_mesh[_rR].csv`，含 `sum/sum_sq/entries/rel_error`，网格结构写入 `run_metadata.json`。`scripts/test_scoring_mesh.py` 实测：ROOT 与 CSV 一致；box 网格沉积能等于事件总沉积能；原生 doseDeposit/cellFlux 与 DoseScorer/FluenceScorer 一致（相对差 < 1e-9）；粒子过滤器划分正确；两次 run 之间清零。INI 入口 `[scoring.mesh.<网格>]` / `[scoring.mesh.<网格>.<量>]`（box/cylinder、粒子与动能过滤）生成相同 `/score/` 命令，实测与宏定义逐格元一致，非法配置运行前失败。GUI 编辑器尚未提供。 证据：同源自洽（与项目 scorer 交叉验证）。|
+| 计分 | LET（径迹平均 / 剂量平均） | 部分支持（实验性，2026-10-22） | `[scoring] let = true`（仅主 INI）与 `[scoring.let] particles`；敏感 physical touchable 上按步平均动能的非限制电子阻止本领计算 LET_t、LET_d（keV/µm），输出 `let_volume_summary_tN[_rR].csv` 与 ROOT `let` ntuple（可相加的 sum 列）。`scripts/test_let_scoring.py`：100/10 MeV 质子在 20 µm 水中 LET_t 与 Bethe 公式相差 0.55%/1.4%，LET_d ≥ LET_t，ROOT 与 CSV 一致。未覆盖重离子、厚靶能谱基准；GUI 仍不能编辑 LET。 证据：解析式（Bethe）。|
+| 计分 | 统计不确定度（Edep / Dose / Fluence / LET） | 部分支持（实验性，2026-10-22） | 逐事件累计 `sum`/`sum_sq`，master 在每轮后写合并的 `scorer_statistics[_rR].csv`（任何输出格式），含 `value`、`mean_per_event`、`std_error`、`rel_error`（R = sqrt(Σx²/(Σx)² − 1/N)）、FOM；LET 比值用 delta 方法。每 worker CSV 与 ROOT ntuple 追加可相加的 `*_sum_sq*`、`n_events` 列（ROOT schema v4），`scripts/g4usim_io.py` 的 `load_scorer_statistics()` 从 ROOT 合并。`scripts/test_statistical_uncertainty.py`：与原始 hits 独立重算一致；20 次独立 run 的实际离散与报告误差之比 1.04–1.25；1/√N 缩放成立。仅为统计误差；偏置/加权运行与重尾 LET_d 未专门验证；GUI 对方法可用的结果显示误差；Q1 为小样本/零分母/零总量明确不可用状态，保持原近似公式。 证据：同源自洽（20 次独立 run 对账）。|
+| 计分 | Dose（敏感 physical touchable） | 部分支持（实验性原型） | `[scoring]/dose=true` 配合 `auto_create_default_scorers=true`，对敏感体按 `(runID, physical touchable path)` 汇总原始/逐 hit 加权 Edep，并以 `GetMass(true,false,preStepMaterial)` 的本体质量（扣除 daughter 占据体积，使用实际副本材料）换算 Gy；真实单/双 worker、连续两轮及 CSV 公式专项通过。仅为当前模拟历史累计剂量；没有源强、时间、注量归一化、任意复杂几何质量保证或独立物理基准；Q1 专项覆盖普通与参数化母体/子体质量反例。 2026-10-22：在单一敏感 box 靶上与 Geant4 原生 `doseDeposit` 打分网格交叉验证一致（相对差 < 1e-9，`scripts/test_scoring_mesh.py`）；仍缺物理基准与归一化。 证据：同源自洽（与原生 doseDeposit 交叉验证）。|
+| 计分 | 位移损伤剂量 DDD（NIEL 表折积） | 部分支持（实验性，2026-10-22） | `[scoring] displacement = true` 与 `[scoring.displacement] <粒子> = <NIEL 表>`；daughter-free 敏感 touchable 上径迹长度注量 × NIEL(E_平均) / V（MeV/g），含零沉积步；每 worker/run `displacement_volume_summary_tN[_rR].csv` 与 `scorer_statistics` 中的 `ddd_total`/`ddd_<粒子>`。`scripts/test_displacement_damage.py`：与 hits 独立重算一致（2e-4）、中子零沉积步与 NIEL·N/A 一致（0.3%）、表外能量与非法表拒绝。`scenarios/semiconductor/niel` 附带 SR-NIEL 硅表（质子、电子、ASTM E722-19 中子），基准 `device_dose` 中 DDD/注量与表一致到 1%；NIEL 数据本身与位移损伤效应未作基准；ROOT 输出只有统计文件。 证据：外部表（SR-NIEL）+ 同源自洽。|
+| 计分 | Fluence（敏感体 Track-Length） | 部分支持（实验性原型） | `[scoring]/fluence=true` 且 `auto_create_default_scorers=true` 时，敏感体内每个 Geant4 step（含零 Edep）累计 `stepLength` 和 `stepLength × weight`，按 physical touchable 的 daughter-free solid 体积求 `mm^-2`；每个 worker/run 输出 `fluence_volume_summary_tN[_rR].csv`。Geantino 穿越 100 mm³ 盒体、12 事件得到约 12 mm / 0.12 mm^-2，ST/MT、双 run、Dose 并存和 GUI Results 专项通过。R29 将计分权重纠正为步前统计权重；eBrem factor 0.1/1/10、单/双 worker 的同次运行原生 energyDeposit/cellFlux 对照覆盖次级与零沉积步（`test_biasing_step_weight.py`），仅为有限配置实现对账。尚无独立物理 benchmark、含 daughter/复杂复制几何、一般 biasing 无偏性或表面穿越注量验证。 2026-10-22：在单一敏感 box 靶上与 Geant4 原生 `cellFlux` 交叉验证一致（相对差 < 1e-9）；仍缺物理基准与归一化。 证据：同源自洽（与原生 cellFlux 交叉验证）。|
+| 偏置 | process-level 截面 biasing | 部分支持 | 工作区 E 候选已在初始化前重绑 macro 物理配置，并按实际 wrapped process 校验目标；有效 e-/proton/neutron、无效目标、MT 和多次 run 通过真实后端回归。R25 按实际 LV 身份冻结共享只读计划，每 worker 创建私有 operator；BeginRun 验证真实 TLS 绑定与 wrapped process，EndRun 提交逐 run/thread 收据，最终须覆盖每轮实际 worker 且全部完成，否则失败。master 挂接字段标明 scope，不能充当 worker 证据；proposal/applied 已有真实调用证据，但不是 biased/analog 无偏性或方差收益验证。派生截面非有限/非正时失败中止。几何重建和 `--ui` 偏置修改明确拒绝；GUI generated 不开放规则生成，external 仅可在 batch 模式使用。 证据：自测（worker 生命周期与有限同源计分对照，无一般 biased/analog 物理基准）。|
+| 偏置 | legacy particle-level XS 兼容语法 | 部分支持 | 有兼容展开；工作区 E 候选对同次配置的 legacy 警告与 Messenger 变更提示去重。新代码应优先使用 process-level 规则。 证据：自测。|
+| 偏置 | importance、weight window、splitting、Russian roulette | 未支持 | 当前没有对应运行时实现。 证据：未验证。|
+| 输出 | hits/event edep/直方图/汇总/run_summary.txt | 完整支持 | 文件按需创建；多线程 worker 产生 _tN 文件。M0-2 后摘要在最终生命周期阶段写入，并记录每次 run、实际事件数、状态、失败命令和生成文件；输出文件清单不等于物理结果验证。 证据：自测。|
+| 输出 | /AIHL/output/setDir、线程后缀、flush、close、print | 部分支持 | OutputMessenger 已注册；无显式 CLI `--output` 时可由 macro 在 Geant4 `PreInit` 阶段改目录，显式 CLI `--output` 会锁定输出目录。`/AIHL/output/setDir`、`setThreadSuffix` 及 `/AIHL/app/setOutputDir` 初始化后会被 Geant4 命令状态门禁拒绝，SimulationManager setter 亦有状态守卫；避免 worker CSV 留在旧目录、最终摘要却移到新目录的实测失配。batch 拒绝后须非零退出、失败摘要且已完成 run 的 CSV 保留，6 个真实反例已通过。命令处理器或 OutputManager setter 异常时，即使 `ApplyCommand()` 返回 0，也已验证中断 macro、原目录及来源不误变更。真实后端曾静默接受 PreInit `setThreadSuffix false`，但 worker 仍强制 `_tN`；现对 `false` 明确 fail-fast，`true` 保持 `_tN`，单/双 worker 负例及双 worker 正例纳入摘要回归，取消后缀能力仍未实现。交互 `csh` 已知错误可被识别，但动态嵌套命令、其他 UI 和完整输出生命周期仍未闭合。 证据：自测。|
+| 输出 | 多线程自动合并 | 部分支持 | `format=root/both` 时由 G4AnalysisManager 将直方图和 ntuple 合并为每 run 一个 ROOT 文件；CSV 仍只写每线程文件，需要 scripts/merge_outputs.py 或 mergeHistograms 手工/GUI 触发。 证据：同源自洽（ROOT 与同 run CSV 对账）。|
+| 输出 | ROOT 输出（G4AnalysisManager，`g4usim_root_v1`） | 部分支持（2026-10-22） | `[output]/format = csv\ 证据：同源自洽（与同 run CSV 对账）。|root\|both` 与 `/AIHL/output/setFormat`（仅 PreInit）；每 run 一个 `g4usim[_rR].root`，含 `edep_raw/edep_weighted` 直方图及 `hits/events/edep_volume/edep_particle/dose/fluence` ntuple，并写 `run_metadata.json`。`scripts/test_root_output.py` 实测单/双/4 线程、两次 run 与同 run CSV 逐项一致，`root` 模式不写 CSV，默认仍仅 CSV。GUI 尚未读取 ROOT；默认格式暂保持 csv。 |
+| 扩展（M3/M5） | Python 输出后处理扩展 API v1 与 GUI JSON 导出 | 部分支持（实验性原型） | `scripts/output_extension_registry.py` 显式装载可信模块、校验接口版本与重复 ID；内置 `dose_json`、`fluence_json` 独占发布聚合 JSON，真实 Geant4 双线程双 run → JSON 分别由 `scripts/test_dose_scoring.py`、`scripts/test_fluence_scoring.py` 逐 worker 对账。GUI Results 提供两个异步导出按钮、取消、失败提示和 JSON 结构校验，专项见 `gui/smoke_tests/smoke_output_extensions_gui.py`。有 metadata 的目录仅汇总合法 manifest 登记文件，缺失/损坏清单拒绝，无 metadata 明示 legacy/unverified；这不保证所有预期 worker 已被上游登记或物理 benchmark；仍无 GUI 插件管理、沙箱、内核 scorer/几何/源动态注册，详见 `docs/输出扩展原型说明.md`。 证据：同源自洽（逐 worker 对账）。|
+| 输出 | CSV 单位和版本化数据契约 | 部分支持 | M0-4 工作区候选在摘要和 `--capabilities` 中标记 CSV 契约 v3，当前已验证的能量/长度列带 `_MeV`/`_mm`，hits 不再输出未计算的 LET 零值列；摘要按实际表头标记 v2/v3/`unknown`。R29 hits/HitRecord 的 `weight` 纠正为步前统计权重，供 Edep/Dose/Fluence/LET/DDD 使用；相空间仍为边界权重，表头版本不变，历史偏置输出须重算。hits/event 保留 `runID`、后续 run 文件使用 `_rR`，单线程与双线程两次 `beamOn` 已验证不覆盖；关闭总计分时不再写全零 event CSV。Windows 中文主配置、macro、输出目录的摘要路径可按 UTF-8 读取。共享 worker 错误登记、batch 非零退出/失败摘要、真实双线程事件行及汇总关闭两类故障注入已验证；已知目录冲突拦截现覆盖 batch 命令前和交互 run 开始，单/双线程首轮及第二轮 `csh` 实测零新增事件和失败摘要；合并发布失败注入也已补充。字段语义与迁移见 `docs/输出数据契约.md`；通用直方图单位、自由文本/CSV 内容编码、真实设备故障、目录检查竞态及其他交互 UI 路径尚未闭合。 证据：自测。|
+| 测试 | M0-5 统一入口与构建身份 | 部分支持 | `scripts/run_m0_tests.py` 与 CTest 按 static/GUI/backend/integration 分层，JSON 报告区分 pass/fail/skip；主后端 `--capabilities.source_fingerprint` 与合并工具 `--source-fingerprint` 检查二进制来源，并记录编译器、配置、Geant4 版本及 MT 状态。2026-10-28 报告 v2：79 例（static 6 / gui 26 / backend 33 / integration 14）全部通过，`assertions_executed_total=116133`、`cases_with_zero_assertions=[]`（阶段 1.4 的 9 个零断言用例已改写成 `assert` 表达，语义与容差未变），探针 `settrace_assert_lines_v2` 同时跟踪脚本启动的线程；报告带 `tests_content_fingerprint` 与逐用例 `log_sha256`，`scripts/check_report_evidence.py` 作为 CI 证据门禁，E2-S1 的六个 editor→writer 边界是 static 用例 `writer_boundary`，证据见 `docs/verification/stage1b-20261028/README.md`。静态/GUI CI workflow 已纳入 Git 且两步骤带 `--fail-on-skip`，但本机通过不表示 GitHub CI 已实际运行。Linux/Geant4 CI、可选 GUI/3D 依赖、高 DPI、跨平台物理基准与真实设备故障仍未闭合。 证据：自测。|
+
+交互命令 M0 增量（2026-10-19）：`csh` 模式现识别不存在的命令、参数类型拒绝（如 `/run/beamOn wrong`）、参数越界（如 `/run/beamOn -1`、`/run/verbose -1`）和非法应用状态拒绝（如 PreInit 的 `/run/abort`），并在结束后写 `status=failed` 和非零退出码。仅覆盖明确匹配的 Geant4 诊断，不具备逐条命令返回码保证；支持等级仍为“部分支持”。
+
+交互物理 M0 增量（2026-10-19）：`--ui` 开始前启用 PhysicsMessenger 修改命令守卫，拒绝可能使 PhysicsManager 与已注册 Geant4 physics list 分离的 `/AIHL/physics/*` 修改；三项只读查询仍可用。真实 `csh` 专项覆盖查询、运行前的 reference 修改和有成功 run 后的 EM 修改，拒绝时收尾为 `failed`、非零退出并记录 `physics` 类别。初始化前的 batch macro 物理修改仍使用已有重新绑定流程；未审计全部原生 Geant4 UI 命令和物理内核实际最终状态，M0 仍为部分支持。
+
+物理宏转交 UI 的生命周期补充（2026-10-19）：仅修改物理配置的 batch macro 在进入 `--ui` 前将待重绑标志用于重新注册物理列表；`/AIHL/physics/listAvailableReferences`、`listAvailableEMReferences` 在 batch 初始化后作为只读查询放行。真实 `csh` 宏→UI→`/run/initialize`→2 事件与宏内查询→2 事件均通过专项；已观察物理重绑分支被调用，尚无独立核素反应截面或次级粒子谱基准，M0 不升级为完成。
+
+## 3. GUI 和工具
+
+| 功能 | 等级 | 当前事实和边界 |
+| --- | --- | --- |
+| PySide6 项目、运行包、QProcess 运行、日志和历史 | 支持（限定范围） | core、widgets 和 smoke tests 覆盖主要运行流程；项目/快照恢复与标准包复制的范围见下行。不是任意输入包的便携或物理验证保证。证据：自测。|
+| E6 项目迁移、运行包快照恢复与复制 | 已通过阶段验收 | 普通项目与包快照分入口严格校验；恢复包内当前材料/几何和快照编辑参数，须重新生成，不恢复历史成功或未输出草稿。复制限完整标准 GUI 输入集合，重定位已知路径；外部依赖/歧义拒绝。说明见[配置兼容与迁移](配置兼容与迁移.md)；代码a779634的Windows134/134、实际CI、实窗12状态及真实2/2事件通过，[证据](verification/e6-visible-20261030/README.md)；不扩张J2/K1或物理验证。|
+| 项目 JSON 读写和旧字段兼容 | 支持（限定范围） | 当前 writer 为 version 7，保留已知 1–6 兼容；新增完整材料文档和原始编辑草稿。未知字段、未来版本、重复键和非法类型拒绝；不静默重读源覆盖恢复草稿。F5完整链路技术验收已通过，见[撤销与恢复契约](配置撤销与恢复.md)。|
+| F5 配置事务、撤销/重做、自动恢复 | 已完成（限定范围） | 主项目现有编辑器与向导成功应用共用完整快照事务；原始非法草稿可保存/恢复但不可绕过生成校验。每会话独立原子恢复副本、真实系统锁、恢复为未命名副本。扫描/场景及未应用向导草稿不在范围；历史运行包继续E6当前包语义。自动测试、异常终止实验、真实后端与实窗分开验收，不新增物理支持。|
+| GUI | generated/external 运行来源 | 部分支持 | C0A 工作区已验证自动生成 package、路径/配置变更刷新与 stale、空 CLI 参数省略、显式 source-copy、启动前文件检查及真实 QProcess 完成 3/3 事件。C0B 联合查询和外部 Run 预检门槛已通过专项；C4 工作区候选按逐 run 和摘要总数核对事件，区分成功、无 run、dry-run、交互无 run、失败与未证实，待窄复审。默认层级几何源已无 blocker；GUI generated 仍不可因后端示例 biasing 规则有效而自动启用无规则 hook。 证据：自测（真实 QProcess 3/3 事件）。|
+| 材料编辑器 | 部分支持 | 支持 NIST、质量分数、体积分数、原子计数的有限 writer；自定义元素/同位素、温压等字段不能完整 round-trip。 证据：自测。|
+| 几何编辑器 | 部分支持 | 可生成 simple box、layered device、hierarchical/boolean 子集；工作区 B3 已对 hierarchical 普通体积的已知 `vis.*`/`cut.*` 做值保留，并开放 `trd` 五参数表格编辑。layered 的 `auto_stack=false`、position/rotation、已知 vis/cut 与 canonical metadata 已通过严格版源/生成文件真实后端各 2/2 事件验证；手动堆叠可在 GUI 编辑，vis/cut/metadata 暂仅保留。默认复杂源无 blocker，GUI 生成包真实运行 3/3 事件；boolean tool 的 `trd`、`trap`、高级模板和完整 schema/迁移仍未闭合。 证据：自测（真实后端 2/2 与 3/3 事件）。|
+| 源编辑器 | 部分支持 | 可生成 point/fixed、point/isotropic、plane circle，以及实验性 plane rectangle；后者需有限正 `halfx/halfy` 和 XY 平面法向；annulus、square、cone、cosine、focused、confine 以及 A4 的能谱、体源、束斑、多源、离子和相空间后端已支持但 GUI 尚无编辑器，仍阻止生成，需手写主 INI。 证据：自测。|
+| 物理编辑器 | 部分支持 | 可生成 reference list、default cut 和 biasing hook；手动物理模块与 biasing 规则没有完整编辑器。 证据：自测。|
+| 计分编辑器 | 部分支持 | 开放 hits、event edep、Edep 和直方图；实验性 Dose 和 Fluence 可分别启用并生成 `dose=true`、`fluence=true`，需默认 scorer 自动创建；LET 继续禁止生成。Results / Dose (Gy) 按 worker 累加能量、质量保留一份；Fluence (mm^-2) 按 worker 累加径迹长度、体积保留一份；均提示线程文件可能不齐及物理验证边界。 证据：自测。|
+| 3D 预览 | 部分支持 | 编辑器预览不是后端几何真值；能力取决于 PyVista/3D 依赖，对未支持实体应显示近似或不可用。路线图 A5 新增“显示后端几何”：后台 QProcess 运行 `/run/initialize` + `/AIHL/geometry/exportMesh` 并显示 Geant4 实际构建的网格（`gui/smoke_tests/smoke_backend_geometry.py`）。路线图 G1 起默认显示后端几何：generated 模式无需运行包（未编辑的几何/材料文件原地使用，编辑过的写编辑器生成文本，须先通过编辑器校验），打开 3D 页及修改后约 1.2 秒自动导出，按输入内容（含几何引用的 STL/GDML 文件与后端可执行文件）缓存，导出期间显示标注“近似”的编辑器草图，失败显示后端原因（`smoke_backend_geometry_auto.py`，真实后端）。仅显示几何，不检查重叠。路线图 G2/G3：材料配色与图例（勾选隐藏某材料）、世界体默认隐藏、含子体积的体积半透明、正视/侧视/俯视/等轴与正交投影、悬停显示名称/材料/实体/体积、单击选中并与体积表双向联动、单独显示/隐藏/全部显示、沿 x/y/z 的剖切平面；逻辑在无 Qt 的 `preview3d/view_model.py`，`smoke_3d_view.py` 在真实窗口中检查拾取、可见性与剖切（VTK 在 Windows 上不能用 Qt offscreen 平台渲染）。路线图 G6：叠加 H1 径迹文件（`preview3d/trajectories.py` 无 Qt 读取与过滤，校验 schema、重复事件和体积索引），显示径迹时体积变为半透明；`smoke_trajectory_view.py` 以真实后端运行示例项目验证自动加载。路线图 G4：编辑器草图按 Geant4 的 `G4PVPlacement` 逐级组合母体变换（先 X 后 Y 再 Z 旋转坐标系、无单位角度为弧度），绘制全部后端实体及其 phi/theta 分段（含 A5 实体与 STL）；replica/parameterised 副本与布尔结果列为“未绘制”并说明原因。`scripts/test_sketch_accuracy.py` 对仓库全部可绘制几何与三个专用夹具比较 130 个体积的包围盒（容差 1.5 %）与 20 个布尔目标的包含关系。路线图 G5：按 GPS 设置绘制源（点、XY 平面内的圆/矩形、固定方向箭头、各向同性射线；仅预览的模式以淡色标注），generated 模式下也叠加在 Geant4 几何上；`smoke_source_glyphs.py` 以 H1 径迹核对 4×200 个真实初级粒子的起点与方向。剖切只裁剪表面、不补截面；J1已补代表性125%/150%DPI、颜色/不透明度的实窗检查，全部硬件组合与完整可访问性未验。 证据：同源自洽（草图包围盒与后端网格、H1 径迹对照）。|
+| GUI 国际化 | 部分支持（工作区） | `core/i18n.py` 提供中文/英文运行时切换和偏好持久化，主框架、关键状态smoke及J1代表性中英实窗已通过；完整专业文本、QTranslator和跨页可访问性仍未闭合。 证据：自测。|
+| GUI 主题和配置持久化 | 部分支持（2026-10-22 界面刷新） | `core/theme.py` 集中提供浅色/深色/系统主题（样式表与同色 Qt palette，系统主题优先读 `styleHints().colorScheme()`）与 QSettings；`core/icons.py` 线条图标随主题重绘；matplotlib 图（结果图表、扫描图）随主题与语言重绘并带中文字体回退。`smoke_main_window_ui.py`、`smoke_start_page.py` 与前后对比截图已检查；J1已补代表性125%/150%DPI、B/K/C与系统主题实窗；完整对比度与可访问性仍未验收。 证据：自测。|
+| I2 环境辅助安装 | 已实现（I2 约定范围，2026-11-01 验收） | “环境 → 安装运行环境…”与 CLI 复用计划、受校验获取/发布、取消/恢复、核验/卸载及 SDK 编译探测。GUI 需清单提供匹配产物；无清单不能安装，不承诺已有公共下载目录或自动配置任意编译器。发布后重新执行 I1 检测，保留原候选且不自动选择。Windows/Linux runtime 各实际完成5事件；SDK consumer与完整应用源码构建、冻结Python的ROOT读写和双平台实际CI通过。Windows11.4官方SDK后端GDML不可用，独立Xerces测试不改变该事实。文件安装、环境就绪、模拟完成和物理验证分别计证；详见[说明](环境辅助安装.md)及[最终证据](verification/i2-j1-final-20261101/README.md)。 |
+| J1 工作区、主题与 3D 外观 | 已实现（J1 约定范围，2026-11-01 验收） | 原生停靠配置/3D/结果/日志与未接入的AI预留区，移动/缩放/隐藏/浮动、三预设及本机保存/恢复/默认回退；不进入项目/F5/K1。B/K浅色偏好与浅/深/系统策略独立，深色C。3D按准确体积副本或材料调色、调不透明度和复位，逐属性体积优先于材料、再优先于自动显示；仅当前视图会话，实际几何变化清除，不写后端vis.*。文字备用视图明确不可调节。Windows实窗覆盖重启、中英、125%/150%DPI及真实运行中切换；Linux冻结XCB/VTK另验。未做物理多屏热插拔或完整可访问性；AI无模型/执行能力。见[说明](工作区布局与外观.md)及[最终证据](verification/i2-j1-final-20261101/README.md)。 |
+| GUI 与后端校验一致性（路线图 E1） | 部分支持（2026-10-23） | `scripts/test_gui_backend_agreement.py`：仓库中全部几何/材料组合、主 INI 与五个向导场景同时经过 GUI 校验（与配置页相同的调用）和后端（`/run/initialize` + `exportMesh`），判定不一致即失败，GUI writer 生成的材料/几何也须被后端接受；当前 61 例无不一致，15 例为编辑器无法无损编辑而提示原始文件复制模式。材料名按后端规则比较（自定义名不区分大小写，NIST 名区分）；`[NIST]`/`[element.*]`/`[isotope.*]` 原样保留并写回；体积分数材料缺省密度为 auto；材料循环引用在 GUI 侧拒绝。只覆盖几何与材料文件，源、物理、计分与主 INI 其他字段的一致性尚未建立（见路线图 E2）。 证据：同源自洽（GUI 校验与后端 61 例对照）。|
+| GUI 开始页与示例库 | 部分支持（2026-10-22） | 开始页：新建仿真、打开项目、最近项目和五个示例卡片（布拉格峰、屏蔽板、硅朗道分布、NaI γ 能谱、质子能量扫描）。示例用向导设置写入项目（与新建仿真向导相同的子集与校验），附带结果在 `examples/gallery/` 只读显示，由 `examples/gallery/build_gallery.py` 用真实后端重新生成；扫描示例无运行包，只读打开。`smoke_start_page.py` 核对附带结果与卡片描述一致（布拉格峰 157.5 mm、662 keV 全能峰与康普顿边、朗道长尾、沉积随能量下降）、示例载入、只读扫描与文件不被写入。附带结果是单一种子的小样本，不是物理基准。 证据：自测。|
+| 屏蔽与涂层场景页（路线图 2B） | 部分支持（2026-10-28） | Scenario 页把 `scenarios/shielding_coating` 的生成、运行与分析串成一条链路：字段来自 `scenario_model.ShieldingSpec`（基础 7 + 高级 8），三层校验（字段解析、`problems()`、配置 schema）；生成经纯函数 `render()` 写出 `materials.ini`/`geometry.ini`/`pores.csv`/`spectrum_*.csv`/`main.ini`/`run.mac`/`scenario.json`（含 NIEL 表路径与 sha256）；运行用 QProcess 调真实后端并核对 `run_summary.txt` 的 `status`/完成事件数；结果表把 TID（Gy，总/每初级/每入射注量）、DDD（有 NIEL 表时，MeV/g）与透射/反照逐行标注证据来源，缺证据直接报错或显式标注 `no_statistics_file_zero_deposition`，不把缺失写成零。回归 `scripts/test_shielding_scenario_model.py`、`scripts/test_shielding_analysis.py`、`scripts/test_scenario_shielding_core.py`、`gui/smoke_tests/smoke_scenario_page.py`、`gui/smoke_tests/smoke_scenario_backend.py`。限制：仅法向入射平板几何、15 个字段、不做参数扫描与绘图、DDD 的 NIEL 数据来源未验证、不是新的物理基准。 证据：自测 + 同源自洽（GUI 分析结果与后端统计文件/摘要对照）。|
+| 发布 | Windows 安装包（路线图 D） | 部分支持（2026-10-22） | `packaging/build_package.py` 生成便携文件夹、ZIP 与 Inno Setup 安装程序：后端及 dumpbin 收集的 Geant4/Xerces-C/Qt 5/VC++ 运行库 DLL、PyInstaller 冻结 GUI、示例、场景、脚本、文档与第三方许可；不含 Geant4 数据，经数据集变量、`GEANT4_DATA_DIR` 或 `bin/geant4-data.txt`（安装程序询问）使用已有数据，`--check-geant4-data` 报告状态。构建时在清空环境中验证数据解析、真实运行与 GUI 自检；`packaging/test_installer.py` 验证静默安装、运行检查与完整卸载；`scripts/test_geant4_data_locator.py` 覆盖数据定位规则。未做代码签名、其他 Windows 版本与无 Geant4 数据机器上的实测，包内 Python 脚本仍需本机 Python 3。 证据：自测。|
+| GUI | 参数扫描与批量运行（路线图 C3） | 部分支持（2026-10-22） | Parameter Scans 页：配置页一个设置（源能量/粒子、物理列表、seed、事件数、体积材料、box 厚度）取列表或 lin/log 范围，`core/scan.py` 逐点校验后用 `create_run_package` 写出普通运行包与 `scan.json`，`core/scan_runner.py` 用 `G4USimRunner` 依次运行（失败不中断、可停止、每点自己的 seed），结果表与随参数变化的图（scorer_statistics 的值与统计误差、每初级粒子归一化）、CSV 导出、重新打开。`smoke_scans.py`（取值、逐点包内容、无效扫描不写文件、结果收集、页面、运行器在失败可执行文件下的顺序与结束）与 `smoke_scans_backend.py`（真实三点能量扫描与 PSTAR 硅 S·ρt 一致在 6%+3σ 内、seed 扫描的种子到达后端）。一次只扫一个参数，无并行运行。 证据：外部表（PSTAR）+ 自测。|
+| GUI | 新建仿真向导（路线图 C2） | 部分支持（2026-10-22） | File → New Simulation...：五个场景（单一靶、体模深度剂量、屏蔽平板、硅探测器、γ 谱仪），NIST 材料，笔形/宽束/各向同性点源，参考物理列表，hits/event_edep/Edep/Dose/Fluence；`core/wizard.py` 生成编辑器模型并原位写入项目，生成包与运行走编辑器同一校验与 writer。`smoke_new_simulation_wizard.py`（模型、对话框、主窗口、生成包）与 `smoke_new_simulation_backend.py`（五个场景真实运行：布拉格峰所在薄片、探测器注量 ≈ N/A、662 keV 全能峰、硅沉积中位数）。不提供自定义材料、打分网格、高级源与 GUI 外的后端字段；人工视觉验收未做。 证据：自测。|
+| GUI | 内置图表（Results / Plots，路线图 C1） | 部分支持（2026-10-22） | `output/plot_data.py` + `widgets/plot_panel.py`（matplotlib）：scorer 总量柱状图与 A3 误差、打分网格一维分布与二维图（CSV 或 ROOT）、Edep 直方图、逐事件沉积谱、相空间能谱；对数轴、每初级粒子归一化、多 run 叠加、跨输出目录比较、PNG/SVG/PDF 与数值 CSV 导出。`smoke_plots.py` 用合成数据逐值核对，`smoke_plots_backend.py` 用真实 Geant4 输出核对 CSV/ROOT 网格一致、布拉格峰位置与 scorer 数值。尚无交互式选区统计、二维图比较、人工视觉/高 DPI 验收。 证据：同源自洽（真实输出核对）。|
+| 输出 | 合并工具和历史扫描 | 部分支持 | GUI 可发现线程文件并调用 Python/C++ 工具。M0-4 工作区候选修正 CSV 合并的预校验、稳定顺序和失败不留半成品；直方图工具读取带 `_MeV` 的新五列以及旧五列/三列表头，仅全 v3 输入的合并输出保留单位列名，并通过临时文件与不覆盖目标的硬链接发布结果。专项测试通过；完整 MT 数据契约与物理统计尚未验收。合并仍是后处理，不是后端自动行为。 证据：自测。|
+
+## 4. 状态变更门槛
+
+把一项能力从“部分支持”改为“完整支持”至少需要：后端解析、校验、运行时、输出契约、单线程/必要时多线程测试、GUI 生成或明确“不适用”、中文文档和 Agent 文档全部同步。把“未支持”改为“部分支持”也必须先有真实运行时行为，不能只增加开关、枚举、空类或预览控件。
+
+## 5. 配置字段表（路线图 E2）
+
+整数字段均为 32 位有符号整数，超出范围在配置阶段报错。
+
+<!-- BEGIN GENERATED: config schema -->
+
+以下字段表由 `scripts/generate_config_schema.py` 从 `schema/config_schema.json` 生成，请勿手工修改；`scripts/test_config_schema.py` 核对独立标量；上下文字段的规则、解析入口、校验阶段和专项测试列在 schema 中。尚未迁移的 section 仍以第 2 节的说明为准。
+
+### `[run]`（主配置 INI，--config）
+
+运行参数。CLI 参数（--threads、--seed、--output、--macro 等）优先于这里的值。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `threads` | - | 整数 | ≥ 1 | `1` | 支持 | M0 | worker 线程数；只能在 Geant4 初始化前设置 |
+| `seed` | `randomSeed` | 整数 | ≥ 0 | - | 支持 | M0 | 随机数种子；未设置时由引擎决定（摘要写 unknown）。优先于 [general] seed |
+| `interactive` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 支持 | M0 | 进入交互会话（等同 --ui） |
+| `macro` | - | 现有文件 | 存在的文件或空 | （空） | 支持 | M0 | 要执行的 macro；相对路径按进程工作目录解析，文件必须存在 |
+| `dry_run` | `dryRun` | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 支持 | M0 | 只检查配置并写摘要，不运行事件 |
+| `verbose` | - | 整数 | 32 位整数 | `0` | 支持 | M0 | 程序输出详细程度；优先于 [general] verbose |
+| `check_overlaps` | `checkOverlaps` | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 支持 | M0 | 放置体积时检查重叠；[geometry] check_overlaps 会覆盖它 |
+| `name` | `run_name`, `runName` | 文本 | 单行文本；空值取默认 | （空） | 支持 | M0 | 运行名称，写入摘要与元数据 |
+
+### `[general]`（主配置 INI，--config）
+
+主 INI 格式版本及兼容运行字段；旧运行字段建议改用 [run]。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `seed` | `randomSeed` | 整数 | ≥ 0 | - | 弃用（兼容） | M0 | 旧写法，[run] seed 存在时被忽略 |
+| `verbose` | - | 整数 | 32 位整数 | `0` | 弃用（兼容） | M0 | 旧写法，[run] verbose 存在时被忽略 |
+| `schema_version` | - | 枚举 | `1`（区分大小写） | `1` | 支持 | E6 | 主 INI 格式版本；缺失按兼容版本 1 解释。候选 reader 发布前仅接受字符串 1；不同于几何、项目及 JSON 协议版本。 |
+
+### `[output]`（主配置 INI，--config）
+
+输出位置、格式与粒子径迹。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `dir` | `outputDir` | 文本 | 单行文本；空值取默认 | `output` | 支持 | M0 | 输出目录；为空时使用 output。CLI --output 优先 |
+| `format` | - | 枚举 | `csv` / `root` / `both` / `auto`（`csv+root` = `both`，`root+csv` = `both`）；空值取默认 | `csv` | 支持 | M0 | 计分输出格式，默认 csv；显式 auto 仅在计分启用且 hits 或 event_edep 输出启用时选择 root，否则选择 csv；root 需要 ROOT 输出支持 |
+| `trajectories` | - | 整数 | ≥ 0 | `0` | 实验性 | H1 | 写出前 N 个事件的全部径迹（trajectories_tN.json）；0 为关闭 |
+| `trajectory_min_energy` | - | 能量 | ≥ 0 MeV，可带 eV/keV/MeV/GeV | `0 MeV` | 实验性 | H1 | 低于此初始动能的次级径迹不写出（初级总是写出） |
+| `trajectory_max_points` | - | 整数 | ≥ 1 | `2000000` | 实验性 | H1 | 每个径迹文件的点数上限，超过后截断并标记 |
+
+### `[source]`（主配置 INI，--config）
+
+单源 GPS/相空间；高级字段仍不开放 GUI 生成。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `preset` | - | 枚举 | `mono_proton` / `proton_beam` / `neutron_beam` / `gamma_beam` / `isotropic_neutron` / `plane_proton_beam` | - | 支持 | E2 inventory | 预设先应用，显式字段再覆盖；显式空值报错 |
+| `particle` | - | 文本 | 单行文本 | - | 支持 | E2 inventory | 粒子名称区分大小写；ion 需要 ion 参数；粒子存在性由 Geant4 确认 |
+| `energy` | - | 能量 | ≥ 0 MeV，可带 eV/keV/MeV/GeV | - | 支持 | E2 inventory | 单能或高斯均值；通常 >0，静止离子可为0 |
+| `verbose` | - | 整数 | ≥ 0 | `0` | 支持 | E2 inventory | 源日志级别 |
+| `isotropic` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 支持 | E2 inventory | 与 angular 互斥；true 与显式 direction 冲突 |
+| `position_type` | - | 枚举 | `point` / `plane` / `volume` / `beam` / `surface` | - | 支持 | E2 inventory | 位置类型；缺省保留预设/旧点源；显式 point 必须 position |
+| `position` | - | 上下文相关结构 | x,y,z 或 x y z unit 或 x unit y unit z unit | - | 支持 | E2 inventory | 点源三长度分量；不与 plane/volume/beam 混用 |
+| `center` | - | 上下文相关结构 | 三长度分量（mm） | - | 支持 | E2 inventory | plane 默认 (0,0,-1 mm)，volume/beam 默认原点 |
+| `z` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 弃用（兼容） | E2 inventory | 历史已知键；未消费，会警告；不能当作 center 的别名 |
+| `direction` | - | 上下文相关结构 | +x/-x/+y/-y/+z/-z 或三个无量纲分量 | - | 支持 | E2 inventory | 非零有限向量，归一化；固定方向传入 GPS planar |
+| `shape` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 支持 | E2 inventory | 取值依 position_type；surface 仅 sphere（球面），volume/sphere 为球内；其他既有平面和束斑形状不变 |
+| `ion` | - | 上下文相关结构 | Z A [charge [excitation]] | - | 实验性 | E2 inventory | 仅 particle=ion；1<=Z<=A<=300；charge 默认Z，激发能默认0且>=0 |
+| `energy_type` | - | 枚举 | `mono` / `gauss` / `uniform` / `power` / `exp` / `histogram` / `points` | - | 实验性 | E2 inventory | mono/gauss/uniform/power/exp/histogram/points 的所需字段与互斥规则见本节 |
+| `energy_sigma` | - | 能量 | > 0 MeV | - | 实验性 | E2 inventory | 仅 gauss，正标准差 |
+| `energy_min` | - | 能量 | ≥ 0 MeV，可带 eV/keV/MeV/GeV | - | 实验性 | E2 inventory | uniform/power/exp 下限；power 必须正，下限小于上限 |
+| `energy_max` | - | 能量 | > 0 MeV | - | 实验性 | E2 inventory | uniform/power/exp 上限，大于下限 |
+| `alpha` | - | 数值 | 有限数值 | - | 实验性 | E2 inventory | power 必需，有限指数 |
+| `ezero` | - | 能量 | > 0 MeV | - | 实验性 | E2 inventory | exp 必需，正能量尺度 |
+| `spectrum_file` | - | 上下文相关结构 | histogram: e_low_MeV,e_high_MeV,weight；points: energy_MeV,density；均支持 keV | - | 实验性 | E2 inventory | histogram/points 能谱文件；读取内容校验，不能只检查存在 |
+| `rot1` | - | 上下文相关结构 | 三个无量纲分量 | - | 实验性 | E2 inventory | 必须与 rot2 成对，非零、非平行；仅 plane/volume/beam |
+| `rot2` | - | 上下文相关结构 | 三个无量纲分量 | - | 实验性 | E2 inventory | 必须与 rot1 成对，非零、非平行；仅 plane/volume/beam |
+| `confine` | - | 文本 | 单行文本 | - | 实验性 | E2 inventory | 仅 volume；非空体积名，实际体积存在性在 PrepareForRun 确认 |
+| `angular` | - | 枚举 | `fixed` / `isotropic` / `cos` / `beam1d` / `beam2d` / `focused` | - | 实验性 | E2 inventory | 与 isotropic 互斥；依类型要求 direction、角宽或 focus |
+| `min_theta` | - | 角度 | ≥ 0 rad | `0` | 实验性 | E2 inventory | isotropic/cos 角锥下限；需要 direction，0<=min<max |
+| `max_theta` | - | 角度 | > 0 rad | - | 实验性 | E2 inventory | 上限：isotropic 默认180deg，cos 默认90deg；不可超对应默认上限 |
+| `focus` | - | 上下文相关结构 | 三长度分量（mm） | - | 实验性 | E2 inventory | focused 必需的三长度焦点；与 direction 互斥 |
+| `phase_space_file` | - | 上下文相关结构 | 逗号分隔 g4usim 相空间 CSV 路径 | - | 实验性 | E2 inventory | 重放文件列表；除 verbose/recycle 外不允许其他源字段；历史按事件索引重放 |
+| `phase_space_recycle` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | 只在 phase_space_file 存在时可用 |
+| `radius` | - | 长度 | > 0 mm | - | 支持 | E2 inventory | plane/circle 默认1mm；annulus/volume 必需；annulus 要求 inner_radius < radius |
+| `halfx` | - | 长度 | > 0 mm | - | 支持 | E2 inventory | 正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错） |
+| `halfy` | - | 长度 | > 0 mm | - | 支持 | E2 inventory | 正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错） |
+| `inner_radius` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | 正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错） |
+| `halfz` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | 正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错） |
+| `beam_sigma` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | 正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错） |
+| `beam_sigma_x` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | 正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错） |
+| `beam_sigma_y` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | 正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错） |
+| `angular_sigma` | - | 角度 | > 0 rad | - | 实验性 | E2 inventory | beam1d 用 sigma；beam2d 用 sigma_x/y；必须正 |
+| `angular_sigma_x` | - | 角度 | > 0 rad | - | 实验性 | E2 inventory | beam1d 用 sigma；beam2d 用 sigma_x/y；必须正 |
+| `angular_sigma_y` | - | 角度 | > 0 rad | - | 实验性 | E2 inventory | beam1d 用 sigma；beam2d 用 sigma_x/y；必须正 |
+| `multiple_vertex` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | J2 | 命名多源模式：false按intensity抽选一源，true每事件各源一顶点；intensity不表示粒子数 |
+
+约束：显式 preset/particle/energy 空值报错；省略保留预设/引擎值。预设后显式覆盖，不把 Manager 缓存视为原生 GPS 真值。；point 必需 position，拒绝 plane 专有字段；plane 拒绝 position。缺省 position_type 不接受 center/radius/shape/halfx/halfy/inner_radius。；plane circle 默认 center=(0,0,-1mm)、radius=1mm；rectangle/ellipse 必需 halfx/halfy；square 只用 halfx；annulus 必需 0<inner_radius<radius。各形状拒绝其他形状专有参数。；volume sphere 用 radius，cylinder 用 radius/halfz，box/ellipsoid 用 halfx/halfy/halfz；beam circle 用 beam_sigma，ellipse 用 beam_sigma_x/y；center 默认原点。；rot1/rot2 必须同时存在且非零非平行；confine 仅 volume，实际物理体在 prepare_run 校验。；energy_type=mono 需 energy；gauss 需 energy/energy_sigma；uniform/power/exp 需 0<=energy_min<energy_max（power 下限>0且需alpha，exp需ezero>0）；histogram/points 需 spectrum_file。各分布拒绝无关能量字段。未指定 energy_type 不接受高级谱参数。；isotropic 与 angular 互斥，isotropic=true 与 direction 冲突；angular=fixed/cos/beam1d/beam2d 要求方向，focused 要求 focus 且拒绝 direction；全空间 isotropic 不接受方向，带角锥时需要方向。；0<=min_theta<max_theta；cos 最大90deg，isotropic 最大180deg。beam1d 要求正 angular_sigma；beam2d 要求正 angular_sigma_x/y。；particle=ion 才允许 ion；Z/A 为整数且1<=Z<=A<=300，激发能>=0，必须显式指定 energy 或 energy_type；离子定义在 prepare_run 解析。；phase_space_file 与其他采样字段互斥，仅允许 verbose/recycle；recycle 不能单独存在。文件内容在配置阶段加载，粒子定义与事件数量要求在运行开始阶段检查。；J2：surface/sphere 的 center 缺省为原点，radius 必须为正；拒绝 position、halfx/y/z、inner_radius、beam_sigma*。
+
+解析入口：`src/Source/SourceManager.cc:LoadFromConfig`；校验阶段：configure; prepare_run; transport。
+回归：`scripts/test_gps_sources.py`、`scripts/test_run_summary.py`、`gui/smoke_tests/smoke_source_editor_v2.py`。
+
+### `[source.<name>]`（主配置 INI，--config）
+
+名称必须非空且不含点；所有命名源独立完整配置。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `preset` | - | 枚举 | `mono_proton` / `proton_beam` / `neutron_beam` / `gamma_beam` / `isotropic_neutron` / `plane_proton_beam` | - | 实验性 | E2 inventory | 预设先应用，显式字段再覆盖；显式空值报错 |
+| `particle` | - | 文本 | 单行文本 | - | 实验性 | E2 inventory | 粒子名称区分大小写；ion 需要 ion 参数；粒子存在性由 Geant4 确认 |
+| `energy` | - | 能量 | ≥ 0 MeV，可带 eV/keV/MeV/GeV | - | 实验性 | E2 inventory | 单能或高斯均值；通常 >0，静止离子可为0 |
+| `isotropic` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | 与 angular 互斥；true 与显式 direction 冲突 |
+| `position_type` | - | 枚举 | `point` / `plane` / `volume` / `beam` / `surface` | - | 实验性 | E2 inventory | 位置类型；缺省保留预设/旧点源；显式 point 必须 position |
+| `position` | - | 上下文相关结构 | x,y,z 或 x y z unit 或 x unit y unit z unit | - | 实验性 | E2 inventory | 点源三长度分量；不与 plane/volume/beam 混用 |
+| `center` | - | 上下文相关结构 | 三长度分量（mm） | - | 实验性 | E2 inventory | plane 默认 (0,0,-1 mm)，volume/beam 默认原点 |
+| `z` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 弃用（兼容） | E2 inventory | 历史已知键；未消费，会警告；不能当作 center 的别名 |
+| `direction` | - | 上下文相关结构 | +x/-x/+y/-y/+z/-z 或三个无量纲分量 | - | 实验性 | E2 inventory | 非零有限向量，归一化；固定方向传入 GPS planar |
+| `shape` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 取值依 position_type；surface 仅 sphere（球面），volume/sphere 为球内；其他既有平面和束斑形状不变 |
+| `ion` | - | 上下文相关结构 | Z A [charge [excitation]] | - | 实验性 | E2 inventory | 仅 particle=ion；1<=Z<=A<=300；charge 默认Z，激发能默认0且>=0 |
+| `energy_type` | - | 枚举 | `mono` / `gauss` / `uniform` / `power` / `exp` / `histogram` / `points` | - | 实验性 | E2 inventory | mono/gauss/uniform/power/exp/histogram/points 的所需字段与互斥规则见本节 |
+| `energy_sigma` | - | 能量 | > 0 MeV | - | 实验性 | E2 inventory | 仅 gauss，正标准差 |
+| `energy_min` | - | 能量 | ≥ 0 MeV，可带 eV/keV/MeV/GeV | - | 实验性 | E2 inventory | uniform/power/exp 下限；power 必须正，下限小于上限 |
+| `energy_max` | - | 能量 | > 0 MeV | - | 实验性 | E2 inventory | uniform/power/exp 上限，大于下限 |
+| `alpha` | - | 数值 | 有限数值 | - | 实验性 | E2 inventory | power 必需，有限指数 |
+| `ezero` | - | 能量 | > 0 MeV | - | 实验性 | E2 inventory | exp 必需，正能量尺度 |
+| `spectrum_file` | - | 上下文相关结构 | histogram: e_low_MeV,e_high_MeV,weight；points: energy_MeV,density；均支持 keV | - | 实验性 | E2 inventory | histogram/points 能谱文件；读取内容校验，不能只检查存在 |
+| `rot1` | - | 上下文相关结构 | 三个无量纲分量 | - | 实验性 | E2 inventory | 必须与 rot2 成对，非零、非平行；仅 plane/volume/beam |
+| `rot2` | - | 上下文相关结构 | 三个无量纲分量 | - | 实验性 | E2 inventory | 必须与 rot1 成对，非零、非平行；仅 plane/volume/beam |
+| `confine` | - | 文本 | 单行文本 | - | 实验性 | E2 inventory | 仅 volume；非空体积名，实际体积存在性在 PrepareForRun 确认 |
+| `angular` | - | 枚举 | `fixed` / `isotropic` / `cos` / `beam1d` / `beam2d` / `focused` | - | 实验性 | E2 inventory | 与 isotropic 互斥；依类型要求 direction、角宽或 focus |
+| `min_theta` | - | 角度 | ≥ 0 rad | `0` | 实验性 | E2 inventory | isotropic/cos 角锥下限；需要 direction，0<=min<max |
+| `max_theta` | - | 角度 | > 0 rad | - | 实验性 | E2 inventory | 上限：isotropic 默认180deg，cos 默认90deg；不可超对应默认上限 |
+| `focus` | - | 上下文相关结构 | 三长度分量（mm） | - | 实验性 | E2 inventory | focused 必需的三长度焦点；与 direction 互斥 |
+| `radius` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | plane/circle 默认1mm；annulus/volume 必需；annulus 要求 inner_radius < radius |
+| `halfx` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | 正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错） |
+| `halfy` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | 正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错） |
+| `inner_radius` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | 正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错） |
+| `halfz` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | 正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错） |
+| `beam_sigma` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | 正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错） |
+| `beam_sigma_x` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | 正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错） |
+| `beam_sigma_y` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | 正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错） |
+| `angular_sigma` | - | 角度 | > 0 rad | - | 实验性 | E2 inventory | beam1d 用 sigma；beam2d 用 sigma_x/y；必须正 |
+| `angular_sigma_x` | - | 角度 | > 0 rad | - | 实验性 | E2 inventory | beam1d 用 sigma；beam2d 用 sigma_x/y；必须正 |
+| `angular_sigma_y` | - | 角度 | > 0 rad | - | 实验性 | E2 inventory | beam1d 用 sigma；beam2d 用 sigma_x/y；必须正 |
+| `intensity` | - | 数值 | > 0 | `1` | 实验性 | E2 inventory | 多源相对权重，有限正数 |
+
+约束：显式 preset/particle/energy 空值报错；省略保留预设/引擎值。预设后显式覆盖，不把 Manager 缓存视为原生 GPS 真值。；point 必需 position，拒绝 plane 专有字段；plane 拒绝 position。缺省 position_type 不接受 center/radius/shape/halfx/halfy/inner_radius。；plane circle 默认 center=(0,0,-1mm)、radius=1mm；rectangle/ellipse 必需 halfx/halfy；square 只用 halfx；annulus 必需 0<inner_radius<radius。各形状拒绝其他形状专有参数。；volume sphere 用 radius，cylinder 用 radius/halfz，box/ellipsoid 用 halfx/halfy/halfz；beam circle 用 beam_sigma，ellipse 用 beam_sigma_x/y；center 默认原点。；rot1/rot2 必须同时存在且非零非平行；confine 仅 volume，实际物理体在 prepare_run 校验。；energy_type=mono 需 energy；gauss 需 energy/energy_sigma；uniform/power/exp 需 0<=energy_min<energy_max（power 下限>0且需alpha，exp需ezero>0）；histogram/points 需 spectrum_file。各分布拒绝无关能量字段。未指定 energy_type 不接受高级谱参数。；isotropic 与 angular 互斥，isotropic=true 与 direction 冲突；angular=fixed/cos/beam1d/beam2d 要求方向，focused 要求 focus 且拒绝 direction；全空间 isotropic 不接受方向，带角锥时需要方向。；0<=min_theta<max_theta；cos 最大90deg，isotropic 最大180deg。beam1d 要求正 angular_sigma；beam2d 要求正 angular_sigma_x/y。；particle=ion 才允许 ion；Z/A 为整数且1<=Z<=A<=300，激发能>=0，必须显式指定 energy 或 energy_type；离子定义在 prepare_run 解析。；phase_space_file 与其他采样字段互斥，仅允许 verbose/recycle；recycle 不能单独存在。文件内容在配置阶段加载，粒子定义与事件数量要求在运行开始阶段检查。；多源与 [source] 除 verbose 外全部字段互斥；每个源必须指定粒子/预设、能量、位置和方向/角分布。多源禁止单字段 Messenger 修改。；J2：surface/sphere 的 center 缺省为原点，radius 必须为正；拒绝 position、halfx/y/z、inner_radius、beam_sigma*。
+
+解析入口：`src/Source/SourceManager.cc:LoadSection`；校验阶段：configure; prepare_run; transport。
+回归：`scripts/test_gps_sources.py`、`scripts/test_run_summary.py`、`gui/smoke_tests/smoke_source_editor_v2.py`。
+
+### `[phase_space]`（主配置 INI，--config）
+
+进入指定体积时记录相空间。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `volume` | - | 文本 | 单行文本 | - | 实验性 | E2 inventory | 非空物理体名 |
+| `particles` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | `all` | 实验性 | E2 inventory | all 或逗号分隔粒子名 |
+| `kill` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | 记录后 kill |
+
+约束：相空间输出为每 worker/run 文件；kill 前记录。
+
+解析入口：`src/Scoring/ScoringManager.cc:LoadFromConfig`；校验阶段：configure; transport; output。
+回归：`scripts/test_gps_sources.py`。
+
+### `[physics]`（主配置 INI，--config）
+
+参考与手动物理模式。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `reference` | - | 文本 | 单行文本 | （空） | 支持 | E2 inventory | 非空启用参考列表，空值退出参考模式；真实列表由 Geant4 初始化确认 |
+| `em` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | `G4EmStandardPhysics_option4` | 支持 | E2 inventory | EM 名称/别名由 PhysicsFactory NormalizeEMOption 解析；优先于 list；空值保留现值 |
+| `list` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 支持 | E2 inventory | 旧入口：仅无 em 时调用 AddPhysicsModule，不是等价别名 |
+| `modules` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 支持 | E2 inventory | 逗号分隔模块；手动模式清空后添加；参考模式作为兼容 extra_modules |
+| `extra_modules` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 支持 | E2 inventory | 逗号分隔非 EM 扩展；参考模式不能添加 EM；手动模式兼容添加 |
+| `default_cut` | - | 长度 | > 0 mm | `1 mm` | 支持 | E2 inventory | 全局正产生阈值长度 |
+| `biasing` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 支持 | E2 inventory | 注册偏置物理 hook；不等同已配置偏置规则 |
+| `verbose` | - | 整数 | ≥ 0 | `0` | 支持 | E2 inventory | 非负日志级别 |
+| `replace_modules` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | J2 | 仅reference模式；按非零physics type唯一替换已有构造器，缺目标/同类重复/与显式EM冲突拒绝 |
+
+约束：reference/em/list/modules/extra_modules 的优先关系由顺序解析决定；list 不列为 em 的字段别名。；物理列表、模块和粒子的最终支持受 Geant4 编译与初始化影响；inspect-run 不证明实际过程注册。；J2：extra_modules只附加，已有同类或同名构造器拒绝；replace_modules显式替换且要求唯一已有目标。
+
+解析入口：`src/Physics/PhysicsManager.cc:LoadFromConfig`；校验阶段：configure; initialize。
+回归：`scripts/test_physics_a6.py`、`scripts/test_backend_capabilities.py`。
+
+### `[physics.microelec]`（主配置 INI，--config）
+
+MicroElec 区域设置。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `enabled` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | MicroElec 开关 |
+| `region` | - | 文本 | 单行文本 | `SV` | 实验性 | E2 inventory | MicroElec 区域名 |
+| `electron_capture` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | 电子俘获开关 |
+| `electron_capture_threshold` | - | 能量 | > 0 MeV | `16.7 eV` | 实验性 | E2 inventory | 正俘获阈值 |
+
+解析入口：`src/Physics/PhysicsManager.cc:LoadFromConfig`；校验阶段：configure; initialize。
+回归：`scripts/test_physics_a6.py`、`scripts/test_backend_capabilities.py`。
+
+### `[physics.cuts]`（主配置 INI，--config）
+
+粒子产生阈值。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `gamma` | - | 长度 | > 0 mm | - | 支持 | E2 inventory | 正长度产生阈值 |
+| `e-` | - | 长度 | > 0 mm | - | 支持 | E2 inventory | 正长度产生阈值 |
+| `e+` | - | 长度 | > 0 mm | - | 支持 | E2 inventory | 正长度产生阈值 |
+| `proton` | - | 长度 | > 0 mm | - | 支持 | E2 inventory | 正长度产生阈值 |
+| `alpha` | - | 长度 | > 0 mm | - | 支持 | E2 inventory | 正长度产生阈值 |
+| `<particle>` | - | 长度 | > 0 mm | - | 支持 | E2 inventory | 其他非空粒子名也会解析；实际应用由物理初始化决定，不能视为粒子已支持 |
+
+约束：gamma/e-/e+/proton/alpha 是原已知键表；实际 SetParticleCut 接受规范化名称，未知粒子的初始化行为仍由后端决定，不能据此白名单额外拒绝。
+
+解析入口：`src/Physics/PhysicsManager.cc:SetParticleCut`；校验阶段：configure。
+回归：`scripts/test_physics_a6.py`、`scripts/test_backend_capabilities.py`。
+
+### `[physics.region.<name>]`（主配置 INI，--config）
+
+区域名保持原始大小写，非空且不含点。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `gamma` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | 正产生阈值/步长/总径迹长度 |
+| `e-` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | 正产生阈值/步长/总径迹长度 |
+| `e+` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | 正产生阈值/步长/总径迹长度 |
+| `proton` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | 正产生阈值/步长/总径迹长度 |
+| `max_step` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | 带电粒子的正最大步长；默认不为 gamma/neutron 等中性粒子注册 StepLimiter |
+| `max_track_length` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | 正产生阈值/步长/总径迹长度 |
+| `max_time` | - | 时间 | > 0 ns | - | 实验性 | E2 inventory | 正总飞行时间上限 |
+| `min_kinetic_energy` | - | 能量 | > 0 MeV | - | 实验性 | E2 inventory | 正动能阈值，在步开始判断 |
+| `volumes` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 逗号分隔、非空体积名列表；INI 配置阶段校验 |
+
+约束：未知键报错；volumes 对 INI 几何前置校验；每次建世界后 ApplyRegionPhysics。；max_track_length 从粒子产生起累计；min_kinetic_energy 在步开始检查。
+
+解析入口：`src/Physics/PhysicsManager.cc:LoadFromConfig`；校验阶段：configure; initialize; transport。
+回归：`scripts/test_physics_a6.py`、`scripts/test_backend_capabilities.py`。
+
+### `[physics.radioactive_decay]`（主配置 INI，--config）
+
+放射性衰变；不重复注册。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `enabled` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E2 inventory | section 存在且省略时为 true |
+| `time_threshold` | - | 时间 | > 0 ns | - | 实验性 | E2 inventory | 正衰变时间阈值；未给出沿用 Geant4 默认 |
+
+约束：只接受 enabled/time_threshold；未知键报错。
+
+解析入口：`src/Physics/PhysicsManager.cc:LoadFromConfig`；校验阶段：configure; initialize。
+回归：`scripts/test_physics_a6.py`、`scripts/test_backend_capabilities.py`。
+
+### `[scoring]`（主配置 INI，--config）
+
+敏感体计分设置。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `enabled` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E2 inventory | 计分开关；不改变物理量定义 |
+| `hits` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E2 inventory | 计分开关；不改变物理量定义 |
+| `event_edep` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E2 inventory | 计分开关；不改变物理量定义 |
+| `edep` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E2 inventory | 计分开关；不改变物理量定义 |
+| `let` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | 计分开关；不改变物理量定义 |
+| `dose` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | 计分开关；不改变物理量定义 |
+| `fluence` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | 计分开关；不改变物理量定义 |
+| `displacement` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | 计分开关；不改变物理量定义 |
+| `auto_create_default_scorers` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E2 inventory | 计分开关；不改变物理量定义 |
+| `verbose` | - | 整数 | ≥ 0 | `0` | 实验性 | E2 inventory | 计分日志级别 |
+
+约束：启用 Dose/Fluence/Displacement 且 enabled=true 时必须 auto_create_default_scorers=true。；displacement 启用需要 NIEL 表；Fluence/DDD 仅 daughter-free touchable；LET 不在 GUI generated 子集。；scoring 缺失时其子 section（edep/let/displacement）不会加载；phase_space/output 不受此早退影响。
+
+解析入口：`src/Scoring/ScoringManager.cc:LoadFromConfig`；校验阶段：configure; initialize; transport; output。
+回归：`scripts/test_dose_scoring.py`、`scripts/test_fluence_scoring.py`、`scripts/test_let_scoring.py`、`scripts/test_displacement_damage.py`、`scripts/test_statistical_uncertainty.py`。
+
+### `[scoring.edep]`（主配置 INI，--config）
+
+需存在 [scoring] 才消费。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `raw_histogram` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E2 inventory | Edep 输出开关 |
+| `weighted_histogram` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E2 inventory | Edep 输出开关 |
+| `volume_summary` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E2 inventory | Edep 输出开关 |
+| `particle_summary` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E2 inventory | Edep 输出开关 |
+| `bins` | - | 整数 | ≥ 1 | `200` | 实验性 | E2 inventory | 正直方图 bin 数 |
+| `min` | - | 能量 | 有限数值 MeV | `0 MeV` | 实验性 | E2 inventory | 有限能量下限，必须小于 max |
+| `max` | - | 能量 | 有限数值 MeV | `10 MeV` | 实验性 | E2 inventory | 有限能量上限，必须大于 min |
+
+约束：bins>0 且 max>min；原始与加权直方图共享配置。
+
+解析入口：`src/Scoring/ScoringManager.cc:LoadFromConfig`；校验阶段：configure。
+回归：`scripts/test_dose_scoring.py`、`scripts/test_fluence_scoring.py`、`scripts/test_let_scoring.py`、`scripts/test_displacement_damage.py`、`scripts/test_statistical_uncertainty.py`。
+
+### `[scoring.let]`（主配置 INI，--config）
+
+需存在 [scoring] 才消费。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `particles` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | `all` | 实验性 | E2 inventory | all 或非空逗号分隔粒子列表 |
+
+解析入口：`src/Scoring/ScoringManager.cc:LoadFromConfig`；校验阶段：configure。
+回归：`scripts/test_dose_scoring.py`、`scripts/test_fluence_scoring.py`、`scripts/test_let_scoring.py`、`scripts/test_displacement_damage.py`、`scripts/test_statistical_uncertainty.py`。
+
+### `[scoring.displacement]`（主配置 INI，--config）
+
+动态键为 Geant4 粒子名（大小写不敏感，按粒子表解析为规范名；粒子表在 physics list 构造后才存在，故名字校验在 run 开始时完成）；未知名字在首个事件前失败；需 [scoring]。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `<particle>` | - | 上下文相关结构 | energy_MeV,niel_MeV_cm2_g | - | 实验性 | E2 inventory | 有出处的 NIEL CSV；非空路径且内容需符合 NielTable；键为 Geant4 粒子名 |
+
+约束：DDD 使用步长折积，不使用 GetNonIonizingEnergyDeposit。；键名按 G4ParticleTable 大小写不敏感解析为规范名（如 he3 解析为 He3）；不匹配任何粒子时在首个事件前失败，报出文件、行号与候选，不得静默让 DDD 恒为 0。
+
+解析入口：`src/Scoring/ScoringManager.cc:LoadFromConfig`；校验阶段：configure。
+回归：`scripts/test_dose_scoring.py`、`scripts/test_fluence_scoring.py`、`scripts/test_let_scoring.py`、`scripts/test_displacement_damage.py`、`scripts/test_statistical_uncertainty.py`。
+
+### `[scoring.mesh.<name>]`（主配置 INI，--config）
+
+网格名称限字母数字下划线横线。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `shape` | - | 枚举 | `box` / `cylinder` | - | 实验性 | E2 inventory | 网格形状 |
+| `size` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | box 三个正半宽；cylinder 正半径和半长，逗号分隔长度 |
+| `bins` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 三个 >=1 的32位整数，逗号分隔 |
+| `center` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | `0,0,0` | 实验性 | E2 inventory | 三个逗号分隔长度 |
+
+约束：shape/size/bins 必需；至少一个匹配的 quantity。
+
+解析入口：`src/Scoring/ScoringMeshConfig.cc:BuildCommands`；校验阶段：configure; initialize; transport; output。
+回归：`scripts/test_scoring_mesh.py`。
+
+### `[scoring.mesh.<name>.<quantity>]`（主配置 INI，--config）
+
+必须存在同名 mesh。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `type` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | Geant4 primitive scorer 命令名；配置阶段只检查名称语法 |
+| `unit` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 可选输出单位，由 Geant4 scorer 命令校验 |
+| `particles` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 可选非空逗号分隔粒子列表 |
+| `energy_min` | - | 能量 | ≥ 0 MeV，可带 eV/keV/MeV/GeV | `0 MeV` | 实验性 | E2 inventory | 0<=下限<上限 |
+| `energy_max` | - | 能量 | > 0 MeV | `1e30 MeV` | 实验性 | E2 inventory | 上限必须大于下限 |
+
+约束：type 必需；unit/type 的运行时校验不能由 inspect-run 替代。
+
+解析入口：`src/Scoring/ScoringMeshConfig.cc:BuildCommands`；校验阶段：configure; initialize。
+回归：`scripts/test_scoring_mesh.py`。
+
+### `[materials]`（主配置 INI，--config）
+
+主文件引用材料 INI。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `file` | `materialFile`, `config`, `configFile` | 现有文件 | 存在的文件或空；空值取默认 | （空） | 支持 | E2 inventory | 第一个非空字段生效；相对进程工作目录 |
+
+解析入口：`src/Core/SimulationManager.cc:Configure`；校验阶段：configure。
+回归：`scripts/test_material_config_schema.py`。
+
+### `[geometry]`（主配置 INI，--config）
+
+主文件选择几何。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `template` | `templateName` | 上下文相关结构 | 依上下文；见本节约束与解析入口；空值取默认 | - | 支持 | E2 inventory | 模板名；首个非空值生效 |
+| `check_overlaps` | `checkOverlaps` | 布尔 | true/false（yes/no、on/off、1/0） | - | 支持 | E2 inventory | 覆盖 run.check_overlaps，显式 CLI 仍最高 |
+| `default_world_material` | `defaultWorldMaterial` | 文本 | 单行文本；空值取默认 | - | 支持 | E2 inventory | 默认世界材料 |
+| `config` | `configFile` | 现有文件 | 存在的文件或空；空值取默认 | （空） | 支持 | E2 inventory | 几何文件相对进程工作目录 |
+
+解析入口：`src/Core/SimulationManager.cc:Configure`；校验阶段：configure。
+回归：`scripts/test_geometry_a5.py`、`scripts/test_geometry_config_diagnostics.py`。
+
+### `[modules]`（主配置 INI，--config）
+
+可选模块执行策略；auto及缺省保持原有行为，off显式抑制，on要求已有有效配置，不补造物理参数。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `scoring` | - | 枚举 | `off` / `auto` / `on` | - | 实验性 | 2C | scoring模块策略：缺省保留旧行为；显式auto按有效请求决定；on要求有效配置；off与活跃请求冲突时拒绝 |
+| `biasing` | - | 枚举 | `off` / `auto` / `on` | - | 实验性 | 2C | biasing模块策略：缺省保留旧行为；显式auto按有效请求决定；on要求有效配置；off与活跃请求冲突时拒绝 |
+| `field` | - | 枚举 | `off` / `auto` / `on` | - | 实验性 | 2C | field模块策略：缺省保留旧行为；显式auto按有效请求决定；on要求有效配置；off与活跃请求冲突时拒绝 |
+| `trajectories` | - | 枚举 | `off` / `auto` / `on` | - | 实验性 | 2C | trajectories模块策略：缺省保留旧行为；显式auto按有效请求决定；on要求有效配置；off与活跃请求冲突时拒绝 |
+
+解析入口：`src/Core/EffectiveSimulation.cc:ApplyModuleModes`；校验阶段：enum plus configured-module dependencies; required geometry/source/physics are not optional。
+回归：`scripts/test_effective_modules.py`。
+
+### `[field]`（主配置 INI，--config）
+
+全局电磁场及积分精度；实验性。专用解析器保持原格式与生命周期，不开放 GUI 编辑。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `magnetic` | - | 上下文相关结构 | Bx, By, Bz T；支持 T/tesla/mT/uT/G/gauss/kG | - | 实验性 | E6 inventory | 均匀磁场：逗号分隔三分量，有限数；单位区分大小写，末分量单位补齐前两分量单位。 |
+| `electric` | - | 上下文相关结构 | Ex, Ey, Ez V/m；支持 V/m/kV/m/MV/m/V/cm/kV/cm/MV/cm/V/mm/kV/mm | - | 实验性 | E6 inventory | 均匀电场三分量；单位区分大小写，可与磁场并存。 |
+| `magnetic_map` | - | 现有文件 | 存在的文件或空 | - | 实验性 | E6 inventory | 规则磁场 CSV 场图；相对主 INI 解析，从实际读取字节校验并记录哈希。 |
+| `electric_map` | - | 现有文件 | 存在的文件或空 | - | 实验性 | E6 inventory | 规则电场 CSV 场图；相对主 INI 解析，全局坐标三线性插值，图外为零。 |
+| `min_step` | - | 长度 | > 0 mm | `0.01` | 实验性 | E6 inventory | min_step 积分精度参数；缺省单位 mm，必须为正长度。 |
+| `delta_chord` | - | 长度 | > 0 mm | `0.25` | 实验性 | E6 inventory | delta_chord 积分精度参数；缺省单位 mm，必须为正长度。 |
+| `delta_one_step` | - | 长度 | > 0 mm | `0.01` | 实验性 | E6 inventory | delta_one_step 积分精度参数；缺省单位 mm，必须为正长度。 |
+| `delta_intersection` | - | 长度 | > 0 mm | `0.001` | 实验性 | E6 inventory | delta_intersection 积分精度参数；缺省单位 mm，必须为正长度。 |
+
+约束：Each field section requires magnetic, electric, magnetic_map or electric_map; an empty field section is invalid.；magnetic and magnetic_map are mutually exclusive; electric and electric_map are mutually exclusive. Magnetic and electric definitions may coexist.；Field vectors and map formats retain FieldConfig parsing, unit case sensitivity and regular-grid validation; the schema does not replace those parsers.；Field objects are created per thread in ConstructSDandField; manager-accepted configuration does not prove transport or physical correctness.；Module policy is governed independently by [modules]/field and keeps existing off/auto/on conflict checks.；volumes is invalid in [field]; use [field.<name>] for a local field. The historical global diagnostic key table omits volumes.
+
+解析入口：`src/Field/FieldConfig.cc:FieldConfig::LoadFromConfigImpl`；校验阶段：configure: syntax/maps; geometry initialization: actual field binding; per-thread ConstructSDandField: installation。
+回归：`scripts/test_field_biasing_schema.py`、`scripts/test_fields_a7.py`。
+
+### `[field.<name>]`（主配置 INI，--config）
+
+具名局部电磁场；名称非空且不含点，必须指定 volumes。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `magnetic` | - | 上下文相关结构 | Bx, By, Bz T；支持 T/tesla/mT/uT/G/gauss/kG | - | 实验性 | E6 inventory | 均匀磁场：逗号分隔三分量，有限数；单位区分大小写，末分量单位补齐前两分量单位。 |
+| `electric` | - | 上下文相关结构 | Ex, Ey, Ez V/m；支持 V/m/kV/m/MV/m/V/cm/kV/cm/MV/cm/V/mm/kV/mm | - | 实验性 | E6 inventory | 均匀电场三分量；单位区分大小写，可与磁场并存。 |
+| `magnetic_map` | - | 现有文件 | 存在的文件或空 | - | 实验性 | E6 inventory | 规则磁场 CSV 场图；相对主 INI 解析，从实际读取字节校验并记录哈希。 |
+| `electric_map` | - | 现有文件 | 存在的文件或空 | - | 实验性 | E6 inventory | 规则电场 CSV 场图；相对主 INI 解析，全局坐标三线性插值，图外为零。 |
+| `volumes` | - | 上下文相关结构 | logicalVolumeA, logicalVolumeB | - | 实验性 | E6 inventory | 非空局部逻辑体名称列表，逗号分隔；保留真实名称身份。 |
+| `min_step` | - | 长度 | > 0 mm | `0.01` | 实验性 | E6 inventory | min_step 积分精度参数；缺省单位 mm，必须为正长度。 |
+| `delta_chord` | - | 长度 | > 0 mm | `0.25` | 实验性 | E6 inventory | delta_chord 积分精度参数；缺省单位 mm，必须为正长度。 |
+| `delta_one_step` | - | 长度 | > 0 mm | `0.01` | 实验性 | E6 inventory | delta_one_step 积分精度参数；缺省单位 mm，必须为正长度。 |
+| `delta_intersection` | - | 长度 | > 0 mm | `0.001` | 实验性 | E6 inventory | delta_intersection 积分精度参数；缺省单位 mm，必须为正长度。 |
+
+约束：Each field section requires magnetic, electric, magnetic_map or electric_map; an empty field section is invalid.；magnetic and magnetic_map are mutually exclusive; electric and electric_map are mutually exclusive. Magnetic and electric definitions may coexist.；Field vectors and map formats retain FieldConfig parsing, unit case sensitivity and regular-grid validation; the schema does not replace those parsers.；Field objects are created per thread in ConstructSDandField; manager-accepted configuration does not prove transport or physical correctness.；Module policy is governed independently by [modules]/field and keeps existing off/auto/on conflict checks.；Section name is [field.<name>] with a nonempty suffix containing no dot; display/object identity preserves the original suffix case.；volumes is required and must contain at least one nonempty logical-volume name; INI geometry names are checked during Configure.；The nearest explicit ancestor defines inheritance; explicit descendants override it. Actual ambiguous names, multiple explicit fields and conflicting inheritance for shared logical volumes are rejected on the master before worker installation.
+
+解析入口：`src/Field/FieldConfig.cc:FieldConfig::LoadFromConfigImpl`；校验阶段：configure: syntax and configured INI volumes; master-built world: ambiguous/conflicting bindings; per-thread ConstructSDandField: installation。
+回归：`scripts/test_field_biasing_schema.py`、`scripts/test_fields_a7.py`。
+
+### `[biasing]`（主配置 INI，--config）
+
+截面偏置旧开关；仅保留现有运行能力，不声明一般无偏性或方差收益。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `enabled` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E6 inventory | 旧偏置开关；缺失模块模式时保留原短路语义，显式模块策略独立处理。 |
+
+约束：Without an explicit auto/on module policy, a missing [biasing] section or enabled=false returns before parsing dormant rule sections.；Explicit [modules]/biasing policies preserve existing conflict checks; on/auto need valid rules and cannot silently override an explicit false gate.；Configured rules and master attachment plans do not prove worker application; actual wrapped-process matching, TLS binding and complete per-run/thread EndRun receipts are separate runtime evidence.
+
+解析入口：`src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig`；校验阶段：configure: gate and module-policy resolution; physics/geometry initialization and BeginRun/EndRun: actual process/worker contracts。
+回归：`scripts/test_field_biasing_schema.py`、`scripts/test_effective_biasing.py`、`scripts/test_biasing_worker_runtime.py`。
+
+### `[biasing.xs]`（主配置 INI，--config）
+
+旧式粒子/过程列表简写；兼容并告警，展开到现有过程规则。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `particles` | - | 上下文相关结构 | particleA, particleB | - | 弃用（兼容） | E6 inventory | 用于展开旧式逐粒子规则的粒子列表。 |
+| `processes` | - | 上下文相关结构 | processA, processB | - | 弃用（兼容） | E6 inventory | 旧式过程列表；真实 wrapped process 在运行期校验。 |
+| `volumes` | - | 上下文相关结构 | logicalVolumeA, logicalVolumeB | - | 弃用（兼容） | E6 inventory | 逗号分隔逻辑体目标；空列表保持 BiasingConfig 与几何绑定原语义。 |
+| `factor` | - | 数值 | > 0 | `1.0` | 弃用（兼容） | E6 inventory | 有限截面倍率，必须大于零；派生 factor*XS 溢出/下溢另在运行期失败。 |
+| `only_primary` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 弃用（兼容） | E6 inventory | 只作用于初级 track；apply_to_secondaries=true 时规范化为 false。 |
+| `apply_to_secondaries` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 弃用（兼容） | E6 inventory | 为 true 时清除 only_primary，即使两项输入都为 true。 |
+| `min_weight` | - | 数值 | ≥ 0 | `0.05` | 弃用（兼容） | E6 inventory | 有限非负俄罗斯轮盘权重阈值。 |
+| `max_interactions` | - | 整数 | ≥ -1 | `5` | 弃用（兼容） | E6 inventory | 最大偏置相互作用次数；-1 表示不限，否则非负。 |
+
+约束：Legacy syntax emits the existing BiasingManager warning; all listed particles/processes expand using BiasingConfig semantics.；Missing module mode retains dormant-rule short circuit and existing empty-list behavior; explicit auto/on rejects incomplete supplied particles/processes lists.；apply_to_secondaries=true takes precedence over only_primary=true; factor>0, min_weight>=0, max_interactions>=-1.；Process matching is case-sensitive; real wrapped processes and volume identity are checked by runtime consumers, not by scalar schema validation.
+
+解析入口：`src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig`；校验阶段：configure only when gate or explicit auto/on requires parsing; initialization/BeginRun: real target matching。
+回归：`scripts/test_field_biasing_schema.py`、`scripts/test_biasing_target_contract.py`、`scripts/test_effective_biasing.py`。
+
+### `[biasing.xs.<particle>.<process>]`（主配置 INI，--config）
+
+具名截面偏置过程规则；section 后缀和实际过程名保留大小写语义。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `particle` | - | 文本 | 单行文本 | - | 实验性 | E6 inventory | 覆盖 section 的粒子分量；缺省取原分量，实际解析规则时拒绝空值。 |
+| `process` | - | 文本 | 单行文本 | - | 实验性 | E6 inventory | 覆盖 section 的过程分量；缺省从 originalSection 保留大小写，例如 hIoni。 |
+| `name` | - | 文本 | 单行文本 | - | 实验性 | E6 inventory | 规则标签；缺失或空值生成 xs_<去空白粒子>_<去空白过程>，不是稳定过程身份。 |
+| `enabled` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E6 inventory | 该过程规则是否启用；保留原校验与合并行为。 |
+| `factor` | - | 数值 | > 0 | `1.0` | 实验性 | E6 inventory | 有限截面倍率，必须大于零；派生 factor*XS 溢出/下溢另在运行期失败。 |
+| `only_primary` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E6 inventory | 只作用于初级 track；apply_to_secondaries=true 时规范化为 false。 |
+| `apply_to_secondaries` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E6 inventory | 为 true 时清除 only_primary，即使两项输入都为 true。 |
+| `min_weight` | - | 数值 | ≥ 0 | `0.05` | 实验性 | E6 inventory | 有限非负俄罗斯轮盘权重阈值。 |
+| `max_interactions` | - | 整数 | ≥ -1 | `5` | 实验性 | E6 inventory | 最大偏置相互作用次数；-1 表示不限，否则非负。 |
+| `volumes` | - | 上下文相关结构 | logicalVolumeA, logicalVolumeB | - | 实验性 | E6 inventory | 逗号分隔逻辑体目标；空列表保持 BiasingConfig 与几何绑定原语义。 |
+
+约束：Exactly four dot-separated section components are required; process names containing dots are unsupported. Explicit particle/process overrides retain the existing mismatch warning.；Section matching is case-normalized, but particle/process defaults come from originalSection; hIoni must not become hioni.；Missing mode and disabled/missing legacy gate keep dormant rules unparsed; explicit auto/on parses candidate rules before module-policy resolution.；apply_to_secondaries=true clears only_primary; empty rule name generates the existing label; duplicate normalized particle/process identities retain existing merge semantics.；factor>0, min_weight>=0, max_interactions>=-1; nonfinite values are rejected by ConfigValue before rule validation.；Real wrapped-process matching, logical-volume identity and worker TLS binding are runtime checks; proposal/applied call counts are not physical validation.
+
+解析入口：`src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig`；校验阶段：configure when parsed: syntax/numeric rule validation; physics initialization/BeginRun: actual wrapped process and worker binding; EndRun: complete receipts。
+回归：`scripts/test_field_biasing_schema.py`、`scripts/test_biasing_target_contract.py`、`scripts/test_biasing_worker_runtime.py`、`scripts/test_effective_biasing.py`。
+
+### `[global]`（独立材料 INI）
+
+隐式 global 不允许任何字段。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+
+解析入口：`src/Materials/MaterialIniReader.cc:ParseSections`；校验阶段：configure。
+回归：`scripts/test_material_config_schema.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[nist]`（独立材料 INI）
+
+NIST 材料引用列表。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `materials` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 支持 | E2 inventory | 逗号分隔 NIST 材料名称；名称由 Geant4 NIST 管理器验证 |
+
+解析入口：`src/Materials/MaterialIniReader.cc:ParseSections`；校验阶段：configure; material_build。
+回归：`scripts/test_material_config_schema.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[isotope.<name>]`（独立材料 INI）
+
+名称非空，注册时不区分大小写。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `symbol` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 支持 | E2 inventory | 必需非空符号 |
+| `z` | - | 整数 | ≥ 1 | - | 支持 | E2 inventory | 必需正整数原子序数 |
+| `n` | - | 整数 | ≥ 1 | - | 支持 | E2 inventory | 必需正整数核子数 |
+| `a` | - | 上下文相关结构 | 数值 + g/mole、g/mol、kg/mole、kg/mol | - | 支持 | E2 inventory | 必需正摩尔质量，MaterialCommandParser::ParseMolarMass |
+
+约束：symbol/z/n/a 均必需。
+
+解析入口：`src/Materials/MaterialIniReader.cc:ParseSections`；校验阶段：configure。
+回归：`scripts/test_material_config_schema.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[element.<name>]`（独立材料 INI）
+
+元素由 Z/A 或同位素定义。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `symbol` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 支持 | E2 inventory | 必需非空符号 |
+| `isotopes` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 支持 | E2 inventory | 同位素及丰度列表，丰度和误差不超过1e-6 |
+| `z` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 支持 | E2 inventory | 与 a 成对，不能与 isotopes 混用 |
+| `a` | - | 上下文相关结构 | 数值 + g/mole、g/mol、kg/mole、kg/mol | - | 支持 | E2 inventory | 正摩尔质量 |
+
+约束：symbol 必需；isotopes 与 z/a 二选一；依赖解析时检查未知与循环引用。
+
+解析入口：`src/Materials/MaterialIniReader.cc:ParseSections`；校验阶段：configure; material_build。
+回归：`scripts/test_material_config_schema.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[material.<name>]`（独立材料 INI）
+
+材料组分/密度，保留现有闭合 schema。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `type` | - | 枚举 | `material` | - | 弃用（兼容） | E2 inventory | 弃用字段，仅 material 可接受 |
+| `mode` | - | 枚举 | `atom_count` / `mass_fraction` / `volume_fraction`（`atom` = `atom_count`，`mass` = `mass_fraction`，`volume` = `volume_fraction`） | `mass_fraction` | 支持 | E2 inventory | 质量分数/原子计数/体积分数及解析器兼容别名 |
+| `density` | - | 上下文相关结构 | 数值 + g/cm3、g/cm^3、kg/m3、kg/m^3、mg/cm3、mg/cm^3；或 auto | - | 支持 | E2 inventory | 正密度；auto 仅 volume_fraction；volume_fraction 缺省 auto |
+| `components` | - | 上下文相关结构 | name:amount 逗号列表；原子数为正整数，分数允许百分号 | - | 支持 | E2 inventory | 必需非空组分列表，语法/计数/分数和由 MaterialCommandParser 与 MaterialManager 校验 |
+| `state` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 支持 | E2 inventory | 材料状态由 MaterialManager 构建时校验 |
+| `temperature` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 不支持 | E2 inventory | 明确拒绝；删除此字段，改用密度/状态/组分 |
+| `pressure` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 不支持 | E2 inventory | 明确拒绝；删除此字段，改用密度/状态/组分 |
+
+约束：非 volume_fraction 必需 density；保留温压专用错误与 file/line/section/key/value。；未知字段和未知 section 报错；组件解析、材料依赖与大小写规则不改变。
+
+解析入口：`src/Materials/MaterialIniReader.cc:ParseSections`；校验阶段：configure; material_build。
+回归：`scripts/test_material_config_schema.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[<alias>]`（独立材料 INI）
+
+旧别名 section；只有包含 material 键时进入此兼容分支。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `material` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 支持 | E2 inventory | NIST 材料名，作为当前 section 名的别名 |
+
+约束：不覆盖 nist/global/isotope./element./material. 的保留分支。
+
+解析入口：`src/Materials/MaterialIniReader.cc:ParseSections`；校验阶段：configure; material_build。
+回归：`scripts/test_material_config_schema.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[global]`（独立几何 INI（hierarchical））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `version` | - | 枚举 | `1` / `2` | `1` | 实验性 | E2 inventory | 1 保留旧警告；2 拒绝未知/重复声明 |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；普通体积必需 shape/material，非 world 必需 parent；shape=box 必需 size 且不接受 parameters；其他形状不接受 size。；tubs 参数 rmin,rmax,halfZ,startPhi,deltaPhi；sphere 六参数；orb 半径；cone 七参数；trd 用 dx1/dx2/dy1/dy2/dz；trap 用 dz/theta/phi/dy1/dx1/dx2/alpha1/dy2/dx3/dx4/alpha2，trd/trap 不接受 parameters。；ellipsoid 三半轴或加上下截面共五参数；eltube 三半长；torus 五参数（0<=rMin<rMax<=rTor,deltaPhi>0）；para 六参数（前三半长>0）；hype 五参数（0<=inner<outer,halfZ>0）。；polycone parameters=(startPhi,deltaPhi)，polyhedra 追加整数 numSide>=3；z_planes/r_inner/r_outer 长度相同且>=2，z非递减，每层0<=r_inner<=r_outer。；tessellated 需要 file，可选 file_unit，拒绝 parameters；STL 配置阶段检查封闭、定向一致和流形。；replica 与 parameterised 要求母体只有此子体；replica 需 axis/count/width；parameterised 二选一 copies_file 或 copies+copy_step。普通 placement 不接受这些专有键。；布尔工具接受 name/operation/shape/size/parameters/position/rotation，以及 trd/trap 对应的命名形状参数；拒绝 A5 新实体作工具，volume-only 字段保留专用错误。
+
+解析入口：`src/Geometry/GeometryConfig.cc:Load`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[world]`（独立几何 INI（hierarchical））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `name` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 体积名称 |
+| `parent` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 父体积名称 |
+| `shape` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 实体类型，参数依实体确定 |
+| `size` | - | 上下文相关结构 | 三个正全长（mm） | - | 实验性 | E2 inventory | box 的三个正全长，不是半宽；非 box 不接受 size |
+| `parameters` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 非 box 实体参数，长度/角度按顺序；无单位为 mm/rad。不是 size 的等价别名。 |
+| `material` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 材料引用 |
+| `position` | - | 上下文相关结构 | 三个长度分量；无单位为 mm | `0,0,0` | 实验性 | E2 inventory | 三长度平移分量 |
+| `rotation` | - | 上下文相关结构 | 三个角度分量；无单位为 rad；frame rotation | `0,0,0` | 实验性 | E2 inventory | 三角度分量，Geant4 frame rotation |
+| `sensitive` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | 敏感体布尔值 |
+| `bias` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | 偏置体布尔值 |
+| `region` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | （空） | 实验性 | E2 inventory | 区域名，保留大小写 |
+| `placement` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | `normal` | 实验性 | E2 inventory | normal/replica/parameterised；assembly 仍拒绝 |
+| `copyno` | - | 整数 | 32 位整数 | - | 实验性 | E2 inventory | 副本整数编号 |
+| `vis.color` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | RGB 颜色 |
+| `vis.alpha` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 透明度 |
+| `vis.visible` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E2 inventory | 可见布尔值 |
+| `vis.wireframe` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | 线框布尔值 |
+| `cut.<particle>` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | gamma/e-/e+/proton 正长度；同节必须非空 region |
+| `metadata.<name>` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 只保存的元数据，名称必须非空 |
+| `dx1` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `dx2` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `dx3` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `dx4` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `dy1` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `dy2` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `dz` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `theta` | - | 角度 | 有限数值 rad | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `phi` | - | 角度 | 有限数值 rad | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `alpha1` | - | 角度 | 有限数值 rad | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `alpha2` | - | 角度 | 有限数值 rad | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `z_planes` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `r_inner` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `r_outer` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `file` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | STL 文件，相对几何 INI；必须封闭、定向一致、流形 |
+| `file_unit` | - | 枚举 | `nm` / `um` / `mm` / `cm` / `m`（区分大小写） | `mm` | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `replica_axis` | - | 枚举 | `x` / `y` / `z` / `phi` | - | 实验性 | E2 inventory | 放置参数；副本数/切片/母体限制与 copies 文件内容由 ValidatePlacement 校验 |
+| `replica_count` | - | 整数 | 1–1000000 | - | 实验性 | E2 inventory | 放置参数；副本数/切片/母体限制与 copies 文件内容由 ValidatePlacement 校验 |
+| `replica_width` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 正切片宽度，phi 用角度，其余用长度；count×width 必须填满母体 |
+| `replica_offset` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 缺省0；笛卡尔轴必须0，phi offset 按母体角范围校验 |
+| `copies_file` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 相对几何文件的 CSV；x_mm,y_mm,z_mm[,rot_x_deg,rot_y_deg,rot_z_deg][,material]；与 position/rotation 冲突 |
+| `copies` | - | 整数 | 1–1000000 | - | 实验性 | E2 inventory | 放置参数；副本数/切片/母体限制与 copies 文件内容由 ValidatePlacement 校验 |
+| `copy_step` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 三个长度分量；与 copies 成对，不能同时给 copies_file |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；普通体积必需 shape/material，非 world 必需 parent；shape=box 必需 size 且不接受 parameters；其他形状不接受 size。；tubs 参数 rmin,rmax,halfZ,startPhi,deltaPhi；sphere 六参数；orb 半径；cone 七参数；trd 用 dx1/dx2/dy1/dy2/dz；trap 用 dz/theta/phi/dy1/dx1/dx2/alpha1/dy2/dx3/dx4/alpha2，trd/trap 不接受 parameters。；ellipsoid 三半轴或加上下截面共五参数；eltube 三半长；torus 五参数（0<=rMin<rMax<=rTor,deltaPhi>0）；para 六参数（前三半长>0）；hype 五参数（0<=inner<outer,halfZ>0）。；polycone parameters=(startPhi,deltaPhi)，polyhedra 追加整数 numSide>=3；z_planes/r_inner/r_outer 长度相同且>=2，z非递减，每层0<=r_inner<=r_outer。；tessellated 需要 file，可选 file_unit，拒绝 parameters；STL 配置阶段检查封闭、定向一致和流形。；replica 与 parameterised 要求母体只有此子体；replica 需 axis/count/width；parameterised 二选一 copies_file 或 copies+copy_step。普通 placement 不接受这些专有键。；布尔工具接受 name/operation/shape/size/parameters/position/rotation，以及 trd/trap 对应的命名形状参数；拒绝 A5 新实体作工具，volume-only 字段保留专用错误。
+
+解析入口：`src/Geometry/GeometryConfig.cc:Load`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[volume.<name>]`（独立几何 INI（hierarchical））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `name` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 体积名称 |
+| `parent` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 父体积名称 |
+| `shape` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 实体类型，参数依实体确定 |
+| `size` | - | 上下文相关结构 | 三个正全长（mm） | - | 实验性 | E2 inventory | box 的三个正全长，不是半宽；非 box 不接受 size |
+| `parameters` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 非 box 实体参数，长度/角度按顺序；无单位为 mm/rad。不是 size 的等价别名。 |
+| `material` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 材料引用 |
+| `position` | - | 上下文相关结构 | 三个长度分量；无单位为 mm | `0,0,0` | 实验性 | E2 inventory | 三长度平移分量 |
+| `rotation` | - | 上下文相关结构 | 三个角度分量；无单位为 rad；frame rotation | `0,0,0` | 实验性 | E2 inventory | 三角度分量，Geant4 frame rotation |
+| `sensitive` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | 敏感体布尔值 |
+| `bias` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | 偏置体布尔值 |
+| `region` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | （空） | 实验性 | E2 inventory | 区域名，保留大小写 |
+| `placement` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | `normal` | 实验性 | E2 inventory | normal/replica/parameterised；assembly 仍拒绝 |
+| `copyno` | - | 整数 | 32 位整数 | - | 实验性 | E2 inventory | 副本整数编号 |
+| `vis.color` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | RGB 颜色 |
+| `vis.alpha` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 透明度 |
+| `vis.visible` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E2 inventory | 可见布尔值 |
+| `vis.wireframe` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | 线框布尔值 |
+| `cut.<particle>` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | gamma/e-/e+/proton 正长度；同节必须非空 region |
+| `metadata.<name>` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 只保存的元数据，名称必须非空 |
+| `dx1` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `dx2` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `dx3` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `dx4` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `dy1` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `dy2` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `dz` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `theta` | - | 角度 | 有限数值 rad | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `phi` | - | 角度 | 有限数值 rad | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `alpha1` | - | 角度 | 有限数值 rad | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `alpha2` | - | 角度 | 有限数值 rad | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `z_planes` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `r_inner` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `r_outer` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `file` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | STL 文件，相对几何 INI；必须封闭、定向一致、流形 |
+| `file_unit` | - | 枚举 | `nm` / `um` / `mm` / `cm` / `m`（区分大小写） | `mm` | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `replica_axis` | - | 枚举 | `x` / `y` / `z` / `phi` | - | 实验性 | E2 inventory | 放置参数；副本数/切片/母体限制与 copies 文件内容由 ValidatePlacement 校验 |
+| `replica_count` | - | 整数 | 1–1000000 | - | 实验性 | E2 inventory | 放置参数；副本数/切片/母体限制与 copies 文件内容由 ValidatePlacement 校验 |
+| `replica_width` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 正切片宽度，phi 用角度，其余用长度；count×width 必须填满母体 |
+| `replica_offset` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 缺省0；笛卡尔轴必须0，phi offset 按母体角范围校验 |
+| `copies_file` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 相对几何文件的 CSV；x_mm,y_mm,z_mm[,rot_x_deg,rot_y_deg,rot_z_deg][,material]；与 position/rotation 冲突 |
+| `copies` | - | 整数 | 1–1000000 | - | 实验性 | E2 inventory | 放置参数；副本数/切片/母体限制与 copies 文件内容由 ValidatePlacement 校验 |
+| `copy_step` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 三个长度分量；与 copies 成对，不能同时给 copies_file |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；普通体积必需 shape/material，非 world 必需 parent；shape=box 必需 size 且不接受 parameters；其他形状不接受 size。；tubs 参数 rmin,rmax,halfZ,startPhi,deltaPhi；sphere 六参数；orb 半径；cone 七参数；trd 用 dx1/dx2/dy1/dy2/dz；trap 用 dz/theta/phi/dy1/dx1/dx2/alpha1/dy2/dx3/dx4/alpha2，trd/trap 不接受 parameters。；ellipsoid 三半轴或加上下截面共五参数；eltube 三半长；torus 五参数（0<=rMin<rMax<=rTor,deltaPhi>0）；para 六参数（前三半长>0）；hype 五参数（0<=inner<outer,halfZ>0）。；polycone parameters=(startPhi,deltaPhi)，polyhedra 追加整数 numSide>=3；z_planes/r_inner/r_outer 长度相同且>=2，z非递减，每层0<=r_inner<=r_outer。；tessellated 需要 file，可选 file_unit，拒绝 parameters；STL 配置阶段检查封闭、定向一致和流形。；replica 与 parameterised 要求母体只有此子体；replica 需 axis/count/width；parameterised 二选一 copies_file 或 copies+copy_step。普通 placement 不接受这些专有键。；布尔工具接受 name/operation/shape/size/parameters/position/rotation，以及 trd/trap 对应的命名形状参数；拒绝 A5 新实体作工具，volume-only 字段保留专用错误。
+
+解析入口：`src/Geometry/GeometryConfig.cc:Load`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[volume.<name>.boolean.<index>]`（独立几何 INI（hierarchical））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `name` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 体积名称 |
+| `operation` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | operation：模板专有参数，按对应模板解析 |
+| `shape` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 实体类型，参数依实体确定 |
+| `size` | - | 上下文相关结构 | 三个正全长（mm） | - | 实验性 | E2 inventory | box 的三个正全长，不是半宽；非 box 不接受 size |
+| `parameters` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 非 box 实体参数，长度/角度按顺序；无单位为 mm/rad。不是 size 的等价别名。 |
+| `position` | - | 上下文相关结构 | 三个长度分量；无单位为 mm | `0,0,0` | 实验性 | E2 inventory | 三长度平移分量 |
+| `rotation` | - | 上下文相关结构 | 三个角度分量；无单位为 rad；frame rotation | `0,0,0` | 实验性 | E2 inventory | 三角度分量，Geant4 frame rotation |
+| `dx1` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `dx2` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `dx3` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `dx4` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `dy1` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `dy2` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `dz` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `theta` | - | 角度 | 有限数值 rad | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `phi` | - | 角度 | 有限数值 rad | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `alpha1` | - | 角度 | 有限数值 rad | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+| `alpha2` | - | 角度 | 有限数值 rad | - | 实验性 | E2 inventory | shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验 |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；普通体积必需 shape/material，非 world 必需 parent；shape=box 必需 size 且不接受 parameters；其他形状不接受 size。；tubs 参数 rmin,rmax,halfZ,startPhi,deltaPhi；sphere 六参数；orb 半径；cone 七参数；trd 用 dx1/dx2/dy1/dy2/dz；trap 用 dz/theta/phi/dy1/dx1/dx2/alpha1/dy2/dx3/dx4/alpha2，trd/trap 不接受 parameters。；ellipsoid 三半轴或加上下截面共五参数；eltube 三半长；torus 五参数（0<=rMin<rMax<=rTor,deltaPhi>0）；para 六参数（前三半长>0）；hype 五参数（0<=inner<outer,halfZ>0）。；polycone parameters=(startPhi,deltaPhi)，polyhedra 追加整数 numSide>=3；z_planes/r_inner/r_outer 长度相同且>=2，z非递减，每层0<=r_inner<=r_outer。；tessellated 需要 file，可选 file_unit，拒绝 parameters；STL 配置阶段检查封闭、定向一致和流形。；replica 与 parameterised 要求母体只有此子体；replica 需 axis/count/width；parameterised 二选一 copies_file 或 copies+copy_step。普通 placement 不接受这些专有键。；布尔工具接受 name/operation/shape/size/parameters/position/rotation，以及 trd/trap 对应的命名形状参数；拒绝 A5 新实体作工具，volume-only 字段保留专用错误。
+
+解析入口：`src/Geometry/GeometryConfig.cc:Load`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[global]`（独立几何 INI（simple_box））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `version` | - | 枚举 | `1` / `2` | `1` | 实验性 | E2 inventory | 1 保留旧警告；2 拒绝未知/重复声明 |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；world 与 target 均必需 size/material；固定 box，target.name 默认 Target。
+
+解析入口：`src/Templates/SimpleBoxTemplate.cc:BuildNodes`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[world]`（独立几何 INI（simple_box））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `size` | - | 上下文相关结构 | 三个正全长（mm） | - | 实验性 | E2 inventory | box 的三个正全长，不是半宽；非 box 不接受 size |
+| `material` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 材料引用 |
+| `shape` | - | 枚举 | `box` | `box` | 支持 | E2 inventory | 固定 box；显式其他实体会拒绝。原诊断表未登记此键，保留原警告行为 |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；world 与 target 均必需 size/material；固定 box，target.name 默认 Target。
+
+解析入口：`src/Templates/SimpleBoxTemplate.cc:BuildNodes`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[target]`（独立几何 INI（simple_box））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `name` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 体积名称 |
+| `shape` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 实体类型，参数依实体确定 |
+| `size` | - | 上下文相关结构 | 三个正全长（mm） | - | 实验性 | E2 inventory | box 的三个正全长，不是半宽；非 box 不接受 size |
+| `material` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 材料引用 |
+| `position` | - | 上下文相关结构 | 三个长度分量；无单位为 mm | `0,0,0` | 实验性 | E2 inventory | 三长度平移分量 |
+| `rotation` | - | 上下文相关结构 | 三个角度分量；无单位为 rad；frame rotation | `0,0,0` | 实验性 | E2 inventory | 三角度分量，Geant4 frame rotation |
+| `sensitive` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E2 inventory | 敏感体布尔值 |
+| `bias` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | 偏置体布尔值 |
+| `region` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | （空） | 实验性 | E2 inventory | 区域名，保留大小写 |
+| `cut.<particle>` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | gamma/e-/e+/proton 正长度；同节必须非空 region |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；world 与 target 均必需 size/material；固定 box，target.name 默认 Target。
+
+解析入口：`src/Templates/SimpleBoxTemplate.cc:BuildNodes`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[visual.world]`（独立几何 INI（simple_box））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `color` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | color：模板专有参数，按对应模板解析 |
+| `alpha` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | alpha：模板专有参数，按对应模板解析 |
+| `visible` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E2 inventory | visible：模板专有参数，按对应模板解析 |
+| `wireframe` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | wireframe：模板专有参数，按对应模板解析 |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；world 与 target 均必需 size/material；固定 box，target.name 默认 Target。
+
+解析入口：`src/Templates/SimpleBoxTemplate.cc:BuildNodes`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[visual.target]`（独立几何 INI（simple_box））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `color` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | color：模板专有参数，按对应模板解析 |
+| `alpha` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | alpha：模板专有参数，按对应模板解析 |
+| `visible` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E2 inventory | visible：模板专有参数，按对应模板解析 |
+| `wireframe` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | wireframe：模板专有参数，按对应模板解析 |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；world 与 target 均必需 size/material；固定 box，target.name 默认 Target。
+
+解析入口：`src/Templates/SimpleBoxTemplate.cc:BuildNodes`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[global]`（独立几何 INI（layered_device））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `version` | - | 枚举 | `1` / `2` | `1` | 实验性 | E2 inventory | 1 保留旧警告；2 拒绝未知/重复声明 |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；world 必需 size/material；layers 必需 names；axis 只支持z；每层必需正 thickness、xy、material；auto_stack=true 时忽略 position，z_start 缺省为总厚度的一半负值；false 时 position 必需。
+
+解析入口：`src/Templates/LayeredDeviceTemplate.cc:BuildNodes`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[world]`（独立几何 INI（layered_device））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `size` | - | 上下文相关结构 | 三个正全长（mm） | - | 实验性 | E2 inventory | box 的三个正全长，不是半宽；非 box 不接受 size |
+| `material` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 材料引用 |
+| `shape` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 实体类型，参数依实体确定 |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；world 必需 size/material；layers 必需 names；axis 只支持z；每层必需正 thickness、xy、material；auto_stack=true 时忽略 position，z_start 缺省为总厚度的一半负值；false 时 position 必需。
+
+解析入口：`src/Templates/LayeredDeviceTemplate.cc:BuildNodes`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[layers]`（独立几何 INI（layered_device））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `count` | - | 整数 | ≥ 1 | - | 实验性 | E2 inventory | 必需正整数，必须等于 names 中的层数 |
+| `names` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | names：模板专有参数，按对应模板解析 |
+| `auto_stack` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E2 inventory | auto_stack：模板专有参数，按对应模板解析 |
+| `axis` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | `z` | 实验性 | E2 inventory | axis：模板专有参数，按对应模板解析 |
+| `gap` | - | 长度 | 有限数值 mm | `0 mm` | 实验性 | E2 inventory | gap：模板专有参数，按对应模板解析 |
+| `z_start` | - | 长度 | 有限数值 mm | - | 实验性 | E2 inventory | z_start：模板专有参数，按对应模板解析 |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；world 必需 size/material；layers 必需 count/names；axis 只支持z；每层必需正 thickness、xy、material；auto_stack=true 时忽略 position，z_start 缺省为总厚度的一半负值；false 时 position 必需。
+
+解析入口：`src/Templates/LayeredDeviceTemplate.cc:BuildNodes`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[layer.<name>]`（独立几何 INI（layered_device））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `thickness` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | thickness：模板专有参数，按对应模板解析 |
+| `xy` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | xy：模板专有参数，按对应模板解析 |
+| `material` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 材料引用 |
+| `position` | - | 上下文相关结构 | 三个长度分量；无单位为 mm | - | 实验性 | E2 inventory | 三长度平移分量 |
+| `rotation` | - | 上下文相关结构 | 三个角度分量；无单位为 rad；frame rotation | `0,0,0` | 实验性 | E2 inventory | 三角度分量，Geant4 frame rotation |
+| `sensitive` | - | 布尔 | true/false（yes/no、on/off、1/0） | - | 实验性 | E2 inventory | 敏感体布尔值 |
+| `bias` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | 偏置体布尔值 |
+| `region` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | （空） | 实验性 | E2 inventory | 区域名，保留大小写 |
+| `copyno` | - | 整数 | 32 位整数 | - | 实验性 | E2 inventory | 副本整数编号 |
+| `cut.<particle>` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | gamma/e-/e+/proton 正长度；同节必须非空 region |
+| `vis.color` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | RGB 颜色 |
+| `vis.alpha` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 透明度 |
+| `vis.visible` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E2 inventory | 可见布尔值 |
+| `vis.wireframe` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | 线框布尔值 |
+| `metadata.<name>` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 只保存的元数据，名称必须非空 |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；world 必需 size/material；layers 必需 names；axis 只支持z；每层必需正 thickness、xy、material；auto_stack=true 时忽略 position，z_start 缺省为总厚度的一半负值；false 时 position 必需。
+
+解析入口：`src/Templates/LayeredDeviceTemplate.cc:BuildNodes`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[global]`（独立几何 INI（array））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `version` | - | 枚举 | `1` / `2` | `1` | 实验性 | E2 inventory | 1 保留旧警告；2 拒绝未知/重复声明 |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；world 必需 size/material；array 必需 element_size/counts/pitch/material；counts 三个正整数；活动轴 pitch>=element_size；实体只允许 box。
+
+解析入口：`src/Templates/ArrayTemplate.cc:BuildNodes`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[world]`（独立几何 INI（array））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `size` | - | 上下文相关结构 | 三个正全长（mm） | - | 实验性 | E2 inventory | box 的三个正全长，不是半宽；非 box 不接受 size |
+| `material` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 材料引用 |
+| `shape` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 实体类型，参数依实体确定 |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；world 必需 size/material；array 必需 element_size/counts/pitch/material；counts 三个正整数；活动轴 pitch>=element_size；实体只允许 box。
+
+解析入口：`src/Templates/ArrayTemplate.cc:BuildNodes`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[array]`（独立几何 INI（array））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `name` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 体积名称 |
+| `shape` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 实体类型，参数依实体确定 |
+| `material` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 材料引用 |
+| `element_size` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | element_size：模板专有参数，按对应模板解析 |
+| `counts` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | counts：模板专有参数，按对应模板解析 |
+| `pitch` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | pitch：模板专有参数，按对应模板解析 |
+| `center` | - | 上下文相关结构 | 三个长度分量；无单位为 mm | `0,0,0` | 实验性 | E2 inventory | center：模板专有参数，按对应模板解析 |
+| `sensitive` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E2 inventory | 敏感体布尔值 |
+| `bias` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | 偏置体布尔值 |
+| `region` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | （空） | 实验性 | E2 inventory | 区域名，保留大小写 |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；world 必需 size/material；array 必需 element_size/counts/pitch/material；counts 三个正整数；活动轴 pitch>=element_size；实体只允许 box。
+
+解析入口：`src/Templates/ArrayTemplate.cc:BuildNodes`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[global]`（独立几何 INI（shielding））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `version` | - | 枚举 | `1` / `2` | `1` | 实验性 | E2 inventory | 1 保留旧警告；2 拒绝未知/重复声明 |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；axis 只支持z；shielding 必需 area/start/layers；各 shield 必需 thickness/material；可选 detector 必需 size/position/material；仅 box。
+
+解析入口：`src/Templates/ShieldingTemplate.cc:BuildNodes`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[world]`（独立几何 INI（shielding））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `size` | - | 上下文相关结构 | 三个正全长（mm） | - | 实验性 | E2 inventory | box 的三个正全长，不是半宽；非 box 不接受 size |
+| `material` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 材料引用 |
+| `shape` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 实体类型，参数依实体确定 |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；axis 只支持z；shielding 必需 area/start/layers；各 shield 必需 thickness/material；可选 detector 必需 size/position/material；仅 box。
+
+解析入口：`src/Templates/ShieldingTemplate.cc:BuildNodes`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[shielding]`（独立几何 INI（shielding））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `axis` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | `z` | 实验性 | E2 inventory | axis：模板专有参数，按对应模板解析 |
+| `area` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | area：模板专有参数，按对应模板解析 |
+| `start` | - | 长度 | 有限数值 mm | - | 实验性 | E2 inventory | start：模板专有参数，按对应模板解析 |
+| `gap` | - | 长度 | 有限数值 mm | `0 mm` | 实验性 | E2 inventory | gap：模板专有参数，按对应模板解析 |
+| `layers` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | layers：模板专有参数，按对应模板解析 |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；axis 只支持z；shielding 必需 area/start/layers；各 shield 必需 thickness/material；可选 detector 必需 size/position/material；仅 box。
+
+解析入口：`src/Templates/ShieldingTemplate.cc:BuildNodes`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[shield.<name>]`（独立几何 INI（shielding））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `thickness` | - | 长度 | > 0 mm | - | 实验性 | E2 inventory | thickness：模板专有参数，按对应模板解析 |
+| `material` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 材料引用 |
+| `bias` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | 偏置体布尔值 |
+| `sensitive` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | 敏感体布尔值 |
+| `region` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | （空） | 实验性 | E2 inventory | 区域名，保留大小写 |
+| `shape` | - | 枚举 | `box` | `box` | 支持 | E2 inventory | 固定 box；显式其他实体会拒绝。原诊断表未登记此键，保留原警告行为 |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；axis 只支持z；shielding 必需 area/start/layers；各 shield 必需 thickness/material；可选 detector 必需 size/position/material；仅 box。
+
+解析入口：`src/Templates/ShieldingTemplate.cc:BuildNodes`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[detector]`（独立几何 INI（shielding））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `size` | - | 上下文相关结构 | 三个正全长（mm） | - | 实验性 | E2 inventory | box 的三个正全长，不是半宽；非 box 不接受 size |
+| `material` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | 材料引用 |
+| `position` | - | 上下文相关结构 | 三个长度分量；无单位为 mm | - | 实验性 | E2 inventory | 三长度平移分量 |
+| `sensitive` | - | 布尔 | true/false（yes/no、on/off、1/0） | `true` | 实验性 | E2 inventory | 敏感体布尔值 |
+| `region` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | （空） | 实验性 | E2 inventory | 区域名，保留大小写 |
+| `shape` | - | 枚举 | `box` | `box` | 支持 | E2 inventory | 固定 box；显式其他实体会拒绝。原诊断表未登记此键，保留原警告行为 |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；axis 只支持z；shielding 必需 area/start/layers；各 shield 必需 thickness/material；可选 detector 必需 size/position/material；仅 box。
+
+解析入口：`src/Templates/ShieldingTemplate.cc:BuildNodes`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[global]`（独立几何 INI（gdml））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `version` | - | 枚举 | `1` / `2` | `1` | 实验性 | E2 inventory | 1 保留旧警告；2 拒绝未知/重复声明 |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；编译不含 GDML 时配置阶段拒绝；file 相对几何 INI；真实 GDML 读取发生在 BuildWorld；world_name 默认 world。
+
+解析入口：`src/Templates/GDMLTemplate.cc:BuildNodes`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+### `[gdml]`（独立几何 INI（gdml））
+
+按当前几何模板解析；未知字段处理遵循 version 1/2。
+
+| 键 | 别名 | 类型 | 取值 | 默认值 | 支持等级 | 起始 | 说明 |
+|---|---|---|---|---|---|---|---|
+| `file` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | STL 文件，相对几何 INI；必须封闭、定向一致、流形 |
+| `validate` | - | 布尔 | true/false（yes/no、on/off、1/0） | `false` | 实验性 | E2 inventory | validate：模板专有参数，按对应模板解析 |
+| `sensitive_volumes` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | sensitive_volumes：模板专有参数，按对应模板解析 |
+| `bias_volumes` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | bias_volumes：模板专有参数，按对应模板解析 |
+| `world_name` | - | 上下文相关结构 | 依上下文；见本节约束与解析入口 | - | 实验性 | E2 inventory | world_name：模板专有参数，按对应模板解析 |
+
+约束：version=1 保留原 warning/legacy metadata；version=2 拒绝未知/重复声明。；文件路径、实体/布尔/放置参数和依赖保留原后端校验；GUI 未开放的实体不得因登记而可生成。；编译不含 GDML 时配置阶段拒绝；file 相对几何 INI；真实 GDML 读取发生在 BuildWorld；world_name 默认 world。
+
+解析入口：`src/Templates/GDMLTemplate.cc:BuildNodes`；校验阶段：configure; geometry_build; transport。
+回归：`scripts/test_geometry_config_diagnostics.py`、`scripts/test_geometry_a5.py`、`scripts/test_gui_backend_agreement.py`。
+
+<!-- END GENERATED: config schema -->
+
+
+### 2026-10-29：有效配置审查（完整2C已验收）
+
+配置阶段子集是历史验收范围；完整2C已在f4770b0干净Release、Windows118/118及实际Linux双版本各118、M0两平台各47、严格证据门禁和最终可见GUI验证，见[最终报告](verification/2c-full-20261029/README.md)。完整2C冻结时schema357项：supported59、experimental291、deprecated5、unsupported2；61项有GUI元数据，其中4项模块策略明确不可编辑，296项无GUI元数据。当前E6已登记394项，字段事实以第5节生成表为准；field/biasing schema及后续GUI编辑/物理验证不随2C闭合。配置请求/解析、revision/configuration_generation 和 applied 收据须分别解释。契约见 [有效配置快照](EffectiveConfig.md)。

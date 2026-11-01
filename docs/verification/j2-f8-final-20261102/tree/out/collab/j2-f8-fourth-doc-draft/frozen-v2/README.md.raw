@@ -1,0 +1,10 @@
+# 第四候选docs冻结v2（仅OUT，未apply）
+
+只修STATUS中identity_errors归属：六份launch的identity_errors=[]，对应report均git_dirty=false。另三文档候选字节完全相同；v1全目录保留。main提出，其余scope不变。
+
+v1-to-v2.delta.patch为最小单句delta；docs.patch仍是相对四份未改tracked来源的完整应用patch。承接v1证据/历史保护与独审范围；未重复300log审或产品/native/profile执行。四doc来源SHA匹配，只读git apply --check0，仅允许main两已审test diff。
+
+docs.patch SHA256：`72550c0fbc577828bc43568f7db66608816f3ef161a29df961156ba1274ba2dc`
+manifest.json SHA256：`c1e696b828bbc76706e2c6734247afaa36edebc4cf46c82b10862a0ada93e39e`
+
+frozen=true，applied=false，阶段未关闭；未来HEAD映射和代表性补native仍pending，不作docs冻结前置。请Feynman只核该delta及三文档字节不变。

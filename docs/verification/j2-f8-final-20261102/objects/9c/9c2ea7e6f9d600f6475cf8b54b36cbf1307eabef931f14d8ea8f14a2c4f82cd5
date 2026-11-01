@@ -1,0 +1,57 @@
+{
+  "schema": "g4usim_diagnostics_v1",
+  "snapshot_id": "224f025fe4864936df3ab375c1be7edd174cb42d77c76e1cfe03674ff5a8a13d",
+  "can_run": false,
+  "errors": [
+    "materials",
+    "geometry"
+  ],
+  "warnings": [],
+  "info": [],
+  "diagnostics": [
+    {
+      "identity": "0cdb2b4c81577a54a75c4c85c24d326a3f7d28599fd92a46d7f486c5554d7fde",
+      "code": "experiment.captured_source.changed",
+      "severity": "error",
+      "origin": "experiment",
+      "message": "materials",
+      "message_key": "",
+      "params": {},
+      "identity_parameters": {},
+      "raw_message": "materials",
+      "unavailable_reason": "source_changed",
+      "location": {
+        "editor": "setup",
+        "field": "materials_config",
+        "collection": "",
+        "row": null,
+        "entity": "",
+        "snapshot_id": ""
+      },
+      "source": null,
+      "related_locations": []
+    },
+    {
+      "identity": "b206a255b0cc00cbd8e1630a6457db8cc33cb9706fd16f04aea2428f6bcd0a3d",
+      "code": "experiment.captured_source.changed",
+      "severity": "error",
+      "origin": "experiment",
+      "message": "geometry",
+      "message_key": "",
+      "params": {},
+      "identity_parameters": {},
+      "raw_message": "geometry",
+      "unavailable_reason": "source_changed",
+      "location": {
+        "editor": "setup",
+        "field": "geometry_config",
+        "collection": "",
+        "row": null,
+        "entity": "",
+        "snapshot_id": ""
+      },
+      "source": null,
+      "related_locations": []
+    }
+  ]
+}

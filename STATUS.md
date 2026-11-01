@@ -2,6 +2,32 @@
 
 更新：2026-11-02。本页只做导航与快照；**阶段状态以 [docs/ROADMAP.md](docs/ROADMAP.md) 为准，支持等级以 [docs/功能支持矩阵.md](docs/功能支持矩阵.md) 为准**，两者冲突时先改事实再改文档。
 
+## 2026-11-02 J2/F8及E7本轮验收
+
+**本轮约定功能验收已完成。** main已接受J2、F8和支撑J2的E7既有15原语／7布尔工具注册与元数据范围。正式构建／测试冻结为 `2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8`；后续包含本页的提交仅为docs/evidence，不改原report／EXE身份，不因文档提交重建或重跑矩阵。交付以实际Git树、三份精确锁及main后置字节映射为准，不自填未来commit SHA。见[最终证据](docs/verification/j2-f8-final-20261102/README.md)、[功能支持矩阵](docs/功能支持矩阵.md)与[J2/F8说明](docs/J2编辑覆盖与F8验收.md)。
+
+| 2ec本机profile | 通过/执行 | v3实际入口 | runner / strict / launch identity_errors |
+|---|---:|---:|---|
+| windows-static | 46/46 | 4586 | 0 / 0 / [] |
+| windows-gui | 66/66 | 8636 | 0 / 0 / [] |
+| windows113-backend | 63/63 | 82029 | 0 / 0 / [] |
+| windows114-backend | 63/63 | 72536 | 0 / 0 / [] |
+| windows113-integration | 31/31 | 6790 | 0 / 0 / [] |
+| windows114-integration | 31/31 | 6780 | 0 / 0 / [] |
+
+六份原launch的identity_errors=[]，对应report均git_dirty=false；合计300/300、181357入口，aggregate passed/errors=[]，SHA `a701f34fc2d3e9bd2d0aec9fc833d249179fc76ad5de873f8c42011e665ec73c`。真实CI四workflow／八job均原attempt1 success：M0 `41352200756`、Linux双Geant4 `41352200765`、Desktop `41352200727`、Installation `41352200731`。12份报告strict全部通过、零skip、逐例及总数matching基线不下降，共636次case执行／221186入口；Desktop/Install不另伪加到636。
+
+CI状态不概括为全局clean：四份M0报告clean；Linux双版本八份原报告git_dirty=true，原status仅对应`.g4env-11.3.2/`或`.g4env-11.4.3/`、`.micromamba/`、`bin/`三行环境目录。tracked_source_gate=pass、untracked_source_files=[]，source/tests/merge与2ec精确匹配。原JSON、原checker和旧56b/2901/18c失败均保留，不改绿、不泛放其它dirty。
+
+E7只关闭本轮15/7统一factory注册、能力元数据和GUI离线定义接线；兼容、缓存／生命周期及适用矩阵通过。实体集合和A5实验性等级不变，不新增assembly、每体积GDML、任意worker构造、全GeometryConfig重写或科学支持结论。
+
+18c三档原生按149GUI/C++与精确7文件允许差异的实际byte-map沿用原HEAD/EXE/限定scope，不冒充2ec全三档重跑。2ec代表性125%另已实际补验I1发现/I2首屏打开关闭、Import旧包及保存、模板Finish/另存、重入Next/Back/Esc并正常退出；main24观察/41JPEG，Ptolemy纯文件独审通过，Harvey合同余项清单无新增必跑操作。文件审不是第二次像素审查。Import的4条旧历史均stale，当前仅import_history；无本轮validate/generate/run新record。自动几何预览可以调用后端构造，但不是事件Run；缓存project/Undo不是live F5。
+
+197张标记local-only原图（70继承QQ、86旧18c、41新2ec）仅保本机，公开只path/size/SHA和观察边界。18c100%的初始化no_run、事件run100/100与导出未CLI replay分别保留；F6极窄dock容不下joint的界限、QQ遮挡、未做物理跨屏/热插拔及科学基准均不扩大。H2/H7/Q2不随本次关闭。下方各候选是当时身份的历史快照，原文不追改。
+
+<details>
+<summary>第四及更早候选历史快照（原文保留）</summary>
+
 ## 2026-11-02 第四修复候选：18c5858证据快照
 
 **第四修复候选，两项test-only专项独审已完成；阶段仍未关闭，完整新候选验收待进行。** 第三冻结为 `18c5858fd6e80a5cb6096beacebfef69c479ad49`。本段只登记该身份的Windows、真实CI和原生范围；第四候选针对两个测试平台断言修订，不预写尚不存在的新HEAD、新CI成功或新增运行事实。
@@ -54,6 +80,8 @@
 第三修复候选包含History三显式buddy及动态语言名称、仅真实QLayout的递归兼容、geometry路径测试精确resolve/samefile比较（不改geometry产品）；History、spacer及STL专项独审均通过，History+spacer组合595专项亦已独审，尚不替代新candidate的CI/原生。F6窄dock界限不修改，不声称不可容纳的整组标签/控件可以同时放入窄视口。K1 final-v1 policy规范身份及原拼写首尾guard专项独审已通过603入口／13组，原短路径30入口及junction 3+5反例保留；**完整新候选验收待进行**，专项关闭不等于CI或阶段关闭。
 
 首轮 `56b689f` 六份本机报告300次执行、286通过/14失败/0跳过、179468入口及严格失败保持原件；GUI自身git_dirty=true/73条长路径表象不追改。原M0 `41330577407`、Linux `41330577426` 失败，安装 `41330577328`、桌面 `41330577359` 成功；本轮新结果不替换原run或旧失败。源码、构建、报告、截图及独审各按原身份保留。完整新候选矩阵/native/CI全部终态并经独审后才考虑阶段关闭；当前归档只是OUT候选，不是最终公开发布。
+
+</details>
 
 </details>
 

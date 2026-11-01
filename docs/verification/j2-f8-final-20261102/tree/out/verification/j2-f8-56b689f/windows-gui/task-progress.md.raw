@@ -1,0 +1,30 @@
+# Windows GUI 正式完整profile进度
+
+- 候选HEAD：56b689fb9ac920cbb1203b2b94dae2483d25f622，启动前tracked clean。
+- 前置关闭：workspace cd5f7e0c最小独审，原F4默认/125各265，自然focus125五组通过；out/collab/f8-independent-review/f4-viewport-final-review.md。
+- 运行命令见launch.json；--profile gui、--require-tracked-sources、--fail-on-skip，默认offscreen，无scale覆盖；66case。新113EXE与merge在同Release，capabilities commit/head/state/sourcefp均已核验。
+- 运行中的native command session：57692；原始控制台runner.log。冻结期间不改产品/测试/runner。
+- 历史匹配baseline：out/verification/i2-j1-5fe0a10/windows-gui/20261101-205241-d4aff2d8/report.json，59case/6760，同settrace_assert_lines_v3，字节SHA178d...匹配；启动前严格原报告门禁已通过。
+- 下一步：等待完整runner结束，保留首次失败交main；定位新timestamp报告，跑check_report_evidence严格完整+同历史baseline比较，不用allow/legacy参数；记录HEAD/dirty/source不变。原生UI仅main负责。
+
+- 2026-11-01T17:27:10.535017+00:00：runner已完成16例pass；fail/skip=0。仍等待原session57692，尚未跑新报告gate；不要重复启动profile。完成后运行本目录verify_profile.py（严格+baseline两门禁），结果写verification-receipt.json。
+
+- 首败gui_source：smoke_source_editor_v2.py:163旧字符串断言与新的enabled-rule拒绝诊断不符，原始46断言日志及first-failure.json已存，已发main；当前runner继续余项。不修改判据、不自动复跑、不把本报告改绿。
+
+## 首轮终态及下一轮环境核对
+- 首轮session57692已结束exit1：66用例，64pass/2fail/0 case级skip，8178断言。gui_source旧emptyhook提示断言、gui_scans fixture漏传内存材料已只读归因；gui_3d_view内部缺pyvista仅18，不能代替历史35。
+- 原strict gate及matching历史baseline gate均exit1，未使用allow/legacy，未拼接/改绿。verification-receipt.json、baseline-arithmetic-triage.json保留首因。
+- 用户授权只读复用D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe。check_venv_imports.py实际导入9模块成功，exit0/stderr空；PySide6+Qt6.11.1、PyVista0.48.4、PyVistaQt0.11.4、VTK9.6.2，全部模块来自该venv。cwd/PYTHONPATH指向C盘候选。
+- 未实例化QApplication、window或render，未安装包；-B/PYTHONDONTWRITEBYTECODE避免向D盘写pyc。详细路径见venv-import.stdout.json，收据venv-import-receipt.json。
+- 核对前后首轮报告目录279文件逐字节SHA全部一致；原64/2报告原字节保留。
+- 下一轮整个profile统一完整venv，保留require-tracked-sources/fail-on-skip及严格matching历史baseline；等待main原生任务结束及下一候选/启动信号。gui_3d_view在Windows会将offscreen切至windows原生子路径，不能称整轮纯offscreen。不自动启动、不拼接单例结果。
+
+- 原生3D定点完成：native-3d-20261102-014628/receipt.json；Dvenv+原smoke+v3 probe，35断言/exit0/无SKIP，18.4秒正常结束，源码SHA340ffd84不变，首轮279文件SHA全不变。未启动全profile。
+- 用户新增授权out-only测试作者草案：test-fix-draft/tests.patch及delivery.md；git apply --check成功，未apply。source完整函数和两套scan fixture逐类合法包生成PASS，scan原assert AST全保留。原始三测试SHA保持。真实backend/Qt扫描运行仍待独审及正式新轮。等待main新candidate/150问题裁决。
+
+## 首轮git元数据更正（原报告保持原字节）
+- 已实际读取原report.json：git_dirty=true，git_status_porcelain有73条D，均为docs/verification下超长历史路径；原report SHA256=8e337085204426fde696e2011717e85ef2167687b3529bbea53408179199cb13。
+- 先前进度/launch/end-identity独立核对clean不能代替runner记录；不得声称首轮report git_dirty=false。原metadata不追改，也不据独立-c命令将首轮改绿。
+- 新增preflight_longpaths_child.py，环境复制后向GIT_CONFIG_COUNT追加GIT_CONFIG_KEY_n=core.longpaths、VALUE_n=true，传给Dvenv子进程。该子进程从runner AST提取并执行实际[git,status,--porcelain] metadata调用，不执行main/profile；结果longpaths-child-preflight.json。
+- 下一轮必须在runner同一child env保持此配置，启动前probe空状态；启动后再次核验环境和状态，最终report也应如实记录。不能只对外层git命令加-c。
+- F8 v3 stale独审125/150增量通过：out/collab/f8-project-dock150-independent/v3-stale-review.md。独立Qt/child进程全部退出，未启动新profile。

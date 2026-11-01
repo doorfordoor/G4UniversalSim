@@ -1,0 +1,39 @@
+{
+  "status": "pass",
+  "patch_sha256": "2b3f9b12c58c6c2dcc97ac35d9448897fdf6592518639b7aa644296be7ad6a74",
+  "candidate_smoke_sha256": "579c6a7a00a93a41570aa28357053d3009b1c2758cf005ccf6de78477fb5b671",
+  "only_resolve_expectation_and_samefile_sha_added": true,
+  "results": [
+    {
+      "kind": "proof",
+      "exit_code": 0,
+      "assertions": 21,
+      "log": "proof.log",
+      "log_sha256": "a2e6d6cd30544ae226e547d99aea1266b0218d03af5de76fcf3d15b232514484"
+    },
+    {
+      "kind": "closure",
+      "exit_code": 0,
+      "assertions": 101,
+      "log": "closure.log",
+      "log_sha256": "784c2f3356206fff28eee99d16a72f0817551e5d34c599ec02456e306c44b97f"
+    }
+  ],
+  "real_windows_short_alias_old_assert_failure_reproduced": true,
+  "generated_reparsed_same_stl_identity_and_sha": true,
+  "missing_and_outside_rejections_preserved": true,
+  "original_tracked_and_author_evidence_bytes_unchanged": true,
+  "source_sha256": {
+    "gui/g4usim_gui/writers/geometry_ini_writer.py": "f8b93bd89fdd3871753c953d11876c81fa8e34464cbef3ccd9959828dfe92537",
+    "gui/g4usim_gui/parsers/geometry_parser.py": "ccb81da48e54bdcf76ec65c351f105ee86fc129e37101eaaf3c4f01f73e5d5cd",
+    "gui/g4usim_gui/editors/geometry_editor_model.py": "58f0e82d1508b105e45312c515a5b9b4d64511e19ade5959ff11b10b9ea2115f",
+    "gui/g4usim_gui/core/project_snapshot.py": "daed5db7923042fa4fb90beac447ce7fe91313ce15a254beae25656d6b800a97",
+    "gui/g4usim_gui/core/run_editor_resources.py": "51a5e11c53ff9072b5a07b174d24920cb3931c85338b0407d0316a6ea0609c46",
+    "gui/g4usim_gui/core/experiment_bundle.py": "fd94da357bfc97ffdf53ac9bd0c5c55d480087f6df226b4266449aad12ff068e",
+    "gui/smoke_tests/smoke_j2_geometry.py": "091cfffed46daa8473d8021f7ea9e4811e40a2c35b98129a4307da8f1efed489",
+    "scripts/test_j2_resource_bundle.py": "67bf4ba34658dea6c49a411b0172b1a2b3a175b0c7f294df64625b92ace5d919"
+  },
+  "tracked_status_longpaths": "",
+  "full_gui_smoke_run": false,
+  "native_or_backend_run": false
+}

@@ -1,0 +1,23 @@
+# 第四候选 Windows GUI完整profile交付
+
+PASS：66 pass / 0 fail / 0 skip，8636实际assert，66项均非零。原session36751自然exit0，strict matching historical baseline gate exit0；cleanup独立查询GUIroot/nativeVTK进程剩余0。native slot已正式释放并通知main，仅供main后续代表性补native；本任务不接integration、不再启动Qt/native。
+
+运行身份：HEAD2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8，113EXE SHA fe5d23d309106d9fca7ad179f6c0cb39fa8b98c6ef35286a0b21866b90d89f89，原冻结launcher4f812f44506e2ea14f03ab49b223ccc0c01b8105c491feaa6dc36095e0c2e1dc，指定完整Dvenv。childlongpaths=true、预检status空；默认缩放无Scale覆盖，require-tracked-sources/fail-on-skip/严格原历史基线全部启用。
+
+- 原windows-gui历史59case/6760，SHA178d2a42b041fe1ed6018d79d6b7b27a72c73cdc348d7204c20dc2b26d5a1e6c；所有历史case保留且逐项assert无下降。无allow/legacy，无报告拼接。
+- 原生gui_3d_view35/35；原日志无内部SKIP，真实widget路径与页面双向选择执行且正常退出。不能以18模型路径替代35。
+- F8新平台Name/Value/真实Label relation及丢buddy负向正式入口643，通过；该无--output路径比带截图655路径少12可选写图assert，按本轮实际643记录，不冒称655。
+- J2geometry成功canonical/samefile/SHA与失败lexical保留的正式入口214，通过；source54/scans58及F4navigation224/layout265均通过。
+- 报告git_dirty=false/git_status_porcelain=''，identity_errors=[]。首尾EXE/merge/helper字节、5helper输入、actual source/tests/mergefp及报告head/profile/路径/5build字段均匹配。
+
+CPPfp9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a；tests_contentfp ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8。
+
+证据：
+- 20261102-053011-53d49584/report.json：完整新报告，SHAeb6044415c756c675e2bab56e4f842bbd5c63e60da1defd459694ad38aa50c26。
+- launch.json：完整命令/env/dependency与前后身份、最终gate/identity_errors原收据。
+- runner.log及timestamp逐用例.log：原始执行证据。
+- strict-baseline-gate.log：严格门禁原输出。
+- delivery-receipt.json：独立终态/历史逐项计数/VTK35无SKIP与raw SHA复核。
+- cleanup.json：原runner结束后GUIroot或nativeVTK测试进程剩余0的只读查询。
+
+范围仅本机Windows默认缩放GUI完整profile（含授权原生VTK），不替代新CI真实终态、main补native或其他profile；原CI红例与旧候选报告保持原字节。全程未改任何tracked产品/测试/docs/runner。所有任务进程已结束，后续等待明确授权。

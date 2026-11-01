@@ -1,0 +1,28 @@
+{
+  "status": "out-only prototype; NOT applied to tracked product; not formal native acceptance",
+  "tracked_gui_matches_native150_identity": true,
+  "proposed_source_sha256": "677a7b54c5ce876d663b6d986642ee5393a385b782a29dad695c2ed20d280b39",
+  "patch_sha256": "00215360996aecd753524ba85111261cea83258e34efbb29979189b4f25a0e4c",
+  "tests": [
+    {
+      "path": "regression-final125.log",
+      "exit_code": 0,
+      "sha256": "056846b35cfcb234cb0ba8c6a576e5f012d72d5b73f3963a49e910397dfda9ba"
+    },
+    {
+      "path": "old-smoke-1.25.log",
+      "exit_code": 0,
+      "sha256": "a0866e27d80b10777b18013ff463966b67dcdef40552ab4bac71232f9c53cfd0"
+    },
+    {
+      "path": "regression-final150.log",
+      "exit_code": 0,
+      "sha256": "056846b35cfcb234cb0ba8c6a576e5f012d72d5b73f3963a49e910397dfda9ba"
+    },
+    {
+      "path": "old-smoke-1.5.log",
+      "exit_code": 0,
+      "sha256": "ff31117ab03bf86aa889e76a69350ce58631c8919edf544697f3a779d8716782"
+    }
+  ]
+}

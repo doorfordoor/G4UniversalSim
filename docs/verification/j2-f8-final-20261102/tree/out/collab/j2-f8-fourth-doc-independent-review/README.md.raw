@@ -1,0 +1,13 @@
+# 第四候选 frozen-v3 五份文档窄独审
+
+结论：PASS，无新增问题。审核对象为 frozen-v3/docs.patch，SHA256 `3cbdb2975abcb36a88325f49851cddef0d025c2ca6cf8c82a62cb8ce1bcc1a03`；manifest SHA256 `e094037f010be282fc9ee91572103913e58199a9a22009b96333823fa53efbea`。这是文件与证据归属审查，不是新候选完整验收。
+
+已读四文档修改内容，并核实五份来源/候选原始字节SHA；v3前四份与v2相同，v2相对v1仅STATUS字段归属一句更正。AGENTS仅新增一条§0索引，删除该插入可恢复整个旧原件，指向新history真实heading。两项更正均为main发现，不记作本独审发现。旧history完整raw prefix、STATUS旧当前快照和dated tail、J2使用正文保持；ROADMAP仅两状态行。候选相对链接存在，无新增未归档OUT公共链接。
+
+独立读取六份report/launch摘要并核raw SHA、18c HEAD、report git_dirty=false、launch identity_errors=[]及runner/gate0；合计300/181295与原local-final-audit相同。没有重读300个case日志或运行门禁。字段归属更正准确。
+
+原CI4pass/4fail与未执行Linuxbackend/integration保持；专项PASS未冒充新CI通过。Windows/Linux接口负向与作者655/独立微Qt范围分开，不泛称所有Unix/macOS。旧三档原生身份、149GUI字节与各档实际操作scope分开，86原图仅本地保留；文件核对不充当独立视觉通行。未来HEAD最终映射及新增单轮代表性native为pending，均不作为docs冻结前置，阶段未关闭。
+
+read-only git apply --check退出0，五份tracked docs仍为原SHA；允许main已授权两test预期diff。未修改tracked、未执行Qt/native/build/profile，无持有测试或源码身份窗口。
+
+检查脚本首次误要求STATUS整个旧body连续，忽略新增历史wrapper；已更正为原header、旧当前快照、dated tail各自精确字节检查。此为本地辅助判据错误，不是候选缺陷，不改原证据。详细摘要见receipt.json。

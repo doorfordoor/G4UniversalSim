@@ -1,0 +1,116 @@
+{
+  "schema": "j2_e7_conditional_closure_doc_entries_v1",
+  "created_utc": "2026-11-01T22:08:06.647257+00:00",
+  "conclusion": "may_close_this_agreed_E7_scope_after_final_J2_applicable_full_matrix_strict_gates_and_independent_closure_by_main",
+  "phase_closed_now": false,
+  "original_review_product_identity": [
+    {
+      "path": "include/Geometry/SolidRegistry.hh",
+      "review_sha256": "245107c43ce261f5801d88a6a125647a02615183759eeda97ef0a8ebb75e95b9",
+      "current_sha256": "245107c43ce261f5801d88a6a125647a02615183759eeda97ef0a8ebb75e95b9",
+      "unchanged": true
+    },
+    {
+      "path": "src/Geometry/SolidRegistry.cc",
+      "review_sha256": "31d2b348be3e1c27926ae35379862b3a41be0fad173bc4b51f0ca9da6b782188",
+      "current_sha256": "31d2b348be3e1c27926ae35379862b3a41be0fad173bc4b51f0ca9da6b782188",
+      "unchanged": true
+    },
+    {
+      "path": "include/Geometry/VolumeBuilder.hh",
+      "review_sha256": "97a2c8c56c5941d8d86f319b1766aa20037e9ae3a26b9fa50742ce21657cf677",
+      "current_sha256": "97a2c8c56c5941d8d86f319b1766aa20037e9ae3a26b9fa50742ce21657cf677",
+      "unchanged": true
+    },
+    {
+      "path": "src/Geometry/VolumeBuilder.cc",
+      "review_sha256": "acdbadfda0bb1e809db32171612fb6136934f494356d545f87cf99aac1582822",
+      "current_sha256": "acdbadfda0bb1e809db32171612fb6136934f494356d545f87cf99aac1582822",
+      "unchanged": true
+    },
+    {
+      "path": "include/Core/BackendCapabilities.hh",
+      "review_sha256": "5ecaf821f0a680917c13ef629bcbe1f80fada081ea0e6633a231bde0f61c611a",
+      "current_sha256": "7bcf7528bec7789f9d4fe796ca8322948dc201407f0862259ae79ca5397b34f1",
+      "unchanged": false
+    }
+  ],
+  "metadata_counts": {
+    "solids": 15,
+    "boolean_tools": 7
+  },
+  "generated_source_sha_matches": true,
+  "current_capability_receipts": [
+    {
+      "path": "out/verification/j2-f8-2ec5b14/identity/capabilities-1132.json",
+      "sha256": "8129b8f3abeb3719076ec03af4333c4f4f2a98ac50980dcaf9bf9fb497075d73",
+      "registry_equal_offline_definition": true,
+      "build_git_commit": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a"
+    },
+    {
+      "path": "out/verification/j2-f8-2ec5b14/identity/capabilities-1143.json",
+      "sha256": "f1b4c9d0e3abd3ea8ced186512590de455c9562006b27acedab2abfc610ec6e4",
+      "registry_equal_offline_definition": true,
+      "build_git_commit": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+      "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a"
+    }
+  ],
+  "historical_cases": [
+    {
+      "head": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+      "report": "out/verification/j2-f8-18c5858/windows-static/20261102-040156-d08e6301/report.json",
+      "report_sha256": "e6f47552fb7cf2f22c491802d76f6807cb29bd63bbbf61ec55e953e73c396dd4",
+      "case": "solid_registry",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 248,
+      "log_sha256": "276e2cd0ed02d4e6b1df8091b273a00a198ea61986e89ba04dd3c9e5a4d9d721",
+      "scope": "historical corresponding case only; not future candidate acceptance"
+    },
+    {
+      "head": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+      "report": "out/verification/j2-f8-18c5858/windows113-backend/20261102-040211-305d428b/report.json",
+      "report_sha256": "b967b64baa226e29f9516e0c888b0a5c11f02b6e8dcd1ca90d0111bebb7d530a",
+      "case": "solid_registry_backend",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 288,
+      "log_sha256": "0e0cec7c76d8ed9f47c6661dd289fc34938e88c8de898ad3a8ce6784f10b6310",
+      "scope": "historical corresponding case only; not future candidate acceptance"
+    },
+    {
+      "head": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+      "report": "out/verification/j2-f8-18c5858/windows114-backend/20261102-040210-4adc1efd/report.json",
+      "report_sha256": "5478271454bf3842d29dd10641ce1df5c2e408c9418619c7313d7dccd6d4a91d",
+      "case": "solid_registry_backend",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 288,
+      "log_sha256": "0e0cec7c76d8ed9f47c6661dd289fc34938e88c8de898ad3a8ce6784f10b6310",
+      "scope": "historical corresponding case only; not future candidate acceptance"
+    }
+  ],
+  "source_snapshots_sha256": {
+    "docs/ROADMAP.md": "6a84486b3d252acc14d1fede072f04ad327411d0e74baeaa2987f763fab69153",
+    "STATUS.md": "7b297322e3120dfdbf414a91bfccca843617ba6cfe31268280296ab783ecfd64",
+    "docs/J2编辑覆盖与F8验收.md": "00f7c6631793f3b8f9987d200e0ca7a0ad83461a3eda1e7d851986a082a119d4",
+    "docs/功能支持矩阵.md": "482aaaa1ef451723477bce8bbba9cefceeca3cf65d8818a99d0ec312edae9c72",
+    "docs/开发路线图.md": "79f715e60ab0ca05488979f4e40b6e1fab9fe3eddfcc20bd60affb5eb022c516",
+    "AGENTS.md": "e9de523c3d3c96e0b5de212b285bd2b642668c0027d9e572ae669d27589babb9",
+    "gui/AGENTS.md": "612345ef6198b92de7b96c0acccb6964b2aec34aacf838c962ddd6a08ad24fe2",
+    "docs/agent-history.md": "1090ce752438606df3972047c4f4bb2b9b48aef3c7af9e6fe566182e54d3c7b2",
+    "docs/开发接续计划.md": "9226f571505ec6865fbf46dcc3b884d7414590a9868b39d95628efdae3984844",
+    "out/collab/j2-e7-implementation.md": "2c4618f575667af657581e5a34b6ae7dc8ab0c21446c8d7f09d7ec62bb092c23",
+    "out/collab/j2-e7-independent-review.md": "e17911d0999563288a6d29a7f34832aa677d716272f7c127c1e362e3b88b5d71",
+    "out/collab/j2-e7-independent-review-checks.json": "6435c9d9c11482cd72523c00297a269cd645799099ac73015ab7d2f5bdef7258",
+    "scripts/test_solid_registry.py": "2a15d1ac43c5d2913d219793544a074355544c7d01f4e1e03f14483ffdd5f766",
+    "scripts/generate_solid_registry.py": "421464992d1f831b2fd2c152896b04b788506048d93d233ecf7f1098703f7fa3",
+    "gui/g4usim_gui/core/solid_registry_data.py": "1b18673cd1b23e2e6625bbb02a8c69337cd862511959fc159762a38ef231a18f",
+    "include/Core/BackendCapabilities.hh": "7bcf7528bec7789f9d4fe796ca8322948dc201407f0862259ae79ca5397b34f1"
+  },
+  "output_sha256": "85285495aa932b81d713bf692cccdf80b4a7be25e0cb9da5c8240f8330212a35",
+  "doc_author": "Beauvoir only; this task changes OUT only",
+  "executed_tests_qt_backend_profile_generator_build": false,
+  "identity_correction": "four original registry/builder files match; BackendCapabilities whole file differs, current registry projection and saved new-build metadata checked separately"
+}

@@ -1,0 +1,11 @@
+# 共享集成独审暂停检查点
+
+目标：只审main新增window/transactions.py、diagnostic_navigation.py、config_builder_page.py、source_physics_scoring_model.py、run_editor_resources.py、package_writer.py；不改产品。用户2026-11-02临时优先回派几何3个P2，修完恢复本审查。
+
+已完成只读差分：扩展控件注册、_collect_extended_drafts、configuration_snapshot采集详情、_loading/_projecting忽略、stable-ID结构化诊断、包内file/copies_file复制；已读smoke_j2_workspace的21入口覆盖，尚未独立执行反例，没有确认新缺陷。
+
+下一步独立反例：1 geometry QLineEdit程序设原文后选择立即切换/捕获，与真实QTest输入对照；2 source stable ID在重排/重名/Undo/恢复后旧诊断必须陈旧，选择本身不使诊断陈旧；3 geometry详情隐藏tab/跨行定位与layer/boolean绑定；4 原始导入/生成模式STL和copies_file资源复制，原目录改名不可访问后K1 export/load/再生成；5 trd/trap boolean经过K1 schema闭包（main已接手schema缺字段，不重复报为新缺陷）。
+
+资源代码当前观察：materialize_geometry_file把资源写入config/geometry-resources并将INI字段改为绝对副本路径；K1 experiment_bundle已有stl/copies角色、shape_properties/preview_properties路径捕获，仍须测试搬移及原来源失效。链接与路径身份的真实拒绝不要只看resolve后的文件存在。尚未下结论。
+
+所有已运行调用均为只读短命令并已结束，无后台命令。不要覆盖原独审报告或既有测试日志。

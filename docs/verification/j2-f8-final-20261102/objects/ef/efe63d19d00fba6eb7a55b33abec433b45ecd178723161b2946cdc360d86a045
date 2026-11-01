@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\f8-project-dock150\probe-regression.py", line 101, in <module>
+    QCoreApplication.sendPostedEvents(None,QEvent.DeferredDelete);pump();QTest.qWait(60)
+                                           ^^^^^^
+NameError: name 'QEvent' is not defined

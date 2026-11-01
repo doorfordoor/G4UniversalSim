@@ -1,0 +1,15 @@
+# main产品诊断code草案独审
+
+结论：本次只读范围未发现可复现P1/P2，草案可交main后续统一裁决；未apply，四tracked文件SHA与manifest原件一致。不是正式profile通过，也不重记历史后端验收。
+
+审查输入：product.patch / manifest.json / prepare.py / probe.py / probe-receipt.json均已读取。实际独立脚本review.py不调用作者probe，用D盘完整venv仅在out内加载四候选，exit0；receipt.json和review.log保存新证据。产品patch SHA256=8cb495e2ebd08bfcd64b75f5ddda3bf14c578369e2668ad28b823bf76422995a，manifest SHA256=71d7302a3d788b3ad5cb6800a320a917ebeb640267fccc7b1924cea16ecfca27。
+
+- 密度：接受函数及CLHEP/单位/regex相关常量AST原样；256种十六进制/大小写/*/有限值/下溢/中间溢出/坏单位组合逐项与原函数结果相同。独立17例分类包括无数字、nan/inf、负零、十六进制负数、下溢、重复星号、坏指数和中间溢出；field定位为materials/rows/0/density。原真实receipt的6合法5拒绝全部对照吻合；未篡改旧receipt也没有冒充本轮重新运行C++。
+- M01/M02：候选下定点执行永久density_checks和model_checks，含合法大小写/十六进制/两步溢出、NIST实际来源优先、volume_fraction auto、自定义元素/同位素保留及无源项目/包写出，全部通过；未重复Qt/真实运行全套材料专项。
+- Physics：unknown、空串、Manual、reference_typo、中文未知mode均以physics.mode.unsupported及mode字段拒绝；项目保存重载保留原mode，诊断JSON回读identity不变。空manual_modules仍structured；合法manual通过。展示problem函数故意改成包含错误字段的任意文案，实际physics.mode/manual_modules/extra_modules三机器path仍决定正确code和field，不依赖展示字符串。
+- JSON兼容：按旧生产契约构造的mode.unsupported记录仍由未改reader原样读取，identity不变；篡改code却不更新identity仍被拒绝。保留code不意味着新生产器重建记录与旧记录具有相同identity：新identity_parameters含reason，旧只有value，属于事实变化；不得把新记录ID硬写回旧归档。这不是reader回归。相同候选输入重新校验与保存重载identity稳定。
+- Geometry：同一源文件STL/parameterized/assembly混合，前两项experimental warning保留第2/3行源定位，assembly仍error、can_run=false。英文/中文/任意替换文案三轮机器code、source位置、identity相同，JSON回读通过。两个not_editable→experimental语义/code迁移需main文档说明；未改成无条件支持，也没削弱assembly拒绝。
+
+非缺陷边界：nan/inf无可匹配数值prefix，归numeric；有限非正prefix优先positive，即使也带坏单位；正prefix但换算/单位失败归invalid。这里是拒绝分类，接受逻辑未动。密度单位不支持的表达式仍拒绝。旧source_only表示本次来自源文件的诊断定位，不等于此项GUI不可编辑。
+
+无QApplication/window/render/后端启动，无产品/测试/runner修改。下一步由main集成文档解释和统一候选，再完整profile；本报告不替代独立测试草案审查。

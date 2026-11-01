@@ -1,0 +1,106 @@
+{
+  "status": "pass",
+  "review_scope": "Full v2 nine-document review plus exact v3 seven-replacement delta; no product/native retest",
+  "base_head": "2901f4254303c3a9089c9025717908c0d77ff190",
+  "v2_patch_sha256": "841da554af311ac5af84630311b79d3ee54f47963ad8ab8e4faad9f1da34ffab",
+  "patch_sha256": "721f9bc9a646ebc15524ac68d0dd0080badce7f2454c8d1b5e2b63699cc229f7",
+  "manifest_sha256": "be34758a76e5af7d69835140441583fc1dee6f62bf17f3a8f70fdac4bdbd930b",
+  "exact_corrections": 7,
+  "changed_candidates": [
+    "STATUS.md",
+    "docs/agent-history.md",
+    "docs/J2编辑覆盖与F8验收.md",
+    "docs/功能支持矩阵.md"
+  ],
+  "byte_identical_candidates": [
+    "docs/ROADMAP.md",
+    "AGENTS.md",
+    "gui/AGENTS.md",
+    "gui/docs/中文快速使用说明.md",
+    "docs/开发路线图.md"
+  ],
+  "nine_doc_sources_match_original_sha": true,
+  "doc_only_git_diff_empty": true,
+  "full_tree_clean_not_required": true,
+  "history_original_full_prefix_exact": true,
+  "status_old_historical_tail_exact": true,
+  "other_dated_history_insert_only": true,
+  "new_links": [
+    {
+      "path": "STATUS.md",
+      "target": "docs/J2编辑覆盖与F8验收.md"
+    },
+    {
+      "path": "docs/J2编辑覆盖与F8验收.md",
+      "target": "../STATUS.md"
+    },
+    {
+      "path": "gui/docs/中文快速使用说明.md",
+      "target": "../../STATUS.md"
+    },
+    {
+      "path": "docs/功能支持矩阵.md",
+      "target": "../STATUS.md"
+    },
+    {
+      "path": "docs/开发路线图.md",
+      "target": "../STATUS.md"
+    },
+    {
+      "path": "docs/开发路线图.md",
+      "target": "ROADMAP.md"
+    }
+  ],
+  "no_new_unarchived_out_links": true,
+  "ci_runs_unchanged_and_release_false": true,
+  "native_overall_false_preserved": true,
+  "verified_profiles": [
+    {
+      "profile": "windows-static",
+      "cases": 46,
+      "assertions": 4545,
+      "report_sha256": "d038cc1adb2d6baac4f2ca515c781cfbb0de99579e84bf234aa356ceb75a0fef",
+      "launch_sha256": "d3aea2e19c86c0b7a63506224681083d93cc6d4f4c5ad31e44321ecf96e45c8c"
+    },
+    {
+      "profile": "windows-gui",
+      "cases": 66,
+      "assertions": 8394,
+      "report_sha256": "09de9901db5821230f8b83b491f9b97198e61d85d7da35b46e504f2c57a533de",
+      "launch_sha256": "f235ce7ebd910015358cdb0b56b2a50945c92683a11a7fb770030df226a8cb2e"
+    },
+    {
+      "profile": "windows113-backend",
+      "cases": 63,
+      "assertions": 81988,
+      "report_sha256": "f807698579865dbdb532a6f422c32ff1d8fcb6f77bb9796257021699a594bafd",
+      "launch_sha256": "ac58915442d2685ba0002e5cdf23d202a42d2c61e1469089af3cb6a11b135aed"
+    },
+    {
+      "profile": "windows114-backend",
+      "cases": 63,
+      "assertions": 72495,
+      "report_sha256": "54f8189f412689ae5b6825e53afb72e600c734c8503b33eabc07b7973f49c655",
+      "launch_sha256": "6e23c9e6f4e969b72e2406257bc2034ef54c92bb1e0c123576763957bd6a9e91"
+    },
+    {
+      "profile": "windows113-integration",
+      "cases": 31,
+      "assertions": 6790,
+      "report_sha256": "4d8c5c89c945639c0ce8be887c64fe58a8bb0e492f970ad7052a6464566e3713",
+      "launch_sha256": "320c89a49dc9666355c41d0a2b8196ca23339b1f5a9191a7ff6e696171465c98"
+    },
+    {
+      "profile": "windows114-integration",
+      "cases": 31,
+      "assertions": 6780,
+      "report_sha256": "dffcddfa8cc45f4b600e9dd03205b0b2cbe2f6c31f91b64dd9d99a2ce6272d82",
+      "launch_sha256": "0b304975b81834a84fcc49b70d04476571aab39d0a996b9cef21bf89b97ba0dc"
+    }
+  ],
+  "verified_total_cases": 300,
+  "verified_total_assertions": 180992,
+  "aggregate_sha256": "2fdb8bade7ba7e5283851d3b8171d7f98424d9169c426c75e8b16885f2415fa1",
+  "git_apply_check_exit": 0,
+  "remaining_findings": []
+}

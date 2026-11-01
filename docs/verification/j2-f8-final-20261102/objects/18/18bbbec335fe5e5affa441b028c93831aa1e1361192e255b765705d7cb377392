@@ -1,0 +1,37 @@
+
+[run]
+threads = 2
+seed = 1025
+[output]
+format = csv
+[materials]
+file = C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/config/materials/material.ini
+[geometry]
+template = simple_box
+config = C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/j2-source-physics-113-r1/test_gps_sources/retained-work/g4usim_gps_87bxnqni/case25_geometry.ini
+[physics]
+reference = FTFP_BERT
+default_cut = 1 mm
+
+[scoring]
+enabled = true
+hits = true
+event_edep = false
+edep = false
+auto_create_default_scorers = true
+[source]
+particle = proton
+energy_type = gauss
+energy = 50 MeV
+energy_sigma = 2 MeV
+position_type = beam
+shape = circle
+center = 0,0,-150 mm
+beam_sigma = 3 mm
+direction = +z
+angular = beam1d
+angular_sigma = 1 deg
+[phase_space]
+volume = Water_PV
+particles = proton
+

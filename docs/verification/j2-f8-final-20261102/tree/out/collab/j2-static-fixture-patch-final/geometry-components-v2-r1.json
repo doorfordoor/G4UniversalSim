@@ -1,0 +1,40 @@
+{
+  "product_patch_sha256": "ba79f819458549eddaa3c595530a5f63601ffc834c2b8ce35b9af15a78f8c71e",
+  "product_manifest_sha256": "41876e67dc331dd4560f5d853f81826b8a7ae4b6d6a5399f4b604114005bff70",
+  "full_scripts": [
+    {
+      "script": "scripts/test_k1_bundle.py",
+      "draft_sha256": "e825d4278bd9b59d7ff871c1f2abd39d564b0fc5591de460f784a6d28cb2fa4f",
+      "argv": [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\test_k1_bundle.py",
+        "--component",
+        "--evidence-root",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-static-fixture-patch-final\\runtime-evidence\\k1-v2-r1"
+      ],
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-static-fixture-patch-final\\test_k1_bundle-combination-v2-r1.log",
+      "started_unix": 1793556477.1640565,
+      "status": "pass",
+      "entry_return": null,
+      "duration_seconds": 111.578,
+      "log_sha256": "ce62cd553dbd4f2d8c93df9bc29d83e94663759516daa85d39f9b6aae7ab5ce4"
+    },
+    {
+      "script": "scripts/test_config_migration.py",
+      "draft_sha256": "e82849979a7ca78ff338c13c9918564930393150b92bb54fe352e8ca25f17849",
+      "argv": [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\test_config_migration.py"
+      ],
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-static-fixture-patch-final\\test_config_migration-combination-v2-r1.log",
+      "started_unix": 1793556588.733338,
+      "status": "fail",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-static-fixture-patch-final\\run_geometry_components.py\", line 27, in <module>\n    value=ns['main']();entry['status']='pass';entry['entry_return']=value\n          ^^^^^^^^^^^^\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-static-fixture-patch-final\\proposed\\scripts\\test_config_migration.py\", line 374, in main\n    geometry_contract(work)\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-static-fixture-patch-final\\proposed\\scripts\\test_config_migration.py\", line 145, in geometry_contract\n    plan = plan_geometry_migration(source, \"hierarchical\")\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\gui\\g4usim_gui\\core\\geometry_migration.py\", line 138, in plan_geometry_migration\n    raise ValueError(f\"{where}: unknown field; explicit legacy metadata mapping required where supported\")\nValueError: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-static-fixture-patch-final\\runtime-work\\e6-migration-e3p20fnr\\geometry.ini:10 [volume.Target]/unit: unknown field; explicit legacy metadata mapping required where supported\n",
+      "duration_seconds": 0.656,
+      "log_sha256": "3a94c576f8ce4dc537a91ecf7141651eae9407ab6d0d85ebfe5f88da69b18e1b"
+    }
+  ],
+  "method": "Complete draft main entries; K1 --component, migration main. Product v2 module source substituted in memory; test __file__ anchors repository reads. All evidence and temporary writes under out. No backend, profile or native launched.",
+  "tracked_sources_unchanged": true,
+  "status": "fail",
+  "head_after": "56b689fb9ac920cbb1203b2b94dae2483d25f622",
+  "git_status_after": ""
+}

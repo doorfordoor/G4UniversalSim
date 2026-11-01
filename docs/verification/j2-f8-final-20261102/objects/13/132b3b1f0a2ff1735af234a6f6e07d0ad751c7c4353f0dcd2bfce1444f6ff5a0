@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\f8-project-dock150\probe-baseline-targeted.py", line 12, in <module>
+    namespace['test_retained_dock_focus'](app,root/'out/collab/f8-project-dock150/permanent-v2-baseline150')
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\f8-project-dock150\smoke_f8_accessibility.proposed.py", line 472, in test_retained_dock_focus
+    assert_project_visible()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\f8-project-dock150\smoke_f8_accessibility.proposed.py", line 420, in assert_project_visible
+    assert viewport.rect().contains(whole), (parent.objectName(), whole, viewport.rect())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('workspaceContentScroll', PySide6.QtCore.QRect(711, 31, 190, 32), PySide6.QtCore.QRect(0, 0, 540, 464))

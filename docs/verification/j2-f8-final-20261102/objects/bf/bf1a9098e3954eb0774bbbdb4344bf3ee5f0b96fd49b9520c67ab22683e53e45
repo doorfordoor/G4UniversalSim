@@ -1,0 +1,47 @@
+# 2901f42 四 workflow 最终独立收据
+
+精确HEAD `2901f4254303c3a9089c9025717908c0d77ff190`，全部自动push / attempt1，8 job均已终态。公开API原件public-push-runs-final.json、connector最终jobs原件jobs-final.json。**整体strict未通过；release_accepted=false。** 未dispatch、rerun、取消CI或修改tracked产品/测试/判据；旧56b及本轮首败保持原样。
+
+| Workflow | Run | 终态 |
+|---|---:|---|
+| [M0 static/GUI](https://github.com/doorfordoor/G4UniversalSim/actions/runs/41336912651) | 41336912651 | failure：Ubuntu成功，Windows GUI两例失败 |
+| [Linux Geant4](https://github.com/doorfordoor/G4UniversalSim/actions/runs/41336912644) | 41336912644 | failure：11.3.2/11.4.3 GUI同两例失败 |
+| [Desktop package](https://github.com/doorfordoor/G4UniversalSim/actions/runs/41336912646) | 41336912646 | success：Linux/Windows |
+| [Full installation](https://github.com/doorfordoor/G4UniversalSim/actions/runs/41336912645) | 41336912645 | success：Linux/Windows |
+
+## 已确认失败与原日志
+
+- Linux双版本 `gui_start_page` / `gui_main_window`：语言切换→shell._refresh_accessibility→decorate_accessibility，`gui/g4usim_gui/core/accessibility.py:80` 对QSpacerItem调用count，AttributeError。各GUI两例失败，backend/integration未执行；见first-failure.md及job-124938588408.log / job-124938588616.log。
+- Windows M0 `gui_k1_workflow`：`scripts/test_k1_workflow.py:175`期待restricted-policy错误，实际先由experiment_bundle.py:632抛 `Unused resource policy entries: …main.ini`。原逐例日志extracted/m0-report-windows-latest-13096301546/20261101-183520-77003a77/gui_k1_workflow.log。
+- Windows M0 `gui_j2_geometry`：`gui/smoke_tests/smoke_j2_geometry.py:162` STL file路径文本断言失败。原逐例日志同目录gui_j2_geometry.log；完整job日志job-124938588441.log。只报告实际异常，不擅改判据或把其归为无影响。
+
+## 独立strict与matching历史逐例比较
+
+| lane/profile | 当前入口 / matching历史 | strict |
+|---|---:|---|
+| M0 Ubuntu static | 4547 / 3966 | pass |
+| M0 Ubuntu GUI | 8373 / 6739 | pass |
+| M0 Windows static | 4539 / 3959 | pass |
+| M0 Windows GUI | 8003 / 6739 | fail |
+| Linux11.3.2 static | 4547 / 3966 | pass |
+| Linux11.3.2 GUI | 8365 / 6739 | fail |
+| Linux11.4.3 static | 4547 / 3966 | pass |
+| Linux11.4.3 GUI | 8365 / 6739 | fail |
+
+合计5 pass /3 fail。全部8份报告的HEAD、源码指纹9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a、测试指纹385409046e46858cba6d00976d3de681affbd2f251a5e40066d5d28d38982520、tracked-source gate、逐例原日志SHA与总和均核对。候选Git对象checker固定并核对SHA；历史归档manifest/报告/原日志先strict通过，再与当前逐例比较，无旧例缺失。入口下降仅失败的旧例：Linux两版本start_page72<74/main_window40<46，Windows k1_workflow12<230；Windows j2_geometry为新增例88入口且失败。没有allow-incomplete/legacy放宽；总入口增加不覆盖失败。完整逐例比较和每个失败日志SHA在report-gates-current.json。
+
+## 安装与桌面收据
+
+Windows installation job124938588360最终success；原artifact13096708514，29409255 bytes，ZIP SHA256 `233e47269e0b4066bd2fcdf76e24628081b6bc8ee8a10920cc05cb0a69b21576` 与GitHubdigest一致、归属精确HEAD。独立核验9阶段exit0、阶段原日志SHA、retained index25对象SHA、889源文件checkout身份、workflow身份、真实summary completed5/5、SDK consumer/full application configure-build-run、host-tools身份及runtime/sdk卸载均通过。完整日志job-124938588360.log，机器收据installation-windows-checked.json。
+
+Linux installation job124938588150 success；artifact13095474657 ZIP SHA256 `aaccf3c2e019a70a47b2461ab1250a80148018964e485aa15cb8a4970c66db09`。同类独立核验10阶段、889源码、真实5/5 events、SDK及卸载通过，installation-linux-checked.json。checkout文本换行仅按候选.gitattributes建模，证据日志始终原字节哈希。
+
+Desktop双平台delivery passed、frozen自检、150 GUI源SHA匹配候选且稳定、4条命令原日志SHA与预期正负对照0/1/0/1独立通过；desktop-linux-checked.json / desktop-win32-checked.json。其范围为冻结GUI启动/自然退出及Python ROOT读写，不替代Geant4回归或物理验证。
+
+## 完整性与边界
+
+8个artifact原ZIP、8个完成job完整connector解码日志全部收齐，最终16文件清单、大小/SHA、artifact/run归属、四语义收据SHA及最终状态在collected-files-final.json。ZIP全部与GitHub原始metadata digest核对；完整解码job日志不冒称GitHub原始run logs ZIP。未重复下载已验证artifact。
+
+本机显式 `git -c core.longpaths=true status` 已独立核对tracked clean。此前73D仅为未启用longpaths的视图，原观察文件保留并由local-worktree-longpaths-check.json说明差异；未重写旧56b报告或修改Git配置。连接器间歇read-only transport send error均区分于CI失败，核对公开状态后单次重读恢复。
+
+本轮CI收集已完成，无待收job。main已将QSpacer、Windows K1和geometry问题分派作者；后续path草案可定点独审。本收据不关闭这些修复，不启动新候选CI。

@@ -1,0 +1,67 @@
+{
+  "name": "em-macro",
+  "exit_code": 0,
+  "argv": [
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\G4UniversalSim.exe",
+    "--config",
+    "main.ini",
+    "--macro",
+    "run.mac",
+    "--output",
+    "output"
+  ],
+  "status": "completed",
+  "completed": "8",
+  "output_failure": "none",
+  "rows": 8,
+  "worker_ids": [
+    0
+  ],
+  "vertex_counts": [
+    1
+  ],
+  "constructors": [
+    {
+      "name": "G4EmPenelope",
+      "physics_type": 2,
+      "cpp_type": "class G4EmPenelopePhysics"
+    },
+    {
+      "name": "G4GammaLeptoNuclearPhys",
+      "physics_type": 3,
+      "cpp_type": "class G4EmExtraPhysics"
+    },
+    {
+      "name": "Decay",
+      "physics_type": 4,
+      "cpp_type": "class G4DecayPhysics"
+    },
+    {
+      "name": "hElasticWEL_CHIPS_XS",
+      "physics_type": 5,
+      "cpp_type": "class G4HadronElasticPhysics"
+    },
+    {
+      "name": "hInelastic FTFP_BERT",
+      "physics_type": 6,
+      "cpp_type": "class G4HadronPhysicsFTFP_BERT"
+    },
+    {
+      "name": "stopping",
+      "physics_type": 7,
+      "cpp_type": "class G4StoppingPhysics"
+    },
+    {
+      "name": "ionInelasticFTFP_BIC",
+      "physics_type": 8,
+      "cpp_type": "class G4IonPhysics"
+    },
+    {
+      "name": "neutronTrackingCut",
+      "physics_type": 0,
+      "cpp_type": "class G4NeutronTrackingCut"
+    }
+  ],
+  "stdout_sha256": "a499a98777595afd7ba94812ad925af0d5f0d2b84fc0449f3d04df22473db9e3",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

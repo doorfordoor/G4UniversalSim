@@ -1,0 +1,24 @@
+# 第四候选native映射checker：准备阶段独立窄审
+
+结论：准备工具独审通过，无确认阻断项；不是future候选通过，也未执行任何实际future HEAD映射。此审查不作为第四docs冻结前置。
+
+审查对象为out/collab/j2-f8-native-fourth-mapping-prep内README/preparation/check_mapping/selftest及其固定anchor/template。checker SHA `549dd0b1916032085ed8da2059cce8c23d2fea820e1387a3699d30d84a1a1cd6`；origin anchor SHA `946d8262ec404178e9f08d18c1619192f06f9fdacb66d079ed6221f5e9a5e3ae`。机器证据receipt.json。
+
+## 已核边界
+
+- future输入要求新完整40位HEAD、为18c后代；main独立指定精确allowlist SHA及HEAD/scope SHA，模板明确未冻结并拒绝。frozen_by字段不是独立授权，实际执行仍须main给出future HEAD和清单，不自动使用当前分支。
+- 全tracked-tree差异必须与允许清单逐路径相等、逐blob原字节SHA匹配；两个指定smoke必须是现有普通100644 blob的修改。运行产品/额外smoke、未列资源、增删固定smoke、type/mode/link/executable/submodule变化均拒绝。
+- docs目录/根文件规则只是类别边界，不是目录或glob放行；每项仍需main精确路径和旧/新SHA。relative拒绝绝对、反斜杠、空/点/上级组件与控制字符，不能用docs前缀文字伪装schema/config/packaging/workflows/gui运行资源。纯逻辑反例另证明docs/*.md不会展开匹配其他文件。
+- 18c三个identity的149GUI集合等于原Git树全部GUI Python路径，每份SHA对应原Git blob；future还必须逐项一致，全树diff额外阻止漏掉新runtime文件。C++指纹只映射实现，不把新编译EXE当原生实跑。
+- 原12JSON及scope原SHA在前后origin重读中受保护。结果保留original_native_head=18c、原EXE01e0fb...、原三档记录与scope，不重写成future native执行。status仅file_identity_mapping_verified_only；新build原生执行、重看图、扩大native结论、运行行为测试均明确false，新矩阵另待验证。
+- 输出仅新建HERE下路径、xb拒绝覆盖；静态Git调用仅ls-tree/cat-file/merge-base，无GUI/Qt/runner导入、EXE、构建或Git写命令。未读取当前EXE来替代历史原EXE身份。
+
+## 独立复核事实
+
+手工只读Git批取149个18c原GUI blob，与anchor逐项SHA比对；三个identity/launch/exit的原HEAD、EXE、exit0及12JSON原SHA、scope SHA逐项核验。raw scale_factor原值保留，不据其自行重算有效DPR；未读取、复制或重看截图，不把元数据或文件身份当作视觉通行。
+
+独立synthetic logic覆盖8组/31个v3断言入口（原作者13组没有冒作我的执行）：精确docs增删、根锚定类别、无glob展开、固定smoke/字段、前后object modes、未列runtime删除、缺失/篡改blob、pending模板/身份语法。探针中Git入口被替换为立即失败，确认此部分Git调用0，没有实际future对象查找、最终map或native执行。日志independent-logic.log及logic-results.json。最初OUT helper使用异常返回作判定导致v3记0入口，原文件/日志保留；改为显式assert记录同一拒绝条件后31入口通过，未改作者checker或其判据。
+
+现有prepare仍future_head=null、future_mapping_executed=false。追加100/125择一代表性native（I1/I2打开取消、导入已有offline包、template Finish与重入Back/Esc）只登记pending，按未来HEAD/build另留身份；旧三档不扩范围，不成为docs冻结前置。
+
+本审只读作者文件/原证据及Git，输出仅本独审OUT目录；不改tracked或原件、不运行Qt/native/build/profile、不执行prepare/check最终命令。future mapping应在两test+docs提交产生新HEAD、main冻结精确manifest后另行执行，阶段关闭另计。

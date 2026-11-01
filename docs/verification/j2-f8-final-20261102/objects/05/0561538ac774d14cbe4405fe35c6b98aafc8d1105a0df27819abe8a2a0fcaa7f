@@ -1,0 +1,30 @@
+{
+  "scope": "read-only AST evaluation of final status expression; launcher/profile/build not run",
+  "launcher_sha256": "3d8ff97c31c28b7781f504884fa5a6af34a28d86e65bb02ea62e6633c4ce5509",
+  "cases": [
+    {
+      "case": "matching",
+      "actual_final_status_expression": "passed"
+    },
+    {
+      "case": "merge_changed",
+      "actual_final_status_expression": "passed"
+    },
+    {
+      "case": "report_head_mismatch",
+      "actual_final_status_expression": "passed"
+    },
+    {
+      "case": "report_source_mismatch",
+      "actual_final_status_expression": "passed"
+    },
+    {
+      "case": "report_profile_mismatch",
+      "actual_final_status_expression": "passed"
+    },
+    {
+      "case": "report_exe_mismatch",
+      "actual_final_status_expression": "passed"
+    }
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "review_source_before": {
+    "gui/g4usim_gui/editors/geometry_editor_model.py": "93d0d5141853477d43e26dde4b265d7bdadb116c76cf8f6232552ef80721ed66",
+    "gui/g4usim_gui/parsers/geometry_parser.py": "ccb81da48e54bdcf76ec65c351f105ee86fc129e37101eaaf3c4f01f73e5d5cd",
+    "gui/g4usim_gui/writers/geometry_ini_writer.py": "f8b93bd89fdd3871753c953d11876c81fa8e34464cbef3ccd9959828dfe92537",
+    "gui/g4usim_gui/widgets/config/geometry.py": "bc0eb7949bfec92b3da5c9ba89e6bb14a319b271046b2eb59e91fab65c154e0f",
+    "gui/g4usim_gui/widgets/config/booleans.py": "c663af8179dba597ad43be2710baf8eb73a2e2ddfb4dc26a097e8fc022e126dd",
+    "gui/g4usim_gui/widgets/config/layers.py": "7634980247064c54661a47fc4ffc990dff32bc12aa6c1eb5c37e0fdb99b64ff8",
+    "gui/g4usim_gui/core/solid_registry_data.py": "1b18673cd1b23e2e6625bbb02a8c69337cd862511959fc159762a38ef231a18f",
+    "scripts/generate_solid_registry.py": "421464992d1f831b2fd2c152896b04b788506048d93d233ecf7f1098703f7fa3"
+  },
+  "review_source_after": {
+    "gui/g4usim_gui/editors/geometry_editor_model.py": "93d0d5141853477d43e26dde4b265d7bdadb116c76cf8f6232552ef80721ed66",
+    "gui/g4usim_gui/parsers/geometry_parser.py": "ccb81da48e54bdcf76ec65c351f105ee86fc129e37101eaaf3c4f01f73e5d5cd",
+    "gui/g4usim_gui/writers/geometry_ini_writer.py": "f8b93bd89fdd3871753c953d11876c81fa8e34464cbef3ccd9959828dfe92537",
+    "gui/g4usim_gui/widgets/config/geometry.py": "bc0eb7949bfec92b3da5c9ba89e6bb14a319b271046b2eb59e91fab65c154e0f",
+    "gui/g4usim_gui/widgets/config/booleans.py": "c663af8179dba597ad43be2710baf8eb73a2e2ddfb4dc26a097e8fc022e126dd",
+    "gui/g4usim_gui/widgets/config/layers.py": "7634980247064c54661a47fc4ffc990dff32bc12aa6c1eb5c37e0fdb99b64ff8",
+    "gui/g4usim_gui/core/solid_registry_data.py": "1b18673cd1b23e2e6625bbb02a8c69337cd862511959fc159762a38ef231a18f",
+    "scripts/generate_solid_registry.py": "421464992d1f831b2fd2c152896b04b788506048d93d233ecf7f1098703f7fa3"
+  },
+  "source_unchanged_during_probe": true,
+  "results": [
+    {
+      "name": "tubs-comma-control",
+      "gui_errors": [],
+      "gui_warnings": [],
+      "writer_accepted": true,
+      "backend_exit": 0,
+      "backend_error_excerpt": ""
+    },
+    {
+      "name": "tubs-space-mixed-unit",
+      "gui_errors": [],
+      "gui_warnings": [],
+      "writer_accepted": true,
+      "backend_exit": 3221226505,
+      "backend_error_excerpt": "\r\n-------- EEEE ------- G4Exception-START -------- EEEE -------\r\n\r\n*** ExceptionHandler is not defined ***\r\n*** G4Exception : InvalidUnit\r\n      issued by : G4UnitDefinition::GetValueOf()\r\nThe unit '10' does not exist in the Units Table!\r\n*** Fatal Exception ***\r\n-------- EEEE ------- G4Exception-END -------- EEEE -------\r\n\r\n\r\n*** G4Exception: Aborting execution ***\r\n"
+    },
+    {
+      "name": "tubs-no-separators",
+      "gui_errors": [],
+      "gui_warnings": [],
+      "writer_accepted": true,
+      "backend_exit": 3221226505,
+      "backend_error_excerpt": "\r\n-------- EEEE ------- G4Exception-START -------- EEEE -------\r\n\r\n*** ExceptionHandler is not defined ***\r\n*** G4Exception : InvalidUnit\r\n      issued by : G4UnitDefinition::GetValueOf()\r\nThe unit 'mm10mm20mm0deg360deg' does not exist in the Units Table!\r\n*** Fatal Exception ***\r\n-------- EEEE ------- G4Exception-END -------- EEEE -------\r\n\r\n\r\n*** G4Exception: Aborting execution ***\r\n"
+    },
+    {
+      "name": "table-control",
+      "gui_errors": [],
+      "gui_warnings": [],
+      "writer_accepted": true,
+      "backend_exit": 0,
+      "backend_error_excerpt": ""
+    },
+    {
+      "name": "table-conflicting-position",
+      "gui_errors": [],
+      "gui_warnings": [],
+      "writer_accepted": true,
+      "backend_exit": 1,
+      "backend_error_excerpt": "G4UniversalSim run inspection failed: Geometry config error in file 'geometry.ini', line 14, section '[volume.V]', volume 'V', key 'copies_file', value 'C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-geometry-review\\r1\\resources\\copies.csv': copies_file defines every copy's position and rotation; remove position and rotation.; created_geometry_object_count=0\r\n"
+    },
+    {
+      "name": "angular-vis-cuts-control",
+      "gui_errors": [],
+      "gui_warnings": [
+        "[GEOMETRY][WARN] V: hype is experimental; sketch preview does not validate backend geometry."
+      ],
+      "writer_accepted": true,
+      "backend_exit": 0,
+      "backend_error_excerpt": ""
+    },
+    {
+      "name": "boolean-trd-control",
+      "gui_errors": [],
+      "gui_warnings": [],
+      "writer_accepted": true,
+      "backend_exit": 0,
+      "backend_error_excerpt": "",
+      "boolean_properties_preserved": true
+    },
+    {
+      "name": "source-resource-replay-control",
+      "gui_errors": [],
+      "gui_warnings": [],
+      "writer_accepted": true,
+      "backend_exit": 0,
+      "backend_error_excerpt": "",
+      "absolute_resource_preserved": true
+    },
+    {
+      "name": "source-unknown-blocker",
+      "gui_errors": [
+        "Source geometry contains fields that the current editor cannot preserve; use original source copy mode.",
+        "Round-trip blocker: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-geometry-review\\r1\\resources\\original.ini:12 [volume.V]/mystery_payload = keep-me: the current Geometry Editor cannot preserve this field without changing the source"
+      ],
+      "gui_warnings": [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-geometry-review\\r1\\resources\\original.ini:12 [volume.V]/mystery_payload = keep-me: legacy metadata is preserved; use metadata.mystery_payload in a future migration"
+      ],
+      "writer_accepted": false,
+      "writer_error": "Geometry Editor round-trip is blocked because source fields cannot be preserved:\nC:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-geometry-review\\r1\\resources\\original.ini:12 [volume.V]/mystery_payload = keep-me: the current Geometry Editor cannot preserve this field without changing the source",
+      "blockers_after_validate": [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-geometry-review\\r1\\resources\\original.ini:12 [volume.V]/mystery_payload = keep-me: the current Geometry Editor cannot preserve this field without changing the source"
+      ]
+    },
+    {
+      "name": "source-resource-disappeared",
+      "gui_errors": [
+        "[GEOMETRY][ERROR] V: Invalid geometry resource copies_file: file is missing"
+      ],
+      "gui_warnings": [],
+      "writer_accepted": false,
+      "writer_error": "Geometry Editor validation failed:\n[GEOMETRY][ERROR] V: Invalid geometry resource copies_file: file is missing"
+    }
+  ]
+}

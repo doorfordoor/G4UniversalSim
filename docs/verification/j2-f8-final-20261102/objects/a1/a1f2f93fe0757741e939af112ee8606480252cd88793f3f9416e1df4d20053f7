@@ -1,0 +1,11 @@
+# 材料独审进度
+
+- 已读Harvey交接并只读审查五个产品/测试文件，五文件SHA与作者收据匹配。
+- 已完成6组针对性反例，其中真实11.3.2既有后端3例新输入对照；未重复全套作者专项，未改产品/STATUS。
+- 发现P2-M01：合法大小写/乘号密度语法被GUI拒绝；P2-M02：GUI接受字面量有限但单位换算溢出的密度。
+- 通过边界：自建元素优先、显式NIST、volume_fraction材料优先、O18原文往返、源错误保留、无源Revert保留非法草稿。
+- 报告review.md；结果results.json；原始run.log；实际后端日志在results.runtime_root。
+- 资源R01已完成重复/顺序/空项/二号缺失/丢原件搬移CLI独立复核，报告另存j2-blank-review/r01-recheck.md；休眠谱按用户裁决非缺陷。
+- 下一步：main分派两P2修复后定点复核。不代表当前共享C++重新构建或完整阶段验收。
+
+- 已通过native multi_agent send_input向main提交两项P2和R01关闭结果，submission_id见main-notification.json。writer-proof.json另证实合法单位被writer拒绝而溢出字面量被writer接受。报告链接及结构化结果已核验。

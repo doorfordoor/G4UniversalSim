@@ -1,0 +1,38 @@
+{
+  "scope": "v3 test draft only; product 677a unchanged; tracked frozen; supersedes stale coverage of old406; old evidence preserved",
+  "files": {
+    "smoke_f8_accessibility.patch": {
+      "sha256": "247e4a6925906471d0b40dd70800149c37fc4aa963d379888c6ada321c3cb6ce",
+      "bytes": 14208,
+      "newlines": "LF"
+    },
+    "smoke_f8_accessibility.proposed.py": {
+      "sha256": "69b11a915a0864110171df75a1a2402ea3025f0a3a01b79d31af8ee26bd9f0e6",
+      "bytes": 31906,
+      "newlines": "LF"
+    }
+  },
+  "tests": [
+    {
+      "path": "permanent-smoke-1.25.log",
+      "exit_code": 0,
+      "assertions_v3": 416,
+      "sha256": "2bcd083c657c5242d1debdb61a1fe7e07bca033feb80335a7271f34bb170d290"
+    },
+    {
+      "path": "permanent-smoke-1.5.log",
+      "exit_code": 0,
+      "assertions_v3": 416,
+      "sha256": "b22b6c74da6c4e59681d3957cfcc7e9c69727705155739c691af93dfff02e116"
+    },
+    {
+      "path": "permanent-baseline150.log",
+      "exit_code": 1,
+      "expected_failure": true,
+      "reason": "frozen product fails retained Project viewport assertion before stale section",
+      "sha256": "9ac3ca43a7aee32af186461a83eadf85e1eab803fbe73c586fda545936a7fa0d"
+    }
+  ],
+  "old_280_functions_and_union_AST_unchanged": true,
+  "tracked_gui_identity_unchanged": true
+}

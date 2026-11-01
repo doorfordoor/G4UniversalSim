@@ -1,0 +1,36 @@
+# J2 static 四脚本定点补丁草案（未应用）
+
+仅写out，基于clean候选 `56b689fb9ac920cbb1203b2b94dae2483d25f622`。不改tracked源/测试/STATUS、不创建提交、不全局构建、不操作native。所有正式首败、门禁与旧身份原件保留。
+
+## 可审阅产物
+
+- [四文件统一patch](tests.patch)；单文件：[K1](test_k1_bundle.patch)、[migration](test_config_migration.patch)、[F4 producers](test_f4_producers.patch)、[F4 document](test_f4_document_diagnostics.patch)。没有混入main的产品补丁。
+- `proposed/scripts/`是完整可读候选，不是已应用代码。各冻结源/草案SHA与组合产品身份见[manifest](manifest.json)。
+- [逐规则机器code迁移清单](machine-code-migrations.json)、[NIST真实定位回归](nist-location-review.md)。
+- [静态范围/保留判据检查](static-review.json)、[冻结产品模型实际观察](current-model-observations.json)。
+- [F4与main产品草案组合首轮收据](f4-combination-r1.json)及两份`*-combination-r1.log`。失败不覆盖。
+
+## 四处意图
+
+1. **K1 parameterised + copies_file 已可编辑**：校验无blocker、合法placement/table字段不丢、writer解析到原table绝对路径；显式source_copy仍作为独立用户选项保存。验证唯一receipt/SHA、snapshot路径与manifest闭包、加载后没有伪造blocker；将bundle搬移并把原source目录临时移开，确认新包table可读/可生成，原workspace失效时拒绝导出。包内CSV缺失仍拒绝，finally恢复所有fixture。未知`placement_future`单独验证blocker、writer拒绝、K1 grammar拒绝、源消失时不伪造空文档。
+2. **migration tessellated 已可编辑**：STL仍是原占位字节，仅检验文件/路径与编辑契约。增加unit/position/rotation/sensitive/copyNo/visual/metadata字段，逐字段对比迁移前后；通过实际writer写到另一目录再parse验证语义、绝对file路径、源文件不被改写。未知key继续blocker/严格迁移拒绝；另检验计划后来源改变导致publication拒绝。
+3. **F4 producers**：manual支持迁移为真unknown mode反例与manual缺modules定位；用真实constructor/bias-rule冲突替换旧“不可编辑”判断，加manual/optical/replacement/显式bias-rule合法配置正例。source_cases原始字符串不变，来源行4/5/7/9不变，仅STL/placement改实验warning并保留assembly error。
+4. **F4 document**：density numeric/positive旧类别断言保留，并覆盖bad/非正/下溢零/单位错误/非有限及转换溢出；每事实单类别、行field定位与重复校验identity稳定。用5fe0a10历史serializer生成的固定v1 JSON golden检查读取/回写不重写旧code/identity（golden是合成契约夹具，不冒充旧运行原件）。NIST用完整目录error/unknown，加入非quicklist正例、name真实定位及alias来源只读边界。geometry visual/metadata改为真实详情字段定位；box/trd采用当前registry机器code，迁移决定待main明确。
+
+## 原判据保留
+
+AST对比确认K1的`test_refusals`、`test_atomic_and_tamper`及其余原函数不变，仅定点改独审fixture、增加未知字段组和main入口；migration除`geometry_contract`之外所有原函数不变，既有资源拒绝、并发publication/故障原子性、源变化、schema/类型和迁移门禁均保留。没有删函数或以空assert填9条编译器分支差额。生成patch后仅做AST及difflib精确投影校验，没有应用patch。
+
+## main应用前须解决/确认
+
+**仍有真实产品回归：直接NIST目标`name=Unknown,nist_name=''`被prefix判断错误标为不可定位。** 摘要表虽只读，详情name控件和导航均存在且可修复。草案原断言保留，与main当前四文件product.patch组合仍失败。显式alias目标无专门控件时保留source/unavailable定位，不借name控件伪造目标定位。详见NIST报告，需main修producer，不应改fixture为G4_前缀来回避。
+
+另需main确认box无效size及trd必填字段采用registry统一机器code是否作为明确接口迁移接受；这是同事实机器code变化，不只是文字/控件变化。当前草案映射完全明确，不接受新旧码二选一的宽松断言。如果main决定保留旧码，须同步调整该部分草案及产品，不能原样应用后宣称兼容。
+
+main已准备的density兼容分类、真正unknown mode和STL/placement实验提示产品草案被原样在内存组合，未修改其文件。
+
+## 组合验证结果与边界
+
+`test_f4_producers`草案主入口PASS；`test_f4_document_diagnostics`主入口FAIL（保留Unknown的name位置断言）。失败之后的7组独立诊断调用PASS：density分类、旧JSON不改写、alias源身份、geometry sources/targets、cut identity与source-read evidence。独立组通过不覆盖主入口失败。
+
+K1/migration草案尚未执行，只有语法和范围证据；等待main解除冻结后应用/分派组件测试。F4测试只在内存加载main的out产品候选及out测试文本，临时文件全部在out，未重跑正式profile，不声称替代static/backend/native/物理验收。没有把占位STL当物理证明。解除冻结/正式重测/更换候选身份均由main统一组织。

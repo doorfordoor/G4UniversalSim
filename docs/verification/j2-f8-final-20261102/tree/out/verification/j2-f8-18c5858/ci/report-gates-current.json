@@ -1,0 +1,2819 @@
+{
+  "candidate_head": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+  "observed_at": "2026-11-01T20:22:35.459619+00:00",
+  "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+  "tests_content_fingerprint": "d5a1691bb3ed613faae4db96405167c0f7ea0a35aa465444e2d260a36a7e67a9",
+  "strict_pass": 4,
+  "strict_fail": 4,
+  "artifacts": [
+    {
+      "artifact_id": 13099130875,
+      "name": "frozen-desktop-Windows",
+      "run_id": 41344573534,
+      "zip_sha256": "6fecefda3794819e6770b98efe241940e55388055af716c729139683ebc91033",
+      "reports": []
+    },
+    {
+      "artifact_id": 13099021059,
+      "name": "frozen-desktop-Linux",
+      "run_id": 41344573534,
+      "zip_sha256": "eed4590cd92e0750ad1cb19c702645fd1c547f0c95177effc8c4864c084868a4",
+      "reports": []
+    },
+    {
+      "artifact_id": 13099091881,
+      "name": "full-installation-Linux",
+      "run_id": 41344573604,
+      "zip_sha256": "bf8adcee6f86057650a70dff5524b22b7fe0f8e00013295e96628e062d89923f",
+      "reports": []
+    },
+    {
+      "artifact_id": 13099380815,
+      "name": "linux-evidence-11.4.3",
+      "run_id": 41344573528,
+      "zip_sha256": "dbb53208e127698bf7fe7d35334db5272a173c2f000a823d7ce982851229665a",
+      "reports": [
+        {
+          "report": "extracted\\linux-evidence-11.4.3-13099380815\\linux-gui\\20261101-200429-80406e4b\\report.json",
+          "report_sha256": "05eeb770d8c8e20c545835e057edd3b22ec98ba1ab3010c4b8427b5414a2d6ea",
+          "lane": "linux114",
+          "profile": "gui",
+          "strict_gate": "fail",
+          "strict_error": "report is not release evidence: 1 case(s) did not pass (['gui_f8_accessibility']); pass --allow-incomplete only for triage",
+          "baseline_id": "linux114-gui",
+          "baseline_report_sha256": "91d55d0745de3c56bdb7fae632ae13a11c984fdd013ea079ca9d0544ed921caa",
+          "every_raw_log_sha_verified": true,
+          "assertions_before": 6739,
+          "assertions_after": 8401,
+          "old_case_comparison": [
+            {
+              "name": "gui_i2_install",
+              "before": 59,
+              "after": 59,
+              "status": "pass"
+            },
+            {
+              "name": "gui_j1_appearance",
+              "before": 29,
+              "after": 29,
+              "status": "pass"
+            },
+            {
+              "name": "gui_workspace_layout",
+              "before": 149,
+              "after": 149,
+              "status": "pass"
+            },
+            {
+              "name": "gui_backend_launch",
+              "before": 74,
+              "after": 74,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_workflow",
+              "before": 230,
+              "after": 260,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_terminal_publication",
+              "before": 291,
+              "after": 291,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_history_scope",
+              "before": 78,
+              "after": 78,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_relocation",
+              "before": 138,
+              "after": 138,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_cli",
+              "before": 124,
+              "after": 124,
+              "status": "pass"
+            },
+            {
+              "name": "gui_i1_environment",
+              "before": 486,
+              "after": 486,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_panel",
+              "before": 1629,
+              "after": 1629,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_window",
+              "before": 178,
+              "after": 178,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f5_recovery",
+              "before": 62,
+              "after": 62,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f5_editor_history",
+              "before": 241,
+              "after": 241,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f5_recovery_process",
+              "before": 12,
+              "after": 12,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f4_navigation",
+              "before": 224,
+              "after": 224,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f4_entrypoints",
+              "before": 62,
+              "after": 62,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f4_layout",
+              "before": 265,
+              "after": 265,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f4_inspect_protocol",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f1_output_identity",
+              "before": 28,
+              "after": 28,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f1_async_identity",
+              "before": 39,
+              "after": 39,
+              "status": "pass"
+            },
+            {
+              "name": "gui_config_migration",
+              "before": 74,
+              "after": 74,
+              "status": "pass"
+            },
+            {
+              "name": "effective_config_collection",
+              "before": 42,
+              "after": 42,
+              "status": "pass"
+            },
+            {
+              "name": "effective_config_viewer",
+              "before": 22,
+              "after": 22,
+              "status": "pass"
+            },
+            {
+              "name": "gui_parsers",
+              "before": 8,
+              "after": 8,
+              "status": "pass"
+            },
+            {
+              "name": "gui_qt_combo_data",
+              "before": 29,
+              "after": 29,
+              "status": "pass"
+            },
+            {
+              "name": "gui_qt_binding_lifetime",
+              "before": 8,
+              "after": 8,
+              "status": "pass"
+            },
+            {
+              "name": "gui_materials",
+              "before": 42,
+              "after": 43,
+              "status": "pass"
+            },
+            {
+              "name": "gui_geometry",
+              "before": 69,
+              "after": 70,
+              "status": "pass"
+            },
+            {
+              "name": "gui_preview",
+              "before": 22,
+              "after": 22,
+              "status": "pass"
+            },
+            {
+              "name": "gui_preview_primitives",
+              "before": 37,
+              "after": 37,
+              "status": "pass"
+            },
+            {
+              "name": "gui_project_io",
+              "before": 6,
+              "after": 6,
+              "status": "pass"
+            },
+            {
+              "name": "gui_project_import_projection",
+              "before": 393,
+              "after": 393,
+              "status": "pass"
+            },
+            {
+              "name": "gui_project_snapshot_restore",
+              "before": 61,
+              "after": 62,
+              "status": "pass"
+            },
+            {
+              "name": "gui_source",
+              "before": 50,
+              "after": 54,
+              "status": "pass"
+            },
+            {
+              "name": "gui_source_field_preservation",
+              "before": 340,
+              "after": 340,
+              "status": "pass"
+            },
+            {
+              "name": "gui_run_config",
+              "before": 34,
+              "after": 34,
+              "status": "pass"
+            },
+            {
+              "name": "gui_dose_results",
+              "before": 21,
+              "after": 21,
+              "status": "pass"
+            },
+            {
+              "name": "gui_plots",
+              "before": 37,
+              "after": 37,
+              "status": "pass"
+            },
+            {
+              "name": "gui_new_simulation_wizard",
+              "before": 60,
+              "after": 62,
+              "status": "pass"
+            },
+            {
+              "name": "scenario_page",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "gui_scans",
+              "before": 58,
+              "after": 58,
+              "status": "pass"
+            },
+            {
+              "name": "gui_start_page",
+              "before": 74,
+              "after": 74,
+              "status": "pass"
+            },
+            {
+              "name": "gui_fluence_results",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "gui_output_extensions",
+              "before": 61,
+              "after": 61,
+              "status": "pass"
+            },
+            {
+              "name": "gui_output",
+              "before": 15,
+              "after": 15,
+              "status": "pass"
+            },
+            {
+              "name": "gui_history",
+              "before": 7,
+              "after": 7,
+              "status": "pass"
+            },
+            {
+              "name": "gui_duplicate_history_cli",
+              "before": 254,
+              "after": 254,
+              "status": "pass"
+            },
+            {
+              "name": "gui_run_result",
+              "before": 20,
+              "after": 20,
+              "status": "pass"
+            },
+            {
+              "name": "gui_live_progress",
+              "before": 79,
+              "after": 79,
+              "status": "pass"
+            },
+            {
+              "name": "gui_main_window",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            },
+            {
+              "name": "gui_unsupported_features",
+              "before": 6,
+              "after": 6,
+              "status": "pass"
+            },
+            {
+              "name": "gui_geometry_safety",
+              "before": 11,
+              "after": 11,
+              "status": "pass"
+            },
+            {
+              "name": "gui_geometry_diagnostics",
+              "before": 15,
+              "after": 15,
+              "status": "pass"
+            },
+            {
+              "name": "q1_postprocessing",
+              "before": 123,
+              "after": 123,
+              "status": "pass"
+            },
+            {
+              "name": "gui_output_provenance",
+              "before": 21,
+              "after": 21,
+              "status": "pass"
+            },
+            {
+              "name": "q1_public_paths",
+              "before": 32,
+              "after": 32,
+              "status": "pass"
+            },
+            {
+              "name": "gui_3d_view",
+              "before": 18,
+              "after": 18,
+              "status": "pass"
+            },
+            {
+              "name": "gui_config_editors",
+              "before": 38,
+              "after": 38,
+              "status": "pass"
+            }
+          ],
+          "new_cases": [
+            "gui_f8_accessibility",
+            "gui_j2_blank",
+            "gui_j2_current_import",
+            "gui_j2_geometry",
+            "gui_j2_materials",
+            "gui_j2_run_editors",
+            "gui_j2_workspace"
+          ],
+          "failures": [
+            {
+              "name": "gui_f8_accessibility",
+              "log": "extracted\\linux-evidence-11.4.3-13099380815\\linux-gui\\20261101-200429-80406e4b\\gui_f8_accessibility.log",
+              "sha256": "240e0ba146a0cfb2902409582dfdea0adbbe7364484de51cc37c1ff5ac2ffa1a",
+              "tail": [
+                "This plugin does not support propagateSizeHints()",
+                "Traceback (most recent call last):",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/smoke_tests/smoke_f8_accessibility.py\", line 871, in <module>",
+                "    main()",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/smoke_tests/smoke_f8_accessibility.py\", line 865, in main",
+                "    test_history_directory_accessibility(app, args.output)",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/smoke_tests/smoke_f8_accessibility.py\", line 659, in test_history_directory_accessibility",
+                "    assert interface.text(QAccessible.Name) == ui_text(source)",
+                "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+                "AssertionError"
+              ]
+            }
+          ]
+        },
+        {
+          "report": "extracted\\linux-evidence-11.4.3-13099380815\\linux-static\\20261101-200255-b023c89f\\report.json",
+          "report_sha256": "f2fd6bd596cbe9e945cf020bc8e8610f07d67be8e2753c3d2641f504d4f3d371",
+          "lane": "linux114",
+          "profile": "static",
+          "strict_gate": "pass",
+          "strict_error": null,
+          "baseline_id": "linux114-static",
+          "baseline_report_sha256": "61b64854609752c8e58892179276eac5ca88b6eff4f29d09b0ebeaf86d614806",
+          "every_raw_log_sha_verified": true,
+          "assertions_before": 3966,
+          "assertions_after": 4573,
+          "old_case_comparison": [
+            {
+              "name": "platform_install_layout",
+              "before": 9,
+              "after": 9,
+              "status": "pass"
+            },
+            {
+              "name": "frozen_startup",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "install_plan",
+              "before": 71,
+              "after": 71,
+              "status": "pass"
+            },
+            {
+              "name": "install_service",
+              "before": 71,
+              "after": 71,
+              "status": "pass"
+            },
+            {
+              "name": "run_summary_mt_observation",
+              "before": 11,
+              "after": 11,
+              "status": "pass"
+            },
+            {
+              "name": "ci_geant4_data",
+              "before": 105,
+              "after": 105,
+              "status": "pass"
+            },
+            {
+              "name": "install_ci_delivery",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            },
+            {
+              "name": "backend_launch",
+              "before": 151,
+              "after": 151,
+              "status": "pass"
+            },
+            {
+              "name": "k1_bundle",
+              "before": 530,
+              "after": 589,
+              "status": "pass"
+            },
+            {
+              "name": "k1_staging_alias",
+              "before": 33,
+              "after": 33,
+              "status": "pass"
+            },
+            {
+              "name": "i1_environment",
+              "before": 142,
+              "after": 142,
+              "status": "pass"
+            },
+            {
+              "name": "f5_source_snapshots",
+              "before": 84,
+              "after": 84,
+              "status": "pass"
+            },
+            {
+              "name": "f5_project_receipts",
+              "before": 22,
+              "after": 22,
+              "status": "pass"
+            },
+            {
+              "name": "f5_transactions",
+              "before": 321,
+              "after": 345,
+              "status": "pass"
+            },
+            {
+              "name": "f5_recovery",
+              "before": 119,
+              "after": 119,
+              "status": "pass"
+            },
+            {
+              "name": "f4_diagnostics",
+              "before": 48,
+              "after": 48,
+              "status": "pass"
+            },
+            {
+              "name": "f4_producers",
+              "before": 593,
+              "after": 624,
+              "status": "pass"
+            },
+            {
+              "name": "f4_document_diagnostics",
+              "before": 119,
+              "after": 187,
+              "status": "pass"
+            },
+            {
+              "name": "build_identity",
+              "before": 47,
+              "after": 47,
+              "status": "pass"
+            },
+            {
+              "name": "f1_input_provenance",
+              "before": 37,
+              "after": 37,
+              "status": "pass"
+            },
+            {
+              "name": "f1_artifact_model",
+              "before": 97,
+              "after": 97,
+              "status": "pass"
+            },
+            {
+              "name": "output_auto_model",
+              "before": 4,
+              "after": 4,
+              "status": "pass"
+            },
+            {
+              "name": "merge_outputs",
+              "before": 18,
+              "after": 18,
+              "status": "pass"
+            },
+            {
+              "name": "output_extensions",
+              "before": 25,
+              "after": 25,
+              "status": "pass"
+            },
+            {
+              "name": "runner_contract",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "doc_links",
+              "before": 11,
+              "after": 11,
+              "status": "pass"
+            },
+            {
+              "name": "platform_paths",
+              "before": 3,
+              "after": 3,
+              "status": "pass"
+            },
+            {
+              "name": "platform_path_fixture_policy",
+              "before": 51,
+              "after": 51,
+              "status": "pass"
+            },
+            {
+              "name": "ci_annotations",
+              "before": 12,
+              "after": 12,
+              "status": "pass"
+            },
+            {
+              "name": "report_evidence",
+              "before": 77,
+              "after": 77,
+              "status": "pass"
+            },
+            {
+              "name": "writer_boundary",
+              "before": 24,
+              "after": 24,
+              "status": "pass"
+            },
+            {
+              "name": "shielding_scenario_model",
+              "before": 93,
+              "after": 93,
+              "status": "pass"
+            },
+            {
+              "name": "shielding_analysis",
+              "before": 113,
+              "after": 113,
+              "status": "pass"
+            },
+            {
+              "name": "effective_config_model",
+              "before": 18,
+              "after": 18,
+              "status": "pass"
+            },
+            {
+              "name": "main_config_version_component",
+              "before": 4,
+              "after": 4,
+              "status": "pass"
+            },
+            {
+              "name": "main_ini_migration",
+              "before": 60,
+              "after": 60,
+              "status": "pass"
+            },
+            {
+              "name": "config_migration",
+              "before": 447,
+              "after": 521,
+              "status": "pass"
+            },
+            {
+              "name": "project_snapshot_compat",
+              "before": 78,
+              "after": 80,
+              "status": "pass"
+            },
+            {
+              "name": "duplicate_generated_package_model",
+              "before": 128,
+              "after": 128,
+              "status": "pass"
+            },
+            {
+              "name": "geometry_diagnostic_identity",
+              "before": 4,
+              "after": 4,
+              "status": "pass"
+            },
+            {
+              "name": "input_provenance",
+              "before": 15,
+              "after": 15,
+              "status": "pass"
+            },
+            {
+              "name": "effective_consumer_state",
+              "before": 3,
+              "after": 3,
+              "status": "pass"
+            },
+            {
+              "name": "effective_receipt_view",
+              "before": 14,
+              "after": 14,
+              "status": "pass"
+            },
+            {
+              "name": "output_provenance",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            }
+          ],
+          "new_cases": [
+            "j2_resources",
+            "solid_registry"
+          ],
+          "failures": []
+        }
+      ]
+    },
+    {
+      "artifact_id": 13098459375,
+      "name": "linux-evidence-11.3.2",
+      "run_id": 41344573528,
+      "zip_sha256": "8aebd51ab987446edc68db23d6a20c6886b414eafe50778c85bd62902b001f4f",
+      "reports": [
+        {
+          "report": "extracted\\linux-evidence-11.3.2-13098459375\\linux-gui\\20261101-200520-d6c095f6\\report.json",
+          "report_sha256": "87372a01cb444bdfff586509fc2f3a6fcc4d065a3204c45c9ca4b34fc12f6bd9",
+          "lane": "linux113",
+          "profile": "gui",
+          "strict_gate": "fail",
+          "strict_error": "report is not release evidence: 1 case(s) did not pass (['gui_f8_accessibility']); pass --allow-incomplete only for triage",
+          "baseline_id": "linux113-gui",
+          "baseline_report_sha256": "fdf42185f92f698ce714254552509b2b3f1e43848d5545efd786c9e7f9821f11",
+          "every_raw_log_sha_verified": true,
+          "assertions_before": 6739,
+          "assertions_after": 8401,
+          "old_case_comparison": [
+            {
+              "name": "gui_i2_install",
+              "before": 59,
+              "after": 59,
+              "status": "pass"
+            },
+            {
+              "name": "gui_j1_appearance",
+              "before": 29,
+              "after": 29,
+              "status": "pass"
+            },
+            {
+              "name": "gui_workspace_layout",
+              "before": 149,
+              "after": 149,
+              "status": "pass"
+            },
+            {
+              "name": "gui_backend_launch",
+              "before": 74,
+              "after": 74,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_workflow",
+              "before": 230,
+              "after": 260,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_terminal_publication",
+              "before": 291,
+              "after": 291,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_history_scope",
+              "before": 78,
+              "after": 78,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_relocation",
+              "before": 138,
+              "after": 138,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_cli",
+              "before": 124,
+              "after": 124,
+              "status": "pass"
+            },
+            {
+              "name": "gui_i1_environment",
+              "before": 486,
+              "after": 486,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_panel",
+              "before": 1629,
+              "after": 1629,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_window",
+              "before": 178,
+              "after": 178,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f5_recovery",
+              "before": 62,
+              "after": 62,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f5_editor_history",
+              "before": 241,
+              "after": 241,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f5_recovery_process",
+              "before": 12,
+              "after": 12,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f4_navigation",
+              "before": 224,
+              "after": 224,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f4_entrypoints",
+              "before": 62,
+              "after": 62,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f4_layout",
+              "before": 265,
+              "after": 265,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f4_inspect_protocol",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f1_output_identity",
+              "before": 28,
+              "after": 28,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f1_async_identity",
+              "before": 39,
+              "after": 39,
+              "status": "pass"
+            },
+            {
+              "name": "gui_config_migration",
+              "before": 74,
+              "after": 74,
+              "status": "pass"
+            },
+            {
+              "name": "effective_config_collection",
+              "before": 42,
+              "after": 42,
+              "status": "pass"
+            },
+            {
+              "name": "effective_config_viewer",
+              "before": 22,
+              "after": 22,
+              "status": "pass"
+            },
+            {
+              "name": "gui_parsers",
+              "before": 8,
+              "after": 8,
+              "status": "pass"
+            },
+            {
+              "name": "gui_qt_combo_data",
+              "before": 29,
+              "after": 29,
+              "status": "pass"
+            },
+            {
+              "name": "gui_qt_binding_lifetime",
+              "before": 8,
+              "after": 8,
+              "status": "pass"
+            },
+            {
+              "name": "gui_materials",
+              "before": 42,
+              "after": 43,
+              "status": "pass"
+            },
+            {
+              "name": "gui_geometry",
+              "before": 69,
+              "after": 70,
+              "status": "pass"
+            },
+            {
+              "name": "gui_preview",
+              "before": 22,
+              "after": 22,
+              "status": "pass"
+            },
+            {
+              "name": "gui_preview_primitives",
+              "before": 37,
+              "after": 37,
+              "status": "pass"
+            },
+            {
+              "name": "gui_project_io",
+              "before": 6,
+              "after": 6,
+              "status": "pass"
+            },
+            {
+              "name": "gui_project_import_projection",
+              "before": 393,
+              "after": 393,
+              "status": "pass"
+            },
+            {
+              "name": "gui_project_snapshot_restore",
+              "before": 61,
+              "after": 62,
+              "status": "pass"
+            },
+            {
+              "name": "gui_source",
+              "before": 50,
+              "after": 54,
+              "status": "pass"
+            },
+            {
+              "name": "gui_source_field_preservation",
+              "before": 340,
+              "after": 340,
+              "status": "pass"
+            },
+            {
+              "name": "gui_run_config",
+              "before": 34,
+              "after": 34,
+              "status": "pass"
+            },
+            {
+              "name": "gui_dose_results",
+              "before": 21,
+              "after": 21,
+              "status": "pass"
+            },
+            {
+              "name": "gui_plots",
+              "before": 37,
+              "after": 37,
+              "status": "pass"
+            },
+            {
+              "name": "gui_new_simulation_wizard",
+              "before": 60,
+              "after": 62,
+              "status": "pass"
+            },
+            {
+              "name": "scenario_page",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "gui_scans",
+              "before": 58,
+              "after": 58,
+              "status": "pass"
+            },
+            {
+              "name": "gui_start_page",
+              "before": 74,
+              "after": 74,
+              "status": "pass"
+            },
+            {
+              "name": "gui_fluence_results",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "gui_output_extensions",
+              "before": 61,
+              "after": 61,
+              "status": "pass"
+            },
+            {
+              "name": "gui_output",
+              "before": 15,
+              "after": 15,
+              "status": "pass"
+            },
+            {
+              "name": "gui_history",
+              "before": 7,
+              "after": 7,
+              "status": "pass"
+            },
+            {
+              "name": "gui_duplicate_history_cli",
+              "before": 254,
+              "after": 254,
+              "status": "pass"
+            },
+            {
+              "name": "gui_run_result",
+              "before": 20,
+              "after": 20,
+              "status": "pass"
+            },
+            {
+              "name": "gui_live_progress",
+              "before": 79,
+              "after": 79,
+              "status": "pass"
+            },
+            {
+              "name": "gui_main_window",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            },
+            {
+              "name": "gui_unsupported_features",
+              "before": 6,
+              "after": 6,
+              "status": "pass"
+            },
+            {
+              "name": "gui_geometry_safety",
+              "before": 11,
+              "after": 11,
+              "status": "pass"
+            },
+            {
+              "name": "gui_geometry_diagnostics",
+              "before": 15,
+              "after": 15,
+              "status": "pass"
+            },
+            {
+              "name": "q1_postprocessing",
+              "before": 123,
+              "after": 123,
+              "status": "pass"
+            },
+            {
+              "name": "gui_output_provenance",
+              "before": 21,
+              "after": 21,
+              "status": "pass"
+            },
+            {
+              "name": "q1_public_paths",
+              "before": 32,
+              "after": 32,
+              "status": "pass"
+            },
+            {
+              "name": "gui_3d_view",
+              "before": 18,
+              "after": 18,
+              "status": "pass"
+            },
+            {
+              "name": "gui_config_editors",
+              "before": 38,
+              "after": 38,
+              "status": "pass"
+            }
+          ],
+          "new_cases": [
+            "gui_f8_accessibility",
+            "gui_j2_blank",
+            "gui_j2_current_import",
+            "gui_j2_geometry",
+            "gui_j2_materials",
+            "gui_j2_run_editors",
+            "gui_j2_workspace"
+          ],
+          "failures": [
+            {
+              "name": "gui_f8_accessibility",
+              "log": "extracted\\linux-evidence-11.3.2-13098459375\\linux-gui\\20261101-200520-d6c095f6\\gui_f8_accessibility.log",
+              "sha256": "240e0ba146a0cfb2902409582dfdea0adbbe7364484de51cc37c1ff5ac2ffa1a",
+              "tail": [
+                "This plugin does not support propagateSizeHints()",
+                "Traceback (most recent call last):",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/smoke_tests/smoke_f8_accessibility.py\", line 871, in <module>",
+                "    main()",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/smoke_tests/smoke_f8_accessibility.py\", line 865, in main",
+                "    test_history_directory_accessibility(app, args.output)",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/smoke_tests/smoke_f8_accessibility.py\", line 659, in test_history_directory_accessibility",
+                "    assert interface.text(QAccessible.Name) == ui_text(source)",
+                "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+                "AssertionError"
+              ]
+            }
+          ]
+        },
+        {
+          "report": "extracted\\linux-evidence-11.3.2-13098459375\\linux-static\\20261101-200344-357e39d0\\report.json",
+          "report_sha256": "8482fdc5300983d7fedac1e28989edcd1ebc71e8c3072f8f142176122bf4564e",
+          "lane": "linux113",
+          "profile": "static",
+          "strict_gate": "pass",
+          "strict_error": null,
+          "baseline_id": "linux113-static",
+          "baseline_report_sha256": "2afda74e1ac4d633e1629fdd4f07f7ba9769e8b600f6ae4dcf144b366288c0e5",
+          "every_raw_log_sha_verified": true,
+          "assertions_before": 3966,
+          "assertions_after": 4573,
+          "old_case_comparison": [
+            {
+              "name": "platform_install_layout",
+              "before": 9,
+              "after": 9,
+              "status": "pass"
+            },
+            {
+              "name": "frozen_startup",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "install_plan",
+              "before": 71,
+              "after": 71,
+              "status": "pass"
+            },
+            {
+              "name": "install_service",
+              "before": 71,
+              "after": 71,
+              "status": "pass"
+            },
+            {
+              "name": "run_summary_mt_observation",
+              "before": 11,
+              "after": 11,
+              "status": "pass"
+            },
+            {
+              "name": "ci_geant4_data",
+              "before": 105,
+              "after": 105,
+              "status": "pass"
+            },
+            {
+              "name": "install_ci_delivery",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            },
+            {
+              "name": "backend_launch",
+              "before": 151,
+              "after": 151,
+              "status": "pass"
+            },
+            {
+              "name": "k1_bundle",
+              "before": 530,
+              "after": 589,
+              "status": "pass"
+            },
+            {
+              "name": "k1_staging_alias",
+              "before": 33,
+              "after": 33,
+              "status": "pass"
+            },
+            {
+              "name": "i1_environment",
+              "before": 142,
+              "after": 142,
+              "status": "pass"
+            },
+            {
+              "name": "f5_source_snapshots",
+              "before": 84,
+              "after": 84,
+              "status": "pass"
+            },
+            {
+              "name": "f5_project_receipts",
+              "before": 22,
+              "after": 22,
+              "status": "pass"
+            },
+            {
+              "name": "f5_transactions",
+              "before": 321,
+              "after": 345,
+              "status": "pass"
+            },
+            {
+              "name": "f5_recovery",
+              "before": 119,
+              "after": 119,
+              "status": "pass"
+            },
+            {
+              "name": "f4_diagnostics",
+              "before": 48,
+              "after": 48,
+              "status": "pass"
+            },
+            {
+              "name": "f4_producers",
+              "before": 593,
+              "after": 624,
+              "status": "pass"
+            },
+            {
+              "name": "f4_document_diagnostics",
+              "before": 119,
+              "after": 187,
+              "status": "pass"
+            },
+            {
+              "name": "build_identity",
+              "before": 47,
+              "after": 47,
+              "status": "pass"
+            },
+            {
+              "name": "f1_input_provenance",
+              "before": 37,
+              "after": 37,
+              "status": "pass"
+            },
+            {
+              "name": "f1_artifact_model",
+              "before": 97,
+              "after": 97,
+              "status": "pass"
+            },
+            {
+              "name": "output_auto_model",
+              "before": 4,
+              "after": 4,
+              "status": "pass"
+            },
+            {
+              "name": "merge_outputs",
+              "before": 18,
+              "after": 18,
+              "status": "pass"
+            },
+            {
+              "name": "output_extensions",
+              "before": 25,
+              "after": 25,
+              "status": "pass"
+            },
+            {
+              "name": "runner_contract",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "doc_links",
+              "before": 11,
+              "after": 11,
+              "status": "pass"
+            },
+            {
+              "name": "platform_paths",
+              "before": 3,
+              "after": 3,
+              "status": "pass"
+            },
+            {
+              "name": "platform_path_fixture_policy",
+              "before": 51,
+              "after": 51,
+              "status": "pass"
+            },
+            {
+              "name": "ci_annotations",
+              "before": 12,
+              "after": 12,
+              "status": "pass"
+            },
+            {
+              "name": "report_evidence",
+              "before": 77,
+              "after": 77,
+              "status": "pass"
+            },
+            {
+              "name": "writer_boundary",
+              "before": 24,
+              "after": 24,
+              "status": "pass"
+            },
+            {
+              "name": "shielding_scenario_model",
+              "before": 93,
+              "after": 93,
+              "status": "pass"
+            },
+            {
+              "name": "shielding_analysis",
+              "before": 113,
+              "after": 113,
+              "status": "pass"
+            },
+            {
+              "name": "effective_config_model",
+              "before": 18,
+              "after": 18,
+              "status": "pass"
+            },
+            {
+              "name": "main_config_version_component",
+              "before": 4,
+              "after": 4,
+              "status": "pass"
+            },
+            {
+              "name": "main_ini_migration",
+              "before": 60,
+              "after": 60,
+              "status": "pass"
+            },
+            {
+              "name": "config_migration",
+              "before": 447,
+              "after": 521,
+              "status": "pass"
+            },
+            {
+              "name": "project_snapshot_compat",
+              "before": 78,
+              "after": 80,
+              "status": "pass"
+            },
+            {
+              "name": "duplicate_generated_package_model",
+              "before": 128,
+              "after": 128,
+              "status": "pass"
+            },
+            {
+              "name": "geometry_diagnostic_identity",
+              "before": 4,
+              "after": 4,
+              "status": "pass"
+            },
+            {
+              "name": "input_provenance",
+              "before": 15,
+              "after": 15,
+              "status": "pass"
+            },
+            {
+              "name": "effective_consumer_state",
+              "before": 3,
+              "after": 3,
+              "status": "pass"
+            },
+            {
+              "name": "effective_receipt_view",
+              "before": 14,
+              "after": 14,
+              "status": "pass"
+            },
+            {
+              "name": "output_provenance",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            }
+          ],
+          "new_cases": [
+            "j2_resources",
+            "solid_registry"
+          ],
+          "failures": []
+        }
+      ]
+    },
+    {
+      "artifact_id": 13099775646,
+      "name": "m0-report-windows-latest",
+      "run_id": 41344573541,
+      "zip_sha256": "534aca2703b3593b8529d417f59e901490c4c34656c56aaa8157d7dfbf0ffdee",
+      "reports": [
+        {
+          "report": "extracted\\m0-report-windows-latest-13099775646\\20261101-200128-fc6882fa\\report.json",
+          "report_sha256": "ed27f7447fe6f0e6bddc98fa29902e610a085f89e359b3b75917c2c7071c68ae",
+          "lane": "m0-windows",
+          "profile": "static",
+          "strict_gate": "pass",
+          "strict_error": null,
+          "baseline_id": "windows-m0-6310969-static",
+          "baseline_report_sha256": "7df971949de5806c10127bc50db3abf9be0c89eb21a5b6b257c1e3911f74c857",
+          "every_raw_log_sha_verified": true,
+          "assertions_before": 3959,
+          "assertions_after": 4573,
+          "old_case_comparison": [
+            {
+              "name": "platform_install_layout",
+              "before": 9,
+              "after": 9,
+              "status": "pass"
+            },
+            {
+              "name": "frozen_startup",
+              "before": 33,
+              "after": 33,
+              "status": "pass"
+            },
+            {
+              "name": "install_plan",
+              "before": 71,
+              "after": 71,
+              "status": "pass"
+            },
+            {
+              "name": "install_service",
+              "before": 70,
+              "after": 70,
+              "status": "pass"
+            },
+            {
+              "name": "run_summary_mt_observation",
+              "before": 11,
+              "after": 11,
+              "status": "pass"
+            },
+            {
+              "name": "ci_geant4_data",
+              "before": 106,
+              "after": 106,
+              "status": "pass"
+            },
+            {
+              "name": "install_ci_delivery",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            },
+            {
+              "name": "backend_launch",
+              "before": 151,
+              "after": 151,
+              "status": "pass"
+            },
+            {
+              "name": "k1_bundle",
+              "before": 529,
+              "after": 596,
+              "status": "pass"
+            },
+            {
+              "name": "k1_staging_alias",
+              "before": 34,
+              "after": 34,
+              "status": "pass"
+            },
+            {
+              "name": "i1_environment",
+              "before": 142,
+              "after": 142,
+              "status": "pass"
+            },
+            {
+              "name": "f5_source_snapshots",
+              "before": 84,
+              "after": 84,
+              "status": "pass"
+            },
+            {
+              "name": "f5_project_receipts",
+              "before": 22,
+              "after": 22,
+              "status": "pass"
+            },
+            {
+              "name": "f5_transactions",
+              "before": 321,
+              "after": 345,
+              "status": "pass"
+            },
+            {
+              "name": "f5_recovery",
+              "before": 119,
+              "after": 119,
+              "status": "pass"
+            },
+            {
+              "name": "f4_diagnostics",
+              "before": 48,
+              "after": 48,
+              "status": "pass"
+            },
+            {
+              "name": "f4_producers",
+              "before": 593,
+              "after": 624,
+              "status": "pass"
+            },
+            {
+              "name": "f4_document_diagnostics",
+              "before": 119,
+              "after": 187,
+              "status": "pass"
+            },
+            {
+              "name": "build_identity",
+              "before": 47,
+              "after": 47,
+              "status": "pass"
+            },
+            {
+              "name": "f1_input_provenance",
+              "before": 36,
+              "after": 36,
+              "status": "pass"
+            },
+            {
+              "name": "f1_artifact_model",
+              "before": 96,
+              "after": 96,
+              "status": "pass"
+            },
+            {
+              "name": "output_auto_model",
+              "before": 3,
+              "after": 3,
+              "status": "pass"
+            },
+            {
+              "name": "merge_outputs",
+              "before": 18,
+              "after": 18,
+              "status": "pass"
+            },
+            {
+              "name": "output_extensions",
+              "before": 25,
+              "after": 25,
+              "status": "pass"
+            },
+            {
+              "name": "runner_contract",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "doc_links",
+              "before": 11,
+              "after": 11,
+              "status": "pass"
+            },
+            {
+              "name": "platform_paths",
+              "before": 3,
+              "after": 3,
+              "status": "pass"
+            },
+            {
+              "name": "platform_path_fixture_policy",
+              "before": 51,
+              "after": 51,
+              "status": "pass"
+            },
+            {
+              "name": "ci_annotations",
+              "before": 12,
+              "after": 12,
+              "status": "pass"
+            },
+            {
+              "name": "report_evidence",
+              "before": 77,
+              "after": 77,
+              "status": "pass"
+            },
+            {
+              "name": "writer_boundary",
+              "before": 24,
+              "after": 24,
+              "status": "pass"
+            },
+            {
+              "name": "shielding_scenario_model",
+              "before": 93,
+              "after": 93,
+              "status": "pass"
+            },
+            {
+              "name": "shielding_analysis",
+              "before": 113,
+              "after": 113,
+              "status": "pass"
+            },
+            {
+              "name": "effective_config_model",
+              "before": 17,
+              "after": 17,
+              "status": "pass"
+            },
+            {
+              "name": "main_config_version_component",
+              "before": 3,
+              "after": 3,
+              "status": "pass"
+            },
+            {
+              "name": "main_ini_migration",
+              "before": 60,
+              "after": 60,
+              "status": "pass"
+            },
+            {
+              "name": "config_migration",
+              "before": 447,
+              "after": 521,
+              "status": "pass"
+            },
+            {
+              "name": "project_snapshot_compat",
+              "before": 78,
+              "after": 80,
+              "status": "pass"
+            },
+            {
+              "name": "duplicate_generated_package_model",
+              "before": 128,
+              "after": 128,
+              "status": "pass"
+            },
+            {
+              "name": "geometry_diagnostic_identity",
+              "before": 3,
+              "after": 3,
+              "status": "pass"
+            },
+            {
+              "name": "input_provenance",
+              "before": 14,
+              "after": 14,
+              "status": "pass"
+            },
+            {
+              "name": "effective_consumer_state",
+              "before": 2,
+              "after": 2,
+              "status": "pass"
+            },
+            {
+              "name": "effective_receipt_view",
+              "before": 13,
+              "after": 13,
+              "status": "pass"
+            },
+            {
+              "name": "output_provenance",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            }
+          ],
+          "new_cases": [
+            "j2_resources",
+            "solid_registry"
+          ],
+          "failures": []
+        },
+        {
+          "report": "extracted\\m0-report-windows-latest-13099775646\\20261101-200537-064d6571\\report.json",
+          "report_sha256": "d0575bce30f90f181edbfd7f01c49fdeaf06473202622684565a8ab5d1b1c6e3",
+          "lane": "m0-windows",
+          "profile": "gui",
+          "strict_gate": "fail",
+          "strict_error": "report is not release evidence: 1 case(s) did not pass (['gui_j2_geometry']); pass --allow-incomplete only for triage",
+          "baseline_id": "windows-m0-6310969-gui",
+          "baseline_report_sha256": "59dbd5060da518458185c2d323518ea01ab3b98644e5637e56b095f1c1de2e9e",
+          "every_raw_log_sha_verified": true,
+          "assertions_before": 6739,
+          "assertions_after": 8536,
+          "old_case_comparison": [
+            {
+              "name": "gui_i2_install",
+              "before": 59,
+              "after": 59,
+              "status": "pass"
+            },
+            {
+              "name": "gui_j1_appearance",
+              "before": 29,
+              "after": 29,
+              "status": "pass"
+            },
+            {
+              "name": "gui_workspace_layout",
+              "before": 149,
+              "after": 149,
+              "status": "pass"
+            },
+            {
+              "name": "gui_backend_launch",
+              "before": 74,
+              "after": 74,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_workflow",
+              "before": 230,
+              "after": 260,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_terminal_publication",
+              "before": 291,
+              "after": 291,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_history_scope",
+              "before": 78,
+              "after": 78,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_relocation",
+              "before": 138,
+              "after": 138,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_cli",
+              "before": 124,
+              "after": 124,
+              "status": "pass"
+            },
+            {
+              "name": "gui_i1_environment",
+              "before": 484,
+              "after": 484,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_panel",
+              "before": 1629,
+              "after": 1629,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_window",
+              "before": 178,
+              "after": 178,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f5_recovery",
+              "before": 62,
+              "after": 62,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f5_editor_history",
+              "before": 241,
+              "after": 241,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f5_recovery_process",
+              "before": 12,
+              "after": 12,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f4_navigation",
+              "before": 224,
+              "after": 224,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f4_entrypoints",
+              "before": 62,
+              "after": 62,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f4_layout",
+              "before": 265,
+              "after": 265,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f4_inspect_protocol",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f1_output_identity",
+              "before": 28,
+              "after": 28,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f1_async_identity",
+              "before": 39,
+              "after": 39,
+              "status": "pass"
+            },
+            {
+              "name": "gui_config_migration",
+              "before": 74,
+              "after": 74,
+              "status": "pass"
+            },
+            {
+              "name": "effective_config_collection",
+              "before": 44,
+              "after": 44,
+              "status": "pass"
+            },
+            {
+              "name": "effective_config_viewer",
+              "before": 22,
+              "after": 22,
+              "status": "pass"
+            },
+            {
+              "name": "gui_parsers",
+              "before": 8,
+              "after": 8,
+              "status": "pass"
+            },
+            {
+              "name": "gui_qt_combo_data",
+              "before": 29,
+              "after": 29,
+              "status": "pass"
+            },
+            {
+              "name": "gui_qt_binding_lifetime",
+              "before": 8,
+              "after": 8,
+              "status": "pass"
+            },
+            {
+              "name": "gui_materials",
+              "before": 42,
+              "after": 43,
+              "status": "pass"
+            },
+            {
+              "name": "gui_geometry",
+              "before": 69,
+              "after": 70,
+              "status": "pass"
+            },
+            {
+              "name": "gui_preview",
+              "before": 22,
+              "after": 22,
+              "status": "pass"
+            },
+            {
+              "name": "gui_preview_primitives",
+              "before": 37,
+              "after": 37,
+              "status": "pass"
+            },
+            {
+              "name": "gui_project_io",
+              "before": 6,
+              "after": 6,
+              "status": "pass"
+            },
+            {
+              "name": "gui_project_import_projection",
+              "before": 393,
+              "after": 393,
+              "status": "pass"
+            },
+            {
+              "name": "gui_project_snapshot_restore",
+              "before": 61,
+              "after": 62,
+              "status": "pass"
+            },
+            {
+              "name": "gui_source",
+              "before": 50,
+              "after": 54,
+              "status": "pass"
+            },
+            {
+              "name": "gui_source_field_preservation",
+              "before": 340,
+              "after": 340,
+              "status": "pass"
+            },
+            {
+              "name": "gui_run_config",
+              "before": 34,
+              "after": 34,
+              "status": "pass"
+            },
+            {
+              "name": "gui_dose_results",
+              "before": 21,
+              "after": 21,
+              "status": "pass"
+            },
+            {
+              "name": "gui_plots",
+              "before": 37,
+              "after": 37,
+              "status": "pass"
+            },
+            {
+              "name": "gui_new_simulation_wizard",
+              "before": 60,
+              "after": 62,
+              "status": "pass"
+            },
+            {
+              "name": "scenario_page",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "gui_scans",
+              "before": 58,
+              "after": 58,
+              "status": "pass"
+            },
+            {
+              "name": "gui_start_page",
+              "before": 74,
+              "after": 74,
+              "status": "pass"
+            },
+            {
+              "name": "gui_fluence_results",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "gui_output_extensions",
+              "before": 61,
+              "after": 61,
+              "status": "pass"
+            },
+            {
+              "name": "gui_output",
+              "before": 15,
+              "after": 15,
+              "status": "pass"
+            },
+            {
+              "name": "gui_history",
+              "before": 7,
+              "after": 7,
+              "status": "pass"
+            },
+            {
+              "name": "gui_duplicate_history_cli",
+              "before": 254,
+              "after": 254,
+              "status": "pass"
+            },
+            {
+              "name": "gui_run_result",
+              "before": 20,
+              "after": 20,
+              "status": "pass"
+            },
+            {
+              "name": "gui_live_progress",
+              "before": 79,
+              "after": 79,
+              "status": "pass"
+            },
+            {
+              "name": "gui_main_window",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            },
+            {
+              "name": "gui_unsupported_features",
+              "before": 6,
+              "after": 6,
+              "status": "pass"
+            },
+            {
+              "name": "gui_geometry_safety",
+              "before": 11,
+              "after": 11,
+              "status": "pass"
+            },
+            {
+              "name": "gui_geometry_diagnostics",
+              "before": 15,
+              "after": 15,
+              "status": "pass"
+            },
+            {
+              "name": "q1_postprocessing",
+              "before": 123,
+              "after": 123,
+              "status": "pass"
+            },
+            {
+              "name": "gui_output_provenance",
+              "before": 21,
+              "after": 21,
+              "status": "pass"
+            },
+            {
+              "name": "q1_public_paths",
+              "before": 32,
+              "after": 32,
+              "status": "pass"
+            },
+            {
+              "name": "gui_3d_view",
+              "before": 18,
+              "after": 18,
+              "status": "pass"
+            },
+            {
+              "name": "gui_config_editors",
+              "before": 38,
+              "after": 38,
+              "status": "pass"
+            }
+          ],
+          "new_cases": [
+            "gui_f8_accessibility",
+            "gui_j2_blank",
+            "gui_j2_current_import",
+            "gui_j2_geometry",
+            "gui_j2_materials",
+            "gui_j2_run_editors",
+            "gui_j2_workspace"
+          ],
+          "failures": [
+            {
+              "name": "gui_j2_geometry",
+              "log": "extracted\\m0-report-windows-latest-13099775646\\20261101-200537-064d6571\\gui_j2_geometry.log",
+              "sha256": "5cd56cb11a6a639fa9208a6c63006d9c5f5ad4fc645de1a6b253ff9293347a5d",
+              "tail": [
+                "G4USIM_ASSERTS=195",
+                "Traceback (most recent call last):",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\tools\\test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\tools\\test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\gui\\smoke_tests\\smoke_j2_geometry.py\", line 327, in <module>",
+                "    run()",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\gui\\smoke_tests\\smoke_j2_geometry.py\", line 264, in run",
+                "    assert page.geometry_document.source_path==str(source)",
+                "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+                "AssertionError"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "artifact_id": 13099526165,
+      "name": "m0-report-ubuntu-latest",
+      "run_id": 41344573541,
+      "zip_sha256": "b75ab5f7dadb32e94acb8b5958522a15436b7044a330892786f5e1818e624a03",
+      "reports": [
+        {
+          "report": "extracted\\m0-report-ubuntu-latest-13099526165\\20261101-200109-28b801a0\\report.json",
+          "report_sha256": "33a237b706e1887d0a817bbf7f54d2431cfbb9ecd434551e6ace60cfadddc475",
+          "lane": "m0-linux",
+          "profile": "static",
+          "strict_gate": "pass",
+          "strict_error": null,
+          "baseline_id": "linux-m0-6310969-static",
+          "baseline_report_sha256": "665b8bdaab8eb061a751d82690bbe0a3a4d64b1875b9fbfba1c78d86c6ab5a15",
+          "every_raw_log_sha_verified": true,
+          "assertions_before": 3966,
+          "assertions_after": 4573,
+          "old_case_comparison": [
+            {
+              "name": "platform_install_layout",
+              "before": 9,
+              "after": 9,
+              "status": "pass"
+            },
+            {
+              "name": "frozen_startup",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "install_plan",
+              "before": 71,
+              "after": 71,
+              "status": "pass"
+            },
+            {
+              "name": "install_service",
+              "before": 71,
+              "after": 71,
+              "status": "pass"
+            },
+            {
+              "name": "run_summary_mt_observation",
+              "before": 11,
+              "after": 11,
+              "status": "pass"
+            },
+            {
+              "name": "ci_geant4_data",
+              "before": 105,
+              "after": 105,
+              "status": "pass"
+            },
+            {
+              "name": "install_ci_delivery",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            },
+            {
+              "name": "backend_launch",
+              "before": 151,
+              "after": 151,
+              "status": "pass"
+            },
+            {
+              "name": "k1_bundle",
+              "before": 530,
+              "after": 589,
+              "status": "pass"
+            },
+            {
+              "name": "k1_staging_alias",
+              "before": 33,
+              "after": 33,
+              "status": "pass"
+            },
+            {
+              "name": "i1_environment",
+              "before": 142,
+              "after": 142,
+              "status": "pass"
+            },
+            {
+              "name": "f5_source_snapshots",
+              "before": 84,
+              "after": 84,
+              "status": "pass"
+            },
+            {
+              "name": "f5_project_receipts",
+              "before": 22,
+              "after": 22,
+              "status": "pass"
+            },
+            {
+              "name": "f5_transactions",
+              "before": 321,
+              "after": 345,
+              "status": "pass"
+            },
+            {
+              "name": "f5_recovery",
+              "before": 119,
+              "after": 119,
+              "status": "pass"
+            },
+            {
+              "name": "f4_diagnostics",
+              "before": 48,
+              "after": 48,
+              "status": "pass"
+            },
+            {
+              "name": "f4_producers",
+              "before": 593,
+              "after": 624,
+              "status": "pass"
+            },
+            {
+              "name": "f4_document_diagnostics",
+              "before": 119,
+              "after": 187,
+              "status": "pass"
+            },
+            {
+              "name": "build_identity",
+              "before": 47,
+              "after": 47,
+              "status": "pass"
+            },
+            {
+              "name": "f1_input_provenance",
+              "before": 37,
+              "after": 37,
+              "status": "pass"
+            },
+            {
+              "name": "f1_artifact_model",
+              "before": 97,
+              "after": 97,
+              "status": "pass"
+            },
+            {
+              "name": "output_auto_model",
+              "before": 4,
+              "after": 4,
+              "status": "pass"
+            },
+            {
+              "name": "merge_outputs",
+              "before": 18,
+              "after": 18,
+              "status": "pass"
+            },
+            {
+              "name": "output_extensions",
+              "before": 25,
+              "after": 25,
+              "status": "pass"
+            },
+            {
+              "name": "runner_contract",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "doc_links",
+              "before": 11,
+              "after": 11,
+              "status": "pass"
+            },
+            {
+              "name": "platform_paths",
+              "before": 3,
+              "after": 3,
+              "status": "pass"
+            },
+            {
+              "name": "platform_path_fixture_policy",
+              "before": 51,
+              "after": 51,
+              "status": "pass"
+            },
+            {
+              "name": "ci_annotations",
+              "before": 12,
+              "after": 12,
+              "status": "pass"
+            },
+            {
+              "name": "report_evidence",
+              "before": 77,
+              "after": 77,
+              "status": "pass"
+            },
+            {
+              "name": "writer_boundary",
+              "before": 24,
+              "after": 24,
+              "status": "pass"
+            },
+            {
+              "name": "shielding_scenario_model",
+              "before": 93,
+              "after": 93,
+              "status": "pass"
+            },
+            {
+              "name": "shielding_analysis",
+              "before": 113,
+              "after": 113,
+              "status": "pass"
+            },
+            {
+              "name": "effective_config_model",
+              "before": 18,
+              "after": 18,
+              "status": "pass"
+            },
+            {
+              "name": "main_config_version_component",
+              "before": 4,
+              "after": 4,
+              "status": "pass"
+            },
+            {
+              "name": "main_ini_migration",
+              "before": 60,
+              "after": 60,
+              "status": "pass"
+            },
+            {
+              "name": "config_migration",
+              "before": 447,
+              "after": 521,
+              "status": "pass"
+            },
+            {
+              "name": "project_snapshot_compat",
+              "before": 78,
+              "after": 80,
+              "status": "pass"
+            },
+            {
+              "name": "duplicate_generated_package_model",
+              "before": 128,
+              "after": 128,
+              "status": "pass"
+            },
+            {
+              "name": "geometry_diagnostic_identity",
+              "before": 4,
+              "after": 4,
+              "status": "pass"
+            },
+            {
+              "name": "input_provenance",
+              "before": 15,
+              "after": 15,
+              "status": "pass"
+            },
+            {
+              "name": "effective_consumer_state",
+              "before": 3,
+              "after": 3,
+              "status": "pass"
+            },
+            {
+              "name": "effective_receipt_view",
+              "before": 14,
+              "after": 14,
+              "status": "pass"
+            },
+            {
+              "name": "output_provenance",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            }
+          ],
+          "new_cases": [
+            "j2_resources",
+            "solid_registry"
+          ],
+          "failures": []
+        },
+        {
+          "report": "extracted\\m0-report-ubuntu-latest-13099526165\\20261101-200301-162564be\\report.json",
+          "report_sha256": "967b2fb3c27b4d32559ec366dda4b5a5436fee6523fd5bd35f4c7faf151604ca",
+          "lane": "m0-linux",
+          "profile": "gui",
+          "strict_gate": "fail",
+          "strict_error": "report is not release evidence: 1 case(s) did not pass (['gui_f8_accessibility']); pass --allow-incomplete only for triage",
+          "baseline_id": "linux-m0-6310969-gui",
+          "baseline_report_sha256": "485ab4beadc3f7dedb4ab8f430e12e6371d2312f2ed262f48792da52e82a1827",
+          "every_raw_log_sha_verified": true,
+          "assertions_before": 6739,
+          "assertions_after": 8401,
+          "old_case_comparison": [
+            {
+              "name": "gui_i2_install",
+              "before": 59,
+              "after": 59,
+              "status": "pass"
+            },
+            {
+              "name": "gui_j1_appearance",
+              "before": 29,
+              "after": 29,
+              "status": "pass"
+            },
+            {
+              "name": "gui_workspace_layout",
+              "before": 149,
+              "after": 149,
+              "status": "pass"
+            },
+            {
+              "name": "gui_backend_launch",
+              "before": 74,
+              "after": 74,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_workflow",
+              "before": 230,
+              "after": 260,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_terminal_publication",
+              "before": 291,
+              "after": 291,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_history_scope",
+              "before": 78,
+              "after": 78,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_relocation",
+              "before": 138,
+              "after": 138,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_cli",
+              "before": 124,
+              "after": 124,
+              "status": "pass"
+            },
+            {
+              "name": "gui_i1_environment",
+              "before": 486,
+              "after": 486,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_panel",
+              "before": 1629,
+              "after": 1629,
+              "status": "pass"
+            },
+            {
+              "name": "gui_k1_window",
+              "before": 178,
+              "after": 178,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f5_recovery",
+              "before": 62,
+              "after": 62,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f5_editor_history",
+              "before": 241,
+              "after": 241,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f5_recovery_process",
+              "before": 12,
+              "after": 12,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f4_navigation",
+              "before": 224,
+              "after": 224,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f4_entrypoints",
+              "before": 62,
+              "after": 62,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f4_layout",
+              "before": 265,
+              "after": 265,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f4_inspect_protocol",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f1_output_identity",
+              "before": 28,
+              "after": 28,
+              "status": "pass"
+            },
+            {
+              "name": "gui_f1_async_identity",
+              "before": 39,
+              "after": 39,
+              "status": "pass"
+            },
+            {
+              "name": "gui_config_migration",
+              "before": 74,
+              "after": 74,
+              "status": "pass"
+            },
+            {
+              "name": "effective_config_collection",
+              "before": 42,
+              "after": 42,
+              "status": "pass"
+            },
+            {
+              "name": "effective_config_viewer",
+              "before": 22,
+              "after": 22,
+              "status": "pass"
+            },
+            {
+              "name": "gui_parsers",
+              "before": 8,
+              "after": 8,
+              "status": "pass"
+            },
+            {
+              "name": "gui_qt_combo_data",
+              "before": 29,
+              "after": 29,
+              "status": "pass"
+            },
+            {
+              "name": "gui_qt_binding_lifetime",
+              "before": 8,
+              "after": 8,
+              "status": "pass"
+            },
+            {
+              "name": "gui_materials",
+              "before": 42,
+              "after": 43,
+              "status": "pass"
+            },
+            {
+              "name": "gui_geometry",
+              "before": 69,
+              "after": 70,
+              "status": "pass"
+            },
+            {
+              "name": "gui_preview",
+              "before": 22,
+              "after": 22,
+              "status": "pass"
+            },
+            {
+              "name": "gui_preview_primitives",
+              "before": 37,
+              "after": 37,
+              "status": "pass"
+            },
+            {
+              "name": "gui_project_io",
+              "before": 6,
+              "after": 6,
+              "status": "pass"
+            },
+            {
+              "name": "gui_project_import_projection",
+              "before": 393,
+              "after": 393,
+              "status": "pass"
+            },
+            {
+              "name": "gui_project_snapshot_restore",
+              "before": 61,
+              "after": 62,
+              "status": "pass"
+            },
+            {
+              "name": "gui_source",
+              "before": 50,
+              "after": 54,
+              "status": "pass"
+            },
+            {
+              "name": "gui_source_field_preservation",
+              "before": 340,
+              "after": 340,
+              "status": "pass"
+            },
+            {
+              "name": "gui_run_config",
+              "before": 34,
+              "after": 34,
+              "status": "pass"
+            },
+            {
+              "name": "gui_dose_results",
+              "before": 21,
+              "after": 21,
+              "status": "pass"
+            },
+            {
+              "name": "gui_plots",
+              "before": 37,
+              "after": 37,
+              "status": "pass"
+            },
+            {
+              "name": "gui_new_simulation_wizard",
+              "before": 60,
+              "after": 62,
+              "status": "pass"
+            },
+            {
+              "name": "scenario_page",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "gui_scans",
+              "before": 58,
+              "after": 58,
+              "status": "pass"
+            },
+            {
+              "name": "gui_start_page",
+              "before": 74,
+              "after": 74,
+              "status": "pass"
+            },
+            {
+              "name": "gui_fluence_results",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "gui_output_extensions",
+              "before": 61,
+              "after": 61,
+              "status": "pass"
+            },
+            {
+              "name": "gui_output",
+              "before": 15,
+              "after": 15,
+              "status": "pass"
+            },
+            {
+              "name": "gui_history",
+              "before": 7,
+              "after": 7,
+              "status": "pass"
+            },
+            {
+              "name": "gui_duplicate_history_cli",
+              "before": 254,
+              "after": 254,
+              "status": "pass"
+            },
+            {
+              "name": "gui_run_result",
+              "before": 20,
+              "after": 20,
+              "status": "pass"
+            },
+            {
+              "name": "gui_live_progress",
+              "before": 79,
+              "after": 79,
+              "status": "pass"
+            },
+            {
+              "name": "gui_main_window",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            },
+            {
+              "name": "gui_unsupported_features",
+              "before": 6,
+              "after": 6,
+              "status": "pass"
+            },
+            {
+              "name": "gui_geometry_safety",
+              "before": 11,
+              "after": 11,
+              "status": "pass"
+            },
+            {
+              "name": "gui_geometry_diagnostics",
+              "before": 15,
+              "after": 15,
+              "status": "pass"
+            },
+            {
+              "name": "q1_postprocessing",
+              "before": 123,
+              "after": 123,
+              "status": "pass"
+            },
+            {
+              "name": "gui_output_provenance",
+              "before": 21,
+              "after": 21,
+              "status": "pass"
+            },
+            {
+              "name": "q1_public_paths",
+              "before": 32,
+              "after": 32,
+              "status": "pass"
+            },
+            {
+              "name": "gui_3d_view",
+              "before": 18,
+              "after": 18,
+              "status": "pass"
+            },
+            {
+              "name": "gui_config_editors",
+              "before": 38,
+              "after": 38,
+              "status": "pass"
+            }
+          ],
+          "new_cases": [
+            "gui_f8_accessibility",
+            "gui_j2_blank",
+            "gui_j2_current_import",
+            "gui_j2_geometry",
+            "gui_j2_materials",
+            "gui_j2_run_editors",
+            "gui_j2_workspace"
+          ],
+          "failures": [
+            {
+              "name": "gui_f8_accessibility",
+              "log": "extracted\\m0-report-ubuntu-latest-13099526165\\20261101-200301-162564be\\gui_f8_accessibility.log",
+              "sha256": "240e0ba146a0cfb2902409582dfdea0adbbe7364484de51cc37c1ff5ac2ffa1a",
+              "tail": [
+                "This plugin does not support propagateSizeHints()",
+                "Traceback (most recent call last):",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/smoke_tests/smoke_f8_accessibility.py\", line 871, in <module>",
+                "    main()",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/smoke_tests/smoke_f8_accessibility.py\", line 865, in main",
+                "    test_history_directory_accessibility(app, args.output)",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/smoke_tests/smoke_f8_accessibility.py\", line 659, in test_history_directory_accessibility",
+                "    assert interface.text(QAccessible.Name) == ui_text(source)",
+                "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+                "AssertionError"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "release_accepted": false,
+  "note": "No allow-incomplete/legacy flags; non-pass reports remain failed. Only available report profiles compared; absent downstream profiles are not success."
+}

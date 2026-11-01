@@ -1,0 +1,21 @@
+{
+  "method": "Standard assert probe executing complete unchanged draft bytes and __main__, with original repository __file__ for ROOT; no product module substitution; all fixtures/evidence under out.",
+  "scripts": [
+    {
+      "path": "scripts/test_k1_bundle.py",
+      "draft_sha256": "e825d4278bd9b59d7ff871c1f2abd39d564b0fc5591de460f784a6d28cb2fa4f",
+      "exit_code": 0,
+      "log": "out\\collab\\j2-static-fixture-independent-review\\test_k1_bundle.py.log",
+      "log_sha256": "3d7db7363bd36f8088b37ebba3e2a17aa52758b93fd503d3269e7aacf2d69577"
+    },
+    {
+      "path": "scripts/test_config_migration.py",
+      "draft_sha256": "e82849979a7ca78ff338c13c9918564930393150b92bb54fe352e8ca25f17849",
+      "exit_code": 1,
+      "log": "out\\collab\\j2-static-fixture-independent-review\\test_config_migration.py.log",
+      "log_sha256": "10b39a5a20e28cc1748c28c905d4aa65532b120858375cd0c4b80e4c4ce320f8"
+    }
+  ],
+  "tracked_script_and_gui_bytes_unchanged": true,
+  "status": "fail"
+}

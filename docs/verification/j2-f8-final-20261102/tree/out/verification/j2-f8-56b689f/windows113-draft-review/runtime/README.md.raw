@@ -1,0 +1,32 @@
+# Windows113 out候选独立真实复核
+
+结论：Ptolemy三份候选均通过，未发现剩余确认阻止项。原正式首轮失败报告保持不变，本证据不能替换完整profile。
+
+- source编辑器候选：exit0，v3探针54断言。
+- scans组件候选：exit0，v3探针58断言。
+- scans backend候选：原main入口完整执行，exit0，v3探针18断言；与历史原完整backend扫描断言数一致。
+- 原session37247正常退出0，无本线程遗留测试进程。
+
+使用完整D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe，offscreen，无native操作。G4USIM_EXE绝对注入现113正式候选，SHA ea4427f57ef65d176144e1ea8f7a5914dff66265b8179989eca851588a2a133f；HEAD56b689fb9ac920cbb1203b2b94dae2483d25f622，fp9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a。SDK/data/Qt5DLL路径正确，清旧G4*DATA后发现12数据集。G4USIM_EXPECT_GDML=true，cache与matching Geant4Config的GDML ON证据见launch-sdk-evidence.json。
+
+## 原入口及仪器边界
+
+候选代码从out原草案载入，__file__绑定C工作区对应原测试位置以取得正确GUI/ROOT；compile文件名保持out候选，以官方test_assert_probe的v3统计候选原断言。没有apply补丁、修改原断言、函数或原测试逻辑。TemporaryDirectory仅在清理前复制完整临时证据，不改变测试内运行目录、生命周期或任何结果判定。独立loader在../out_candidate_entry.py，执行编排在../run_out_candidates.py。
+
+三tracked测试SHA前后均为草案manifest中的原SHA；三候选SHA保持原稿；各进程实际导入GUI依赖SHA前后不变，HEAD/fp/EXE身份前后不变。事实见receipt.json与每个候选目录entry-identity.json。完成时通知main结束三测试SHA核对窗口；此后无需继续占用tracked源，允许主线程统一apply。
+
+## 真实后端结果
+
+保存5份run_summary，每轮planned/completed均400、单轮run_count=1，总完成2000事件，见backend-run-facts.json。
+
+| 能量MeV | 沉积MeV/event | 统计误差 | PSTAR×rho×t MeV |
+|---:|---:|---:|---:|
+| 50 | 0.7283 | 0.0370 | 0.6887 |
+| 100 | 0.4292 | 0.0219 | 0.4079 |
+| 200 | 0.2510 | 0.0034 | 0.2535 |
+
+保留原绝对差<=6%参考+3sigma；三个点全部通过，下降趋势、CSV4行和三个400事件完成判据不变。两seed点真实configured_seed分别101/202，均400事件成功，原断言通过。该结果为既有PSTAR场景回归，不能推成新偏置或其他物理能力已验证。
+
+原日志：smoke_source_editor_v2.py.log、smoke_scans.py.log、smoke_scans_backend.py.log；receipt有其字节SHA。每例temp-evidence保存原临时目录副本（含扫描manifest、生成INI/macro、run_status/summary、CSV等），不只留字符串输出。
+
+先前静态独审无确认阻止项：两scan文件所有assert AST/顺序完全不变（40/14站点），source除hook契约替换外其余函数AST不变。静态证据../static-audit.json。本轮真实复核补足静态审查的执行边界，不擦除原profile的scan初败，也不修F4 external字段拒绝。

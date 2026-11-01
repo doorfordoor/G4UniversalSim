@@ -1,0 +1,16 @@
+G4USIM_ASSERTS=88
+Traceback (most recent call last):
+  File "D:\a\G4UniversalSim\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "D:\a\G4UniversalSim\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "D:\a\G4UniversalSim\G4UniversalSim\gui\smoke_tests\smoke_j2_geometry.py", line 323, in <module>
+    run()
+  File "D:\a\G4UniversalSim\G4UniversalSim\gui\smoke_tests\smoke_j2_geometry.py", line 162, in run
+    assert f'file = {folder / "mesh.stl"}' in generated
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

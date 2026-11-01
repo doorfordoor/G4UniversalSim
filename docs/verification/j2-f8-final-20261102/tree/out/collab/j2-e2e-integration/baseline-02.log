@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_end_to_end.py", line 325, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_end_to_end.py", line 311, in main
+    execute(app, executable, root, receipt)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_end_to_end.py", line 196, in execute
+    baseline_inventory, _ = physics_inventory(Path(baseline["output_dir"]))
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_end_to_end.py", line 145, in physics_inventory
+    assert inventories, path
+           ^^^^^^^^^^^
+AssertionError: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-e2e-integration\baseline-02\runs\experiment-records\2b5a7955a5644a61a2d15932918f5c70\20261102_003146_new_simulation\output\effective_config_finalization.json

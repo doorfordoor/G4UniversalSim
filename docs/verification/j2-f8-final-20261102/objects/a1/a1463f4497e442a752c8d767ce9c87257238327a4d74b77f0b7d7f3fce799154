@@ -1,0 +1,1202 @@
+﻿2026-11-01T17:15:58.0621752Z Current runner version: '2.338.2'
+2026-11-01T17:15:58.0646492Z ##[group]Runner Image Provisioner
+2026-11-01T17:15:58.0647466Z Hosted Compute Agent
+2026-11-01T17:15:58.0648072Z Version: 20261021.618
+2026-11-01T17:15:58.0648788Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-11-01T17:15:58.0649527Z Build Date: 2026-10-21T00:45:21Z
+2026-11-01T17:15:58.0650348Z Worker ID: {b3a19ab9-38e1-4eac-97f2-071a30c970b8}
+2026-11-01T17:15:58.0651087Z Region: westus
+2026-11-01T17:15:58.0651634Z Cloud: Azure
+2026-11-01T17:15:58.0652604Z ##[endgroup]
+2026-11-01T17:15:58.0654170Z ##[group]Operating System
+2026-11-01T17:15:58.0654792Z Ubuntu
+2026-11-01T17:15:58.0655414Z 24.04.5
+2026-11-01T17:15:58.0656240Z LTS
+2026-11-01T17:15:58.0656904Z ##[endgroup]
+2026-11-01T17:15:58.0657529Z ##[group]Runner Image
+2026-11-01T17:15:58.0658157Z Image: ubuntu-24.04
+2026-11-01T17:15:58.0658886Z Version: 20261025.353.1
+2026-11-01T17:15:58.0660133Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261025.353/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-01T17:15:58.0661771Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261025.353
+2026-11-01T17:15:58.0662770Z ##[endgroup]
+2026-11-01T17:15:58.0663913Z ##[group]GITHUB_TOKEN Permissions
+2026-11-01T17:15:58.0665807Z Contents: read
+2026-11-01T17:15:58.0667034Z Metadata: read
+2026-11-01T17:15:58.0667611Z ##[endgroup]
+2026-11-01T17:15:58.0670138Z Secret source: Actions
+2026-11-01T17:15:58.0671163Z Cache mode: write
+2026-11-01T17:15:58.0671912Z Prepare workflow directory
+2026-11-01T17:15:58.1081131Z Prepare all required actions
+2026-11-01T17:15:58.1129824Z Getting action download info
+2026-11-01T17:15:58.5006870Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-11-01T17:15:58.6593999Z Download action repository 'actions/setup-python@v7' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+2026-11-01T17:15:59.0369635Z Download action repository 'actions/upload-artifact@v6' (SHA:b7c566a772e6b6bfb58ed0dc250532a479d7789f)
+2026-11-01T17:15:59.3007510Z Complete job name: ubuntu-24.04 / Geant4 11.4.3 installation
+2026-11-01T17:15:59.3929671Z ##[group]Run actions/checkout@v7
+2026-11-01T17:15:59.3930542Z with:
+2026-11-01T17:15:59.3931012Z   repository: doorfordoor/G4UniversalSim
+2026-11-01T17:15:59.3934852Z   token: ***
+2026-11-01T17:15:59.3935285Z   ssh-strict: true
+2026-11-01T17:15:59.3935720Z   ssh-user: git
+2026-11-01T17:15:59.3936376Z   persist-credentials: true
+2026-11-01T17:15:59.3936871Z   clean: true
+2026-11-01T17:15:59.3937320Z   sparse-checkout-cone-mode: true
+2026-11-01T17:15:59.3937843Z   fetch-depth: 1
+2026-11-01T17:15:59.3938271Z   fetch-tags: false
+2026-11-01T17:15:59.3938716Z   show-progress: true
+2026-11-01T17:15:59.3939170Z   lfs: false
+2026-11-01T17:15:59.3939590Z   submodules: false
+2026-11-01T17:15:59.3940040Z   set-safe-directory: true
+2026-11-01T17:15:59.3940553Z   allow-unsafe-pr-checkout: false
+2026-11-01T17:15:59.3941312Z env:
+2026-11-01T17:15:59.3941737Z   QT_QPA_PLATFORM: offscreen
+2026-11-01T17:15:59.3942246Z ##[endgroup]
+2026-11-01T17:15:59.6723149Z Syncing repository: doorfordoor/G4UniversalSim
+2026-11-01T17:15:59.6726258Z ##[group]Getting Git version info
+2026-11-01T17:15:59.6727762Z Working directory is '/home/runner/work/G4UniversalSim/G4UniversalSim'
+2026-11-01T17:15:59.6729791Z [command]/usr/bin/git version
+2026-11-01T17:15:59.6814409Z git version 2.56.0
+2026-11-01T17:15:59.6840210Z ##[endgroup]
+2026-11-01T17:15:59.6851878Z Temporarily overriding HOME='/home/runner/work/_temp/2effdc65-5d88-43b9-9a90-3cff59d0fb44' before making global git config changes
+2026-11-01T17:15:59.6854755Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-01T17:15:59.6857619Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/G4UniversalSim/G4UniversalSim
+2026-11-01T17:15:59.6909997Z Deleting the contents of '/home/runner/work/G4UniversalSim/G4UniversalSim'
+2026-11-01T17:15:59.6913376Z ##[group]Determining repository object format
+2026-11-01T17:15:59.6915562Z ##[endgroup]
+2026-11-01T17:15:59.6917334Z ##[group]Initializing the repository
+2026-11-01T17:15:59.6919691Z [command]/usr/bin/git init /home/runner/work/G4UniversalSim/G4UniversalSim
+2026-11-01T17:15:59.7041759Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-01T17:15:59.7043852Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-01T17:15:59.7045666Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-01T17:15:59.7047373Z hint: call:
+2026-11-01T17:15:59.7048180Z hint:
+2026-11-01T17:15:59.7049106Z hint: 	git config --global init.defaultBranch <name>
+2026-11-01T17:15:59.7050258Z hint:
+2026-11-01T17:15:59.7051374Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-01T17:15:59.7053219Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-01T17:15:59.7054762Z hint:
+2026-11-01T17:15:59.7055499Z hint: 	git branch -m <name>
+2026-11-01T17:15:59.7056719Z hint:
+2026-11-01T17:15:59.7058008Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-01T17:15:59.7060383Z Initialized empty Git repository in /home/runner/work/G4UniversalSim/G4UniversalSim/.git/
+2026-11-01T17:15:59.7066765Z [command]/usr/bin/git remote add origin https://github.com/doorfordoor/G4UniversalSim
+2026-11-01T17:15:59.7113117Z ##[endgroup]
+2026-11-01T17:15:59.7114670Z ##[group]Disabling automatic garbage collection
+2026-11-01T17:15:59.7116481Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-01T17:15:59.7157380Z ##[endgroup]
+2026-11-01T17:15:59.7159249Z ##[group]Setting up auth
+2026-11-01T17:15:59.7160337Z Removing SSH command configuration
+2026-11-01T17:15:59.7162507Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-01T17:15:59.7202447Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-01T17:15:59.7634792Z Removing HTTP extra header
+2026-11-01T17:15:59.7641921Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-01T17:15:59.7691681Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-01T17:15:59.7936519Z Removing includeIf entries pointing to credentials config files
+2026-11-01T17:15:59.7942811Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-01T17:15:59.7997604Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-01T17:15:59.8244249Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-1a3a6de1-a5d8-43de-9893-e84934ea2151.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-01T17:15:59.8298761Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git.path /home/runner/work/_temp/git-credentials-1a3a6de1-a5d8-43de-9893-e84934ea2151.config
+2026-11-01T17:15:59.8344267Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-1a3a6de1-a5d8-43de-9893-e84934ea2151.config
+2026-11-01T17:15:59.8389679Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-1a3a6de1-a5d8-43de-9893-e84934ea2151.config
+2026-11-01T17:15:59.8435891Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-1a3a6de1-a5d8-43de-9893-e84934ea2151.config
+2026-11-01T17:15:59.8477946Z ##[endgroup]
+2026-11-01T17:15:59.8479346Z ##[group]Fetching the repository
+2026-11-01T17:15:59.8484094Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +56b689fb9ac920cbb1203b2b94dae2483d25f622:refs/remotes/origin/roadmap/J2-F8-editing
+2026-11-01T17:16:16.9258436Z From https://github.com/doorfordoor/G4UniversalSim
+2026-11-01T17:16:16.9259596Z  * [new ref]         56b689fb9ac920cbb1203b2b94dae2483d25f622 -> origin/roadmap/J2-F8-editing
+2026-11-01T17:16:16.9271253Z [command]/usr/bin/git branch --list --remote origin/roadmap/J2-F8-editing
+2026-11-01T17:16:16.9311076Z   origin/roadmap/J2-F8-editing
+2026-11-01T17:16:16.9320824Z [command]/usr/bin/git rev-parse refs/remotes/origin/roadmap/J2-F8-editing
+2026-11-01T17:16:16.9358227Z 56b689fb9ac920cbb1203b2b94dae2483d25f622
+2026-11-01T17:16:16.9362780Z ##[endgroup]
+2026-11-01T17:16:16.9363637Z ##[group]Determining the checkout info
+2026-11-01T17:16:16.9367524Z ##[endgroup]
+2026-11-01T17:16:16.9370360Z [command]/usr/bin/git sparse-checkout disable
+2026-11-01T17:16:16.9435633Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-01T17:16:16.9479797Z ##[group]Checking out the ref
+2026-11-01T17:16:16.9484063Z [command]/usr/bin/git checkout --progress --force -B roadmap/J2-F8-editing refs/remotes/origin/roadmap/J2-F8-editing
+2026-11-01T17:16:18.6186771Z Updating files:  57% (12154/21311)
+2026-11-01T17:16:18.6451321Z Updating files:  58% (12361/21311)
+2026-11-01T17:16:18.8485074Z Updating files:  59% (12574/21311)
+2026-11-01T17:16:18.8559995Z Updating files:  60% (12787/21311)
+2026-11-01T17:16:18.8805076Z Updating files:  61% (13000/21311)
+2026-11-01T17:16:18.9253776Z Updating files:  62% (13213/21311)
+2026-11-01T17:16:18.9325498Z Updating files:  63% (13426/21311)
+2026-11-01T17:16:18.9396973Z Updating files:  64% (13640/21311)
+2026-11-01T17:16:18.9696690Z Updating files:  65% (13853/21311)
+2026-11-01T17:16:18.9730313Z Updating files:  65% (14034/21311)
+2026-11-01T17:16:18.9999121Z Updating files:  66% (14066/21311)
+2026-11-01T17:16:19.0211046Z Updating files:  67% (14279/21311)
+2026-11-01T17:16:19.1151371Z Updating files:  68% (14492/21311)
+2026-11-01T17:16:19.1224909Z Updating files:  69% (14705/21311)
+2026-11-01T17:16:19.1298323Z Updating files:  70% (14918/21311)
+2026-11-01T17:16:19.1808885Z Updating files:  71% (15131/21311)
+2026-11-01T17:16:19.2175722Z Updating files:  72% (15344/21311)
+2026-11-01T17:16:19.2396737Z Updating files:  73% (15558/21311)
+2026-11-01T17:16:19.3555838Z Updating files:  74% (15771/21311)
+2026-11-01T17:16:19.3628150Z Updating files:  75% (15984/21311)
+2026-11-01T17:16:19.3697627Z Updating files:  76% (16197/21311)
+2026-11-01T17:16:19.4422506Z Updating files:  77% (16410/21311)
+2026-11-01T17:16:19.4662892Z Updating files:  78% (16623/21311)
+2026-11-01T17:16:19.4758322Z Updating files:  79% (16836/21311)
+2026-11-01T17:16:19.4952905Z Updating files:  80% (17049/21311)
+2026-11-01T17:16:19.5053749Z Updating files:  81% (17262/21311)
+2026-11-01T17:16:19.5126644Z Updating files:  82% (17476/21311)
+2026-11-01T17:16:19.5206205Z Updating files:  83% (17689/21311)
+2026-11-01T17:16:19.5283296Z Updating files:  84% (17902/21311)
+2026-11-01T17:16:19.5354063Z Updating files:  85% (18115/21311)
+2026-11-01T17:16:19.5458482Z Updating files:  86% (18328/21311)
+2026-11-01T17:16:19.5544947Z Updating files:  87% (18541/21311)
+2026-11-01T17:16:19.5650504Z Updating files:  88% (18754/21311)
+2026-11-01T17:16:19.5776672Z Updating files:  89% (18967/21311)
+2026-11-01T17:16:19.5854320Z Updating files:  90% (19180/21311)
+2026-11-01T17:16:19.5931295Z Updating files:  91% (19394/21311)
+2026-11-01T17:16:19.6005097Z Updating files:  92% (19607/21311)
+2026-11-01T17:16:19.6073106Z Updating files:  93% (19820/21311)
+2026-11-01T17:16:19.6143182Z Updating files:  94% (20033/21311)
+2026-11-01T17:16:19.6211905Z Updating files:  95% (20246/21311)
+2026-11-01T17:16:19.6418641Z Updating files:  96% (20459/21311)
+2026-11-01T17:16:19.6560131Z Updating files:  97% (20672/21311)
+2026-11-01T17:16:19.6692466Z Updating files:  98% (20885/21311)
+2026-11-01T17:16:19.6871870Z Updating files:  99% (21098/21311)
+2026-11-01T17:16:19.6872572Z Updating files: 100% (21311/21311)
+2026-11-01T17:16:19.6872956Z Updating files: 100% (21311/21311), done.
+2026-11-01T17:16:19.7115453Z Switched to a new branch 'roadmap/J2-F8-editing'
+2026-11-01T17:16:19.7121140Z branch 'roadmap/J2-F8-editing' set up to track 'origin/roadmap/J2-F8-editing'.
+2026-11-01T17:16:19.7280895Z ##[endgroup]
+2026-11-01T17:16:19.7339170Z [command]/usr/bin/git log -1 --format=%H
+2026-11-01T17:16:19.7382850Z 56b689fb9ac920cbb1203b2b94dae2483d25f622
+2026-11-01T17:16:19.7654092Z ##[group]Run actions/setup-python@v7
+2026-11-01T17:16:19.7654392Z with:
+2026-11-01T17:16:19.7654601Z   python-version: 3.11
+2026-11-01T17:16:19.7654827Z   check-latest: false
+2026-11-01T17:16:19.7657580Z   token: ***
+2026-11-01T17:16:19.7657939Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+2026-11-01T17:16:19.7658355Z   update-environment: true
+2026-11-01T17:16:19.7658594Z   allow-prereleases: false
+2026-11-01T17:16:19.7658820Z   freethreaded: false
+2026-11-01T17:16:19.7659034Z env:
+2026-11-01T17:16:19.7659243Z   QT_QPA_PLATFORM: offscreen
+2026-11-01T17:16:19.7659472Z ##[endgroup]
+2026-11-01T17:16:19.8841278Z ##[group]Installed versions
+2026-11-01T17:16:19.8929957Z Successfully set up CPython (3.11.17)
+2026-11-01T17:16:19.8930750Z ##[endgroup]
+2026-11-01T17:16:19.9082384Z ##[group]Run sudo apt-get update
+2026-11-01T17:16:19.9082756Z [36;1msudo apt-get update[0m
+2026-11-01T17:16:19.9083767Z [36;1msudo apt-get install --yes --no-install-recommends libegl1 libgl1 libopengl0 libxkbcommon0 libdbus-1-3 libfontconfig1 libxcb-cursor0 libxcb-icccm4 libxcb-keysyms1 libxcb-shape0 libxcb-xkb1 libxkbcommon-x11-0 patchelf fonts-noto-cjk[0m
+2026-11-01T17:16:19.9219601Z shell: /usr/bin/bash -e {0}
+2026-11-01T17:16:19.9219899Z env:
+2026-11-01T17:16:19.9220126Z   QT_QPA_PLATFORM: offscreen
+2026-11-01T17:16:19.9220446Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:16:19.9220925Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-11-01T17:16:19.9221369Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:16:19.9221778Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:16:19.9222177Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:16:19.9222646Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-11-01T17:16:19.9222985Z ##[endgroup]
+2026-11-01T17:16:20.0291427Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-11-01T17:16:20.0562762Z Get:6 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+2026-11-01T17:16:20.0892957Z Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+2026-11-01T17:16:20.0929087Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2026-11-01T17:16:20.0992273Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2026-11-01T17:16:20.1049686Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+2026-11-01T17:16:20.1940564Z Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [682 kB]
+2026-11-01T17:16:20.2075596Z Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [617 kB]
+2026-11-01T17:16:20.3395859Z Get:9 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1408 kB]
+2026-11-01T17:16:20.3470138Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [311 kB]
+2026-11-01T17:16:20.3507443Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1707 kB]
+2026-11-01T17:16:20.3587648Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [343 kB]
+2026-11-01T17:16:20.3626904Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [1813 kB]
+2026-11-01T17:16:20.3698374Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [412 kB]
+2026-11-01T17:16:20.3727205Z Get:15 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [14.3 kB]
+2026-11-01T17:16:20.4548593Z Get:16 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Packages [1146 kB]
+2026-11-01T17:16:20.4595587Z Get:17 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [231 kB]
+2026-11-01T17:16:20.4627221Z Get:18 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1223 kB]
+2026-11-01T17:16:20.5100051Z Get:19 http://azure.archive.ubuntu.com/ubuntu noble-security/universe Translation-en [246 kB]
+2026-11-01T17:16:26.0012764Z Fetched 10.5 MB in 1s (8929 kB/s)
+2026-11-01T17:16:27.0910296Z Reading package lists...
+2026-11-01T17:16:27.1307046Z Reading package lists...
+2026-11-01T17:16:27.3410143Z Building dependency tree...
+2026-11-01T17:16:27.3417406Z Reading state information...
+2026-11-01T17:16:27.4824040Z libgl1 is already the newest version (1.7.0-1build1).
+2026-11-01T17:16:27.4824795Z libgl1 set to manually installed.
+2026-11-01T17:16:27.4825327Z libxkbcommon0 is already the newest version (1.6.0-1build1).
+2026-11-01T17:16:27.4825822Z libxkbcommon0 set to manually installed.
+2026-11-01T17:16:27.4826658Z libdbus-1-3 is already the newest version (1.14.10-4ubuntu4.1).
+2026-11-01T17:16:27.4827108Z libdbus-1-3 set to manually installed.
+2026-11-01T17:16:27.4828057Z libfontconfig1 is already the newest version (2.15.0-1.1ubuntu2).
+2026-11-01T17:16:27.4828949Z libfontconfig1 set to manually installed.
+2026-11-01T17:16:27.4829649Z patchelf is already the newest version (0.18.0-1.1build1).
+2026-11-01T17:16:27.4830235Z The following additional packages will be installed:
+2026-11-01T17:16:27.4830738Z   libegl-mesa0 libxcb-image0 libxcb-render-util0 libxcb-util1
+2026-11-01T17:16:27.4834804Z Suggested packages:
+2026-11-01T17:16:27.4835218Z   fonts-noto-cjk-extra
+2026-11-01T17:16:27.5105694Z The following NEW packages will be installed:
+2026-11-01T17:16:27.5109898Z   fonts-noto-cjk libegl-mesa0 libegl1 libopengl0 libxcb-cursor0 libxcb-icccm4
+2026-11-01T17:16:27.5110915Z   libxcb-image0 libxcb-keysyms1 libxcb-render-util0 libxcb-shape0 libxcb-util1
+2026-11-01T17:16:27.5112106Z   libxcb-xkb1 libxkbcommon-x11-0
+2026-11-01T17:16:27.5312911Z 0 upgraded, 13 newly installed, 0 to remove and 6 not upgraded.
+2026-11-01T17:16:27.5313584Z Need to get 61.5 MB of archives.
+2026-11-01T17:16:27.5314216Z After this operation, 94.4 MB of additional disk space will be used.
+2026-11-01T17:16:27.5314952Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-11-01T17:16:27.6097288Z Get:2 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 fonts-noto-cjk all 1:20230817+repack1-3 [61.2 MB]
+2026-11-01T17:17:14.6858445Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libegl-mesa0 amd64 25.2.8-0ubuntu0.24.04.4 [117 kB]
+2026-11-01T17:17:14.7661591Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-shape0 amd64 1.15-1ubuntu2 [6100 B]
+2026-11-01T17:17:14.8268391Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-xkb1 amd64 1.15-1ubuntu2 [32.3 kB]
+2026-11-01T17:17:14.8916486Z Get:6 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libxkbcommon-x11-0 amd64 1.6.0-1build1 [14.5 kB]
+2026-11-01T17:17:14.9534927Z Get:7 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libegl1 amd64 1.7.0-1build1 [28.7 kB]
+2026-11-01T17:17:15.0180400Z Get:8 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libopengl0 amd64 1.7.0-1build1 [32.8 kB]
+2026-11-01T17:17:15.0836951Z Get:9 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-util1 amd64 0.4.0-1build3 [10.7 kB]
+2026-11-01T17:17:15.1451505Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-image0 amd64 0.4.0-2build1 [10.8 kB]
+2026-11-01T17:17:15.2062238Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-render-util0 amd64 0.3.9-1build4 [9608 B]
+2026-11-01T17:17:15.2674258Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libxcb-cursor0 amd64 0.1.4-1build1 [10.7 kB]
+2026-11-01T17:17:15.3291029Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-icccm4 amd64 0.4.1-1.1build3 [10.8 kB]
+2026-11-01T17:17:15.3901178Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-keysyms1 amd64 0.4.0-1build4 [7956 B]
+2026-11-01T17:17:15.6815608Z Fetched 61.5 MB in 48s (1285 kB/s)
+2026-11-01T17:17:15.7192439Z Selecting previously unselected package fonts-noto-cjk.
+2026-11-01T17:17:15.7780716Z (Reading database ... 
+2026-11-01T17:17:15.7781022Z (Reading database ... 5%
+2026-11-01T17:17:15.7781272Z (Reading database ... 10%
+2026-11-01T17:17:15.7781518Z (Reading database ... 15%
+2026-11-01T17:17:15.7781746Z (Reading database ... 20%
+2026-11-01T17:17:15.7782109Z (Reading database ... 25%
+2026-11-01T17:17:15.7782348Z (Reading database ... 30%
+2026-11-01T17:17:15.7782628Z (Reading database ... 35%
+2026-11-01T17:17:15.7782937Z (Reading database ... 40%
+2026-11-01T17:17:15.7783173Z (Reading database ... 45%
+2026-11-01T17:17:15.7783444Z (Reading database ... 50%
+2026-11-01T17:17:15.8317858Z (Reading database ... 55%
+2026-11-01T17:17:16.1488363Z (Reading database ... 60%
+2026-11-01T17:17:16.4273560Z (Reading database ... 65%
+2026-11-01T17:17:16.6965125Z (Reading database ... 70%
+2026-11-01T17:17:16.9359015Z (Reading database ... 75%
+2026-11-01T17:17:17.3908803Z (Reading database ... 80%
+2026-11-01T17:17:17.9063236Z (Reading database ... 85%
+2026-11-01T17:17:18.5225553Z (Reading database ... 90%
+2026-11-01T17:17:19.1207682Z (Reading database ... 95%
+2026-11-01T17:17:19.1208253Z (Reading database ... 100%
+2026-11-01T17:17:19.1208929Z (Reading database ... 215504 files and directories currently installed.)
+2026-11-01T17:17:19.1253722Z Preparing to unpack .../00-fonts-noto-cjk_1%3a20230817+repack1-3_all.deb ...
+2026-11-01T17:17:19.1353641Z Unpacking fonts-noto-cjk (1:20230817+repack1-3) ...
+2026-11-01T17:17:19.5917464Z Selecting previously unselected package libegl-mesa0:amd64.
+2026-11-01T17:17:19.6059189Z Preparing to unpack .../01-libegl-mesa0_25.2.8-0ubuntu0.24.04.4_amd64.deb ...
+2026-11-01T17:17:19.6080056Z Unpacking libegl-mesa0:amd64 (25.2.8-0ubuntu0.24.04.4) ...
+2026-11-01T17:17:19.6364993Z Selecting previously unselected package libxcb-shape0:amd64.
+2026-11-01T17:17:19.6508651Z Preparing to unpack .../02-libxcb-shape0_1.15-1ubuntu2_amd64.deb ...
+2026-11-01T17:17:19.6519988Z Unpacking libxcb-shape0:amd64 (1.15-1ubuntu2) ...
+2026-11-01T17:17:19.6782335Z Selecting previously unselected package libxcb-xkb1:amd64.
+2026-11-01T17:17:19.6925155Z Preparing to unpack .../03-libxcb-xkb1_1.15-1ubuntu2_amd64.deb ...
+2026-11-01T17:17:19.6936429Z Unpacking libxcb-xkb1:amd64 (1.15-1ubuntu2) ...
+2026-11-01T17:17:19.7197082Z Selecting previously unselected package libxkbcommon-x11-0:amd64.
+2026-11-01T17:17:19.7339665Z Preparing to unpack .../04-libxkbcommon-x11-0_1.6.0-1build1_amd64.deb ...
+2026-11-01T17:17:19.7349749Z Unpacking libxkbcommon-x11-0:amd64 (1.6.0-1build1) ...
+2026-11-01T17:17:19.7593582Z Selecting previously unselected package libegl1:amd64.
+2026-11-01T17:17:19.7735381Z Preparing to unpack .../05-libegl1_1.7.0-1build1_amd64.deb ...
+2026-11-01T17:17:19.7746604Z Unpacking libegl1:amd64 (1.7.0-1build1) ...
+2026-11-01T17:17:19.8019277Z Selecting previously unselected package libopengl0:amd64.
+2026-11-01T17:17:19.8162979Z Preparing to unpack .../06-libopengl0_1.7.0-1build1_amd64.deb ...
+2026-11-01T17:17:19.8172117Z Unpacking libopengl0:amd64 (1.7.0-1build1) ...
+2026-11-01T17:17:19.8423398Z Selecting previously unselected package libxcb-util1:amd64.
+2026-11-01T17:17:19.8566468Z Preparing to unpack .../07-libxcb-util1_0.4.0-1build3_amd64.deb ...
+2026-11-01T17:17:19.8575498Z Unpacking libxcb-util1:amd64 (0.4.0-1build3) ...
+2026-11-01T17:17:19.8852035Z Selecting previously unselected package libxcb-image0:amd64.
+2026-11-01T17:17:19.8992971Z Preparing to unpack .../08-libxcb-image0_0.4.0-2build1_amd64.deb ...
+2026-11-01T17:17:19.9002948Z Unpacking libxcb-image0:amd64 (0.4.0-2build1) ...
+2026-11-01T17:17:19.9241932Z Selecting previously unselected package libxcb-render-util0:amd64.
+2026-11-01T17:17:19.9386202Z Preparing to unpack .../09-libxcb-render-util0_0.3.9-1build4_amd64.deb ...
+2026-11-01T17:17:19.9396437Z Unpacking libxcb-render-util0:amd64 (0.3.9-1build4) ...
+2026-11-01T17:17:19.9649208Z Selecting previously unselected package libxcb-cursor0:amd64.
+2026-11-01T17:17:19.9795570Z Preparing to unpack .../10-libxcb-cursor0_0.1.4-1build1_amd64.deb ...
+2026-11-01T17:17:19.9804982Z Unpacking libxcb-cursor0:amd64 (0.1.4-1build1) ...
+2026-11-01T17:17:20.0065308Z Selecting previously unselected package libxcb-icccm4:amd64.
+2026-11-01T17:17:20.0206876Z Preparing to unpack .../11-libxcb-icccm4_0.4.1-1.1build3_amd64.deb ...
+2026-11-01T17:17:20.0221888Z Unpacking libxcb-icccm4:amd64 (0.4.1-1.1build3) ...
+2026-11-01T17:17:20.0465102Z Selecting previously unselected package libxcb-keysyms1:amd64.
+2026-11-01T17:17:20.0608201Z Preparing to unpack .../12-libxcb-keysyms1_0.4.0-1build4_amd64.deb ...
+2026-11-01T17:17:20.0618578Z Unpacking libxcb-keysyms1:amd64 (0.4.0-1build4) ...
+2026-11-01T17:17:20.1107423Z Setting up fonts-noto-cjk (1:20230817+repack1-3) ...
+2026-11-01T17:17:20.1176521Z Setting up libxcb-keysyms1:amd64 (0.4.0-1build4) ...
+2026-11-01T17:17:20.1198699Z Setting up libxcb-shape0:amd64 (1.15-1ubuntu2) ...
+2026-11-01T17:17:20.1218885Z Setting up libxcb-render-util0:amd64 (0.3.9-1build4) ...
+2026-11-01T17:17:20.1242455Z Setting up libxcb-icccm4:amd64 (0.4.1-1.1build3) ...
+2026-11-01T17:17:20.1264799Z Setting up libopengl0:amd64 (1.7.0-1build1) ...
+2026-11-01T17:17:20.1286963Z Setting up libxcb-util1:amd64 (0.4.0-1build3) ...
+2026-11-01T17:17:20.1308011Z Setting up libxcb-xkb1:amd64 (1.15-1ubuntu2) ...
+2026-11-01T17:17:20.1331926Z Setting up libxcb-image0:amd64 (0.4.0-2build1) ...
+2026-11-01T17:17:20.1352647Z Setting up libegl-mesa0:amd64 (25.2.8-0ubuntu0.24.04.4) ...
+2026-11-01T17:17:20.1373975Z Setting up libxcb-cursor0:amd64 (0.1.4-1build1) ...
+2026-11-01T17:17:20.1394470Z Setting up libxkbcommon-x11-0:amd64 (1.6.0-1build1) ...
+2026-11-01T17:17:20.1415634Z Setting up libegl1:amd64 (1.7.0-1build1) ...
+2026-11-01T17:17:20.1443064Z Processing triggers for libc-bin (2.39-0ubuntu8.9) ...
+2026-11-01T17:17:20.2215654Z Processing triggers for fontconfig (2.15.0-1.1ubuntu2) ...
+2026-11-01T17:17:21.4063060Z 
+2026-11-01T17:17:21.4063783Z Running kernel seems to be up-to-date.
+2026-11-01T17:17:21.4064276Z 
+2026-11-01T17:17:21.4064533Z No services need to be restarted.
+2026-11-01T17:17:21.4064898Z 
+2026-11-01T17:17:21.4065118Z No containers need to be restarted.
+2026-11-01T17:17:21.4065353Z 
+2026-11-01T17:17:21.4065517Z No user sessions are running outdated binaries.
+2026-11-01T17:17:21.4065803Z 
+2026-11-01T17:17:21.4066418Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2026-11-01T17:17:22.4139702Z ##[group]Run python -m pip install -r gui/requirements.txt -r gui/requirements-3d.txt pyinstaller
+2026-11-01T17:17:22.4140438Z [36;1mpython -m pip install -r gui/requirements.txt -r gui/requirements-3d.txt pyinstaller[0m
+2026-11-01T17:17:22.4162223Z shell: /usr/bin/bash -e {0}
+2026-11-01T17:17:22.4162478Z env:
+2026-11-01T17:17:22.4162677Z   QT_QPA_PLATFORM: offscreen
+2026-11-01T17:17:22.4163011Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:17:22.4163456Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-11-01T17:17:22.4163916Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:17:22.4164305Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:17:22.4164689Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:17:22.4165077Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-11-01T17:17:22.4165401Z ##[endgroup]
+2026-11-01T17:17:25.1202973Z Collecting pyinstaller
+2026-11-01T17:17:25.1922732Z   Downloading pyinstaller-6.22.3-py3-none-manylinux2014_x86_64.whl.metadata (8.5 kB)
+2026-11-01T17:17:25.2367862Z Collecting PySide6<6.12,>=6.11.1 (from -r gui/requirements.txt (line 4))
+2026-11-01T17:17:25.2490213Z   Downloading pyside6-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (5.2 kB)
+2026-11-01T17:17:25.3030761Z Collecting uproot (from -r gui/requirements.txt (line 5))
+2026-11-01T17:17:25.3160148Z   Downloading uproot-5.7.7-py3-none-any.whl.metadata (36 kB)
+2026-11-01T17:17:25.5722070Z Collecting numpy (from -r gui/requirements.txt (line 6))
+2026-11-01T17:17:25.5838273Z   Downloading numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+2026-11-01T17:17:25.7417067Z Collecting matplotlib (from -r gui/requirements.txt (line 7))
+2026-11-01T17:17:25.7554514Z   Downloading matplotlib-3.11.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (80 kB)
+2026-11-01T17:17:25.8090781Z Collecting pyvista (from -r gui/requirements-3d.txt (line 1))
+2026-11-01T17:17:25.8212456Z   Downloading pyvista-0.49.2-py3-none-any.whl.metadata (14 kB)
+2026-11-01T17:17:25.8456430Z Collecting pyvistaqt (from -r gui/requirements-3d.txt (line 2))
+2026-11-01T17:17:25.8580111Z   Downloading pyvistaqt-0.13.1-py3-none-any.whl.metadata (5.3 kB)
+2026-11-01T17:17:25.9067962Z Collecting vtk (from -r gui/requirements-3d.txt (line 3))
+2026-11-01T17:17:25.9190336Z   Downloading vtk-9.7.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.6 kB)
+2026-11-01T17:17:25.9512226Z Collecting shiboken6==6.11.3 (from PySide6<6.12,>=6.11.1->-r gui/requirements.txt (line 4))
+2026-11-01T17:17:25.9675261Z   Downloading shiboken6-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (2.4 kB)
+2026-11-01T17:17:25.9988173Z Collecting PySide6_Essentials==6.11.3 (from PySide6<6.12,>=6.11.1->-r gui/requirements.txt (line 4))
+2026-11-01T17:17:26.0109201Z   Downloading pyside6_essentials-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (3.6 kB)
+2026-11-01T17:17:26.0539973Z Collecting PySide6_Addons==6.11.3 (from PySide6<6.12,>=6.11.1->-r gui/requirements.txt (line 4))
+2026-11-01T17:17:26.0667607Z   Downloading pyside6_addons-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (4.0 kB)
+2026-11-01T17:17:26.0890788Z Collecting altgraph (from pyinstaller)
+2026-11-01T17:17:26.1002164Z   Downloading altgraph-0.17.5-py2.py3-none-any.whl.metadata (7.5 kB)
+2026-11-01T17:17:26.1242730Z Collecting packaging>=22.0 (from pyinstaller)
+2026-11-01T17:17:26.1357753Z   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+2026-11-01T17:17:26.1613835Z Collecting pyinstaller-hooks-contrib>=2026.7 (from pyinstaller)
+2026-11-01T17:17:26.1740367Z   Downloading pyinstaller_hooks_contrib-2026.9-py3-none-any.whl.metadata (16 kB)
+2026-11-01T17:17:26.1785179Z Requirement already satisfied: setuptools>=42.0.0 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from pyinstaller) (79.0.1)
+2026-11-01T17:17:26.2567012Z Collecting awkward>=2.8.2 (from uproot->-r gui/requirements.txt (line 5))
+2026-11-01T17:17:26.2698526Z   Downloading awkward-2.14.0-py3-none-any.whl.metadata (7.1 kB)
+2026-11-01T17:17:26.4571705Z Collecting cramjam>=2.5.0 (from uproot->-r gui/requirements.txt (line 5))
+2026-11-01T17:17:26.4694495Z   Downloading cramjam-2.14.0-cp311-cp311-manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+2026-11-01T17:17:26.4986250Z Collecting fsspec!=2026.2.0 (from uproot->-r gui/requirements.txt (line 5))
+2026-11-01T17:17:26.5103165Z   Downloading fsspec-2026.9.0-py3-none-any.whl.metadata (10 kB)
+2026-11-01T17:17:26.7548365Z Collecting xxhash (from uproot->-r gui/requirements.txt (line 5))
+2026-11-01T17:17:26.7669679Z   Downloading xxhash-4.0.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (17 kB)
+2026-11-01T17:17:26.8365238Z Collecting contourpy>=1.0.1 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T17:17:26.8479158Z   Downloading contourpy-1.3.3-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (5.5 kB)
+2026-11-01T17:17:26.8673168Z Collecting cycler>=0.10 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T17:17:26.8788992Z   Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+2026-11-01T17:17:27.0400301Z Collecting fonttools>=4.28.2 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T17:17:27.0515822Z   Downloading fonttools-4.68.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (139 kB)
+2026-11-01T17:17:27.1362385Z Collecting kiwisolver>=1.3.1 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T17:17:27.1477158Z   Downloading kiwisolver-1.5.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.2 kB)
+2026-11-01T17:17:27.3499253Z Collecting pillow>=9 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T17:17:27.3617747Z   Downloading pillow-13.0.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+2026-11-01T17:17:27.3935058Z Collecting pyparsing>=3 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T17:17:27.4050011Z   Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+2026-11-01T17:17:27.4253855Z Collecting python-dateutil>=2.7 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T17:17:27.4362735Z   Downloading python_dateutil-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+2026-11-01T17:17:27.4689465Z Collecting cyclopts>=4.0.0 (from pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T17:17:27.4814051Z   Downloading cyclopts-5.3.2-py3-none-any.whl.metadata (12 kB)
+2026-11-01T17:17:27.5119809Z Collecting pooch (from pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T17:17:27.5232228Z   Downloading pooch-1.9.0-py3-none-any.whl.metadata (10 kB)
+2026-11-01T17:17:27.5477880Z Collecting pyvista-validation==0.2.2 (from pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T17:17:27.5600510Z   Downloading pyvista_validation-0.2.2-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (8.7 kB)
+2026-11-01T17:17:27.5823863Z Collecting scooby>=0.5.1 (from pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T17:17:27.5944711Z   Downloading scooby-0.12.1-py3-none-any.whl.metadata (16 kB)
+2026-11-01T17:17:27.6176990Z Collecting typing-extensions>=4.10 (from pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T17:17:27.6289641Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-11-01T17:17:27.6602813Z Collecting QtPy>=1.9.0 (from pyvistaqt->-r gui/requirements-3d.txt (line 2))
+2026-11-01T17:17:27.6746303Z   Downloading QtPy-2.4.3-py3-none-any.whl.metadata (12 kB)
+2026-11-01T17:17:27.8131910Z Collecting awkward-cpp==57 (from awkward>=2.8.2->uproot->-r gui/requirements.txt (line 5))
+2026-11-01T17:17:27.8261505Z   Downloading awkward_cpp-57-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (2.1 kB)
+2026-11-01T17:17:27.8629400Z Collecting importlib-metadata>=4.13.0 (from awkward>=2.8.2->uproot->-r gui/requirements.txt (line 5))
+2026-11-01T17:17:27.8740864Z   Downloading importlib_metadata-10.1.0-py3-none-any.whl.metadata (4.5 kB)
+2026-11-01T17:17:27.9004086Z Collecting attrs>=23.1.0 (from cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T17:17:27.9113974Z   Downloading attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+2026-11-01T17:17:27.9310053Z Collecting docstring-parser<4.0,>=0.15 (from cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T17:17:27.9425031Z   Downloading docstring_parser-0.18.0-py3-none-any.whl.metadata (3.5 kB)
+2026-11-01T17:17:27.9637605Z Collecting rich-rst<3,>=2.0.1 (from cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T17:17:27.9760785Z   Downloading rich_rst-2.2.0-py3-none-any.whl.metadata (5.0 kB)
+2026-11-01T17:17:28.0117396Z Collecting rich>=13.6.0 (from cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T17:17:28.0234850Z   Downloading rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+2026-11-01T17:17:28.0543271Z Collecting pygments>=2.0.0 (from rich-rst<3,>=2.0.1->cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T17:17:28.0660455Z   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+2026-11-01T17:17:28.0933793Z Collecting zipp>=3.20 (from importlib-metadata>=4.13.0->awkward>=2.8.2->uproot->-r gui/requirements.txt (line 5))
+2026-11-01T17:17:28.1047079Z   Downloading zipp-4.1.2-py3-none-any.whl.metadata (3.6 kB)
+2026-11-01T17:17:28.1316201Z Collecting tzdata (from python-dateutil>=2.7->matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T17:17:28.1430550Z   Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+2026-11-01T17:17:28.1659534Z Collecting markdown-it-py>=2.2.0 (from rich>=13.6.0->cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T17:17:28.1772631Z   Downloading markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+2026-11-01T17:17:28.2009590Z Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=13.6.0->cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T17:17:28.2120368Z   Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+2026-11-01T17:17:28.2523922Z Collecting platformdirs>=2.5.0 (from pooch->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T17:17:28.2640855Z   Downloading platformdirs-4.14.3-py3-none-any.whl.metadata (5.4 kB)
+2026-11-01T17:17:28.2925088Z Collecting requests>=2.19.0 (from pooch->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T17:17:28.3046541Z   Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+2026-11-01T17:17:28.4692059Z Collecting charset_normalizer<4,>=2 (from requests>=2.19.0->pooch->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T17:17:28.4812823Z   Downloading charset_normalizer-3.5.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (46 kB)
+2026-11-01T17:17:28.5059860Z Collecting idna<4,>=2.5 (from requests>=2.19.0->pooch->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T17:17:28.5173226Z   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+2026-11-01T17:17:28.5455724Z Collecting urllib3<3,>=1.26 (from requests>=2.19.0->pooch->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T17:17:28.5568446Z   Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+2026-11-01T17:17:28.5823500Z Collecting certifi>=2023.5.7 (from requests>=2.19.0->pooch->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T17:17:28.5934480Z   Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+2026-11-01T17:17:28.6120411Z Downloading pyside6-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl (572 kB)
+2026-11-01T17:17:28.6284050Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 572.1/572.1 kB 28.4 MB/s  0:00:00
+2026-11-01T17:17:28.6415197Z Downloading pyside6_addons-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl (175.3 MB)
+2026-11-01T17:17:30.8814998Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 175.3/175.3 MB 78.3 MB/s  0:00:02
+2026-11-01T17:17:30.8947130Z Downloading pyside6_essentials-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl (80.3 MB)
+2026-11-01T17:17:31.5119784Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 80.3/80.3 MB 130.2 MB/s  0:00:00
+2026-11-01T17:17:31.5248498Z Downloading shiboken6-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl (272 kB)
+2026-11-01T17:17:31.5423560Z Downloading pyinstaller-6.22.3-py3-none-manylinux2014_x86_64.whl (764 kB)
+2026-11-01T17:17:31.5482744Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 765.0/765.0 kB 147.0 MB/s  0:00:00
+2026-11-01T17:17:31.5644663Z Downloading uproot-5.7.7-py3-none-any.whl (441 kB)
+2026-11-01T17:17:31.5884442Z Downloading numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.9 MB)
+2026-11-01T17:17:31.6939169Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.9/16.9 MB 162.2 MB/s  0:00:00
+2026-11-01T17:17:31.7073680Z Downloading matplotlib-3.11.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (9.9 MB)
+2026-11-01T17:17:31.7660619Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.9/9.9 MB 171.8 MB/s  0:00:00
+2026-11-01T17:17:31.7822307Z Downloading pyvista-0.49.2-py3-none-any.whl (2.7 MB)
+2026-11-01T17:17:31.7972894Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.7/2.7 MB 199.1 MB/s  0:00:00
+2026-11-01T17:17:31.8104826Z Downloading pyvista_validation-0.2.2-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (261 kB)
+2026-11-01T17:17:31.8429179Z Downloading vtk-9.7.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (139.6 MB)
+2026-11-01T17:17:33.0814229Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 139.6/139.6 MB 113.6 MB/s  0:00:01
+2026-11-01T17:17:33.0941290Z Downloading pyvistaqt-0.13.1-py3-none-any.whl (141 kB)
+2026-11-01T17:17:33.1111272Z Downloading awkward-2.14.0-py3-none-any.whl (1.0 MB)
+2026-11-01T17:17:33.1260594Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.0/1.0 MB 81.1 MB/s  0:00:00
+2026-11-01T17:17:33.1441078Z Downloading awkward_cpp-57-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (696 kB)
+2026-11-01T17:17:33.1564580Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 696.6/696.6 kB 42.9 MB/s  0:00:00
+2026-11-01T17:17:33.1694245Z Downloading contourpy-1.3.3-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (355 kB)
+2026-11-01T17:17:33.1856719Z Downloading cramjam-2.14.0-cp311-cp311-manylinux_2_28_x86_64.whl (2.0 MB)
+2026-11-01T17:17:33.2023672Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 125.2 MB/s  0:00:00
+2026-11-01T17:17:33.2138004Z Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+2026-11-01T17:17:33.2299333Z Downloading cyclopts-5.3.2-py3-none-any.whl (297 kB)
+2026-11-01T17:17:33.2441350Z Downloading docstring_parser-0.18.0-py3-none-any.whl (22 kB)
+2026-11-01T17:17:33.2588646Z Downloading rich_rst-2.2.0-py3-none-any.whl (279 kB)
+2026-11-01T17:17:33.2727415Z Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+2026-11-01T17:17:33.2864414Z Downloading fonttools-4.68.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.5 MB)
+2026-11-01T17:17:33.3161663Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.5/5.5 MB 195.5 MB/s  0:00:00
+2026-11-01T17:17:33.3274829Z Downloading fsspec-2026.9.0-py3-none-any.whl (221 kB)
+2026-11-01T17:17:33.3408310Z Downloading importlib_metadata-10.1.0-py3-none-any.whl (32 kB)
+2026-11-01T17:17:33.3538883Z Downloading kiwisolver-1.5.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.4 MB)
+2026-11-01T17:17:33.3658122Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 133.3 MB/s  0:00:00
+2026-11-01T17:17:33.3769557Z Downloading packaging-26.3-py3-none-any.whl (129 kB)
+2026-11-01T17:17:33.3902096Z Downloading pillow-13.0.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (7.1 MB)
+2026-11-01T17:17:33.4216973Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.1/7.1 MB 238.9 MB/s  0:00:00
+2026-11-01T17:17:33.4332388Z Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-11-01T17:17:33.4398233Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 243.4 MB/s  0:00:00
+2026-11-01T17:17:33.4543775Z Downloading pyinstaller_hooks_contrib-2026.9-py3-none-any.whl (462 kB)
+2026-11-01T17:17:33.4685225Z Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+2026-11-01T17:17:33.4837144Z Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+2026-11-01T17:17:33.5089725Z Downloading QtPy-2.4.3-py3-none-any.whl (95 kB)
+2026-11-01T17:17:33.5264246Z Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+2026-11-01T17:17:33.5406139Z Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+2026-11-01T17:17:33.5542024Z Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+2026-11-01T17:17:33.5685569Z Downloading scooby-0.12.1-py3-none-any.whl (21 kB)
+2026-11-01T17:17:33.5818582Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-11-01T17:17:33.5952416Z Downloading zipp-4.1.2-py3-none-any.whl (10 kB)
+2026-11-01T17:17:33.6085830Z Downloading altgraph-0.17.5-py2.py3-none-any.whl (21 kB)
+2026-11-01T17:17:33.6220059Z Downloading pooch-1.9.0-py3-none-any.whl (67 kB)
+2026-11-01T17:17:33.6354122Z Downloading platformdirs-4.14.3-py3-none-any.whl (35 kB)
+2026-11-01T17:17:33.6482800Z Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+2026-11-01T17:17:33.6617512Z Downloading charset_normalizer-3.5.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (269 kB)
+2026-11-01T17:17:33.6763025Z Downloading idna-3.20-py3-none-any.whl (69 kB)
+2026-11-01T17:17:33.6899130Z Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+2026-11-01T17:17:33.7049919Z Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+2026-11-01T17:17:33.7188766Z Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+2026-11-01T17:17:33.7337158Z Downloading xxhash-4.0.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (260 kB)
+2026-11-01T17:17:34.4625274Z Installing collected packages: altgraph, zipp, xxhash, urllib3, tzdata, typing-extensions, shiboken6, scooby, pyparsing, pygments, platformdirs, pillow, packaging, numpy, mdurl, kiwisolver, idna, fsspec, fonttools, docstring-parser, cycler, cramjam, charset_normalizer, certifi, attrs, requests, QtPy, pyvista-validation, python-dateutil, PySide6_Essentials, pyinstaller-hooks-contrib, markdown-it-py, importlib-metadata, contourpy, awkward-cpp, rich, PySide6_Addons, pyinstaller, pooch, matplotlib, awkward, vtk, uproot, rich-rst, PySide6, cyclopts, pyvista, pyvistaqt
+2026-11-01T17:17:48.3738008Z 
+2026-11-01T17:17:48.3763892Z Successfully installed PySide6-6.11.3 PySide6_Addons-6.11.3 PySide6_Essentials-6.11.3 QtPy-2.4.3 altgraph-0.17.5 attrs-26.1.0 awkward-2.14.0 awkward-cpp-57 certifi-2026.10.23 charset_normalizer-3.5.2 contourpy-1.3.3 cramjam-2.14.0 cycler-0.12.1 cyclopts-5.3.2 docstring-parser-0.18.0 fonttools-4.68.0 fsspec-2026.9.0 idna-3.20 importlib-metadata-10.1.0 kiwisolver-1.5.1 markdown-it-py-4.2.0 matplotlib-3.11.2 mdurl-0.1.2 numpy-2.4.6 packaging-26.3 pillow-13.0.0 platformdirs-4.14.3 pooch-1.9.0 pygments-2.21.0 pyinstaller-6.22.3 pyinstaller-hooks-contrib-2026.9 pyparsing-3.3.3 python-dateutil-4.0.0 pyvista-0.49.2 pyvista-validation-0.2.2 pyvistaqt-0.13.1 requests-2.34.2 rich-15.0.0 rich-rst-2.2.0 scooby-0.12.1 shiboken6-6.11.3 typing-extensions-4.16.0 tzdata-2026.6 uproot-5.7.7 urllib3-2.8.0 vtk-9.7.1 xxhash-4.0.2 zipp-4.1.2
+2026-11-01T17:17:48.5707394Z ##[group]Run set -euo pipefail
+2026-11-01T17:17:48.5707738Z [36;1mset -euo pipefail[0m
+2026-11-01T17:17:48.5708024Z [36;1mdelivery="$RUNNER_TEMP/g4usim-delivery"[0m
+2026-11-01T17:17:48.5708358Z [36;1mmkdir -p "$delivery/bootstrap"[0m
+2026-11-01T17:17:48.5708937Z [36;1mcurl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xj -C "$delivery/bootstrap" bin/micromamba[0m
+2026-11-01T17:17:48.5709533Z [36;1mprefix="$delivery/bootstrap/geant4"[0m
+2026-11-01T17:17:48.5710141Z [36;1m"$delivery/bootstrap/bin/micromamba" create -y -p "$prefix" -c conda-forge 'geant4=11.4.3' 'python=3.11' expat zlib freetype[0m
+2026-11-01T17:17:48.5711010Z [36;1m"$delivery/bootstrap/bin/micromamba" run -p "$prefix" -- printenv | grep -E '^(G4[A-Z0-9_]*DATA|GEANT4[A-Z0-9_]*)=' >> "$GITHUB_ENV"[0m
+2026-11-01T17:17:48.5711610Z [36;1mecho "G4_PREFIX=$prefix" >> "$GITHUB_ENV"[0m
+2026-11-01T17:17:48.5711972Z [36;1mecho "G4_BUILD=$delivery/backend" >> "$GITHUB_ENV"[0m
+2026-11-01T17:17:48.5712358Z [36;1mecho "DELIVERY_ROOT=$delivery" >> "$GITHUB_ENV"[0m
+2026-11-01T17:17:48.5735350Z shell: /usr/bin/bash -e {0}
+2026-11-01T17:17:48.5735597Z env:
+2026-11-01T17:17:48.5735794Z   QT_QPA_PLATFORM: offscreen
+2026-11-01T17:17:48.5736366Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:17:48.5736819Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-11-01T17:17:48.5737452Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:17:48.5737841Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:17:48.5738217Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:17:48.5738611Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-11-01T17:17:48.5738938Z ##[endgroup]
+2026-11-01T17:17:50.4557806Z Fetch Shard Index for conda-forge/linux-64                                                      ⧖ Starting
+2026-11-01T17:17:50.5052398Z Fetch Shard Index for conda-forge/linux-64                                                ✔ Done (0.0 sec)
+2026-11-01T17:17:50.5053254Z Fetch Shard Index for conda-forge/noarch                                                        ⧖ Starting
+2026-11-01T17:17:50.5620320Z Fetch Shard Index for conda-forge/noarch                                                  ✔ Done (0.1 sec)
+2026-11-01T17:17:50.5621639Z Fetching and Parsing Packages' Shards                                                           ⧖ Starting
+2026-11-01T17:17:54.2426439Z Fetching and Parsing Packages' Shards                                                     ✔ Done (3.7 sec)
+2026-11-01T17:17:54.5035654Z 
+2026-11-01T17:17:54.5037258Z Resolving Environment                                                                           ⧖ Starting
+2026-11-01T17:17:54.7552636Z Resolving Environment                                                                     ✔ Done (0.3 sec)
+2026-11-01T17:17:54.7553840Z 
+2026-11-01T17:17:54.7554011Z Transaction
+2026-11-01T17:17:54.7554194Z 
+2026-11-01T17:17:54.7554546Z   Prefix: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4
+2026-11-01T17:17:54.7555035Z 
+2026-11-01T17:17:54.7555164Z   Updating specs:
+2026-11-01T17:17:54.7555310Z 
+2026-11-01T17:17:54.7555408Z    - geant4=11.4.3
+2026-11-01T17:17:54.7555744Z    - python=3.11
+2026-11-01T17:17:54.7556311Z    - expat
+2026-11-01T17:17:54.7556609Z    - zlib
+2026-11-01T17:17:54.7556897Z    - freetype
+2026-11-01T17:17:54.7557228Z    - pip
+2026-11-01T17:17:54.7557400Z 
+2026-11-01T17:17:54.7557407Z 
+2026-11-01T17:17:54.8846627Z   Package                               Version  Build                 Channel          Size
+2026-11-01T17:17:54.8848559Z warning  libmamba Security Warning: This transaction includes executing package scripts (pre/post-link/unlink) if present. These scripts can contain arbitrary code. Please ensure you trust the package sources.
+2026-11-01T17:17:54.8850265Z ──────────────────────────────────────────────────────────────────────────────────────────────
+2026-11-01T17:17:54.8850928Z   Install:
+2026-11-01T17:17:54.8851950Z ──────────────────────────────────────────────────────────────────────────────────────────────
+2026-11-01T17:17:54.8852356Z 
+2026-11-01T17:17:54.8852637Z   + _openmp_mutex                           4.5  20_gnu                conda-forge      29kB
+2026-11-01T17:17:54.8853300Z   + alsa-lib                           1.2.16.1  h7cc23a3_1            conda-forge     595kB
+2026-11-01T17:17:54.8853957Z   + aws-c-auth                            1.0.0  h7648d90_2            conda-forge     136kB
+2026-11-01T17:17:54.8854584Z   + aws-c-cal                             1.0.0  hcf7459e_1            conda-forge      59kB
+2026-11-01T17:17:54.8855222Z   + aws-c-common                          1.0.5  hebe6cf0_0            conda-forge     279kB
+2026-11-01T17:17:54.8855754Z   + aws-c-compression                     1.0.0  ha404f16_1            conda-forge      22kB
+2026-11-01T17:17:54.8856556Z   + aws-c-http                            1.0.0  h392d1a3_1            conda-forge     233kB
+2026-11-01T17:17:54.8857034Z   + aws-c-io                              1.0.0  h07ba609_0            conda-forge     184kB
+2026-11-01T17:17:54.8857487Z   + aws-c-s3                              1.0.0  hfe03eda_1            conda-forge     164kB
+2026-11-01T17:17:54.8857961Z   + aws-c-sdkutils                        1.0.1  ha404f16_0            conda-forge      72kB
+2026-11-01T17:17:54.8858453Z   + aws-checksums                         1.0.1  ha404f16_0            conda-forge     105kB
+2026-11-01T17:17:54.8859226Z   + bzip2                                 1.0.8  hda65f42_10           conda-forge     258kB
+2026-11-01T17:17:54.8859678Z   + c-ares                               1.34.9  hebe6cf0_0            conda-forge     234kB
+2026-11-01T17:17:54.8860173Z   + ca-certificates                  2026.10.23  hbd8a1cb_0            conda-forge     130kB
+2026-11-01T17:17:54.8860663Z   + cairo                                1.18.6  h3c89d7e_0            conda-forge       1MB
+2026-11-01T17:17:54.8861118Z   + clhep                               2.4.7.2  hee9eb32_2            conda-forge       2MB
+2026-11-01T17:17:54.8861580Z   + cyrus-sasl                           2.1.28  hac629b4_1            conda-forge     210kB
+2026-11-01T17:17:54.8862037Z   + dbus                                 1.16.2  he8c428d_2            conda-forge     450kB
+2026-11-01T17:17:54.8862519Z   + double-conversion                     3.4.0  hecca717_0            conda-forge      72kB
+2026-11-01T17:17:54.8863008Z   + expat                                 2.9.0  hd2095e1_0            conda-forge     153kB
+2026-11-01T17:17:54.8863521Z   + font-ttf-dejavu-sans-mono              2.37  hab24e00_0            conda-forge     397kB
+2026-11-01T17:17:54.8864073Z   + font-ttf-inconsolata                  3.000  h77eed37_0            conda-forge      97kB
+2026-11-01T17:17:54.8864625Z   + font-ttf-source-code-pro              2.038  h77eed37_0            conda-forge     701kB
+2026-11-01T17:17:54.8865170Z   + font-ttf-ubuntu                        0.83  h77eed37_3            conda-forge       2MB
+2026-11-01T17:17:54.8865660Z   + fontconfig                           2.18.3  h4db4eae_1            conda-forge     296kB
+2026-11-01T17:17:54.8866467Z   + fonts-conda-ecosystem                     1  0                     conda-forge       4kB
+2026-11-01T17:17:54.8866995Z   + fonts-conda-forge                         1  hc364b38_1            conda-forge       4kB
+2026-11-01T17:17:54.8867834Z   + freetype                             2.14.3  ha770c72_2            conda-forge     175kB
+2026-11-01T17:17:54.8868493Z   + geant4                               11.4.3  qt_f90a02a_0          conda-forge      23MB
+2026-11-01T17:17:54.8868950Z   + geant4-data-abla                        3.3  hd8ed1ab_1            conda-forge     116kB
+2026-11-01T17:17:54.8869447Z   + geant4-data-channeling                2.0.0  hd8ed1ab_0            conda-forge      10MB
+2026-11-01T17:17:54.8869960Z   + geant4-data-emlow                     8.8.0  hd8ed1ab_0            conda-forge     307MB
+2026-11-01T17:17:54.8870633Z   + geant4-data-ensdfstate                  3.0  hd8ed1ab_0            conda-forge     230kB
+2026-11-01T17:17:54.8871142Z   + geant4-data-incl                      1.3.0  hd8ed1ab_1            conda-forge      79kB
+2026-11-01T17:17:54.8871623Z   + geant4-data-ndl                       4.7.1  hd8ed1ab_1            conda-forge       1GB
+2026-11-01T17:17:54.8872120Z   + geant4-data-particlexs                4.2.0  hd8ed1ab_0            conda-forge      11MB
+2026-11-01T17:17:54.8872665Z   + geant4-data-photonevaporation         6.1.2  hd8ed1ab_0            conda-forge       8MB
+2026-11-01T17:17:54.8873181Z   + geant4-data-pii                         1.3  hd8ed1ab_2            conda-forge       3MB
+2026-11-01T17:17:54.8873693Z   + geant4-data-radioactivedecay          6.1.2  hd8ed1ab_0            conda-forge     765kB
+2026-11-01T17:17:54.8874227Z   + geant4-data-realsurface                 2.2  hd8ed1ab_1            conda-forge     132MB
+2026-11-01T17:17:54.8874740Z   + geant4-data-saiddata                    2.0  hd8ed1ab_1            conda-forge      33kB
+2026-11-01T17:17:54.8875229Z   + geant4-qt-mutex                      11.4.3  qt_0                  conda-forge      11kB
+2026-11-01T17:17:54.8875685Z   + graphite2                            1.3.15  h54a6638_1            conda-forge     103kB
+2026-11-01T17:17:54.8876423Z   + hdf5                                  2.2.0  nompi_hdbb200c_101    conda-forge       4MB
+2026-11-01T17:17:54.8876978Z   + icu                                    78.3  py310h44b86e0_2       conda-forge      14MB
+2026-11-01T17:17:54.8877398Z   + keyutils                              1.6.3  h7cc23a3_1            conda-forge     135kB
+2026-11-01T17:17:54.8877834Z   + krb5                                 1.22.2  hbc21106_2            conda-forge       1MB
+2026-11-01T17:17:54.8878282Z   + ld_impl_linux-64                     2.46.1  default_hbd61a6d_103  conda-forge     742kB
+2026-11-01T17:17:54.8878732Z   + lerc                                  4.3.0  he78707d_0            conda-forge     270kB
+2026-11-01T17:17:54.8879154Z   + libaec                                1.1.7  h659bb9a_0            conda-forge      38kB
+2026-11-01T17:17:54.8879629Z   + libbrotlicommon                       1.2.1  h39a168f_0            conda-forge      80kB
+2026-11-01T17:17:54.8880161Z   + libbrotlidec                          1.2.1  ha411449_0            conda-forge      35kB
+2026-11-01T17:17:54.8880616Z   + libbrotlienc                          1.2.1  h018ffa1_0            conda-forge     298kB
+2026-11-01T17:17:54.8881065Z   + libcups                               2.3.3  h7a8fb5f_6            conda-forge       5MB
+2026-11-01T17:17:54.8881500Z   + libcurl                              8.23.0  ha042cf0_0            conda-forge     506kB
+2026-11-01T17:17:54.8881940Z   + libdeflate                             1.25  hd45a770_1            conda-forge      74kB
+2026-11-01T17:17:54.8882376Z   + libdrm                              2.4.129  h7cc23a3_0            conda-forge     313kB
+2026-11-01T17:17:54.8882823Z   + libedit                        3.1.20260512  pl5321h373387f_0      conda-forge     136kB
+2026-11-01T17:17:54.8883266Z   + libegl                                1.7.0  ha4b6fd6_5            conda-forge      47kB
+2026-11-01T17:17:54.8883708Z   + libegl-devel                          1.7.0  ha4b6fd6_5            conda-forge      31kB
+2026-11-01T17:17:54.8884146Z   + libev                                  4.33  h280c20c_3            conda-forge      43kB
+2026-11-01T17:17:54.8884589Z   + libexpat                              2.9.0  hd2095e1_0            conda-forge      79kB
+2026-11-01T17:17:54.8885021Z   + libffi                                3.7.0  h81df57d_1            conda-forge      68kB
+2026-11-01T17:17:54.8885461Z   + libfreetype                          2.14.3  ha770c72_2            conda-forge       8kB
+2026-11-01T17:17:54.8886142Z   + libfreetype6                         2.14.3  h5e6c136_2            conda-forge     388kB
+2026-11-01T17:17:54.8886847Z   + libgcc                               16.2.0  ha9f2e26_7            conda-forge       1MB
+2026-11-01T17:17:54.8887286Z   + libgcc-ng                            16.2.0  h69a702a_7            conda-forge      29kB
+2026-11-01T17:17:54.8887728Z   + libgfortran                          16.2.0  h69a702a_7            conda-forge      29kB
+2026-11-01T17:17:54.8888182Z   + libgfortran5                         16.2.0  h6b99dfc_7            conda-forge       3MB
+2026-11-01T17:17:54.8888626Z   + libgl                                 1.7.0  ha4b6fd6_5            conda-forge     132kB
+2026-11-01T17:17:54.8889065Z   + libgl-devel                           1.7.0  ha4b6fd6_5            conda-forge     116kB
+2026-11-01T17:17:54.8889506Z   + libglib                              2.90.0  h569388d_0            conda-forge       5MB
+2026-11-01T17:17:54.8889939Z   + libglvnd                              1.7.0  ha4b6fd6_5            conda-forge     134kB
+2026-11-01T17:17:54.8890363Z   + libglx                                1.7.0  ha4b6fd6_5            conda-forge      80kB
+2026-11-01T17:17:54.8890808Z   + libglx-devel                          1.7.0  ha4b6fd6_5            conda-forge      28kB
+2026-11-01T17:17:54.8891254Z   + libgomp                              16.2.0  he0feb66_7            conda-forge     641kB
+2026-11-01T17:17:54.8891708Z   + libharfbuzz                          15.0.0  h23af247_0            conda-forge       2MB
+2026-11-01T17:17:54.8892153Z   + libiconv                               1.18  h0cb94f2_3            conda-forge     789kB
+2026-11-01T17:17:54.8892771Z   + libjpeg-turbo                         3.2.1  h7cc23a3_0            conda-forge     654kB
+2026-11-01T17:17:54.8893216Z   + liblzma                               5.8.3  hb03c661_1            conda-forge     113kB
+2026-11-01T17:17:54.8893652Z   + libnghttp2                           1.70.0  hc5e5977_0            conda-forge     833kB
+2026-11-01T17:17:54.8894089Z   + libnsl                                2.0.1  hb9d3cd8_1            conda-forge      34kB
+2026-11-01T17:17:54.8894517Z   + libntlm                                 1.8  hb9d3cd8_0            conda-forge      33kB
+2026-11-01T17:17:54.8894962Z   + libpciaccess                           0.19  hb03c661_1            conda-forge      30kB
+2026-11-01T17:17:54.8895400Z   + libpng                               1.6.59  h922cc85_0            conda-forge     317kB
+2026-11-01T17:17:54.8895817Z   + libpq                                  18.6  h3883810_3            conda-forge       3MB
+2026-11-01T17:17:54.8896546Z   + libpsl                               0.23.1  hd9e3e90_1            conda-forge      73kB
+2026-11-01T17:17:54.8897010Z   + libpython                           3.11.18  ha57cdbe_0_cpython    conda-forge       8MB
+2026-11-01T17:17:54.8897465Z   + libsqlite                            3.54.1  h13e7031_0            conda-forge     984kB
+2026-11-01T17:17:54.8897910Z   + libssh2                              1.11.1  h6154650_1            conda-forge     306kB
+2026-11-01T17:17:54.8898354Z   + libstdcxx                            16.2.0  h934c35e_7            conda-forge       7MB
+2026-11-01T17:17:54.8898794Z   + libtiff                               4.7.2  hcc2c06a_1            conda-forge     460kB
+2026-11-01T17:17:54.8899224Z   + libuuid                              2.42.4  hcfc3c73_0            conda-forge      34kB
+2026-11-01T17:17:54.8899682Z   + libvulkan-loader                  1.4.357.0  h0e34353_2            conda-forge     207kB
+2026-11-01T17:17:54.8900158Z   + libwebp-base                          1.6.0  hd42ef1d_1            conda-forge     428kB
+2026-11-01T17:17:54.8900605Z   + libxcb                               1.17.0  hb83e432_2            conda-forge     395kB
+2026-11-01T17:17:54.8901038Z   + libxcrypt                            4.4.38  h280c20c_0            conda-forge     102kB
+2026-11-01T17:17:54.8901498Z   + libxkbcommon                         1.13.2  h59c2f34_2            conda-forge     945kB
+2026-11-01T17:17:54.8901940Z   + libxml2                              2.15.4  h7df9aa5_1            conda-forge      47kB
+2026-11-01T17:17:54.8902541Z   + libxml2-16                           2.15.4  hf3af7cc_1            conda-forge     569kB
+2026-11-01T17:17:54.8902985Z   + libzlib                               1.3.2  h25fd6f3_3            conda-forge      64kB
+2026-11-01T17:17:54.8903427Z   + ncurses                                 6.6  hdb14827_1            conda-forge     911kB
+2026-11-01T17:17:54.8903859Z   + openldap                             2.6.13  hbde042b_0            conda-forge     786kB
+2026-11-01T17:17:54.8904296Z   + openssl                               3.6.5  h781a0a9_0            conda-forge       3MB
+2026-11-01T17:17:54.8904732Z   + packaging                              26.3  pyhc364b38_0          conda-forge     116kB
+2026-11-01T17:17:54.8905171Z   + pcre2                                 10.47  h8b3dc9c_1            conda-forge       1MB
+2026-11-01T17:17:54.8905586Z   + pip                                  26.2.2  pyh8b19718_0          conda-forge       1MB
+2026-11-01T17:17:54.8906144Z   + pixman                               0.46.4  h54a6638_3            conda-forge     377kB
+2026-11-01T17:17:54.8906594Z   + pthread-stubs                           0.4  h7cc23a3_1004         conda-forge      10kB
+2026-11-01T17:17:54.8907040Z   + python                              3.11.18  h5f976f7_0_cpython    conda-forge      23MB
+2026-11-01T17:17:54.8907477Z   + qt6-main                             6.12.0  pl5321hcf69127_1      conda-forge      65MB
+2026-11-01T17:17:54.8908046Z   + readline                                8.3  hd6e31c0_1            conda-forge     349kB
+2026-11-01T17:17:54.8908467Z   + s2n                                   1.7.7  ha5dc4ae_0            conda-forge     394kB
+2026-11-01T17:17:54.8908897Z   + setuptools                           84.2.1  pyhe730653_0          conda-forge     567kB
+2026-11-01T17:17:54.8909324Z   + tk                                   8.6.13  noxft_h1df4ec4_4      conda-forge       4MB
+2026-11-01T17:17:54.8909737Z   + tzdata                                2026e  h5d301ff_0            conda-forge     119kB
+2026-11-01T17:17:54.8910160Z   + wayland                              1.26.0  hc1c935e_2            conda-forge     340kB
+2026-11-01T17:17:54.8910582Z   + wheel                                0.48.0  pyhd8ed1ab_0          conda-forge      35kB
+2026-11-01T17:17:54.8911004Z   + xcb-util                              0.4.1  h4f16b4b_2            conda-forge      21kB
+2026-11-01T17:17:54.8911457Z   + xcb-util-cursor                       0.1.6  hb03c661_0            conda-forge      21kB
+2026-11-01T17:17:54.8911963Z   + xcb-util-image                        0.4.0  hb711507_2            conda-forge      25kB
+2026-11-01T17:17:54.8912430Z   + xcb-util-keysyms                      0.4.1  hb711507_0            conda-forge      14kB
+2026-11-01T17:17:54.8912910Z   + xcb-util-renderutil                  0.3.10  hb711507_0            conda-forge      17kB
+2026-11-01T17:17:54.8913373Z   + xcb-util-wm                           0.4.2  hb711507_0            conda-forge      52kB
+2026-11-01T17:17:54.8913807Z   + xerces-c                              3.3.0  h78fed68_2            conda-forge       2MB
+2026-11-01T17:17:54.8914264Z   + xkeyboard-config                       2.48  hebe6cf0_1            conda-forge     442kB
+2026-11-01T17:17:54.8914728Z   + xorg-libice                           1.1.2  h280c20c_0            conda-forge      63kB
+2026-11-01T17:17:54.8915169Z   + xorg-libsm                            1.2.6  h0d788c3_1            conda-forge      31kB
+2026-11-01T17:17:54.8915616Z   + xorg-libx11                          1.8.14  hb83e432_0            conda-forge     847kB
+2026-11-01T17:17:54.8916346Z   + xorg-libxau                          1.0.12  h7cc23a3_2            conda-forge      19kB
+2026-11-01T17:17:54.8916819Z   + xorg-libxcomposite                    0.4.7  hb03c661_0            conda-forge      14kB
+2026-11-01T17:17:54.8917295Z   + xorg-libxcursor                       1.2.3  h7cc23a3_1            conda-forge      35kB
+2026-11-01T17:17:54.8917764Z   + xorg-libxdamage                       1.1.6  hb9d3cd8_0            conda-forge      13kB
+2026-11-01T17:17:54.8918366Z   + xorg-libxdmcp                         1.1.5  h7cc23a3_2            conda-forge      23kB
+2026-11-01T17:17:54.8918828Z   + xorg-libxext                          1.3.7  h7cc23a3_1            conda-forge      53kB
+2026-11-01T17:17:54.8919285Z   + xorg-libxfixes                        6.0.2  h7cc23a3_1            conda-forge      21kB
+2026-11-01T17:17:54.8919740Z   + xorg-libxi                            1.8.4  h7cc23a3_0            conda-forge      50kB
+2026-11-01T17:17:54.8920188Z   + xorg-libxmu                           1.3.1  hb03c661_0            conda-forge      90kB
+2026-11-01T17:17:54.8920640Z   + xorg-libxrandr                        1.5.5  h7cc23a3_1            conda-forge      31kB
+2026-11-01T17:17:54.8921107Z   + xorg-libxrender                      0.9.13  h7cc23a3_0            conda-forge      35kB
+2026-11-01T17:17:54.8921570Z   + xorg-libxt                            1.3.1  h7cc23a3_1            conda-forge     384kB
+2026-11-01T17:17:54.8922019Z   + xorg-libxtst                          1.2.6  h7cc23a3_0            conda-forge      35kB
+2026-11-01T17:17:54.8922481Z   + xorg-libxxf86vm                       1.1.7  hb03c661_0            conda-forge      19kB
+2026-11-01T17:17:54.8922952Z   + xorg-xorgproto                       2025.1  hebe6cf0_3            conda-forge     596kB
+2026-11-01T17:17:54.8923388Z   + zlib                                  1.3.2  h25fd6f3_3            conda-forge      96kB
+2026-11-01T17:17:54.8923921Z   + zstd                                  1.5.7  hb78ec9c_7            conda-forge     601kB
+2026-11-01T17:17:54.8924183Z 
+2026-11-01T17:17:54.8924260Z   Summary:
+2026-11-01T17:17:54.8924371Z 
+2026-11-01T17:17:54.8924468Z   Install: 146 packages
+2026-11-01T17:17:54.8924609Z 
+2026-11-01T17:17:54.8924703Z   Total download: 2GB
+2026-11-01T17:17:54.8924835Z 
+2026-11-01T17:17:54.8925188Z ──────────────────────────────────────────────────────────────────────────────────────────────
+2026-11-01T17:17:54.8925461Z 
+2026-11-01T17:17:54.8925465Z 
+2026-11-01T17:17:54.8925500Z 
+2026-11-01T17:17:54.8925590Z Transaction starting
+2026-11-01T17:18:05.4181885Z Linking geant4-qt-mutex-11.4.3-qt_0
+2026-11-01T17:18:05.4188978Z Linking libzlib-1.3.2-h25fd6f3_3
+2026-11-01T17:18:05.4196247Z Linking libglvnd-1.7.0-ha4b6fd6_5
+2026-11-01T17:18:05.4204415Z Linking libgomp-16.2.0-he0feb66_7
+2026-11-01T17:18:05.4213795Z Linking zstd-1.5.7-hb78ec9c_7
+2026-11-01T17:18:05.4234914Z Linking zlib-1.3.2-h25fd6f3_3
+2026-11-01T17:18:05.4639326Z Linking libegl-1.7.0-ha4b6fd6_5
+2026-11-01T17:18:05.4648881Z Linking _openmp_mutex-4.5-20_gnu
+2026-11-01T17:18:05.6248545Z Linking ld_impl_linux-64-2.46.1-default_hbd61a6d_103
+2026-11-01T17:18:05.6391917Z Linking libgcc-16.2.0-ha9f2e26_7
+2026-11-01T17:18:05.6406392Z Linking libev-4.33-h280c20c_3
+2026-11-01T17:18:05.6414460Z Linking c-ares-1.34.9-hebe6cf0_0
+2026-11-01T17:18:05.6508265Z Linking libdeflate-1.25-hd45a770_1
+2026-11-01T17:18:05.6520327Z Linking libiconv-1.18-h0cb94f2_3
+2026-11-01T17:18:05.6575252Z Linking libpciaccess-0.19-hb03c661_1
+2026-11-01T17:18:05.7153900Z Linking libgfortran5-16.2.0-h6b99dfc_7
+2026-11-01T17:18:05.7164219Z Linking keyutils-1.6.3-h7cc23a3_1
+2026-11-01T17:18:05.7212069Z Linking xorg-libxdmcp-1.1.5-h7cc23a3_2
+2026-11-01T17:18:05.7222382Z Linking xorg-libxau-1.0.12-h7cc23a3_2
+2026-11-01T17:18:05.7232484Z Linking xorg-xorgproto-2025.1-hebe6cf0_3
+2026-11-01T17:18:05.7368212Z Linking aws-c-common-1.0.5-hebe6cf0_0
+2026-11-01T17:18:05.7429492Z Linking xorg-libice-1.1.2-h280c20c_0
+2026-11-01T17:18:05.7442309Z Linking libbrotlicommon-1.2.1-h39a168f_0
+2026-11-01T17:18:05.7454842Z Linking alsa-lib-1.2.16.1-h7cc23a3_1
+2026-11-01T17:18:05.7548282Z Linking libwebp-base-1.6.0-hd42ef1d_1
+2026-11-01T17:18:05.7578242Z Linking libntlm-1.8-hb9d3cd8_0
+2026-11-01T17:18:05.7588484Z Linking libjpeg-turbo-3.2.1-h7cc23a3_0
+2026-11-01T17:18:05.7622342Z Linking libgcc-ng-16.2.0-h69a702a_7
+2026-11-01T17:18:05.7629754Z Linking bzip2-1.0.8-hda65f42_10
+2026-11-01T17:18:05.7648117Z Linking libnsl-2.0.1-hb9d3cd8_1
+2026-11-01T17:18:05.7661122Z Linking libffi-3.7.0-h81df57d_1
+2026-11-01T17:18:05.7674197Z Linking liblzma-5.8.3-hb03c661_1
+2026-11-01T17:18:05.7681295Z Linking ncurses-6.6-hdb14827_1
+2026-11-01T17:18:07.0982392Z Linking tk-8.6.13-noxft_h1df4ec4_4
+2026-11-01T17:18:07.1301246Z Linking libpng-1.6.59-h922cc85_0
+2026-11-01T17:18:07.1323482Z Linking pthread-stubs-0.4-h7cc23a3_1004
+2026-11-01T17:18:07.1330807Z Linking libstdcxx-16.2.0-h934c35e_7
+2026-11-01T17:18:07.1340590Z Linking libuuid-2.42.4-hcfc3c73_0
+2026-11-01T17:18:07.1352337Z Linking libpython-3.11.18-ha57cdbe_0_cpython
+2026-11-01T17:18:07.1726108Z Linking libxcrypt-4.4.38-h280c20c_0
+2026-11-01T17:18:07.1742648Z Linking libexpat-2.9.0-hd2095e1_0
+2026-11-01T17:18:07.1750287Z Linking libdrm-2.4.129-h7cc23a3_0
+2026-11-01T17:18:07.1799558Z Linking libgfortran-16.2.0-h69a702a_7
+2026-11-01T17:18:07.1805627Z Linking aws-c-sdkutils-1.0.1-ha404f16_0
+2026-11-01T17:18:07.1824372Z Linking aws-c-compression-1.0.0-ha404f16_1
+2026-11-01T17:18:07.1837938Z Linking aws-checksums-1.0.1-ha404f16_0
+2026-11-01T17:18:07.1851871Z Linking libbrotlienc-1.2.1-h018ffa1_0
+2026-11-01T17:18:07.1861553Z Linking libbrotlidec-1.2.1-ha411449_0
+2026-11-01T17:18:07.1871414Z Linking pcre2-10.47-h8b3dc9c_1
+2026-11-01T17:18:07.2007710Z Linking libedit-3.1.20260512-pl5321h373387f_0
+2026-11-01T17:18:07.2055233Z Linking readline-8.3-hd6e31c0_1
+2026-11-01T17:18:07.2077934Z Linking libfreetype6-2.14.3-h5e6c136_2
+2026-11-01T17:18:07.2085657Z Linking libxcb-1.17.0-hb83e432_2
+2026-11-01T17:18:07.2211126Z Linking lerc-4.3.0-he78707d_0
+2026-11-01T17:18:07.2220675Z Linking libaec-1.1.7-h659bb9a_0
+2026-11-01T17:18:07.2234624Z Linking pixman-0.46.4-h54a6638_3
+2026-11-01T17:18:07.2245566Z Linking graphite2-1.3.15-h54a6638_1
+2026-11-01T17:18:07.2259809Z Linking clhep-2.4.7.2-hee9eb32_2
+2026-11-01T17:18:07.2454282Z Linking icu-78.3-py310h44b86e0_2
+2026-11-01T17:18:07.2626290Z Linking double-conversion-3.4.0-hecca717_0
+2026-11-01T17:18:07.2646364Z Linking xorg-libsm-1.2.6-h0d788c3_1
+2026-11-01T17:18:07.2658091Z Linking wayland-1.26.0-hc1c935e_2
+2026-11-01T17:18:07.2692090Z Linking expat-2.9.0-hd2095e1_0
+2026-11-01T17:18:07.2708885Z Linking libglib-2.90.0-h569388d_0
+2026-11-01T17:18:07.3065884Z Linking libfreetype-2.14.3-ha770c72_2
+2026-11-01T17:18:07.3072720Z Linking xcb-util-0.4.1-h4f16b4b_2
+2026-11-01T17:18:07.3088275Z Linking xcb-util-renderutil-0.3.10-hb711507_0
+2026-11-01T17:18:07.3100150Z Linking xcb-util-keysyms-0.4.1-hb711507_0
+2026-11-01T17:18:07.3111960Z Linking xcb-util-wm-0.4.2-hb711507_0
+2026-11-01T17:18:07.3127358Z Linking xorg-libx11-1.8.14-hb83e432_0
+2026-11-01T17:18:07.3287417Z Linking libtiff-4.7.2-hcc2c06a_1
+2026-11-01T17:18:07.3312935Z Linking libpsl-0.23.1-hd9e3e90_1
+2026-11-01T17:18:07.3323014Z Linking xerces-c-3.3.0-h78fed68_2
+2026-11-01T17:18:07.3577918Z Linking libxml2-16-2.15.4-hf3af7cc_1
+2026-11-01T17:18:07.3604326Z Linking libsqlite-3.54.1-h13e7031_0
+2026-11-01T17:18:07.3615155Z Linking dbus-1.16.2-he8c428d_2
+2026-11-01T17:18:07.3669234Z Linking fontconfig-2.18.3-h4db4eae_1
+2026-11-01T17:18:07.3754173Z Linking freetype-2.14.3-ha770c72_2
+2026-11-01T17:18:07.3798764Z Linking xcb-util-image-0.4.0-hb711507_2
+2026-11-01T17:18:07.3811058Z Linking xkeyboard-config-2.48-hebe6cf0_1
+2026-11-01T17:18:07.3976493Z Linking xorg-libxfixes-6.0.2-h7cc23a3_1
+2026-11-01T17:18:07.3988375Z Linking xorg-libxrender-0.9.13-h7cc23a3_0
+2026-11-01T17:18:07.3999097Z Linking libglx-1.7.0-ha4b6fd6_5
+2026-11-01T17:18:07.4006295Z Linking xorg-libxt-1.3.1-h7cc23a3_1
+2026-11-01T17:18:07.4049998Z Linking xorg-libxext-1.3.7-h7cc23a3_1
+2026-11-01T17:18:07.4068930Z Linking libxml2-2.15.4-h7df9aa5_1
+2026-11-01T17:18:07.4079496Z Linking xcb-util-cursor-0.1.6-hb03c661_0
+2026-11-01T17:18:07.4092716Z Linking xorg-libxcomposite-0.4.7-hb03c661_0
+2026-11-01T17:18:07.4103612Z Linking xorg-libxcursor-1.2.3-h7cc23a3_1
+2026-11-01T17:18:07.4116149Z Linking libglx-devel-1.7.0-ha4b6fd6_5
+2026-11-01T17:18:07.4128398Z Linking libgl-1.7.0-ha4b6fd6_5
+2026-11-01T17:18:07.4135288Z Linking xorg-libxi-1.8.4-h7cc23a3_0
+2026-11-01T17:18:07.4145845Z Linking xorg-libxrandr-1.5.5-h7cc23a3_1
+2026-11-01T17:18:07.4156636Z Linking xorg-libxdamage-1.1.6-hb9d3cd8_0
+2026-11-01T17:18:07.4166945Z Linking xorg-libxxf86vm-1.1.7-hb03c661_0
+2026-11-01T17:18:07.4177757Z Linking xorg-libxmu-1.3.1-hb03c661_0
+2026-11-01T17:18:07.4206472Z Linking libxkbcommon-1.13.2-h59c2f34_2
+2026-11-01T17:18:07.4278231Z Linking libgl-devel-1.7.0-ha4b6fd6_5
+2026-11-01T17:18:07.4294462Z Linking xorg-libxtst-1.2.6-h7cc23a3_0
+2026-11-01T17:18:07.4307050Z Linking libvulkan-loader-1.4.357.0-h0e34353_2
+2026-11-01T17:18:07.4330118Z Linking libegl-devel-1.7.0-ha4b6fd6_5
+2026-11-01T17:18:07.4341355Z Linking geant4-data-emlow-8.8.0-hd8ed1ab_0
+2026-11-01T17:18:08.1101008Z Linking geant4-data-photonevaporation-6.1.2-hd8ed1ab_0
+2026-11-01T17:18:08.3230996Z Linking geant4-data-radioactivedecay-6.1.2-hd8ed1ab_0
+2026-11-01T17:18:08.5098644Z Linking geant4-data-particlexs-4.2.0-hd8ed1ab_0
+2026-11-01T17:18:08.7087759Z Linking geant4-data-ensdfstate-3.0-hd8ed1ab_0
+2026-11-01T17:18:08.7100994Z Linking geant4-data-channeling-2.0.0-hd8ed1ab_0
+2026-11-01T17:18:08.7123210Z Linking tzdata-2026e-h5d301ff_0
+2026-11-01T17:18:08.7417785Z Linking ca-certificates-2026.10.23-hbd8a1cb_0
+2026-11-01T17:18:08.7427654Z Linking geant4-data-ndl-4.7.1-hd8ed1ab_1
+2026-11-01T17:18:09.6954165Z Linking geant4-data-abla-3.3-hd8ed1ab_1
+2026-11-01T17:18:09.6971088Z Linking geant4-data-realsurface-2.2-hd8ed1ab_1
+2026-11-01T17:18:09.7003933Z Linking geant4-data-saiddata-2.0-hd8ed1ab_1
+2026-11-01T17:18:09.7033446Z Linking geant4-data-pii-1.3-hd8ed1ab_2
+2026-11-01T17:18:10.0884599Z Linking geant4-data-incl-1.3.0-hd8ed1ab_1
+2026-11-01T17:18:10.0904097Z Linking font-ttf-dejavu-sans-mono-2.37-hab24e00_0
+2026-11-01T17:18:10.0912399Z Linking font-ttf-inconsolata-3.000-h77eed37_0
+2026-11-01T17:18:10.0920683Z Linking font-ttf-source-code-pro-2.038-h77eed37_0
+2026-11-01T17:18:10.0934241Z Linking font-ttf-ubuntu-0.83-h77eed37_3
+2026-11-01T17:18:10.0946989Z Linking fonts-conda-forge-1-hc364b38_1
+2026-11-01T17:18:10.0952981Z Linking fonts-conda-ecosystem-1-0
+2026-11-01T17:18:10.0959153Z Linking openssl-3.6.5-h781a0a9_0
+2026-11-01T17:18:10.1131684Z Linking cairo-1.18.6-h3c89d7e_0
+2026-11-01T17:18:10.1175511Z Linking libssh2-1.11.1-h6154650_1
+2026-11-01T17:18:10.1296565Z Linking libnghttp2-1.70.0-hc5e5977_0
+2026-11-01T17:18:10.1310238Z Linking aws-c-cal-1.0.0-hcf7459e_1
+2026-11-01T17:18:10.1330294Z Linking s2n-1.7.7-ha5dc4ae_0
+2026-11-01T17:18:10.1348318Z Linking krb5-1.22.2-hbc21106_2
+2026-11-01T17:18:10.1503555Z Linking python-3.11.18-h5f976f7_0_cpython
+2026-11-01T17:18:10.3002871Z Linking libharfbuzz-15.0.0-h23af247_0
+2026-11-01T17:18:10.3029062Z Linking aws-c-io-1.0.0-h07ba609_0
+2026-11-01T17:18:10.3057038Z Linking libcurl-8.23.0-ha042cf0_0
+2026-11-01T17:18:10.3087781Z Linking cyrus-sasl-2.1.28-hac629b4_1
+2026-11-01T17:18:10.3148175Z Linking libcups-2.3.3-h7a8fb5f_6
+2026-11-01T17:18:10.3221891Z Linking aws-c-http-1.0.0-h392d1a3_1
+2026-11-01T17:18:10.3246100Z Linking openldap-2.6.13-hbde042b_0
+2026-11-01T17:18:10.3676704Z Linking aws-c-auth-1.0.0-h7648d90_2
+2026-11-01T17:18:10.3696878Z Linking libpq-18.6-h3883810_3
+2026-11-01T17:18:10.4304543Z Linking aws-c-s3-1.0.0-hfe03eda_1
+2026-11-01T17:18:10.4325744Z Linking qt6-main-6.12.0-pl5321hcf69127_1
+2026-11-01T17:18:12.2455517Z Linking hdf5-2.2.0-nompi_hdbb200c_101
+2026-11-01T17:18:12.2686433Z Linking geant4-11.4.3-qt_f90a02a_0
+2026-11-01T17:18:12.5319011Z Linking packaging-26.3-pyhc364b38_0
+2026-11-01T17:18:12.5775308Z Linking setuptools-84.2.1-pyhe730653_0
+2026-11-01T17:18:12.6001445Z Linking wheel-0.48.0-pyhd8ed1ab_0
+2026-11-01T17:18:12.6021626Z Linking pip-26.2.2-pyh8b19718_0
+2026-11-01T17:18:13.0878124Z 
+2026-11-01T17:18:13.0878607Z Transaction finished
+2026-11-01T17:18:13.0878805Z 
+2026-11-01T17:18:13.1222830Z 
+2026-11-01T17:18:13.1223113Z To activate this environment, use:
+2026-11-01T17:18:13.1223344Z 
+2026-11-01T17:18:13.1223603Z     micromamba activate /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4
+2026-11-01T17:18:13.1223963Z 
+2026-11-01T17:18:13.1224123Z Or to execute a single command in this environment, use:
+2026-11-01T17:18:13.1224375Z 
+2026-11-01T17:18:13.1224884Z     micromamba run -p /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4 mycommand
+2026-11-01T17:18:13.1225293Z 
+2026-11-01T17:18:13.3093515Z ##[group]Run cmake -S . -B "$G4_BUILD" -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$G4_PREFIX" \
+2026-11-01T17:18:13.3094238Z [36;1mcmake -S . -B "$G4_BUILD" -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$G4_PREFIX" \[0m
+2026-11-01T17:18:13.3094882Z [36;1m  -DEXPAT_INCLUDE_DIR="$G4_PREFIX/include" -DEXPAT_LIBRARY="$G4_PREFIX/lib/libexpat.so" \[0m
+2026-11-01T17:18:13.3095486Z [36;1m  -DZLIB_INCLUDE_DIR="$G4_PREFIX/include" -DZLIB_LIBRARY="$G4_PREFIX/lib/libz.so" \[0m
+2026-11-01T17:18:13.3096396Z [36;1m  -DFREETYPE_INCLUDE_DIRS="$G4_PREFIX/include/freetype2" -DFREETYPE_LIBRARY="$G4_PREFIX/lib/libfreetype.so"[0m
+2026-11-01T17:18:13.3096968Z [36;1mcmake --build "$G4_BUILD" --parallel 4[0m
+2026-11-01T17:18:13.3097431Z [36;1m"$G4_BUILD/G4UniversalSim" --check-geant4-data > "$DELIVERY_ROOT/discovery.json"[0m
+2026-11-01T17:18:13.3118198Z shell: /usr/bin/bash -e {0}
+2026-11-01T17:18:13.3118447Z env:
+2026-11-01T17:18:13.3118650Z   QT_QPA_PLATFORM: offscreen
+2026-11-01T17:18:13.3118994Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:18:13.3119439Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-11-01T17:18:13.3119898Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:18:13.3120447Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:18:13.3120857Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:18:13.3121389Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-11-01T17:18:13.3122068Z   G4ENSDFSTATEDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/ENSDFSTATE3.0
+2026-11-01T17:18:13.3123011Z   G4PIIDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/PII1.3
+2026-11-01T17:18:13.3123809Z   G4INCLDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/INCL1.3
+2026-11-01T17:18:13.3124558Z   G4LEDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/EMLOW8.8
+2026-11-01T17:18:13.3125399Z   G4CHANNELINGDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/CHANNELING2.0
+2026-11-01T17:18:13.3126414Z   G4PARTICLEXSDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/PARTICLEXS4.2
+2026-11-01T17:18:13.3127349Z   G4NEUTRONHPDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/NDL4.7.1
+2026-11-01T17:18:13.3128128Z   G4SAIDXSDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/SAIDDATA2.0
+2026-11-01T17:18:13.3128952Z   G4REALSURFACEDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/RealSurface2.2
+2026-11-01T17:18:13.3181229Z   G4ABLADATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/ABLA3.3
+2026-11-01T17:18:13.3182007Z   G4LEVELGAMMADATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/PhotonEvaporation6.1.2
+2026-11-01T17:18:13.3182834Z   G4RADIOACTIVEDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/RadioactiveDecay6.1.2
+2026-11-01T17:18:13.3183447Z   G4_PREFIX: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4
+2026-11-01T17:18:13.3183847Z   G4_BUILD: /home/runner/work/_temp/g4usim-delivery/backend
+2026-11-01T17:18:13.3184222Z   DELIVERY_ROOT: /home/runner/work/_temp/g4usim-delivery
+2026-11-01T17:18:13.3184526Z ##[endgroup]
+2026-11-01T17:18:16.1925161Z -- The CXX compiler identification is GNU 13.3.0
+2026-11-01T17:18:16.3069170Z -- Detecting CXX compiler ABI info
+2026-11-01T17:18:16.5489943Z -- Detecting CXX compiler ABI info - done
+2026-11-01T17:18:16.5672733Z -- Check for working CXX compiler: /usr/bin/c++ - skipped
+2026-11-01T17:18:16.5723467Z -- Detecting CXX compile features
+2026-11-01T17:18:16.5732746Z -- Detecting CXX compile features - done
+2026-11-01T17:18:16.6714616Z -- Found EXPAT: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/lib/libexpat.so (found suitable version "2.9.0", minimum required is "2.8.5")
+2026-11-01T17:18:16.6808934Z -- Found ZLIB: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/lib/libz.so (found suitable version "1.3.2", minimum required is "1.3.2")
+2026-11-01T17:18:16.7059630Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+2026-11-01T17:18:16.9414005Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+2026-11-01T17:18:16.9425261Z -- Found Threads: TRUE
+2026-11-01T17:18:16.9586933Z -- Found XercesC: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/lib/libxerces-c.so (found suitable version "3.3.0", minimum required is "3.3.0")
+2026-11-01T17:18:16.9711114Z -- Found Freetype: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/lib/libfreetype.so (found suitable version "2.14.3", minimum required is "2.14.3")
+2026-11-01T17:18:16.9873445Z -- Found HDF5: hdf5-shared (found version "2.2.0")
+2026-11-01T17:18:16.9927936Z -- Looking for H5_HAVE_THREADSAFE
+2026-11-01T17:18:17.0582841Z -- Looking for H5_HAVE_THREADSAFE - found
+2026-11-01T17:18:17.0932550Z -- Found X11: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/include
+2026-11-01T17:18:17.0947159Z -- Looking for XOpenDisplay in /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/lib/libX11.so;/home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/lib/libXext.so
+2026-11-01T17:18:17.1663791Z -- Looking for XOpenDisplay in /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/lib/libX11.so;/home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/lib/libXext.so - found
+2026-11-01T17:18:17.1664846Z -- Looking for gethostbyname
+2026-11-01T17:18:17.2324182Z -- Looking for gethostbyname - found
+2026-11-01T17:18:17.2324736Z -- Looking for connect
+2026-11-01T17:18:17.2979747Z -- Looking for connect - found
+2026-11-01T17:18:17.2980255Z -- Looking for remove
+2026-11-01T17:18:17.3630388Z -- Looking for remove - found
+2026-11-01T17:18:17.3630891Z -- Looking for shmat
+2026-11-01T17:18:17.4284478Z -- Looking for shmat - found
+2026-11-01T17:18:17.4285149Z -- Looking for IceConnectionNumber in ICE
+2026-11-01T17:18:17.4943542Z -- Looking for IceConnectionNumber in ICE - found
+2026-11-01T17:18:17.5348213Z -- Performing Test HAVE_STDATOMIC
+2026-11-01T17:18:17.8055074Z -- Performing Test HAVE_STDATOMIC - Success
+2026-11-01T17:18:17.8065692Z -- Found WrapAtomic: TRUE
+2026-11-01T17:18:17.8436284Z -- Found OpenGL: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/lib/libGL.so
+2026-11-01T17:18:17.8447220Z -- Found WrapOpenGL: TRUE
+2026-11-01T17:18:17.8492607Z -- Could NOT find WrapVulkanHeaders (missing: Vulkan_INCLUDE_DIR) 
+2026-11-01T17:18:17.9323630Z -- Could NOT find WrapVulkanHeaders (missing: Vulkan_INCLUDE_DIR) 
+2026-11-01T17:18:17.9492010Z -- Found Geant4: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/lib/cmake/Geant4/Geant4Config.cmake (found version "11.4.3")
+2026-11-01T17:18:18.0133269Z -- G4UniversalSim: GDML support enabled
+2026-11-01T17:18:19.1102758Z -- Configuring done (4.3s)
+2026-11-01T17:18:19.1762874Z -- Generating done (0.1s)
+2026-11-01T17:18:19.1773834Z -- Build files have been written to: /home/runner/work/_temp/g4usim-delivery/backend
+2026-11-01T17:18:19.2305424Z [  1%] Building CXX object CMakeFiles/mergeHistograms.dir/tools/mergeHistograms.cc.o
+2026-11-01T17:18:19.2324512Z [  3%] Building CXX object CMakeFiles/gdmlInputCaptureCheck.dir/tools/gdmlInputCaptureCheck.cc.o
+2026-11-01T17:18:19.2326248Z [  3%] Building CXX object CMakeFiles/scoringNumericCheck.dir/tools/scoringNumericCheck.cc.o
+2026-11-01T17:18:19.2386737Z [  3%] Building CXX object CMakeFiles/G4UniversalSim.dir/main.cc.o
+2026-11-01T17:18:20.5157784Z [  4%] Building CXX object CMakeFiles/scoringNumericCheck.dir/src/Scoring/HistoryStatistics.cc.o
+2026-11-01T17:18:21.4027877Z [  5%] Building CXX object CMakeFiles/gdmlInputCaptureCheck.dir/src/Geometry/GdmlInputCapture.cc.o
+2026-11-01T17:18:22.2687197Z [  6%] Linking CXX executable scoringNumericCheck
+2026-11-01T17:18:22.3247299Z [  6%] Linking CXX executable mergeHistograms
+2026-11-01T17:18:22.3517079Z [  6%] Built target scoringNumericCheck
+2026-11-01T17:18:22.3637967Z [  7%] Building CXX object CMakeFiles/randomCommandGuardCheck.dir/tools/randomCommandGuardCheck.cc.o
+2026-11-01T17:18:22.4126976Z [  7%] Built target mergeHistograms
+2026-11-01T17:18:22.4187062Z [  8%] Building CXX object CMakeFiles/gdmlInputCaptureCheck.dir/src/Config/InputProvenance.cc.o
+2026-11-01T17:18:23.8176440Z [  9%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Actions/ActionInitialization.cc.o
+2026-11-01T17:18:24.4283483Z [ 10%] Building CXX object CMakeFiles/randomCommandGuardCheck.dir/src/Core/RandomCommandGuard.cc.o
+2026-11-01T17:18:24.5004375Z [ 11%] Linking CXX executable gdmlInputCaptureCheck
+2026-11-01T17:18:25.1767164Z [ 11%] Built target gdmlInputCaptureCheck
+2026-11-01T17:18:25.1797048Z [ 12%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Actions/EventAction.cc.o
+2026-11-01T17:18:26.7717728Z [ 13%] Building CXX object CMakeFiles/randomCommandGuardCheck.dir/src/Config/InputProvenance.cc.o
+2026-11-01T17:18:27.7667271Z [ 14%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Actions/RunAction.cc.o
+2026-11-01T17:18:27.8913414Z [ 15%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Actions/RunProgress.cc.o
+2026-11-01T17:18:28.0387294Z [ 16%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Actions/SteppingAction.cc.o
+2026-11-01T17:18:28.6326817Z [ 17%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Actions/TrackingAction.cc.o
+2026-11-01T17:18:28.8097111Z [ 18%] Linking CXX executable randomCommandGuardCheck
+2026-11-01T17:18:29.0987254Z [ 18%] Built target randomCommandGuardCheck
+2026-11-01T17:18:29.1017451Z [ 18%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Actions/WorkerRunContext.cc.o
+2026-11-01T17:18:30.1887454Z [ 19%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Biasing/BiasingImportance.cc.o
+2026-11-01T17:18:30.2151882Z [ 20%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Biasing/BiasingManager.cc.o
+2026-11-01T17:18:30.5097454Z [ 21%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Biasing/BiasingMessenger.cc.o
+2026-11-01T17:18:30.7877532Z [ 22%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Biasing/BiasingMultiParticleXS.cc.o
+2026-11-01T17:18:31.1198253Z [ 23%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Biasing/BiasingRegion.cc.o
+2026-11-01T17:18:31.1497342Z [ 24%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Biasing/BiasingXS.cc.o
+2026-11-01T17:18:33.2206680Z [ 24%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Biasing/EffectiveBiasing.cc.o
+2026-11-01T17:18:33.3947381Z [ 25%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Config/ConfigManager.cc.o
+2026-11-01T17:18:36.3610147Z [ 26%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Config/ConfigValue.cc.o
+2026-11-01T17:18:37.2047564Z [ 27%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Config/EffectiveConfig.cc.o
+2026-11-01T17:18:37.8817550Z [ 28%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Config/IniReader.cc.o
+2026-11-01T17:18:38.8767538Z [ 29%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Config/InputProvenance.cc.o
+2026-11-01T17:18:39.8480825Z [ 30%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Core/AppMessenger.cc.o
+2026-11-01T17:18:40.9587277Z [ 30%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Core/EffectiveSimulation.cc.o
+2026-11-01T17:18:41.4557863Z [ 31%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Core/Geant4DataLocator.cc.o
+2026-11-01T17:18:41.6800913Z [ 32%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Core/MacroPreflight.cc.o
+2026-11-01T17:18:42.0028020Z [ 33%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Core/RandomCommandGuard.cc.o
+2026-11-01T17:18:43.0151456Z [ 34%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Core/SimulationContext.cc.o
+2026-11-01T17:18:43.4357152Z [ 35%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Core/SimulationManager.cc.o
+2026-11-01T17:18:44.1773731Z [ 36%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Detector/DetectorConstruction.cc.o
+2026-11-01T17:18:45.3147759Z [ 37%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Detector/DetectorMessenger.cc.o
+2026-11-01T17:18:46.8697684Z [ 37%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Field/FieldConfig.cc.o
+2026-11-01T17:18:46.9007392Z [ 38%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Field/FieldSetup.cc.o
+2026-11-01T17:18:50.2097191Z [ 39%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/GdmlIO.cc.o
+2026-11-01T17:18:51.7174566Z [ 40%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/GdmlInputCapture.cc.o
+2026-11-01T17:18:53.0800330Z [ 41%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/GeometryConfig.cc.o
+2026-11-01T17:18:53.5067611Z [ 42%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/GeometryConfigDiagnostic.cc.o
+2026-11-01T17:18:54.1827427Z [ 43%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/GeometryExport.cc.o
+2026-11-01T17:18:54.9067577Z [ 43%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/GeometryManager.cc.o
+2026-11-01T17:18:56.7229084Z [ 44%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/GeometryMessenger.cc.o
+2026-11-01T17:18:57.7293553Z [ 45%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/GeometryRegistry.cc.o
+2026-11-01T17:18:59.7967215Z [ 46%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/GeometrySafety.cc.o
+2026-11-01T17:19:00.0313644Z [ 47%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/GeometryUtils.cc.o
+2026-11-01T17:19:00.2924174Z [ 48%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/SolidRegistry.cc.o
+2026-11-01T17:19:00.7626849Z [ 49%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/StlReader.cc.o
+2026-11-01T17:19:01.1657590Z [ 49%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/VolumeBuilder.cc.o
+2026-11-01T17:19:02.6571936Z [ 50%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/VolumeNode.cc.o
+2026-11-01T17:19:04.3327401Z [ 51%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Hits/ParticleHit.cc.o
+2026-11-01T17:19:04.5917375Z [ 52%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Hits/ParticleHitCollection.cc.o
+2026-11-01T17:19:05.7856555Z [ 53%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Hits/SensitiveDetector.cc.o
+2026-11-01T17:19:06.1318043Z [ 54%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Hits/TrackInformation.cc.o
+2026-11-01T17:19:06.2487383Z [ 55%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Materials/MaterialCommandParser.cc.o
+2026-11-01T17:19:06.2937402Z [ 55%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Materials/MaterialFactory.cc.o
+2026-11-01T17:19:07.4147531Z [ 56%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Materials/MaterialIniReader.cc.o
+2026-11-01T17:19:07.6570652Z [ 57%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Materials/MaterialManager.cc.o
+2026-11-01T17:19:08.6177486Z [ 58%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Materials/MaterialMessenger.cc.o
+2026-11-01T17:19:08.8377558Z [ 59%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Output/AnalysisOutput.cc.o
+2026-11-01T17:19:11.2157466Z [ 60%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Output/CsvWriter.cc.o
+2026-11-01T17:19:11.3253131Z [ 61%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Output/EffectiveOutput.cc.o
+2026-11-01T17:19:12.0317244Z [ 62%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Output/Histogram1D.cc.o
+2026-11-01T17:19:13.0068647Z [ 62%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Output/Histogram2D.cc.o
+2026-11-01T17:19:13.1677233Z [ 63%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Output/OutputManager.cc.o
+2026-11-01T17:19:13.9564491Z [ 64%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Output/OutputMessenger.cc.o
+2026-11-01T17:19:16.1307274Z [ 65%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Output/RunSummary.cc.o
+2026-11-01T17:19:16.7247420Z [ 66%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Physics/ElectronCapture.cc.o
+2026-11-01T17:19:17.5257717Z [ 67%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Physics/MicroElecPhysics.cc.o
+2026-11-01T17:19:18.3810697Z [ 68%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Physics/PhysicsFactory.cc.o
+2026-11-01T17:19:19.2217675Z [ 68%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Physics/PhysicsList.cc.o
+2026-11-01T17:19:19.4027348Z [ 69%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Physics/PhysicsManager.cc.o
+2026-11-01T17:19:20.5517483Z [ 70%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Physics/PhysicsMessenger.cc.o
+2026-11-01T17:19:21.6727879Z [ 71%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Physics/ProcessDump.cc.o
+2026-11-01T17:19:22.8174879Z [ 72%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/DisplacementScorer.cc.o
+2026-11-01T17:19:23.5677533Z [ 73%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/DoseScorer.cc.o
+2026-11-01T17:19:24.8747270Z [ 74%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/EdepScorer.cc.o
+2026-11-01T17:19:25.4598511Z [ 74%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/EffectiveScoring.cc.o
+2026-11-01T17:19:25.7309931Z [ 75%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/FluenceScorer.cc.o
+2026-11-01T17:19:27.1287464Z [ 76%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/HistoryStatistics.cc.o
+2026-11-01T17:19:27.9507454Z [ 77%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/LETScorer.cc.o
+2026-11-01T17:19:28.1621712Z [ 78%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/NielTable.cc.o
+2026-11-01T17:19:28.9364025Z [ 79%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/ParticleAggregator.cc.o
+2026-11-01T17:19:28.9639540Z [ 80%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/PhaseSpace.cc.o
+2026-11-01T17:19:29.5840584Z [ 80%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/ScorerBase.cc.o
+2026-11-01T17:19:29.9589943Z [ 81%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/ScoringManager.cc.o
+2026-11-01T17:19:30.6931946Z [ 82%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/ScoringMeshConfig.cc.o
+2026-11-01T17:19:30.9808562Z [ 83%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/ScoringMeshExport.cc.o
+2026-11-01T17:19:32.4457465Z [ 84%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/ScoringMessenger.cc.o
+2026-11-01T17:19:33.4137413Z [ 85%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/ThreadLocalScoringContext.cc.o
+2026-11-01T17:19:33.4407341Z [ 86%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/TrajectoryRecorder.cc.o
+2026-11-01T17:19:34.4647513Z [ 87%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Source/PrimaryGeneratorAction.cc.o
+2026-11-01T17:19:35.9257414Z [ 87%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Source/SourceManager.cc.o
+2026-11-01T17:19:36.9417480Z [ 88%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Source/SourceMessenger.cc.o
+2026-11-01T17:19:37.1631993Z [ 89%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Templates/ArrayTemplate.cc.o
+2026-11-01T17:19:38.3957420Z [ 90%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Templates/GDMLTemplate.cc.o
+2026-11-01T17:19:39.0257299Z [ 91%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Templates/GeometryTemplate.cc.o
+2026-11-01T17:19:39.1457462Z [ 92%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Templates/HierarchicalVolumeTemplate.cc.o
+2026-11-01T17:19:40.4047528Z [ 93%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Templates/LayeredDeviceTemplate.cc.o
+2026-11-01T17:19:41.4227537Z [ 93%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Templates/ShieldingTemplate.cc.o
+2026-11-01T17:19:41.7192566Z [ 94%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Templates/SimpleBoxTemplate.cc.o
+2026-11-01T17:19:42.6367235Z [ 95%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Templates/TemplateFactory.cc.o
+2026-11-01T17:19:43.0507583Z [ 96%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Utils/CommandParser.cc.o
+2026-11-01T17:19:43.4357383Z [ 97%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Utils/FileUtils.cc.o
+2026-11-01T17:19:43.6677401Z [ 98%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Utils/G4NameUtils.cc.o
+2026-11-01T17:19:44.1747360Z [ 99%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Utils/StringUtils.cc.o
+2026-11-01T17:19:44.2207168Z [ 99%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Utils/UnitParser.cc.o
+2026-11-01T17:19:47.2537803Z [100%] Linking CXX executable G4UniversalSim
+2026-11-01T17:19:47.9328310Z Copying config/ to runtime output directory
+2026-11-01T17:19:47.9396126Z Copying macros/ to runtime output directory
+2026-11-01T17:19:47.9457621Z Copying scripts/ to runtime output directory
+2026-11-01T17:19:47.9731521Z [100%] Built target G4UniversalSim
+2026-11-01T17:19:48.0356359Z ##[group]Run python -B tools/test_assert_probe.py packaging/ci_delivery.py --build-dir "$G4_BUILD" --geant4-prefix "$G4_PREFIX" \
+2026-11-01T17:19:48.0357406Z [36;1mpython -B tools/test_assert_probe.py packaging/ci_delivery.py --build-dir "$G4_BUILD" --geant4-prefix "$G4_PREFIX" \[0m
+2026-11-01T17:19:48.0358232Z [36;1m  --discovery-json "$DELIVERY_ROOT/discovery.json" --work-root "$DELIVERY_ROOT/acceptance" \[0m
+2026-11-01T17:19:48.0359227Z [36;1m  --cmake "$(command -v cmake)" --compiler "$(command -v c++)" --application-build[0m
+2026-11-01T17:19:48.0381360Z shell: /usr/bin/bash -e {0}
+2026-11-01T17:19:48.0381609Z env:
+2026-11-01T17:19:48.0381810Z   QT_QPA_PLATFORM: offscreen
+2026-11-01T17:19:48.0382119Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:19:48.0382860Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-11-01T17:19:48.0383338Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:19:48.0383897Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:19:48.0384280Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:19:48.0384811Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-11-01T17:19:48.0385387Z   G4ENSDFSTATEDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/ENSDFSTATE3.0
+2026-11-01T17:19:48.0386436Z   G4PIIDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/PII1.3
+2026-11-01T17:19:48.0387253Z   G4INCLDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/INCL1.3
+2026-11-01T17:19:48.0387873Z   G4LEDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/EMLOW8.8
+2026-11-01T17:19:48.0388673Z   G4CHANNELINGDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/CHANNELING2.0
+2026-11-01T17:19:48.0389556Z   G4PARTICLEXSDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/PARTICLEXS4.2
+2026-11-01T17:19:48.0390266Z   G4NEUTRONHPDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/NDL4.7.1
+2026-11-01T17:19:48.0391091Z   G4SAIDXSDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/SAIDDATA2.0
+2026-11-01T17:19:48.0391936Z   G4REALSURFACEDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/RealSurface2.2
+2026-11-01T17:19:48.0392612Z   G4ABLADATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/ABLA3.3
+2026-11-01T17:19:48.0393463Z   G4LEVELGAMMADATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/PhotonEvaporation6.1.2
+2026-11-01T17:19:48.0394397Z   G4RADIOACTIVEDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/RadioactiveDecay6.1.2
+2026-11-01T17:19:48.0395006Z   G4_PREFIX: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4
+2026-11-01T17:19:48.0395533Z   G4_BUILD: /home/runner/work/_temp/g4usim-delivery/backend
+2026-11-01T17:19:48.0396120Z   DELIVERY_ROOT: /home/runner/work/_temp/g4usim-delivery
+2026-11-01T17:19:48.0396616Z ##[endgroup]
+2026-11-01T17:33:14.9950342Z {"status": "verified", "report": "/home/runner/work/_temp/g4usim-delivery/acceptance/delivery-report.json", "error": null}
+2026-11-01T17:33:14.9951023Z G4USIM_ASSERTS=28
+2026-11-01T17:33:15.0268243Z ##[group]Run actions/upload-artifact@v6
+2026-11-01T17:33:15.0268563Z with:
+2026-11-01T17:33:15.0268790Z   name: full-installation-Linux
+2026-11-01T17:33:15.0269064Z   retention-days: 7
+2026-11-01T17:33:15.0270950Z   path: /home/runner/work/_temp/g4usim-delivery/acceptance/evidence/
+/home/runner/work/_temp/g4usim-delivery/acceptance/runtime-evidence/
+/home/runner/work/_temp/g4usim-delivery/acceptance/sdk-evidence/
+/home/runner/work/_temp/g4usim-delivery/acceptance/logs/
+/home/runner/work/_temp/g4usim-delivery/acceptance/*.json
+/home/runner/work/_temp/g4usim-delivery/acceptance/*.log
+/home/runner/work/_temp/g4usim-delivery/bootstrap/datasets/fetch-report.json
+/home/runner/work/_temp/g4usim-delivery/discovery.json
+
+2026-11-01T17:33:15.0272919Z   if-no-files-found: error
+2026-11-01T17:33:15.0273162Z   compression-level: 6
+2026-11-01T17:33:15.0273378Z   overwrite: false
+2026-11-01T17:33:15.0273590Z   include-hidden-files: false
+2026-11-01T17:33:15.0273817Z env:
+2026-11-01T17:33:15.0274042Z   QT_QPA_PLATFORM: offscreen
+2026-11-01T17:33:15.0274348Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:33:15.0275023Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-11-01T17:33:15.0275443Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:33:15.0275822Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:33:15.0276611Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-11-01T17:33:15.0277012Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-11-01T17:33:15.0277606Z   G4ENSDFSTATEDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/ENSDFSTATE3.0
+2026-11-01T17:33:15.0278309Z   G4PIIDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/PII1.3
+2026-11-01T17:33:15.0278920Z   G4INCLDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/INCL1.3
+2026-11-01T17:33:15.0279533Z   G4LEDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/EMLOW8.8
+2026-11-01T17:33:15.0280194Z   G4CHANNELINGDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/CHANNELING2.0
+2026-11-01T17:33:15.0280918Z   G4PARTICLEXSDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/PARTICLEXS4.2
+2026-11-01T17:33:15.0281622Z   G4NEUTRONHPDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/NDL4.7.1
+2026-11-01T17:33:15.0282279Z   G4SAIDXSDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/SAIDDATA2.0
+2026-11-01T17:33:15.0282976Z   G4REALSURFACEDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/RealSurface2.2
+2026-11-01T17:33:15.0283640Z   G4ABLADATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/ABLA3.3
+2026-11-01T17:33:15.0284340Z   G4LEVELGAMMADATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/PhotonEvaporation6.1.2
+2026-11-01T17:33:15.0285133Z   G4RADIOACTIVEDATA: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4/share/Geant4/data/RadioactiveDecay6.1.2
+2026-11-01T17:33:15.0285752Z   G4_PREFIX: /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4
+2026-11-01T17:33:15.0286458Z   G4_BUILD: /home/runner/work/_temp/g4usim-delivery/backend
+2026-11-01T17:33:15.0286828Z   DELIVERY_ROOT: /home/runner/work/_temp/g4usim-delivery
+2026-11-01T17:33:15.0287133Z ##[endgroup]
+2026-11-01T17:33:15.2356778Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-11-01T17:33:15.2359459Z The least common ancestor is /home/runner/work/_temp/g4usim-delivery. This will be the root directory of the artifact
+2026-11-01T17:33:15.2360698Z With the provided path, there will be 90 files uploaded
+2026-11-01T17:33:15.2364184Z Artifact name is valid!
+2026-11-01T17:33:15.2365123Z Root directory input is valid!
+2026-11-01T17:33:15.7654425Z Beginning upload of artifact content to blob storage
+2026-11-01T17:33:17.3843128Z Uploaded bytes 8388608
+2026-11-01T17:33:18.0221151Z Uploaded bytes 16777216
+2026-11-01T17:33:18.0331670Z Uploaded bytes 25165824
+2026-11-01T17:33:18.6938132Z Uploaded bytes 32731076
+2026-11-01T17:33:18.7684762Z Finished uploading artifact content to blob storage!
+2026-11-01T17:33:18.7689029Z SHA256 digest of uploaded artifact zip is 8bb396778f082cd0debb31ec921b63c22d64ed36f9b964648a8b502432e14ed8
+2026-11-01T17:33:18.7691439Z Finalizing artifact upload
+2026-11-01T17:33:19.3579764Z Artifact full-installation-Linux.zip successfully finalized. Artifact ID 13093212578
+2026-11-01T17:33:19.3581295Z Artifact full-installation-Linux has been successfully uploaded! Final size is 32731076 bytes. Artifact ID is 13093212578
+2026-11-01T17:33:19.3586940Z Artifact download URL: https://github.com/doorfordoor/G4UniversalSim/actions/runs/41330577328/artifacts/13093212578
+2026-11-01T17:33:19.3851763Z Post job cleanup.
+2026-11-01T17:33:19.5288876Z Post job cleanup.
+2026-11-01T17:33:19.6316761Z [command]/usr/bin/git version
+2026-11-01T17:33:19.6390021Z git version 2.56.0
+2026-11-01T17:33:19.6437320Z Temporarily overriding HOME='/home/runner/work/_temp/9f0f522e-8200-48a5-81c2-1181d38c4130' before making global git config changes
+2026-11-01T17:33:19.6439172Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-01T17:33:19.6447153Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/G4UniversalSim/G4UniversalSim
+2026-11-01T17:33:19.6504932Z Removing SSH command configuration
+2026-11-01T17:33:19.6505828Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-01T17:33:19.6558593Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-01T17:33:19.7016678Z Removing HTTP extra header
+2026-11-01T17:33:19.7027241Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-01T17:33:19.7087229Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-01T17:33:19.7476781Z Removing includeIf entries pointing to credentials config files
+2026-11-01T17:33:19.7487545Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-01T17:33:19.7550381Z includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git.path
+2026-11-01T17:33:19.7551550Z includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path
+2026-11-01T17:33:19.7555812Z includeif.gitdir:/github/workspace/.git.path
+2026-11-01T17:33:19.7557252Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-11-01T17:33:19.7559432Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git.path
+2026-11-01T17:33:19.7592525Z /home/runner/work/_temp/git-credentials-1a3a6de1-a5d8-43de-9893-e84934ea2151.config
+2026-11-01T17:33:19.7603893Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-1a3a6de1\-a5d8\-43de\-9893\-e84934ea2151\.config
+2026-11-01T17:33:19.7658964Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path
+2026-11-01T17:33:19.7700936Z /home/runner/work/_temp/git-credentials-1a3a6de1-a5d8-43de-9893-e84934ea2151.config
+2026-11-01T17:33:19.7711431Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-1a3a6de1\-a5d8\-43de\-9893\-e84934ea2151\.config
+2026-11-01T17:33:19.7758449Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-11-01T17:33:19.7794821Z /github/runner_temp/git-credentials-1a3a6de1-a5d8-43de-9893-e84934ea2151.config
+2026-11-01T17:33:19.7804101Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-1a3a6de1\-a5d8\-43de\-9893\-e84934ea2151\.config
+2026-11-01T17:33:19.7852339Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-11-01T17:33:19.7888888Z /github/runner_temp/git-credentials-1a3a6de1-a5d8-43de-9893-e84934ea2151.config
+2026-11-01T17:33:19.7898225Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-1a3a6de1\-a5d8\-43de\-9893\-e84934ea2151\.config
+2026-11-01T17:33:19.7947613Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-01T17:33:19.8248729Z Removing credentials config '/home/runner/work/_temp/git-credentials-1a3a6de1-a5d8-43de-9893-e84934ea2151.config'
+2026-11-01T17:33:19.8443195Z Cleaning up orphan processes

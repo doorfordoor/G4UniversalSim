@@ -26,7 +26,7 @@ This file is the single source of truth for progress. Every work session updates
 | C Wizard + built-in plotting | Done (C1 built-in plots, C2 wizard, C3 parameter scans) | see log |
 | D Installer | Done (portable ZIP + Inno Setup installer; uses an existing Geant4 data folder) | see log |
 | E Fixes and foundations | In progress: E1, E2, E3 (Linux incl. Geant4 11.3.2/11.4.3 matrix, done 2026-10-28), E5 done; E4 pending | see log |
-| F System optimisation (backend + GUI) | In progress: F1 and F6 done; F4 已完成; F5 已完成; F2/F3/F7/F8 pending | see log |
+| F System optimisation (backend + GUI) | In progress: F1/F4/F5/F6/F8 done; F2/F3/F7 pending | see log |
 | G 3D view redesign | Done (G1-G6) | see log |
 | H Geant4 capability increments | In progress: H1 done | see log |
 | Q1 完整可靠性审查、修复与验收 | **已完成**：九域审查及R01–R32闭合；Windows105、Linux双版本各105与实窗通过 | 验收代码 `8ecad66`；[最终证据](verification/q1-final-20261029/README.md) |
@@ -252,7 +252,7 @@ is marked experimental in the support matrix until benchmarked.
 | **Q1** | 完整可靠性审查、反例复现、修复、回归与交付复核；覆盖已公开能力和拒绝边界 | 九域独立复核、确认缺陷及正式回归闭合，冻结矩阵与同v3逐例/总数门禁通过 | **已完成**；验收代码 `8ecad66`，见[最终报告](verification/q1-final-20261029/README.md) |
 | **2C** | 完整 EffectiveConfig：11 类真实消费者、稳定对象身份、完整来源链、实际读取字节哈希、事务替换/删除、configure/run_begin/finalization、内核/worker 证据、off/auto/on、GUI 审查 | Q1 基线；每类消费者有正反例，拒绝不污染 revision/来源；unknown 不伪装 applied；现有协议兼容 | 已完成（产品 `f4770b0`）；`70a1aba` 仅为历史配置子集。[完整2C最终证据](verification/2c-full-20261029/README.md)，不扩张E6/F1/Q2等范围 |
 | **E6** | E2 范围补齐与配置兼容：field/biasing schema；主 INI 版本策略；几何 v2/项目格式迁移与诊断去重 | 2C；生成表不手改；旧输入/别名、未来未知版本、迁移副本、**现有编辑子集** writer 兼容/往返。扩大编辑范围归 J2，不让 E6 等待 J2，不顺带开放 assembly/材料温压等 | 已完成：代码 `a779634`，Windows134、Linux双版本各134、M0双平台各58；实窗12状态与真实2/2事件、独立复核通过。[最终证据与集成状态](verification/e6-visible-20261030/README.md)。E2 原状态保持完成 |
-| **E7** | SolidRegistry 与统一实体能力元数据；后端构造、校验、能力查询、GUI 可消费定义逐步归一 | E6/现有 A5；实体逐项差分、缓存/线程生命周期守卫与旧配置不变；不借重构增加未验实体 | 2026-11-01 随 J2 实施：既有 15 原语/7 布尔工具的注册与 GUI 元数据候选已完成并独审，待本阶段冻结矩阵验收；未增加实体集合 |
+| **E7** | SolidRegistry 与统一实体能力元数据；后端构造、校验、能力查询、GUI 可消费定义逐步归一 | E6/现有 A5；实体逐项差分、缓存/线程生命周期守卫与旧配置不变；不借重构增加未验实体 | 2026-11-02 **本轮15/7约定范围完成**：既有15原语/7布尔工具统一factory注册、能力元数据及GUI离线定义接线，兼容/缓存生命周期/适用矩阵通过；实体集合、A5实验性与科学等级不变；测试冻结2ec5b14，见[最终证据](verification/j2-f8-final-20261102/README.md) |
 | **Q2** | 科研基准与适用范围：Dose/Fluence/LET/DDD、统计不确定度、现有 XS biasing 与 analog 对照、独立数据/解析参考与可复现实验 | Q1、F1；V-01 的口径先在 Q1 明确，Q2 再验证有限样本/覆盖与适用边界；不以同源自洽或 process 挂接代替独立证据 | 待完整验收，复用 A/B 已有限定基准 |
 
 #### 原 E/F 余项（保留原编号）
@@ -267,7 +267,7 @@ is marked experimental in the support matrix until benchmarked.
 | **F5** | 配置事务 undo/redo、自动保存、异常恢复 | 主编辑快照完整；恢复不覆盖原件，撤销后重新验证 | 已完成：5c1eec5，Windows160/50898、双Linux各160、M0双平台各79及F4门禁通过；5d实窗22观察/28截图/退出0经身份映射。[最终证据](verification/f5-final-20261031/README.md) |
 | **F6** | 实时进度与 sequence | 已完成，Q1 复核解析、取消和失败边界；进度不替代成功证据 | 保持完成 |
 | **F7** | 二维扫描、线程预算内并发、场景生成器扫描 | 依赖 K1/F3；每点独立 seed/目录/证据，失败/重试不重复发布，缺点可见 | 待开始；已有单参数串行扫描保留 |
-| **F8** | 环境设置衔接、空白/模板/导入与向导重入、跨页DPI/键盘/文案一致性与可访问性 | I1/I2提供环境链路；J1实现布局/主题/主要中文及焦点适配；J2实现无源创建和编辑能力；F8做跨项桌面验收 | 第四修复候选：18c5858实际Windows/CI/三档原生按原身份登记；两项test-only平台接口断言修订；两项专项独审已PASS；18c本机300/181295，原CI4pass/4fail保留；未来HEAD映射及单轮补native pending，完整新候选验收待进行、阶段未关闭 |
+| **F8** | 环境设置衔接、空白/模板/导入与向导重入、跨页DPI/键盘/文案一致性与可访问性 | I1/I2提供环境链路；J1实现布局/主题/主要中文及焦点适配；J2实现无源创建和编辑能力；F8做跨项桌面验收 | 2026-11-02 **本轮约定范围完成**：2ec Windows300/181357、CI12报告636/221186严格通过；旧18c三档限定映射+新2ec125代表补验及文件独审，窄dock/QQ/缓存边界保留；后续docs/evidence提交不改原测试身份 |
 
 E3 的已完成 Linux CI 基础不重建；Windows 11.4、原生 Linux 桌面、包内 ROOT/Python 辅助工具与干净安装验收归 I2。现有后端 ROOT 输出和新版本源码 CI 仍按 Q1 及各阶段冻结矩阵验证。Geant4 11.2 先在 I1/I2 决定是否进入支持矩阵：不支持则清晰拒绝/说明，不默认承担无限旧版本兼容。
 
@@ -295,7 +295,7 @@ J2内部提交顺序为：无源创建/文档身份 → 材料辅助及多体积
 | **I1 环境发现与诊断** | 后端/运行时真实查询、SDK/工具链及可选组件候选事实、版本/架构/数据诊断，异步 GUI 显式选择 | Q1；只读发现与运行资格分开，不安装或自动模拟 | **已完成**：第五冻结专项与独立审查通过，第四单候选实窗按未变 I1 字节映射；第七 `2914b39` 五项文件 SHA 再核一致。[证据与限制](verification/k1-final-20261031/README.md#i1-独立验收) |
 | **I2 辅助安装与双平台交付** | 目标 1；受控安装前缀、下载校验、失败恢复、运行时/SDK 两种方案、当前版本 Windows/Linux 包、诊断包和版本矩阵 | I1 | **2026-11-01 已完成阶段验收**：计划/获取/发布/恢复、runtime/SDK、两平台安装/核验/卸载、SDK consumer 与完整源码构建、冻结工具及实际 CI 均已验证；无匹配清单时明确不可安装，不承诺自动配置任意编译器。最终测试 `6310969` 与产品 `5fe0a10` 的身份及旧失败见[最终证据](verification/i2-j1-final-20261101/README.md)。 |
 | **J1 可调整工作区** | 配置、3D/结果、日志、AI区可移动/缩放/隐藏/浮动；三种布局及B/K/C主题、明确区域层级与主要中文；本机布局持久化，按体积/材料调整3D颜色和透明度及会话复位 | Q1/K1状态所有权稳定；与I2按文件独占并行 | **2026-11-01 已完成阶段验收**：DeepSeek实际设计协作、单实例dock、本机保存/重启恢复/回退、主题/3D外观与运行中切换经独审及实窗验证；26图、4次正常退出，中英及代表性DPI，未做物理多屏热插拔。显示动作不改配置、不新增run所有者；完整可访问性归F8。[最终证据](verification/i2-j1-final-20261101/README.md)。 |
-| **J2 编辑覆盖与几何往返** | 原M3余项；空白创建与无已有配置文件输入、NIST元素来源辅助、命名多源及球面源、物理模块组合/替换、多敏感体编辑和高级实体/场/偏置；后端vis属性往返 | E6；实体能力归一相关部分依赖E7，其余不被无关实体重构阻塞；在L1前完成本轮明确范围 | **第四修复候选，阶段未关闭**：18c实际reload来源规范化与Windows264测试断言分开；只调整成功路径测试、不删失败保留判据；两test专项独审已PASS；18c六profile300/181295，未来HEAD原生身份映射及单轮补验pending，新候选完整CI仍必须 |
+| **J2 编辑覆盖与几何往返** | 原M3余项；空白创建与无已有配置文件输入、NIST元素来源辅助、命名多源及球面源、物理模块组合/替换、多敏感体编辑和高级实体/场/偏置；后端vis属性往返 | E6；实体能力归一相关部分依赖E7，其余不被无关实体重构阻塞；在L1前完成本轮明确范围 | 2026-11-02 **本轮约定范围完成**：空白/高级编辑/往返/资源闭包及接口回归，2ec完整矩阵/严格门禁/独审通过；E7仅既有15/7元数据范围。旧失败原件、实验性/物理界限不提高，见[最终证据](verification/j2-f8-final-20261102/README.md) |
 | **K1 可信实验工作流与配置导出** | 统一 inspect/validate/apply/generate/run/evaluate/export，四层验证、输入身份、可移植配置/资源/证据包 | 2C、E6、F1、F4、F5、I1 | **已完成阶段验收**：第七产品 `2914b39` 的 Windows182/182、57181 v3入口与官方CI548/548、133720入口按原身份保留；P1及永久回归P2经独审关闭，`5644e1e` 新单例Windows36/Linux33通过严格门禁。已正常快进集成并推送至 `codex`。[最终证据](verification/k1-final-20261031/README.md) |
 | **K2 独立 Geant4 工程导出** | 目标 3 的源码部分；可审阅 C++/CMake、配置/资源/许可、扩展点和构建说明；脱离工具可继续开发 | K1、I2；当前支持子集即可，不依赖所有 H 项 | 导出模板/manifest → 生成与构建 → 两平台干净环境构建/运行/二次修改；不能只附 INI 或依赖工具安装目录 |
 | **L1 配置 Agent 与模型接入** | 目标 4 首版及目标 5 基础；云 API-key/本地模型适配、结构化差异、授权范围内修改、校验、试跑、读证据、确认/导出 | K1、I1；J1承载，J2先交付本轮手工编辑范围，F8跨项验收；provider/API研究可先行 | provider/凭据与动作接口 → 有界任务状态 → 自然语言端到端/取消/恢复/歧义/失败反例。可写边界来自接口白名单，不来自 EffectiveConfig 读回子集 |

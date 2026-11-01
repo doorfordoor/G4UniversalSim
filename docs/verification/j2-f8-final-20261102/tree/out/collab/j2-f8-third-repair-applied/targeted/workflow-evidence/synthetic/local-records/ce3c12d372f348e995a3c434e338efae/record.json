@@ -1,0 +1,189 @@
+{
+  "action": "validate",
+  "can_run": true,
+  "coverage": "local_source_copy_compatibility",
+  "created_at": "2026-11-01T19:56:43.809859+00:00",
+  "diagnostics": {
+    "can_run": true,
+    "diagnostics": [
+      {
+        "code": "geometry.scoring.not_edited",
+        "identity": "5a26bd552944c262a9392a26b9e11dcce9f9317a2b1315a88a65e110834a650a",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Geometry config mentions LET/Dose/Fluence; those are not edited by this GUI MVP.",
+        "message_key": "",
+        "origin": "config.source",
+        "params": {},
+        "raw_message": "Geometry config mentions LET/Dose/Fluence; those are not edited by this GUI MVP.",
+        "related_locations": [],
+        "severity": "warning",
+        "source": {
+          "filename": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-source-copy\\original-geometry.ini",
+          "key": "",
+          "line": null,
+          "section": "",
+          "text_sha256": "cb56e652467733695ead10caa06a14f3ae0fc42ca37160450250a2038273ce26",
+          "text_snapshot": "# original geometry is never overwritten\n[global]\nversion = 1\n[world]\nshape = box\nsize = 100 mm,100 mm,100 mm\nmaterial = G4_Galactic\n[volume.Target]\nparent = world\nshape = box\nsize = 8 mm,8 mm,8 mm\nmaterial = FirstTarget\nposition = 0 mm,0 mm,0 mm\nsensitive = true\nvis.palette = legacy\n",
+          "value": ""
+        },
+        "unavailable_reason": "source_only"
+      },
+      {
+        "code": "config.geometry.source_copy.active",
+        "identity": "884316ceb5bd10e9e7fbfc2d554020a10cd4ffacd5e5f35eac4ce0fb21245103",
+        "identity_parameters": {},
+        "location": {
+          "collection": "",
+          "editor": "geometry",
+          "entity": "",
+          "field": "source_copy_mode",
+          "row": null,
+          "snapshot_id": ""
+        },
+        "message": "Geometry Editor: original source copy mode is active; blocked fields are preserved but not certified by editor validation.",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Geometry Editor: original source copy mode is active; blocked fields are preserved but not certified by editor validation.",
+        "related_locations": [],
+        "severity": "warning",
+        "source": null,
+        "unavailable_reason": ""
+      },
+      {
+        "code": "config.information.add_editor_summary_info.1",
+        "identity": "076621de6d5f9d1ebd4e62868ccb49f737cba8ce77d8104cc0d1466438feb785",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Source summary: preset=proton_beam, particle=e-, energy=1 MeV",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Source summary: preset=proton_beam, particle=e-, energy=1 MeV",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.add_editor_summary_info.2",
+        "identity": "bec34ce34da794f9ac60aee2015471e1923ef869b68f88d42f016a862efb53d6",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Physics summary: mode=reference, reference=FTFP_BERT, default_cut=0.1 mm, biasing=False",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Physics summary: mode=reference, reference=FTFP_BERT, default_cut=0.1 mm, biasing=False",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.add_editor_summary_info.3",
+        "identity": "d91acc777a7b14b1d3460ae8828b7559d510acd72772d733b727a9e9477cda70",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Scoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Scoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.validate_config_builder.1",
+        "identity": "05dbfe9a24bcea20f94ecc1f5a606036c9e5ccce854fa634adb55aad271f06f4",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Validation passed.",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Validation passed.",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      }
+    ],
+    "errors": [],
+    "info": [
+      "Source summary: preset=proton_beam, particle=e-, energy=1 MeV",
+      "Physics summary: mode=reference, reference=FTFP_BERT, default_cut=0.1 mm, biasing=False",
+      "Scoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100",
+      "Validation passed."
+    ],
+    "schema": "g4usim_diagnostics_v1",
+    "snapshot_id": "49b2f7c4ddd97f438bd0c34cd5084643ddf4f1b84f7be88e53e25282e2de57c5",
+    "warnings": [
+      "Geometry config mentions LET/Dose/Fluence; those are not edited by this GUI MVP.",
+      "Geometry Editor: original source copy mode is active; blocked fields are preserved but not certified by editor validation."
+    ]
+  },
+  "finished_at": "2026-11-01T19:56:43.997257+00:00",
+  "identity": {
+    "backend": {
+      "sha256": "21bb438c0d4a6f1f164b9a646f6ee000340185e5871180aec06db8d3f07c0082",
+      "size_bytes": 274712,
+      "status": "recorded"
+    },
+    "configuration_fingerprint": "49b2f7c4ddd97f438bd0c34cd5084643ddf4f1b84f7be88e53e25282e2de57c5",
+    "coverage": "local_source_copy_compatibility",
+    "coverage_reason": "Unknown resource grammar: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-source-copy\\original-geometry.ini:15 [volume.Target]/vis.palette",
+    "declared_source_receipts": {
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-source-copy\\original-geometry.ini": {
+        "sha256": "cb56e652467733695ead10caa06a14f3ae0fc42ca37160450250a2038273ce26",
+        "size_bytes": 285
+      },
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-source-copy\\original-materials.ini": {
+        "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5",
+        "size_bytes": 249
+      }
+    },
+    "environment": {
+      "reason": "field_validation_only",
+      "status": "not_probed"
+    },
+    "execution_fingerprint": "1680336c5208adf2545846bd4ece66b39b0a55bdb790930ac5914d9e2f37ecdb",
+    "fingerprint": "0c002672cc1b27801fec4f7ead47e99311c032b733532aeeb790a94e7bdda83f",
+    "recursive_closure": "unverified_export_not_qualified",
+    "resource_fingerprint": "ba398ef0ee96eba009f7cf272e04eb11ce5242f0b67428482adac0c97c62195d",
+    "resources": [
+      {
+        "captured_text": false,
+        "distribution": "unknown",
+        "path": "declared/materials",
+        "role": "materials",
+        "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5",
+        "source_sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5"
+      },
+      {
+        "captured_text": false,
+        "distribution": "unknown",
+        "path": "declared/geometry",
+        "role": "geometry",
+        "sha256": "cb56e652467733695ead10caa06a14f3ae0fc42ca37160450250a2038273ce26",
+        "source_sha256": "cb56e652467733695ead10caa06a14f3ae0fc42ca37160450250a2038273ce26"
+      }
+    ],
+    "revision": 0,
+    "schema": "g4usim_experiment_identity_v1",
+    "snapshot_fingerprint": "49b2f7c4ddd97f438bd0c34cd5084643ddf4f1b84f7be88e53e25282e2de57c5"
+  },
+  "level": "fields",
+  "reason": "experiment.fields_completed",
+  "record_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\targeted\\workflow-evidence\\synthetic\\local-records\\ce3c12d372f348e995a3c434e338efae",
+  "record_id": "ce3c12d372f348e995a3c434e338efae",
+  "revision": 0,
+  "run_id": "ce3c12d372f348e995a3c434e338efae",
+  "schema": "g4usim_experiment_record_v1",
+  "session_id": "8d861f15c1454d608dbc4cf780c18ef4",
+  "stale": false,
+  "status": "passed"
+}

@@ -1,0 +1,707 @@
+[
+  {
+    "index": 1,
+    "label": "initial",
+    "note": "Initial Start page directly inspected. Primary five entry buttons visible; external QQ overlay covers center/lower content, excluded. Raw local-only.",
+    "at": "2026-11-01T21:49:27.825Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — demo"
+    },
+    "focused_element": "7 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll",
+    "screenshots": [
+      {
+        "file": "001-initial-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 99603,
+        "sha256": "d6abc29d7a784d669bc3c9a2dc11d44013858ac19d277808320fb54cb48d4e3d",
+        "width": 1202,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 2,
+    "label": "repositioned",
+    "note": "Window moved left through titlebar. Main entry buttons visually unobstructed; QQ remains right lower, excluded.",
+    "at": "2026-11-01T21:52:01.426Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — demo"
+    },
+    "focused_element": "7 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll",
+    "screenshots": [
+      {
+        "file": "002-repositioned-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 97442,
+        "sha256": "56313633641a1afb6704941c1eff49cf76e2573954d5aad238e7c1c622647a5c",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 3,
+    "label": "i1-discovered",
+    "note": "Environment dialog visibly reports 11.3.2 responsive backend and required data, with discovery-not-simulation notice. QQ lower right excluded.",
+    "at": "2026-11-01T21:52:25.844Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — demo"
+    },
+    "focused_element": "123 编辑 所选环境摘要 Value: 后端程序：C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\G4UniversalSim.exe 发现状态：后端可响应，已找到必需数据目录 架构：x86_64 Geant4：11.3.2 构建所用编译器：MSVC 19.51.36246.0 必需数据集：已找到必需数据目录 选择操作仅选定后端路径，不会启动或验证模拟。 ID: QApplication.EnvironmentDialog.QPlainTextEdit",
+    "screenshots": [
+      {
+        "file": "003-i1-discovered-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 110935,
+        "sha256": "9ae1d1a17cce94a44ed4246685dbc3c5351327af02073bb949ada7a390ee40b3",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      },
+      {
+        "file": "003-i1-discovered-1.jpg",
+        "mime": "image/jpeg",
+        "bytes": 75209,
+        "sha256": "c75b998bec50a5094fbacbe61e8306e323bf574d37772a29473870bc4cc17d80",
+        "width": 962,
+        "height": 671,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 4,
+    "label": "i2-open",
+    "note": "Install dialog opened from I1. No manifest attached notice visible; Start install disabled and download consent unchecked. Only Close exercised.",
+    "at": "2026-11-01T21:52:49.723Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — demo"
+    },
+    "focused_element": "149 编辑 存放位置 Value: C:\\Users\\123 ID: QApplication.InstallDialog.QLineEdit",
+    "screenshots": [
+      {
+        "file": "004-i2-open-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 109187,
+        "sha256": "1170d02561db9a2db2757cff4cbdad36ae1bc286c75e36d8cde7b44bff039c79",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      },
+      {
+        "file": "004-i2-open-1.jpg",
+        "mime": "image/jpeg",
+        "bytes": 67565,
+        "sha256": "655b394aa89a98d355aeff68aa975d723776907fe5d3b5eb8462f1672585ce2e",
+        "width": 962,
+        "height": 671,
+        "raw_local_only_other_application_pixels_possible": true
+      },
+      {
+        "file": "004-i2-open-2.jpg",
+        "mime": "image/jpeg",
+        "bytes": 59254,
+        "sha256": "3400681d6a7da5860e1a9dd5e7641f15b8b7fd28e3cc48f93f72ba2a141296f1",
+        "width": 842,
+        "height": 711,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 5,
+    "label": "i2-closed",
+    "note": "Close returned to single Environment dialog. No install action invoked.",
+    "at": "2026-11-01T21:52:56.955Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — demo"
+    },
+    "focused_element": "123 编辑 所选环境摘要 Value: 后端程序：C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\G4UniversalSim.exe 发现状态：后端可响应，已找到必需数据目录 架构：x86_64 Geant4：11.3.2 构建所用编译器：MSVC 19.51.36246.0 必需数据集：已找到必需数据目录 选择操作仅选定后端路径，不会启动或验证模拟。 ID: QApplication.EnvironmentDialog.QPlainTextEdit",
+    "screenshots": [
+      {
+        "file": "005-i2-closed-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 109681,
+        "sha256": "c9ecb4bab2324b648476e0d0aacfde45f826258725efc423c26fa5d9ea1d02a2",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      },
+      {
+        "file": "005-i2-closed-1.jpg",
+        "mime": "image/jpeg",
+        "bytes": 71824,
+        "sha256": "97f87774ff03bc01c592d5c3a41a2ea7112010ed664b7220e08ca051a442365a",
+        "width": 962,
+        "height": 671,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 6,
+    "label": "i1-closed",
+    "note": "Environment closed back to Start.",
+    "at": "2026-11-01T21:53:06.581Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — demo"
+    },
+    "focused_element": "51 按钮 (settable, string) 环境设置… ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.QFrame.QPushButton",
+    "screenshots": [
+      {
+        "file": "006-i1-closed-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 98325,
+        "sha256": "5a186c4e412a8874c31cba6e8452122d5376f27140b179448d791dd7eba349c0",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 7,
+    "label": "import-bundle-path",
+    "note": "Production directory picker supplied original 18c native100 export path.",
+    "at": "2026-11-01T21:53:52.476Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — demo"
+    },
+    "focused_element": "333 编辑 (settable, string) 搜索框 Description: 在 G4UniversalSim 中搜索 ID: SearchEditBox",
+    "screenshots": [
+      {
+        "file": "007-import-bundle-path-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 114173,
+        "sha256": "194a9067e2b50ee3762b52c2de722db5cfea128fa5265e701fe527d982eaf1fb",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      },
+      {
+        "file": "007-import-bundle-path-1.jpg",
+        "mime": "image/jpeg",
+        "bytes": 78144,
+        "sha256": "0ad66794bb679555f769f2532df8d0c9449a2f5f6ecd6439d027575cb35114df",
+        "width": 1011,
+        "height": 634,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 8,
+    "label": "import-backend-picker",
+    "note": "Production picker at current out/build-i2-formal113/Release, observed G4UniversalSim.exe.",
+    "at": "2026-11-01T21:54:21.408Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — demo"
+    },
+    "focused_element": "494 编辑 (settable, string) 搜索框 Description: 在 Release 中搜索 ID: SearchEditBox",
+    "screenshots": [
+      {
+        "file": "008-import-backend-picker-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 104114,
+        "sha256": "3421beb951e1b220ee471e2bf2b3d355f24f658c2d3b15edec88278b9cefd9aa",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      },
+      {
+        "file": "008-import-backend-picker-1.jpg",
+        "mime": "image/jpeg",
+        "bytes": 68968,
+        "sha256": "b5727741a19726667404164cd5e5e66511a0e13ae29d148483d197f75187e9bd",
+        "width": 1011,
+        "height": 634,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 9,
+    "label": "import-runs-picker",
+    "note": "Independent native125/import-runs folder selected.",
+    "at": "2026-11-01T21:54:41.086Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — demo"
+    },
+    "focused_element": "494 编辑 (settable, string) 搜索框 Description: 在 native125 中搜索 ID: SearchEditBox",
+    "screenshots": [
+      {
+        "file": "009-import-runs-picker-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 89676,
+        "sha256": "a387833cd4631c8d819817ccdf1900f319a16013438fc2083194442b513004dd",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      },
+      {
+        "file": "009-import-runs-picker-1.jpg",
+        "mime": "image/jpeg",
+        "bytes": 54465,
+        "sha256": "402f9654a888ae2e3804b91ed38f6ad270ae21c4b02c192a8fb91dfcd2bb6040",
+        "width": 1011,
+        "height": 634,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 10,
+    "label": "imported-awaiting-validation",
+    "note": "Import completed to new_simulation unsaved; header explicitly 待验证. No simulation Run action.",
+    "at": "2026-11-01T21:55:11.747Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — new_simulation *"
+    },
+    "focused_element": "50 按钮 (settable, string) 导入配置包… ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.QFrame.QPushButton",
+    "screenshots": [
+      {
+        "file": "010-imported-awaiting-validation-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 99770,
+        "sha256": "d7ddffcdc58984b44cfb65d52f71a4fe78d9ce85115312957bdfcfe7fb511176",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 11,
+    "label": "import-save-dialog",
+    "note": "Saving imported project as native125/imported-18c-bundle.json via normal project Save.",
+    "at": "2026-11-01T21:55:53.676Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — new_simulation *"
+    },
+    "focused_element": null,
+    "screenshots": [
+      {
+        "file": "011-import-save-dialog-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 102659,
+        "sha256": "19897bc56084635a3640c5ce1c3b79d4880c6ccb74c605c6ee7bd6aed6086714",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      },
+      {
+        "file": "011-import-save-dialog-1.jpg",
+        "mime": "image/jpeg",
+        "bytes": 67113,
+        "sha256": "044fba5b28ea0d58972ce23d4ef212baeae950a1d4e38457e4751266f3c2d416",
+        "width": 1011,
+        "height": 634,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 12,
+    "label": "import-saved",
+    "note": "Saved notification has exact new output path; header remains pending validation.",
+    "at": "2026-11-01T21:56:03.912Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — new_simulation *"
+    },
+    "focused_element": "50 按钮 (settable, string) 导入配置包… ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.QFrame.QPushButton",
+    "screenshots": [
+      {
+        "file": "012-import-saved-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 100509,
+        "sha256": "59cd6a1d8a6c98d58a952a2386982ffe7fb7940526be0d09e1dee60f8ad723af",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 13,
+    "label": "template-start",
+    "note": "Create template opened with single_target selection and explicit replacement/undo/cancel notice.",
+    "at": "2026-11-01T21:56:13.907Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — new_simulation"
+    },
+    "focused_element": "763 编辑 (settable, string) 仿真名称 Value: single_target ID: QApplication.NewSimulationWizard.QWidget.QFrame.ScenarioPage.f8WizardPageScroll.qt_scrollarea_viewport.QWidget.QLineEdit",
+    "screenshots": [
+      {
+        "file": "013-template-start-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 90363,
+        "sha256": "1ab52fe94325f94bddba73fa8d552b3cf08b9b89f8fa09c94cda18aba5dc259a",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      },
+      {
+        "file": "013-template-start-1.jpg",
+        "mime": "image/jpeg",
+        "bytes": 35961,
+        "sha256": "e38abfcc023f5883506882a53d48c2d87ea9430e9d6221c191457d2d4120cc46",
+        "width": 722,
+        "height": 561,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 14,
+    "label": "template-geometry",
+    "note": "Natural Return reached Geometry. G4_WATER/G4_Galactic labels and controls visible; numeric locale glyph distinction previously diagnosed, no padding change.",
+    "at": "2026-11-01T21:56:22.081Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — new_simulation"
+    },
+    "focused_element": "777 旋转图标 (settable, float) Value: 10 ID: QApplication.NewSimulationWizard.QWidget.QFrame.GeometryPage.f8WizardPageScroll.qt_scrollarea_viewport.QWidget.QDoubleSpinBox",
+    "screenshots": [
+      {
+        "file": "014-template-geometry-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 81847,
+        "sha256": "4182687ccad4746a7aed95ad88ed303288e03287613ae90708b2a801095c4bb0",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      },
+      {
+        "file": "014-template-geometry-1.jpg",
+        "mime": "image/jpeg",
+        "bytes": 27835,
+        "sha256": "8f8a51eebe003d7f19961fd40bdf936b3c9f651f738e98a6f44a90a346aaebc3",
+        "width": 722,
+        "height": 561,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 15,
+    "label": "template-source",
+    "note": "Natural second Return reached Source, proton/100 MeV/point +z defaults.",
+    "at": "2026-11-01T21:56:31.344Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — new_simulation"
+    },
+    "focused_element": "787 旋转图标 (settable, float) 能量 Value: 100 ID: QApplication.NewSimulationWizard.QWidget.QFrame.SourcePage.f8WizardPageScroll.qt_scrollarea_viewport.QWidget.QDoubleSpinBox",
+    "screenshots": [
+      {
+        "file": "015-template-source-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 77750,
+        "sha256": "f580d49c60a73096aa108370819ed81de2d5a6286568dc038f9f694316e2c049",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      },
+      {
+        "file": "015-template-source-1.jpg",
+        "mime": "image/jpeg",
+        "bytes": 21970,
+        "sha256": "bdbc4131c1404d59e30ccee2c6ba33b65892741418984f093a0020351a823579",
+        "width": 722,
+        "height": 561,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 16,
+    "label": "template-run-default",
+    "note": "Natural scroll revealed default checked generate-and-run option. It will be unchecked for this template-apply-only native scope.",
+    "at": "2026-11-01T21:56:52.129Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — new_simulation"
+    },
+    "focused_element": "798 旋转图标 (settable, float) 事件数 Value: 1000 ID: QApplication.NewSimulationWizard.QWidget.QFrame.RunPage.wizardRunScroll.qt_scrollarea_viewport.QWidget.QSpinBox",
+    "screenshots": [
+      {
+        "file": "016-template-run-default-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 90637,
+        "sha256": "3757ac1baef1941fab11899a9bbda25dc840c3764f15876ce53b95a91b0fe562",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      },
+      {
+        "file": "016-template-run-default-1.jpg",
+        "mime": "image/jpeg",
+        "bytes": 34548,
+        "sha256": "61754a0db959f1b1156fc7fcba2d453d611587ad04e5d3a52a224bc6d7a9b299",
+        "width": 722,
+        "height": 561,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 17,
+    "label": "template-run-unchecked",
+    "note": "Generate-and-run checkbox visibly unchecked before Finish.",
+    "at": "2026-11-01T21:57:02.534Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — new_simulation"
+    },
+    "focused_element": "798 旋转图标 (settable, float) 事件数 Value: 1000 ID: QApplication.NewSimulationWizard.QWidget.QFrame.RunPage.wizardRunScroll.qt_scrollarea_viewport.QWidget.QSpinBox",
+    "screenshots": [
+      {
+        "file": "017-template-run-unchecked-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 90341,
+        "sha256": "3a37f10f16a1725ac6e987e84deed09d0e64a71b218c11c9e985ea2235cd5941",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      },
+      {
+        "file": "017-template-run-unchecked-1.jpg",
+        "mime": "image/jpeg",
+        "bytes": 34218,
+        "sha256": "32861ed58412503d5317e46da5e6d319537b996915837017f5c840b031dbb971",
+        "width": 722,
+        "height": 561,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 18,
+    "label": "template-finished",
+    "note": "Keyboard Return applied template: single_target title, Config page, undo action Apply wizard, status says inspect editor or Run manually. Did not invoke Run.",
+    "at": "2026-11-01T21:57:38.783Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — new_simulation"
+    },
+    "focused_element": null,
+    "screenshots": [
+      {
+        "file": "018-template-finished-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 119362,
+        "sha256": "0fb4f784e674e93598851c35107a3f3a027349c4c26875d060a9e7386dfd23e7",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 19,
+    "label": "template-save-dialog",
+    "note": "New template-finished.json in same native evidence root; imported project file preserved separately.",
+    "at": "2026-11-01T21:58:22.701Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — single_target *"
+    },
+    "focused_element": null,
+    "screenshots": [
+      {
+        "file": "019-template-save-dialog-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 111088,
+        "sha256": "4503904f0d55ba38e78706d9fb288baba7c3d1e437931ef95a655bed2bdce80e",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      },
+      {
+        "file": "019-template-save-dialog-1.jpg",
+        "mime": "image/jpeg",
+        "bytes": 73093,
+        "sha256": "908accb29d5a8d550661438c5ccbb9b30c7775879ce1bf39c13aa533f9cf8ec4",
+        "width": 1011,
+        "height": 634,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 20,
+    "label": "template-saved",
+    "note": "Template saved to separate template-finished.json; Config undo label is Apply wizard. Preview auto-load enabled and actual constructed two-volume preview observed; not simulation event-run proof.",
+    "at": "2026-11-01T21:58:33.783Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — single_target *"
+    },
+    "focused_element": "848 编辑 (settable, string) 名称 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox.QLineEdit",
+    "screenshots": [
+      {
+        "file": "020-template-saved-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 122567,
+        "sha256": "c0599df22fd9c838361e40b89c60e722817dff297c328a20ca4ed31f2cca10f0",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 21,
+    "label": "reentry-start",
+    "note": "Ctrl+N reentered template wizard after successful Finish and Save.",
+    "at": "2026-11-01T21:59:02.714Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — single_target"
+    },
+    "focused_element": "1193 编辑 (settable, string) 仿真名称 Value: single_target ID: QApplication.NewSimulationWizard.QWidget.QFrame.ScenarioPage.f8WizardPageScroll.qt_scrollarea_viewport.QWidget.QLineEdit",
+    "screenshots": [
+      {
+        "file": "021-reentry-start-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 99786,
+        "sha256": "97a9fc9a95039593dfaae31eb8a2ec589d914d0dbd67b818b8e15cb0eaf59499",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      },
+      {
+        "file": "021-reentry-start-1.jpg",
+        "mime": "image/jpeg",
+        "bytes": 35832,
+        "sha256": "f616e5b65cc74e8c315c04dfff72e877750a6b8448b1fe1e7365c4a9892a023d",
+        "width": 722,
+        "height": 561,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 22,
+    "label": "reentry-geometry",
+    "note": "Reentry Next reached Geometry; Back arrow top-left is visible.",
+    "at": "2026-11-01T21:59:13.648Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — single_target"
+    },
+    "focused_element": "1207 旋转图标 (settable, float) Value: 10 ID: QApplication.NewSimulationWizard.QWidget.QFrame.GeometryPage.f8WizardPageScroll.qt_scrollarea_viewport.QWidget.QDoubleSpinBox",
+    "screenshots": [
+      {
+        "file": "022-reentry-geometry-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 91021,
+        "sha256": "588056eaea50dbae085bc3a39e2f48a3b3b43e0d006bbffe1f512811f096f0b3",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      },
+      {
+        "file": "022-reentry-geometry-1.jpg",
+        "mime": "image/jpeg",
+        "bytes": 27396,
+        "sha256": "68f3502a4060b5235cf4366d4b64c730df29c6403c208c7c8398dbc5772fdc58",
+        "width": 722,
+        "height": 561,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 23,
+    "label": "reentry-back",
+    "note": "Actual Back click returned Geometry to Scenario; no Finish on reentry.",
+    "at": "2026-11-01T21:59:23.316Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — single_target"
+    },
+    "focused_element": "1223 编辑 (settable, string) 仿真名称 Value: single_target ID: QApplication.NewSimulationWizard.QWidget.QFrame.ScenarioPage.f8WizardPageScroll.qt_scrollarea_viewport.QWidget.QLineEdit",
+    "screenshots": [
+      {
+        "file": "023-reentry-back-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 100247,
+        "sha256": "69cb2dc903ef572aea341c362188359c3aa464a9de29b0005f5ae84bef64e36e",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      },
+      {
+        "file": "023-reentry-back-1.jpg",
+        "mime": "image/jpeg",
+        "bytes": 35445,
+        "sha256": "55825059a69a67e88bca396d20eff1d2fccbfd9e8c1b2fd2fb3702d0ae4dfcbb",
+        "width": 722,
+        "height": 561,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  },
+  {
+    "index": 24,
+    "label": "reentry-cancelled",
+    "note": "Esc closed reentered wizard, single_target title without dirty star, undo label retained Apply wizard; cached state will be separately audited, not called full F5 snapshot.",
+    "at": "2026-11-01T21:59:38.696Z",
+    "window": {
+      "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+      "id": 44308928,
+      "title": "G4UniversalSim Runner — single_target"
+    },
+    "focused_element": "848 编辑 (settable, string) 名称 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.workspaceDock_configuration.ConfigBuilderPage.QSplitter.QWidget.QTabWidget.qt_tabwidget_stackedwidget.editorScroll.qt_scrollarea_viewport.MaterialsEditor.QGroupBox.QLineEdit",
+    "screenshots": [
+      {
+        "file": "024-reentry-cancelled-0.jpg",
+        "mime": "image/jpeg",
+        "bytes": 116797,
+        "sha256": "d97869dcc6db20b3c498bc2db4dff8ea7ac78b79c1981366f0427492b238da5d",
+        "width": 1201,
+        "height": 831,
+        "raw_local_only_other_application_pixels_possible": true
+      }
+    ]
+  }
+]

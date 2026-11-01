@@ -1,0 +1,400 @@
+{
+  "passed": true,
+  "launcher_sha256": "4f812f44506e2ea14f03ab49b223ccc0c01b8105c491feaa6dc36095e0c2e1dc",
+  "syntax": "PASS compile only; no launcher execution",
+  "matching_identity_accepted": true,
+  "identity_mutations_rejected": 47,
+  "variants": [
+    {
+      "section": "report",
+      "field": "git_head",
+      "variant": "changed",
+      "rejected": true,
+      "errors": [
+        "report.git_head"
+      ]
+    },
+    {
+      "section": "report",
+      "field": "git_head",
+      "variant": "missing",
+      "rejected": true,
+      "errors": [
+        "report.git_head"
+      ]
+    },
+    {
+      "section": "report",
+      "field": "profile",
+      "variant": "changed",
+      "rejected": true,
+      "errors": [
+        "report.profile"
+      ]
+    },
+    {
+      "section": "report",
+      "field": "profile",
+      "variant": "missing",
+      "rejected": true,
+      "errors": [
+        "report.profile"
+      ]
+    },
+    {
+      "section": "report",
+      "field": "source_fingerprint",
+      "variant": "changed",
+      "rejected": true,
+      "errors": [
+        "report.source_fingerprint"
+      ]
+    },
+    {
+      "section": "report",
+      "field": "source_fingerprint",
+      "variant": "missing",
+      "rejected": true,
+      "errors": [
+        "report.source_fingerprint"
+      ]
+    },
+    {
+      "section": "report",
+      "field": "tests_content_fingerprint",
+      "variant": "changed",
+      "rejected": true,
+      "errors": [
+        "report.tests_content_fingerprint"
+      ]
+    },
+    {
+      "section": "report",
+      "field": "tests_content_fingerprint",
+      "variant": "missing",
+      "rejected": true,
+      "errors": [
+        "report.tests_content_fingerprint"
+      ]
+    },
+    {
+      "section": "report",
+      "field": "merge_source_fingerprint",
+      "variant": "changed",
+      "rejected": true,
+      "errors": [
+        "report.merge_source_fingerprint"
+      ]
+    },
+    {
+      "section": "report",
+      "field": "merge_source_fingerprint",
+      "variant": "missing",
+      "rejected": true,
+      "errors": [
+        "report.merge_source_fingerprint"
+      ]
+    },
+    {
+      "section": "report",
+      "field": "backend_executable",
+      "variant": "changed",
+      "rejected": true,
+      "errors": [
+        "report.backend_executable"
+      ]
+    },
+    {
+      "section": "report",
+      "field": "backend_executable",
+      "variant": "missing",
+      "rejected": true,
+      "errors": [
+        "report.backend_executable"
+      ]
+    },
+    {
+      "section": "report",
+      "field": "merge_executable",
+      "variant": "changed",
+      "rejected": true,
+      "errors": [
+        "report.merge_executable"
+      ]
+    },
+    {
+      "section": "report",
+      "field": "merge_executable",
+      "variant": "missing",
+      "rejected": true,
+      "errors": [
+        "report.merge_executable"
+      ]
+    },
+    {
+      "section": "report",
+      "field": "git_dirty",
+      "variant": "changed",
+      "rejected": true,
+      "errors": [
+        "report.git_dirty"
+      ]
+    },
+    {
+      "section": "report",
+      "field": "git_dirty",
+      "variant": "missing",
+      "rejected": true,
+      "errors": [
+        "report.git_dirty"
+      ]
+    },
+    {
+      "section": "report",
+      "field": "git_status_porcelain",
+      "variant": "changed",
+      "rejected": true,
+      "errors": [
+        "report.git_status_porcelain"
+      ]
+    },
+    {
+      "section": "report",
+      "field": "git_status_porcelain",
+      "variant": "missing",
+      "rejected": true,
+      "errors": [
+        "report.git_status_porcelain"
+      ]
+    },
+    {
+      "section": "report",
+      "field": "backend_build_identity",
+      "variant": "changed",
+      "rejected": true,
+      "errors": [
+        "report.backend_build_identity"
+      ]
+    },
+    {
+      "section": "report",
+      "field": "backend_build_identity",
+      "variant": "missing",
+      "rejected": true,
+      "errors": [
+        "report.backend_build_identity"
+      ]
+    },
+    {
+      "section": "ending",
+      "field": "head",
+      "variant": "changed",
+      "rejected": true,
+      "errors": [
+        "ending.head"
+      ]
+    },
+    {
+      "section": "ending",
+      "field": "head",
+      "variant": "missing",
+      "rejected": true,
+      "errors": [
+        "ending.head"
+      ]
+    },
+    {
+      "section": "ending",
+      "field": "git_status",
+      "variant": "changed",
+      "rejected": true,
+      "errors": [
+        "ending.git_status"
+      ]
+    },
+    {
+      "section": "ending",
+      "field": "git_status",
+      "variant": "missing",
+      "rejected": true,
+      "errors": [
+        "ending.git_status"
+      ]
+    },
+    {
+      "section": "ending",
+      "field": "exe_sha256",
+      "variant": "changed",
+      "rejected": true,
+      "errors": [
+        "ending.exe_sha256"
+      ]
+    },
+    {
+      "section": "ending",
+      "field": "exe_sha256",
+      "variant": "missing",
+      "rejected": true,
+      "errors": [
+        "ending.exe_sha256"
+      ]
+    },
+    {
+      "section": "ending",
+      "field": "merge_sha256",
+      "variant": "changed",
+      "rejected": true,
+      "errors": [
+        "ending.merge_sha256"
+      ]
+    },
+    {
+      "section": "ending",
+      "field": "merge_sha256",
+      "variant": "missing",
+      "rejected": true,
+      "errors": [
+        "ending.merge_sha256"
+      ]
+    },
+    {
+      "section": "ending",
+      "field": "sources",
+      "variant": "changed",
+      "rejected": true,
+      "errors": [
+        "ending.sources"
+      ]
+    },
+    {
+      "section": "ending",
+      "field": "sources",
+      "variant": "missing",
+      "rejected": true,
+      "errors": [
+        "ending.sources"
+      ]
+    },
+    {
+      "section": "ending",
+      "field": "helper_sha256",
+      "variant": "changed",
+      "rejected": true,
+      "errors": [
+        "ending.helper_sha256"
+      ]
+    },
+    {
+      "section": "ending",
+      "field": "helper_sha256",
+      "variant": "missing",
+      "rejected": true,
+      "errors": [
+        "ending.helper_sha256"
+      ]
+    },
+    {
+      "section": "ending",
+      "field": "helper_inputs",
+      "variant": "changed",
+      "rejected": true,
+      "errors": [
+        "ending.helper_inputs"
+      ]
+    },
+    {
+      "section": "ending",
+      "field": "helper_inputs",
+      "variant": "missing",
+      "rejected": true,
+      "errors": [
+        "ending.helper_inputs"
+      ]
+    },
+    {
+      "field": "backend_build_identity.build_configuration",
+      "rejected": true
+    },
+    {
+      "field": "backend_build_identity.compiler_id",
+      "rejected": true
+    },
+    {
+      "field": "backend_build_identity.compiler_version",
+      "rejected": true
+    },
+    {
+      "field": "backend_build_identity.geant4_version_number",
+      "rejected": true
+    },
+    {
+      "field": "backend_build_identity.multithreaded",
+      "rejected": true
+    },
+    {
+      "field": "helper_inputs.0",
+      "rejected": true
+    },
+    {
+      "field": "helper_inputs.1",
+      "rejected": true
+    },
+    {
+      "field": "helper_inputs.2",
+      "rejected": true
+    },
+    {
+      "field": "helper_inputs.3",
+      "rejected": true
+    },
+    {
+      "field": "helper_inputs.4",
+      "rejected": true
+    },
+    {
+      "field": "ending.sources.source_fingerprint",
+      "rejected": true
+    },
+    {
+      "field": "ending.sources.tests_content_fingerprint",
+      "rejected": true
+    },
+    {
+      "field": "ending.sources.merge_source_fingerprint",
+      "rejected": true
+    }
+  ],
+  "normalized_equivalent_path_accepted": true,
+  "actual_fingerprint_child_runs": [
+    {
+      "command": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-c",
+        "import runpy,json,hashlib; from pathlib import Path; m=runpy.run_path('scripts/run_m0_tests.py'); print(json.dumps({'source_fingerprint':m['workspace_source_fingerprint'](),'tests_content_fingerprint':m['tests_content_fingerprint'](),'merge_source_fingerprint':hashlib.sha256(Path('tools/mergeHistograms.cc').read_bytes()).hexdigest()}))"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"source_fingerprint\": \"9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a\", \"tests_content_fingerprint\": \"a0b6ba859c87e276b2b602040c28376150ef8fa86a24e78e2adacebd9aa0df1e\", \"merge_source_fingerprint\": \"49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d\"}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-c",
+        "import runpy,json,hashlib; from pathlib import Path; m=runpy.run_path('scripts/run_m0_tests.py'); print(json.dumps({'source_fingerprint':m['workspace_source_fingerprint'](),'tests_content_fingerprint':m['tests_content_fingerprint'](),'merge_source_fingerprint':hashlib.sha256(Path('tools/mergeHistograms.cc').read_bytes()).hexdigest()}))"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"source_fingerprint\": \"9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a\", \"tests_content_fingerprint\": \"a0b6ba859c87e276b2b602040c28376150ef8fa86a24e78e2adacebd9aa0df1e\", \"merge_source_fingerprint\": \"49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d\"}\n",
+      "stderr": ""
+    }
+  ],
+  "fingerprints_stable": {
+    "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+    "tests_content_fingerprint": "a0b6ba859c87e276b2b602040c28376150ef8fa86a24e78e2adacebd9aa0df1e",
+    "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d"
+  },
+  "data_binding_block": "PASS actual receipt/SDK/2published SHA/exact12, 3 bad dataset variants rejected",
+  "no_launcher_build_profile_or_ui": true,
+  "script_bytes_unchanged": true
+}

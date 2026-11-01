@@ -1,0 +1,128 @@
+{
+  "scope": "read-only product review; not formal acceptance",
+  "confirmed_findings": [
+    {
+      "priority": "P2",
+      "file": "gui/g4usim_gui/widgets/config/geometry.py",
+      "line": 315,
+      "finding": "No-source Revert clears in-memory geometry; Undo restores"
+    }
+  ],
+  "evidence_files": [
+    {
+      "name": "concurrent-edit-observation.json",
+      "bytes": 179,
+      "sha256": "f0265e35a02388ad99f9aee25d89a3f53c06ec4bc66e181e11d8806c7bae072e"
+    },
+    {
+      "name": "invalid-generate.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "invalid-generate.stdout.json",
+      "bytes": 16225,
+      "sha256": "1783b53d8499d3c33877c2ac9b2790d95f1ca38f250482cff8f6b2f9f85028a8"
+    },
+    {
+      "name": "invalid-validate.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "invalid-validate.stdout.json",
+      "bytes": 16221,
+      "sha256": "213399a6998abbd262b8764d1bfd934d51f7b92b27bd7dc50fc1de6ff49acc58"
+    },
+    {
+      "name": "progress.md",
+      "bytes": 1029,
+      "sha256": "2bf228f0bf81f5a5eef6421c7fb71d046d7f963632c5cb2254d9910e44f1903b"
+    },
+    {
+      "name": "reload-first-harness-error.log",
+      "bytes": 401,
+      "sha256": "15b42bcd963a9d650b5ed70969edfe596f8ee46be6d97f24ab46688cdccbf62c"
+    },
+    {
+      "name": "reload-results.json",
+      "bytes": 1996,
+      "sha256": "8bed5c566376a9f6a9130d07885269ca6f8804075a65f5ba3c5f3903e0f82a56"
+    },
+    {
+      "name": "reload.log",
+      "bytes": 947,
+      "sha256": "f51087845edb510e7c9aada633fd7753032b010d695177f4051fa47c4dc81cfc"
+    },
+    {
+      "name": "reload_cases.py",
+      "bytes": 3711,
+      "sha256": "07ad613646d4c947c7fa849babd29868bd8c5b11e50c70b285507c1dceec9ef8"
+    },
+    {
+      "name": "replay-results.json",
+      "bytes": 42667,
+      "sha256": "24fe26bfe3cf45d5ef652881255c77becd98663e167e9e586d28c299f83d5d05"
+    },
+    {
+      "name": "replay.log",
+      "bytes": 31516,
+      "sha256": "96e20f6552b50bd811e6e9b43dd2f77db4f03e1fae8cc71f11c8287539a9b859"
+    },
+    {
+      "name": "replay_cases.py",
+      "bytes": 1351,
+      "sha256": "99907f5574a49cfbed26fefb2a02204914e2599932701662a543880fe3ed3889"
+    },
+    {
+      "name": "results.json",
+      "bytes": 3881,
+      "sha256": "98151e7b285152f38ca17c29104214d229612097f4d153a26f46f035461554b7"
+    },
+    {
+      "name": "review.md",
+      "bytes": 9889,
+      "sha256": "ec54d41a98c44b93a0fc875cf7804a2987e48442f0e5131bf8f327851a51c872"
+    },
+    {
+      "name": "review_cases.py",
+      "bytes": 12215,
+      "sha256": "7f3755855a6df8abe69161f3a58fa6e7b2a0b37f055e1fc43c3d41294b88a580"
+    },
+    {
+      "name": "run.log",
+      "bytes": 1322,
+      "sha256": "e4e485c232087eb7f9950940e117d89901225b55a3fb233737547ff71cb9f1d6"
+    },
+    {
+      "name": "source-undo.log",
+      "bytes": 1754,
+      "sha256": "7bb4b6898abfd5618f33953e5d50993aaa0a2b6fe8ba7ef0ab7997aa16076152"
+    },
+    {
+      "name": "source_undo_cases.py",
+      "bytes": 3280,
+      "sha256": "aa33292f4d5c5a83873545c6beabd3787c69a175b0acdbc20e7ee546b011178d"
+    },
+    {
+      "name": "valid-generate.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "valid-generate.stdout.json",
+      "bytes": 24084,
+      "sha256": "24fed0b065fc6dde7d106aaa0cc0a4c1cb587be2356bdb17e46391eb36dac17b"
+    },
+    {
+      "name": "valid-validate.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "valid-validate.stdout.json",
+      "bytes": 15211,
+      "sha256": "c5ede98f16eb1a5b40c522a505b73d06d29d575523ef96858e1a2bc6276e9c26"
+    }
+  ]
+}

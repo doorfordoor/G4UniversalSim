@@ -1,0 +1,32 @@
+# Beauvoir 四脚本草案独立复核
+
+范围：out/collab/j2-static-fixture-patch-draft 的4份完整 proposed/scripts 草案；基准56b689fb9ac920cbb1203b2b94dae2483d25f622。只写本 out 报告/运行器/日志，没有 apply、修改 tracked 或新增 CI 动作。首候选正式失败证据及 Beauvoir r1 原件不改写。main 已接受显式 geometry 机器 code 迁移，故不再作为待决问题。
+
+## 确认问题：migration 夹具使用不存在的 tessellated 单位键（P2）
+
+`proposed/scripts/test_config_migration.py:139` 新增 `unit = cm`，但真实 tessellated 配置键为 `file_unit`（gui/g4usim_gui/core/solid_registry_data.py 对 tessellated 的字段声明）。实际完整主入口在草案第145行调用 `plan_geometry_migration` 时即由 `gui/g4usim_gui/core/geometry_migration.py:138` 拒绝：`geometry.ini:10 [volume.Target]/unit: unknown field; explicit legacy metadata mapping required where supported`。因此该草案不能原样应用，新增保留性/writer断言均尚未到达。
+
+具体修复：将第139行夹具中的 `unit = cm` 改为 `file_unit = cm`，并同步第164行 `migrated_row.shape_properties["unit"]` 为 `["file_unit"]`，再跑原 main 完整入口。应修夹具的真实键，不应为此放宽 migration 对未知键的拒绝。保留 STL 占位字节的验证边界，不将其称作真实后端 STL 验证。
+
+独立反例：`python -B out/collab/j2-static-fixture-independent-review/run_geometry_drafts.py` 首轮结果见 geometry-execution.json；migration exit1、135断言入口；完整日志 test_config_migration.py.log。该运行器有防覆盖保护，重验须使用新收据位置；勿直接重跑覆盖现有证据。
+
+## 实际执行收据
+
+| 草案 | 实际完整入口 | 结果 |
+|---|---|---|
+| K1 bundle | 原 ROOT / __main__，--component，out evidence-root | exit0，11组，562断言入口 |
+| Config migration | 原 ROOT / __main__，所有临时夹具在out | exit1，135入口，以上未知unit首因 |
+| F4 producers | 原 ROOT / __main__，4个main产品v2模块仅内存替换 | exit0，624入口 |
+| F4 document diagnostics | 同上，完整主入口 | exit0，187入口 |
+
+使用仓库标准 tools/test_assert_probe.py，仅替换 runpy 对目标草案的加载以保留原脚本 __file__/ROOT；执行完整草案原字节和原 __main__，不选跑子组、不改断言。K1/migration 不替换任何产品模块。源码和测试 SHA 在前后检查不变。K1真实包搬移、原来源离线、copies_file唯一收据及缺失拒绝、未知字段阻断组均由完整 main 运行，不以 AST 代替执行。K1为组件证据，没有启动后端或恢复运行信任。
+
+F4产品v2 manifest SHA256：41876e67dc331dd4560f5d853f81826b8a7ae4b6d6a5399f4b604114005bff70；product.patch SHA256：ba79f819458549eddaa3c595530a5f63601ffc834c2b8ce35b9af15a78f8c71e。四模块逐项candidate/原tracked SHA检查通过。机器收据 f4-v2-r2-execution.json。直接 Unknown NIST/name定位、目录外quicklist正例、alias来源只读、旧诊断JSON身份和density分类均随完整main通过。
+
+独立F4首轮加载器将临时目录命名为temp-test_f4_document_diagnostics.py，来源路径含`_f4`触发原脚本第87行序列化无`_f4`检查。此为本审查加载器路径干扰，不是产品发现；首轮f4-v2-execution.json及日志保留。改用中性temp-documents-v2-r2目录后原字节完整入口通过，未修改测试/产品。Beauvoir r1的真实Unknown定位失败仍原样保留。
+
+## 草案静态范围
+
+逐项读过四份patch：K1原拒绝/原子性组保留，新增未知键反例；migration原项目类型/并发publication/故障原子性组保留。F4更换已支持能力的反例，并增合法manual/optical/replacement/bias规则正例；原来源行号和assembly拒绝断言仍在。已接受的geometry code迁移使用明确新code，不接受新旧二选一。未发现其余需要阻止应用的具体问题；当前唯一确认阻塞为上述migration键名。
+
+结论：K1及F4草案在已核对身份下可进入main统一应用/重测；migration草案需先修正确键并重新跑完整入口。此结果不替代正式static矩阵，不使原候选CI转绿。

@@ -1,0 +1,25 @@
+# J2 / F8 功能验收裁决与最终交付边界
+
+2026-11-02，main。实际测试／构建冻结为 `2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8`。
+
+本轮 J2、F8 以及支撑 J2 的 E7 既有15原语／7布尔工具注册与元数据范围，实施、定点独审、适用完整回归和约定原生范围的验收依据已经齐备。允许最终文档据此登记本轮范围完成。最终交付仍须完成公开投影、文档独审、精确入库、docs-only 身份映射和正常 ff/push；本记录不声称这些后续动作已经执行。
+
+## 核验依据
+
+- Windows 六份完整报告全部终态，原会话均真实 exit0、strict matching baseline gate0、identity_errors=[]、无 fail/skip；300/300 次用例执行，181357 个 v3 assert 入口。main 只执行一次冻结聚合脚本，`out/verification/j2-f8-2ec5b14/local-final-audit.json` 为 passed/errors=[]，SHA256 `a701f34fc2d3e9bd2d0aec9fc833d249179fc76ad5de873f8c42011e665ec73c`。逐例及总数基线没有减少，不拼接报告。
+- 最后114 integration原 session96828 真实 exit0，31/31、6780入口；终态收据确认相关进程0、native slot已释放。报告SHA `a09dadd089cb63f5837dadb56901a8cdc8137b3fb3021ebe309277c051ffb46b`。
+- 实际 CI 四workflow、八job均初始 attempt1 success；12份严格报告共636次执行、221186入口。M0 run41352200756、Linux双Geant4 run41352200765、Desktop run41352200727、Installation run41352200731。Sagan独立收据 `out/verification/j2-f8-2ec5b14/ci/review-final.md` SHA `99f4a29d2392c5fc24f8bd2dfdf67358aba2386f2e9894f4e6cd5c88648b5e73`；算术收据SHA `edcbb7859c33c28ebf522c1345e8b83f21867e47e779b3c121da55e1ea250773`。旧失败按原身份和原字节保留。
+- 18c三档原生限定范围经149GUI字节映射沿用；2ec代表性125%补验另记。main操作与观图范围见 `j2-f8-2ec5b14-main-native-scope.md`（SHA `60c35ef3ce7e2c28bfc608fb985cf9a5fdd25e9fea59cb824972a8de2c230f50`），Ptolemy独立纯文件收据 `j2-f8-2ec5b14-native-file-independent/receipt.json`（SHA `86878c3b2675471be99ff45301305b1449b8bc7a7540ddaafdc0f73c744810ab`）。独立文件审不冒充第二次像素审查。
+- 历史缺陷的定点关闭与后续全矩阵分别保留；例如旧F4 layout开放记录由 `f8-independent-review/f4-viewport-final-review.md` 和本轮原layout265实际通过承接，不改旧开放报告。History标签、QLayout兼容、延迟焦点/stale回归、K1 policy与两平台测试接口都有各自独审，不以新版报告追改旧红例。
+
+## 保持的范围限制
+
+空白／无源编辑、NIST来源、命名多源／Surface Sphere、模块组合与替换、多敏感体、可编辑字段及离线完整编辑包按Roadmap本轮合同验收。休眠资源的完整编辑包严格闭包保持；实验性实体与场／偏置等原支持等级不因GUI开放或本次工程验收自动提升。
+
+F8不承诺所有尺寸或所有DPI组合：最内层viewport本身容不下控件的窄dock边界仍明确保留；能够容纳的label+完整field合同不放宽。18c三档的各自范围、2ec新增125操作和被QQ遮挡区域分别记述。197张本机原生原图仅本地保留，公开只保留必要元数据与范围。
+
+2ec导入包后的4条旧历史为stale、当前仅import_history，不冒新validate/generate/run；template Finish取消事件运行后仍有自动Geant4几何预览，不声称完全无后端。18c100%事件链、双版674端到端、真实统计与独立物理基准各按自身证据范围，不能用world-only零沉积或运行成功概括物理正确性。H2/H7/Q2等未纳入本次阶段关闭。
+
+## 后续身份与交付
+
+最终提交只允许经独审的当前文档与精确公共证据清单；原产品、测试、runner、workflow、源码／测试／merge指纹保持2ec不变，不重建或重跑整矩阵制造文档提交身份。后续实际HEAD产生后，才执行经独审的只读映射工具。当前工具准备发现的Python3.11 junction拒绝缺口须先修复并独审，不能用hasattr略过；这是OUT工具问题，不改变上述产品验收结果。

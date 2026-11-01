@@ -1,0 +1,27 @@
+# Follow-up independent review receipt
+
+Reviewer Sagan `01a197d6-adc1-75b0-bb56-7123f75bab20`, medium reasoning, read-only. Scope: CURRENT INI/package adapter, source preview hiding, RunConfig summaries, interaction/selection capture API, Boolean named properties with explicit not_drawn. Main-agent files and global/native/backend acceptance excluded.
+
+Five findings were fixed and regression-tested: physical order of case-variant duplicate keys; backend bias-factor default 1; isotropic theta default upper limit 180deg; plane center default z=-1mm; legacy plane-circle implicit shape/radius compatibility. Manual implicit physics is now derived from the actual manager's option4+decay defaults. New smoke includes each counterexample.
+
+Additional review covered CURRENT materials/geometry path declaration aggregation so final targets, not earlier case-variant keys, control acceptance. Final `outside.ini` is refused with its actual value and line retained.
+
+Reviewer final result:
+
+> 新增路径核对逻辑复核通过，可关闭：同 section 的大小写混合重复键，按最后物理行生效；跨重复 section 聚合后，仅核对最终 materials/geometry 目标；最终路径合法可恢复，最终指向 outside.ini 时拒绝，并保留最终声明值及行号。
+> 已重跑新 smoke，退出 0；另核对了5组聚合反例。原五项保持关闭，本轮未发现新增问题，未修改文件。
+
+Implementation-side final receipts: import-path-order-final.log exit 0 / 208 v3 entrances; followup-own-final.log 223; followup-run-config-final.log 34; summary-legacy.log 340; current-snapshot-legacy.log 61, all exit 0. Counts are assert-line entrances, not scientific claims. Earlier failed fixture/CRLF comparison logs remain intact.
+
+## Main-agent window message patch (write boundary retained)
+
+No window file was changed by this agent. In `gui/g4usim_gui/window/project.py::_show_snapshot_restore_notes`, replace the package-root scope key with:
+
+```python
+scope = ui_text(
+    "Restored the current package's materials, geometry and main.ini source/physics/field/bias configuration. "
+    "Run/scoring use recorded snapshot settings. Macro edits and historical run success were not restored."
+)
+```
+
+The matching Chinese key is included in the latest core/j2_run_editors_i18n.json. This removes the old false statement that current hand-edited main source/physics was not restored. Central i18n import remains main-owned.

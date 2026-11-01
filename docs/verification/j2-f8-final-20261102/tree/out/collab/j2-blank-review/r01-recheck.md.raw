@@ -1,0 +1,17 @@
+# R01 phase-space多文件修复独立复核
+
+日期2026-11-02。结论：**R01在本轮被测资源实现上独立复核关闭**。无产品修改。
+
+使用全新fixture `b.csv,a.csv,b.csv`（含首尾空白）实际检查：
+
+- materialize保留B/A/B顺序与重复项，仅复制两个唯一原文件，两个B指向同一副本。
+- 导出后删除两个原文件、搬移到中文/空格新目录，load_bundle的三项资源均在新包内，字节顺序仍为B/A/B。
+- `a.csv,`、`,a.csv`、`a.csv,,a.csv`均被源校验和export拒绝，无发布目录；不要求纯资源身份collector代替完整语义校验。
+- 第二项缺失时拒绝导出、无目标/残留staging，原始快照指纹不变。
+- 搬移后实际运行包内replay.py的generate/validate，两者退出0、passed；均为生成/字段校验，不是Geant4运行或物理验证。
+
+原始[复核脚本](r01_recheck.py)、[结果](r01-recheck/results.json)、[日志](r01-recheck.log)。结果记录helper/bundle/package_writer/作者专项四文件运行前后SHA一致。
+
+休眠谱按用户2026-11-02裁决：**完整可编辑离线包严格闭合所有保留资源字段**，缺失非活动依赖拒绝导出；不得静默清空草稿。普通运行只复制活动资源。此前resource-review.md中的“待裁决”现已解决，不计缺陷；本轮缺第二文件异常也已显示完整编辑资源的明确提示。
+
+geometry无源Reload的P2归原作者修复，不因资源R01通过而关闭。正式矩阵、后端phase-space读取/事件顺序、完整编辑器实窗验收仍由主负责人组织，本复核不外推这些结论。

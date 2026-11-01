@@ -1,0 +1,39 @@
+# J2/F8原生验收范围余项核对（纯文本，不关闭阶段）
+
+结论：按六链路实施合同、ROADMAP J2/F8及main明确裁定的“旧18c三档限定映射＋新候选一档代表性补验”，**当前没有新发现的、必须再补跑的原生操作项；原生操作余项清单为空**。此结论采用main直接操作/观图的范围记录，不替代Ptolemy对新native125的纯文件独审，不代表formal/CI或J2/F8阶段已通过。
+
+| 合同／此前原生范围差异 | 现有范围覆盖 | 判断与保留边界 |
+|---|---|---|
+| I1环境设置／I2入口可达，取消不执行安装 | 2ec native125证据002–006：开始页→I1发现→I2首屏→逐层关闭 | 代表性入口项已补。仅发现、不验证模拟；未下载、安装或应用环境选择。I2开发宿主首屏不算安装成功；安装资格/交付沿I2既有独立链。 |
+| 导入入口与离线包衔接 | 2ec native125证据007–012：生产对话框选择18c blank-native-bundle、当前113EXE及新import-runs，导入后Ctrl+S保存副本 | 入口/实际导入动作已补。新项目仍“待验证”，不继承旧包验证资格；保存JSON/资源闭包交Ptolemy文件审。不要求把本次导入另跑一套后端。 |
+| 模板应用Finish及实际保存 | 2ec native125证据013–020：单靶模板三次Return，实际取消“完成后生成运行包并运行”，Return Finish→配置页→另存template-finished.json | 代表性Finish已补；不冒称所有五模板逐一原生Finish。五模板继续可用由已有永久生成回归支持，合同未要求五个全做原生相同流程。Finish后的2体积Geant4几何预览不算事件Run。 |
+| 向导重入／Back／Esc取消 | 2ec native125证据021–024：保存后Ctrl+N重入、Next、Back、Esc返回single_target，无dirty星号 | 代表性重入取消已补。raw摘要及cached Undo/Redo/modified仅作限定旁证，不充当完整F5快照；完整业务隔离/非法草稿/Undo恢复由永久回归另证。 |
+| 跨页键盘／DPI／中英／主题／可访问性 | 18c150九页/F6/retained docks→Project及Tab、History三Name en/zh/en、wizard取消及dark；18c125定点Config/F6→Project/Tab、History；18c100中文History | 沿原各档scope与身份映射，不称2ec重新三档实跑，不把125说成九页/wizard。真实Qt焦点与UIA缓存界定沿原独审。窄preview及超宽joint仍按既定边界，不追加泛化修复。 |
+| 无预备源文件的空白业务链 | 18c100真实New blank→生产Save/Open→fields→Initialize(no_run)→Generate→Run100/100→Export→Results；18c150直接New blank与随后wizard取消分段 | 已有真实原生事件Run独立证据。Initialize不是事件运行；world零沉积不是探测器物理基准。原生100导出replay_verified=false，不改称CLI replay；搬移重放由永久E2E的真实后端链另证。 |
+
+## 仍需收口的明确事项（不新增原生动作）
+
+1. Ptolemy完成新2ec native125文件独审：独立确认本轮HEAD/EXE/GUI身份、保存/导入文件与资源及正常退出链。本文仅采用main范围记录，没有重复文件链路审或像素审查。
+2. 在最终归档保留旧18c三档原HEAD/EXE/scope，挂接新候选精确GUI149/允许差异的身份映射收据；新2ec native125保留独立目录/HEAD/EXE。映射只证明身份，不改称新构建全三档执行。本次未运行或重新判定mapping checker。
+3. 既定新候选formal矩阵、实际CI、独审与最终证据门禁继续由现有负责人收尾；原18c两类test-only失败原件保留，不用专项或原生结果替代新候选CI。
+4. main将最终文档/归档/ROADMAP状态与上述终态统一。当前ROADMAP所载“单轮补native pending”等属于其成文快照；本OUT记录已完成的操作范围，未替main更新阶段状态。
+
+## 不增列为缺口的范围
+
+- 本合同未要求NIST/同位素、每种多源/物理constructor、高级实体等各自在每档DPI逐控件原生重跑；解析、运行时与科学语义由对应永久回归/真实backend分别证明。预览和界面到达不能顶替该后端证据。
+- QQ/外部浮层遮挡、41张raw local-only、缓存F5/焦点及150超窄dock等保持main原限制，不据此泛化为新的全屏、多屏或读屏器认证要求；本文未打开、复制或上传图片。
+- 不增加真实安装/下载、三档整套重复、100原导出CLI replay或H2/H7/Q2独立物理基准。实际CI/formal仍有人负责，本任务未重复。
+
+本次只读取合同、ROADMAP与既有scope/审查文本并计算其SHA；未运行Qt/native/product/profile/backend/build。原scope-map及其旧pending文字按历史原件保留。
+
+## 引用快照SHA256
+
+- [docs/collab/inbox/20261101-j2-f8-execution.md](../../docs/collab/inbox/20261101-j2-f8-execution.md) — `8051e1952aa12bb761531a7abd5d7f9c78aabdb44b3a2d98c8a321924a2ddd8e`
+- [docs/ROADMAP.md](../../docs/ROADMAP.md) — `6a84486b3d252acc14d1fede072f04ad327411d0e74baeaa2987f763fab69153`
+- [docs/J2编辑覆盖与F8验收.md](../../docs/J2编辑覆盖与F8验收.md) — `00f7c6631793f3b8f9987d200e0ca7a0ad83461a3eda1e7d851986a082a119d4`
+- [out/collab/j2-f8-18c5858-scope-map/README.md](../../out/collab/j2-f8-18c5858-scope-map/README.md) — `a74e6b0445501a5d59e123182497ee639fbbd29c3ffccc293058c9ff4e32011f`
+- [out/collab/j2-f8-18c5858-main-acceptance-scope.md](../../out/collab/j2-f8-18c5858-main-acceptance-scope.md) — `700e7f3a22915cac1ce28ab44040056a36f562ecda826ba71b5fd9d034d3e69f`
+- [out/collab/j2-f8-2ec5b14-main-native-scope.md](../../out/collab/j2-f8-2ec5b14-main-native-scope.md) — `60c35ef3ce7e2c28bfc608fb985cf9a5fdd25e9fea59cb824972a8de2c230f50`
+- [out/collab/native100-file-independent/review.md](../../out/collab/native100-file-independent/review.md) — `b748178a1781d7869110c3df3d275829b758e9091127cc0c6061ff0953a7139e`
+- [out/collab/j2-f8-18c5858-native-file-audit/README.md](../../out/collab/j2-f8-18c5858-native-file-audit/README.md) — `905e3c0350362b44e6ac1bbed5bdda421fa118fc95befb48096f4f9912a06b5f`
+- [out/collab/j2-f8-native-fourth-mapping-independent/README.md](../../out/collab/j2-f8-native-fourth-mapping-independent/README.md) — `e3f7ec5dc11b9667a4e9c0f2f06efcc935d71ed5eaf6c927f1b3ee7f806b7ef7`

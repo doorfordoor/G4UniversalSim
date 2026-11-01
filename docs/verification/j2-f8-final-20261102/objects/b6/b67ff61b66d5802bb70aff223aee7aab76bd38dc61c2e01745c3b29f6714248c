@@ -1,0 +1,39 @@
+{
+  "published_files": [
+    {
+      "file": "request.json",
+      "pattern_hits": {},
+      "credential_json_fields": []
+    },
+    {
+      "file": "response.json",
+      "pattern_hits": {},
+      "credential_json_fields": []
+    },
+    {
+      "file": "deepseek-design.md",
+      "pattern_hits": {},
+      "credential_json_fields": []
+    },
+    {
+      "file": "acceptance-checklist.md",
+      "pattern_hits": {},
+      "credential_json_fields": []
+    }
+  ],
+  "excluded": [
+    {
+      "source": "out/collab/j2-f8-design/request_design.py",
+      "bytes": 7996,
+      "sha256": "4a8e471792b758315153c06c3bb99e89b411b9e9622e90d1fea7c520822c3a6a",
+      "reason": "Local credential-file locator is present; publish only relative code provenance and SHA, never its body."
+    },
+    {
+      "source": "out/collab/j2-f8-design/progress.md",
+      "bytes": 1901,
+      "sha256": "105e0278b1cedb1d3fc62206de78bf3ab38eacd1e96ccafbf7fdd070ec020459",
+      "reason": "Ephemeral resumable task state is not publication evidence; preserve only relative provenance and SHA."
+    }
+  ],
+  "source_secret_file_opened": false
+}

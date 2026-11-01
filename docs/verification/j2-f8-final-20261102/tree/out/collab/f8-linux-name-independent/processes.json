@@ -1,0 +1,26 @@
+[
+  {
+    "platform": "windows",
+    "command": [
+      "D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe",
+      "-u",
+      "-B",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f8-linux-name-independent\\review.py"
+    ],
+    "exit_code": 0
+  },
+  {
+    "platform": "linux",
+    "command": [
+      "wsl.exe",
+      "-d",
+      "Ubuntu",
+      "--",
+      "/home/u123/venvs/g4-f4-qt-6.11.3-20261030/bin/python",
+      "-u",
+      "-B",
+      "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/f8-linux-name-independent/review.py"
+    ],
+    "exit_code": 0
+  }
+]

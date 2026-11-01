@@ -1,0 +1,52 @@
+{
+  "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows-gui\\20261102-012220-a82212ec\\report.json",
+  "report_sha256": "8e337085204426fde696e2011717e85ef2167687b3529bbea53408179199cb13",
+  "runner_exit_code": 1,
+  "head": "56b689fb9ac920cbb1203b2b94dae2483d25f622",
+  "head_after": "56b689fb9ac920cbb1203b2b94dae2483d25f622",
+  "tracked_status_after": "",
+  "baseline": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\i2-j1-5fe0a10\\windows-gui\\20261101-205241-d4aff2d8\\report.json",
+  "checks": [
+    {
+      "check": "strict",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "scripts/check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows-gui\\20261102-012220-a82212ec\\report.json"
+      ],
+      "exit_code": 1,
+      "log_sha256": "835a1a3bcd8acb987f7a36cd25aacc4576e185b9607b08d9d5928e3318f61c33"
+    },
+    {
+      "check": "historical-baseline",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "scripts/check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows-gui\\20261102-012220-a82212ec\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\i2-j1-5fe0a10\\windows-gui\\20261101-205241-d4aff2d8\\report.json"
+      ],
+      "exit_code": 1,
+      "log_sha256": "835a1a3bcd8acb987f7a36cd25aacc4576e185b9607b08d9d5928e3318f61c33"
+    }
+  ],
+  "summary": {
+    "profile": "gui",
+    "schema": "G4UniversalSimM0TestReport",
+    "assert_probe": "settrace_assert_lines_v3",
+    "assertions_executed_total": 8178,
+    "cases_with_zero_assertions": [],
+    "cases_with_assertion_counts": 66,
+    "counts": null,
+    "results_count": null
+  },
+  "case_statuses": {
+    "pass": 64,
+    "fail": 2,
+    "skip": 0
+  }
+}

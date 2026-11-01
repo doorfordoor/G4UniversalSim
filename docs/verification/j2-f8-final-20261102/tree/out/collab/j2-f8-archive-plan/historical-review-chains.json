@@ -1,0 +1,1285 @@
+{
+  "review_index_source": "out/collab/j2-f8-review-index.json",
+  "original_entries": [
+    {
+      "id": "physics149b",
+      "title": "跨入口 EM replacement 覆盖成功 setEM",
+      "status": "closed_in_recorded_scope",
+      "findings": [
+        {
+          "id": "physics-em-replacement",
+          "severity": "P1",
+          "summary": "拒绝冲突macro，不发布被拒绝的Manager值/来源/revision/generation"
+        }
+      ],
+      "chain": {
+        "original_reports": [
+          {
+            "path": "out/collab/j2-backend-review/README.md"
+          }
+        ],
+        "fix_records": [
+          {
+            "path": "out/collab/j2-source-physics-implementation.md"
+          },
+          {
+            "path": "out/collab/j2-p1-physics-ready.json"
+          },
+          {
+            "path": "out/collab/j2-p1-targeted-validation.json"
+          }
+        ],
+        "independent_confirmations": [
+          {
+            "path": "out/collab/j2-backend-review/p1-recheck-149b25dd/README.md"
+          },
+          {
+            "path": "out/collab/j2-backend-review/p1-recheck-149b25dd/complete.json"
+          }
+        ]
+      },
+      "historical_identities": [
+        {
+          "stage": "original-e44",
+          "kind": "recorded_cpp_binary_identity",
+          "record": {
+            "path": "out/collab/j2-backend-review/identity.json"
+          },
+          "values": [
+            {
+              "source_fingerprint": "e44d005a039448d083008c0c6ba3f824b2f1b680b8d6b2b63f297137754d76f6",
+              "binary_fingerprint": "e44d005a039448d083008c0c6ba3f824b2f1b680b8d6b2b63f297137754d76f6",
+              "exe_sha256": "d5c179c2540a4f0e7e146bb5faffa39cd718549d11cae0a0bb87e1359e1d740b"
+            }
+          ]
+        },
+        {
+          "stage": "fix-ready-149b",
+          "kind": "recorded_file_hashes",
+          "record": {
+            "path": "out/collab/j2-p1-physics-ready.json"
+          },
+          "files": {
+            "include/Physics/PhysicsManager.hh": {
+              "sha256": "224103358512c1684d650949c6463c0a92578ca3f00b1c4c0104650008daa6eb"
+            },
+            "src/Physics/PhysicsManager.cc": {
+              "sha256": "9a79a7f16328f376054d0a8079ee3c217c6bbb2fd4f4201d40cbff2035780b4a"
+            },
+            "src/Physics/PhysicsMessenger.cc": {
+              "sha256": "3ab4e97d36d6d552e6597c09e2328c3cadb80c070901b5c5826e147c42931439"
+            },
+            "scripts/test_j2_sources_physics.py": {
+              "sha256": "6d3507ff9f358b98d6253ec2c2f1aa2f22a91137deae627bb9ac0e28543cc62a"
+            }
+          }
+        },
+        {
+          "stage": "independent-1132-149b",
+          "kind": "recorded_cpp_binary_identity",
+          "record": {
+            "path": "out/collab/j2-backend-review/p1-recheck-149b25dd/1132/identity.json"
+          },
+          "values": [
+            {
+              "version": "1132",
+              "source_fingerprint": "149b25dd00773898c324d09a53dd1ef64b0bf37bc105ca0f74d0c4933245756f",
+              "sha256": "8f7dde9254791d79b5db398fe477fe0fd1e98d012a616af040c04ebb7eb7a7fb"
+            }
+          ]
+        },
+        {
+          "stage": "independent-1143-149b",
+          "kind": "recorded_cpp_binary_identity",
+          "record": {
+            "path": "out/collab/j2-backend-review/p1-recheck-149b25dd/1143/identity.json"
+          },
+          "values": [
+            {
+              "version": "1143",
+              "source_fingerprint": "149b25dd00773898c324d09a53dd1ef64b0bf37bc105ca0f74d0c4933245756f",
+              "sha256": "4919f2e62b6c73ef394cd5cc963078dad86eba16dd66d109ba8c967893c22f54"
+            }
+          ]
+        }
+      ],
+      "limits": [
+        "限定Windows Geant411.3.2/11.4.3原149b身份；不回填9e40。",
+        "6组独立反例/构造器对照，不替代正式全矩阵、Linux或辐射物理基准。",
+        "旧SourceMessenger FatalException边界未借本修复宣称关闭。"
+      ],
+      "additional_evidence": [
+        {
+          "path": "out/collab/j2-backend-review/p1-recheck-149b25dd/results.json"
+        },
+        {
+          "path": "out/collab/j2-p1-build-identities.json"
+        }
+      ]
+    },
+    {
+      "id": "materials-density",
+      "title": "材料密度词法与CLHEP换算有限性",
+      "status": "closed_in_recorded_scope",
+      "findings": [
+        {
+          "id": "P2-M01",
+          "severity": "P2",
+          "summary": "合法密度单位大小写/可选乘号被误拒"
+        },
+        {
+          "id": "P2-M02",
+          "severity": "P2",
+          "summary": "仅检查字面量有限，漏掉换算溢出/下溢"
+        }
+      ],
+      "chain": {
+        "original_reports": [
+          {
+            "path": "out/collab/j2-materials-review/review.md"
+          }
+        ],
+        "fix_records": [
+          {
+            "path": "out/collab/j2-materials/density-fix-identity.json"
+          },
+          {
+            "path": "out/collab/j2-materials/density-p2-fix-final.log"
+          }
+        ],
+        "independent_confirmations": [
+          {
+            "path": "out/collab/j2-materials-review/density-recheck.md"
+          },
+          {
+            "path": "out/collab/j2-materials-review/density-recheck/results.json"
+          }
+        ]
+      },
+      "historical_identities": [
+        {
+          "stage": "original-five-files",
+          "kind": "recorded_file_hashes",
+          "record": {
+            "path": "out/collab/j2-materials-review/results.json"
+          },
+          "files": {
+            "gui/g4usim_gui/core/nist_elements.py": {
+              "sha256": "fd692f360e536eb47a273c2d0cd4e55642246fd50035587a136629ff557aacec"
+            },
+            "gui/g4usim_gui/editors/material_editor_model.py": {
+              "sha256": "f9c0273d0d5e74ee0ebfd93a2ed3c9fa4756b31a4aebf75b9b172c80ac35ec49"
+            },
+            "gui/g4usim_gui/parsers/materials_parser.py": {
+              "sha256": "750101c3336763ae6200df102289bdfa5852d8247b6e52c7e63e9149c21b5dd5"
+            },
+            "gui/g4usim_gui/widgets/config/materials.py": {
+              "sha256": "54cc30f628acb226e0a7c143b470b4c08e22a4caa0459618224a4f061e61516d"
+            },
+            "gui/smoke_tests/smoke_j2_materials.py": {
+              "sha256": "cb65bc16788847abe855c026b14e9e5f359d9dabab2247596bb39a48e9a64664"
+            }
+          }
+        },
+        {
+          "stage": "fixed-density",
+          "kind": "recorded_file_hashes",
+          "record": {
+            "path": "out/collab/j2-materials/density-fix-identity.json"
+          },
+          "files": {
+            "gui/g4usim_gui/editors/material_editor_model.py": {
+              "sha256": "f931ce13b1ba0634d77f9b8547ffdf12067e7c15ab6ca7a685a4cfa205919b16"
+            },
+            "gui/smoke_tests/smoke_j2_materials.py": {
+              "sha256": "2387881c2542fe62e9bfad7316da9f9242a08e038f5598b01d1a8eebe70ccab8"
+            }
+          }
+        },
+        {
+          "stage": "independent-runtime-existing-1132",
+          "kind": "recorded_cpp_binary_identity",
+          "record": {
+            "path": "out/collab/j2-materials-review/density-recheck/results.json"
+          },
+          "values": [
+            {
+              "version": "1132",
+              "source_fingerprint": "c2b575bbb9c594765364aa7c78150e842ffb20ff34b10ad4729720bae2c8c91b",
+              "exe_sha256": "fbb7c56e820d3d36e5f87a3ef2995d55c554d4c5cb38dbaa75191422d4bc37f0"
+            }
+          ]
+        }
+      ],
+      "limits": [
+        "使用既有c2b575…后端，不是共享C++新构建身份。",
+        "合法值各1事件仅证明材料接受/事件完成，不证明材料物理数据准确性。",
+        "未重跑全部材料/同位素矩阵或F8原生DPI。"
+      ],
+      "additional_evidence": [
+        {
+          "path": "out/collab/j2-materials/implementation-receipt.json"
+        }
+      ],
+      "interpretation_note": "修复冻结收据与独审结果提供完整两文件SHA；不以当前产品字节重算替代原身份。"
+    },
+    {
+      "id": "geometry-three",
+      "title": "几何模型原3项P2",
+      "status": "closed_in_recorded_scope",
+      "findings": [
+        {
+          "id": "geometry-token-grouping",
+          "severity": "P2",
+          "summary": "参数分组较后端宽松，可能触发InvalidUnit"
+        },
+        {
+          "id": "geometry-copies-transform-conflict",
+          "severity": "P2",
+          "summary": "copies_file未拒绝position/rotation冲突"
+        },
+        {
+          "id": "geometry-replica-tail-unit",
+          "severity": "P2",
+          "summary": "预览尾单位传播误拒后端合法replica"
+        }
+      ],
+      "chain": {
+        "original_reports": [
+          {
+            "path": "out/collab/j2-geometry-review/README.md"
+          }
+        ],
+        "fix_records": [
+          {
+            "path": "out/collab/j2-geometry-p2-fix.md"
+          },
+          {
+            "path": "out/collab/j2-geometry-p2-receipt.json"
+          }
+        ],
+        "independent_confirmations": [
+          {
+            "path": "out/collab/j2-geometry-review/p2-recheck/README.md"
+          },
+          {
+            "path": "out/collab/j2-geometry-review/p2-recheck/supplement/receipt.json"
+          }
+        ]
+      },
+      "historical_identities": [
+        {
+          "stage": "original-r2-eight-files",
+          "kind": "recorded_file_hashes",
+          "record": {
+            "path": "out/collab/j2-geometry-review/r2/receipt.json"
+          },
+          "files": {
+            "gui/g4usim_gui/editors/geometry_editor_model.py": {
+              "sha256": "a4ea11e69ea8045ad73bd18b8c4b901673e7cab00388ecba3d07fb79276ab734"
+            },
+            "gui/g4usim_gui/parsers/geometry_parser.py": {
+              "sha256": "ccb81da48e54bdcf76ec65c351f105ee86fc129e37101eaaf3c4f01f73e5d5cd"
+            },
+            "gui/g4usim_gui/writers/geometry_ini_writer.py": {
+              "sha256": "f8b93bd89fdd3871753c953d11876c81fa8e34464cbef3ccd9959828dfe92537"
+            },
+            "gui/g4usim_gui/widgets/config/geometry.py": {
+              "sha256": "0a4e7ec31371e39ca087cd65cca1255a5ac3d0359eee629b5c9267fbba1e4700"
+            },
+            "gui/g4usim_gui/widgets/config/booleans.py": {
+              "sha256": "c663af8179dba597ad43be2710baf8eb73a2e2ddfb4dc26a097e8fc022e126dd"
+            },
+            "gui/g4usim_gui/widgets/config/layers.py": {
+              "sha256": "7634980247064c54661a47fc4ffc990dff32bc12aa6c1eb5c37e0fdb99b64ff8"
+            },
+            "gui/g4usim_gui/core/solid_registry_data.py": {
+              "sha256": "1b18673cd1b23e2e6625bbb02a8c69337cd862511959fc159762a38ef231a18f"
+            },
+            "scripts/generate_solid_registry.py": {
+              "sha256": "421464992d1f831b2fd2c152896b04b788506048d93d233ecf7f1098703f7fa3"
+            }
+          }
+        },
+        {
+          "stage": "author-fixed-model-and-smoke",
+          "kind": "recorded_file_hashes",
+          "record": {
+            "path": "out/collab/j2-geometry-p2-receipt.json"
+          },
+          "files": {
+            "gui/g4usim_gui/editors/geometry_editor_model.py": {
+              "sha256": "58f0e82d1508b105e45312c515a5b9b4d64511e19ade5959ff11b10b9ea2115f"
+            },
+            "gui/smoke_tests/smoke_j2_geometry.py": {
+              "sha256": "091cfffed46daa8473d8021f7ea9e4811e40a2c35b98129a4307da8f1efed489"
+            }
+          }
+        },
+        {
+          "stage": "independent-r3-eight-files",
+          "kind": "recorded_file_hashes",
+          "record": {
+            "path": "out/collab/j2-geometry-review/p2-recheck/r3/receipt.json"
+          },
+          "files": {
+            "gui/g4usim_gui/editors/geometry_editor_model.py": {
+              "sha256": "58f0e82d1508b105e45312c515a5b9b4d64511e19ade5959ff11b10b9ea2115f"
+            },
+            "gui/g4usim_gui/parsers/geometry_parser.py": {
+              "sha256": "ccb81da48e54bdcf76ec65c351f105ee86fc129e37101eaaf3c4f01f73e5d5cd"
+            },
+            "gui/g4usim_gui/writers/geometry_ini_writer.py": {
+              "sha256": "f8b93bd89fdd3871753c953d11876c81fa8e34464cbef3ccd9959828dfe92537"
+            },
+            "gui/g4usim_gui/widgets/config/geometry.py": {
+              "sha256": "0a4e7ec31371e39ca087cd65cca1255a5ac3d0359eee629b5c9267fbba1e4700"
+            },
+            "gui/g4usim_gui/widgets/config/booleans.py": {
+              "sha256": "c663af8179dba597ad43be2710baf8eb73a2e2ddfb4dc26a097e8fc022e126dd"
+            },
+            "gui/g4usim_gui/widgets/config/layers.py": {
+              "sha256": "7634980247064c54661a47fc4ffc990dff32bc12aa6c1eb5c37e0fdb99b64ff8"
+            },
+            "gui/g4usim_gui/core/solid_registry_data.py": {
+              "sha256": "1b18673cd1b23e2e6625bbb02a8c69337cd862511959fc159762a38ef231a18f"
+            },
+            "scripts/generate_solid_registry.py": {
+              "sha256": "421464992d1f831b2fd2c152896b04b788506048d93d233ecf7f1098703f7fa3"
+            }
+          }
+        },
+        {
+          "stage": "independent-149b-binaries",
+          "kind": "recorded_cpp_binary_identity",
+          "record": {
+            "path": "out/collab/j2-geometry-review/p2-recheck/identity.json"
+          },
+          "values": [
+            {
+              "version": "1132",
+              "capabilities_source_fingerprint": "149b25dd00773898c324d09a53dd1ef64b0bf37bc105ca0f74d0c4933245756f",
+              "workspace_source_fingerprint": "149b25dd00773898c324d09a53dd1ef64b0bf37bc105ca0f74d0c4933245756f",
+              "exe_sha256": "8f7dde9254791d79b5db398fe477fe0fd1e98d012a616af040c04ebb7eb7a7fb"
+            },
+            {
+              "version": "1143",
+              "capabilities_source_fingerprint": "149b25dd00773898c324d09a53dd1ef64b0bf37bc105ca0f74d0c4933245756f",
+              "workspace_source_fingerprint": "149b25dd00773898c324d09a53dd1ef64b0bf37bc105ca0f74d0c4933245756f",
+              "exe_sha256": "4919f2e62b6c73ef394cd5cc963078dad86eba16dd66d109ba8c967893c22f54"
+            }
+          ]
+        }
+      ],
+      "limits": [
+        "修后真实Inspect使用149b的113；双版capabilities身份已核对，不等于两版所有GUI新输入均运行。",
+        "原3P2关闭时仍发现Boolean/schema阻断，单独由boolean9e40链关闭。",
+        "不涵盖完整F4/F5/K1/i18n/窗口或全矩阵。"
+      ],
+      "additional_evidence": [
+        {
+          "path": "out/collab/j2-geometry-review/r2/receipt.json"
+        },
+        {
+          "path": "out/collab/j2-geometry-review/p2-recheck/details-r3/receipt.json"
+        }
+      ]
+    },
+    {
+      "id": "boolean9e40",
+      "title": "Boolean named fields消费与strict shape schema",
+      "status": "closed_in_recorded_scope",
+      "findings": [
+        {
+          "id": "boolean-known-shape-consumption",
+          "severity": "P2",
+          "summary": "schema列known后trd/trap字段未进入tool.properties"
+        }
+      ],
+      "chain": {
+        "original_reports": [
+          {
+            "path": "out/collab/j2-geometry-review/p2-recheck/README.md"
+          }
+        ],
+        "fix_records": [
+          {
+            "path": "out/collab/j2-boolean-build-identities.json"
+          },
+          {
+            "path": "out/collab/j2-shape-schema-build-identities.json"
+          },
+          {
+            "path": "out/collab/j2-boolean-permanent113-r5.log"
+          }
+        ],
+        "independent_confirmations": [
+          {
+            "path": "out/collab/j2-geometry-review/shape-schema-recheck.md"
+          }
+        ]
+      },
+      "historical_identities": [
+        {
+          "stage": "origin-149b",
+          "kind": "recorded_cpp_binary_identity",
+          "record": {
+            "path": "out/collab/j2-geometry-review/p2-recheck/identity.json"
+          },
+          "values": [
+            {
+              "version": "1132",
+              "capabilities_source_fingerprint": "149b25dd00773898c324d09a53dd1ef64b0bf37bc105ca0f74d0c4933245756f",
+              "workspace_source_fingerprint": "149b25dd00773898c324d09a53dd1ef64b0bf37bc105ca0f74d0c4933245756f",
+              "exe_sha256": "8f7dde9254791d79b5db398fe477fe0fd1e98d012a616af040c04ebb7eb7a7fb"
+            },
+            {
+              "version": "1143",
+              "capabilities_source_fingerprint": "149b25dd00773898c324d09a53dd1ef64b0bf37bc105ca0f74d0c4933245756f",
+              "workspace_source_fingerprint": "149b25dd00773898c324d09a53dd1ef64b0bf37bc105ca0f74d0c4933245756f",
+              "exe_sha256": "4919f2e62b6c73ef394cd5cc963078dad86eba16dd66d109ba8c967893c22f54"
+            }
+          ]
+        },
+        {
+          "stage": "intermediate-real-CSG-88c32e",
+          "kind": "recorded_cpp_binary_identity",
+          "record": {
+            "path": "out/collab/j2-boolean-build-identities.json"
+          },
+          "values": [
+            {
+              "version": "1132",
+              "source_fingerprint": "88c32e8c7ae6052083f975b710d91625e0bf9ed5239f86d6624b961cf3f42488",
+              "sha256": "1bb85ddbbd4c9690b86f14176b1173445e106789a7d49391ed1f137c97c6bbd1",
+              "build_exit_code": 0
+            },
+            {
+              "version": "1143",
+              "source_fingerprint": "88c32e8c7ae6052083f975b710d91625e0bf9ed5239f86d6624b961cf3f42488",
+              "sha256": "eafe9aa121bbbf4d737a611ae1c57f4ca63804a387727874d20e35cd196aa82e",
+              "build_exit_code": 0
+            }
+          ]
+        },
+        {
+          "stage": "strict-schema-independent-9e40",
+          "kind": "recorded_cpp_binary_identity",
+          "record": {
+            "path": "out/collab/j2-shape-schema-build-identities.json"
+          },
+          "values": [
+            {
+              "version": "1132",
+              "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+              "sha256": "76b369fdf6d981e1cce7c476f72756cd16b5dc69166f7ccdf1c0081d80e7edfd",
+              "build_exit_code": 0
+            },
+            {
+              "version": "1143",
+              "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+              "sha256": "95aee9b960620a17473a957dac4f9c6edc7bef9eab9be2efc0a9f3ffd0456af7",
+              "build_exit_code": 0
+            }
+          ]
+        }
+      ],
+      "limits": [
+        "独立113/114各30检查、各8个run fixture/32事件；不是完整源/物理新身份验收。",
+        "88c32旧strict forbidden非零结果不能冒具体分支证据；9e40按具体key/diagnostic补足。",
+        "网格/轨迹/实际solid证明该几何作用，不是辐射物理基准。"
+      ],
+      "additional_evidence": [
+        {
+          "path": "out/collab/j2-geometry-review/boolean-constructed-1132-r1/receipt.json"
+        },
+        {
+          "path": "out/collab/j2-geometry-review/boolean-constructed-1143-r1/receipt.json"
+        },
+        {
+          "path": "out/collab/j2-geometry-review/boolean-schema-1132-r3/receipt.json"
+        },
+        {
+          "path": "out/collab/j2-geometry-review/boolean-schema-1143-r3/receipt.json"
+        },
+        {
+          "path": "out/collab/j2-geometry-review/schema-33-static-compatibility-final.json"
+        },
+        {
+          "path": "out/collab/j2-boolean-permanent113.log"
+        },
+        {
+          "path": "out/collab/j2-boolean-permanent113-r2.log"
+        },
+        {
+          "path": "out/collab/j2-boolean-permanent113-r3.log"
+        },
+        {
+          "path": "out/collab/j2-boolean-permanent113-r4.log"
+        }
+      ],
+      "interpretation_note": "作者r1-r4及独审r1/r2原件保留；包含测试预期错误与真实schema反例，不能统称夹具错误。r5为288入口，旧结果不换指纹。"
+    },
+    {
+      "id": "resourcealias",
+      "title": "legacy source-copy、STL收据与parameterized别名",
+      "status": "closed_in_recorded_scope",
+      "findings": [
+        {
+          "id": "resource-P2-1",
+          "severity": "P2",
+          "summary": "strict迁移scanner误拒legacy v1 source-copy重复声明"
+        },
+        {
+          "id": "resource-P2-2",
+          "severity": "P2",
+          "summary": "CURRENT包未从shape_properties.file登记STL"
+        },
+        {
+          "id": "resource-alias",
+          "severity": "P2",
+          "summary": "合法parameterized别名漏登记/拒绝缺copies表"
+        }
+      ],
+      "chain": {
+        "original_reports": [
+          {
+            "path": "out/collab/j2-integration-review/README.md"
+          },
+          {
+            "path": "out/collab/j2-integration-review/resource-p2-recheck.md"
+          }
+        ],
+        "fix_records": [
+          {
+            "path": "out/collab/j2-resource-p2-fix/README.md"
+          },
+          {
+            "path": "out/collab/j2-resource-p2-fix/files.json"
+          },
+          {
+            "path": "out/collab/j2-resource-p2-fix/alias-files.json"
+          }
+        ],
+        "independent_confirmations": [
+          {
+            "path": "out/collab/j2-integration-review/resource-p2-final-close/README.md"
+          },
+          {
+            "path": "out/collab/j2-integration-review/resource-p2-final-close/receipt.json"
+          }
+        ]
+      },
+      "historical_identities": [
+        {
+          "stage": "original-relocation-gate",
+          "kind": "recorded_file_hashes",
+          "record": {
+            "path": "out/collab/j2-integration-review/resources-1793551222814213000/receipt.json"
+          },
+          "files": {
+            "core/run_editor_resources.py": {
+              "sha256": "03fde9cecf88af1cc2f2a0029f3e4bb23a89e17f877a257363fe1ab716fe0a5c"
+            },
+            "writers/package_writer.py": {
+              "sha256": "a0b79625b19423c64baea0b72b941e9941861e47017f289de2100ac31a49798f"
+            },
+            "core/experiment_bundle.py": {
+              "sha256": "fd94da357bfc97ffdf53ac9bd0c5c55d480087f6df226b4266449aad12ff068e"
+            },
+            "core/config_schema_data.py": {
+              "sha256": "453297c40c5942a7cd3c375441313c8e77f002be04e69473a3d46afd8589862f"
+            }
+          }
+        },
+        {
+          "stage": "original-STL-import",
+          "kind": "recorded_file_hashes",
+          "record": {
+            "path": "out/collab/j2-integration-review/package-load-resource-receipt.json"
+          },
+          "files": {
+            "core/project_snapshot.py": {
+              "sha256": "c607d40e4b66ca958efb09dd2260527bb565028c4a4083648cdf90def16cafc0"
+            },
+            "parsers/geometry_parser.py": {
+              "sha256": "ccb81da48e54bdcf76ec65c351f105ee86fc129e37101eaaf3c4f01f73e5d5cd"
+            },
+            "core/run_editor_resources.py": {
+              "sha256": "03fde9cecf88af1cc2f2a0029f3e4bb23a89e17f877a257363fe1ab716fe0a5c"
+            }
+          }
+        },
+        {
+          "stage": "first-fix-82-alias-not-yet-closed",
+          "kind": "recorded_file_hashes",
+          "record": {
+            "path": "out/collab/j2-resource-p2-fix/files.json"
+          },
+          "files": {
+            "gui/g4usim_gui/core/run_editor_resources.py": {
+              "sha256": "51a5e11c53ff9072b5a07b174d24920cb3931c85338b0407d0316a6ea0609c46",
+              "bytes": 6658
+            },
+            "gui/g4usim_gui/core/project_snapshot.py": {
+              "sha256": "ba155ee3acedc5c13b3c7d75d31a7924305b62fc989e2045c668d6ca2fa873b6",
+              "bytes": 20205
+            },
+            "scripts/test_j2_resource_bundle.py": {
+              "sha256": "842b0c516ba20515c37b6fb5f80c216ef1f0a1e77051cc5cb712c7d76a077287",
+              "bytes": 16820
+            }
+          }
+        },
+        {
+          "stage": "alias-final-101",
+          "kind": "recorded_file_hashes",
+          "record": {
+            "path": "out/collab/j2-resource-p2-fix/alias-files.json"
+          },
+          "files": {
+            "gui/g4usim_gui/core/run_editor_resources.py": {
+              "sha256": "51a5e11c53ff9072b5a07b174d24920cb3931c85338b0407d0316a6ea0609c46",
+              "bytes": 6658
+            },
+            "gui/g4usim_gui/core/project_snapshot.py": {
+              "sha256": "daed5db7923042fa4fb90beac447ce7fe91313ce15a254beae25656d6b800a97",
+              "bytes": 20224
+            },
+            "scripts/test_j2_resource_bundle.py": {
+              "sha256": "67bf4ba34658dea6c49a411b0172b1a2b3a175b0c7f294df64625b92ace5d919",
+              "bytes": 18793
+            }
+          }
+        }
+      ],
+      "limits": [
+        "资源字节/路径/收据与拒绝路径验证，无后端/native/物理验收。",
+        "占位STL仅作字节闭包fixture；不称其物理有效。",
+        "101最终六对照关闭alias，旧82通过不回写成覆盖alias。"
+      ],
+      "additional_evidence": [
+        {
+          "path": "out/collab/j2-integration-review/resource-p2-recheck-permanent.log"
+        },
+        {
+          "path": "out/collab/j2-integration-review/resource-p2-alias-final-recheck.log"
+        }
+      ]
+    },
+    {
+      "id": "CURRENT",
+      "title": "CURRENT INI导入、默认语义与最终路径聚合",
+      "status": "closed_in_recorded_scope",
+      "findings": [
+        {
+          "id": "CURRENT-physical-key-order",
+          "severity": null,
+          "summary": "大小写混合重复键未按物理最后声明"
+        },
+        {
+          "id": "CURRENT-default-bias-factor",
+          "severity": null,
+          "summary": "缺省bias factor与后端1不一致"
+        },
+        {
+          "id": "CURRENT-isotropic-theta",
+          "severity": null,
+          "summary": "isotropic缺省theta上限180deg不一致"
+        },
+        {
+          "id": "CURRENT-plane-center",
+          "severity": null,
+          "summary": "plane缺省center z=-1mm不一致"
+        },
+        {
+          "id": "CURRENT-legacy-plane-circle",
+          "severity": null,
+          "summary": "legacy circle隐式shape/radius兼容"
+        },
+        {
+          "id": "CURRENT-final-resource-target",
+          "severity": null,
+          "summary": "重复section/key后只核对最终materials/geometry目标"
+        }
+      ],
+      "chain": {
+        "original_reports": [
+          {
+            "path": "out/collab/j2-run-editors/followup-review.md"
+          }
+        ],
+        "fix_records": [
+          {
+            "path": "out/collab/j2-run-editors-implementation.md"
+          },
+          {
+            "path": "out/collab/j2-run-editors/followup-files.json"
+          }
+        ],
+        "independent_confirmations": [
+          {
+            "path": "out/collab/j2-run-editors/followup-review.md"
+          }
+        ]
+      },
+      "historical_identities": [
+        {
+          "stage": "followup-final-Python-files",
+          "kind": "recorded_file_hashes",
+          "record": {
+            "path": "out/collab/j2-run-editors/followup-files.json"
+          },
+          "files": {
+            "gui/g4usim_gui/core/run_editor_import.py": {
+              "sha256": "e33bbb0391aa5984da16024227b6b4a1e562c35713b17ffe376cb469b57c1c15",
+              "bytes": 18409
+            },
+            "gui/g4usim_gui/core/project_snapshot.py": {
+              "sha256": "c607d40e4b66ca958efb09dd2260527bb565028c4a4083648cdf90def16cafc0",
+              "bytes": 19487
+            },
+            "gui/g4usim_gui/preview3d/source_builder.py": {
+              "sha256": "ab83e2b2d83c0897bd414f6c6226819da633a402b5a056a3bc4bc35500312a59",
+              "bytes": 10807
+            },
+            "gui/g4usim_gui/preview3d/scene_builder.py": {
+              "sha256": "30cf05e7fbb45d045b8738e5e094ff78e6e751e18b2c26b05c065437644e1965",
+              "bytes": 18698
+            },
+            "gui/g4usim_gui/widgets/config/preview3d.py": {
+              "sha256": "ff4476632c8e5f8e2d02f0403d46945de47aafc2c93ef040f89e73415dba9df4",
+              "bytes": 10684
+            },
+            "gui/g4usim_gui/widgets/config/run_config.py": {
+              "sha256": "84f3430093e219b169163b15827c0db920a585b4b943c9b19ab401b97aaffcc0",
+              "bytes": 33747
+            },
+            "gui/g4usim_gui/widgets/config/j2_run_editors.py": {
+              "sha256": "ecd4b703bdc3776db35d3ea4aa2ed35bb03a23c75ed1c808e78795f760fa59a8",
+              "bytes": 20201
+            },
+            "gui/g4usim_gui/core/j2_run_editors_i18n.json": {
+              "sha256": "621a45cc58daecfa3af795716870c6a68c6517cc7d8e88c1eccf7b4aeb7bd312",
+              "bytes": 23579
+            },
+            "gui/smoke_tests/smoke_j2_current_import_preview.py": {
+              "sha256": "cf87a45ee02fdaae5f172b043f478d037eb0580743f69bf31e2df4fd9a64a014",
+              "bytes": 15866
+            },
+            "gui/smoke_tests/smoke_project_snapshot_restore.py": {
+              "sha256": "e9146855fab757c3da8d974b4fa27077385713f68a934089e8e09bd5db9a9045",
+              "bytes": 12534
+            }
+          }
+        },
+        {
+          "stage": "original-pre-fix",
+          "kind": "identity_not_recorded_in_read_report",
+          "source_fingerprint": null,
+          "note": "报告记录各反例与最终回信，未给独立修前SHA；不得用后续文件SHA补填。"
+        }
+      ],
+      "limits": [
+        "原报告未逐项赋P等级，severity=null，不补猜P1/P2。",
+        "208为断言入口，非后端/物理证明；未覆盖main跨模块F5/native全验收。",
+        "window恢复说明及集中翻译补丁由main持有，报告中的待接线说明不是这些反例已关闭的证明。"
+      ],
+      "additional_evidence": [
+        {
+          "path": "out/collab/j2-run-editors/import-path-order-final.log"
+        },
+        {
+          "path": "out/collab/j2-run-editors/current-snapshot-legacy.log"
+        }
+      ]
+    },
+    {
+      "id": "run-editor-original",
+      "title": "运行编辑器初始三项独审",
+      "status": "closed_in_recorded_scope",
+      "findings": [
+        {
+          "id": "run-editor-display-units",
+          "severity": "P1",
+          "summary": "display length尾单位与backend逐分量单位冲突"
+        },
+        {
+          "id": "run-editor-process-case",
+          "severity": "P2",
+          "summary": "process大小写变体在INI section发生碰撞"
+        },
+        {
+          "id": "run-editor-rotation-overflow",
+          "severity": "P2",
+          "summary": "有限1e200向量的平方溢出"
+        }
+      ],
+      "chain": {
+        "original_reports": [
+          {
+            "path": "out/collab/j2-run-editors/review.md"
+          }
+        ],
+        "fix_records": [
+          {
+            "path": "out/collab/j2-run-editors-implementation.md"
+          },
+          {
+            "path": "out/collab/j2-run-editors/own-files.json"
+          }
+        ],
+        "independent_confirmations": [
+          {
+            "path": "out/collab/j2-run-editors/review.md"
+          }
+        ]
+      },
+      "historical_identities": [
+        {
+          "stage": "final-initial-editor-freeze",
+          "kind": "recorded_file_hashes",
+          "record": {
+            "path": "out/collab/j2-run-editors/own-files.json"
+          },
+          "files": {
+            "gui/g4usim_gui/core/project.py": {
+              "sha256": "67e62074806b211331696ef9f345e36cbdfe96b8548e4e247e7d2b2ed93c026e",
+              "bytes": 13067
+            },
+            "gui/g4usim_gui/core/run_editor_model.py": {
+              "sha256": "97d5855dab85c36fa23b94281f6a0a0f5e3c1b0ead5bad2a3b5ab7eee8fe636a",
+              "bytes": 26164
+            },
+            "gui/g4usim_gui/core/j2_run_editors_i18n.json": {
+              "sha256": "bf880aac8612f3a435b1146fe8a3eaab4be2b3e4a33fa5aaad86c6a4b7839054",
+              "bytes": 18198
+            },
+            "gui/g4usim_gui/editors/source_physics_scoring_model.py": {
+              "sha256": "36a46a32e2730be64766e5f19c9e39631446b876ba8ac356a92297d6410b0559",
+              "bytes": 23628
+            },
+            "gui/g4usim_gui/widgets/config/run_config.py": {
+              "sha256": "32a9b03f0b951001b66ca93c43d547210f0e04f5b05ca00813c4f887ead3befa",
+              "bytes": 30971
+            },
+            "gui/g4usim_gui/widgets/config/j2_run_editors.py": {
+              "sha256": "fc84890c172fe366602ff8518b005dc6b45171405ccf58fbe081d8452938401b",
+              "bytes": 16128
+            },
+            "gui/g4usim_gui/writers/main_ini_writer.py": {
+              "sha256": "c5ea5daddcc329c196a2c6541d97cf2a4e767f585517aa7a8054ca27a8b7f505",
+              "bytes": 5893
+            },
+            "gui/smoke_tests/smoke_j2_run_editors.py": {
+              "sha256": "6fa8cc80d60f53fa9cb61fa647b1ecb3d7c3b6f48ba48493ffe072b59e7bfa9e",
+              "bytes": 15075
+            }
+          }
+        },
+        {
+          "stage": "pre-fix",
+          "kind": "identity_not_recorded_in_read_report",
+          "source_fingerprint": null,
+          "note": "初始问题与最终独审回信同在review.md；不制造不存在的独立原始SHA。"
+        }
+      ],
+      "limits": [
+        "Python own smoke223及三独立反例，不是CURRENT全部后续main接线或后端过程匹配验收。",
+        "源编辑器稳定ID/位置与物理内核GPS索引不同，不能由GUI输入推断运行应用。"
+      ],
+      "additional_evidence": []
+    },
+    {
+      "id": "F8focus8f597",
+      "title": "F8自然焦点/label完整框与向导按钮定点关闭",
+      "status": "closed_in_recorded_scope",
+      "findings": [
+        {
+          "id": "F8-container-focus-clipping",
+          "severity": null,
+          "summary": "首焦点为scroll容器导致label左裁切"
+        },
+        {
+          "id": "F8-candidate-five-pixels",
+          "severity": null,
+          "summary": "中间候选Tab时字段右缘5px裁切"
+        },
+        {
+          "id": "F8-wizard-role-text",
+          "severity": null,
+          "summary": "最终四按钮文字/可访问名定点确认（不虚构独立P等级）"
+        }
+      ],
+      "chain": {
+        "original_reports": [
+          {
+            "path": "out/collab/f8-native-clipping-analysis.md"
+          },
+          {
+            "path": "out/collab/f8-independent-review/focus-fix-progress.md"
+          }
+        ],
+        "fix_records": [
+          {
+            "path": "out/collab/f8-leftfix-final/handoff.md"
+          },
+          {
+            "path": "out/collab/f8-leftfix-final/freeze.json"
+          }
+        ],
+        "independent_confirmations": [
+          {
+            "path": "out/collab/f8-independent-review/focus-fix-final-review.md"
+          }
+        ]
+      },
+      "historical_identities": [
+        {
+          "stage": "original-accessibility-five-files",
+          "kind": "recorded_file_hashes",
+          "record": {
+            "path": "out/collab/f8-accessibility/receipt.json"
+          },
+          "files": {
+            "gui/g4usim_gui/core/accessibility.py": {
+              "sha256": "783b0c6184f5ff26b12a00c951e92bd912571dd9eb7be8168d0ce430c75902ac"
+            },
+            "gui/g4usim_gui/widgets/start_page.py": {
+              "sha256": "b8d8e8b363f7a691e9cec4babe52c4277bc869f82dfca239c90b7c6bffa328ec"
+            },
+            "gui/g4usim_gui/main_window.py": {
+              "sha256": "df76026a347894c617dbca570b4706948b1eed639956fc8c1bcc2f097ca10639"
+            },
+            "gui/g4usim_gui/window/shell.py": {
+              "sha256": "2bf59c065dee740b03fbc678ed32f787cd0b8c293e92b1fc8d498f80c6b11516"
+            },
+            "gui/smoke_tests/smoke_f8_accessibility.py": {
+              "sha256": "46d57a99aece59c5b8f64aa43863faacc9074124ec1904a6de0dee7d4ca72ec0"
+            }
+          }
+        },
+        {
+          "stage": "candidate-9759-five-pixel-observation",
+          "kind": "recorded_file_hashes",
+          "record": {
+            "path": "out/collab/f8-independent-review/focus-candidate125/results.json"
+          },
+          "files": {
+            "gui/g4usim_gui/core/accessibility.py": {
+              "sha256": "9759bee2b76449d74c999a9db301ce39526ffc69651cceae266df720cb805f90"
+            },
+            "gui/g4usim_gui/window/shell.py": {
+              "sha256": "2bf59c065dee740b03fbc678ed32f787cd0b8c293e92b1fc8d498f80c6b11516"
+            },
+            "gui/smoke_tests/smoke_f8_accessibility.py": {
+              "sha256": "46d57a99aece59c5b8f64aa43863faacc9074124ec1904a6de0dee7d4ca72ec0"
+            },
+            "gui/g4usim_gui/main_window.py": {
+              "sha256": "df76026a347894c617dbca570b4706948b1eed639956fc8c1bcc2f097ca10639"
+            },
+            "gui/g4usim_gui/widgets/start_page.py": {
+              "sha256": "b8d8e8b363f7a691e9cec4babe52c4277bc869f82dfca239c90b7c6bffa328ec"
+            }
+          }
+        },
+        {
+          "stage": "intermediate-15ab-targeted-pass",
+          "kind": "recorded_file_hashes",
+          "record": {
+            "path": "out/collab/f8-independent-review/focus-union125/results.json"
+          },
+          "files": {
+            "gui/g4usim_gui/core/accessibility.py": {
+              "sha256": "15ab6f87d28d03e01f5d34cca5e43fd453a45bb51fe186d73d7077aafd2b59aa"
+            },
+            "gui/g4usim_gui/window/shell.py": {
+              "sha256": "2bf59c065dee740b03fbc678ed32f787cd0b8c293e92b1fc8d498f80c6b11516"
+            },
+            "gui/smoke_tests/smoke_f8_accessibility.py": {
+              "sha256": "6d8c630dc9c73ad8f2448684aedd0cc4388cc4baa8398956ae1589cdc5efba23"
+            },
+            "gui/g4usim_gui/main_window.py": {
+              "sha256": "df76026a347894c617dbca570b4706948b1eed639956fc8c1bcc2f097ca10639"
+            },
+            "gui/g4usim_gui/widgets/start_page.py": {
+              "sha256": "b8d8e8b363f7a691e9cec4babe52c4277bc869f82dfca239c90b7c6bffa328ec"
+            }
+          }
+        },
+        {
+          "stage": "final-8f597-freeze",
+          "kind": "recorded_file_hashes",
+          "record": {
+            "path": "out/collab/f8-leftfix-final/freeze.json"
+          },
+          "files": {
+            "gui/g4usim_gui/core/accessibility.py": {
+              "sha256": "8f597259072c4ca7c929b6c9021716da5a6011fc6b6d4a4907af96dc8ba89fca"
+            },
+            "gui/g4usim_gui/widgets/start_page.py": {
+              "sha256": "b8d8e8b363f7a691e9cec4babe52c4277bc869f82dfca239c90b7c6bffa328ec"
+            },
+            "gui/g4usim_gui/main_window.py": {
+              "sha256": "df76026a347894c617dbca570b4706948b1eed639956fc8c1bcc2f097ca10639"
+            },
+            "gui/g4usim_gui/window/shell.py": {
+              "sha256": "2bf59c065dee740b03fbc678ed32f787cd0b8c293e92b1fc8d498f80c6b11516"
+            },
+            "gui/smoke_tests/smoke_f8_accessibility.py": {
+              "sha256": "7087edc6ae93bb666020eb06fb46bd8a60b2539c0213b5058276daf385d04c8e"
+            }
+          }
+        }
+      ],
+      "limits": [
+        "最终DPR1.25/1.5各6组独审仅关闭自然焦点/viewport和四按钮本地化。",
+        "不是F8阶段关闭，不包含原生读屏/真实系统DPI/物理多屏/安装或模拟。",
+        "F4 stdout_view布局首败和异常清理AV仍开放，不被本8f597通过覆盖。",
+        "Back底层text为空的首次独审误判已单独保留；角色文字/name和Space实际返回的复核才是关闭依据。"
+      ],
+      "additional_evidence": [
+        {
+          "path": "out/collab/f8-independent-review/review.md"
+        },
+        {
+          "path": "out/collab/f8-independent-review/focus-fix-review.md"
+        },
+        {
+          "path": "out/collab/f8-independent-review/focus-frozen125-r2/results.json"
+        },
+        {
+          "path": "out/collab/f8-independent-review/focus-frozen150-r2/results.json"
+        },
+        {
+          "path": "out/collab/f8-independent-review/wizard-diagnostic/results.json"
+        }
+      ]
+    },
+    {
+      "id": "phase-space-R01",
+      "title": "多文件phase-space闭包与顺序/重复项",
+      "status": "closed_in_recorded_scope",
+      "findings": [
+        {
+          "id": "P2-R01",
+          "severity": "P2",
+          "summary": "逗号列表被当作单个路径，生成/导出失败"
+        }
+      ],
+      "chain": {
+        "original_reports": [
+          {
+            "path": "out/collab/j2-blank-review/resource-review.md"
+          }
+        ],
+        "fix_records": [
+          {
+            "path": "out/collab/j2-blank-review/r01-recheck.md"
+          },
+          {
+            "path": "out/collab/j2-blank-review/r01-recheck/results.json"
+          }
+        ],
+        "independent_confirmations": [
+          {
+            "path": "out/collab/j2-blank-review/r01-recheck.md"
+          }
+        ]
+      },
+      "historical_identities": [
+        {
+          "stage": "original-resources-round",
+          "kind": "recorded_file_hashes",
+          "record": {
+            "path": "out/collab/j2-blank-review/resources-round/results.json"
+          },
+          "files": {
+            "gui/g4usim_gui/core/run_editor_resources.py": {
+              "sha256": "a66986a6c32df63df60c443c14c5970ae7c42761a34900b99f4fab98f7de6b05"
+            },
+            "gui/g4usim_gui/core/run_editor_model.py": {
+              "sha256": "97d5855dab85c36fa23b94281f6a0a0f5e3c1b0ead5bad2a3b5ab7eee8fe636a"
+            },
+            "gui/g4usim_gui/core/experiment_bundle.py": {
+              "sha256": "2228f8a067798c29e79e54f96d0640031aee55e4e2c136272e309bd46820df0d"
+            },
+            "gui/g4usim_gui/core/edit_snapshot.py": {
+              "sha256": "27bb8185784e0ff3b3559e4e46381c1a13ada098c1f1a17437bba35140f9b182"
+            },
+            "gui/g4usim_gui/editors/source_physics_scoring_model.py": {
+              "sha256": "36a46a32e2730be64766e5f19c9e39631446b876ba8ac356a92297d6410b0559"
+            },
+            "gui/g4usim_gui/editors/geometry_editor_model.py": {
+              "sha256": "e2c9a3f3b10f056f9d657132d3901141c1f4f1668b6198c1724be494e4d5ae5b"
+            },
+            "gui/g4usim_gui/writers/package_writer.py": {
+              "sha256": "91e3130dd26f5d7afc8789b5104bbb0c2e4584a3b86ce7a1d544b858c76b1e3f"
+            },
+            "gui/g4usim_gui/writers/main_ini_writer.py": {
+              "sha256": "c5ea5daddcc329c196a2c6541d97cf2a4e767f585517aa7a8054ca27a8b7f505"
+            },
+            "scripts/test_j2_resource_bundle.py": {
+              "sha256": "066a96105ab580a7114792990f4fa87adc63f72eb5ac87456d221e3847a563cf"
+            }
+          }
+        },
+        {
+          "stage": "independent-R01-close",
+          "kind": "recorded_file_hashes",
+          "record": {
+            "path": "out/collab/j2-blank-review/r01-recheck/results.json"
+          },
+          "files": {
+            "gui/g4usim_gui/core/run_editor_resources.py": {
+              "sha256": "7d73e2677d94ebd6a368a382e0e6a62d019803dfdadd10a8df9b010b13e5fe0a"
+            },
+            "gui/g4usim_gui/core/experiment_bundle.py": {
+              "sha256": "fd94da357bfc97ffdf53ac9bd0c5c55d480087f6df226b4266449aad12ff068e"
+            },
+            "gui/g4usim_gui/writers/package_writer.py": {
+              "sha256": "91e3130dd26f5d7afc8789b5104bbb0c2e4584a3b86ce7a1d544b858c76b1e3f"
+            },
+            "scripts/test_j2_resource_bundle.py": {
+              "sha256": "f282d927dcacc216dbcd1e2d8e0749514f7399c87b1de43bbcacd2623f0b345e"
+            }
+          }
+        }
+      ],
+      "limits": [
+        "B/A/B顺序、去重、丢原文件搬移、CLI generate/validate，不证明后端读取fixture格式/事件或物理。",
+        "完整可编辑离线包严格闭合休眠资源为用户裁决；普通运行只复制活动资源，不能静默删草稿。"
+      ],
+      "additional_evidence": []
+    },
+    {
+      "id": "no-source-reload",
+      "title": "无来源Geometry Reload/Revert清空",
+      "status": "closed_in_recorded_scope",
+      "findings": [
+        {
+          "id": "blank-reload-P2",
+          "severity": "P2",
+          "summary": "无源Revert把world/KEEP清空"
+        }
+      ],
+      "chain": {
+        "original_reports": [
+          {
+            "path": "out/collab/j2-blank-review/review.md"
+          }
+        ],
+        "fix_records": [
+          {
+            "path": "out/collab/j2-geometry-implementation.md"
+          }
+        ],
+        "independent_confirmations": [
+          {
+            "path": "out/collab/j2-blank-review/reload-recheck.md"
+          }
+        ]
+      },
+      "historical_identities": [
+        {
+          "stage": "original-reload-probe",
+          "kind": "recorded_file_hashes",
+          "record": {
+            "path": "out/collab/j2-blank-review/reload-results.json"
+          },
+          "files": {
+            "widgets/config/geometry.py": {
+              "sha256": "fa6df074c3c16f91bbe3e19f60255b5dee6357de5a8b95e1bb7830cdc4a995c9"
+            },
+            "widgets/config/materials.py": {
+              "sha256": "7dd835e0bcb1ad3c2359efe8a48c75d29ea4d7d4469ab9055c44ecc8469aebb3"
+            },
+            "core/wizard.py": {
+              "sha256": "36d0f4cfb4230907edb2ecc45a1fa1493a1a968f20393941a3b49ead6c3bfcb4"
+            },
+            "window/project.py": {
+              "sha256": "edd71bce6e2e2d0a1f9bc199cb17156d756a15fd47db2df1d809025ac7bda3b4"
+            },
+            "window/transactions.py": {
+              "sha256": "518b0fc84d03f77089c598fc2d4a2cb1a4c7dca9f240c0e2cf99c8d748f201d0"
+            }
+          }
+        },
+        {
+          "stage": "independent-reload-close",
+          "kind": "recorded_file_hashes",
+          "record": {
+            "path": "out/collab/j2-blank-review/reload-recheck-results.json"
+          },
+          "files": {
+            "widgets/config/geometry.py": {
+              "sha256": "0a4e7ec31371e39ca087cd65cca1255a5ac3d0359eee629b5c9267fbba1e4700"
+            },
+            "widgets/config/materials.py": {
+              "sha256": "54cc30f628acb226e0a7c143b470b4c08e22a4caa0459618224a4f061e61516d"
+            },
+            "core/wizard.py": {
+              "sha256": "36d0f4cfb4230907edb2ecc45a1fa1493a1a968f20393941a3b49ead6c3bfcb4"
+            },
+            "window/project.py": {
+              "sha256": "edd71bce6e2e2d0a1f9bc199cb17156d756a15fd47db2df1d809025ac7bda3b4"
+            },
+            "window/transactions.py": {
+              "sha256": "31e6585e448f651a3b34069385326fef90f747fc38ea7a8804c3f78392cc4994"
+            }
+          }
+        }
+      ],
+      "limits": [
+        "只证明保留文档/revision/原文及重新导入；后续main旧summary→blank以新的共享证据另计。",
+        "不冒充全窗口/新候选正式矩阵或原生验收。"
+      ],
+      "additional_evidence": [
+        {
+          "path": "out/collab/j2-integration-review/source-blank-first.log"
+        }
+      ]
+    }
+  ],
+  "original_open_items": [
+    {
+      "id": "F4-layout",
+      "status": "open",
+      "severity": null,
+      "status_basis": "用户明确保持开放；本索引不执行新判断",
+      "summary": "stdout_view中心被祖先clip；失败清理出现recovery lock/访问违例。首因与清理次因分别保留。",
+      "evidence": [
+        {
+          "path": "out/collab/f8-leftfix-final/handoff.md"
+        },
+        {
+          "path": "out/collab/f8-leftfix-final/freeze.json"
+        },
+        {
+          "path": "out/collab/f8-leftfix-final/f4-layout.log"
+        },
+        {
+          "path": "out/collab/f8-leftfix-final/f4-layout-default.log"
+        },
+        {
+          "path": "out/collab/f8-independent-review/focus-fix-final-review.md"
+        }
+      ],
+      "not_closed_by": [
+        "F8focus8f597"
+      ],
+      "owner": "main/F4fix",
+      "limits": [
+        "索引不把旧F4专项、F8焦点修复或native host退出当作本项关闭。"
+      ]
+    }
+  ],
+  "note": "Original F4 open status remains historical; separate later repair/v3 closure artifacts must not overwrite it",
+  "later_closure_roots": [
+    "out/collab/f8-project-dock150-independent",
+    "out/collab/j2-f8-repair-independent",
+    "out/collab/j2-static-fixture-independent-review",
+    "out/collab/j2-migration-final-v2-independent",
+    "out/collab/j2-external-inspect-independent-review"
+  ]
+}

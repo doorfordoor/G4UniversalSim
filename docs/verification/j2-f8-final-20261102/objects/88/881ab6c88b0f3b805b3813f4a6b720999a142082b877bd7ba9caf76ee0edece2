@@ -1,0 +1,53 @@
+G4USIM_ASSERTS=7
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-external-inspect-fix\run_overlay.py", line 17, in <module>
+    runpy.run_path(str(ROOT / "tools/test_assert_probe.py"), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-external-inspect-fix\test_external_inspect_source_scope.py", line 128, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-external-inspect-fix\test_external_inspect_source_scope.py", line 57, in main
+    bundle = collect_bundle_resources(external)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\experiment_bundle.py", line 645, in collect_bundle_resources
+    data, records, closure = _collected(snapshot, validation_records, resource_policy)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\experiment_bundle.py", line 612, in _collected
+    data = _snapshot_paths(data, closure)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\experiment_bundle.py", line 399, in _snapshot_paths
+    p[key] = resource(p[key], role, mode) if p["runInputMode"] == "external" else ""
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\experiment_bundle.py", line 382, in resource
+    target = closure.add(_resolve(value, base), role, mode=mode)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\experiment_bundle.py", line 231, in add
+    data = self.macro(raw.decode("utf-8-sig"), path, relative, mode).encode("utf-8")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\experiment_bundle.py", line 307, in macro
+    return self._macro(text, path, relative)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\experiment_bundle.py", line 344, in _macro
+    target = self.ref(args, base, role, relative, local=command == "/control/execute", mode=self.macro_mode)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\experiment_bundle.py", line 246, in ref
+    target = self.add(_resolve(value, base), role, mode=mode)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\experiment_bundle.py", line 231, in add
+    data = self.macro(raw.decode("utf-8-sig"), path, relative, mode).encode("utf-8")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\experiment_bundle.py", line 307, in macro
+    return self._macro(text, path, relative)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\experiment_bundle.py", line 353, in _macro
+    raise ValueError(f"Unknown resource command grammar: {where}")
+ValueError: Unknown resource command grammar: D:\Temp\external-source-scope-57qqg6hx\nested.mac:1 /control/echo

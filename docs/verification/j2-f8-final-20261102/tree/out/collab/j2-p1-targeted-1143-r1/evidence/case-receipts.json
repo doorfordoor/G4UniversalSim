@@ -1,0 +1,130 @@
+[
+  {
+    "name": "replacement-macro-reject-set-em",
+    "exit_code": 1,
+    "expect_rejection": "conflicts with configured [physics]/replace_modules",
+    "observed_primaries": 0,
+    "stdout_sha256": "57fe213ae3282b5e4718ee067b811da1f149a2efdf4d10e65ca5b0c6a8b33217",
+    "stderr_sha256": "588f75ffc102bd8feb9109fd95bcdf733d24633ddba27f99c6ab234c1fa61bbe"
+  },
+  {
+    "name": "replacement-macro-reject-add-module-em",
+    "exit_code": 1,
+    "expect_rejection": "conflicts with configured [physics]/replace_modules",
+    "observed_primaries": 0,
+    "stdout_sha256": "088e4ea56c919a8f068816d1e505769abb0e02d2ce50f8c9050026b5088c7be8",
+    "stderr_sha256": "c1fb6aeb2267aefa71231e1b2a1eb674eb7cd036a00e2cc51d1e5c83bf043bfd"
+  },
+  {
+    "name": "replacement-macro-reject-add-hadronic-em",
+    "exit_code": 1,
+    "expect_rejection": "conflicts with configured [physics]/replace_modules",
+    "observed_primaries": 0,
+    "stdout_sha256": "51670c169c46f40ec95f0dba6020292457d505be895489044e9d9fc39beedd1f",
+    "stderr_sha256": "7e363c178cb174dc7ebd40b3a238ec1ea9df9e2cd6e5071cb5381a024107d461"
+  },
+  {
+    "name": "replacement-macro-reject-add-other-em",
+    "exit_code": 1,
+    "expect_rejection": "conflicts with configured [physics]/replace_modules",
+    "observed_primaries": 0,
+    "stdout_sha256": "d772a3fdf9d13535b49f174b747be6a49afdad1c21e8a34e797f44568a9b69dd",
+    "stderr_sha256": "349d03674e262ac2b491a3eda763172712eedba5c561c822d26c99723084602b"
+  },
+  {
+    "name": "replacement-macro-reject-add-extra-em",
+    "exit_code": 1,
+    "expect_rejection": "conflicts with configured [physics]/replace_modules",
+    "observed_primaries": 0,
+    "stdout_sha256": "57476e43f9ace984149fd99784c444d5d5bd39e75ca4d5ef1acd4f841af3c14e",
+    "stderr_sha256": "2b0331b0c162c6e73f6f8d7a8236be97814ab09fbaeb5f68ee13ad2b843483a3"
+  },
+  {
+    "name": "replacement-macro-reject-set-reference",
+    "exit_code": 1,
+    "expect_rejection": "conflicts with configured [physics]/replace_modules",
+    "observed_primaries": 0,
+    "stdout_sha256": "77cb9012a1155a392166fc14db39d3df319867b6df30cf3164f30bdc866e249a",
+    "stderr_sha256": "b7099a4aa1bdf7a60e546a387afe2177e00f8feb05b0bddd177ba5ee0f1e0bd8"
+  },
+  {
+    "name": "replacement-macro-reject-set-base-reference",
+    "exit_code": 1,
+    "expect_rejection": "conflicts with configured [physics]/replace_modules",
+    "observed_primaries": 0,
+    "stdout_sha256": "7d75a4d0dfc2c213f4c831f3287fce2438652e6d08ef60b070f680879609f4be",
+    "stderr_sha256": "fc7e6870282d82a897aa780aa22680cb9bc3246fce7f5bda95a0ef290829591a"
+  },
+  {
+    "name": "replacement-macro-reject-clear-reference",
+    "exit_code": 1,
+    "expect_rejection": "conflicts with configured [physics]/replace_modules",
+    "observed_primaries": 0,
+    "stdout_sha256": "460779fec78a4c74120355d804c7a4f46be22667d33a0e96a92e950e54222a81",
+    "stderr_sha256": "76f78b35c43ab9365f02aa1c7ab6c8ba41d89e5f138a843e5690a0fbf79bb3fe"
+  },
+  {
+    "name": "replacement-macro-reject-add-module-hadronic",
+    "exit_code": 1,
+    "expect_rejection": "conflicts with configured [physics]/replace_modules",
+    "observed_primaries": 0,
+    "stdout_sha256": "335cba722e4a9651fb4bc2e21d67ddb7b356f5aa554f951a040595648941b4f6",
+    "stderr_sha256": "8210e5854da2e05b357156ae340db63d8fcef1f606cb71e15ba18f2cb70bd344"
+  },
+  {
+    "name": "replacement-macro-reject-add-hadronic",
+    "exit_code": 1,
+    "expect_rejection": "conflicts with configured [physics]/replace_modules",
+    "observed_primaries": 0,
+    "stdout_sha256": "e12e4261499488a9e0c4a8635b1aa5b8edbd75e02e3e10710d085dfd536efd09",
+    "stderr_sha256": "8330448000d90278bba7f0308f749be6b5d9cb273b4eb9800fd298b259b3d24e"
+  },
+  {
+    "name": "replacement-macro-reject-add-other-hadronic",
+    "exit_code": 1,
+    "expect_rejection": "conflicts with configured [physics]/replace_modules",
+    "observed_primaries": 0,
+    "stdout_sha256": "007b80f5dfdedd5c4d4c6807d22552146ea34d606cacde79f830d55cee512e1c",
+    "stderr_sha256": "55c385fe08b32920b37f1255626e6f160a7342cc582e87ba135c2b03f92b95e9"
+  },
+  {
+    "name": "replacement-macro-reject-add-extra-hadronic",
+    "exit_code": 1,
+    "expect_rejection": "conflicts with configured [physics]/replace_modules",
+    "observed_primaries": 0,
+    "stdout_sha256": "4790576a1456377027f82ed6329499390b32d25a088079199d851cb0dc81807f",
+    "stderr_sha256": "ad4265c7a163da005b7df9f323ac686add88372a374acfe5d5f3da74512967ad"
+  },
+  {
+    "name": "replacement-macro-control-no-plan",
+    "exit_code": 0,
+    "expect_rejection": null,
+    "observed_primaries": 8,
+    "stdout_sha256": "8917a34fd81b3a94f7624bb850eb6f67f6e583f23ad7eb7870521eb65fc4b2ec",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "replacement-macro-control-cuts",
+    "exit_code": 0,
+    "expect_rejection": null,
+    "observed_primaries": 8,
+    "stdout_sha256": "3104bacdb5885140d4de8da50ed2ca2d8123f7b972d76e34a80768f0001308b5",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "replacement-macro-control-other-category",
+    "exit_code": 0,
+    "expect_rejection": null,
+    "observed_primaries": 8,
+    "stdout_sha256": "5fd57c1734dd268584a290ec9f23d9be345eacab47462e3a45c6591a6bfe57f2",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "replacement-macro-control-optical",
+    "exit_code": 0,
+    "expect_rejection": null,
+    "observed_primaries": 8,
+    "stdout_sha256": "5f25e44155fbf8f3469988083fe2478f42153f67ee9f37ee84a906e8b57c1aa5",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

@@ -1,0 +1,78 @@
+{
+  "status": "passed",
+  "cases": 7,
+  "source_sha256": "58f0e82d1508b105e45312c515a5b9b4d64511e19ade5959ff11b10b9ea2115f",
+  "cpp_source_fingerprint": "149b25dd00773898c324d09a53dd1ef64b0bf37bc105ca0f74d0c4933245756f",
+  "source_unchanged": true,
+  "observations": [
+    {
+      "name": "ten-token",
+      "writer_accepted": true,
+      "errors": [],
+      "diagnostic_fields": [],
+      "raw_preserved": true,
+      "backend_exit": 0
+    },
+    {
+      "name": "five-token",
+      "writer_accepted": true,
+      "errors": [],
+      "diagnostic_fields": [],
+      "raw_preserved": true,
+      "backend_exit": 0
+    },
+    {
+      "name": "table-position",
+      "writer_accepted": false,
+      "errors": [
+        "[GEOMETRY][ERROR] V: copies_file defines every copy's position and rotation; remove position and rotation."
+      ],
+      "diagnostic_fields": [
+        "position"
+      ],
+      "raw_preserved": true
+    },
+    {
+      "name": "table-rotation",
+      "writer_accepted": false,
+      "errors": [
+        "[GEOMETRY][ERROR] V: copies_file defines every copy's position and rotation; remove position and rotation."
+      ],
+      "diagnostic_fields": [
+        "rotation"
+      ],
+      "raw_preserved": true
+    },
+    {
+      "name": "table-both",
+      "writer_accepted": false,
+      "errors": [
+        "[GEOMETRY][ERROR] V: copies_file defines every copy's position and rotation; remove position and rotation."
+      ],
+      "diagnostic_fields": [
+        "position",
+        "rotation"
+      ],
+      "raw_preserved": true
+    },
+    {
+      "name": "mixed-replica-good",
+      "writer_accepted": true,
+      "errors": [],
+      "diagnostic_fields": [],
+      "raw_preserved": true,
+      "backend_exit": 0
+    },
+    {
+      "name": "mixed-replica-wrong-cross-section",
+      "writer_accepted": false,
+      "errors": [
+        "[GEOMETRY][ERROR] V: Replica dimensions, total width or phi centering do not match the mother."
+      ],
+      "diagnostic_fields": [
+        "replica_width"
+      ],
+      "raw_preserved": true
+    }
+  ]
+}

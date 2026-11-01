@@ -1,0 +1,26 @@
+G4USIM_ASSERTS=9
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_k1_workflow.py", line 173, in source_capture_scope
+    collect_bundle_resources(external, resource_policy=policy)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\experiment_bundle.py", line 646, in collect_bundle_resources
+    data, records = _finish_collection(data, records, closure)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\experiment_bundle.py", line 632, in _finish_collection
+    raise ValueError("Unused resource policy entries: " + ", ".join(sorted(set(closure.policy) - closure.used_policy)))
+ValueError: Unused resource policy entries: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-resource-policy-path-review\long-folder-with-alias-input\external-source-scope-0g1uv2ka\main.ini
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-resource-policy-path-review\run_focused.py", line 21, in <module>
+    raise SystemExit(test_assert_probe.main(['test_assert_probe.py',str(target)]))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-resource-policy-path-review\run_focused.py", line 17, in focused
+    else:namespace['source_capture_scope']()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_k1_workflow.py", line 175, in source_capture_scope
+    assert "Restricted resource requires explicit redistribution policy" in str(error)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

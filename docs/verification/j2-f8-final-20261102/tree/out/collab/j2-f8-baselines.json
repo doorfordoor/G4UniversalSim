@@ -1,0 +1,571 @@
+{
+  "schema": "g4usim_j2_f8_historical_baselines_v1",
+  "historical_only": true,
+  "new_j2_f8_formal_results_created": false,
+  "authority": "docs/verification/i2-j1-final-20261101/acceptance-state.json",
+  "source_archive_index": "docs/verification/i2-j1-final-20261101/automated-delivery/reports-index.json",
+  "assert_probe": "settrace_assert_lines_v3",
+  "log_digest_algorithm": "sha256_raw_bytes_lf_v2",
+  "verification_this_task": "Read original/archived report bytes, verify SHA and counts/status. Historical raw logs were not rehashed or rerun. Archived strict pass is a historical fact.",
+  "baselines": [
+    {
+      "id": "windows113-static",
+      "selection": "primary_same_host_local",
+      "historical_baseline": true,
+      "profile": "static",
+      "cases": 44,
+      "assertions": 3964,
+      "head": "5fe0a1052e33c96d033375d0920f29b15d432dcc",
+      "original_report": "out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/report.json",
+      "original_exists": true,
+      "report_sha256": "5b72c84e71c6e1b096ad81566c0adb5d7809fd590506dc9f37559ea8b3526c99",
+      "archive_increment": "20261101T135231Z",
+      "archive_logical_report": "automated/local/windows-static/20261101-205231-c62d61cd/report.json",
+      "archive_zip": "docs/verification/i2-j1-final-20261101/automated-delivery/increments/20261101T135231Z/evidence.zip",
+      "archive_member": "objects/5b/5b72c84e71c6e1b096ad81566c0adb5d7809fd590506dc9f37559ea8b3526c99",
+      "report_bytes_verified": true,
+      "historical_strict_gate": "pass",
+      "logs_rechecked_this_task": false
+    },
+    {
+      "id": "windows113-gui",
+      "selection": "primary_same_host_local",
+      "historical_baseline": true,
+      "profile": "gui",
+      "cases": 59,
+      "assertions": 6760,
+      "head": "5fe0a1052e33c96d033375d0920f29b15d432dcc",
+      "original_report": "out/verification/i2-j1-5fe0a10/windows-gui/20261101-205241-d4aff2d8/report.json",
+      "original_exists": true,
+      "report_sha256": "178d2a42b041fe1ed6018d79d6b7b27a72c73cdc348d7204c20dc2b26d5a1e6c",
+      "archive_increment": "20261101T135231Z",
+      "archive_logical_report": "automated/local/windows-gui/20261101-205241-d4aff2d8/report.json",
+      "archive_zip": "docs/verification/i2-j1-final-20261101/automated-delivery/increments/20261101T135231Z/evidence.zip",
+      "archive_member": "objects/17/178d2a42b041fe1ed6018d79d6b7b27a72c73cdc348d7204c20dc2b26d5a1e6c",
+      "report_bytes_verified": true,
+      "historical_strict_gate": "pass",
+      "logs_rechecked_this_task": false
+    },
+    {
+      "id": "windows113-backend",
+      "selection": "primary_same_host_local",
+      "historical_baseline": true,
+      "profile": "backend",
+      "cases": 61,
+      "assertions": 76814,
+      "head": "5fe0a1052e33c96d033375d0920f29b15d432dcc",
+      "original_report": "out/verification/i2-j1-5fe0a10/windows113-backend/20261101-205411-0e9901a5/report.json",
+      "original_exists": true,
+      "report_sha256": "2735fc3250511af3ac8db604f5a33ddba848676496a3027c05ece520a5d93536",
+      "archive_increment": "20261101T135231Z",
+      "archive_logical_report": "automated/local/windows113-backend/20261101-205411-0e9901a5/report.json",
+      "archive_zip": "docs/verification/i2-j1-final-20261101/automated-delivery/increments/20261101T135231Z/evidence.zip",
+      "archive_member": "objects/27/2735fc3250511af3ac8db604f5a33ddba848676496a3027c05ece520a5d93536",
+      "report_bytes_verified": true,
+      "historical_strict_gate": "pass",
+      "logs_rechecked_this_task": false
+    },
+    {
+      "id": "windows113-integration",
+      "selection": "primary_same_host_local",
+      "historical_baseline": true,
+      "profile": "integration",
+      "cases": 29,
+      "assertions": 6054,
+      "head": "5fe0a1052e33c96d033375d0920f29b15d432dcc",
+      "original_report": "out/verification/i2-j1-5fe0a10/windows113-integration/20261101-213823-a10c064e/report.json",
+      "original_exists": true,
+      "report_sha256": "193f85ac437775d8c84bd5173d97eea5973c35a70ec12799ca44e498558113de",
+      "archive_increment": "20261101T140648Z",
+      "archive_logical_report": "automated/local/windows113-integration/20261101-213823-a10c064e/report.json",
+      "archive_zip": "docs/verification/i2-j1-final-20261101/automated-delivery/increments/20261101T140648Z/evidence.zip",
+      "archive_member": "objects/19/193f85ac437775d8c84bd5173d97eea5973c35a70ec12799ca44e498558113de",
+      "report_bytes_verified": true,
+      "historical_strict_gate": "pass",
+      "logs_rechecked_this_task": false
+    },
+    {
+      "id": "windows114-backend",
+      "selection": "primary_same_host_local",
+      "historical_baseline": true,
+      "profile": "backend",
+      "cases": 61,
+      "assertions": 67321,
+      "head": "5fe0a1052e33c96d033375d0920f29b15d432dcc",
+      "original_report": "out/verification/i2-j1-5fe0a10/windows114-backend/20261101-205411-79e165c8/report.json",
+      "original_exists": true,
+      "report_sha256": "c0de0742a3ec2b2cdafbaf7b0d79cf58e489737a3479001c621b76f4607426df",
+      "archive_increment": "20261101T135231Z",
+      "archive_logical_report": "automated/local/windows114-backend/20261101-205411-79e165c8/report.json",
+      "archive_zip": "docs/verification/i2-j1-final-20261101/automated-delivery/increments/20261101T135231Z/evidence.zip",
+      "archive_member": "objects/c0/c0de0742a3ec2b2cdafbaf7b0d79cf58e489737a3479001c621b76f4607426df",
+      "report_bytes_verified": true,
+      "historical_strict_gate": "pass",
+      "logs_rechecked_this_task": false
+    },
+    {
+      "id": "windows114-integration",
+      "selection": "primary_same_host_local",
+      "historical_baseline": true,
+      "profile": "integration",
+      "cases": 29,
+      "assertions": 6045,
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "original_report": "out/verification/i2-j1-03d2c48/windows114-integration/20261101-221315-6389b5dd/report.json",
+      "original_exists": true,
+      "report_sha256": "2b6031df0b82040afc5d0b050c4dd62cf2744e18f2cb0a7dc6dc5fb9c49e1a47",
+      "archive_increment": "20261101T143437Z",
+      "archive_logical_report": "automated/local/windows114-integration/20261101-221315-6389b5dd/report.json",
+      "archive_zip": "docs/verification/i2-j1-final-20261101/automated-delivery/increments/20261101T143437Z/evidence.zip",
+      "archive_member": "objects/2b/2b6031df0b82040afc5d0b050c4dd62cf2744e18f2cb0a7dc6dc5fb9c49e1a47",
+      "report_bytes_verified": true,
+      "historical_strict_gate": "pass",
+      "logs_rechecked_this_task": false
+    },
+    {
+      "id": "linux-m0-6310969-static",
+      "selection": "supplementary_latest_ci_not_a_replacement_for_local_profiles",
+      "historical_baseline": true,
+      "profile": "static",
+      "cases": 44,
+      "assertions": 3966,
+      "head": "6310969005183e314b05e0b0362450fa6194bea1",
+      "original_report": "out/verification/i2-j1-6310969/ci/extracted/m0-report-ubuntu-latest-13087119373/20261101-144135-4d7ff67f/report.json",
+      "original_exists": true,
+      "report_sha256": "665b8bdaab8eb061a751d82690bbe0a3a4d64b1875b9fbfba1c78d86c6ab5a15",
+      "archive_increment": "20261101T151052Z",
+      "archive_logical_report": "automated/ci/m0-report-ubuntu-latest-13087119373/20261101-144135-4d7ff67f/report.json",
+      "archive_zip": "docs/verification/i2-j1-final-20261101/automated-delivery/increments/20261101T151052Z/evidence.zip",
+      "archive_member": "objects/66/665b8bdaab8eb061a751d82690bbe0a3a4d64b1875b9fbfba1c78d86c6ab5a15",
+      "report_bytes_verified": true,
+      "historical_strict_gate": "pass",
+      "logs_rechecked_this_task": false
+    },
+    {
+      "id": "linux-m0-6310969-gui",
+      "selection": "supplementary_latest_ci_not_a_replacement_for_local_profiles",
+      "historical_baseline": true,
+      "profile": "gui",
+      "cases": 59,
+      "assertions": 6739,
+      "head": "6310969005183e314b05e0b0362450fa6194bea1",
+      "original_report": "out/verification/i2-j1-6310969/ci/extracted/m0-report-ubuntu-latest-13087119373/20261101-144310-866ffdc4/report.json",
+      "original_exists": true,
+      "report_sha256": "485ab4beadc3f7dedb4ab8f430e12e6371d2312f2ed262f48792da52e82a1827",
+      "archive_increment": "20261101T151052Z",
+      "archive_logical_report": "automated/ci/m0-report-ubuntu-latest-13087119373/20261101-144310-866ffdc4/report.json",
+      "archive_zip": "docs/verification/i2-j1-final-20261101/automated-delivery/increments/20261101T151052Z/evidence.zip",
+      "archive_member": "objects/48/485ab4beadc3f7dedb4ab8f430e12e6371d2312f2ed262f48792da52e82a1827",
+      "report_bytes_verified": true,
+      "historical_strict_gate": "pass",
+      "logs_rechecked_this_task": false
+    },
+    {
+      "id": "windows-m0-6310969-static",
+      "selection": "supplementary_latest_ci_not_a_replacement_for_local_profiles",
+      "historical_baseline": true,
+      "profile": "static",
+      "cases": 44,
+      "assertions": 3959,
+      "head": "6310969005183e314b05e0b0362450fa6194bea1",
+      "original_report": "out/verification/i2-j1-6310969/ci/extracted/m0-report-windows-latest-13088128041/20261101-144208-6260dda6/report.json",
+      "original_exists": true,
+      "report_sha256": "7df971949de5806c10127bc50db3abf9be0c89eb21a5b6b257c1e3911f74c857",
+      "archive_increment": "20261101T151052Z",
+      "archive_logical_report": "automated/ci/m0-report-windows-latest-13088128041/20261101-144208-6260dda6/report.json",
+      "archive_zip": "docs/verification/i2-j1-final-20261101/automated-delivery/increments/20261101T151052Z/evidence.zip",
+      "archive_member": "objects/7d/7df971949de5806c10127bc50db3abf9be0c89eb21a5b6b257c1e3911f74c857",
+      "report_bytes_verified": true,
+      "historical_strict_gate": "pass",
+      "logs_rechecked_this_task": false
+    },
+    {
+      "id": "windows-m0-6310969-gui",
+      "selection": "supplementary_latest_ci_not_a_replacement_for_local_profiles",
+      "historical_baseline": true,
+      "profile": "gui",
+      "cases": 59,
+      "assertions": 6739,
+      "head": "6310969005183e314b05e0b0362450fa6194bea1",
+      "original_report": "out/verification/i2-j1-6310969/ci/extracted/m0-report-windows-latest-13088128041/20261101-144550-80bc5c13/report.json",
+      "original_exists": true,
+      "report_sha256": "59dbd5060da518458185c2d323518ea01ab3b98644e5637e56b095f1c1de2e9e",
+      "archive_increment": "20261101T151052Z",
+      "archive_logical_report": "automated/ci/m0-report-windows-latest-13088128041/20261101-144550-80bc5c13/report.json",
+      "archive_zip": "docs/verification/i2-j1-final-20261101/automated-delivery/increments/20261101T151052Z/evidence.zip",
+      "archive_member": "objects/59/59dbd5060da518458185c2d323518ea01ab3b98644e5637e56b095f1c1de2e9e",
+      "report_bytes_verified": true,
+      "historical_strict_gate": "pass",
+      "logs_rechecked_this_task": false
+    },
+    {
+      "id": "linux113-backend",
+      "selection": "primary_version_matrix_ci",
+      "historical_baseline": true,
+      "profile": "backend",
+      "cases": 61,
+      "assertions": 76820,
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "original_report": "out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.3.2-13087921872/linux-backend/20261101-142031-b85b3b32/report.json",
+      "original_exists": true,
+      "report_sha256": "4115a80ed9994870fc1e52e21b570cf2e4db749765806bc9939aea2677456382",
+      "archive_increment": "20261101T145126Z",
+      "archive_logical_report": "automated/ci/linux-evidence-11.3.2-13087921872/linux-backend/20261101-142031-b85b3b32/report.json",
+      "archive_zip": "docs/verification/i2-j1-final-20261101/automated-delivery/increments/20261101T145126Z/evidence.zip",
+      "archive_member": "objects/41/4115a80ed9994870fc1e52e21b570cf2e4db749765806bc9939aea2677456382",
+      "report_bytes_verified": true,
+      "historical_strict_gate": "pass",
+      "logs_rechecked_this_task": false
+    },
+    {
+      "id": "linux113-gui",
+      "selection": "primary_version_matrix_ci",
+      "historical_baseline": true,
+      "profile": "gui",
+      "cases": 59,
+      "assertions": 6739,
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "original_report": "out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.3.2-13087921872/linux-gui/20261101-141600-27d9f9ea/report.json",
+      "original_exists": true,
+      "report_sha256": "fdf42185f92f698ce714254552509b2b3f1e43848d5545efd786c9e7f9821f11",
+      "archive_increment": "20261101T145126Z",
+      "archive_logical_report": "automated/ci/linux-evidence-11.3.2-13087921872/linux-gui/20261101-141600-27d9f9ea/report.json",
+      "archive_zip": "docs/verification/i2-j1-final-20261101/automated-delivery/increments/20261101T145126Z/evidence.zip",
+      "archive_member": "objects/fd/fdf42185f92f698ce714254552509b2b3f1e43848d5545efd786c9e7f9821f11",
+      "report_bytes_verified": true,
+      "historical_strict_gate": "pass",
+      "logs_rechecked_this_task": false
+    },
+    {
+      "id": "linux113-integration",
+      "selection": "primary_version_matrix_ci",
+      "historical_baseline": true,
+      "profile": "integration",
+      "cases": 29,
+      "assertions": 6035,
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "original_report": "out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.3.2-13087921872/linux-integration/20261101-143523-ce41a587/report.json",
+      "original_exists": true,
+      "report_sha256": "218dccca25449f764fc236da45e7dd1f3cd7064acffe39f132245a0d0c3ba5ed",
+      "archive_increment": "20261101T145126Z",
+      "archive_logical_report": "automated/ci/linux-evidence-11.3.2-13087921872/linux-integration/20261101-143523-ce41a587/report.json",
+      "archive_zip": "docs/verification/i2-j1-final-20261101/automated-delivery/increments/20261101T145126Z/evidence.zip",
+      "archive_member": "objects/21/218dccca25449f764fc236da45e7dd1f3cd7064acffe39f132245a0d0c3ba5ed",
+      "report_bytes_verified": true,
+      "historical_strict_gate": "pass",
+      "logs_rechecked_this_task": false
+    },
+    {
+      "id": "linux113-static",
+      "selection": "primary_version_matrix_ci",
+      "historical_baseline": true,
+      "profile": "static",
+      "cases": 44,
+      "assertions": 3966,
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "original_report": "out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.3.2-13087921872/linux-static/20261101-141435-473d56e4/report.json",
+      "original_exists": true,
+      "report_sha256": "2afda74e1ac4d633e1629fdd4f07f7ba9769e8b600f6ae4dcf144b366288c0e5",
+      "archive_increment": "20261101T145126Z",
+      "archive_logical_report": "automated/ci/linux-evidence-11.3.2-13087921872/linux-static/20261101-141435-473d56e4/report.json",
+      "archive_zip": "docs/verification/i2-j1-final-20261101/automated-delivery/increments/20261101T145126Z/evidence.zip",
+      "archive_member": "objects/2a/2afda74e1ac4d633e1629fdd4f07f7ba9769e8b600f6ae4dcf144b366288c0e5",
+      "report_bytes_verified": true,
+      "historical_strict_gate": "pass",
+      "logs_rechecked_this_task": false
+    },
+    {
+      "id": "linux114-backend",
+      "selection": "primary_version_matrix_ci",
+      "historical_baseline": true,
+      "profile": "backend",
+      "cases": 61,
+      "assertions": 67674,
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "original_report": "out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.4.3-13087926895/linux-backend/20261101-142038-73ddc795/report.json",
+      "original_exists": true,
+      "report_sha256": "9821147d634e0bd5b0fd8878c1a55c45b59399c399dfea723893f720473b5e64",
+      "archive_increment": "20261101T145126Z",
+      "archive_logical_report": "automated/ci/linux-evidence-11.4.3-13087926895/linux-backend/20261101-142038-73ddc795/report.json",
+      "archive_zip": "docs/verification/i2-j1-final-20261101/automated-delivery/increments/20261101T145126Z/evidence.zip",
+      "archive_member": "objects/98/9821147d634e0bd5b0fd8878c1a55c45b59399c399dfea723893f720473b5e64",
+      "report_bytes_verified": true,
+      "historical_strict_gate": "pass",
+      "logs_rechecked_this_task": false
+    },
+    {
+      "id": "linux114-gui",
+      "selection": "primary_version_matrix_ci",
+      "historical_baseline": true,
+      "profile": "gui",
+      "cases": 59,
+      "assertions": 6739,
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "original_report": "out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.4.3-13087926895/linux-gui/20261101-141602-5d59f966/report.json",
+      "original_exists": true,
+      "report_sha256": "91d55d0745de3c56bdb7fae632ae13a11c984fdd013ea079ca9d0544ed921caa",
+      "archive_increment": "20261101T145126Z",
+      "archive_logical_report": "automated/ci/linux-evidence-11.4.3-13087926895/linux-gui/20261101-141602-5d59f966/report.json",
+      "archive_zip": "docs/verification/i2-j1-final-20261101/automated-delivery/increments/20261101T145126Z/evidence.zip",
+      "archive_member": "objects/91/91d55d0745de3c56bdb7fae632ae13a11c984fdd013ea079ca9d0544ed921caa",
+      "report_bytes_verified": true,
+      "historical_strict_gate": "pass",
+      "logs_rechecked_this_task": false
+    },
+    {
+      "id": "linux114-integration",
+      "selection": "primary_version_matrix_ci",
+      "historical_baseline": true,
+      "profile": "integration",
+      "cases": 29,
+      "assertions": 6035,
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "original_report": "out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.4.3-13087926895/linux-integration/20261101-143513-c440e9a9/report.json",
+      "original_exists": true,
+      "report_sha256": "9d7c3bc095f356de17a57fbe2e487f22491beb6b9b81b5fd71fa2b92012127a0",
+      "archive_increment": "20261101T145126Z",
+      "archive_logical_report": "automated/ci/linux-evidence-11.4.3-13087926895/linux-integration/20261101-143513-c440e9a9/report.json",
+      "archive_zip": "docs/verification/i2-j1-final-20261101/automated-delivery/increments/20261101T145126Z/evidence.zip",
+      "archive_member": "objects/9d/9d7c3bc095f356de17a57fbe2e487f22491beb6b9b81b5fd71fa2b92012127a0",
+      "report_bytes_verified": true,
+      "historical_strict_gate": "pass",
+      "logs_rechecked_this_task": false
+    },
+    {
+      "id": "linux114-static",
+      "selection": "primary_version_matrix_ci",
+      "historical_baseline": true,
+      "profile": "static",
+      "cases": 44,
+      "assertions": 3966,
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "original_report": "out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.4.3-13087926895/linux-static/20261101-141435-fe86f483/report.json",
+      "original_exists": true,
+      "report_sha256": "61b64854609752c8e58892179276eac5ca88b6eff4f29d09b0ebeaf86d614806",
+      "archive_increment": "20261101T145126Z",
+      "archive_logical_report": "automated/ci/linux-evidence-11.4.3-13087926895/linux-static/20261101-141435-fe86f483/report.json",
+      "archive_zip": "docs/verification/i2-j1-final-20261101/automated-delivery/increments/20261101T145126Z/evidence.zip",
+      "archive_member": "objects/61/61b64854609752c8e58892179276eac5ca88b6eff4f29d09b0ebeaf86d614806",
+      "report_bytes_verified": true,
+      "historical_strict_gate": "pass",
+      "logs_rechecked_this_task": false
+    }
+  ],
+  "case_registry_audit": {
+    "registry": "scripts/run_m0_tests.py",
+    "registry_sha256": "9dc6e2a953d0eb8128d90c423bcbe1bae6b724f405b1572f0726d67a7c9ff814",
+    "previous_cases": 193,
+    "current_cases": 206,
+    "added_cases": 13,
+    "removed_cases": [],
+    "current_profile_case_counts": {
+      "static": 46,
+      "backend": 63,
+      "gui": 66,
+      "integration": 31
+    },
+    "added_profile_case_counts": {
+      "static": 2,
+      "backend": 2,
+      "gui": 7,
+      "integration": 2
+    },
+    "cases": [
+      {
+        "name": "solid_registry",
+        "script": "scripts/test_solid_registry.py",
+        "profile": "static",
+        "requirements": [
+          "cxx"
+        ],
+        "args": [],
+        "timeout_s": 600,
+        "static_assert_sites_not_execution_count": 58,
+        "required_cli_options": []
+      },
+      {
+        "name": "solid_registry_backend",
+        "script": "scripts/test_solid_registry.py",
+        "profile": "backend",
+        "requirements": [
+          "cxx",
+          "exe"
+        ],
+        "args": [
+          "--backend"
+        ],
+        "timeout_s": 600,
+        "static_assert_sites_not_execution_count": 58,
+        "required_cli_options": []
+      },
+      {
+        "name": "j2_source_physics",
+        "script": "scripts/test_j2_sources_physics.py",
+        "profile": "backend",
+        "requirements": [
+          "exe"
+        ],
+        "args": [],
+        "timeout_s": 600,
+        "static_assert_sites_not_execution_count": 78,
+        "required_cli_options": []
+      },
+      {
+        "name": "j2_resources",
+        "script": "scripts/test_j2_resource_bundle.py",
+        "profile": "static",
+        "requirements": [],
+        "args": [],
+        "timeout_s": 600,
+        "static_assert_sites_not_execution_count": 21,
+        "required_cli_options": []
+      },
+      {
+        "name": "gui_j2_blank",
+        "script": "gui/smoke_tests/smoke_j2_blank.py",
+        "profile": "gui",
+        "requirements": [
+          "qt"
+        ],
+        "args": [],
+        "timeout_s": 600,
+        "static_assert_sites_not_execution_count": 26,
+        "required_cli_options": []
+      },
+      {
+        "name": "gui_j2_geometry",
+        "script": "gui/smoke_tests/smoke_j2_geometry.py",
+        "profile": "gui",
+        "requirements": [
+          "qt"
+        ],
+        "args": [],
+        "timeout_s": 600,
+        "static_assert_sites_not_execution_count": 70,
+        "required_cli_options": []
+      },
+      {
+        "name": "gui_j2_materials",
+        "script": "gui/smoke_tests/smoke_j2_materials.py",
+        "profile": "gui",
+        "requirements": [
+          "qt"
+        ],
+        "args": [],
+        "timeout_s": 600,
+        "static_assert_sites_not_execution_count": 68,
+        "required_cli_options": []
+      },
+      {
+        "name": "j2_materials_backend",
+        "script": "gui/smoke_tests/smoke_j2_materials.py",
+        "profile": "integration",
+        "requirements": [
+          "qt",
+          "exe"
+        ],
+        "args": [
+          "--backend"
+        ],
+        "timeout_s": 600,
+        "static_assert_sites_not_execution_count": 68,
+        "required_cli_options": []
+      },
+      {
+        "name": "gui_j2_run_editors",
+        "script": "gui/smoke_tests/smoke_j2_run_editors.py",
+        "profile": "gui",
+        "requirements": [
+          "qt"
+        ],
+        "args": [],
+        "timeout_s": 600,
+        "static_assert_sites_not_execution_count": 77,
+        "required_cli_options": []
+      },
+      {
+        "name": "gui_j2_workspace",
+        "script": "gui/smoke_tests/smoke_j2_workspace.py",
+        "profile": "gui",
+        "requirements": [
+          "qt"
+        ],
+        "args": [],
+        "timeout_s": 600,
+        "static_assert_sites_not_execution_count": 21,
+        "required_cli_options": []
+      },
+      {
+        "name": "gui_j2_current_import",
+        "script": "gui/smoke_tests/smoke_j2_current_import_preview.py",
+        "profile": "gui",
+        "requirements": [
+          "qt"
+        ],
+        "args": [],
+        "timeout_s": 600,
+        "static_assert_sites_not_execution_count": 60,
+        "required_cli_options": []
+      },
+      {
+        "name": "gui_j2_end_to_end",
+        "script": "gui/smoke_tests/smoke_j2_end_to_end.py",
+        "profile": "integration",
+        "requirements": [
+          "exe",
+          "qt"
+        ],
+        "args": [],
+        "timeout_s": 600,
+        "static_assert_sites_not_execution_count": 60,
+        "required_cli_options": []
+      },
+      {
+        "name": "gui_f8_accessibility",
+        "script": "gui/smoke_tests/smoke_f8_accessibility.py",
+        "profile": "gui",
+        "requirements": [
+          "qt"
+        ],
+        "args": [],
+        "timeout_s": 600,
+        "static_assert_sites_not_execution_count": 50,
+        "required_cli_options": []
+      }
+    ],
+    "notes": [
+      "Exact current delta is 13, not 14; no old case was removed.",
+      "No new case needs an extra required CLI flag. Backend modes receive G4USIM_EXE from the runner.",
+      "j2_materials_backend args=(--backend,) now uses a unique retained temporary evidence directory when --output is absent.",
+      "gui_j2_end_to_end uses runner G4USIM_TEST_EVIDENCE_DIR and requires a fresh backend; --allow-stale-backend is not a release option.",
+      "solid_registry and solid_registry_backend require an actual C++17 compiler; registry component doubles are not real Geant4 solids.",
+      "assert site counts are syntax inventories, not executed counts or acceptance thresholds."
+    ]
+  },
+  "gate_rules": {
+    "checker": "scripts/check_report_evidence.py",
+    "new_report_options": "--report <new/report.json> --baseline <matching historical/report.json>",
+    "release_forbidden_options": [
+      "--allow-incomplete",
+      "--allow-legacy-probe",
+      "--allow-legacy-digest",
+      "--no-assert-probe"
+    ],
+    "compare": "Same OS/version/profile. Same v3 probe, total and each old case assertion count must not decline, no old case missing. Checker itself does not enforce matching profile/platform: select correctly.",
+    "archive_replay": "Use automated-delivery/verify_archive.py --replay-dir <new dir> to materialize immutable reports and referenced logs if original paths are unavailable; do not rewrite old report identities."
+  },
+  "planned_new_archive": {
+    "status": "plan_only_no_new_results",
+    "working_root": "out/verification/j2-f8-<frozen-head>/{windows113,windows114,linux113,linux114}/{static,gui,backend,integration}",
+    "final_root": "docs/verification/j2-f8-final-<acceptance-date>",
+    "contents": [
+      "original report.json and every referenced raw log",
+      "per-case evidence_directory with manifest/SHA",
+      "frozen source/test/exe/SDK identity mapping",
+      "strict gate outputs and explicit historical baseline id",
+      "separate real Windows native observations/screenshots/host exit evidence",
+      "independent reviews, failures and final acceptance decision owned by main"
+    ],
+    "publication": "Select actual completed reports only. Verify copies without reading original paths; leave failed runs/history unchanged. No stage status changes in this task."
+  }
+}

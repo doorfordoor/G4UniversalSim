@@ -1,0 +1,37 @@
+# Windows113 正式候选首轮结果（失败保留）
+
+HEAD `56b689fb9ac920cbb1203b2b94dae2483d25f622`；source fp `9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a`。原session14861已退出1，两profile全部终态。未改产品/测试/判据，无补跑覆盖。结论：本轮不是发布绿色证据。
+
+| Profile | pass/fail/skip | 实际断言 | 历史baseline | runner / strict gate |
+|---|---|---:|---:|---|
+| backend | 61/2/0（63例） | 81907 | 76814（61例） | 1 / 1 |
+| integration | 29/2/0（31例） | 6680 | 6054（29例） | 1 / 1 |
+
+- backend报告：`windows113-backend/20261102-011748-9a34c5d0/report.json`。
+- integration报告：`windows113-integration/20261102-014658-5f26cf76/report.json`。
+- 历史baseline路径/SHA来源 `out/collab/j2-f8-baselines.json`；两份历史报告本轮独立strict重验均exit0，日志 `windows113-{backend,integration}.historical-strict.log`。
+- 新报告使用 require-tracked-sources / fail-on-skip / v3 assertion probe；逐例全有非零断言，tracked gate均pass，HEAD clean、source/tests fp一致。总数增加不抵消逐例缺口。
+- 新报告strict --baseline gate均exit1，首先拒绝未通过用例，未豁免或使用allow-incomplete。`windows113-{backend,integration}.baseline-diagnostic.json`是另行只读逐例差异，不是通过门禁。
+
+## 初败及逐例减少
+
+| Profile/case | 历史→本轮 | 原始首因 | 处置 |
+|---|---:|---|---|
+| backend / k1_bundle_backend | 556→523（−33） | test_k1_bundle.py:592 要求copies_file源复制快照round_trip_blockers非空，实际为空 | 主线程判定旧fixture契约，原失败保留 |
+| backend / backend_capabilities | 21→6（−15） | test_backend_capabilities.py:59 GDML_EXPECTED；本轮launcher漏显式G4USIM_EXPECT_GDML，旧fallback只找ROOT/build*，漏out/build-i2-formal113 | 环境注入问题，非以capabilities反推期望。matching CMakeCache Geant4_DIR=D:/ProgramFiles/Geant4/lib/cmake/Geant4，Geant4Config.cmake:307 set(Geant4_gdml_FOUND ON)。下轮113显式true，114false |
+| integration / gui_f4_inspect_backend | 49→3（−46） | smoke_f4_inspect_backend.py:89 QProcess尚未启动，experiment.fields_rejected | 字段拒绝具体诊断交Cicero；本轮不重现/修改 |
+| integration / gui_scans_backend | 18→2（−16） | smoke_scans_backend.py:82 create_scan失败；50/100/200MeV均Materials config is required | fixture apply_to_project已清旧路径并创建dirty materialEditor，但ScanBase漏materials；后续out草案另审另测，不改本轮报告 |
+| integration / gui_trajectory_view（表面pass） | 35→23（−12） | 原log有SKIP widget part: No module named pyvista；backend完成但3D走文本fallback | 内部缺测，下一轮完整Dvenv恢复，不降阈值 |
+| integration / gui_source_glyphs（表面pass） | 40→34（−6） | 原log有SKIP widget part: No module named pyvista | 同上，不把runner skip=0当全部子路径执行 |
+
+无历史用例缺失。backend仅前两失败例断言下降；integration仅上表四例下降。backend新加solid_registry_backend、j2_source_physics；integration新加j2_materials_backend、gui_j2_end_to_end。J2 source/physics4853、GPS219、A6为71、A5为4321、J2 E2E674均按原报告通过；这些组件通过不抵消整体fail。
+
+## 执行身份与环境边界
+
+`windows113-execution-receipt.json`记录命令、baseline、EXE/merge SHA、前后源码/HEAD/二进制/clean状态及两份报告路径，identity_unchanged=true。
+EXE SHA `ea4427f57ef65d176144e1ea8f7a5914dff66265b8179989eca851588a2a133f`。
+SDK PATH前置D:/ProgramFiles/Geant4/bin与Qt5.15.2/msvc2019_64/bin；清继承G4*DATA再用113数据根，12数据集发现/存在/根约束通过，G4EMLOW8.6.1。Qt offscreen，插件路径匹配所用PySide6。
+本轮Python为C:/Users/123/AppData/Local/Programs/Python/Python311/python.exe，3.11.9，缺PyVista。此环境差异及GDML注入遗漏均明确保留，下一轮完整D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe，不能将后续out补跑拼进本轮。
+CXX初始未设置；下一轮仍由原发现分支寻找可用编译器，不为本任务增加CXX覆盖。
+
+首因另存windows113-first-failure.json、windows113-capabilities-first-failure.json、windows113-integration-first-failure.json、windows113-scans-first-failure.json，各含原log SHA。全部逐例log在对应timestamp目录，完整driver输出与strict日志位于本目录。

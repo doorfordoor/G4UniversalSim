@@ -1,0 +1,15 @@
+# 第四候选 Windows GUI 完整profile checkpoint
+
+目标HEAD2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8，113EXE fe5d23d309106d9fca7ad179f6c0cb39fa8b98c6ef35286a0b21866b90d89f89，CPPfp9e40e889...。新build-1132 [0,0]及raw EXE SHA、冻结launcher4f812f44506e2ea14f03ab49b223ccc0c01b8105c491feaa6dc36095e0c2e1dc已独立预核。
+
+实际已Dvenv启动原launcher，新root本目录；--series113 --profilegui --require-tracked-sources/fail-on-skip/原strict matching historical baseline/childlongpaths，默认缩放无覆盖。详细同env child预检、command/identity见launch.json。开始前status空、core.longpaths=true。
+
+原command session36751运行中，最初gui_i2_install59/gui_j1_appearance29PASS。只poll此session，不重复启动。runner.log及timestamp逐用例日志独立落盘；不改任何tracked产品/测试/docs。原生VTK slot占用至真实exit+gate+cleanup；结束必须立即通知main释放供代表性native，不接integration。
+
+完成步骤：poll原session到终态→核launch status/identity_errors和严格baseline gate→report66/counts/空git→核gui_3d_view35且无内部SKIP→确认所有测试子进程自然结束→发main释放slot→写summary.md/delivery-receipt.json。若失败保留原首因交main，不改判据、不重跑、不拼接。
+
+## 最终完成
+- session36751已自然exit0；66/0/0，8636断言；strict59/6760 baseline gate exit0，identity_errors=[]，git_dirty=false/status空。
+- VTK35/35且无内部SKIP，cleanup.json查询GUIroot/VTK剩余0，native slot已通知main正式释放。
+- report SHAeb6044415c756c675e2bab56e4f842bbd5c63e60da1defd459694ad38aa50c26；summary.md/delivery-receipt.json完成，无报告拼接或tracked编辑。
+- 无session待poll，不接integration、不再启动Qt/native。等待main后续授权。

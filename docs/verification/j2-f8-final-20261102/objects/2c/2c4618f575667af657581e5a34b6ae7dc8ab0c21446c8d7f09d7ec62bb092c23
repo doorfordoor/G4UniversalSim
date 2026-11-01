@@ -1,0 +1,62 @@
+# J2 前置 E7 SolidRegistry 实施与证据
+
+## 交付范围
+
+共享工作区 `C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim`，分支 `roadmap/J2-F8-editing`，起始 HEAD `fc606739b9bb5b381b87d5ffd2870844c10afee2`。直接编辑，无创建分支/提交。
+
+独占修改仅五个文件：
+- `include/Geometry/SolidRegistry.hh`（新）
+- `src/Geometry/SolidRegistry.cc`（新）
+- `include/Geometry/VolumeBuilder.hh`
+- `src/Geometry/VolumeBuilder.cc`
+- `scripts/test_solid_registry.py`（新）
+
+已读 AGENTS.md、docs/agent-history.md 的 A5/Q1 几何运行边界、docs/ROADMAP.md E7/J2、docs/collab/inbox/20261101-j2-f8-execution.md；核对支持矩阵与长期路线图，没有提升原有实验性/物理验收等级。原有 STATUS/ROADMAP 修改及深目录缺失保持原状。没有修改 CMake/main/BackendCapabilities/GUI/状态文档，没有新增 schema 或生成器。下一阶段 editor/parser/writer/widgets 等待分配，不提前编辑。
+
+## 可集成 API
+
+`#include "Geometry/SolidRegistry.hh"`
+
+- `const std::vector<SolidRegistry::Entry>& SolidRegistry::Entries()`：进程内不可变表。
+- `Find(VolumeShape)` / `Find(const std::string&)`：返回稳定条目地址或 nullptr；名称 trim/大小写不敏感，只接受既有 canonical/别名。
+- `Supports(shape, Context::Volume|BooleanTool)`：校验端可消费的资格查询。
+- `Create(VolumeBuilder&, const VolumeNode&, Context=Volume)`：同表绑定真实现有 factory；保留对象登记、输入 evidence、构造校验及异常传播。
+- `effective_config::Value Describe()`：JSON-ready，`Describe().ToJson()` 输出 `g4usim_solid_registry_v1`。
+
+Entry 提供 shape/name/aliases/geant4Class、顺序 parameters、hierarchical 精确 parameterCounts、properties（量纲/required/default）、usesSize/booleanTool/experimental/precomputeVolume、builderCompatibility 和真实 factory。
+
+主代理集成位置已核对：`include/Core/BackendCapabilities.hh` 的 `WriteBackendCapabilities` 目前手写 solids。建议加入顶层 `solid_registry` 对象，值直接来自 `SolidRegistry::Describe().ToJson()`；旧 `solids` 投影遍历 Entries 生成，保留 id/runtime/parameters 类型：无 parameters 为 null；ellipsoid 旧 parameters=5 保持，新对象 parameter_counts=[3,5] 明确其真实可选数量。不要再维护独立实体名/资格表。现有 GLOB_RECURSE 已覆盖新源和头文件，无需列源。
+
+Python/GUI 建议：由主代理构建后用 `--capabilities` 导出该对象，生成离线 Python 数据模块（文件范围另由主代理确定），附 schema 与 source_fingerprint；启动时无需为了显示编辑器启动 Geant4。字段编辑和 writer 读取参数顺序/量纲/数量/required/default/别名/布尔资格。未来后端更新时重新生成并做 JSON 一致性检查。不是另手写 JSON/schema。
+
+关键区别：`parameter_counts`/`uses_size` 对应严格 hierarchical INI；`builder_compatibility` 只解释旧 C++ builder 回退，不得当作 GUI writer 权限。现有 tubs builder 可 size 回退、orb 可 size.x/2 回退，但 hierarchical INI 均禁止 size；这些旧行为保留。
+
+## 实现与兼容边界
+
+15 个既有 primitive 的真实 factory 全部进入同一表，含 polycone/polyhedra 的 false/true 分派；7 个旧实体继续可作 boolean tool，A5 8 类继续拒绝。未增加实体、未开放 assembly/GDML 每体积构造或额外 placement。
+
+普通体积与布尔工具均经 registry 分派。布尔工具的旧提前检查与错误文本搬至 registry；VolumeBuilder 保留 owner/boolean index/tool 的上下文包装，普通入口保留 GDML 拒绝。
+
+体积预缓存严格沿用旧策略：A5 8 类在既有 master-owned 构建过程中调用 GetCubicVolume 一次；旧 7 类、布尔工具及布尔组合不新增调用，不改变随机流。没有移动 Geant4 store、rotation/vis/parameterisation 所有权或 worker 生命周期。逐字比较基线确认：从 CreateBoxSolid 定义到 VolumeBuilder.cc 文件末尾（所有实际实体构造、STL evidence、placement、region、vis 等）完全相同。
+
+元数据不是完整数值校验器。GeometryConfig 现有 source-aware 数值/字段冲突/关系/文件与 placement 校验保持原实现；其后续归一可消费 Entry、Supports、参数数量/属性定义，但本任务没有越权编辑 GeometryConfig/GeometryUtils。canonical/alias 仍由旧解析器接受；新增静态检查比较其与 registry，防止漂移。
+
+## 已执行证据
+
+1. `python -B tools/test_assert_probe.py scripts/test_solid_registry.py --metadata-output out/collab/j2-e7-solid-metadata.json`：退出 0，最终 `G4USIM_ASSERTS=248`。production SolidRegistry.cc 与实际 EffectiveConfig.cc 编译、链接并执行；factory/solid 使用明确标注的组件替身，不声称真实 Geant4 构造。覆盖 15 路 factory/原 node 与 solid 身份、polyhedra 分派、7 个工具、A5 工具拒绝、旧错误文本、异常/null/unknown、缓存资格/调用数量、元数据查询无构造副作用、现有 parser canonical/alias 一致性。
+   - 最终日志：`out/collab/j2-e7-component.log`
+   - 首轮通过（247 条）保留：`out/collab/j2-e7-component-01.log`
+   - JSON 定义：`out/collab/j2-e7-solid-metadata.json`（15 类）
+2. `D:/msys64/ucrt64/bin/g++.exe -std=c++17 -Wall -Wextra -pedantic -fsyntax-only -I include -I D:/ProgramFiles/Geant4/include/Geant4 src/Geometry/SolidRegistry.cc src/Geometry/VolumeBuilder.cc`：退出 0，无警告；使用真实 VolumeBuilder/VolumeNode/Geant4 头文件。日志 `out/collab/j2-e7-syntax.log` 为空符合无诊断，不是链接通过。
+3. 五个改动文件为 UTF-8 无 BOM/LF，git diff --check 通过；上述基线构造与生命周期后缀逐字一致。文件及证据 SHA-256 见 `out/collab/j2-e7-local-checks.json`。这是本地组件收据，不冒充统一测试平台正式报告。
+
+一次创建测试文件的 shell 包装因嵌套引号导致 Python SyntaxError，未产生测试文件；改用直接 UTF-8/LF 写文件后执行组件通过。后端入口审查修正了 status 应为 completed（非 success），并检查实际摘要/事件数；该后端入口尚未执行，不用静态通过覆盖它。
+
+## 主代理下一步串行集成与验收
+
+- 用上面的 API 接 BackendCapabilities；注册 static case 命令 `scripts/test_solid_registry.py`，backend case 命令 `scripts/test_solid_registry.py --backend`。本任务不修改全局 runner。
+- 正常全局构建并刷新源码指纹；`G4USIM_EXE` 必须指向此次工作区产物。
+- `python -B tools/test_assert_probe.py scripts/test_solid_registry.py --backend`。此模式要求 capabilities.solid_registry 与组件导出逐字段相等、source_fingerprint 与当前工作区相等；复用既有 A5 独立解析体积/质量与负例，补旧 7 类的真实双线程体积/质量及 completed/摘要完成/400事件/实际2线程事实。禁止使用旧二进制。
+- 串行执行相关 geometry_a5、geometry_safety、geometry roundtrip、default geometry、Q1 边界等既有后端回归与适用 Windows/Linux 版本矩阵；统一报告严格证据门禁由主代理执行。完整链接、真实模拟、旧输入差分、真实布尔构造与 MT 生命周期仍需这些回归证明。
+
+当前只交付实现候选与已述静态/组件证据，不关闭 E7/J2，也不声称完成物理或跨平台验收。没有运行中的命令。

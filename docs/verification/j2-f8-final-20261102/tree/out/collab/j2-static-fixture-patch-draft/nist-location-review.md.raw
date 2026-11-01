@@ -1,0 +1,14 @@
+# NIST name 定位：真实 producer 回归，草案保留拒绝验收
+
+冻结源 `material_editor_model.py:381-388`：target由 `nist_name.strip() or name` 取得，但editable_target额外要求 `name.startswith('G4_')`。
+
+1. `widgets/config/materials.py:46-48` 只读的是摘要表格。`:62` 的 material_name 是普通QLineEdit；没有对该控件设置只读。`:255`投影row.name，`:289`回写name，`:294-295`将新G4_名称同步到nist_name。
+2. `widgets/diagnostic_navigation.py:240,357-358`登记 materials/rows/name → material_name。无须新增GUI列或目标。
+3. `MaterialRow(name='Unknown',mode='nist',nist_name='')`没有显式alias目标。改name为G4_Si即可修复真正的目标。当前location=None是错误地失去已存在的可编辑入口。
+4. 显式alias如name=Alias/nist_name=Unknown：name控件表示alias名称，GUI无nist_name专门控件，writer用`[Alias]/material=Unknown`。不能把alias目标错误伪装为alias名称错误。应保持source/unavailable nist_name；无真实源时source=None，有源时保留捕获的源文本而不伪造line。
+
+草案在 `test_f4_document_diagnostics.py` 保留原Unknown/name断言；另加G4_未知名及全目录有效非quicklist正例，并单独覆盖显式alias的源身份与源改变后的历史快照。与main四文件product.patch组合时，原Unknown断言仍FAIL，7组后续独立探查通过。
+
+建议main最小修producer的判定是使“nist_name为空/空白时的直接目标”可定位name，已有显式G4_同名路径保持；无需扩大到任意显式alias。例：`editable_target = not row.nist_name.strip() or (target == row.name and row.name.startswith('G4_'))`。此处仅建议，没有产品patch应用或源文件改动。
+
+本检查以实际控件/回写/导航源码及内存模型诊断为据，未创建窗口，不冒充native定位验收。已有F4 name原断言不删除，也不通过改fixture前缀消除失败。

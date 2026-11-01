@@ -1,0 +1,47 @@
+{
+  "version": "1143",
+  "identity": {
+    "version": "1143",
+    "executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-windows114\\Release\\G4UniversalSim.exe",
+    "sha256": "4919f2e62b6c73ef394cd5cc963078dad86eba16dd66d109ba8c967893c22f54",
+    "source_fingerprint": "149b25dd00773898c324d09a53dd1ef64b0bf37bc105ca0f74d0c4933245756f",
+    "sdk": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\dependencies\\geant4-11.4.3\\geant4-11.4.3-win64"
+  },
+  "source_before": "149b25dd00773898c324d09a53dd1ef64b0bf37bc105ca0f74d0c4933245756f",
+  "command": [
+    "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "-B",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\tools\\test_assert_probe.py",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\test_j2_sources_physics.py",
+    "--only-replacement-macros",
+    "--evidence-dir",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-p1-targeted-1143-r1\\evidence"
+  ],
+  "environment": {
+    "G4USIM_EXE": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-windows114\\Release\\G4UniversalSim.exe",
+    "GEANT4_DATA_DIR": "C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/i2-controlled/windows114-data/data",
+    "G4USIM_GEANT4_DATA": "C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/i2-controlled/windows114-data/data"
+  },
+  "removed_environment_keys": [
+    "G4ABLADATA",
+    "G4CHANNELINGDATA",
+    "G4ENSDFSTATEDATA",
+    "G4INCLDATA",
+    "G4LEDATA",
+    "G4LEVELGAMMADATA",
+    "G4NEUTRONHPDATA",
+    "G4PARTICLEXSDATA",
+    "G4PIIDATA",
+    "G4RADIOACTIVEDATA",
+    "G4REALSURFACEDATA",
+    "G4SAIDXSDATA"
+  ],
+  "status": "passed",
+  "exit_code": 0,
+  "elapsed_seconds": 12.418,
+  "source_after": "149b25dd00773898c324d09a53dd1ef64b0bf37bc105ca0f74d0c4933245756f",
+  "log_sha256": "8fc50ee810cf3827e26b8721775aeca8018dcfa508c7ca89e9c1a5a0b49cf403",
+  "assertions_executed": 257,
+  "script_sha256": "6d3507ff9f358b98d6253ec2c2f1aa2f22a91137deae627bb9ac0e28543cc62a",
+  "source_unchanged": true
+}

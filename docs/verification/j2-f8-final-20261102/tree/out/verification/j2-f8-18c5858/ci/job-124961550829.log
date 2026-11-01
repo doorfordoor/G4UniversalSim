@@ -1,0 +1,705 @@
+﻿2026-11-01T20:00:19.5206844Z Current runner version: '2.338.2'
+2026-11-01T20:00:19.5236664Z ##[group]Runner Image Provisioner
+2026-11-01T20:00:19.5237901Z Hosted Compute Agent
+2026-11-01T20:00:19.5238463Z Version: 20261021.618
+2026-11-01T20:00:19.5239065Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-11-01T20:00:19.5239796Z Build Date: 2026-10-21T00:45:21Z
+2026-11-01T20:00:19.5240492Z Worker ID: {6d1f4077-3551-4677-b0e7-0beb78b3dec6}
+2026-11-01T20:00:19.5241050Z Region: eastus
+2026-11-01T20:00:19.5241490Z Cloud: Azure
+2026-11-01T20:00:19.5241882Z ##[endgroup]
+2026-11-01T20:00:19.5243105Z ##[group]Operating System
+2026-11-01T20:00:19.5243586Z Microsoft Windows Server 2025
+2026-11-01T20:00:19.5244113Z 10.0.26100
+2026-11-01T20:00:19.5244549Z Datacenter
+2026-11-01T20:00:19.5244926Z ##[endgroup]
+2026-11-01T20:00:19.5245356Z ##[group]Runner Image
+2026-11-01T20:00:19.5245821Z Image: windows-2025-vs2026
+2026-11-01T20:00:19.5246507Z Version: 20261021.278.1
+2026-11-01T20:00:19.5247809Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261021.278/images/windows/Windows2025-VS2026-Readme.md
+2026-11-01T20:00:19.5249141Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261021.278
+2026-11-01T20:00:19.5249966Z ##[endgroup]
+2026-11-01T20:00:19.5250922Z ##[group]GITHUB_TOKEN Permissions
+2026-11-01T20:00:19.5252660Z Contents: read
+2026-11-01T20:00:19.5253191Z Metadata: read
+2026-11-01T20:00:19.5253697Z ##[endgroup]
+2026-11-01T20:00:19.5255466Z Secret source: Actions
+2026-11-01T20:00:19.5256257Z Cache mode: write
+2026-11-01T20:00:19.5256798Z Prepare workflow directory
+2026-11-01T20:00:19.5609490Z Prepare all required actions
+2026-11-01T20:00:19.5649702Z Getting action download info
+2026-11-01T20:00:19.6976773Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-11-01T20:00:19.8042124Z Download action repository 'actions/setup-python@v7' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+2026-11-01T20:00:20.0636274Z Download action repository 'actions/upload-artifact@v6' (SHA:b7c566a772e6b6bfb58ed0dc250532a479d7789f)
+2026-11-01T20:00:20.3504951Z Complete job name: windows-latest / Geant4 11.4.3 installation
+2026-11-01T20:00:20.4682153Z ##[group]Run git config --global core.longpaths true
+2026-11-01T20:00:20.4682990Z [36;1mgit config --global core.longpaths true[0m
+2026-11-01T20:00:20.5363431Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-01T20:00:20.5364266Z env:
+2026-11-01T20:00:20.5364600Z   QT_QPA_PLATFORM: offscreen
+2026-11-01T20:00:20.5364993Z ##[endgroup]
+2026-11-01T20:00:21.4361700Z ##[group]Run actions/checkout@v7
+2026-11-01T20:00:21.4362674Z with:
+2026-11-01T20:00:21.4363355Z   repository: doorfordoor/G4UniversalSim
+2026-11-01T20:00:21.4370004Z   token: ***
+2026-11-01T20:00:21.4370651Z   ssh-strict: true
+2026-11-01T20:00:21.4371331Z   ssh-user: git
+2026-11-01T20:00:21.4371993Z   persist-credentials: true
+2026-11-01T20:00:21.4372737Z   clean: true
+2026-11-01T20:00:21.4373475Z   sparse-checkout-cone-mode: true
+2026-11-01T20:00:21.4374270Z   fetch-depth: 1
+2026-11-01T20:00:21.4374908Z   fetch-tags: false
+2026-11-01T20:00:21.4375562Z   show-progress: true
+2026-11-01T20:00:21.4376225Z   lfs: false
+2026-11-01T20:00:21.4376834Z   submodules: false
+2026-11-01T20:00:21.4377506Z   set-safe-directory: true
+2026-11-01T20:00:21.4378267Z   allow-unsafe-pr-checkout: false
+2026-11-01T20:00:21.4379041Z env:
+2026-11-01T20:00:21.4379655Z   QT_QPA_PLATFORM: offscreen
+2026-11-01T20:00:21.4380448Z ##[endgroup]
+2026-11-01T20:00:21.5613741Z Syncing repository: doorfordoor/G4UniversalSim
+2026-11-01T20:00:21.5616187Z ##[group]Getting Git version info
+2026-11-01T20:00:21.5617333Z Working directory is 'D:\a\G4UniversalSim\G4UniversalSim'
+2026-11-01T20:00:21.6120986Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-01T20:00:21.6416451Z git version 2.56.0.windows.2
+2026-11-01T20:00:21.6452800Z ##[endgroup]
+2026-11-01T20:00:21.6461818Z Copying 'C:\Users\runneradmin\.gitconfig' to 'D:\a\_temp\8b50a83a-0924-418f-a6f5-56007523b97c\.gitconfig'
+2026-11-01T20:00:21.6480941Z Temporarily overriding HOME='D:\a\_temp\8b50a83a-0924-418f-a6f5-56007523b97c' before making global git config changes
+2026-11-01T20:00:21.6483002Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-01T20:00:21.6489371Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\G4UniversalSim\G4UniversalSim
+2026-11-01T20:00:21.6789149Z Deleting the contents of 'D:\a\G4UniversalSim\G4UniversalSim'
+2026-11-01T20:00:21.6793770Z ##[group]Determining repository object format
+2026-11-01T20:00:21.6795228Z ##[endgroup]
+2026-11-01T20:00:21.6796654Z ##[group]Initializing the repository
+2026-11-01T20:00:21.6809203Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\G4UniversalSim\G4UniversalSim
+2026-11-01T20:00:21.7683533Z Initialized empty Git repository in D:/a/G4UniversalSim/G4UniversalSim/.git/
+2026-11-01T20:00:21.7724632Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/doorfordoor/G4UniversalSim
+2026-11-01T20:00:21.8337632Z ##[endgroup]
+2026-11-01T20:00:21.8338314Z ##[group]Disabling automatic garbage collection
+2026-11-01T20:00:21.8338951Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-01T20:00:21.8669750Z ##[endgroup]
+2026-11-01T20:00:21.8670246Z ##[group]Setting up auth
+2026-11-01T20:00:21.8670633Z Removing SSH command configuration
+2026-11-01T20:00:21.8681162Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-01T20:00:21.9028182Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-01T20:00:23.3898134Z Removing HTTP extra header
+2026-11-01T20:00:23.3908091Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-01T20:00:23.4237041Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-01T20:00:23.8928910Z Removing includeIf entries pointing to credentials config files
+2026-11-01T20:00:23.8942158Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-01T20:00:23.9276866Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-01T20:00:24.4701725Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:\a\_temp\git-credentials-582d4409-8aea-421d-a070-3e0833fbf410.config http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-01T20:00:24.5061529Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/G4UniversalSim/G4UniversalSim/.git.path D:\a\_temp\git-credentials-582d4409-8aea-421d-a070-3e0833fbf410.config
+2026-11-01T20:00:24.5378085Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path D:\a\_temp\git-credentials-582d4409-8aea-421d-a070-3e0833fbf410.config
+2026-11-01T20:00:24.5773594Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-582d4409-8aea-421d-a070-3e0833fbf410.config
+2026-11-01T20:00:24.6105943Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-582d4409-8aea-421d-a070-3e0833fbf410.config
+2026-11-01T20:00:24.6413881Z ##[endgroup]
+2026-11-01T20:00:24.6414234Z ##[group]Fetching the repository
+2026-11-01T20:00:24.6425290Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +18c5858fd6e80a5cb6096beacebfef69c479ad49:refs/remotes/origin/roadmap/J2-F8-editing
+2026-11-01T20:00:31.7653166Z From https://github.com/doorfordoor/G4UniversalSim
+2026-11-01T20:00:31.7653934Z  * [new ref]         18c5858fd6e80a5cb6096beacebfef69c479ad49 -> origin/roadmap/J2-F8-editing
+2026-11-01T20:00:31.7708581Z [command]"C:\Program Files\Git\bin\git.exe" branch --list --remote origin/roadmap/J2-F8-editing
+2026-11-01T20:00:31.8104986Z   origin/roadmap/J2-F8-editing
+2026-11-01T20:00:31.8154840Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse refs/remotes/origin/roadmap/J2-F8-editing
+2026-11-01T20:00:31.8486615Z 18c5858fd6e80a5cb6096beacebfef69c479ad49
+2026-11-01T20:00:31.8521498Z ##[endgroup]
+2026-11-01T20:00:31.8521955Z ##[group]Determining the checkout info
+2026-11-01T20:00:31.8522843Z ##[endgroup]
+2026-11-01T20:00:31.8531654Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-01T20:00:31.8988317Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-01T20:00:31.9331279Z ##[group]Checking out the ref
+2026-11-01T20:00:31.9332206Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B roadmap/J2-F8-editing refs/remotes/origin/roadmap/J2-F8-editing
+2026-11-01T20:00:33.0207768Z Updating files:  21% (4644/21318)
+2026-11-01T20:00:33.0781457Z Updating files:  22% (4690/21318)
+2026-11-01T20:00:33.1135911Z Updating files:  23% (4904/21318)
+2026-11-01T20:00:33.1509527Z Updating files:  24% (5117/21318)
+2026-11-01T20:00:33.1858812Z Updating files:  25% (5330/21318)
+2026-11-01T20:00:33.2233125Z Updating files:  26% (5543/21318)
+2026-11-01T20:00:33.2592285Z Updating files:  27% (5756/21318)
+2026-11-01T20:00:33.2979161Z Updating files:  28% (5970/21318)
+2026-11-01T20:00:33.3390165Z Updating files:  29% (6183/21318)
+2026-11-01T20:00:33.3994565Z Updating files:  30% (6396/21318)
+2026-11-01T20:00:33.4607590Z Updating files:  31% (6609/21318)
+2026-11-01T20:00:33.5264203Z Updating files:  32% (6822/21318)
+2026-11-01T20:00:33.5662279Z Updating files:  33% (7035/21318)
+2026-11-01T20:00:33.6233205Z Updating files:  34% (7249/21318)
+2026-11-01T20:00:33.6747761Z Updating files:  35% (7462/21318)
+2026-11-01T20:00:34.2768090Z Updating files:  36% (7675/21318)
+2026-11-01T20:00:34.2769433Z Updating files:  36% (7887/21318)
+2026-11-01T20:00:34.3160828Z Updating files:  37% (7888/21318)
+2026-11-01T20:00:34.3520618Z Updating files:  38% (8101/21318)
+2026-11-01T20:00:34.3917183Z Updating files:  39% (8315/21318)
+2026-11-01T20:00:34.4285788Z Updating files:  40% (8528/21318)
+2026-11-01T20:00:34.4672573Z Updating files:  41% (8741/21318)
+2026-11-01T20:00:34.5025195Z Updating files:  42% (8954/21318)
+2026-11-01T20:00:34.5422351Z Updating files:  43% (9167/21318)
+2026-11-01T20:00:34.5917498Z Updating files:  44% (9380/21318)
+2026-11-01T20:00:34.6390203Z Updating files:  45% (9594/21318)
+2026-11-01T20:00:34.7229449Z Updating files:  46% (9807/21318)
+2026-11-01T20:00:34.7697360Z Updating files:  47% (10020/21318)
+2026-11-01T20:00:34.8071814Z Updating files:  48% (10233/21318)
+2026-11-01T20:00:34.8437413Z Updating files:  49% (10446/21318)
+2026-11-01T20:00:34.8996895Z Updating files:  50% (10659/21318)
+2026-11-01T20:00:34.9379262Z Updating files:  51% (10873/21318)
+2026-11-01T20:00:34.9776304Z Updating files:  52% (11086/21318)
+2026-11-01T20:00:35.0108836Z Updating files:  53% (11299/21318)
+2026-11-01T20:00:35.0282009Z Updating files:  53% (11426/21318)
+2026-11-01T20:00:35.0682415Z Updating files:  54% (11512/21318)
+2026-11-01T20:00:35.2687414Z Updating files:  55% (11725/21318)
+2026-11-01T20:00:35.4620727Z Updating files:  56% (11939/21318)
+2026-11-01T20:00:36.0291408Z Updating files:  57% (12152/21318)
+2026-11-01T20:00:36.1191299Z Updating files:  57% (12172/21318)
+2026-11-01T20:00:36.1871689Z Updating files:  58% (12365/21318)
+2026-11-01T20:00:36.4025445Z Updating files:  59% (12578/21318)
+2026-11-01T20:00:36.4377577Z Updating files:  60% (12791/21318)
+2026-11-01T20:00:36.4908773Z Updating files:  61% (13004/21318)
+2026-11-01T20:00:36.5710865Z Updating files:  62% (13218/21318)
+2026-11-01T20:00:36.6050162Z Updating files:  63% (13431/21318)
+2026-11-01T20:00:36.8216346Z Updating files:  64% (13644/21318)
+2026-11-01T20:00:36.8948262Z Updating files:  65% (13857/21318)
+2026-11-01T20:00:36.9594753Z Updating files:  66% (14070/21318)
+2026-11-01T20:00:37.0121099Z Updating files:  67% (14284/21318)
+2026-11-01T20:00:37.0392510Z Updating files:  68% (14497/21318)
+2026-11-01T20:00:37.1344598Z Updating files:  68% (14611/21318)
+2026-11-01T20:00:37.1697028Z Updating files:  69% (14710/21318)
+2026-11-01T20:00:37.2045050Z Updating files:  70% (14923/21318)
+2026-11-01T20:00:37.2965760Z Updating files:  71% (15136/21318)
+2026-11-01T20:00:37.3716235Z Updating files:  72% (15349/21318)
+2026-11-01T20:00:37.4253503Z Updating files:  73% (15563/21318)
+2026-11-01T20:00:37.5732590Z Updating files:  74% (15776/21318)
+2026-11-01T20:00:37.6086028Z Updating files:  75% (15989/21318)
+2026-11-01T20:00:37.6436587Z Updating files:  76% (16202/21318)
+2026-11-01T20:00:37.7573555Z Updating files:  77% (16415/21318)
+2026-11-01T20:00:37.8056801Z Updating files:  78% (16629/21318)
+2026-11-01T20:00:37.8463260Z Updating files:  79% (16842/21318)
+2026-11-01T20:00:37.8967622Z Updating files:  80% (17055/21318)
+2026-11-01T20:00:37.9347724Z Updating files:  81% (17268/21318)
+2026-11-01T20:00:37.9688627Z Updating files:  82% (17481/21318)
+2026-11-01T20:00:38.1437046Z Updating files:  83% (17694/21318)
+2026-11-01T20:00:38.1811862Z Updating files:  84% (17908/21318)
+2026-11-01T20:00:38.2160424Z Updating files:  85% (18121/21318)
+2026-11-01T20:00:38.2558535Z Updating files:  86% (18334/21318)
+2026-11-01T20:00:38.2938358Z Updating files:  87% (18547/21318)
+2026-11-01T20:00:38.3334384Z Updating files:  88% (18760/21318)
+2026-11-01T20:00:38.3752879Z Updating files:  89% (18974/21318)
+2026-11-01T20:00:38.4112331Z Updating files:  90% (19187/21318)
+2026-11-01T20:00:38.4467338Z Updating files:  91% (19400/21318)
+2026-11-01T20:00:38.4802197Z Updating files:  92% (19613/21318)
+2026-11-01T20:00:38.5120341Z Updating files:  93% (19826/21318)
+2026-11-01T20:00:38.5448280Z Updating files:  94% (20039/21318)
+2026-11-01T20:00:38.5764693Z Updating files:  95% (20253/21318)
+2026-11-01T20:00:38.6282518Z Updating files:  96% (20466/21318)
+2026-11-01T20:00:38.6734263Z Updating files:  97% (20679/21318)
+2026-11-01T20:00:38.7163122Z Updating files:  98% (20892/21318)
+2026-11-01T20:00:38.7660446Z Updating files:  99% (21105/21318)
+2026-11-01T20:00:38.7661151Z Updating files: 100% (21318/21318)
+2026-11-01T20:00:38.7661390Z Updating files: 100% (21318/21318), done.
+2026-11-01T20:00:38.8005532Z Switched to a new branch 'roadmap/J2-F8-editing'
+2026-11-01T20:00:38.8017349Z branch 'roadmap/J2-F8-editing' set up to track 'origin/roadmap/J2-F8-editing'.
+2026-11-01T20:00:38.8431349Z ##[endgroup]
+2026-11-01T20:00:38.8787885Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-01T20:00:38.9085199Z 18c5858fd6e80a5cb6096beacebfef69c479ad49
+2026-11-01T20:00:38.9434060Z ##[group]Run actions/setup-python@v7
+2026-11-01T20:00:38.9434342Z with:
+2026-11-01T20:00:38.9434509Z   python-version: 3.11
+2026-11-01T20:00:38.9434696Z   check-latest: false
+2026-11-01T20:00:38.9436572Z   token: ***
+2026-11-01T20:00:38.9436837Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+2026-11-01T20:00:38.9437145Z   update-environment: true
+2026-11-01T20:00:38.9437332Z   allow-prereleases: false
+2026-11-01T20:00:38.9437502Z   freethreaded: false
+2026-11-01T20:00:38.9437665Z env:
+2026-11-01T20:00:38.9437813Z   QT_QPA_PLATFORM: offscreen
+2026-11-01T20:00:38.9437995Z ##[endgroup]
+2026-11-01T20:00:39.0670550Z ##[group]Installed versions
+2026-11-01T20:00:39.0799683Z Successfully set up CPython (3.11.9)
+2026-11-01T20:00:39.0800389Z ##[endgroup]
+2026-11-01T20:00:39.1036163Z ##[group]Run python -m pip install -r gui/requirements.txt -r gui/requirements-3d.txt pyinstaller
+2026-11-01T20:00:39.1036964Z [36;1mpython -m pip install -r gui/requirements.txt -r gui/requirements-3d.txt pyinstaller[0m
+2026-11-01T20:00:39.1135711Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-01T20:00:39.1135993Z env:
+2026-11-01T20:00:39.1136144Z   QT_QPA_PLATFORM: offscreen
+2026-11-01T20:00:39.1136390Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-11-01T20:00:39.1136756Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+2026-11-01T20:00:39.1137093Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-11-01T20:00:39.1137396Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-11-01T20:00:39.1137700Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-11-01T20:00:39.1137944Z ##[endgroup]
+2026-11-01T20:00:44.5239570Z Collecting pyinstaller
+2026-11-01T20:00:44.8708961Z   Downloading pyinstaller-6.22.3-py3-none-win_amd64.whl.metadata (8.5 kB)
+2026-11-01T20:00:45.0070257Z Collecting PySide6<6.12,>=6.11.1 (from -r gui/requirements.txt (line 4))
+2026-11-01T20:00:45.1271400Z   Downloading pyside6-6.11.3-cp310-abi3-win_amd64.whl.metadata (5.4 kB)
+2026-11-01T20:00:45.3038701Z Collecting uproot (from -r gui/requirements.txt (line 5))
+2026-11-01T20:00:45.4214015Z   Downloading uproot-5.7.7-py3-none-any.whl.metadata (36 kB)
+2026-11-01T20:00:45.8918689Z Collecting numpy (from -r gui/requirements.txt (line 6))
+2026-11-01T20:00:45.9573637Z   Downloading numpy-2.4.6-cp311-cp311-win_amd64.whl.metadata (6.6 kB)
+2026-11-01T20:00:46.1861958Z Collecting matplotlib (from -r gui/requirements.txt (line 7))
+2026-11-01T20:00:46.2519825Z   Downloading matplotlib-3.11.2-cp311-cp311-win_amd64.whl.metadata (80 kB)
+2026-11-01T20:00:46.4534403Z Collecting pyvista (from -r gui/requirements-3d.txt (line 1))
+2026-11-01T20:00:46.5195233Z   Downloading pyvista-0.49.2-py3-none-any.whl.metadata (14 kB)
+2026-11-01T20:00:46.6396815Z Collecting pyvistaqt (from -r gui/requirements-3d.txt (line 2))
+2026-11-01T20:00:46.7047065Z   Downloading pyvistaqt-0.13.1-py3-none-any.whl.metadata (5.3 kB)
+2026-11-01T20:00:46.8474947Z Collecting vtk (from -r gui/requirements-3d.txt (line 3))
+2026-11-01T20:00:46.9130095Z   Downloading vtk-9.7.1-cp311-cp311-win_amd64.whl.metadata (5.5 kB)
+2026-11-01T20:00:47.0374339Z Collecting shiboken6==6.11.3 (from PySide6<6.12,>=6.11.1->-r gui/requirements.txt (line 4))
+2026-11-01T20:00:47.1505186Z   Downloading shiboken6-6.11.3-cp310-abi3-win_amd64.whl.metadata (2.5 kB)
+2026-11-01T20:00:47.2919504Z Collecting PySide6_Essentials==6.11.3 (from PySide6<6.12,>=6.11.1->-r gui/requirements.txt (line 4))
+2026-11-01T20:00:47.4075787Z   Downloading pyside6_essentials-6.11.3-cp310-abi3-win_amd64.whl.metadata (3.8 kB)
+2026-11-01T20:00:47.5555810Z Collecting PySide6_Addons==6.11.3 (from PySide6<6.12,>=6.11.1->-r gui/requirements.txt (line 4))
+2026-11-01T20:00:47.6692480Z   Downloading pyside6_addons-6.11.3-cp310-abi3-win_amd64.whl.metadata (4.2 kB)
+2026-11-01T20:00:47.7942958Z Collecting altgraph (from pyinstaller)
+2026-11-01T20:00:47.8602954Z   Downloading altgraph-0.17.5-py2.py3-none-any.whl.metadata (7.5 kB)
+2026-11-01T20:00:47.9766757Z Collecting packaging>=22.0 (from pyinstaller)
+2026-11-01T20:00:48.0420281Z   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+2026-11-01T20:00:48.1524289Z Collecting pefile>=2022.5.30 (from pyinstaller)
+2026-11-01T20:00:48.2182305Z   Downloading pefile-2024.8.26-py3-none-any.whl.metadata (1.4 kB)
+2026-11-01T20:00:48.3477316Z Collecting pyinstaller-hooks-contrib>=2026.7 (from pyinstaller)
+2026-11-01T20:00:48.4126748Z   Downloading pyinstaller_hooks_contrib-2026.9-py3-none-any.whl.metadata (16 kB)
+2026-11-01T20:00:48.5460605Z Collecting pywin32-ctypes>=0.2.1 (from pyinstaller)
+2026-11-01T20:00:48.6103820Z   Downloading pywin32_ctypes-0.2.3-py3-none-any.whl.metadata (3.9 kB)
+2026-11-01T20:00:48.6294861Z Requirement already satisfied: setuptools>=42.0.0 in C:\hostedtoolcache\windows\Python\3.11.9\x64\Lib\site-packages (from pyinstaller) (65.5.0)
+2026-11-01T20:00:48.7671746Z Collecting awkward>=2.8.2 (from uproot->-r gui/requirements.txt (line 5))
+2026-11-01T20:00:48.8346891Z   Downloading awkward-2.14.0-py3-none-any.whl.metadata (7.1 kB)
+2026-11-01T20:00:49.0867183Z Collecting cramjam>=2.5.0 (from uproot->-r gui/requirements.txt (line 5))
+2026-11-01T20:00:49.1519659Z   Downloading cramjam-2.14.0-cp311-cp311-win_amd64.whl.metadata (6.7 kB)
+2026-11-01T20:00:49.2718728Z Collecting fsspec!=2026.2.0 (from uproot->-r gui/requirements.txt (line 5))
+2026-11-01T20:00:49.3375118Z   Downloading fsspec-2026.9.0-py3-none-any.whl.metadata (10 kB)
+2026-11-01T20:00:49.6477218Z Collecting xxhash (from uproot->-r gui/requirements.txt (line 5))
+2026-11-01T20:00:49.7128151Z   Downloading xxhash-4.0.2-cp311-cp311-win_amd64.whl.metadata (18 kB)
+2026-11-01T20:00:49.8704861Z Collecting contourpy>=1.0.1 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T20:00:49.9371440Z   Downloading contourpy-1.3.3-cp311-cp311-win_amd64.whl.metadata (5.5 kB)
+2026-11-01T20:00:50.0486359Z Collecting cycler>=0.10 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T20:00:50.1130140Z   Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+2026-11-01T20:00:50.3845280Z Collecting fonttools>=4.28.2 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T20:00:50.4557671Z   Downloading fonttools-4.68.0-cp311-cp311-win_amd64.whl.metadata (142 kB)
+2026-11-01T20:00:50.7627696Z Collecting kiwisolver>=1.3.1 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T20:00:50.8276920Z   Downloading kiwisolver-1.5.1-cp311-cp311-win_amd64.whl.metadata (5.2 kB)
+2026-11-01T20:00:51.1154745Z Collecting pillow>=9 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T20:00:51.1811461Z   Downloading pillow-13.0.0-cp311-cp311-win_amd64.whl.metadata (9.3 kB)
+2026-11-01T20:00:51.3976288Z Collecting pyparsing>=3 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T20:00:51.4614977Z   Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+2026-11-01T20:00:51.5746494Z Collecting python-dateutil>=2.7 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T20:00:51.6427571Z   Downloading python_dateutil-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+2026-11-01T20:00:51.7642692Z Collecting cyclopts>=4.0.0 (from pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T20:00:51.8282819Z   Downloading cyclopts-5.3.2-py3-none-any.whl.metadata (12 kB)
+2026-11-01T20:00:51.9670540Z Collecting pooch (from pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T20:00:52.0343126Z   Downloading pooch-1.9.0-py3-none-any.whl.metadata (10 kB)
+2026-11-01T20:00:52.1529888Z Collecting pyvista-validation==0.2.2 (from pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T20:00:52.2193391Z   Downloading pyvista_validation-0.2.2-cp310-abi3-win_amd64.whl.metadata (8.9 kB)
+2026-11-01T20:00:52.3319005Z Collecting scooby>=0.5.1 (from pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T20:00:52.4003563Z   Downloading scooby-0.12.1-py3-none-any.whl.metadata (16 kB)
+2026-11-01T20:00:52.5189410Z Collecting typing-extensions>=4.10 (from pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T20:00:52.5827937Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-11-01T20:00:52.7478358Z Collecting QtPy>=1.9.0 (from pyvistaqt->-r gui/requirements-3d.txt (line 2))
+2026-11-01T20:00:52.8135280Z   Downloading QtPy-2.4.3-py3-none-any.whl.metadata (12 kB)
+2026-11-01T20:00:53.0331919Z Collecting awkward-cpp==57 (from awkward>=2.8.2->uproot->-r gui/requirements.txt (line 5))
+2026-11-01T20:00:53.1395402Z   Downloading awkward_cpp-57-cp311-cp311-win_amd64.whl.metadata (2.1 kB)
+2026-11-01T20:00:53.2629882Z Collecting importlib-metadata>=4.13.0 (from awkward>=2.8.2->uproot->-r gui/requirements.txt (line 5))
+2026-11-01T20:00:53.3299400Z   Downloading importlib_metadata-10.1.0-py3-none-any.whl.metadata (4.5 kB)
+2026-11-01T20:00:53.4623087Z Collecting attrs>=23.1.0 (from cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T20:00:53.5277055Z   Downloading attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+2026-11-01T20:00:53.6388318Z Collecting docstring-parser<4.0,>=0.15 (from cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T20:00:53.7023623Z   Downloading docstring_parser-0.18.0-py3-none-any.whl.metadata (3.5 kB)
+2026-11-01T20:00:53.8252045Z Collecting rich-rst<3,>=2.0.1 (from cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T20:00:53.8916075Z   Downloading rich_rst-2.2.0-py3-none-any.whl.metadata (5.0 kB)
+2026-11-01T20:00:54.0571015Z Collecting rich>=13.6.0 (from cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T20:00:54.1219870Z   Downloading rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+2026-11-01T20:00:54.2472299Z Collecting pygments>=2.0.0 (from rich-rst<3,>=2.0.1->cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T20:00:54.3113665Z   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+2026-11-01T20:00:54.4278368Z Collecting zipp>=3.20 (from importlib-metadata>=4.13.0->awkward>=2.8.2->uproot->-r gui/requirements.txt (line 5))
+2026-11-01T20:00:54.4918427Z   Downloading zipp-4.1.2-py3-none-any.whl.metadata (3.6 kB)
+2026-11-01T20:00:54.6128171Z Collecting tzdata (from python-dateutil>=2.7->matplotlib->-r gui/requirements.txt (line 7))
+2026-11-01T20:00:54.6786662Z   Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+2026-11-01T20:00:54.7951119Z Collecting markdown-it-py>=2.2.0 (from rich>=13.6.0->cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T20:00:54.8595110Z   Downloading markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+2026-11-01T20:00:55.0208713Z Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=13.6.0->cyclopts>=4.0.0->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T20:00:55.0847363Z   Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+2026-11-01T20:00:55.2224697Z Collecting platformdirs>=2.5.0 (from pooch->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T20:00:55.2870179Z   Downloading platformdirs-4.14.3-py3-none-any.whl.metadata (5.4 kB)
+2026-11-01T20:00:55.4018011Z Collecting requests>=2.19.0 (from pooch->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T20:00:55.4658551Z   Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+2026-11-01T20:00:55.7570124Z Collecting charset_normalizer<4,>=2 (from requests>=2.19.0->pooch->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T20:00:55.8237468Z   Downloading charset_normalizer-3.5.2-cp311-cp311-win_amd64.whl.metadata (47 kB)
+2026-11-01T20:00:55.9535901Z Collecting idna<4,>=2.5 (from requests>=2.19.0->pooch->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T20:00:56.0175543Z   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+2026-11-01T20:00:56.1363138Z Collecting urllib3<3,>=1.26 (from requests>=2.19.0->pooch->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T20:00:56.2008899Z   Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+2026-11-01T20:00:56.3938124Z Collecting certifi>=2023.5.7 (from requests>=2.19.0->pooch->pyvista->-r gui/requirements-3d.txt (line 1))
+2026-11-01T20:00:56.4580803Z   Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+2026-11-01T20:00:56.7783976Z Downloading pyside6-6.11.3-cp310-abi3-win_amd64.whl (578 kB)
+2026-11-01T20:00:57.0350699Z    ---------------------------------------- 578.4/578.4 kB 1.6 MB/s  0:00:00
+2026-11-01T20:00:57.2210692Z Downloading pyside6_addons-6.11.3-cp310-abi3-win_amd64.whl (168.4 MB)
+2026-11-01T20:01:09.8379206Z    ---------------------------------------- 168.4/168.4 MB 13.4 MB/s  0:00:12
+2026-11-01T20:01:09.9725693Z Downloading pyside6_essentials-6.11.3-cp310-abi3-win_amd64.whl (77.1 MB)
+2026-11-01T20:01:15.9220639Z    ---------------------------------------- 77.1/77.1 MB 12.9 MB/s  0:00:05
+2026-11-01T20:01:16.0453959Z Downloading shiboken6-6.11.3-cp310-abi3-win_amd64.whl (1.2 MB)
+2026-11-01T20:01:16.1211987Z    ---------------------------------------- 1.2/1.2 MB 15.3 MB/s  0:00:00
+2026-11-01T20:01:16.1883647Z Downloading pyinstaller-6.22.3-py3-none-win_amd64.whl (1.5 MB)
+2026-11-01T20:01:16.2238313Z    ---------------------------------------- 1.5/1.5 MB 38.5 MB/s  0:00:00
+2026-11-01T20:01:16.2896123Z Downloading uproot-5.7.7-py3-none-any.whl (441 kB)
+2026-11-01T20:01:16.3904317Z Downloading numpy-2.4.6-cp311-cp311-win_amd64.whl (12.6 MB)
+2026-11-01T20:01:16.5288270Z    ---------------------------------------- 12.6/12.6 MB 98.8 MB/s  0:00:00
+2026-11-01T20:01:16.5930422Z Downloading matplotlib-3.11.2-cp311-cp311-win_amd64.whl (9.3 MB)
+2026-11-01T20:01:16.6861411Z    ---------------------------------------- 9.3/9.3 MB 96.5 MB/s  0:00:00
+2026-11-01T20:01:16.7535559Z Downloading pyvista-0.49.2-py3-none-any.whl (2.7 MB)
+2026-11-01T20:01:16.8899146Z    ---------------------------------------- 2.7/2.7 MB 17.5 MB/s  0:00:00
+2026-11-01T20:01:16.9545806Z Downloading pyvista_validation-0.2.2-cp310-abi3-win_amd64.whl (74 kB)
+2026-11-01T20:01:17.0420828Z Downloading vtk-9.7.1-cp311-cp311-win_amd64.whl (80.4 MB)
+2026-11-01T20:01:18.5247977Z    ---------------------------------------- 80.4/80.4 MB 54.6 MB/s  0:00:01
+2026-11-01T20:01:18.5895124Z Downloading pyvistaqt-0.13.1-py3-none-any.whl (141 kB)
+2026-11-01T20:01:18.6734490Z Downloading awkward-2.14.0-py3-none-any.whl (1.0 MB)
+2026-11-01T20:01:18.7053244Z    ---------------------------------------- 1.0/1.0 MB 23.1 MB/s  0:00:00
+2026-11-01T20:01:18.8388732Z Downloading awkward_cpp-57-cp311-cp311-win_amd64.whl (736 kB)
+2026-11-01T20:01:18.8826725Z    ---------------------------------------- 736.5/736.5 kB 15.3 MB/s  0:00:00
+2026-11-01T20:01:18.9498644Z Downloading contourpy-1.3.3-cp311-cp311-win_amd64.whl (225 kB)
+2026-11-01T20:01:19.0349165Z Downloading cramjam-2.14.0-cp311-cp311-win_amd64.whl (1.8 MB)
+2026-11-01T20:01:19.0654271Z    ---------------------------------------- 1.8/1.8 MB 49.6 MB/s  0:00:00
+2026-11-01T20:01:19.1286313Z Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+2026-11-01T20:01:19.2378371Z Downloading cyclopts-5.3.2-py3-none-any.whl (297 kB)
+2026-11-01T20:01:19.3238258Z Downloading docstring_parser-0.18.0-py3-none-any.whl (22 kB)
+2026-11-01T20:01:19.4117614Z Downloading rich_rst-2.2.0-py3-none-any.whl (279 kB)
+2026-11-01T20:01:19.5087869Z Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+2026-11-01T20:01:19.6013477Z Downloading fonttools-4.68.0-cp311-cp311-win_amd64.whl (1.7 MB)
+2026-11-01T20:01:19.6298252Z    ---------------------------------------- 1.7/1.7 MB 45.8 MB/s  0:00:00
+2026-11-01T20:01:19.6938673Z Downloading fsspec-2026.9.0-py3-none-any.whl (221 kB)
+2026-11-01T20:01:19.7860547Z Downloading importlib_metadata-10.1.0-py3-none-any.whl (32 kB)
+2026-11-01T20:01:19.8704404Z Downloading kiwisolver-1.5.1-cp311-cp311-win_amd64.whl (70 kB)
+2026-11-01T20:01:19.9532100Z Downloading packaging-26.3-py3-none-any.whl (129 kB)
+2026-11-01T20:01:20.0434984Z Downloading pefile-2024.8.26-py3-none-any.whl (74 kB)
+2026-11-01T20:01:20.1373137Z Downloading pillow-13.0.0-cp311-cp311-win_amd64.whl (7.3 MB)
+2026-11-01T20:01:20.2413208Z    ---------------------------------------- 7.3/7.3 MB 74.6 MB/s  0:00:00
+2026-11-01T20:01:20.3062398Z Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-11-01T20:01:20.3329722Z    ---------------------------------------- 1.3/1.3 MB 30.9 MB/s  0:00:00
+2026-11-01T20:01:20.4001787Z Downloading pyinstaller_hooks_contrib-2026.9-py3-none-any.whl (462 kB)
+2026-11-01T20:01:20.4868606Z Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+2026-11-01T20:01:20.5706036Z Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+2026-11-01T20:01:20.6583514Z Downloading pywin32_ctypes-0.2.3-py3-none-any.whl (30 kB)
+2026-11-01T20:01:20.7431223Z Downloading QtPy-2.4.3-py3-none-any.whl (95 kB)
+2026-11-01T20:01:20.8235779Z Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+2026-11-01T20:01:20.9399853Z Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+2026-11-01T20:01:21.0231798Z Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+2026-11-01T20:01:21.1123098Z Downloading scooby-0.12.1-py3-none-any.whl (21 kB)
+2026-11-01T20:01:21.3357092Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-11-01T20:01:21.4239878Z Downloading zipp-4.1.2-py3-none-any.whl (10 kB)
+2026-11-01T20:01:21.5139073Z Downloading altgraph-0.17.5-py2.py3-none-any.whl (21 kB)
+2026-11-01T20:01:21.7637169Z Downloading pooch-1.9.0-py3-none-any.whl (67 kB)
+2026-11-01T20:01:21.8497792Z Downloading platformdirs-4.14.3-py3-none-any.whl (35 kB)
+2026-11-01T20:01:21.9399959Z Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+2026-11-01T20:01:22.0469285Z Downloading charset_normalizer-3.5.2-cp311-cp311-win_amd64.whl (214 kB)
+2026-11-01T20:01:22.1464415Z Downloading idna-3.20-py3-none-any.whl (69 kB)
+2026-11-01T20:01:22.2282342Z Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+2026-11-01T20:01:22.3365590Z Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+2026-11-01T20:01:22.4183493Z Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+2026-11-01T20:01:22.7518838Z Downloading xxhash-4.0.2-cp311-cp311-win_amd64.whl (36 kB)
+2026-11-01T20:01:24.2664400Z Installing collected packages: altgraph, zipp, xxhash, urllib3, tzdata, typing-extensions, shiboken6, scooby, pywin32-ctypes, pyparsing, pygments, platformdirs, pillow, pefile, packaging, numpy, mdurl, kiwisolver, idna, fsspec, fonttools, docstring-parser, cycler, cramjam, charset_normalizer, certifi, attrs, requests, QtPy, pyvista-validation, python-dateutil, PySide6_Essentials, pyinstaller-hooks-contrib, markdown-it-py, importlib-metadata, contourpy, awkward-cpp, rich, PySide6_Addons, pyinstaller, pooch, matplotlib, awkward, vtk, uproot, rich-rst, PySide6, cyclopts, pyvista, pyvistaqt
+2026-11-01T20:01:59.4740671Z 
+2026-11-01T20:01:59.4767241Z Successfully installed PySide6-6.11.3 PySide6_Addons-6.11.3 PySide6_Essentials-6.11.3 QtPy-2.4.3 altgraph-0.17.5 attrs-26.1.0 awkward-2.14.0 awkward-cpp-57 certifi-2026.10.23 charset_normalizer-3.5.2 contourpy-1.3.3 cramjam-2.14.0 cycler-0.12.1 cyclopts-5.3.2 docstring-parser-0.18.0 fonttools-4.68.0 fsspec-2026.9.0 idna-3.20 importlib-metadata-10.1.0 kiwisolver-1.5.1 markdown-it-py-4.2.0 matplotlib-3.11.2 mdurl-0.1.2 numpy-2.4.6 packaging-26.3 pefile-2024.8.26 pillow-13.0.0 platformdirs-4.14.3 pooch-1.9.0 pygments-2.21.0 pyinstaller-6.22.3 pyinstaller-hooks-contrib-2026.9 pyparsing-3.3.3 python-dateutil-4.0.0 pyvista-0.49.2 pyvista-validation-0.2.2 pyvistaqt-0.13.1 pywin32-ctypes-0.2.3 requests-2.34.2 rich-15.0.0 rich-rst-2.2.0 scooby-0.12.1 shiboken6-6.11.3 typing-extensions-4.16.0 tzdata-2026.6 uproot-5.7.7 urllib3-2.8.0 vtk-9.7.1 xxhash-4.0.2 zipp-4.1.2
+2026-11-01T20:01:59.7706836Z ##[group]Run $delivery = Join-Path $env:RUNNER_TEMP 'g4usim-delivery'
+2026-11-01T20:01:59.7707323Z [36;1m$delivery = Join-Path $env:RUNNER_TEMP 'g4usim-delivery'[0m
+2026-11-01T20:01:59.7707640Z [36;1m$bootstrap = Join-Path $delivery 'bootstrap'[0m
+2026-11-01T20:01:59.7707942Z [36;1mNew-Item -ItemType Directory -Path $bootstrap | Out-Null[0m
+2026-11-01T20:01:59.7708292Z [36;1m$archive = Join-Path $bootstrap 'geant4-11.4.3-official.zip'[0m
+2026-11-01T20:01:59.7708793Z [36;1mInvoke-WebRequest 'https://geant4-data.web.cern.ch/releases/lib4.11.4.p03/WIN64-VC17.14.41-11.zip' -OutFile $archive[0m
+2026-11-01T20:01:59.7709666Z [36;1mif ((Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant() -ne 'b0725c4e34d4714c5ccf0f575b4bccfb06c021fc19f3696f347bb7ea464e4d9c') { throw 'Official SDK archive identity mismatch' }[0m
+2026-11-01T20:01:59.7710454Z [36;1mExpand-Archive -LiteralPath $archive -DestinationPath (Join-Path $bootstrap 'sdk')[0m
+2026-11-01T20:01:59.7711030Z [36;1m$configs = @(Get-ChildItem -LiteralPath (Join-Path $bootstrap 'sdk') -Filter Geant4Config.cmake -Recurse -File)[0m
+2026-11-01T20:01:59.7711539Z [36;1mif ($configs.Count -ne 1) { throw 'Expected one Geant4 CMake configuration' }[0m
+2026-11-01T20:01:59.7711914Z [36;1m$prefix = $configs[0].Directory.Parent.Parent.Parent.FullName[0m
+2026-11-01T20:01:59.7712204Z [36;1m"G4_PREFIX=$prefix" >> $env:GITHUB_ENV[0m
+2026-11-01T20:01:59.7713068Z [36;1m"G4_BUILD=$(Join-Path $delivery 'backend')" >> $env:GITHUB_ENV[0m
+2026-11-01T20:01:59.7713352Z [36;1m"DELIVERY_ROOT=$delivery" >> $env:GITHUB_ENV[0m
+2026-11-01T20:01:59.7713612Z [36;1m(Join-Path $prefix 'bin') >> $env:GITHUB_PATH[0m
+2026-11-01T20:01:59.7714054Z [36;1mpython packaging/ci_fetch_geant4_data.py --config $configs[0].FullName --directory (Join-Path $bootstrap 'datasets')[0m
+2026-11-01T20:01:59.7714569Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Dataset acquisition or verification failed' }[0m
+2026-11-01T20:01:59.7714966Z [36;1m"GEANT4_DATA_DIR=$(Join-Path $bootstrap 'datasets/data')" >> $env:GITHUB_ENV[0m
+2026-11-01T20:01:59.7777350Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-01T20:01:59.7777624Z env:
+2026-11-01T20:01:59.7777778Z   QT_QPA_PLATFORM: offscreen
+2026-11-01T20:01:59.7778028Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-11-01T20:01:59.7778373Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+2026-11-01T20:01:59.7778719Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-11-01T20:01:59.7779024Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-11-01T20:01:59.7779317Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-11-01T20:01:59.7779557Z ##[endgroup]
+2026-11-01T20:04:01.1163494Z Fetched 12 datasets; receipt: D:\a\_temp\g4usim-delivery\bootstrap\datasets\fetch-report.json
+2026-11-01T20:04:01.1692557Z ##[group]Run cmake -S . -B $env:G4_BUILD "-DGeant4_DIR=$env:G4_PREFIX/lib/cmake/Geant4"
+2026-11-01T20:04:01.1693105Z [36;1mcmake -S . -B $env:G4_BUILD "-DGeant4_DIR=$env:G4_PREFIX/lib/cmake/Geant4"[0m
+2026-11-01T20:04:01.1693488Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Backend configure failed' }[0m
+2026-11-01T20:04:01.1693855Z [36;1mcmake --build $env:G4_BUILD --config Release --parallel 4[0m
+2026-11-01T20:04:01.1694200Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Backend compilation failed' }[0m
+2026-11-01T20:04:01.1694688Z [36;1m& "$env:G4_BUILD/Release/G4UniversalSim.exe" --check-geant4-data > "$env:DELIVERY_ROOT/discovery.json"[0m
+2026-11-01T20:04:01.1695158Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Actual backend dataset discovery failed' }[0m
+2026-11-01T20:04:01.1757549Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-01T20:04:01.1757837Z env:
+2026-11-01T20:04:01.1757996Z   QT_QPA_PLATFORM: offscreen
+2026-11-01T20:04:01.1758292Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-11-01T20:04:01.1758641Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+2026-11-01T20:04:01.1758985Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-11-01T20:04:01.1759294Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-11-01T20:04:01.1759597Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-11-01T20:04:01.1759916Z   G4_PREFIX: D:\a\_temp\g4usim-delivery\bootstrap\sdk\geant4-11.4.3-win64
+2026-11-01T20:04:01.1760221Z   G4_BUILD: D:\a\_temp\g4usim-delivery\backend
+2026-11-01T20:04:01.1760465Z   DELIVERY_ROOT: D:\a\_temp\g4usim-delivery
+2026-11-01T20:04:01.1760745Z   GEANT4_DATA_DIR: D:\a\_temp\g4usim-delivery\bootstrap\datasets\data
+2026-11-01T20:04:01.1761008Z ##[endgroup]
+2026-11-01T20:04:14.1707082Z -- Building for: Visual Studio 18 2026
+2026-11-01T20:04:14.1707578Z -- The CXX compiler identification is MSVC 19.51.36260.0
+2026-11-01T20:04:14.3898551Z -- Detecting CXX compiler ABI info
+2026-11-01T20:04:15.9010910Z -- Detecting CXX compiler ABI info - done
+2026-11-01T20:04:15.9341976Z -- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/18/Enterprise/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped
+2026-11-01T20:04:15.9355068Z -- Detecting CXX compile features
+2026-11-01T20:04:15.9365291Z -- Detecting CXX compile features - done
+2026-11-01T20:04:16.0607221Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+2026-11-01T20:04:17.1116278Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+2026-11-01T20:04:17.1116865Z -- Looking for pthread_create in pthreads
+2026-11-01T20:04:17.6452110Z -- Looking for pthread_create in pthreads - not found
+2026-11-01T20:04:17.6452490Z -- Looking for pthread_create in pthread
+2026-11-01T20:04:18.1308870Z -- Looking for pthread_create in pthread - not found
+2026-11-01T20:04:18.1420225Z -- Found Threads: TRUE
+2026-11-01T20:04:18.1501822Z -- Found OpenGL: opengl32
+2026-11-01T20:04:18.1551942Z -- Found Geant4: D:/a/_temp/g4usim-delivery/bootstrap/sdk/geant4-11.4.3-win64/lib/cmake/Geant4/Geant4Config.cmake (found version "11.4.3")
+2026-11-01T20:04:18.5346425Z -- G4UniversalSim: Geant4 has no GDML; [gdml] geometry will be rejected
+2026-11-01T20:04:20.1950962Z -- Configuring done (17.9s)
+2026-11-01T20:04:20.3078290Z -- Generating done (0.1s)
+2026-11-01T20:04:20.3086760Z -- Build files have been written to: D:/a/_temp/g4usim-delivery/backend
+2026-11-01T20:04:20.4284878Z MSBuild version 18.11.1-1.26513.3+940033be3 for .NET Framework
+2026-11-01T20:04:20.4849120Z 
+2026-11-01T20:04:20.7250831Z   Checking File Globs
+2026-11-01T20:04:20.8460284Z   1>Checking Build System
+2026-11-01T20:04:21.3476987Z   Building Custom Rule D:/a/G4UniversalSim/G4UniversalSim/CMakeLists.txt
+2026-11-01T20:04:21.6008396Z   main.cc
+2026-11-01T20:04:21.6252735Z   Building Custom Rule D:/a/G4UniversalSim/G4UniversalSim/CMakeLists.txt
+2026-11-01T20:04:21.6384531Z   Building Custom Rule D:/a/G4UniversalSim/G4UniversalSim/CMakeLists.txt
+2026-11-01T20:04:21.6385644Z   Building Custom Rule D:/a/G4UniversalSim/G4UniversalSim/CMakeLists.txt
+2026-11-01T20:04:21.7908454Z   mergeHistograms.cc
+2026-11-01T20:04:21.7909859Z   scoringNumericCheck.cc
+2026-11-01T20:04:21.7910477Z   randomCommandGuardCheck.cc
+2026-11-01T20:04:23.9957111Z   HistoryStatistics.cc
+2026-11-01T20:04:24.4278050Z   RandomCommandGuard.cc
+2026-11-01T20:04:24.5771213Z   Generating Code...
+2026-11-01T20:04:26.6715066Z   scoringNumericCheck.vcxproj -> D:\a\_temp\g4usim-delivery\backend\Release\scoringNumericCheck.exe
+2026-11-01T20:04:26.6720012Z D:\a\G4UniversalSim\G4UniversalSim\main.cc(678,33): warning C4996: '_wfopen': This function or variable may be unsafe. Consider using _wfopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [D:\a\_temp\g4usim-delivery\backend\G4UniversalSim.vcxproj]
+2026-11-01T20:04:26.8075612Z   mergeHistograms.vcxproj -> D:\a\_temp\g4usim-delivery\backend\Release\mergeHistograms.exe
+2026-11-01T20:04:27.2881922Z   InputProvenance.cc
+2026-11-01T20:04:27.8829447Z   ActionInitialization.cc
+2026-11-01T20:04:28.0847851Z   Generating Code...
+2026-11-01T20:04:29.7688064Z   EventAction.cc
+2026-11-01T20:04:30.4558224Z   randomCommandGuardCheck.vcxproj -> D:\a\_temp\g4usim-delivery\backend\Release\randomCommandGuardCheck.exe
+2026-11-01T20:04:31.5057218Z   RunAction.cc
+2026-11-01T20:04:33.3785799Z   RunProgress.cc
+2026-11-01T20:04:33.8988445Z   SteppingAction.cc
+2026-11-01T20:04:35.3977423Z   TrackingAction.cc
+2026-11-01T20:04:36.3984595Z   WorkerRunContext.cc
+2026-11-01T20:04:37.2721432Z   BiasingImportance.cc
+2026-11-01T20:04:37.2844598Z   BiasingManager.cc
+2026-11-01T20:04:38.3321538Z D:\a\G4UniversalSim\G4UniversalSim\src\Biasing\BiasingManager.cc(703,34): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [D:\a\_temp\g4usim-delivery\backend\G4UniversalSim.vcxproj]
+2026-11-01T20:04:39.3233542Z   BiasingMessenger.cc
+2026-11-01T20:04:40.5995025Z   BiasingMultiParticleXS.cc
+2026-11-01T20:04:41.7427436Z   BiasingRegion.cc
+2026-11-01T20:04:41.7570598Z   BiasingXS.cc
+2026-11-01T20:04:43.5840427Z   EffectiveBiasing.cc
+2026-11-01T20:04:45.4291874Z   ConfigManager.cc
+2026-11-01T20:04:45.9529718Z   ConfigValue.cc
+2026-11-01T20:04:46.2392320Z   EffectiveConfig.cc
+2026-11-01T20:04:47.1157814Z   IniReader.cc
+2026-11-01T20:04:47.7089229Z   InputProvenance.cc
+2026-11-01T20:04:48.4428587Z   Generating Code...
+2026-11-01T20:04:59.9471531Z   Compiling...
+2026-11-01T20:04:59.9471820Z   AppMessenger.cc
+2026-11-01T20:05:00.9863229Z   EffectiveSimulation.cc
+2026-11-01T20:05:04.7496668Z D:\a\G4UniversalSim\G4UniversalSim\src\Core\EffectiveSimulation.cc(289,20): warning C4996: '_wfopen': This function or variable may be unsafe. Consider using _wfopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [D:\a\_temp\g4usim-delivery\backend\G4UniversalSim.vcxproj]
+2026-11-01T20:05:05.7566274Z   Geant4DataLocator.cc
+2026-11-01T20:05:06.7525327Z   MacroPreflight.cc
+2026-11-01T20:05:07.5098272Z   RandomCommandGuard.cc
+2026-11-01T20:05:09.0166284Z   SimulationContext.cc
+2026-11-01T20:05:09.2610770Z   SimulationManager.cc
+2026-11-01T20:05:11.8476920Z   DetectorConstruction.cc
+2026-11-01T20:05:13.4940732Z   DetectorMessenger.cc
+2026-11-01T20:05:14.3301817Z   FieldConfig.cc
+2026-11-01T20:05:16.4089204Z   FieldSetup.cc
+2026-11-01T20:05:18.1589386Z   GdmlIO.cc
+2026-11-01T20:05:18.8660224Z   GdmlInputCapture.cc
+2026-11-01T20:05:19.2064361Z   GeometryConfig.cc
+2026-11-01T20:05:20.3940844Z   GeometryConfigDiagnostic.cc
+2026-11-01T20:05:21.0729694Z   GeometryExport.cc
+2026-11-01T20:05:22.3518034Z   GeometryManager.cc
+2026-11-01T20:05:24.6648564Z   GeometryMessenger.cc
+2026-11-01T20:05:26.6683937Z   GeometryRegistry.cc
+2026-11-01T20:05:27.8728445Z   GeometrySafety.cc
+2026-11-01T20:05:28.4695252Z   Generating Code...
+2026-11-01T20:05:44.5486517Z   Compiling...
+2026-11-01T20:05:44.5486834Z   GeometryUtils.cc
+2026-11-01T20:05:44.8666105Z   SolidRegistry.cc
+2026-11-01T20:05:45.8518886Z   StlReader.cc
+2026-11-01T20:05:46.6602544Z   VolumeBuilder.cc
+2026-11-01T20:05:48.3704438Z   VolumeNode.cc
+2026-11-01T20:05:48.8850216Z   ParticleHit.cc
+2026-11-01T20:05:49.9755157Z   ParticleHitCollection.cc
+2026-11-01T20:05:50.5727894Z   SensitiveDetector.cc
+2026-11-01T20:05:51.5688074Z D:\a\G4UniversalSim\G4UniversalSim\src\Hits\SensitiveDetector.cc(35,30): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [D:\a\_temp\g4usim-delivery\backend\G4UniversalSim.vcxproj]
+2026-11-01T20:05:52.3358150Z   TrackInformation.cc
+2026-11-01T20:05:53.3522903Z   MaterialCommandParser.cc
+2026-11-01T20:05:53.6652571Z   MaterialFactory.cc
+2026-11-01T20:05:54.3956446Z   MaterialIniReader.cc
+2026-11-01T20:05:55.1471638Z   MaterialManager.cc
+2026-11-01T20:05:57.0323955Z   MaterialMessenger.cc
+2026-11-01T20:05:58.1042721Z   AnalysisOutput.cc
+2026-11-01T20:05:59.3780028Z   CsvWriter.cc
+2026-11-01T20:06:00.3418996Z   EffectiveOutput.cc
+2026-11-01T20:06:02.0377710Z   Histogram1D.cc
+2026-11-01T20:06:02.4565771Z   Histogram2D.cc
+2026-11-01T20:06:02.8713887Z   OutputManager.cc
+2026-11-01T20:06:04.2086729Z   Generating Code...
+2026-11-01T20:06:14.6800536Z   Compiling...
+2026-11-01T20:06:14.6800873Z   OutputMessenger.cc
+2026-11-01T20:06:15.7126701Z   RunSummary.cc
+2026-11-01T20:06:16.2852657Z D:\a\G4UniversalSim\G4UniversalSim\src\Output\RunSummary.cc(502,35): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [D:\a\_temp\g4usim-delivery\backend\G4UniversalSim.vcxproj]
+2026-11-01T20:06:16.6829544Z   ElectronCapture.cc
+2026-11-01T20:06:17.7574007Z   MicroElecPhysics.cc
+2026-11-01T20:06:18.9019459Z   PhysicsFactory.cc
+2026-11-01T20:06:20.7864852Z   PhysicsList.cc
+2026-11-01T20:06:22.1606668Z   PhysicsManager.cc
+2026-11-01T20:06:24.0823701Z   PhysicsMessenger.cc
+2026-11-01T20:06:25.0711718Z   ProcessDump.cc
+2026-11-01T20:06:26.6936454Z   DisplacementScorer.cc
+2026-11-01T20:06:27.6730878Z   DoseScorer.cc
+2026-11-01T20:06:28.6215100Z   EdepScorer.cc
+2026-11-01T20:06:29.5696626Z   EffectiveScoring.cc
+2026-11-01T20:06:31.3714078Z   FluenceScorer.cc
+2026-11-01T20:06:32.3248496Z   HistoryStatistics.cc
+2026-11-01T20:06:32.7211526Z   LETScorer.cc
+2026-11-01T20:06:33.7101658Z   NielTable.cc
+2026-11-01T20:06:34.4050205Z   ParticleAggregator.cc
+2026-11-01T20:06:34.4175851Z   PhaseSpace.cc
+2026-11-01T20:06:35.1358596Z   ScorerBase.cc
+2026-11-01T20:06:35.3789885Z   Generating Code...
+2026-11-01T20:06:44.1827430Z   Compiling...
+2026-11-01T20:06:44.1827712Z   ScoringManager.cc
+2026-11-01T20:06:46.2661945Z   ScoringMeshConfig.cc
+2026-11-01T20:06:48.2230200Z   ScoringMeshExport.cc
+2026-11-01T20:06:49.0749262Z   ScoringMessenger.cc
+2026-11-01T20:06:50.1035545Z   ThreadLocalScoringContext.cc
+2026-11-01T20:06:50.1166640Z   TrajectoryRecorder.cc
+2026-11-01T20:06:51.3401739Z   PrimaryGeneratorAction.cc
+2026-11-01T20:06:52.3940138Z D:\a\G4UniversalSim\G4UniversalSim\src\Source\PrimaryGeneratorAction.cc(31,29): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [D:\a\_temp\g4usim-delivery\backend\G4UniversalSim.vcxproj]
+2026-11-01T20:06:53.2551787Z   SourceManager.cc
+2026-11-01T20:06:55.5414891Z   SourceMessenger.cc
+2026-11-01T20:06:56.5695081Z   ArrayTemplate.cc
+2026-11-01T20:06:57.0205077Z   GDMLTemplate.cc
+2026-11-01T20:06:57.8692143Z   GeometryTemplate.cc
+2026-11-01T20:06:58.3734360Z   HierarchicalVolumeTemplate.cc
+2026-11-01T20:06:58.8743440Z   LayeredDeviceTemplate.cc
+2026-11-01T20:06:59.3939732Z   ShieldingTemplate.cc
+2026-11-01T20:06:59.8615168Z   SimpleBoxTemplate.cc
+2026-11-01T20:07:00.3215500Z   TemplateFactory.cc
+2026-11-01T20:07:00.8281529Z   CommandParser.cc
+2026-11-01T20:07:01.1451586Z   FileUtils.cc
+2026-11-01T20:07:01.8263763Z   G4NameUtils.cc
+2026-11-01T20:07:02.2333893Z   Generating Code...
+2026-11-01T20:07:13.7479673Z   Compiling...
+2026-11-01T20:07:13.7479955Z   StringUtils.cc
+2026-11-01T20:07:14.2170540Z   UnitParser.cc
+2026-11-01T20:07:14.8420946Z   Generating Code...
+2026-11-01T20:07:16.4687858Z   G4UniversalSim.vcxproj -> D:\a\_temp\g4usim-delivery\backend\Release\G4UniversalSim.exe
+2026-11-01T20:07:16.4762775Z   Copying config/ to runtime output directory	Copying macros/ to runtime output directory	Copying scripts/ to runtime output directory
+2026-11-01T20:07:16.6494077Z   Building Custom Rule D:/a/G4UniversalSim/G4UniversalSim/CMakeLists.txt
+2026-11-01T20:07:16.9824190Z ##[group]Run python -B tools/test_assert_probe.py packaging/ci_delivery.py --build-dir $env:G4_BUILD --geant4-prefix $env:G4_PREFIX --discovery-json "$env:DELIVERY_ROOT/discovery.json" --work-root "$env:DELIVERY_ROOT/acceptance" --cmake (Get-Command cmake).Source --application-build
+2026-11-01T20:07:16.9825773Z [36;1mpython -B tools/test_assert_probe.py packaging/ci_delivery.py --build-dir $env:G4_BUILD --geant4-prefix $env:G4_PREFIX --discovery-json "$env:DELIVERY_ROOT/discovery.json" --work-root "$env:DELIVERY_ROOT/acceptance" --cmake (Get-Command cmake).Source --application-build[0m
+2026-11-01T20:07:16.9826731Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Full installation lifecycle verification failed' }[0m
+2026-11-01T20:07:16.9886742Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-01T20:07:16.9887011Z env:
+2026-11-01T20:07:16.9887163Z   QT_QPA_PLATFORM: offscreen
+2026-11-01T20:07:16.9887456Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-11-01T20:07:16.9887798Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+2026-11-01T20:07:16.9888132Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-11-01T20:07:16.9888431Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-11-01T20:07:16.9888985Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-11-01T20:07:16.9889314Z   G4_PREFIX: D:\a\_temp\g4usim-delivery\bootstrap\sdk\geant4-11.4.3-win64
+2026-11-01T20:07:16.9889625Z   G4_BUILD: D:\a\_temp\g4usim-delivery\backend
+2026-11-01T20:07:16.9889847Z   DELIVERY_ROOT: D:\a\_temp\g4usim-delivery
+2026-11-01T20:07:16.9890114Z   GEANT4_DATA_DIR: D:\a\_temp\g4usim-delivery\bootstrap\datasets\data
+2026-11-01T20:07:16.9890565Z ##[endgroup]
+2026-11-01T20:29:58.3981834Z {"status": "verified", "report": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\delivery-report.json", "error": null}
+2026-11-01T20:29:58.3982447Z G4USIM_ASSERTS=25
+2026-11-01T20:29:59.1825862Z ##[group]Run actions/upload-artifact@v6
+2026-11-01T20:29:59.1826825Z with:
+2026-11-01T20:29:59.1827120Z   name: full-installation-Windows
+2026-11-01T20:29:59.1827420Z   retention-days: 7
+2026-11-01T20:29:59.1828810Z   path: D:\a\_temp/g4usim-delivery/acceptance/evidence/
+D:\a\_temp/g4usim-delivery/acceptance/runtime-evidence/
+D:\a\_temp/g4usim-delivery/acceptance/sdk-evidence/
+D:\a\_temp/g4usim-delivery/acceptance/logs/
+D:\a\_temp/g4usim-delivery/acceptance/*.json
+D:\a\_temp/g4usim-delivery/acceptance/*.log
+D:\a\_temp/g4usim-delivery/bootstrap/datasets/fetch-report.json
+D:\a\_temp/g4usim-delivery/discovery.json
+
+2026-11-01T20:29:59.1830106Z   if-no-files-found: error
+2026-11-01T20:29:59.1830445Z   compression-level: 6
+2026-11-01T20:29:59.1830685Z   overwrite: false
+2026-11-01T20:29:59.1830907Z   include-hidden-files: false
+2026-11-01T20:29:59.1831149Z env:
+2026-11-01T20:29:59.1831366Z   QT_QPA_PLATFORM: offscreen
+2026-11-01T20:29:59.1831782Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-11-01T20:29:59.1832198Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+2026-11-01T20:29:59.1832600Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-11-01T20:29:59.1832963Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-11-01T20:29:59.1833332Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-11-01T20:29:59.1833751Z   G4_PREFIX: D:\a\_temp\g4usim-delivery\bootstrap\sdk\geant4-11.4.3-win64
+2026-11-01T20:29:59.1834100Z   G4_BUILD: D:\a\_temp\g4usim-delivery\backend
+2026-11-01T20:29:59.1834396Z   DELIVERY_ROOT: D:\a\_temp\g4usim-delivery
+2026-11-01T20:29:59.1834731Z   GEANT4_DATA_DIR: D:\a\_temp\g4usim-delivery\bootstrap\datasets\data
+2026-11-01T20:29:59.1835066Z ##[endgroup]
+2026-11-01T20:30:00.1850846Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-11-01T20:30:00.1853956Z The least common ancestor is D:\a\_temp\g4usim-delivery. This will be the root directory of the artifact
+2026-11-01T20:30:00.1854774Z With the provided path, there will be 92 files uploaded
+2026-11-01T20:30:00.1858868Z Artifact name is valid!
+2026-11-01T20:30:00.1860366Z Root directory input is valid!
+2026-11-01T20:30:00.4662524Z Beginning upload of artifact content to blob storage
+2026-11-01T20:30:01.4173543Z Uploaded bytes 8388608
+2026-11-01T20:30:01.8029726Z Uploaded bytes 16777216
+2026-11-01T20:30:02.2297516Z Uploaded bytes 25165824
+2026-11-01T20:30:02.4881197Z Uploaded bytes 29409116
+2026-11-01T20:30:02.5033545Z Finished uploading artifact content to blob storage!
+2026-11-01T20:30:02.5035267Z SHA256 digest of uploaded artifact zip is 96993a1e8606fbaeacfd9f3a3f49698a711de166798dfaf278f0bbc3ba2a7533
+2026-11-01T20:30:02.5037123Z Finalizing artifact upload
+2026-11-01T20:30:02.9427408Z Artifact full-installation-Windows.zip successfully finalized. Artifact ID 13099083446
+2026-11-01T20:30:02.9428271Z Artifact full-installation-Windows has been successfully uploaded! Final size is 29409116 bytes. Artifact ID is 13099083446
+2026-11-01T20:30:02.9436259Z Artifact download URL: https://github.com/doorfordoor/G4UniversalSim/actions/runs/41344573604/artifacts/13099083446
+2026-11-01T20:30:02.9926504Z Post job cleanup.
+2026-11-01T20:30:03.1505879Z Post job cleanup.
+2026-11-01T20:30:03.3042723Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-01T20:30:03.3339214Z git version 2.56.0.windows.2
+2026-11-01T20:30:03.3388825Z Copying 'C:\Users\runneradmin\.gitconfig' to 'D:\a\_temp\29843c22-f136-476b-a402-a447d5a02c9d\.gitconfig'
+2026-11-01T20:30:03.3408342Z Temporarily overriding HOME='D:\a\_temp\29843c22-f136-476b-a402-a447d5a02c9d' before making global git config changes
+2026-11-01T20:30:03.3409973Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-01T20:30:03.3417328Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\G4UniversalSim\G4UniversalSim
+2026-11-01T20:30:03.3784626Z Removing SSH command configuration
+2026-11-01T20:30:03.3794844Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-01T20:30:03.4141675Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-01T20:30:04.2532565Z Removing HTTP extra header
+2026-11-01T20:30:04.2541686Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-01T20:30:04.2868197Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-01T20:30:04.7545477Z Removing includeIf entries pointing to credentials config files
+2026-11-01T20:30:04.7556062Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-01T20:30:04.7840984Z includeif.gitdir:D:/a/G4UniversalSim/G4UniversalSim/.git.path
+2026-11-01T20:30:04.7841834Z includeif.gitdir:D:/a/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path
+2026-11-01T20:30:04.7842419Z includeif.gitdir:/github/workspace/.git.path
+2026-11-01T20:30:04.7842929Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-11-01T20:30:04.7879342Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/G4UniversalSim/G4UniversalSim/.git.path
+2026-11-01T20:30:04.8162094Z D:\a\_temp\git-credentials-582d4409-8aea-421d-a070-3e0833fbf410.config
+2026-11-01T20:30:04.8203492Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/G4UniversalSim/G4UniversalSim/.git.path D\:\\a\\_temp\\git\-credentials\-582d4409\-8aea\-421d\-a070\-3e0833fbf410\.config
+2026-11-01T20:30:04.8549007Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path
+2026-11-01T20:30:04.8837399Z D:\a\_temp\git-credentials-582d4409-8aea-421d-a070-3e0833fbf410.config
+2026-11-01T20:30:04.8905608Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path D\:\\a\\_temp\\git\-credentials\-582d4409\-8aea\-421d\-a070\-3e0833fbf410\.config
+2026-11-01T20:30:04.9238682Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-11-01T20:30:04.9519118Z /github/runner_temp/git-credentials-582d4409-8aea-421d-a070-3e0833fbf410.config
+2026-11-01T20:30:04.9557905Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-582d4409\-8aea\-421d\-a070\-3e0833fbf410\.config
+2026-11-01T20:30:04.9887615Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-11-01T20:30:05.0172412Z /github/runner_temp/git-credentials-582d4409-8aea-421d-a070-3e0833fbf410.config
+2026-11-01T20:30:05.0214219Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-582d4409\-8aea\-421d\-a070\-3e0833fbf410\.config
+2026-11-01T20:30:05.0541816Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-01T20:30:05.5300223Z Removing credentials config 'D:\a\_temp\git-credentials-582d4409-8aea-421d-a070-3e0833fbf410.config'
+2026-11-01T20:30:05.5507710Z Cleaning up orphan processes
+2026-11-01T20:30:05.7041750Z Terminate orphan process: pid (1836) (vctip)
+2026-11-01T20:30:05.7082111Z Terminate orphan process: pid (2624) (MSBuild)

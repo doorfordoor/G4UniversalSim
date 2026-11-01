@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\j2-blank-review\reload_cases.py", line 33, in <module>
+    doc=copy.deepcopy(p.geometryEditor);doc.volumes[1].name='REIMPORTED';file=WORK/'new-source.ini';write_geometry_ini(str(file),doc)
+                                        ~~~~~~~~~~~^^^
+IndexError: list index out of range

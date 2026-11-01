@@ -1,0 +1,5 @@
+
+## 后续独审 checkpoint
+- main诊断code v1已审，review.md/receipt.json：256密度等范围通过，未apply。
+- v2 NIST一行delta实际Qt完成：nist-v2/review.md + receipt.json，en/zh8例直接name/空白name目标定位真实material_name，alias及显式非G4同名目标保持unsupported/source_shown；模型/快照无修改，四trackedSHA保持。out运行全部结束。
+- F8产品677a旧独审通过；永久406测试独审找到stale段没有实际旧pending（focus_page同页），已交main→Harvey v3，独立证据在../f8-project-dock150-independent/permanent-test-review.md/json。待v3只审stale增量，不重跑旧8组。正式fullprofile仍等待main下一candidate/明确启动。

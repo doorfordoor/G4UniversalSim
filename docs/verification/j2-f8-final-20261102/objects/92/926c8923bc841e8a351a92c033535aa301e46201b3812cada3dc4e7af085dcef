@@ -1,0 +1,162 @@
+{
+  "schema": "j2_f8_windows114_formal_v1",
+  "status": "failed",
+  "head": "56b689fb9ac920cbb1203b2b94dae2483d25f622",
+  "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+  "profiles": {
+    "backend": {
+      "status": "failed",
+      "expected_cases": 63,
+      "baseline_id": "windows114-backend",
+      "baseline_report": "out/verification/i2-j1-5fe0a10/windows114-backend/20261101-205411-79e165c8/report.json",
+      "baseline_sha256": "c0de0742a3ec2b2cdafbaf7b0d79cf58e489737a3479001c621b76f4607426df",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\run_m0_tests.py",
+        "--profile",
+        "backend",
+        "--executable",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-windows114\\Release\\G4UniversalSim.exe",
+        "--merge-executable",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-windows114\\Release\\mergeHistograms.exe",
+        "--report-root",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows114-backend",
+        "--require-tracked-sources",
+        "--fail-on-skip"
+      ],
+      "runner_stdout": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows114-coordinator\\backend-runner.log",
+      "completed_cases": 63,
+      "started_utc": "2026-11-01T17:20:48Z",
+      "runner_pid": 16020,
+      "last_completed": {
+        "name": "run_reinitialization",
+        "status": "PASS"
+      },
+      "runner_exit_code": 1,
+      "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows114-backend\\20261102-012049-57371f8c\\report.json",
+      "report_sha256": "591e52a47535115123eb12468ad886f039e1b6c08dc4a5ba0f4e2e2050ae8759",
+      "assertion_entrances": 72428,
+      "actual_cases": 63,
+      "failures": [
+        "k1_bundle_backend"
+      ],
+      "gate_command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows114-backend\\20261102-012049-57371f8c\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\i2-j1-5fe0a10\\windows114-backend\\20261101-205411-79e165c8\\report.json"
+      ],
+      "gate_exit_code": 1,
+      "gate_log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows114-coordinator\\backend-strict-gate.log"
+    },
+    "integration": {
+      "status": "failed",
+      "expected_cases": 31,
+      "baseline_id": "windows114-integration",
+      "baseline_report": "out/verification/i2-j1-03d2c48/windows114-integration/20261101-221315-6389b5dd/report.json",
+      "baseline_sha256": "2b6031df0b82040afc5d0b050c4dd62cf2744e18f2cb0a7dc6dc5fb9c49e1a47",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\run_m0_tests.py",
+        "--profile",
+        "integration",
+        "--executable",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-windows114\\Release\\G4UniversalSim.exe",
+        "--merge-executable",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-windows114\\Release\\mergeHistograms.exe",
+        "--report-root",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows114-integration",
+        "--require-tracked-sources",
+        "--fail-on-skip"
+      ],
+      "runner_stdout": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows114-coordinator\\integration-runner.log",
+      "completed_cases": 31,
+      "started_utc": "2026-11-01T17:50:22Z",
+      "runner_pid": 19568,
+      "last_completed": {
+        "name": "config_schema",
+        "status": "PASS"
+      },
+      "runner_exit_code": 1,
+      "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows114-integration\\20261102-015023-8bc66545\\report.json",
+      "report_sha256": "832decccd0c0bfdf9fd9c00555e2f6167409c95035cf316c8f88c04ef8b5da4b",
+      "assertion_entrances": 6659,
+      "actual_cases": 31,
+      "failures": [
+        "gui_f4_inspect_backend",
+        "effective_gdml",
+        "gui_scans_backend"
+      ],
+      "gate_command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows114-integration\\20261102-015023-8bc66545\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\i2-j1-03d2c48\\windows114-integration\\20261101-221315-6389b5dd\\report.json"
+      ],
+      "gate_exit_code": 1,
+      "gate_log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows114-coordinator\\integration-strict-gate.log"
+    }
+  },
+  "started_utc": "2026-11-01T17:20:47Z",
+  "executable": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-windows114\\Release\\G4UniversalSim.exe",
+    "sha256": "bf75f92288577ed7d7e24163e973de71d81afb79866c9080e588d790bd0e05ec"
+  },
+  "merge": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-windows114\\Release\\mergeHistograms.exe",
+    "sha256": "e1b1b9a7be6040297e70fcff6f02a690c0a80f4e1e06b51652f63ade163f017b"
+  },
+  "environment": {
+    "removed_data_keys": [
+      "G4ABLADATA",
+      "G4CHANNELINGDATA",
+      "G4ENSDFSTATEDATA",
+      "G4INCLDATA",
+      "G4LEDATA",
+      "G4LEVELGAMMADATA",
+      "G4NEUTRONHPDATA",
+      "G4PARTICLEXSDATA",
+      "G4PIIDATA",
+      "G4RADIOACTIVEDATA",
+      "G4REALSURFACEDATA",
+      "G4SAIDXSDATA"
+    ],
+    "GEANT4_DATA_DIR": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\i2-controlled\\windows114-data\\data",
+    "G4USIM_GEANT4_DATA": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\i2-controlled\\windows114-data\\data",
+    "sdk_bin_path_prefix": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\dependencies\\geant4-11.4.3\\geant4-11.4.3-win64\\bin",
+    "CXX": "D:\\msys64\\ucrt64\\bin\\g++.EXE",
+    "QT_QPA_PLATFORM": "offscreen",
+    "git_core_longpaths": "true, child-only"
+  },
+  "verified_capabilities": {
+    "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+    "build_git_commit": "56b689fb9ac920cbb1203b2b94dae2483d25f622",
+    "build_git_source_state": "clean",
+    "geant4_version_number": 1143
+  },
+  "data_discovery": {
+    "actual_geant4_version": "$Name: geant4-11-04-patch-03 [MT]$",
+    "all_12_from_verified_root": true,
+    "required_complete": true,
+    "full_payload_receipt": "out/collab/j2-114-data-reuse/receipt.json"
+  },
+  "first_failure": {
+    "profile": "backend",
+    "case": "k1_bundle_backend",
+    "first_line": "FAIL k1_bundle_backend: PASS test_safe_environment_history",
+    "raw_runner_log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows114-coordinator\\backend-runner.log"
+  },
+  "ending_head": "56b689fb9ac920cbb1203b2b94dae2483d25f622",
+  "ending_source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+  "executable_unchanged": true,
+  "merge_unchanged": true,
+  "finished_utc": "2026-11-01T18:05:43Z"
+}

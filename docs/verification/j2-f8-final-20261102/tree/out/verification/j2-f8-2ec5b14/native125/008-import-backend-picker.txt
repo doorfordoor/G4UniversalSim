@@ -1,0 +1,414 @@
+Window: "G4UniversalSim Runner — demo", App: pythonw.exe.
+	0 窗口 (settable, string) G4UniversalSim Runner — demo Secondary Actions: Raise ID: QApplication.MainWindow
+		356 对话框 选择后端程序 Secondary Actions: Raise
+			357 窗格
+				358 工具栏 命令模块 ID: FolderBandModuleInner
+					359 按钮 帮助(&H) Description: 获取帮助。 ID: HelpButton
+					360 复选框 预览窗格 Description: 显示预览窗格。 ID: PreviewButton
+					361 拆分按钮 详细信息 Description: 更改你的视图。 ID: ViewControl
+						362 按钮 视图滑块 Description: 更多选项 ID: SplitMenuButton
+					363 按钮 组织​​ Description: 组织该文件夹的内容。 ID: {7DDC1264-7E4D-4F74-BBC0-D191987C8D0F}
+					364 按钮 新建​​文件夹​​ Description: 新建文件夹。 ID: {E44616AD-6DF1-4B94-85A4-E465AE8A19DB}
+				365 窗格 控制项宿主 ID: ProperTreeHost
+					366 树 导航窗格 ID: 100
+						367 滚动条 (settable, float) 垂直滚动条 Value: 11 ID: NonClientVerticalScrollBar
+							368 按钮 上一行 ID: UpButton
+							369 按钮 向上翻页 ID: UpPageButton
+							370 缩略图 位置 ID: ScrollbarThumb
+							371 按钮 向下翻页 ID: DownPageButton
+							372 按钮 下一行 ID: DownButton
+						373 树项目 (selectable, settable, string) 桌面 Value: 桌面
+							374 树项目 (selectable, settable, string) WPS云盘 Value: WPS云盘
+							375 树项目 (selectable, settable, string) 主文件夹 Value: 主文件夹
+							376 树项目 (selectable, settable, string) 图库 Value: 图库
+							377 树项目 (selectable, settable, string) 亚勇 - 个人 Value: 亚勇 - 个人
+								378 树项目 (selectable, settable, string) Desktop Value: Desktop
+								379 树项目 (selectable, settable, string) Microsoft Copilot Chat 文件 Value: Microsoft Copilot Chat 文件
+								380 树项目 (selectable, settable, string) Music Value: Music
+								381 树项目 (selectable, settable, string) Pictures Value: Pictures
+								382 树项目 (selectable, settable, string) Videos Value: Videos
+								383 树项目 (selectable, settable, string) 附件 Value: 附件
+								384 树项目 (selectable, settable, string) 李亚勇 Value: 李亚勇
+								385 树项目 (selectable, settable, string) 李亚勇 1 Value: 李亚勇 1
+								386 树项目 (selectable, settable, string) 视频 Value: 视频
+								387 树项目 (selectable, settable, string) 文档 Value: 文档
+								388 树项目 (selectable, settable, string) 音乐 Value: 音乐
+							389 树项目 (selectable, settable, string) 快速访问开始 - Downloads (已固定) Value: 快速访问开始 - Downloads (已固定)
+							390 树项目 (selectable, settable, string) 文档 (已固定) Value: 文档 (已固定)
+							391 树项目 (selectable, settable, string) 图片 (已固定) Value: 图片 (已固定)
+							392 树项目 (selectable, settable, string) 桌面 (已固定) Value: 桌面 (已固定)
+							393 树项目 (selectable, settable, string) 19号-书籍 (已固定) Value: 19号-书籍 (已固定)
+							394 树项目 (selectable, settable, string) 音乐 (已固定) Value: 音乐 (已固定)
+							395 树项目 (selectable, settable, string) 视频 (已固定) Value: 视频 (已固定)
+							396 树项目 (selectable, settable, string) 3-档案馆 (已固定) Value: 3-档案馆 (已固定)
+							397 树项目 (selectable, settable, string) Fc_test (已固定) Value: Fc_test (已固定)
+							398 树项目 (selectable, settable, string) JFM7VX690T_前八篇论文PDF Value: JFM7VX690T_前八篇论文PDF
+							399 树项目 (selectable, settable, string) Chrome Value: Chrome
+							400 树项目 (selectable, settable, string) 快速访问结束 - 模板+规则 Value: 快速访问结束 - 模板+规则
+							401 树项目 (selectable, settable, string) 此电脑 Value: 此电脑
+								402 树项目 (selectable, settable, string) 本地磁盘 (C:) Value: 本地磁盘 (C:)
+								403 树项目 (selectable, settable, string) DATA (D:) Value: DATA (D:)
+								404 树项目 (selectable, settable, string) WORK (E:) Value: WORK (E:)
+								405 树项目 (selectable, settable, string) GAMES (F:) Value: GAMES (F:)
+								406 树项目 (selectable, settable, string) PortableSSD (G:) Value: PortableSSD (G:)
+							407 树项目 (selectable, settable, string) PortableSSD (G:) Value: PortableSSD (G:)
+							408 树项目 (selectable, settable, string) 网络 Value: 网络
+							409 树项目 (selectable, settable, string) Linux Value: Linux
+								410 树项目 (selectable, settable, string) Ubuntu Value: Ubuntu
+				411 窗格 Shell 文件夹视图 ID: listview
+					412 列表 项目视图
+						413 标头 标题
+							414 拆分按钮 名称 ID: System.ItemNameDisplay
+								415 按钮 筛选器下拉列表 ID: DropDown
+							416 拆分按钮 修改日期 ID: System.DateModified
+								417 按钮 筛选器下拉列表 ID: DropDown
+							418 拆分按钮 类型 ID: System.ItemTypeText
+								419 按钮 筛选器下拉列表 ID: DropDown
+							420 拆分按钮 大小 ID: System.Size
+								421 按钮 筛选器下拉列表 ID: DropDown
+						422 列表项目 (selectable, settable, string) config Value: config ID: 0
+							423 编辑 (settable, string) 名称 Value: config ID: System.ItemNameDisplay
+							269 编辑 修改日期 Value: ‎2/‎11/‎2026 ‏‎上午5:28 ID: System.DateModified
+							288 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							424 编辑 大小 ID: System.Size
+						425 列表项目 (selectable, settable, string) macros Value: macros ID: 1
+							426 编辑 (settable, string) 名称 Value: macros ID: System.ItemNameDisplay
+							427 编辑 修改日期 Value: ‎2/‎11/‎2026 ‏‎上午5:28 ID: System.DateModified
+							428 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							429 编辑 大小 ID: System.Size
+						430 列表项目 (selectable, settable, string) scripts Value: scripts ID: 2
+							431 编辑 (settable, string) 名称 Value: scripts ID: System.ItemNameDisplay
+							432 编辑 修改日期 Value: ‎2/‎11/‎2026 ‏‎上午5:28 ID: System.DateModified
+							433 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							434 编辑 大小 ID: System.Size
+						350 列表项目 (selectable, settable, string) G4UniversalSim.exe Value: G4UniversalSim.exe ID: 3
+							435 编辑 (settable, string) 名称 Value: G4UniversalSim.exe ID: System.ItemNameDisplay
+							436 编辑 修改日期 Value: ‎2/‎11/‎2026 ‏‎上午5:28 ID: System.DateModified
+							437 编辑 类型 Value: 应用程序 ID: System.ItemTypeText
+							438 编辑 大小 Value: 2,409 KB ID: System.Size
+						439 列表项目 (selectable, settable, string) gdmlInputCaptureCheck.exe Value: gdmlInputCaptureCheck.exe ID: 4
+							440 编辑 (settable, string) 名称 Value: gdmlInputCaptureCheck.exe ID: System.ItemNameDisplay
+							441 编辑 修改日期 Value: ‎1/‎11/‎2026 ‏‎下午8:17 ID: System.DateModified
+							442 编辑 类型 Value: 应用程序 ID: System.ItemTypeText
+							443 编辑 大小 Value: 97 KB ID: System.Size
+						444 列表项目 (selectable, settable, string) mergeHistograms.exe Value: mergeHistograms.exe ID: 5
+							445 编辑 (settable, string) 名称 Value: mergeHistograms.exe ID: System.ItemNameDisplay
+							446 编辑 修改日期 Value: ‎1/‎11/‎2026 ‏‎下午8:17 ID: System.DateModified
+							273 编辑 类型 Value: 应用程序 ID: System.ItemTypeText
+							447 编辑 大小 Value: 106 KB ID: System.Size
+						448 列表项目 (selectable, settable, string) randomCommandGuardCheck.exe Value: randomCommandGuardCheck.exe ID: 6
+							449 编辑 (settable, string) 名称 Value: randomCommandGuardCheck.exe ID: System.ItemNameDisplay
+							450 编辑 修改日期 Value: ‎1/‎11/‎2026 ‏‎下午8:17 ID: System.DateModified
+							451 编辑 类型 Value: 应用程序 ID: System.ItemTypeText
+							452 编辑 大小 Value: 152 KB ID: System.Size
+						453 列表项目 (selectable, settable, string) scoringNumericCheck.exe Value: scoringNumericCheck.exe ID: 7
+							454 编辑 (settable, string) 名称 Value: scoringNumericCheck.exe ID: System.ItemNameDisplay
+							455 编辑 修改日期 Value: ‎1/‎11/‎2026 ‏‎下午8:17 ID: System.DateModified
+							456 编辑 类型 Value: 应用程序 ID: System.ItemTypeText
+							457 编辑 大小 Value: 43 KB ID: System.Size
+				458 树 应用程序控件 ID: AppControlsModuleInner
+			459 文本 文件名(N): ID: 1090
+			460 组合框 (settable, string) 文件名(N): ID: 1148
+				461 编辑 (settable, string) 文件名(N): Value: G4UniversalSim.exe ID: 1148
+				462 按钮 打开 ID: DropDown
+			463 组合框 (settable, string) 文件类型(T): Value: All Files (*) ID: 1136
+				464 文本 (settable, string) 文件类型(T): Value: All Files (*)
+				465 按钮 打开 ID: DropDown
+			466 按钮 打开(O) ID: 1
+			467 按钮 取消 ID: 2
+			468 缩略图 (settable, float) Value: 0
+			469 窗格 ID: 40965
+				470 窗格
+					471 工具栏 导航按钮
+						472 按钮 (disabled) 后退 (Alt + 向左键)
+						473 按钮 (disabled) 前进 (Alt + 向右键)
+						474 按钮 (disabled) 最近浏览的位置
+				475 窗格
+					476 工具栏 上区段
+						477 按钮 上移到“build-i2-formal113”(Alt + 向上键)
+				478 窗格 ID: 41477
+					479 进度栏 正在加载 Value: 0
+						480 窗格
+							481 工具栏 地址: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\build-i2-formal113\Release ID: 1001
+								482 拆分按钮 所有位置
+								483 拆分按钮 ‎effective-config
+								484 拆分按钮 ‎G4UniversalSim
+								485 拆分按钮 ‎out
+								486 拆分按钮 ‎build-i2-formal113
+								487 拆分按钮 ‎Release
+						488 工具栏 地址区段
+							489 按钮 上一个位置
+							490 按钮 刷新“Release”(F5)
+				491 窗格
+					492 窗格
+						493 窗格
+							494 编辑 (settable, string) 搜索框 Description: 在 Release 中搜索 ID: SearchEditBox
+							495 按钮 搜索 ID: SearchBoxSearchButton
+			496 标题栏 (settable, string) Value: 选择后端程序
+				497 菜单栏 系统 ID: MenuBar
+					498 菜单项 系统
+				499 按钮 关闭
+		1 标题栏 (settable, string) Value: G4UniversalSim Runner — demo
+			2 菜单栏 系统 ID: MenuBar
+				3 菜单项 系统
+			4 按钮 最小化
+			5 按钮 最大化
+			6 按钮 关闭
+		7 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll
+			8 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport
+				9 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell
+					10 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar
+						11 图像 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.brandLogo
+						12 文本 G4UniversalSim ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.brandMark
+						13 文本 仿真工作台 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.brandCaption
+						14 文本 工作流程 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.sidebarSection
+						15 复选框 (settable, string) 开始 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.QToolButton
+						16 复选框 (settable, string) 项目 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.QToolButton
+						17 复选框 (settable, string) 配置 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.QToolButton
+						18 复选框 (settable, string) 场景 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.QToolButton
+						19 复选框 (settable, string) 有效配置 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.QToolButton
+						20 复选框 (settable, string) 运行控制台 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.QToolButton
+						21 复选框 (settable, string) 结果 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.QToolButton
+						22 复选框 (settable, string) 运行历史 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.QToolButton
+						23 复选框 (settable, string) 参数扫描 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.QToolButton
+						24 文本 G4UniversalSim 0.1.0 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.sidebar.sidebarFooter
+					25 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost
+						26 自定义 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.pageHeader
+							27 文本 开始 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.pageHeader.pageTitle
+							28 文本 新建仿真、重新打开项目或浏览示例。 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.pageHeader.pageSubtitle
+							29 文本 项目：demo ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.pageHeader.QLabel
+							30 文本 ● 空闲 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.pageHeader.QLabel
+							31 按钮 (settable, string) 主题 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.pageHeader.QToolButton
+							32 按钮 (settable, string) 语言 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.pageHeader.QToolButton
+						33 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll
+							34 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport
+								35 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget
+									36 窗口 (settable, string) Secondary Actions: Raise ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace
+										37 窗格 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport
+											38 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage
+												39 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea
+													40 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport
+														41 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport
+															42 自定义 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.QFrame
+																43 图像 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.QFrame.QLabel
+																44 文本 欢迎使用 G4UniversalSim ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.QFrame.QLabel
+																45 文本 逐步设置 Geant4 仿真、运行并查看结果，或从下方的示例开始。 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.QFrame.QLabel
+																46 文本 键盘：Ctrl+Alt+1–9 切换页面；F6 下一焦点区域；Shift+F6 上一焦点区域；Ctrl+Alt+E 环境设置。 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.QFrame.QLabel
+																47 按钮 (settable, string) 新建空白仿真 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.QFrame.QPushButton
+																48 按钮 (settable, string) 从模板创建… ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.QFrame.QPushButton
+																49 按钮 (settable, string) 打开项目... ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.QFrame.QPushButton
+																50 按钮 (settable, string) 导入配置包… ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.QFrame.QPushButton
+																51 按钮 (settable, string) 环境设置… ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.QFrame.QPushButton
+															52 自定义 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.QFrame
+																53 文本 最近的项目 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.QFrame.QLabel
+																54 文本 还没有最近的项目。保存过的项目会显示在这里。 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.QFrame.QLabel
+															55 文本 示例 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.QLabel
+															56 文本 每个示例打开时附带 Geant4 已算好的结果；在配置页按“生成并运行”可重新计算。 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.QLabel
+															57 自定义 (settable, string) 质子布拉格峰 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard
+																58 图像 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																59 文本 质子布拉格峰 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																60 文本 150 MeV 质子射入分成 40 片的水体模：各片剂量逐渐升高，在约 158 mm 处形成布拉格峰，其后几乎降为零。 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																61 文本 proton ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																62 文本 dose ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																63 文本 water ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																64 按钮 (settable, string) 打开示例 质子布拉格峰 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QPushButton
+															65 自定义 (settable, string) 屏蔽平板 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard
+																66 图像 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																67 文本 屏蔽平板 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																68 文本 70 MeV 质子在 10 mm 铝中减速：屏蔽后的 300 um 硅探测器看到更大且展宽的沉积能量；同时计分剂量与径迹长度注量。 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																69 文本 proton ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																70 文本 shielding ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																71 文本 fluence ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																72 按钮 (settable, string) 打开示例 屏蔽平板 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QPushButton
+															73 自定义 (settable, string) 硅中的朗道分布 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard
+																74 图像 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																75 文本 硅中的朗道分布 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																76 文本 100 MeV 质子穿过 300 um 硅片：逐事件沉积能量服从不对称的朗道-瓦维洛夫分布，带有长长的高能尾。 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																77 文本 proton ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																78 文本 silicon ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																79 文本 spectrum ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																80 按钮 (settable, string) 打开示例 硅中的朗道分布 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QPushButton
+															81 自定义 (settable, string) NaI γ 能谱 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard
+																82 图像 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																83 文本 NaI γ 能谱 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																84 文本 各向同性点源发出的 662 keV 光子（Cs-137 谱线）照射 3 in x 3 in NaI 晶体：全能峰、康普顿连续谱与康普顿边，未加探测器分辨率。 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																85 文本 gamma ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																86 文本 spectrum ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																87 文本 NaI ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																88 按钮 (settable, string) 打开示例 NaI γ 能谱 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QPushButton
+															89 自定义 (settable, string) 质子能量扫描 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard
+																90 图像 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																91 文本 质子能量扫描 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																92 文本 在 300 um 硅片上把质子能量从 20 MeV 扫描到 200 MeV：平均沉积能量随能量下降，与阻止本领的变化一致。 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																93 文本 scan ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																94 文本 proton ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																95 文本 silicon ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QLabel
+																96 按钮 (settable, string) 打开示例 质子能量扫描 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_viewport.pageViewport.ExampleCard.QPushButton
+													97 组 (settable, string) ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_vcontainer
+														98 滚动条 (settable, float) Value: 0 ID: QApplication.MainWindow.workspaceShellScroll.qt_scrollarea_viewport.appShell.contentHost.workspaceContentScroll.qt_scrollarea_viewport.QWidget.workspaceHost_workspace.pageViewport.StartPage.QScrollArea.qt_scrollarea_vcontainer.QScrollBar
+		99 菜单栏 (settable, string) ID: QApplication.MainWindow.QMenuBar
+			100 菜单项 (settable, string) 文件 ID: QApplication.MainWindow.QMenuBar.QAction
+			101 菜单项 (settable, string) 编辑 ID: QApplication.MainWindow.QMenuBar.QAction
+			102 菜单项 (settable, string) 视图 ID: QApplication.MainWindow.QMenuBar.QAction
+			103 菜单项 (settable, string) 导航 ID: QApplication.MainWindow.QMenuBar.QAction
+		104 工具栏 (settable, string) 编辑历史 ID: QApplication.MainWindow.editHistoryToolbar
+			105 按钮 (disabled, settable, string) 撤销 ID: QApplication.MainWindow.editHistoryToolbar.QToolButton
+			106 按钮 (disabled, settable, string) 重做 ID: QApplication.MainWindow.editHistoryToolbar.QToolButton
+		107 状态栏 ID: QApplication.MainWindow.QStatusBar
+			108 缩略图 (settable, string) ID: QApplication.MainWindow.QStatusBar.QSizeGrip
+			109 文本 恢复保护：没有未保存的修改 ID: QApplication.MainWindow.QStatusBar.QLabel
+		356 对话框 选择后端程序 Secondary Actions: Raise
+			357 窗格
+				358 工具栏 命令模块 ID: FolderBandModuleInner
+					359 按钮 帮助(&H) Description: 获取帮助。 ID: HelpButton
+					360 复选框 预览窗格 Description: 显示预览窗格。 ID: PreviewButton
+					361 拆分按钮 详细信息 Description: 更改你的视图。 ID: ViewControl
+						362 按钮 视图滑块 Description: 更多选项 ID: SplitMenuButton
+					363 按钮 组织​​ Description: 组织该文件夹的内容。 ID: {7DDC1264-7E4D-4F74-BBC0-D191987C8D0F}
+					364 按钮 新建​​文件夹​​ Description: 新建文件夹。 ID: {E44616AD-6DF1-4B94-85A4-E465AE8A19DB}
+				365 窗格 控制项宿主 ID: ProperTreeHost
+					366 树 导航窗格 ID: 100
+						367 滚动条 (settable, float) 垂直滚动条 Value: 11 ID: NonClientVerticalScrollBar
+							368 按钮 上一行 ID: UpButton
+							369 按钮 向上翻页 ID: UpPageButton
+							370 缩略图 位置 ID: ScrollbarThumb
+							371 按钮 向下翻页 ID: DownPageButton
+							372 按钮 下一行 ID: DownButton
+						373 树项目 (selectable, settable, string) 桌面 Value: 桌面
+							374 树项目 (selectable, settable, string) WPS云盘 Value: WPS云盘
+							375 树项目 (selectable, settable, string) 主文件夹 Value: 主文件夹
+							376 树项目 (selectable, settable, string) 图库 Value: 图库
+							377 树项目 (selectable, settable, string) 亚勇 - 个人 Value: 亚勇 - 个人
+								378 树项目 (selectable, settable, string) Desktop Value: Desktop
+								379 树项目 (selectable, settable, string) Microsoft Copilot Chat 文件 Value: Microsoft Copilot Chat 文件
+								380 树项目 (selectable, settable, string) Music Value: Music
+								381 树项目 (selectable, settable, string) Pictures Value: Pictures
+								382 树项目 (selectable, settable, string) Videos Value: Videos
+								383 树项目 (selectable, settable, string) 附件 Value: 附件
+								384 树项目 (selectable, settable, string) 李亚勇 Value: 李亚勇
+								385 树项目 (selectable, settable, string) 李亚勇 1 Value: 李亚勇 1
+								386 树项目 (selectable, settable, string) 视频 Value: 视频
+								387 树项目 (selectable, settable, string) 文档 Value: 文档
+								388 树项目 (selectable, settable, string) 音乐 Value: 音乐
+							389 树项目 (selectable, settable, string) 快速访问开始 - Downloads (已固定) Value: 快速访问开始 - Downloads (已固定)
+							390 树项目 (selectable, settable, string) 文档 (已固定) Value: 文档 (已固定)
+							391 树项目 (selectable, settable, string) 图片 (已固定) Value: 图片 (已固定)
+							392 树项目 (selectable, settable, string) 桌面 (已固定) Value: 桌面 (已固定)
+							393 树项目 (selectable, settable, string) 19号-书籍 (已固定) Value: 19号-书籍 (已固定)
+							394 树项目 (selectable, settable, string) 音乐 (已固定) Value: 音乐 (已固定)
+							395 树项目 (selectable, settable, string) 视频 (已固定) Value: 视频 (已固定)
+							396 树项目 (selectable, settable, string) 3-档案馆 (已固定) Value: 3-档案馆 (已固定)
+							397 树项目 (selectable, settable, string) Fc_test (已固定) Value: Fc_test (已固定)
+							398 树项目 (selectable, settable, string) JFM7VX690T_前八篇论文PDF Value: JFM7VX690T_前八篇论文PDF
+							399 树项目 (selectable, settable, string) Chrome Value: Chrome
+							400 树项目 (selectable, settable, string) 快速访问结束 - 模板+规则 Value: 快速访问结束 - 模板+规则
+							401 树项目 (selectable, settable, string) 此电脑 Value: 此电脑
+								402 树项目 (selectable, settable, string) 本地磁盘 (C:) Value: 本地磁盘 (C:)
+								403 树项目 (selectable, settable, string) DATA (D:) Value: DATA (D:)
+								404 树项目 (selectable, settable, string) WORK (E:) Value: WORK (E:)
+								405 树项目 (selectable, settable, string) GAMES (F:) Value: GAMES (F:)
+								406 树项目 (selectable, settable, string) PortableSSD (G:) Value: PortableSSD (G:)
+							407 树项目 (selectable, settable, string) PortableSSD (G:) Value: PortableSSD (G:)
+							408 树项目 (selectable, settable, string) 网络 Value: 网络
+							409 树项目 (selectable, settable, string) Linux Value: Linux
+								410 树项目 (selectable, settable, string) Ubuntu Value: Ubuntu
+				411 窗格 Shell 文件夹视图 ID: listview
+					412 列表 项目视图
+						413 标头 标题
+							414 拆分按钮 名称 ID: System.ItemNameDisplay
+								415 按钮 筛选器下拉列表 ID: DropDown
+							416 拆分按钮 修改日期 ID: System.DateModified
+								417 按钮 筛选器下拉列表 ID: DropDown
+							418 拆分按钮 类型 ID: System.ItemTypeText
+								419 按钮 筛选器下拉列表 ID: DropDown
+							420 拆分按钮 大小 ID: System.Size
+								421 按钮 筛选器下拉列表 ID: DropDown
+						422 列表项目 (selectable, settable, string) config Value: config ID: 0
+							423 编辑 (settable, string) 名称 Value: config ID: System.ItemNameDisplay
+							269 编辑 修改日期 Value: ‎2/‎11/‎2026 ‏‎上午5:28 ID: System.DateModified
+							288 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							424 编辑 大小 ID: System.Size
+						425 列表项目 (selectable, settable, string) macros Value: macros ID: 1
+							426 编辑 (settable, string) 名称 Value: macros ID: System.ItemNameDisplay
+							427 编辑 修改日期 Value: ‎2/‎11/‎2026 ‏‎上午5:28 ID: System.DateModified
+							428 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							429 编辑 大小 ID: System.Size
+						430 列表项目 (selectable, settable, string) scripts Value: scripts ID: 2
+							431 编辑 (settable, string) 名称 Value: scripts ID: System.ItemNameDisplay
+							432 编辑 修改日期 Value: ‎2/‎11/‎2026 ‏‎上午5:28 ID: System.DateModified
+							433 编辑 类型 Value: 文件夹 ID: System.ItemTypeText
+							434 编辑 大小 ID: System.Size
+						350 列表项目 (selectable, settable, string) G4UniversalSim.exe Value: G4UniversalSim.exe ID: 3
+							435 编辑 (settable, string) 名称 Value: G4UniversalSim.exe ID: System.ItemNameDisplay
+							436 编辑 修改日期 Value: ‎2/‎11/‎2026 ‏‎上午5:28 ID: System.DateModified
+							437 编辑 类型 Value: 应用程序 ID: System.ItemTypeText
+							438 编辑 大小 Value: 2,409 KB ID: System.Size
+						439 列表项目 (selectable, settable, string) gdmlInputCaptureCheck.exe Value: gdmlInputCaptureCheck.exe ID: 4
+							440 编辑 (settable, string) 名称 Value: gdmlInputCaptureCheck.exe ID: System.ItemNameDisplay
+							441 编辑 修改日期 Value: ‎1/‎11/‎2026 ‏‎下午8:17 ID: System.DateModified
+							442 编辑 类型 Value: 应用程序 ID: System.ItemTypeText
+							443 编辑 大小 Value: 97 KB ID: System.Size
+						444 列表项目 (selectable, settable, string) mergeHistograms.exe Value: mergeHistograms.exe ID: 5
+							445 编辑 (settable, string) 名称 Value: mergeHistograms.exe ID: System.ItemNameDisplay
+							446 编辑 修改日期 Value: ‎1/‎11/‎2026 ‏‎下午8:17 ID: System.DateModified
+							273 编辑 类型 Value: 应用程序 ID: System.ItemTypeText
+							447 编辑 大小 Value: 106 KB ID: System.Size
+						448 列表项目 (selectable, settable, string) randomCommandGuardCheck.exe Value: randomCommandGuardCheck.exe ID: 6
+							449 编辑 (settable, string) 名称 Value: randomCommandGuardCheck.exe ID: System.ItemNameDisplay
+							450 编辑 修改日期 Value: ‎1/‎11/‎2026 ‏‎下午8:17 ID: System.DateModified
+							451 编辑 类型 Value: 应用程序 ID: System.ItemTypeText
+							452 编辑 大小 Value: 152 KB ID: System.Size
+						453 列表项目 (selectable, settable, string) scoringNumericCheck.exe Value: scoringNumericCheck.exe ID: 7
+							454 编辑 (settable, string) 名称 Value: scoringNumericCheck.exe ID: System.ItemNameDisplay
+							455 编辑 修改日期 Value: ‎1/‎11/‎2026 ‏‎下午8:17 ID: System.DateModified
+							456 编辑 类型 Value: 应用程序 ID: System.ItemTypeText
+							457 编辑 大小 Value: 43 KB ID: System.Size
+				458 树 应用程序控件 ID: AppControlsModuleInner
+			459 文本 文件名(N): ID: 1090
+			460 组合框 (settable, string) 文件名(N): ID: 1148
+				461 编辑 (settable, string) 文件名(N): Value: G4UniversalSim.exe ID: 1148
+				462 按钮 打开 ID: DropDown
+			463 组合框 (settable, string) 文件类型(T): Value: All Files (*) ID: 1136
+				464 文本 (settable, string) 文件类型(T): Value: All Files (*)
+				465 按钮 打开 ID: DropDown
+			466 按钮 打开(O) ID: 1
+			467 按钮 取消 ID: 2
+			468 缩略图 (settable, float) Value: 0
+			469 窗格 ID: 40965
+				470 窗格
+					471 工具栏 导航按钮
+						472 按钮 (disabled) 后退 (Alt + 向左键)
+						473 按钮 (disabled) 前进 (Alt + 向右键)
+						474 按钮 (disabled) 最近浏览的位置
+				475 窗格
+					476 工具栏 上区段
+						477 按钮 上移到“build-i2-formal113”(Alt + 向上键)
+				478 窗格 ID: 41477
+					479 进度栏 正在加载 Value: 0
+						480 窗格
+							481 工具栏 地址: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\build-i2-formal113\Release ID: 1001
+								482 拆分按钮 所有位置
+								483 拆分按钮 ‎effective-config
+								484 拆分按钮 ‎G4UniversalSim
+								485 拆分按钮 ‎out
+								486 拆分按钮 ‎build-i2-formal113
+								487 拆分按钮 ‎Release
+						488 工具栏 地址区段
+							489 按钮 上一个位置
+							490 按钮 刷新“Release”(F5)
+				491 窗格
+					492 窗格
+						493 窗格
+							494 编辑 (settable, string) 搜索框 Description: 在 Release 中搜索 ID: SearchEditBox
+							495 按钮 搜索 ID: SearchBoxSearchButton
+			496 标题栏 (settable, string) Value: 选择后端程序
+				497 菜单栏 系统 ID: MenuBar
+					498 菜单项 系统
+				499 按钮 关闭
+
+Document text: ```
+开始
+新建仿真、重新打开项目或浏览示例。
+项目：demo
+● 空闲
+```

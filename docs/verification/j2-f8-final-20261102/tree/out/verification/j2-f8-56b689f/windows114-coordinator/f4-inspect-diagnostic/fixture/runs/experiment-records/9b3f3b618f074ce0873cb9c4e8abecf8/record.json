@@ -1,0 +1,73 @@
+{
+  "action": "inspect",
+  "can_run": false,
+  "created_at": "2026-11-01T18:00:17.636404+00:00",
+  "diagnostics": {
+    "can_run": false,
+    "diagnostics": [
+      {
+        "code": "experiment.captured_source.changed",
+        "identity": "0cdb2b4c81577a54a75c4c85c24d326a3f7d28599fd92a46d7f486c5554d7fde",
+        "identity_parameters": {},
+        "location": {
+          "collection": "",
+          "editor": "setup",
+          "entity": "",
+          "field": "materials_config",
+          "row": null,
+          "snapshot_id": ""
+        },
+        "message": "materials",
+        "message_key": "",
+        "origin": "experiment",
+        "params": {},
+        "raw_message": "materials",
+        "related_locations": [],
+        "severity": "error",
+        "source": null,
+        "unavailable_reason": "source_changed"
+      },
+      {
+        "code": "experiment.captured_source.changed",
+        "identity": "b206a255b0cc00cbd8e1630a6457db8cc33cb9706fd16f04aea2428f6bcd0a3d",
+        "identity_parameters": {},
+        "location": {
+          "collection": "",
+          "editor": "setup",
+          "entity": "",
+          "field": "geometry_config",
+          "row": null,
+          "snapshot_id": ""
+        },
+        "message": "geometry",
+        "message_key": "",
+        "origin": "experiment",
+        "params": {},
+        "raw_message": "geometry",
+        "related_locations": [],
+        "severity": "error",
+        "source": null,
+        "unavailable_reason": "source_changed"
+      }
+    ],
+    "errors": [
+      "materials",
+      "geometry"
+    ],
+    "info": [],
+    "schema": "g4usim_diagnostics_v1",
+    "snapshot_id": "224f025fe4864936df3ab375c1be7edd174cb42d77c76e1cfe03674ff5a8a13d",
+    "warnings": []
+  },
+  "finished_at": "2026-11-01T18:00:17.737957+00:00",
+  "level": "inspect",
+  "reason": "experiment.fields_rejected",
+  "record_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows114-coordinator\\f4-inspect-diagnostic\\fixture\\runs\\experiment-records\\9b3f3b618f074ce0873cb9c4e8abecf8",
+  "record_id": "9b3f3b618f074ce0873cb9c4e8abecf8",
+  "revision": 1,
+  "run_id": "9b3f3b618f074ce0873cb9c4e8abecf8",
+  "schema": "g4usim_experiment_record_v1",
+  "session_id": "32be3f3608a447a5962c9ce4ad86c02c",
+  "stale": false,
+  "status": "failed"
+}

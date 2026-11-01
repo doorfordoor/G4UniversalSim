@@ -1,0 +1,169 @@
+--- a/STATUS.md
++++ b/STATUS.md
+@@ -4,17 +4,28 @@
+ 
+ ## 2026-11-02 J2/F8 当前实施
+ 
+-候选尚未验收。工作区 effective-config、分支 roadmap/J2-F8-editing、基线 fc606739；首轮候选已提交为 `56b689f`。D 盘旧检出保持不动。完整实施与模型分工见 [开工契约](docs/collab/inbox/20261101-j2-f8-execution.md)，DeepSeek 已实际参与前端设计并归档原始交付。实际子代理为 6.1 Sol high/medium，工具未提供 Terra/Luna。
+-
+-当前 C++ 双版构建均 exit 0，源码指纹 `9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a`，路径及 EXE SHA 见 `out/collab/j2-shape-schema-build-identities.json`。E7 既有实体与 trd/trap 严格 v2 属性消费已补齐；物理 P1、材料 M01/M02、三项高级几何 P2、无源 Reload 与 phase-space 列表问题均有各自身份的独立关闭证据，旧失败保留。CURRENT 导入原五项及路径顺序已独立关闭，后续资源核验变更另审。
+-
+-永久 E2E 在前一源码身份 88c32e8c 的 11.3.2/11.4.3 均 exit 0、各 674 个 v3 入口，Qt/K1→保存重载→离线搬移→统一 CLI 链路和真实双源/双敏感体通过；汇总 `out/collab/j2-e2e-integration/dual-version-final-receipt.json`。脚本 SHA `5b112036e184afac3e97bd9c5257142b197a36c83c119f822318ec972f9b082f` 冻结，已按 exe/qt、600 秒接入 integration，无 stale fallback；最终源码由正式矩阵再验。114 使用已核验 I2 data 根，清除子进程继承的旧 G4*DATA 后启动。
+-
+-F8 原标签、向导及 workspace_layout 当前页尺寸修复已独立关闭。首轮原生 100%/125%/150% 窗口均正常退出，100% 完成真实100事件与保存重载/导出；150% 保留 dock 后切项目又发现布局完成前焦点显露失效。新增受控延迟显露与永久回归 v3 已独审关闭，125%/150% 作者各416入口，独审确认真实 pending 焦点替换；未改变旧可见性合同、业务快照或 dock 所有权。旧失败、旧限定范围审查与首次原生证据均保留，新冻结仍须正式矩阵及原生复验。
+-
+-首轮本机六份正式报告共300次执行，286通过/14失败/0跳过、179468个v3入口；严格门禁失败，不能称阶段通过。GUI报告自身 git_dirty=true（73条长路径删除表象）保留原件，下一轮对子进程显式配置 longpaths。M0 CI `41330577407` 与 Linux CI `41330577426` 失败；安装 `41330577328`、冻结桌面 `41330577359` 双平台成功。Linux后续profile未执行，不以安装通过代替功能矩阵。
+-
+-已统一应用独审后的定点修复：密度/未知物理模式诊断兼容、NIST真实字段定位、external Inspect只核验实际输入、F8延迟焦点；测试按实际J2能力更新，扫描fixture携带内存材料文档，旧物理和可见性判据保留。诊断分类迁移见[说明](docs/结构化诊断与定位.md)。下一轮完整D盘venv恢复PyVista真实子路径，不拼接旧报告；同v3逐例与总数门禁不放宽。新候选须重新提交、双版构建、六份本机profile、真实CI及原生复验后才可归档关闭。
++**第三修复候选，相关专项独审已完成，完整新候选验收待进行；阶段未关闭。** 工作区 effective-config、分支 roadmap/J2-F8-editing；首轮冻结为 `56b689f`，第二冻结为 `2901f42`。本候选包含下述已审修复，仍须以新提交身份完成完整复验，不能把专项或本机通过改写成整阶段验收。当前约定见[开工契约](docs/collab/inbox/20261101-j2-f8-execution.md)和[J2/F8说明](docs/J2编辑覆盖与F8验收.md)。
++
++`2901f42` 的 C++ 源码指纹仍为 `9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a`。截至本次文档候选快照，以下本机正式报告已通过 runner 和 matching 历史 strict 门禁，identity_errors 为空、report git_dirty=false；未用内部SKIP代替完整PyVista路径。
++
++| 本机 profile | 通过/用例 | v3入口 | runner / strict / identity_errors |
++| --- | ---: | ---: | --- |
++| windows-static | 46/46 | 4545 | 0 / 0 / [] |
++| windows-gui | 66/66 | 8394 | 0 / 0 / [] |
++| windows113-backend | 63/63 | 81988 | 0 / 0 / [] |
++| windows114-backend | 63/63 | 72495 | 0 / 0 / [] |
++| windows113-integration | 31/31 | 6790 | 0 / 0 / [] |
++| windows114-integration | 31/31 | 6780 | 0 / 0 / [] |
++
++本快照六份本机profile均已终态passed，合计300/300、180992入口；local-final-audit的errors=[]。这些是2901f42本机结果，不替代第三修复候选完整验收。证据根文字登记为 `out/verification/j2-f8-2901f42/`；最终归档入库后另补稳定链接，当前不以未归档out作为公共证据链接。
++
++第二候选四个真实push CI（均attempt1）已终态：Linux Geant4 `41336912644` 与 M0 `41336912651` **失败**，Desktop `41336912646` 与 Full installation `41336912645` 双平台成功。Linux GUI暴露QSpacerItem被当成layout递归的问题；Windows M0 GUI保留K1 policy别名身份拒绝及geometry文件路径断言首败。整体release_accepted=false；未运行的下游profile不记通过，安装/桌面成功不替代功能CI。
++
++第二候选原生有效DPR 1.0/1.25/1.5的host均exit0，三档149项GUI SHA与2901f42冻结源码相符、使用完整D盘venv。main逐条观图，QQ覆盖像素排除；125%向导经自然拖动后另留完整无遮挡dialog观察。100%实际保存/重载blank-native.json、完成生成/初始化/100事件/导出，初始化no_run与100/100事件分开；7成员offline-native资源SHA匹配，历史仍stale、未执行离线replay。150%Project retained问题在相应视觉范围已消失，但F6窄dock边界与History名称/标签遗漏保持开放，**不升overall native pass**。后续三档对新repair范围仍需补验；物理跨屏/热插拔与物理正确性不由这些观察推出。
++
++第三修复候选包含History三显式buddy及动态语言名称、仅真实QLayout的递归兼容、geometry路径测试精确resolve/samefile比较（不改geometry产品）；History、spacer及STL专项独审均通过，History+spacer组合595专项亦已独审，尚不替代新candidate的CI/原生。F6窄dock界限不修改，不声称不可容纳的整组标签/控件可以同时放入窄视口。K1 final-v1 policy规范身份及原拼写首尾guard专项独审已通过603入口／13组，原短路径30入口及junction 3+5反例保留；**完整新候选验收待进行**，专项关闭不等于CI或阶段关闭。
++
++首轮 `56b689f` 六份本机报告300次执行、286通过/14失败/0跳过、179468入口及严格失败保持原件；GUI自身git_dirty=true/73条长路径表象不追改。原M0 `41330577407`、Linux `41330577426` 失败，安装 `41330577328`、桌面 `41330577359` 成功；本轮新结果不替换原run或旧失败。源码、构建、报告、截图及独审各按原身份保留。完整新候选矩阵/native/CI全部终态并经独审后才考虑阶段关闭；当前归档只是OUT候选，不是最终公开发布。
+ 
+ ## 一句话定位
+ 
+--- a/docs/ROADMAP.md
++++ b/docs/ROADMAP.md
+@@ -162,7 +162,7 @@
+ GUI:
+ - **F4 Validation that leads to the field.** Every message carries its location
+   (editor, row, field); clicking it selects the tab/row and highlights the control.
+-- **F5 Undo/redo and autosave.** 主项目和成功应用向导共用完整快照事务；v7保存材料/几何及原始草稿，独立恢复副本受系统会话锁保护，恢复为未命名、未保存副本。[使用与限制](配置撤销与恢复.md)。
++- **F5 Undo/redo and autosave.** 主项目和成功应用向导共用完整快照事务；v8保存材料/几何及原始草稿，完整v7编辑快照仅补枚举的新字段，独立恢复副本受系统会话锁保护，恢复为未命名、未保存副本。[使用与限制](配置撤销与恢复.md)。
+ - **F6 Live run progress.** The backend prints a progress line (events done, rate)
+   at a fixed interval; the Run Console shows a progress bar, rate and time left.
+ - **F7 Better scans.** Two-parameter grids with a 2D map plot; several points at once
+@@ -267,7 +267,7 @@
+ | **F5** | 配置事务 undo/redo、自动保存、异常恢复 | 主编辑快照完整；恢复不覆盖原件，撤销后重新验证 | 已完成：5c1eec5，Windows160/50898、双Linux各160、M0双平台各79及F4门禁通过；5d实窗22观察/28截图/退出0经身份映射。[最终证据](verification/f5-final-20261031/README.md) |
+ | **F6** | 实时进度与 sequence | 已完成，Q1 复核解析、取消和失败边界；进度不替代成功证据 | 保持完成 |
+ | **F7** | 二维扫描、线程预算内并发、场景生成器扫描 | 依赖 K1/F3；每点独立 seed/目录/证据，失败/重试不重复发布，缺点可见 | 待开始；已有单参数串行扫描保留 |
+-| **F8** | 环境设置衔接、空白/模板/导入与向导重入、跨页DPI/键盘/文案一致性与可访问性 | I1/I2提供环境链路；J1实现布局/主题/主要中文及焦点适配；J2实现无源创建和编辑能力；F8做跨项桌面验收 | 2026-11-02 第二候选准备，尚未验收；首轮150% retained-dock焦点缺陷及永久回归已独审修复，须新冻结矩阵和实窗复验；从空白到结果/搬移链路与不同缩放分别留证 |
++| **F8** | 环境设置衔接、空白/模板/导入与向导重入、跨页DPI/键盘/文案一致性与可访问性 | I1/I2提供环境链路；J1实现布局/主题/主要中文及焦点适配；J2实现无源创建和编辑能力；F8做跨项桌面验收 | 2026-11-02 第三修复候选，相关专项独审已完成，完整新候选验收待进行；2901f42本机已过范围、CI失败及原生开放边界见STATUS，History/QLayout专项不代替新冻结复验 |
+ 
+ E3 的已完成 Linux CI 基础不重建；Windows 11.4、原生 Linux 桌面、包内 ROOT/Python 辅助工具与干净安装验收归 I2。现有后端 ROOT 输出和新版本源码 CI 仍按 Q1 及各阶段冻结矩阵验证。Geant4 11.2 先在 I1/I2 决定是否进入支持矩阵：不支持则清晰拒绝/说明，不默认承担无限旧版本兼容。
+ 
+@@ -295,7 +295,7 @@
+ | **I1 环境发现与诊断** | 后端/运行时真实查询、SDK/工具链及可选组件候选事实、版本/架构/数据诊断，异步 GUI 显式选择 | Q1；只读发现与运行资格分开，不安装或自动模拟 | **已完成**：第五冻结专项与独立审查通过，第四单候选实窗按未变 I1 字节映射；第七 `2914b39` 五项文件 SHA 再核一致。[证据与限制](verification/k1-final-20261031/README.md#i1-独立验收) |
+ | **I2 辅助安装与双平台交付** | 目标 1；受控安装前缀、下载校验、失败恢复、运行时/SDK 两种方案、当前版本 Windows/Linux 包、诊断包和版本矩阵 | I1 | **2026-11-01 已完成阶段验收**：计划/获取/发布/恢复、runtime/SDK、两平台安装/核验/卸载、SDK consumer 与完整源码构建、冻结工具及实际 CI 均已验证；无匹配清单时明确不可安装，不承诺自动配置任意编译器。最终测试 `6310969` 与产品 `5fe0a10` 的身份及旧失败见[最终证据](verification/i2-j1-final-20261101/README.md)。 |
+ | **J1 可调整工作区** | 配置、3D/结果、日志、AI区可移动/缩放/隐藏/浮动；三种布局及B/K/C主题、明确区域层级与主要中文；本机布局持久化，按体积/材料调整3D颜色和透明度及会话复位 | Q1/K1状态所有权稳定；与I2按文件独占并行 | **2026-11-01 已完成阶段验收**：DeepSeek实际设计协作、单实例dock、本机保存/重启恢复/回退、主题/3D外观与运行中切换经独审及实窗验证；26图、4次正常退出，中英及代表性DPI，未做物理多屏热插拔。显示动作不改配置、不新增run所有者；完整可访问性归F8。[最终证据](verification/i2-j1-final-20261101/README.md)。 |
+-| **J2 编辑覆盖与几何往返** | 原M3余项；空白创建与无已有配置文件输入、NIST元素来源辅助、命名多源及球面源、物理模块组合/替换、多敏感体编辑和高级实体/场/偏置；后端vis属性往返 | E6；实体能力归一相关部分依赖E7，其余不被无关实体重构阻塞；在L1前完成本轮明确范围 | **2026-11-02 实施及专项独审完成，第二候选准备，未验收**：首轮56b689f矩阵失败原件保留，诊断兼容/定位、external Inspect及旧测试语义已定点修复；新冻结须完整Windows/Linux及历史门禁。球面不冒充体源，模块注册不冒充替换 |
++| **J2 编辑覆盖与几何往返** | 原M3余项；空白创建与无已有配置文件输入、NIST元素来源辅助、命名多源及球面源、物理模块组合/替换、多敏感体编辑和高级实体/场/偏置；后端vis属性往返 | E6；实体能力归一相关部分依赖E7，其余不被无关实体重构阻塞；在L1前完成本轮明确范围 | **2026-11-02 第三修复候选，相关专项独审已完成，完整新候选验收待进行**：保留56b689f及2901f42原失败；K1 policy final-v1专项独审已通过603入口，完整新candidate验收仍待进行，几何路径仅修严格同文件测试；不提高物理支持等级 |
+ | **K1 可信实验工作流与配置导出** | 统一 inspect/validate/apply/generate/run/evaluate/export，四层验证、输入身份、可移植配置/资源/证据包 | 2C、E6、F1、F4、F5、I1 | **已完成阶段验收**：第七产品 `2914b39` 的 Windows182/182、57181 v3入口与官方CI548/548、133720入口按原身份保留；P1及永久回归P2经独审关闭，`5644e1e` 新单例Windows36/Linux33通过严格门禁。已正常快进集成并推送至 `codex`。[最终证据](verification/k1-final-20261031/README.md) |
+ | **K2 独立 Geant4 工程导出** | 目标 3 的源码部分；可审阅 C++/CMake、配置/资源/许可、扩展点和构建说明；脱离工具可继续开发 | K1、I2；当前支持子集即可，不依赖所有 H 项 | 导出模板/manifest → 生成与构建 → 两平台干净环境构建/运行/二次修改；不能只附 INI 或依赖工具安装目录 |
+ | **L1 配置 Agent 与模型接入** | 目标 4 首版及目标 5 基础；云 API-key/本地模型适配、结构化差异、授权范围内修改、校验、试跑、读证据、确认/导出 | K1、I1；J1承载，J2先交付本轮手工编辑范围，F8跨项验收；provider/API研究可先行 | provider/凭据与动作接口 → 有界任务状态 → 自然语言端到端/取消/恢复/歧义/失败反例。可写边界来自接口白名单，不来自 EffectiveConfig 读回子集 |
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -3,6 +3,8 @@
+ 本文件是仓库级约束，适用于根目录及其子目录。更具体的目录约束可以由更深层的 AGENTS.md 补充；gui/AGENTS.md 适用于 GUI 目录。
+ 
+ ## 0. 条目索引与历史全文
++
++- 2026-11-02 J2/F8第三修复候选：相关专项独审已完成，完整新候选验收待进行；2901f42本机已过范围不代表CI/原生整体通过；History三显式buddy/动态语言、QLayout类型递归、K1 policy规范身份与原拼写首尾guard的候选边界见 docs/agent-history.md 同名新条目。原失败与旧身份保留，未宣告阶段关闭。
+ 
+ - 2026-11-02 J2/F8候选：E7实体元数据、命名源/显式构造器替换与v8快照已接线；完整验收未关闭。修改前读 docs/agent-history.md 同日条目及 docs/J2编辑覆盖与F8验收.md，保持原source/运行/物理证据边界。
+ 
+--- a/gui/AGENTS.md
++++ b/gui/AGENTS.md
+@@ -1,4 +1,6 @@
+ # G4UniversalSim GUI Agent 开发约束
++
++2026-11-02 J2/F8第三修复候选：相关专项独审已完成，完整新候选验收待进行；History只用三个明确buddy及既有语言刷新链，真实QLayout才可递归count/itemAt；F6窄dock界限不修、不放宽可容纳joint判据。K1 policy final-v1专项独审已通过603入口，完整新候选验收仍待进行；原拼写安全检查不得被canonical匹配替代。详见 ../docs/agent-history.md 同名条目；2901f42旧raw不改，新修复三档原生补验仍待完成。
+ 
+ 2026-11-02 J2/F8候选：高级详情原文使用原F5模型/事务，按当前实体与字段定位F4诊断；无源恢复不清空，已导入来源丢失不洗白。v7完整快照仅枚举迁移至v8，离线完整编辑包闭合休眠资源。修改前读 ../docs/agent-history.md 同日条目与 ../docs/J2编辑覆盖与F8验收.md；尚未正式验收。
+ 
+--- a/docs/agent-history.md
++++ b/docs/agent-history.md
+@@ -677,3 +677,17 @@
+ 诊断分类由machine path产生，不从显示文案猜测。材料numeric/positive旧分类保留，新的invalid只用于新增单位/有限性/换算约束；density_internal_value接受逻辑不变。未知physics.mode沿旧unsupported，合法manual转用实际依赖校验。完整NIST目录的未知名称为error，直接名称能定位实际字段，显式别名目标不能伪装成别名名称控件。STL/replica从旧不可编辑告警迁移到experimental；box/trd登记器统一产生的code迁移、旧v1 JSON身份不重写及新记录身份差异见[结构化诊断与定位](结构化诊断与定位.md)。
+ 
+ 测试fixture必须携带wizard生成的dirty内存材料文档，不回填旧路径；scans保留全部原断言、PSTAR判据与事件数。已开放STL/parameterised应验证资源与往返，并保留真正未知字段/放置拒绝，STL单位键为file_unit。Windows GUI/integration使用完整PyVista环境，内部SKIP不能当完整3D通过；同版本同profile同v3基线逐例/总数门禁不放宽。正式launcher绑定本轮报告head/profile/源码/测试/merge指纹、EXE/merge路径和构建身份，并检查merge/helper/输入首尾SHA；114数据绑定已核验SDK版本与12项目录，不以required_complete冒充版本证明。这些是第二候选约束，尚不宣称阶段验收完成。
++
++## 2026-11-02 J2/F8 第三修复候选（专项独审完成，阶段未关闭）
++
++第二冻结2901f42的已过本机profile、真实CI及原生范围按各自原report/launch/visual-observations登记，详见STATUS当前段。2901f42的四项CI run均attempt1：Linux41336912644/M0 41336912651失败，安装41336912645/桌面41336912646成功；首轮56b689f四run及旧失败另保留，不拼接报告或改绿。第三修复候选包含下述已审产品及测试修复；截至文档快照，113 integration已通过31/31、6790入口及gate0，114 integration已通过31/31、6780入口及gate0；2901f42六份本机profile均已终态passed，合计300/300、180992入口，local-final-audit的errors=[]。完整新候选验收待进行，仍须以新提交及必要构建身份完成同版本/同profile/v3历史strict门禁、真实CI和原生复验。
++
++History修复只为Runs root→runs_root、Search→search、Status→status_filter建立三个显式buddy，复用现有语言刷新链，使QWidget及QAccessible名称随en/zh/en更新；不新增全局QHBox猜配、翻译表或业务事务。QLayout兼容修复先判真实QLayout再按count/itemAt遍历，区分QSpacerItem/QWidgetItem，不把item.layout()的任意绑定返回值当layout。原CI异常、自然环境与受控返回值负向证据分别保留；两产品及组合595专项独审均已通过，仍不能冒充新候选CI/native通过。
++
++F6窄preview dock不在本修复中扩大尺寸/改变布局。可容纳标签+完整控件时仍要求joint完整可见；确实不可同容纳的宽度边界不能伪装成全joint通过，也不得强制滚动归零或更换dock实例。main直接视觉观察排除QQ覆盖；被动矩形containment不能证明无遮挡。2901f42三档原生host退出0及100%真实100事件不关闭150%F6/History开放项；新repair相关scope在三档仍须补验。
++
++K1 final-v1修复以policy规范身份匹配同一普通文件，但不改变closure节点、资源读取路径或source_receipts。原policy绝对拼写必须先_no_links再resolve，并保存原拼写；资源匹配方向也先拒链接再resolve。相同普通文件的重复policy入口明确拒绝，无关/相对unused入口仍拒绝，restricted默认拒绝与显式允许裁决不放宽。collect返回前、export原收据核验后且_publish_directory前，均重新按原policy拼写_no_links→resolve并核对身份，不能入口resolve后丢掉原拼写。真实晚junction反例只改policy原组件也须拒绝，export不发布并清理自身staging；这些确定时点检查不承诺任意并发替换安全。该final-v1补丁f705dc96及其产品4990d9f4/测试80726fb8专项独审已通过：完整603入口／13组、原短路径30入口、真实junction 3+5。该专项已闭合，完整新candidate验收仍待进行，不能据此将旧CI或阶段改为通过。
++
++几何STL file路径回归专项独审已通过；该测试只做规范resolve及samefile的精确同文件断言，不能用endswith/文件名/存在性代替身份，也不为测试改geometry产品语义。当前项目格式v8；普通旧项目及完整v7编辑快照仍按已知枚举迁移，损坏旧字段不泛化默认，有日期历史v7文本不追改。
++
++证据根文字登记为out/verification/j2-f8-2901f42及out/collab中的各冻结独审目录，尚未归档为公共链接；最终入库后由main另链。Native独立文件审计仅核launch/GUI149/SHA/原图引用/记录/离线manifest，overall=false。旧raw、原CI失败、JPEG编码的原图字节以及旧copy/review首败均保留，不以本段更新历史身份。当前条目是第三候选实施契约，不是阶段状态改为完成。
+--- a/docs/J2编辑覆盖与F8验收.md
++++ b/docs/J2编辑覆盖与F8验收.md
+@@ -1,6 +1,8 @@
+ # J2 编辑覆盖与 F8 跨页流程
+ 
+-当前为实施候选，正式状态见 [ROADMAP](ROADMAP.md)。本页说明接口、使用方法和验收边界，不把组件检查或界面预览当作完整模拟验收。
++当前为第三修复候选，相关专项独审已完成，完整新候选验收待进行；正式状态见 [ROADMAP](ROADMAP.md)。本页说明接口、使用方法和验收边界，不把组件检查或界面预览当作完整模拟验收。
++
++第三修复候选包含已审History、spacer、STL路径测试与K1 policy修复，J2/F8阶段仍未关闭。2901f42本机已过范围、CI明确失败及原生边界见[状态入口](../STATUS.md)；113 integration已通过31/31、6790入口及gate0，114 integration已通过31/31、6780入口及gate0；本快照2901f42六份本机profile均已通过，合计300/300、180992入口，独立汇总errors=[]。完整新candidate验收待进行。本页不将专项或界面预览升级为整体验收。
+ 
+ ## 从空白开始
+ 
+@@ -70,6 +72,8 @@
+ 
+ 停靠区域切换可能先改变焦点、随后才完成中央页布局。焦点显露保留同步检查，并在布局完成后只补显露仍有效且仍为当前焦点的本窗口控件；可容纳的标签和完整控件联合可见，滚动只作必要平移。新焦点、外部窗口焦点、控件删除或窗口关闭会取消旧任务。
+ 
++第三修复候选为历史页“运行包根目录／搜索／状态”建立明确标签关联并沿既有语言刷新链更新名称；布局遍历只处理真实QLayout，避免把spacer当layout。组合专项已独审，仍须新candidate复验。F6预览dock过窄时不保证完整按钮文本或不可容纳的joint同时可见；可增宽dock或主窗，此项边界没有被修复或降低标准。
++
+ external 模式的 Inspect 使用实际主配置/宏及后端检查，不把休眠的 generated 编辑来源当作本轮输入。切回 generated 后原来源变化检查恢复生效；完整可编辑导出仍闭合全部保留资源。诊断代码和位置随编辑能力开放发生的兼容变化见[结构化诊断与定位](结构化诊断与定位.md)，旧JSON不重写、不重新赋予当前验证资格。
+ 
+ 验收必须分别保存源码与可执行文件身份、逐例正反证据、独审发现和复核、Windows／Linux适用矩阵以及实际窗口观察。源顶点、构造器／过程、体积计分、保存重载和搬移运行有各自判据。物理多屏热插拔、读屏器的全功能认证、任意动态 Geant4 命令及无限旧版本兼容不由这些检查推出。
+--- a/gui/docs/中文快速使用说明.md
++++ b/gui/docs/中文快速使用说明.md
+@@ -1,4 +1,6 @@
+ # G4UniversalSim GUI 中文快速使用说明
++
++第三修复候选，相关专项独审已完成，完整新候选验收待进行，阶段未关闭。本候选包含History标签关联／语言切换及布局spacer兼容修复；窄预览dock不能容纳完整按钮时可增宽dock或窗口，不将其称作整体可访问性通过。完整本机／CI／原生状态以[状态入口](../../STATUS.md)为准。
+ 
+ 2026-11-02 J2/F8候选提供空白项目、内存材料/几何、命名多源和物理组合编辑，完整流程见[J2/F8说明](../../docs/J2编辑覆盖与F8验收.md)。外部输入模式检查当前选定的主配置/宏，不因保留的生成模式编辑历史而拒绝；切回生成模式仍检查编辑来源，完整离线编辑包仍要求所有保留资源存在。跨页快捷键和Tab会在停靠区域布局完成后显露当前焦点及可容纳的完整标签/控件；切换焦点不会被旧显露任务抢回。正式阶段验收仍在进行。
+ 
+@@ -99,7 +101,7 @@
+ 
+ ## 3. 项目页
+ 
+-项目页保存的是 GUI 状态，不是后端仿真的输入格式。保存的 JSON 使用 `G4UniversalSimProject` schema，当前 version 为 6。
++项目页保存的是 GUI 状态，不是后端仿真的输入格式。保存的 JSON 使用 `G4UniversalSimProject` schema，当前 version 为 8；普通旧项目按已知版本迁移，完整v7编辑快照只补枚举的新字段，损坏快照仍拒绝。
+ 
+ 主要字段：
+ 
+--- a/docs/功能支持矩阵.md
++++ b/docs/功能支持矩阵.md
+@@ -1,6 +1,8 @@
+ 2026-10-31 F5：**已完成**。冻结验收5c1eec5；Windows160/160、50898个v3入口，Linux11.3.2/11.4.3各160、M0两平台各79，原F4逐例与总量门禁通过。原生22份观察/28截图/真实退出0保持5d身份，经明确映射关联新冻结；不新增物理验证结论。[最终证据](verification/f5-final-20261031/README.md)。下方带日期的旧状态保留其历史范围。
+ 
+ # G4UniversalSim 功能支持矩阵
++
++当前为第三修复候选，相关专项独审已完成，完整新候选验收待进行，阶段状态未关闭：2901f42已有本机通过范围但M0/Linux CI仍失败；在2901f42原生观察范围内，Project retained缺陷已消失；当时F6窄dock与History遗漏仍不升该次overall。History／真实QLayout、STL路径测试及K1 policy final-v1修复专项独审均通过；完整新candidate验收待进行；本段不提高任何后端或物理支持等级。见[状态入口](../STATUS.md)。
+ 
+ 2026-11-02 J2/F8实施候选：空白／模板独立内存输入、NIST来源辅助、命名GPS与球面源、reference显式构造器替换、高级几何／场／偏置编辑已接入。E7复用既有实体，不扩大物理支持等级；首轮冻结矩阵存在失败，已独审的诊断、external Inspect及焦点修复进入第二候选，尚未整体验收。准确接口和边界见[J2/F8说明](J2编辑覆盖与F8验收.md)。
+ 
+--- a/docs/开发路线图.md
++++ b/docs/开发路线图.md
+@@ -1,3 +1,5 @@
++当前接续：2026-11-02 J2/F8第三修复候选，相关专项独审已完成，完整新候选验收待进行；第二冻结2901f42的本机已过范围不代替明确失败的M0/Linux CI及原生开放项，阶段仍未关闭。History／QLayout组合、STL路径测试与K1 policy final-v1专项独审已通过；完整新candidate验收仍待进行。下方有日期的旧段保留当时状态，当前以[STATUS](../STATUS.md)与[ROADMAP](ROADMAP.md)为准。
++
+ 2026-11-02 J2/F8：完整实施后的首轮候选 `56b689f` 未通过正式矩阵；定点修复已独审，正准备第二冻结。完整venv的真实3D、逐例断言基线、报告/构建身份及跨页原生复验均保留为关闭条件；当前不标阶段完成。用法与边界见[J2/F8说明](J2编辑覆盖与F8验收.md)。
+ 
+ 2026-10-31 F5：**已完成**。冻结验收5c1eec5；Windows160/160、50898个v3入口，Linux11.3.2/11.4.3各160、M0两平台各79，原F4逐例与总量门禁通过。原生22份观察/28截图/真实退出0保持5d身份，经明确映射关联新冻结；不新增物理验证结论。[最终证据](verification/f5-final-20261031/README.md)。下方带日期的旧状态保留其历史范围。

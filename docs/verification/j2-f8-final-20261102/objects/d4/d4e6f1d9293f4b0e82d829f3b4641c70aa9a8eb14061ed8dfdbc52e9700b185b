@@ -1,0 +1,33 @@
+# F8 左裁切修复独立自然焦点复核（版本化候选证据）
+
+2026-11-02。保留旧review.md及125-r2/150的原五文件身份；本报告对应修复后的新字节，不覆盖旧结论或原生观察。只读产品，没有任何原生窗口/鼠标键盘操作。
+
+## 本轮结论与身份
+
+125%和150%各5组独立自然路径检查全部完成、进程退出0，相关五文件运行前后SHA一致。被测core/accessibility.py：`15ab6f87d28d03e01f5d34cca5e43fd453a45bb51fe186d73d7077aafd2b59aa`；shell.py：`2bf59c065dee740b03fbc678ed32f787cd0b8c293e92b1fc8d498f80c6b11516`；作者smoke：`6d8c630dc9c73ad8f2448684aedd0cc4388cc4baa8398956ae1589cdc5efba23`。其余身份详见JSON。
+
+**原“Scroll容器首焦点→自动居中→label左裁切”和随后候选的5px字段右裁，在本轮字节及路径上均不再复现。** 这不是正式F8/原生实窗验收，且尚需作者最终冻结与本SHA核对；若后续修改同文件，不能无条件沿用本通过。
+
+证据：[独立脚本](natural_focus_cases.py)，[125结果](focus-union125/results.json)/[日志](focus-union125.log)，[150结果](focus-union150/results.json)/[日志](focus-union150.log)。
+
+## 测试方法及观察
+
+独立MainWindow、Fusion/中文、隔离QSettings/history/recovery，1200×800、DPR1.25/1.5。键盘通过真实Qt Ctrl+Alt导航、F6/Shift+F6和Tab；没有写滚动条值，没有强归零、没有直接调用ensureWidgetVisible/ensure_focus_visible，没有截图前校正视图。
+
+1. 自然Ctrl+Alt+2进入项目页：首焦点为真实QLineEdit项目名称，非QScrollArea容器；真实buddy QLabel与字段相对于每层viewport的完整矩形均可见。125实例外层label x34/w52、field x118/w309、viewport980，H0是自然结果而非测试设置。
+2. 自然Ctrl+Alt+3配置页：焦点为可操作QToolButton，非scroll容器；配置页Run name的实际label与字段均在viewport内。没有强求某一个指定控件必须首焦点，避免把合法Qt顺序误定缺陷。
+3. 非顺序遍历九页及F6往返：焦点属于目标页面，没有回到整块scroll容器；runner/workflow仍原对象。
+4. 回到项目页，自然Tab连续6次：有实际buddy的label和字段在所有祖先scroll viewport中保持可见；若尺寸能容纳，检查完整矩形，而非仅128px锚点。
+5. 无parent的外部QPlainTextEdit保持原tabChangesFocus、accessibleName与原文；全程原非法seed和主业务快照指纹不变。
+
+## 发现与修复过程的独立证据
+
+原候选helper `9759bee2…` 的自然项目/配置、九页/F6已通过，但项目名称QLineEdit经过Tab时，label660..712可见、字段718..975超出970viewport约5px。失败证据保留于focus-candidate125、focus-candidate150、focus-candidate125-r2；没有删除失败或把断言改成强归零。候选125-r2将foreign单独验证，确保Tab失败不跳过foreign边界。
+
+该观察已报main，未在开发中就定最终P2。新实现优先选择能容纳的完整label/control联合矩形，仅过宽目标才取小阅读锚点，并在两个轴上分别处理；因此本轮相同完整矩形断言通过，无需弱化为仅左侧128px可见。
+
+## 剩余边界
+
+作者正在完成自己的永久smoke/最终冻结交接。本轮只验证用户指定的label/focus viewport、九页及foreign边界，不代替作者向导按钮可访问名等后续新增项的专项，不隐去其开发中日志。若最终冻结SHA与此处不同，应按具体差异重新确认。
+
+没有真实系统DPI/AltGr/读屏、多屏、原生窗口截图、安装或后端运行结论；原生复验仍由main所有。永久E2E及其双版674证据未改，9e40e889新C++最终全量由main正式runner覆盖。

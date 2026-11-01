@@ -1,0 +1,22 @@
+# 第四候选代表性原生补验（main 实际操作与观图）
+
+候选 `2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8`；113 EXE `fe5d23d309106d9fca7ad179f6c0cb39fa8b98c6ef35286a0b21866b90d89f89`。使用已独审 launch-v4 与被动 host-v2，Dvenv，实际 Qt DPR=1.25、主窗1200×800。根 `out/verification/j2-f8-2ec5b14/native125`。原 session6497 已真实返回 exit0；launch `process_exit_code=0`、起止 HEAD/EXE相同、ending_git_status空；exit.json code0/visiblefalse；限定本轮根的 CIM remaining0。两host日志为空。
+
+本次使用 computer-use 的 sky 原生输入与返回图片逐步观察，24条保存观察、41张原始图片。没有产品API代替UI、强制滚动归零或 ensure 调用。初始标题栏拖动后的工具输出曾被截断，下一步重新截图后才继续输入。I1 modal 的 UIA index130出现 cached unavailable，重新观察后使用坐标打开I2。Finish一次坐标点击被QQ命中检测拒绝，激活目标并重新观察后改用 Return 成功；拒绝本身不算产品失败或成功输入。
+
+## 已实际补验的操作
+
+1. 开始页环境设置→I1发现：当前113后端、11.3.2与必需数据已找到，界面有“仅发现、不验证模拟”说明。I1→I2首屏，未附带安装清单提示、开始安装禁用、下载同意未勾选。I2关闭→I1关闭，未安装、下载或应用环境选择。证据002–006。
+2. 开始页“导入配置包”依次实际选择18c native100的 `blank-native-bundle`、当前113 EXE和本轮新 `import-runs`。异步完成后为 `new_simulation *`，顶部明确“待验证”。普通Ctrl+S保存 `imported-18c-bundle.json`，不改原18c包。证据007–012。
+3. “从模板创建”进入单一靶场景，经三次Return依次几何、源、运行页。自然滚动发现默认勾选“完成后生成运行包并运行”，实际取消勾选并目视复核。随后Return执行Finish，进入配置页，标题 `single_target *`、撤销标签“应用仿真向导”。通过文件菜单“项目另存为”保存 `template-finished.json`。证据013–020。
+4. Ctrl+N重入同一向导，Next到几何、实际点击左上Back回场景、Esc取消；返回保存后的single_target，无dirty星号。Alt+F4正常退出。证据021–024。被动记录该重入段raw项目摘要保持39302246…，缓存undo=true/redo=false/modified=false；不将这些缓存称为完整F5 snapshot。
+
+## 范围与限制
+
+- 本轮只补以上125%操作，不替代18c三档既有原生范围，也不把旧三档映射冒充新构建全三档重跑。对应149GUI字节映射仍由独立checker单独记录。
+- 本轮未点击事件模拟Run。配置页“自动显示Geant4几何”原已启用，Finish后实际出现Geant4构造的2体积预览，因此不能说完全未启动任何后端。该预览不构成事件数或物理基准验证。
+- Import当前状态为待验证，旧validation_history不当本轮验证通过；具体保存JSON与包资源由独立文件审查核验。
+- I2仅首屏打开/关闭，不将没有安装清单的开发宿主当发布安装成功。安装的真实四个平台/版本证据另属既有formal/CI范围。
+- QQ浮窗在画面右下方，遮挡区域不做视觉通过判断。41原图仅本机留存，不复制到公开归档、不上传。可见主要入口、向导左侧内容和已执行动作按本次观察记录；不把窗口矩形包含当无遮挡。
+- native系统文件对话框部分UIA focused_element是缓存SearchEditBox；输入焦点依据重新观察的文件名光标。Qt focus以被动host记录为准。dataclass摘要不是live编辑器快照。
+- 本文是main操作与直接观图范围，独立纯文件审查不冒充第二次像素审查。完整J2/F8阶段仍待剩余formal、实际CI、归档与文档终态汇合。

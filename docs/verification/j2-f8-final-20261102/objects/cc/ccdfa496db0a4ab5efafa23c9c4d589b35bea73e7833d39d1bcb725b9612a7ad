@@ -1,0 +1,26 @@
+{
+  "schema": "g4usim_j2_geometry_local_checks_v1",
+  "scope": "GUI/static/component evidence only; not phase closure",
+  "files": {
+    "gui/g4usim_gui/editors/geometry_editor_model.py": "a4ea11e69ea8045ad73bd18b8c4b901673e7cab00388ecba3d07fb79276ab734",
+    "gui/g4usim_gui/parsers/geometry_parser.py": "ccb81da48e54bdcf76ec65c351f105ee86fc129e37101eaaf3c4f01f73e5d5cd",
+    "gui/g4usim_gui/writers/geometry_ini_writer.py": "f8b93bd89fdd3871753c953d11876c81fa8e34464cbef3ccd9959828dfe92537",
+    "gui/g4usim_gui/widgets/config/geometry.py": "0a4e7ec31371e39ca087cd65cca1255a5ac3d0359eee629b5c9267fbba1e4700",
+    "gui/g4usim_gui/widgets/config/layers.py": "7634980247064c54661a47fc4ffc990dff32bc12aa6c1eb5c37e0fdb99b64ff8",
+    "gui/g4usim_gui/widgets/config/booleans.py": "c663af8179dba597ad43be2710baf8eb73a2e2ddfb4dc26a097e8fc022e126dd",
+    "gui/g4usim_gui/core/solid_registry_data.py": "1b18673cd1b23e2e6625bbb02a8c69337cd862511959fc159762a38ef231a18f",
+    "scripts/generate_solid_registry.py": "421464992d1f831b2fd2c152896b04b788506048d93d233ecf7f1098703f7fa3",
+    "gui/smoke_tests/smoke_j2_geometry.py": "59b2b879b901719cd79a3d2312d511fa63bdd6e7167e27db5966740c948f877b"
+  },
+  "smoke_assertions": 132,
+  "compileall_exit": 0,
+  "backend_metadata_check_exit": 0,
+  "reload_review_exit": 0,
+  "reload_no_source_revision_unchanged": true,
+  "evidence": {
+    "out/collab/j2-geometry-smoke-final.log": "a7d2d93597cf7147299c2d6022bf1a45e87034db15e736daf00c344333a70cf1",
+    "out/collab/j2-geometry-generation-backend-check.log": "03b0ed1e6c5aedf413413a43dc912b4f982c7de6744a8058adfba41df218357d",
+    "out/collab/j2-geometry-review-rerun/reload-results.json": "65fb43abb18a0dc5939010332ed2ddeec1ce756f4126f9c572bcf5a5a5620303",
+    "out/collab/j2-geometry-review-rerun/reload.log": "04eb3b889d809d78b9ec95262f7063669ba8613f1329df43888598f44697f87a"
+  }
+}

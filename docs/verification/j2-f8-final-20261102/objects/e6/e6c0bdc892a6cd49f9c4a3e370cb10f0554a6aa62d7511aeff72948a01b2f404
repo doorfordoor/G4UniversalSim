@@ -1,0 +1,26 @@
+{
+  "kind": "OUT-only Windows path assertion candidate; no UI/backend launch",
+  "head": "2901f4254303c3a9089c9025717908c0d77ff190",
+  "tracked_status": "",
+  "original_source_hashes_unchanged": true,
+  "patch_sha256": "2b3f9b12c58c6c2dcc97ac35d9448897fdf6592518639b7aa644296be7ad6a74",
+  "candidate_smoke_sha256": "579c6a7a00a93a41570aa28357053d3009b1c2758cf005ccf6de78477fb5b671",
+  "tests": {
+    "path-proof.log": {
+      "exit_code": 0,
+      "assertion_entrances": 21,
+      "sha256": "a2e6d6cd30544ae226e547d99aea1266b0218d03af5de76fcf3d15b232514484"
+    },
+    "original-resource-closure.log": {
+      "exit_code": 0,
+      "assertion_entrances": 101,
+      "sha256": "784c2f3356206fff28eee99d16a72f0817551e5d34c599ec02456e306c44b97f"
+    }
+  },
+  "evidence": "path-proof.json",
+  "full_gui_smoke": "not run; main native UI slot retained",
+  "backend_original_report_sha256": "54f8189f412689ae5b6825e53afb72e600c734c8503b33eabc07b7973f49c655",
+  "backend_rerun": false,
+  "integration_started": false,
+  "scope": "test-only expectation uses same resolve contract as writer; new samefile and SHA checks; no resource production/parser/closure changes"
+}

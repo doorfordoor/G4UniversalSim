@@ -1,0 +1,964 @@
+{
+  "completed_runs": [
+    {
+      "lane": "second-windows-static",
+      "group": "second_local_formal",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/report.json",
+      "report_sha256": "5b72c84e71c6e1b096ad81566c0adb5d7809fd590506dc9f37559ea8b3526c99",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-windows-static-historical-baseline.log",
+      "log_sha256": "f0f54bc8d6f503630bb8086d0eefbe6e25055d819ed221af838bad8acc69715d",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows-static\\20261101-205231-c62d61cd\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-windows-static",
+      "group": "second_local_formal",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-2901f42/windows-static/20261102-023100-10bc6193/report.json",
+      "report_sha256": "d038cc1adb2d6baac4f2ca515c781cfbb0de99579e84bf234aa356ceb75a0fef",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-windows-static-original-current.log",
+      "log_sha256": "e5384ddd871f65b43024f58feba40e932e1cdf1bfa9da5e1bcb855293e3a0446",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-2901f42\\windows-static\\20261102-023100-10bc6193\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows-static\\20261101-205231-c62d61cd\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-windows-gui",
+      "group": "second_local_formal",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/i2-j1-5fe0a10/windows-gui/20261101-205241-d4aff2d8/report.json",
+      "report_sha256": "178d2a42b041fe1ed6018d79d6b7b27a72c73cdc348d7204c20dc2b26d5a1e6c",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-windows-gui-historical-baseline.log",
+      "log_sha256": "e448a50913320a417f97672519120d9ec018d218ac7162d5312cc11ce9824716",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows-gui\\20261101-205241-d4aff2d8\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-windows-gui",
+      "group": "second_local_formal",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-2901f42/windows-gui/20261102-023116-d6e6dd42/report.json",
+      "report_sha256": "09de9901db5821230f8b83b491f9b97198e61d85d7da35b46e504f2c57a533de",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-windows-gui-original-current.log",
+      "log_sha256": "44249be9fcd1199fae129b3eb09bb42bb54a8ca37bcfddff5ec160b316f37c61",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-2901f42\\windows-gui\\20261102-023116-d6e6dd42\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows-gui\\20261101-205241-d4aff2d8\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-windows113-backend",
+      "group": "second_local_formal",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/i2-j1-5fe0a10/windows113-backend/20261101-205411-0e9901a5/report.json",
+      "report_sha256": "2735fc3250511af3ac8db604f5a33ddba848676496a3027c05ece520a5d93536",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-windows113-backend-historical-baseline.log",
+      "log_sha256": "145393cfa1b5099351180d46f47af241cda6b96b110b4554ba98bb72863f3f89",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows113-backend\\20261101-205411-0e9901a5\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-windows113-backend",
+      "group": "second_local_formal",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-2901f42/windows113-backend/20261102-023135-4649d145/report.json",
+      "report_sha256": "f807698579865dbdb532a6f422c32ff1d8fcb6f77bb9796257021699a594bafd",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-windows113-backend-original-current.log",
+      "log_sha256": "267ac5758cbbbebf523cebb145e2082f023d90a0a83ea3295f7cd264be0d00a6",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-2901f42\\windows113-backend\\20261102-023135-4649d145\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows113-backend\\20261101-205411-0e9901a5\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-windows114-backend",
+      "group": "second_local_formal",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/i2-j1-5fe0a10/windows114-backend/20261101-205411-79e165c8/report.json",
+      "report_sha256": "c0de0742a3ec2b2cdafbaf7b0d79cf58e489737a3479001c621b76f4607426df",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-windows114-backend-historical-baseline.log",
+      "log_sha256": "24f90291c2e021c5bc43fa50a6b6b05beaf9cfbfae0e73d720cbd9db3f08cd91",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows114-backend\\20261101-205411-79e165c8\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-windows114-backend",
+      "group": "second_local_formal",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-2901f42/windows114-backend/20261102-023110-c5f5a096/report.json",
+      "report_sha256": "54f8189f412689ae5b6825e53afb72e600c734c8503b33eabc07b7973f49c655",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-windows114-backend-original-current.log",
+      "log_sha256": "f112933e47317b7bfa89c69c327a1f5eba66a6b40b21e26a86c98909c5ceaeca",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-2901f42\\windows114-backend\\20261102-023110-c5f5a096\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows114-backend\\20261101-205411-79e165c8\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-windows113-integration",
+      "group": "second_local_formal",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/i2-j1-5fe0a10/windows113-integration/20261101-213823-a10c064e/report.json",
+      "report_sha256": "193f85ac437775d8c84bd5173d97eea5973c35a70ec12799ca44e498558113de",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-windows113-integration-historical-baseline.log",
+      "log_sha256": "3a787d4ae56e856c399a2beb8b2717452b6701bcb4692dfef4cf104672cdcae7",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows113-integration\\20261101-213823-a10c064e\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-windows113-integration",
+      "group": "second_local_formal",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-2901f42/windows113-integration/20261102-032113-f31d9133/report.json",
+      "report_sha256": "4d8c5c89c945639c0ce8be887c64fe58a8bb0e492f970ad7052a6464566e3713",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-windows113-integration-original-current.log",
+      "log_sha256": "83e2c0aad5b0cf07df03c4008fb4d93d81bdf3249771da493f2cd7346046316c",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-2901f42\\windows113-integration\\20261102-032113-f31d9133\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows113-integration\\20261101-213823-a10c064e\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-windows114-integration",
+      "group": "second_local_formal",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/i2-j1-03d2c48/windows114-integration/20261101-221315-6389b5dd/report.json",
+      "report_sha256": "2b6031df0b82040afc5d0b050c4dd62cf2744e18f2cb0a7dc6dc5fb9c49e1a47",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-windows114-integration-historical-baseline.log",
+      "log_sha256": "3ea16e4ef96fd1584357fc78bb2f5061842326f378f408e29bdd24f6ea309a24",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-03d2c48\\windows114-integration\\20261101-221315-6389b5dd\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-windows114-integration",
+      "group": "second_local_formal",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-2901f42/windows114-integration/20261102-033740-5265276d/report.json",
+      "report_sha256": "dffcddfa8cc45f4b600e9dd03205b0b2cbe2f6c31f91b64dd9d99a2ce6272d82",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-windows114-integration-original-current.log",
+      "log_sha256": "642e8f13e40231d1fa67188e3e0176804e7e1b7749eff23b2475780a0d55eed8",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-2901f42\\windows114-integration\\20261102-033740-5265276d\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-03d2c48\\windows114-integration\\20261101-221315-6389b5dd\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-ci-linux-evidence-11.4.3-gui",
+      "group": "second_CI_original",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.4.3-13087926895/linux-gui/20261101-141602-5d59f966/report.json",
+      "report_sha256": "91d55d0745de3c56bdb7fae632ae13a11c984fdd013ea079ca9d0544ed921caa",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-ci-linux-evidence-11.4.3-gui-historical-baseline.log",
+      "log_sha256": "8a8500a0150a8f69c943ae1ec0166a55002ce9cadec2fdaa496a124fd68d1802",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-03d2c48\\ci\\extracted\\linux-evidence-11.4.3-13087926895\\linux-gui\\20261101-141602-5d59f966\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-ci-linux-evidence-11.4.3-gui",
+      "group": "second_CI_original",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-2901f42/ci/extracted/linux-evidence-11.4.3-13095793742/linux-gui/20261101-183416-0f304e02/report.json",
+      "report_sha256": "c30c6cee001de83820f35b121efe5a225c2b8ec22e7c7c7d21df480324881996",
+      "exit_code": 1,
+      "expected_exit": 1,
+      "log": "versions/v3-18c5858/relocated-verification/second-ci-linux-evidence-11.4.3-gui-original-current.log",
+      "log_sha256": "377303e36383adec25b926025f9757e8d670f4efbf260982d5b0ec3945b91973",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-2901f42\\ci\\extracted\\linux-evidence-11.4.3-13095793742\\linux-gui\\20261101-183416-0f304e02\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-03d2c48\\ci\\extracted\\linux-evidence-11.4.3-13087926895\\linux-gui\\20261101-141602-5d59f966\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-ci-linux-evidence-11.4.3-static",
+      "group": "second_CI_original",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.4.3-13087926895/linux-static/20261101-141435-fe86f483/report.json",
+      "report_sha256": "61b64854609752c8e58892179276eac5ca88b6eff4f29d09b0ebeaf86d614806",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-ci-linux-evidence-11.4.3-static-historical-baseline.log",
+      "log_sha256": "375c03d9337b4c0f7e94f15c936d6f9d075988c0bb89a1414c7cbfa183f56c56",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-03d2c48\\ci\\extracted\\linux-evidence-11.4.3-13087926895\\linux-static\\20261101-141435-fe86f483\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-ci-linux-evidence-11.4.3-static",
+      "group": "second_CI_original",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-2901f42/ci/extracted/linux-evidence-11.4.3-13095793742/linux-static/20261101-183239-05f959d9/report.json",
+      "report_sha256": "ddb26a69031a63cdbafca42633abe967bc7cc59ca181ae912d6b496d43b9367e",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-ci-linux-evidence-11.4.3-static-original-current.log",
+      "log_sha256": "feaed595e79fa37c82199da4e9d361b9fc807af5f006fa6d3f37a4a8716c6b8a",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-2901f42\\ci\\extracted\\linux-evidence-11.4.3-13095793742\\linux-static\\20261101-183239-05f959d9\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-03d2c48\\ci\\extracted\\linux-evidence-11.4.3-13087926895\\linux-static\\20261101-141435-fe86f483\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-ci-linux-evidence-11.3.2-gui",
+      "group": "second_CI_original",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.3.2-13087921872/linux-gui/20261101-141600-27d9f9ea/report.json",
+      "report_sha256": "fdf42185f92f698ce714254552509b2b3f1e43848d5545efd786c9e7f9821f11",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-ci-linux-evidence-11.3.2-gui-historical-baseline.log",
+      "log_sha256": "f0fe8f9a4b0d22d85777b762d4a3d42c90ec5b63941c0def5359d04b33732e2e",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-03d2c48\\ci\\extracted\\linux-evidence-11.3.2-13087921872\\linux-gui\\20261101-141600-27d9f9ea\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-ci-linux-evidence-11.3.2-gui",
+      "group": "second_CI_original",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-2901f42/ci/extracted/linux-evidence-11.3.2-13095209403/linux-gui/20261101-183305-8caf9b13/report.json",
+      "report_sha256": "0b6f2b47fc56e8c891d140834ffb56d90b1f000686b16a603711f712531779d6",
+      "exit_code": 1,
+      "expected_exit": 1,
+      "log": "versions/v3-18c5858/relocated-verification/second-ci-linux-evidence-11.3.2-gui-original-current.log",
+      "log_sha256": "38bb426cef9b27a635c57cf8c82afb82a2553db4cc2da1578a4c7a454f23f932",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-2901f42\\ci\\extracted\\linux-evidence-11.3.2-13095209403\\linux-gui\\20261101-183305-8caf9b13\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-03d2c48\\ci\\extracted\\linux-evidence-11.3.2-13087921872\\linux-gui\\20261101-141600-27d9f9ea\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-ci-linux-evidence-11.3.2-static",
+      "group": "second_CI_original",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/i2-j1-03d2c48/ci/extracted/linux-evidence-11.3.2-13087921872/linux-static/20261101-141435-473d56e4/report.json",
+      "report_sha256": "2afda74e1ac4d633e1629fdd4f07f7ba9769e8b600f6ae4dcf144b366288c0e5",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-ci-linux-evidence-11.3.2-static-historical-baseline.log",
+      "log_sha256": "b4bc4a7f59087624a22d18b73948f711557c61ea7d12584bbc8c1670e6a2e444",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-03d2c48\\ci\\extracted\\linux-evidence-11.3.2-13087921872\\linux-static\\20261101-141435-473d56e4\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-ci-linux-evidence-11.3.2-static",
+      "group": "second_CI_original",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-2901f42/ci/extracted/linux-evidence-11.3.2-13095209403/linux-static/20261101-183208-31816d7d/report.json",
+      "report_sha256": "0af0a47f58b6864e48e32806d35733c2fd35ad0fe2379d603ba71cb721d913f0",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-ci-linux-evidence-11.3.2-static-original-current.log",
+      "log_sha256": "39505a4a13152fca6b737ad9c6285030a77d6d37e784f8f4768f16e172acf64c",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-2901f42\\ci\\extracted\\linux-evidence-11.3.2-13095209403\\linux-static\\20261101-183208-31816d7d\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-03d2c48\\ci\\extracted\\linux-evidence-11.3.2-13087921872\\linux-static\\20261101-141435-473d56e4\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-ci-m0-report-windows-latest-static",
+      "group": "second_CI_original",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/i2-j1-6310969/ci/extracted/m0-report-windows-latest-13088128041/20261101-144208-6260dda6/report.json",
+      "report_sha256": "7df971949de5806c10127bc50db3abf9be0c89eb21a5b6b257c1e3911f74c857",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-ci-m0-report-windows-latest-static-historical-baseline.log",
+      "log_sha256": "b41eb55ed74f33cd5f60c081619b75eca3859e550ddbf694f0e8192d44390757",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-6310969\\ci\\extracted\\m0-report-windows-latest-13088128041\\20261101-144208-6260dda6\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-ci-m0-report-windows-latest-static",
+      "group": "second_CI_original",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-2901f42/ci/extracted/m0-report-windows-latest-13096301546/20261101-183120-314fffe0/report.json",
+      "report_sha256": "2f24728cd9b9eedb8c36dc7ccedcf3ff9123aa2153183578f63b710fb4d4e53b",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-ci-m0-report-windows-latest-static-original-current.log",
+      "log_sha256": "d90bb3c898dc1ea9395a458d00d7238763cc28fd6e79d1d17ae5c4320ac152fd",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-2901f42\\ci\\extracted\\m0-report-windows-latest-13096301546\\20261101-183120-314fffe0\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-6310969\\ci\\extracted\\m0-report-windows-latest-13088128041\\20261101-144208-6260dda6\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-ci-m0-report-windows-latest-gui",
+      "group": "second_CI_original",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/i2-j1-6310969/ci/extracted/m0-report-windows-latest-13088128041/20261101-144550-80bc5c13/report.json",
+      "report_sha256": "59dbd5060da518458185c2d323518ea01ab3b98644e5637e56b095f1c1de2e9e",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-ci-m0-report-windows-latest-gui-historical-baseline.log",
+      "log_sha256": "d6d827763ba0ba3e448cf2d89059bf42d2fa3cd7a4143213f74c270175964e4e",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-6310969\\ci\\extracted\\m0-report-windows-latest-13088128041\\20261101-144550-80bc5c13\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-ci-m0-report-windows-latest-gui",
+      "group": "second_CI_original",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-2901f42/ci/extracted/m0-report-windows-latest-13096301546/20261101-183520-77003a77/report.json",
+      "report_sha256": "6671ef97a44583608a2d329bb1616981dbaf50f895d8f6f932dc2ed2f06898c6",
+      "exit_code": 1,
+      "expected_exit": 1,
+      "log": "versions/v3-18c5858/relocated-verification/second-ci-m0-report-windows-latest-gui-original-current.log",
+      "log_sha256": "adc208e4c5611dcd67aca45dcb33a7cafcfd93d0ac221ca0324a7ba7491bcf1d",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-2901f42\\ci\\extracted\\m0-report-windows-latest-13096301546\\20261101-183520-77003a77\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-6310969\\ci\\extracted\\m0-report-windows-latest-13088128041\\20261101-144550-80bc5c13\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-ci-m0-report-ubuntu-latest-static",
+      "group": "second_CI_original",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/i2-j1-6310969/ci/extracted/m0-report-ubuntu-latest-13087119373/20261101-144135-4d7ff67f/report.json",
+      "report_sha256": "665b8bdaab8eb061a751d82690bbe0a3a4d64b1875b9fbfba1c78d86c6ab5a15",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-ci-m0-report-ubuntu-latest-static-historical-baseline.log",
+      "log_sha256": "1484734e4f3fa5d947d5414fcc3b36dd72e961bf35e793060f2cb0af07249b69",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-6310969\\ci\\extracted\\m0-report-ubuntu-latest-13087119373\\20261101-144135-4d7ff67f\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-ci-m0-report-ubuntu-latest-static",
+      "group": "second_CI_original",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-2901f42/ci/extracted/m0-report-ubuntu-latest-13096021428/20261101-183140-ffaa806c/report.json",
+      "report_sha256": "4f83af3bb23046f15c0923e85d0b95949c96a22902815ef2c6d31a68af3bd705",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-ci-m0-report-ubuntu-latest-static-original-current.log",
+      "log_sha256": "6aac04a1ec0de6d49b99a5459cbad6c76971372a5d67fe7bf864015fd1072603",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-2901f42\\ci\\extracted\\m0-report-ubuntu-latest-13096021428\\20261101-183140-ffaa806c\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-6310969\\ci\\extracted\\m0-report-ubuntu-latest-13087119373\\20261101-144135-4d7ff67f\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-ci-m0-report-ubuntu-latest-gui",
+      "group": "second_CI_original",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/i2-j1-6310969/ci/extracted/m0-report-ubuntu-latest-13087119373/20261101-144310-866ffdc4/report.json",
+      "report_sha256": "485ab4beadc3f7dedb4ab8f430e12e6371d2312f2ed262f48792da52e82a1827",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-ci-m0-report-ubuntu-latest-gui-historical-baseline.log",
+      "log_sha256": "191ee04103638c9fa174918579ef9f619ab673c3af8b7a532293b90ee45ee243",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-6310969\\ci\\extracted\\m0-report-ubuntu-latest-13087119373\\20261101-144310-866ffdc4\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "second-ci-m0-report-ubuntu-latest-gui",
+      "group": "second_CI_original",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-2901f42/ci/extracted/m0-report-ubuntu-latest-13096021428/20261101-183324-bcb1ebd3/report.json",
+      "report_sha256": "38e9667489e0a42789a049bc2b423b54f285df62ae3b582b7e11876e6174305a",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/second-ci-m0-report-ubuntu-latest-gui-original-current.log",
+      "log_sha256": "bdf6b8f85198a4119e600fba5e389c688d61d9b672847ce23470f186a653ce6b",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-2901f42\\ci\\extracted\\m0-report-ubuntu-latest-13096021428\\20261101-183324-bcb1ebd3\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-6310969\\ci\\extracted\\m0-report-ubuntu-latest-13087119373\\20261101-144310-866ffdc4\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "first-windows-gui",
+      "group": "first_failed_original",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/i2-j1-5fe0a10/windows-gui/20261101-205241-d4aff2d8/report.json",
+      "report_sha256": "178d2a42b041fe1ed6018d79d6b7b27a72c73cdc348d7204c20dc2b26d5a1e6c",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/first-windows-gui-historical-baseline.log",
+      "log_sha256": "e448a50913320a417f97672519120d9ec018d218ac7162d5312cc11ce9824716",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows-gui\\20261101-205241-d4aff2d8\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "first-windows-gui",
+      "group": "first_failed_original",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-56b689f/windows-gui/20261102-012220-a82212ec/report.json",
+      "report_sha256": "8e337085204426fde696e2011717e85ef2167687b3529bbea53408179199cb13",
+      "exit_code": 1,
+      "expected_exit": 1,
+      "log": "versions/v3-18c5858/relocated-verification/first-windows-gui-original-current.log",
+      "log_sha256": "564af5ff14a30efb0441f64dcadfefedf454da9d9b80cb03b44008746a7e5759",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-56b689f\\windows-gui\\20261102-012220-a82212ec\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows-gui\\20261101-205241-d4aff2d8\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "first-windows-static",
+      "group": "first_failed_original",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/i2-j1-5fe0a10/windows-static/20261101-205231-c62d61cd/report.json",
+      "report_sha256": "5b72c84e71c6e1b096ad81566c0adb5d7809fd590506dc9f37559ea8b3526c99",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/first-windows-static-historical-baseline.log",
+      "log_sha256": "f0f54bc8d6f503630bb8086d0eefbe6e25055d819ed221af838bad8acc69715d",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows-static\\20261101-205231-c62d61cd\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "first-windows-static",
+      "group": "first_failed_original",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-56b689f/windows-static/20261102-011952-3779ed5f/report.json",
+      "report_sha256": "2063a7dc27ee502cca4660df4d6ba9862149644e3dad2806cba29431cbc07f35",
+      "exit_code": 1,
+      "expected_exit": 1,
+      "log": "versions/v3-18c5858/relocated-verification/first-windows-static-original-current.log",
+      "log_sha256": "08bc031c743c8ea08e64475e60a73920337fd13ba650e81f0dad71c8d3c78d6a",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-56b689f\\windows-static\\20261102-011952-3779ed5f\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows-static\\20261101-205231-c62d61cd\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "first-windows113-backend",
+      "group": "first_failed_original",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/i2-j1-5fe0a10/windows113-backend/20261101-205411-0e9901a5/report.json",
+      "report_sha256": "2735fc3250511af3ac8db604f5a33ddba848676496a3027c05ece520a5d93536",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/first-windows113-backend-historical-baseline.log",
+      "log_sha256": "145393cfa1b5099351180d46f47af241cda6b96b110b4554ba98bb72863f3f89",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows113-backend\\20261101-205411-0e9901a5\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "first-windows113-backend",
+      "group": "first_failed_original",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-56b689f/windows113-backend/20261102-011748-9a34c5d0/report.json",
+      "report_sha256": "feab350843b18576909153690c66a84cc3d09f7c4f8753b8b389787a3a639086",
+      "exit_code": 1,
+      "expected_exit": 1,
+      "log": "versions/v3-18c5858/relocated-verification/first-windows113-backend-original-current.log",
+      "log_sha256": "b1f711f0660cfe8f08deb78d8011004c2727e303f5c97660f7c8aa9582209ce0",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-56b689f\\windows113-backend\\20261102-011748-9a34c5d0\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows113-backend\\20261101-205411-0e9901a5\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "first-windows113-integration",
+      "group": "first_failed_original",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/i2-j1-5fe0a10/windows113-integration/20261101-213823-a10c064e/report.json",
+      "report_sha256": "193f85ac437775d8c84bd5173d97eea5973c35a70ec12799ca44e498558113de",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/first-windows113-integration-historical-baseline.log",
+      "log_sha256": "3a787d4ae56e856c399a2beb8b2717452b6701bcb4692dfef4cf104672cdcae7",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows113-integration\\20261101-213823-a10c064e\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "first-windows113-integration",
+      "group": "first_failed_original",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-56b689f/windows113-integration/20261102-014658-5f26cf76/report.json",
+      "report_sha256": "36607e1994f6bd050bc0ea6ec37fc7d9a0cac4857b7787f6363a2776f85078a6",
+      "exit_code": 1,
+      "expected_exit": 1,
+      "log": "versions/v3-18c5858/relocated-verification/first-windows113-integration-original-current.log",
+      "log_sha256": "cfcc940c3f3ccc17da9b17eb3e5c2e316ce9d7914039e91c2c87c1c664e15d4e",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-56b689f\\windows113-integration\\20261102-014658-5f26cf76\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows113-integration\\20261101-213823-a10c064e\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "first-windows114-backend",
+      "group": "first_failed_original",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/i2-j1-5fe0a10/windows114-backend/20261101-205411-79e165c8/report.json",
+      "report_sha256": "c0de0742a3ec2b2cdafbaf7b0d79cf58e489737a3479001c621b76f4607426df",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/first-windows114-backend-historical-baseline.log",
+      "log_sha256": "24f90291c2e021c5bc43fa50a6b6b05beaf9cfbfae0e73d720cbd9db3f08cd91",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows114-backend\\20261101-205411-79e165c8\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "first-windows114-backend",
+      "group": "first_failed_original",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-56b689f/windows114-backend/20261102-012049-57371f8c/report.json",
+      "report_sha256": "591e52a47535115123eb12468ad886f039e1b6c08dc4a5ba0f4e2e2050ae8759",
+      "exit_code": 1,
+      "expected_exit": 1,
+      "log": "versions/v3-18c5858/relocated-verification/first-windows114-backend-original-current.log",
+      "log_sha256": "c2fe97899e1ebafd65588824ccb47a0d7a321f7f7b018e14c0ef4e1760033ea0",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-56b689f\\windows114-backend\\20261102-012049-57371f8c\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-5fe0a10\\windows114-backend\\20261101-205411-79e165c8\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "first-windows114-integration",
+      "group": "first_failed_original",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/i2-j1-03d2c48/windows114-integration/20261101-221315-6389b5dd/report.json",
+      "report_sha256": "2b6031df0b82040afc5d0b050c4dd62cf2744e18f2cb0a7dc6dc5fb9c49e1a47",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/first-windows114-integration-historical-baseline.log",
+      "log_sha256": "3ea16e4ef96fd1584357fc78bb2f5061842326f378f408e29bdd24f6ea309a24",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-03d2c48\\windows114-integration\\20261101-221315-6389b5dd\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "first-windows114-integration",
+      "group": "first_failed_original",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-56b689f/windows114-integration/20261102-015023-8bc66545/report.json",
+      "report_sha256": "832decccd0c0bfdf9fd9c00555e2f6167409c95035cf316c8f88c04ef8b5da4b",
+      "exit_code": 1,
+      "expected_exit": 1,
+      "log": "versions/v3-18c5858/relocated-verification/first-windows114-integration-original-current.log",
+      "log_sha256": "16961d17babc9150419fddec237ac530ee34659011a72a3315016619cb507ade",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-56b689f\\windows114-integration\\20261102-015023-8bc66545\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\i2-j1-03d2c48\\windows114-integration\\20261101-221315-6389b5dd\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "first-linux113",
+      "group": "first_failed_original",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/j2-f8-56b689f/ci/historical/linux113-static/report.json",
+      "report_sha256": "2afda74e1ac4d633e1629fdd4f07f7ba9769e8b600f6ae4dcf144b366288c0e5",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/first-linux113-historical-baseline.log",
+      "log_sha256": "43ab69cbe75332b02cfc8341ccac83edca0d0975a3e4644cf1be08e3bd50a98c",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-56b689f\\ci\\historical\\linux113-static\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "first-linux113",
+      "group": "first_failed_original",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-56b689f/ci/extracted/linux-evidence-11.3.2-13093695553/linux-static/20261101-171806-f37917ae/report.json",
+      "report_sha256": "90f146754ef3a91e837c55e3505f96a3e4779a692ffccd5d5fbdaacfa105b907",
+      "exit_code": 1,
+      "expected_exit": 1,
+      "log": "versions/v3-18c5858/relocated-verification/first-linux113-original-current.log",
+      "log_sha256": "744101bf8cbd08e4890ad541e6a686691a053d3a46213335c5d260988bafbaed",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-56b689f\\ci\\extracted\\linux-evidence-11.3.2-13093695553\\linux-static\\20261101-171806-f37917ae\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-56b689f\\ci\\historical\\linux113-static\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "first-linux114",
+      "group": "first_failed_original",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/j2-f8-56b689f/ci/historical/linux114-static/report.json",
+      "report_sha256": "61b64854609752c8e58892179276eac5ca88b6eff4f29d09b0ebeaf86d614806",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/first-linux114-historical-baseline.log",
+      "log_sha256": "2bb79f411a75c5cfd712553e4f25294a89a9ea69520d5bf3f95e22f38100f52d",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-56b689f\\ci\\historical\\linux114-static\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "first-linux114",
+      "group": "first_failed_original",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-56b689f/ci/extracted/linux-evidence-11.4.3-13092839619/linux-static/20261101-171938-c32708b9/report.json",
+      "report_sha256": "39da8fa9162a4acce54b403d43504c88b7874c711ca4fab0a6eb83829e1b6269",
+      "exit_code": 1,
+      "expected_exit": 1,
+      "log": "versions/v3-18c5858/relocated-verification/first-linux114-original-current.log",
+      "log_sha256": "aa7481579b09b18acedf5406d22474cd83ba87c6ccad3858e1548b7892dc3ed3",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-56b689f\\ci\\extracted\\linux-evidence-11.4.3-13092839619\\linux-static\\20261101-171938-c32708b9\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-56b689f\\ci\\historical\\linux114-static\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "first-m0-linux",
+      "group": "first_failed_original",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/j2-f8-56b689f/ci/gates/m0-ubuntu-static/historical/report.json",
+      "report_sha256": "665b8bdaab8eb061a751d82690bbe0a3a4d64b1875b9fbfba1c78d86c6ab5a15",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/first-m0-linux-historical-baseline.log",
+      "log_sha256": "06133ce5124b80237438872175fe391a04af63c56e7aff9e0180fc9666eceeed",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-56b689f\\ci\\gates\\m0-ubuntu-static\\historical\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "first-m0-linux",
+      "group": "first_failed_original",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-56b689f/ci/extracted/m0-report-ubuntu-latest-13093800091/20261101-171631-fa098b72/report.json",
+      "report_sha256": "42aeacc5d6ccdfc09eee04af661b99dee2fb66a4b84e6a15ae56e908524d2b7a",
+      "exit_code": 1,
+      "expected_exit": 1,
+      "log": "versions/v3-18c5858/relocated-verification/first-m0-linux-original-current.log",
+      "log_sha256": "4af3ffb633d8671846454090728a015192391fec86639e6835e6d7d3a097119b",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-56b689f\\ci\\extracted\\m0-report-ubuntu-latest-13093800091\\20261101-171631-fa098b72\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-56b689f\\ci\\gates\\m0-ubuntu-static\\historical\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "first-m0-windows",
+      "group": "first_failed_original",
+      "kind": "historical-baseline",
+      "report": "tree/out/verification/j2-f8-56b689f/ci/historical/windows-m0-6310969-static/report.json",
+      "report_sha256": "7df971949de5806c10127bc50db3abf9be0c89eb21a5b6b257c1e3911f74c857",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log": "versions/v3-18c5858/relocated-verification/first-m0-windows-historical-baseline.log",
+      "log_sha256": "5d44985d7011939033888a245477d44001bb007e66b12a8d6c1e426ee56a2f17",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-56b689f\\ci\\historical\\windows-m0-6310969-static\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    },
+    {
+      "lane": "first-m0-windows",
+      "group": "first_failed_original",
+      "kind": "original-current",
+      "report": "tree/out/verification/j2-f8-56b689f/ci/extracted/m0-report-windows-latest-13092893947/20261101-171724-98f36bb8/report.json",
+      "report_sha256": "20c35508388e50b68dc1559730c537762b7e84dc0318c92657427bea72a423e5",
+      "exit_code": 1,
+      "expected_exit": 1,
+      "log": "versions/v3-18c5858/relocated-verification/first-m0-windows-original-current.log",
+      "log_sha256": "7c6b45fdbfd648ba7ac0b9ddaa753a819096e562a7ba0df5122556e68732b14f",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-56b689f\\ci\\extracted\\m0-report-windows-latest-13092893947\\20261101-171724-98f36bb8\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-archive-plan\\staging-v3-18c5858\\tree\\out\\verification\\j2-f8-56b689f\\ci\\historical\\windows-m0-6310969-static\\report.json"
+      ],
+      "allow_legacy_or_incomplete_flags": false
+    }
+  ]
+}

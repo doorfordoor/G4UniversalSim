@@ -1,0 +1,36 @@
+# F8 五文件独立组件审查（offscreen，原身份）
+
+日期2026-11-02。依据f8-accessibility-implementation.md、f8-native-handoff.md，只读审查accessibility.py、start_page.py、main_window.py、window/shell.py及smoke_f8_accessibility.py。未修改产品、永久测试或runner，没有原生窗口/键鼠操作，没有与main的实窗争用。
+
+结论：在Harvey冻结收据的五文件字节上，独立125%和150%各6组反例检查通过，**没有新增独立确认的P1/P2**。仅是下面列明的组件边界，不是F8阶段关闭，不覆盖main另已发现的真实表单label左裁切。该实窗问题由Harvey定位，本报告不替代、撤销或重复登记它。
+
+## 独立证据
+
+脚本 [independent_cases.py](independent_cases.py)。最终[125%结果](125-r2/results.json)/[日志](125-r2.log)，[150%结果](150/results.json)/[日志](150.log)。两次process退出0，五文件运行前后SHA一致且与作者receipt.json逐项相同；没有使用作者142入口日志冒充独审。
+
+实际DPR分别1.25/1.5，offscreen availableGeometry为640×640/533×533；测试的最小目标窗口为760×480。后者可以大于offscreen虚拟屏幕，所以这里是控件/viewport几何与焦点压力测试，不能声称物理屏幕完整可见、真实Windows DPI或多屏热切换通过。
+
+| 检查 | 独立观察 |
+| --- | --- |
+| 九页Ctrl+Alt+1..9与F6/Shift+F6 | 非顺序逐页触发真实Qt动作，焦点属于目标页；原非法seed、完整编辑指纹、runner/EditSession/workflow实例不变 |
+| QApplication过滤器作用域 | 无父外部QPlainTextEdit的tabChangesFocus/名称/内容不被改；owned QDialog按实际label设名称但原字段值、主快照不变 |
+| 多行Tab与已有busy guard | Tab离开文本框但不写入Tab或改原文；can_mutate拒绝时向导无动作，重入flag最终复位 |
+| I1/I2可见单实例 | 重复环境入口保持同一visible I1对象，重复安装入口保持同一visible I2对象；真实父子链，只有一个可见安装器；plan/receipt为空、未安装/运行，业务指纹不变 |
+| 向导重入/返回/Esc/重开 | 真实modal loop中第二次调用不创建第二个可见wizard；Back保留局部厚度6；Esc和随后重开不提交临时name/厚度或清掉项目非法seed |
+| 短屏滚动 | 窗口760×480，逐一聚焦五开始按钮和主题/语言；在所有祖先QScrollArea的viewport内验证按钮完整矩形可见，业务快照不变 |
+
+## 源码核对与所有权判断
+
+AccessibilityController的全局filter只对QObject父链归属于当前MainWindow的widget处理；FocusIn仅调用既有滚动呈现，dialog Show只装饰/包裹既有页面及限尺寸，返回False，不消费业务按键。多行Tab策略改变焦点行为，原文可保留；这不等于承诺Tab还能在多行框插入缩进。
+
+show_environment_settings在可见I1上raise；show_environment_installer点击I1已有install_button，原EnvironmentDialog负责复用可见I2及publication→reprobe信号。没有另造runner、安装状态或任务owner。这里的“单实例”指同一窗口同时可见的I1/I2；关闭后重新创建隐藏/新对象的生命周期不据此定缺陷。
+
+MainWindow向导入口只有重入flag和finally，不重写ContentMixin的候选/事务路径。短屏布局仍复用原页/dock，新增外层滚动和开始页换行，不复制编辑模型。没有发现F8焦点、语言或呈现刷新直接写业务字段的路径。
+
+## 首轮失败保留与未覆盖项
+
+[首轮125日志](125.log)与[首轮结果](125/results.json)保留：窗口show/activate后未泵事件就发送第一组快捷键，Qt快捷键尚未注册为active，本独审脚本首项失败，其余5项通过。已仅修改本目录脚本，给新offscreen窗口50ms事件等待，125-r2和150随后均通过。不是产品修复，不把首轮失败回写成通过。
+
+本轮没有观察截图，不作视觉可读性判断；没有实际读屏、系统快捷键/AltGr、原生Windows DPI、物理多屏、真实环境安装或下载。短屏检查针对焦点控件完整矩形，**没有验证每个表单label也总与buddy同时可见**，所以不能用于反驳main刚发现的label左裁切。该问题需要在其修复后的新字节上单独复核，不能继承本报告旧身份。
+
+建议main保持F8最终判定开放，合并实窗label问题与修复后的新证据；五文件若变动，按实际影响定点复测，不复用本轮旧SHA作新实窗通过。当前所有offscreen进程已关闭。

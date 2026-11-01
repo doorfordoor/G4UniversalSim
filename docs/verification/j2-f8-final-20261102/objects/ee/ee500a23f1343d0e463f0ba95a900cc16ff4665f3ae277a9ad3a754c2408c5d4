@@ -1,0 +1,39 @@
+# F8 永久 retained-dock 回归补丁草案（out-only，2026-11-02）
+
+未改 tracked。拟在现有 smoke_f8_accessibility.py 内新增 `test_retained_dock_focus(app, output=None)`，main末尾追加一次调用，不新增runner Case/args。
+
+## 交付与SHA256
+
+- smoke_f8_accessibility.patch（LF，可 git apply --check）：
+  `f5102d8367bd9779b587294613c5487d5b197c1235ff88a1a2dee6f7ecd2d784`
+- smoke_f8_accessibility.proposed.py（实际离屏执行的完整草案，CRLF字节）：
+  `df8db0fe6ce906651f224699de6d360b6f811a6752ae4a32045a4699e97459b2`
+- 完整smoke草案归一化LF内容SHA：
+  `28ec235172d1d738beb49a6aa562e98ba1ac2942dc6d180d649eee7ac6efb428`
+
+产品 accessibility.proposed.py 保持此前独审内容/SHA `677a7b54c5ce876d663b6d986642ee5393a385b782a29dad695c2ed20d280b39`。提供 `accessibility.lf.patch` 作为此前CRLF补丁的LF字节副本，SHA `e7c29590423e618d32a79c7071f754cbea94ad975c3105ca6904f6e546344261`；产品代码内容没有改变，旧原始patch/receipt保留。两个LF补丁一起 `git apply --check` 已exit0，未应用。
+
+## 永久回归合同
+
+- 独立生产MainWindow smoke适配器与隔离QSettings/recovery/runs，760×640，同host的 _set_project/reset_history 路径。
+- CtrlAlt2→CtrlAlt3→F6→CtrlN/Return×3/AltLeft/Esc→dark→CtrlAlt2，保留8个阶段截图、中央stack实际占位几何和所有祖先ScrollArea的字段/联合框/交集/滚动值。
+- 返回Project后，断言真实focus为项目名，完整field在每层viewport内；label+完整field联合框能容纳的轴必须完整可见。保留config/preview dock，不重建或换parent。
+- 九页快捷键与F6；新导航焦点取代待执行的旧focus；foreign QWidget获得焦点时主viewport不滚动、foreign文本不变；owned焦点控件在回调前真实deleteLater/DeferredDelete，断言C++包装器失效，再确认主窗口可正常返回Project。
+- F5业务指纹与Undo/Redo/is_modified保持前值；不调用显露helper修复结果，不prepare/归零滚动、不隐藏dock。同步显露及原union helper完全不改。
+- AST逐函数比较证实旧测试函数完全未动；main只有一个新增调用。旧280个断言入口完整保留。
+
+## 验证
+
+| 日志 | 产品 | 结果 |
+| --- | --- | --- |
+| permanent-v2-smoke-1.25.log | 内存加载产品候选 + 完整永久smoke草案 | exit0 / v3 406 |
+| permanent-v2-smoke-1.5.log | 同上 | exit0 / v3 406 |
+| permanent-v2-baseline150.log | 冻结产品 + 同一新增测试 | 预期exit1 |
+
+负向对照准确停在新增的 Project 返回可见性断言：`workspaceContentScroll` field `QRect(711,31,190,32)`、viewport `QRect(0,0,540,464)`，与native150 P2一致。没有把异常退出当通过。
+
+对应截图/JSON：`permanent-v2-smoke-1.25/`、`permanent-v2-smoke-1.5/`（retained-01...08、retained-dock-focus.json）；负对照在 `permanent-v2-baseline150/`。完整SHA/退出收据见 `permanent-smoke-receipt.json`。
+
+初稿测试额外假设AltLeft必定Back，实测当前Qt只保持向导第3页；该无关假设已从新增测试去掉，仍重放完全相同的AltLeft输入再Esc取消。不是改旧断言或放宽viewport/union合同；初稿源码、失败日志均原样保留。
+
+冻结原文件核对仍为：accessibility.py `8f597259...`、smoke_f8_accessibility.py `7087edc6...`。没有新翻译，没有新原生操作，没有全局构建或阶段状态变化。待 main 矩阵终态及独审裁决后再决定是否应用。

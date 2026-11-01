@@ -1,0 +1,104 @@
+--- a/gui/g4usim_gui/editors/material_editor_model.py
++++ b/gui/g4usim_gui/editors/material_editor_model.py
+@@ -359,6 +359,21 @@
+     return result
+ 
+ 
++def _density_failure_code(text: str) -> str:
++    """Keep established F4 categories without weakening density acceptance."""
++    match = _DENSITY_NUMBER.match(text.strip())
++    if match is None:
++        return 'materials.density.numeric'
++    try:
++        number = match.group()
++        value = float.fromhex(number) if '0x' in number.lower() else float(number)
++    except (ValueError, OverflowError):
++        return 'materials.density.invalid'
++    if math.isfinite(value) and value <= 0:
++        return 'materials.density.positive'
++    return 'materials.density.invalid'
++
++
+ def _validate_density(row: MaterialRow) -> None:
+     if row.mode == "nist":
+         if row.density:
+@@ -370,8 +385,15 @@
+         _issue(row, 'materials.density.required', 'error', "density is required", 'density')
+         return
+     if density_internal_value(row.density) is None:
+-        _issue(row, 'materials.density.invalid', 'error', ui_format(
+-            "Density must be finite and positive with a supported unit (g/cm3, kg/m3, mg/cm3): {value}", value=row.density), 'density')
++        code = _density_failure_code(row.density)
++        if code == 'materials.density.numeric':
++            message = "density should start with a positive number or be auto for volume_fraction"
++        elif code == 'materials.density.positive':
++            message = "density must be > 0"
++        else:
++            message = ui_format(
++                "Density must be finite and positive with a supported unit (g/cm3, kg/m3, mg/cm3): {value}", value=row.density)
++        _issue(row, code, 'error', message, 'density')
+ 
+ 
+ def _validate_components(row: MaterialRow, document: MaterialDocument) -> None:
+@@ -380,7 +402,7 @@
+             _issue(row, 'materials.components.ignored', 'warning', "components are ignored for nist rows", 'components_text')
+         target = row.nist_name.strip() or row.name
+         if target not in NIST_MATERIALS:
+-            editable_target = target == row.name and row.name.startswith('G4_')
++            editable_target = not row.nist_name.strip() or (target == row.name and row.name.startswith('G4_'))
+             _issue(row, 'materials.nist.unknown', 'error', ui_format(
+                 "Unknown NIST material in the Geant4 catalog: {name}", name=target),
+                 'name' if editable_target else 'nist_name',
+--- a/gui/g4usim_gui/editors/source_physics_scoring_model.py
++++ b/gui/g4usim_gui/editors/source_physics_scoring_model.py
+@@ -226,7 +226,8 @@
+         value = getattr(model, field, None)
+         if isinstance(value, list):
+             value = [asdict(item) if hasattr(item, '__dataclass_fields__') else item for item in value]
+-    emit_diagnostic(model, f'{editor}.structured.invalid', 'error', problem(path, reason),
++    code = 'physics.mode.unsupported' if editor == 'physics' and path == 'physics.mode' else f'{editor}.structured.invalid'
++    emit_diagnostic(model, code, 'error', problem(path, reason),
+                     origin=f'{editor}.editor', editor=editor, field=field,
+                     collection=collection, row=row, entity=entity,
+                     identity_parameters={'reason': reason, 'value': value})
+--- a/gui/g4usim_gui/validators/config_validator.py
++++ b/gui/g4usim_gui/validators/config_validator.py
+@@ -342,8 +342,7 @@
+     text = path.read_text(encoding="utf-8", errors="replace")
+     lower = text.lower()
+     if re.search(r"(?im)^\s*shape\s*=\s*(tessellated|stl)\s*(?:#.*)?$", text):
+-        report.add('geometry.shape.not_editable', 'warning', "Geometry uses shape = tessellated (STL, backend-supported); the GUI geometry "
+-                               "editors cannot edit it.", origin='config.source', source=_source_field_location(path, text, key='shape', allowed_values=('tessellated', 'stl')), unavailable_reason='source_only')
++        report.add('geometry.shape.experimental', 'warning', ui_text('STL geometry is editable in the GUI and remains experimental; validate the resource and Geant4 initialization before running.'), origin='config.source', source=_source_field_location(path, text, key='shape', allowed_values=('tessellated', 'stl')), unavailable_reason='source_only')
+     if re.search(r"(?im)^\s*\[gdml\]\s*(?:#.*)?$", text):
+         message = capability_message("geometry.gdml.external")
+         if message not in report.warnings:
+@@ -354,11 +353,9 @@
+     )))
+     for placement in unsupported_placements:
+         report.add('geometry.placement.unsupported', 'error', capability_message("geometry.placement.unsupported", placement=placement), origin='config.source', source=_source_field_location(path, text, key='placement', value=placement), unavailable_reason='source_only')
+-    # Roadmap A5: the backend builds replica/parameterised placement from a
+-    # hand-written geometry INI; the GUI editors cannot edit them.
++    # J2 exposes A5 placement editing; experimental runtime boundaries remain.
+     if re.search(r"(?im)^\s*placement\s*=\s*(replica|parameteri[sz]ed)\s*(?:#.*)?$", text):
+-        report.add('geometry.placement.not_editable', 'warning', "Geometry uses placement=replica/parameterised (backend-supported); "
+-                               "the GUI geometry editors cannot edit these volumes.", origin='config.source', source=_source_field_location(path, text, key='placement', allowed_values=('replica', 'parameterised', 'parameterized')), unavailable_reason='source_only')
++        report.add('geometry.placement.experimental', 'warning', ui_text('Replica and parameterised placement are editable in the GUI and remain experimental; validate placement constraints and Geant4 initialization before running.'), origin='config.source', source=_source_field_location(path, text, key='placement', allowed_values=('replica', 'parameterised', 'parameterized')), unavailable_reason='source_only')
+     if "let" in lower or "dose" in lower or "fluence" in lower:
+         report.add('geometry.scoring.not_edited', 'warning', "Geometry config mentions LET/Dose/Fluence; those are not edited by this GUI MVP.", origin='config.source', source=source_location(str(path), text, key='', section='', value=''), unavailable_reason='source_only')
+     if "[volume." in lower and ".boolean." in lower:
+--- a/gui/g4usim_gui/core/i18n.py
++++ b/gui/g4usim_gui/core/i18n.py
+@@ -1659,6 +1659,12 @@
+ })
+ 
+ 
++ZH_CN.update({
++    'STL geometry is editable in the GUI and remains experimental; validate the resource and Geant4 initialization before running.': 'GUI 可编辑 STL 几何，其运行能力仍属实验性；运行前须校验资源并完成 Geant4 初始化检查。',
++    'Replica and parameterised placement are editable in the GUI and remain experimental; validate placement constraints and Geant4 initialization before running.': 'GUI 可编辑 replica 和 parameterised 放置，其运行能力仍属实验性；运行前须校验放置约束并完成 Geant4 初始化检查。',
++})
++
++
+ def default_language() -> LanguageCode:
+     return "zh_CN" if QLocale.system().language() == QLocale.Chinese else "en"
+ 

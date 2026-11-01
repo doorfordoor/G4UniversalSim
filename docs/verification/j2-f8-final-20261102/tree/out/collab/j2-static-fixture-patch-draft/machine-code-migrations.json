@@ -1,0 +1,123 @@
+{
+  "draft_only": true,
+  "migrations": [
+    {
+      "old": "materials.density.numeric",
+      "new": "materials.density.numeric",
+      "when": "bad/non-numeric density",
+      "location": "materials/rows/<row>/density",
+      "action": "retain stable category via main product draft"
+    },
+    {
+      "old": "materials.density.positive",
+      "new": "materials.density.positive",
+      "when": "parsed numeric <=0, including conversion underflow zero",
+      "location": "materials/rows/<row>/density",
+      "action": "retain stable category via main product draft"
+    },
+    {
+      "old": null,
+      "new": "materials.density.invalid",
+      "when": "unsupported unit, nonfinite or failed conversion",
+      "location": "materials/rows/<row>/density",
+      "action": "new category, canonical acceptance function unchanged"
+    },
+    {
+      "old": "physics.mode.unsupported",
+      "new": "physics.mode.unsupported",
+      "when": "unknown mode outside reference/manual",
+      "location": "physics/mode",
+      "action": "retain stable code via main product draft; not a rejection of legal manual"
+    },
+    {
+      "old": "physics.mode.unsupported (manual fixture)",
+      "new": "physics.structured.invalid",
+      "when": "manual with empty modules",
+      "location": "physics/manual_modules",
+      "action": "capability-semantic migration; add legal manual positive"
+    },
+    {
+      "old": "physics.biasing.not_editable",
+      "new": "physics.structured.invalid",
+      "when": "hook enabled but no active rules",
+      "location": "physics/bias_rules",
+      "action": "J2 rule consistency error; legal configured rules get no old capability warning"
+    },
+    {
+      "old": "physics.extra_modules.not_editable",
+      "new": "physics.structured.invalid",
+      "when": "EM extra module conflicts with reference list",
+      "location": "physics/extra_modules",
+      "action": "J2 real constructor conflict; optical extension positive"
+    },
+    {
+      "old": "physics.manual_modules.not_generated",
+      "new": "physics.structured.invalid",
+      "when": "manual modules coexist with reference mode",
+      "location": "physics/manual_modules",
+      "action": "J2 mode conflict; legal manual constructors positive"
+    },
+    {
+      "old": "materials.nist.unlisted (warning)",
+      "new": "materials.nist.unknown (error)",
+      "when": "target absent from complete NIST catalog",
+      "location": "editable direct target: rows/<row>/name; explicit alias target: source/unavailable nist_name",
+      "action": "full catalog semantics; valid catalog outside quicklist is positive; direct empty-target name regression remains blocking"
+    },
+    {
+      "old": "geometry.shape.not_editable",
+      "new": "geometry.shape.experimental",
+      "when": "tessellated/STL source",
+      "location": "source original shape line 4",
+      "action": "main product draft warning; preserve source snapshot/line"
+    },
+    {
+      "old": "geometry.placement.not_editable",
+      "new": "geometry.placement.experimental",
+      "when": "replica/parameterised source",
+      "location": "source original placement line 5",
+      "action": "main product draft warning; assembly error line 7 unchanged"
+    },
+    {
+      "old": "geometry.vector.components (box size)",
+      "new": "geometry.solid.size",
+      "when": "box size malformed",
+      "location": "geometry/volumes/<row>/size",
+      "action": "current registry code used in draft; requires main explicit machine-code migration decision"
+    },
+    {
+      "old": "geometry.trd.length",
+      "new": [
+        "geometry.solid.dx1",
+        "geometry.solid.dx2",
+        "geometry.solid.dy1",
+        "geometry.solid.dy2",
+        "geometry.solid.dz"
+      ],
+      "when": "missing required trd properties",
+      "location": "geometry/volumes/<row>/<property>",
+      "action": "current registry code split used in draft; requires main explicit compatibility decision"
+    },
+    {
+      "old": "geometry.layer.alpha_range",
+      "new": "geometry.layer.alpha_range",
+      "when": "layer vis.alpha out of range",
+      "location": "layers/layers/<row>/vis.alpha",
+      "action": "same code; now an editable backend-details field, remove old unsupported location expectation"
+    },
+    {
+      "old": "geometry.metadata.syntax",
+      "new": "geometry.metadata.syntax",
+      "when": "invalid metadata syntax",
+      "location": "layers/layers/<row>/metadata",
+      "action": "same code; editable metadata details field"
+    },
+    {
+      "old": "geometry.visual.alpha_range",
+      "new": "geometry.visual.alpha_range",
+      "when": "volume vis.alpha out of range",
+      "location": "geometry/volumes/<row>/vis.alpha",
+      "action": "same code; editable backend-details field"
+    }
+  ]
+}

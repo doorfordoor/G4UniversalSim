@@ -1,0 +1,113 @@
+{
+  "status": "passed",
+  "started_utc": "2026-11-01T19:54:35.566217+00:00",
+  "base_head": "2901f4254303c3a9089c9025717908c0d77ff190",
+  "scope": "actual patched tree uncommitted, original v3 probe, no candidate source loader/monkeypatch",
+  "expected_candidate_sha256": {
+    "gui/g4usim_gui/core/accessibility.py": "c9d87e23c88704fedc2c17a8a954aba9acf365c607ea47fe86b6c56854be2be7",
+    "gui/g4usim_gui/widgets/run_history_page.py": "cc98442e975cec3f1b33d556a8dabdd7381ec22368e94bd6124178edacb5a463",
+    "gui/smoke_tests/smoke_f8_accessibility.py": "943c92a0cdd0650511b7c8ce45378ebcbddc06b7f55b90835317eb44d3a59e95"
+  },
+  "source_sha256_before": {
+    "gui/g4usim_gui/core/accessibility.py": "c9d87e23c88704fedc2c17a8a954aba9acf365c607ea47fe86b6c56854be2be7",
+    "gui/g4usim_gui/core/experiment_bundle.py": "4990d9f4439711f96aa5a5475f6f39ea3588b8c1e3fabf7e3e2eca0318a45610",
+    "gui/g4usim_gui/core/i18n.py": "b404eb2b52c1db4fbe8f0b50aa396ea4635e65942fada84e302d9c6e015282ec",
+    "gui/g4usim_gui/widgets/run_history_page.py": "cc98442e975cec3f1b33d556a8dabdd7381ec22368e94bd6124178edacb5a463",
+    "gui/g4usim_gui/window/shell.py": "2bf59c065dee740b03fbc678ed32f787cd0b8c293e92b1fc8d498f80c6b11516",
+    "gui/g4usim_gui/window/workspace_layout.py": "cd5f7e0c1761085abe5c68a849753f939f965e252a9d46a1c637d9d17f4ef34c",
+    "gui/smoke_tests/smoke_f8_accessibility.py": "943c92a0cdd0650511b7c8ce45378ebcbddc06b7f55b90835317eb44d3a59e95",
+    "gui/smoke_tests/smoke_j2_geometry.py": "579c6a7a00a93a41570aa28357053d3009b1c2758cf005ccf6de78477fb5b671",
+    "scripts/test_k1_bundle.py": "80726fb8eeda65700169416b8a9711967ed15283ed8bbc22bbf20b42d8c216f3",
+    "tools/test_assert_probe.py": "fd6515504cdec5ab86046e53e390cb366f49ee5facbf7acbe21314943ad8568c"
+  },
+  "runs": [
+    {
+      "scale": "1.25",
+      "command": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-u",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\tools\\test_assert_probe.py",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\gui\\smoke_tests\\smoke_f8_accessibility.py",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\f8\\scale1.25"
+      ],
+      "qt_platform": "offscreen",
+      "output": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\f8\\scale1.25",
+      "started_utc": "2026-11-01T19:54:35.567216+00:00",
+      "pid": 52508,
+      "exit_code": 0,
+      "process_ended": true,
+      "finished_utc": "2026-11-01T19:56:24.231367+00:00",
+      "assertions_markers": [
+        "595"
+      ],
+      "log_sha256_raw_bytes": "be7c26e90fdd6fdd6e4b52466228360e1d7a34bde08796ada629ffcf8e6ce2d0",
+      "runtime_warning_preserved": true,
+      "source_sha256_after": {
+        "gui/g4usim_gui/core/accessibility.py": "c9d87e23c88704fedc2c17a8a954aba9acf365c607ea47fe86b6c56854be2be7",
+        "gui/g4usim_gui/core/experiment_bundle.py": "4990d9f4439711f96aa5a5475f6f39ea3588b8c1e3fabf7e3e2eca0318a45610",
+        "gui/g4usim_gui/core/i18n.py": "b404eb2b52c1db4fbe8f0b50aa396ea4635e65942fada84e302d9c6e015282ec",
+        "gui/g4usim_gui/widgets/run_history_page.py": "cc98442e975cec3f1b33d556a8dabdd7381ec22368e94bd6124178edacb5a463",
+        "gui/g4usim_gui/window/shell.py": "2bf59c065dee740b03fbc678ed32f787cd0b8c293e92b1fc8d498f80c6b11516",
+        "gui/g4usim_gui/window/workspace_layout.py": "cd5f7e0c1761085abe5c68a849753f939f965e252a9d46a1c637d9d17f4ef34c",
+        "gui/smoke_tests/smoke_f8_accessibility.py": "943c92a0cdd0650511b7c8ce45378ebcbddc06b7f55b90835317eb44d3a59e95",
+        "gui/smoke_tests/smoke_j2_geometry.py": "579c6a7a00a93a41570aa28357053d3009b1c2758cf005ccf6de78477fb5b671",
+        "scripts/test_k1_bundle.py": "80726fb8eeda65700169416b8a9711967ed15283ed8bbc22bbf20b42d8c216f3",
+        "tools/test_assert_probe.py": "fd6515504cdec5ab86046e53e390cb366f49ee5facbf7acbe21314943ad8568c"
+      },
+      "source_bytes_unchanged": true
+    },
+    {
+      "scale": "1.5",
+      "command": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-u",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\tools\\test_assert_probe.py",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\gui\\smoke_tests\\smoke_f8_accessibility.py",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\f8\\scale1.5"
+      ],
+      "qt_platform": "offscreen",
+      "output": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-f8-third-repair-applied\\f8\\scale1.5",
+      "started_utc": "2026-11-01T19:56:24.233361+00:00",
+      "pid": 51896,
+      "exit_code": 0,
+      "process_ended": true,
+      "finished_utc": "2026-11-01T19:58:00.693981+00:00",
+      "assertions_markers": [
+        "595"
+      ],
+      "log_sha256_raw_bytes": "24f1013fbed9b923ef1239ba55d4a30bec7ee6e348db4436104de217dc5324f7",
+      "runtime_warning_preserved": true,
+      "source_sha256_after": {
+        "gui/g4usim_gui/core/accessibility.py": "c9d87e23c88704fedc2c17a8a954aba9acf365c607ea47fe86b6c56854be2be7",
+        "gui/g4usim_gui/core/experiment_bundle.py": "4990d9f4439711f96aa5a5475f6f39ea3588b8c1e3fabf7e3e2eca0318a45610",
+        "gui/g4usim_gui/core/i18n.py": "b404eb2b52c1db4fbe8f0b50aa396ea4635e65942fada84e302d9c6e015282ec",
+        "gui/g4usim_gui/widgets/run_history_page.py": "cc98442e975cec3f1b33d556a8dabdd7381ec22368e94bd6124178edacb5a463",
+        "gui/g4usim_gui/window/shell.py": "2bf59c065dee740b03fbc678ed32f787cd0b8c293e92b1fc8d498f80c6b11516",
+        "gui/g4usim_gui/window/workspace_layout.py": "cd5f7e0c1761085abe5c68a849753f939f965e252a9d46a1c637d9d17f4ef34c",
+        "gui/smoke_tests/smoke_f8_accessibility.py": "943c92a0cdd0650511b7c8ce45378ebcbddc06b7f55b90835317eb44d3a59e95",
+        "gui/smoke_tests/smoke_j2_geometry.py": "579c6a7a00a93a41570aa28357053d3009b1c2758cf005ccf6de78477fb5b671",
+        "scripts/test_k1_bundle.py": "80726fb8eeda65700169416b8a9711967ed15283ed8bbc22bbf20b42d8c216f3",
+        "tools/test_assert_probe.py": "fd6515504cdec5ab86046e53e390cb366f49ee5facbf7acbe21314943ad8568c"
+      },
+      "source_bytes_unchanged": true
+    }
+  ],
+  "finished_utc": "2026-11-01T19:58:00.694981+00:00",
+  "source_sha256_after": {
+    "gui/g4usim_gui/core/accessibility.py": "c9d87e23c88704fedc2c17a8a954aba9acf365c607ea47fe86b6c56854be2be7",
+    "gui/g4usim_gui/core/experiment_bundle.py": "4990d9f4439711f96aa5a5475f6f39ea3588b8c1e3fabf7e3e2eca0318a45610",
+    "gui/g4usim_gui/core/i18n.py": "b404eb2b52c1db4fbe8f0b50aa396ea4635e65942fada84e302d9c6e015282ec",
+    "gui/g4usim_gui/widgets/run_history_page.py": "cc98442e975cec3f1b33d556a8dabdd7381ec22368e94bd6124178edacb5a463",
+    "gui/g4usim_gui/window/shell.py": "2bf59c065dee740b03fbc678ed32f787cd0b8c293e92b1fc8d498f80c6b11516",
+    "gui/g4usim_gui/window/workspace_layout.py": "cd5f7e0c1761085abe5c68a849753f939f965e252a9d46a1c637d9d17f4ef34c",
+    "gui/smoke_tests/smoke_f8_accessibility.py": "943c92a0cdd0650511b7c8ce45378ebcbddc06b7f55b90835317eb44d3a59e95",
+    "gui/smoke_tests/smoke_j2_geometry.py": "579c6a7a00a93a41570aa28357053d3009b1c2758cf005ccf6de78477fb5b671",
+    "scripts/test_k1_bundle.py": "80726fb8eeda65700169416b8a9711967ed15283ed8bbc22bbf20b42d8c216f3",
+    "tools/test_assert_probe.py": "fd6515504cdec5ab86046e53e390cb366f49ee5facbf7acbe21314943ad8568c"
+  },
+  "head_after": "2901f4254303c3a9089c9025717908c0d77ff190"
+}

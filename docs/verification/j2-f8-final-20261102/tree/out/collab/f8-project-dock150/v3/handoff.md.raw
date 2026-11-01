@@ -1,0 +1,34 @@
+# F8 永久测试 v3：Ptolemy stale 假覆盖 P2 修订（out-only）
+
+2026-11-02。仅此 v3 目录新增测试草案/patch/运行证据；未覆盖原406源码、f510...patch、df8d...完整草案、permanent-v2日志/图像/receipt。产品候选677a7...未动；tracked GUI仍匹配native150 identity，原tracked smoke仍7087edc6...。等待独审定点复核和统一apply。
+
+## 修订
+
+旧406 stale段从已经持焦Project直接focus_page(1)，不会产生FocusIn，不能证明真实旧任务被替换；此项审查成立，旧406不能作为该机制覆盖证据。
+
+v3先通过真实CtrlAlt1自然离开Project并settle，确认Start持焦且_pending_focus=None。随后连续：
+
+1. focus_page(1)，不pump；断言实际焦点是Project项目名称、pending weakref真实指向该field、单次timer活动。
+2. focus_page(0)，仍不pump；断言新焦点为Start控件、pending不再指向Project，且只能指向新Start或已取消。
+3. settle；断言pending排空、焦点仍为最新Start、各祖先viewport中新目标可见。
+
+保留已有最终Project/label+完整field可见性、九页/F6、foreign/deleted、dock单实例及业务fingerprint/Undo断言。不改原280函数或union helper；AST检查通过，main仍只增加新测试调用。
+
+## 新SHA（全部LF）
+
+- smoke_f8_accessibility.patch：`247e4a6925906471d0b40dd70800149c37fc4aa963d379888c6ada321c3cb6ce`
+- smoke_f8_accessibility.proposed.py：`69b11a915a0864110171df75a1a2402ea3025f0a3a01b79d31af8ee26bd9f0e6`
+
+patch与此前accessibility.lf.patch组合git apply --check exit0，未应用。产品proposed原始SHA仍 `677a7b54c5ce876d663b6d986642ee5393a385b782a29dad695c2ed20d280b39`。
+
+## 作者验证
+
+- permanent-smoke-1.25.log：完整草案+内存产品候选，exit0，v3=416。
+- permanent-smoke-1.5.log：完整草案+内存产品候选，exit0，v3=416。
+- 两档retained-dock-focus.json均记录：
+  - stale-project-queued：page1、pending_is_project=true、timer_active=true。
+  - stale-start-supersedes：page0、old_project_pending=false、pending_is_current_start=true、pending_cancelled=false。
+- permanent-baseline150.log：冻结产品+同一新增函数，预期exit1，准确失败于返回Project后的field(711,31,190,32)超出viewport(0,0,540,464)。失败在stale段之前，不用该负向日志声称验证stale取消机制。
+- receipt.json记录新测试源码/patch/日志SHA和退出结果。各DPR目录保留八阶段截图及视口/占位几何JSON。
+
+执行器：probe-permanent-smoke.py（F8_PROBE_SCALE=1.25/1.5），probe-baseline-targeted.py（冻结负向）。不新增runner Case/args。无新翻译、原生输入或构建。

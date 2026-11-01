@@ -1,0 +1,23 @@
+PASS gui_materials: asserts=43/43
+PASS gui_geometry: asserts=70/64
+FAIL gui_j2_blank: G4USIM_ASSERTS=24
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_blank.py", line 112, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_j2_blank.py", line 96, in main
+    assert page.materials_summary is None and page.geometry_summary is None
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+ asserts=24/26
+PASS gui_j2_workspace: asserts=21/21
+PASS gui_config_editors: asserts=38/28
+Report: out\collab\j2-integration-regression-r1\20261102-002352-91b98bfb\report.json
+4 pass / 1 fail / 0 skip of 5 cases; assertions executed 196 (5 cases reported counts, 0 cases asserted nothing)

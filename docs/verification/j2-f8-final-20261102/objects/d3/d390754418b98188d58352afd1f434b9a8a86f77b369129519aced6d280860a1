@@ -1,0 +1,41 @@
+# 四测试最终草案：v2产品组合完整入口全部通过，未应用
+
+基于clean HEAD `56b689fb9ac920cbb1203b2b94dae2483d25f622`。仅写out；tracked产品/测试/STATUS均未修改。旧草案与review共23个文件逐SHA验证原字节保留。
+
+## 交付
+
+- [四测试统一patch](tests.patch)，SHA `b240672c7e1c42b9b54075a7dc9e788a66ecc2ad7aed1237df6e09ee338c200f`。
+- 单文件patch：[K1](test_k1_bundle.patch)、[migration](test_config_migration.patch)、[F4 producers](test_f4_producers.patch)、[F4 document](test_f4_document_diagnostics.patch)。完整候选在`proposed/scripts/`。
+- [manifest](manifest.json)：逐文件冻结源SHA/候选SHA、main产品v2的SHA与边界。
+- [四个完整入口验证收据](four-test-validation.json)，[静态范围检查](static-review.json)，[机器code迁移表](machine-code-migrations.json)。
+
+## 完整结果
+
+| 完整草案入口 | 结果 | 原始收据/日志 |
+| --- | --- | --- |
+| test_k1_bundle.py --component | PASS，11组（含旧资源拒绝/原子性及新增未知字段） | geometry-components-v2-r1.json / test_k1_bundle-combination-v2-r1.log |
+| test_config_migration.py main | PASS | geometry-components-v2-r2.json / test_config_migration-combination-v2-r2.log |
+| test_f4_producers.py main | PASS | f4-combination-v2.json / test_f4_producers-combination-v2.log |
+| test_f4_document_diagnostics.py main | PASS，原Unknown/name断言保留 | f4-combination-v2.json / test_f4_document_diagnostics-combination-v2.log |
+
+四入口使用同一main产品v2：`out/collab/j2-f8-repair-draft-v2/product.patch`，SHA `ba79f819458549eddaa3c595530a5f63601ffc834c2b8ce35b9af15a78f8c71e`。仅在内存替换模块，测试ROOT仍指向冻结仓库以便读取真实schema/registry，所有临时/fixture输出在本out目录；没有应用磁盘源码补丁。
+
+K1、F4测试文本与前一草案完全相同，没有重复执行已通过入口。migration首轮失败是本草案误把真实`file_unit`写成`unit`，在strict migration正确拒绝未知字段处失败；原日志、r1源码/patch/manifest保留于对应r1收据及`revisions/r1/`。仅修out夹具字段与对应断言后，重测migration完整入口通过，不属于降低产品判据。
+
+## 实现意图与保留边界
+
+K1验证已支持parameterised/copies_file的模型/writer、唯一资源receipt与snapshot重定位、实际移动包且移开原来源后的加载/生成、缺原来源/包内表拒绝；未知placement_future独立保留blocker/writer/K1 grammar拒绝和来源失效。原资源拒绝及原子性函数AST不变。
+
+migration验证tessellated/file/file_unit及位置/旋转/敏感性/copyNo/visual/metadata不丢，实际writer写到另一目录后再parse，路径继续指向同资源且源字节不变；未知键blocker与严格迁移拒绝、计划后来源改变拒绝publication；其它旧migration函数AST不变。STL仍是原占位字节，测试不宣称物理有效。
+
+F4根据J2真实manual/modules/bias规则语义更新负例并加合法编辑配置；真unknown mode保留稳定code。密度numeric/positive分类及非有限/溢出/下溢边界、单事实分类和重复identity稳定、历史serializer合成的固定v1 JSON不改code/identity均通过。旧JSON不新增alias，不追改历史证据。
+
+NIST完整目录未知值为error/unknown，非quicklist合法值通过。v2使空nist_name的直接目标可定位可编辑name，原非G4_的Unknown断言不删除、不换名。显式alias目标保持nist_name来源/不可定位边界，捕获来源改变后的历史身份不伪造行号。
+
+main已明确接受的机器code迁移严格限于box非法size `geometry.vector.components -> geometry.solid.size`，以及trd必填长度 `geometry.trd.length -> geometry.solid.dx1/dx2/dy1/dy2/dz`。其它vector code不泛改，新记录code变化会改变identity；历史JSON保留原code/identity。人类F4接口文档由main补充。source_cases原文本及来源行4/5/7/9保留，STL/placement实验warning不冒充不可编辑，assembly仍error。
+
+## 未验范围与运行退出
+
+此交付是out草案的四入口验证，不是正式profile报告拼接；正式候选56b689f首轮失败及严格门禁记录不变。main应用后仍需按新身份进行必要正式回归/strict baseline，且9项CXX分支计数问题需按既有诊断统一处理。没有C++/真实后端/native/物理验收。Harvey F8 stale v3永久覆盖不在本四文件补丁内，由其owner独立交付；不改变677a产品独审结论。
+
+所有本任务读源码的测试运行均已结束；最终活动进程检查另见`process-exit.json`。本线程在交付后不再启动源码读取测试，main可据此协调应用窗口。

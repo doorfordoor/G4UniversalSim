@@ -1,0 +1,36 @@
+# F8 最终冻结修复：独立自然焦点与向导按钮定点复核
+
+2026-11-02。依据main给定 `out/collab/f8-leftfix-final/freeze.json`；只读产品，没有改永久测试/runner，也没有使用原生UI。原review.md（原五文件身份）、focus-fix-review.md（15ab候选）及全部失败证据保留。
+
+## 结论
+
+**最终冻结修复在本次独立定点范围通过**：DPR1.25与1.5各6组检查，两个进程均退出0，运行前后五文件一致，并与作者最终freeze.json逐项相同。
+
+- core/accessibility.py：`8f597259072c4ca7c929b6c9021716da5a6011fc6b6d4a4907af96dc8ba89fca`。
+- smoke_f8_accessibility.py：`7087edc6ae93bb666020eb06fb46bd8a60b2539c0213b5058276daf385d04c8e`。
+- shell/start/main等其余三文件详见freeze及本轮JSON，不沿用原helper hash声称新字节通过。
+
+[125结果](focus-frozen125-r2/results.json)/[日志](focus-frozen125-r2.log)，[150结果](focus-frozen150-r2/results.json)/[日志](focus-frozen150-r2.log)，[独立脚本](natural_focus_cases.py)。使用当前产品集中i18n的Next/Back/Finish/Cancel，不注入作者JSON或修改词典。
+
+## 自然路径复核
+
+1. 隔离QSettings/history/recovery，真实MainWindow/Fusion/中文，1200×800。通过Ctrl+Alt+2/3进入项目/配置，焦点不再是QScrollArea。实际buddy label及字段相对各层viewport的完整矩形均可见；没有调用scrollbar.setValue、没有强归零，也没有直接调用ensureWidgetVisible/ensure_focus_visible来修正测试视图。
+2. 非顺序九页快捷键、F6/Shift+F6仍能聚焦正确区域；自然Tab遍历项目页字段，能容纳的label与完整字段保持可见。原“整容器居中导致label左裁切”以及候选“项目名称字段右缘5px裁切”均不再复现。
+3. foreign QPlainTextEdit的原文、tabChangesFocus及accessibleName仍不受MainWindow控制器影响；现有runner/workflow仍是原对象，原非法seed和完整业务快照不变。
+
+## 向导四按钮：独立最小定点
+
+在同一真实modal向导中走start→geometry→source→run→Back回source；每一阶段按en→zh_CN→en切换语言，检查四角色Back/Next/Finish/Cancel的buttonText与实际button.accessibleName。中文明确期望“上一步/下一步/完成/取消”，不是拿UI自己的翻译值反算预期。
+
+同时泵Qt事件后复查（不只同步setter瞬间）。从Run页用真实Back按钮Space激活，确认返回source页；最终Esc取消，不应用临时向导或改变主项目非法草稿。Finish仅检查其角色及显示/可访问名，不点击提交或启动运行。
+
+本机Qt风格下Back的实际QAbstractButton.text()可为空，而角色buttonText与accessibleName正确；该按钮仍可Space正常操作。不能将这种呈现形式单独判作“Back未翻译”。其他按钮检查实际text与预期一致。
+
+## 首次失败与边界
+
+- focus-frozen125/150日志保留：新增独审一度要求Back底层text非空，与本机Qt呈现形式不符；其角色文字及可访问名本来均正确。
+- [wizard诊断](wizard-diagnostic/results.json)记录同步及泵事件后的四角色数据：Back visible/disabled时实际text为空，name/role_text均正确。仅修本目录独审断言，新增实际Space导航，随后125-r2/150-r2全通过；没有修改产品来“过测”。
+- 本报告仅关闭上述焦点/viewport及四按钮本地化的定点检查，不是F8整体通过。**main已保留的F4 layout125压力首败stdout_view中心clip和异常清理AV仍未闭合**，归Harvey/main继续调查，本报告不覆盖它们。
+- offscreen组件没有实际原生截图/读屏/系统DPI、多屏或安装/模拟结论。原生UI所有权始终由main持有，未争用。
+
+E2E双版88c32e/674证据与永久脚本SHA5b112036…保持原身份不变；9e40e889最终C++将由main下一正式runner统一覆盖，未在这里重复第三套。

@@ -1,0 +1,64 @@
+{
+  "head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+  "purpose": "six complete frozen local reports; not CI/native/stage acceptance",
+  "profiles": {
+    "windows-static": {
+      "report": "out\\verification\\j2-f8-2ec5b14\\windows-static\\20261102-052959-87f97644\\report.json",
+      "report_sha256": "671986d62bb5ca6af798ac31fbfc9f25dd606f644505a3081ebe13a4c0d7e908",
+      "launch_sha256": "2714eb319cd5fe90321f02316a8de2c1ee0dc6a26053d8b22dffb56dd36eec1f",
+      "cases": 46,
+      "assertions": 4586,
+      "baseline_assertions": 3964,
+      "errors": []
+    },
+    "windows-gui": {
+      "report": "out\\verification\\j2-f8-2ec5b14\\windows-gui\\20261102-053011-53d49584\\report.json",
+      "report_sha256": "eb6044415c756c675e2bab56e4f842bbd5c63e60da1defd459694ad38aa50c26",
+      "launch_sha256": "42428aaf85bc922a8a789495dbc4b2685726615d79ae56bac69ca1f09ac5caa3",
+      "cases": 66,
+      "assertions": 8636,
+      "baseline_assertions": 6760,
+      "errors": []
+    },
+    "windows113-backend": {
+      "report": "out\\verification\\j2-f8-2ec5b14\\windows113-backend\\20261102-053015-033f0a7f\\report.json",
+      "report_sha256": "d62dd3f7fd25d91552f6f674429c15bbc6857254f491bde5a7dbe017fbaad75b",
+      "launch_sha256": "2925698924e883b029ff3e1532b92ac8f9a177c8570766d8963c5b455b234aef",
+      "cases": 63,
+      "assertions": 82029,
+      "baseline_assertions": 76814,
+      "errors": []
+    },
+    "windows114-backend": {
+      "report": "out\\verification\\j2-f8-2ec5b14\\windows114-backend\\20261102-053010-077a8457\\report.json",
+      "report_sha256": "72241f990734e6ef6694f1a3bc25ffddbb144f775d9513fb6cb595c75b3e9ee9",
+      "launch_sha256": "8585b423cae4aabbe2d3d06709b3e4ba2142875d74dea4087196d5a0c9bb5a62",
+      "cases": 63,
+      "assertions": 72536,
+      "baseline_assertions": 67321,
+      "errors": []
+    },
+    "windows113-integration": {
+      "report": "out\\verification\\j2-f8-2ec5b14\\windows113-integration\\20261102-060158-291be458\\report.json",
+      "report_sha256": "47a54dceb0cc575a25f2283d8e745e48d51bbcada16d61bbbb8b1293bf2df088",
+      "launch_sha256": "3fb53af8517aa06e6e7017ea504d77124f06faf475afceb2e3a793c4a7a34aa2",
+      "cases": 31,
+      "assertions": 6790,
+      "baseline_assertions": 6054,
+      "errors": []
+    },
+    "windows114-integration": {
+      "report": "out\\verification\\j2-f8-2ec5b14\\windows114-integration\\20261102-061507-7d5768e9\\report.json",
+      "report_sha256": "a09dadd089cb63f5837dadb56901a8cdc8137b3fb3021ebe309277c051ffb46b",
+      "launch_sha256": "ce4966dea1e6ed4d17293414e48a9473b8d5b4e39fa2b20a016f72ca1a6d64ff",
+      "cases": 31,
+      "assertions": 6780,
+      "baseline_assertions": 6045,
+      "errors": []
+    }
+  },
+  "errors": [],
+  "cases": 300,
+  "assertions": 181357,
+  "status": "passed"
+}

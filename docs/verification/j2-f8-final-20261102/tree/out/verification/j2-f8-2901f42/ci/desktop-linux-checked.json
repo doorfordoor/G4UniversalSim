@@ -1,0 +1,22 @@
+{
+  "candidate_head": "2901f4254303c3a9089c9025717908c0d77ff190",
+  "platform": "linux",
+  "status": "independently_verified",
+  "delivery_status": "passed",
+  "source_identity": {
+    "files": 150,
+    "raw_git_blob_matches": 150,
+    "declared_text_checkout_crlf_matches": [],
+    "note": "Only candidate checkout text EOL is modeled; evidence logs are always hashed as raw bytes"
+  },
+  "command_raw_logs_sha_verified": true,
+  "expected_positive_and_negative_exit_codes": {
+    "frozen-gui": 0,
+    "existing-gui-report": 1,
+    "frozen-python-root": 0,
+    "frozen-gui-import-failure": 1
+  },
+  "gui_selftest_ok": true,
+  "frozen": true,
+  "scope": "frozen GUI startup/natural exit and Python ROOT read-write; no Geant4 simulation"
+}

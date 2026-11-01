@@ -1,0 +1,10 @@
+# Actual tracked F8第四修复应用后专项
+
+实际工作树原永久入口、原v3 probe，D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe，Qt offscreen；125/150各执行一次，各独立--output。无OUT loader、无外部monkeypatch、未改tracked。测试原有受控fixture保留，不声称全部为自然路径。
+
+运行前后F8 SHA均5f234e69c00d602039cb8f2ebc7daadb4f69edc860e6010989628d06253b3814，149 GUI产品逐字节与tests-apply-receipt一致；原probe SHA也不变。source-before/after.json、runtime.json、两原日志、独立输出及receipt.json保留。
+
+- 1.25: exit0，v3 655，原session 38339已实际poll终态；log SHA 108b54ff588633eec2bdc6766ea14a9b057c721657348778da8235bd79038be0。
+- 1.5: exit0，v3 655，原session 27515已实际poll终态；log SHA b0263b3391e336ef9cf8da05b463d9d4bd6e3b58f5f92d09543e6920368181cb。
+
+两个测试进程均已结束，无待poll会话；没有formal/native/backend/build执行或阶段状态判定。595是此前with-output入口基线，增加的provider/真实Label关系及丢buddy负向产生新计数，不降低旧判据。新增截图仅offscreen测试产物，未冒称本任务独立目视验收。

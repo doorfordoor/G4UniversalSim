@@ -1,0 +1,70 @@
+# 第四候选2ec5b14：真实CI最终独立收据
+
+精确HEAD **2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8**，branch roadmap/J2-F8-editing。四个自动push workflow、初始八个job均 **attempt1 / completed / success**。原件与前三轮分根保存，未拼接报告。
+
+**本轮CI证据门禁通过：12 strict pass /0 fail，零skip、无缺profile。** 这是CI工作流、报告和安装/桌面收据的独立判定，不替main评定J2/F8阶段完成，也不代表新原生观察或通用物理验证。
+
+| Workflow | Run | 终态 |
+|---|---:|---|
+| [M0 static/GUI](https://github.com/doorfordoor/G4UniversalSim/actions/runs/41352200756) | 41352200756 | Ubuntu/Windows success |
+| [Linux Geant4](https://github.com/doorfordoor/G4UniversalSim/actions/runs/41352200765) | 41352200765 | 11.3.2/11.4.3 success |
+| [Desktop package](https://github.com/doorfordoor/G4UniversalSim/actions/runs/41352200727) | 41352200727 | Linux/Windows success |
+| [Full installation](https://github.com/doorfordoor/G4UniversalSim/actions/runs/41352200731) | 41352200731 | Linux/Windows success |
+
+原始公开push身份与终态：public-push-runs-initial.json /public-push-runs-final.json；原始初始jobs：jobs-initial-*.json；八job终态：jobs-final.json。终态job ID集合与初始attempt1完全一致，未混入后续attempt。
+
+## 全部12份实际报告及matching历史
+
+| lane/profile | 全部通过case数 /实际assert入口 | matching历史assert | strict |
+|---|---:|---:|---|
+| M0 Ubuntu static | 46 /4573 | 3966 | pass |
+| M0 Ubuntu GUI | 66 /8615 | 6739 | pass |
+| M0 Windows static | 46 /4573 | 3959 | pass |
+| M0 Windows GUI | 66 /8615 | 6739 | pass |
+| Linux11.3.2 static | 46 /4573 | 3966 | pass |
+| Linux11.3.2 GUI | 66 /8615 | 6739 | pass |
+| Linux11.3.2 backend | 63 /82020 | 76820 | pass |
+| Linux11.3.2 integration | 31 /6770 | 6035 | pass |
+| Linux11.4.3 static | 46 /4573 | 3966 | pass |
+| Linux11.4.3 GUI | 66 /8615 | 6739 | pass |
+| Linux11.4.3 backend | 63 /72874 | 67674 | pass |
+| Linux11.4.3 integration | 31 /6770 | 6035 | pass |
+
+每份报告及每个case均pass、exit0、非零assert入口；无skip、无零assert case，逐例求和与总数一致。逐份核对HEAD、source_fp **9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a**、tests_fp **ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8**、tracked-source gate、全部原始逐例日志SHA。backend/integration实际Geant4版本分别1132/1143，未互相代替。
+
+checker-2ec5b14.py从本HEAD Git对象原字节固定，checker-identity.json记录SHA。matching历史按同OS/版本/profile从out/collab/j2-f8-baselines.json指定归档提取，先核archive manifest/报告/原日志SHA并strict验证历史，再验证本轮。全部旧例仍存在且逐例入口不下降，新增case另列。未使用allow-incomplete、legacy或任何放宽。详细逐例比较、每报告SHA、版本/平台与case数在report-gates-current.json。
+
+Linux两job的真实“Verify the evidence gate rejects a tampered report”步骤均success；finalize.py另核对两项负对照终态，不仅依据总workflow绿。
+
+## 本轮对既有红例的实际记录
+
+本轮四个GUI lane的gui_f8_accessibility均pass/643入口、gui_j2_geometry均pass/214入口；gui_k1_workflow、gui_start_page、gui_main_window均pass。current-ci-regression-targets.json只引用本轮原报告及各case原日志SHA，不回填/重写前三轮失败。原18c Linux F8:659、Windows geometry:264等红例仍保留原候选、原日志和原门禁。
+
+## 八个原ZIP及八份完整job日志
+
+| artifact | ID |
+|---|---:|
+| m0-report-ubuntu-latest | 13102097206 |
+| m0-report-windows-latest | 13102896151 |
+| linux-evidence-11.3.2 | 13102513206 |
+| linux-evidence-11.4.3 | 13103140474 |
+| frozen-desktop-Linux | 13101732052 |
+| frozen-desktop-Windows | 13101268672 |
+| full-installation-Linux | 13102765216 |
+| full-installation-Windows | 13102807661 |
+
+collected-files-final.json包含全部16文件大小/完整SHA256、artifact/run或job/run归属及四语义收据SHA。八ZIP均实际下载一次，大小/SHA逐一匹配GitHub metadata digest及精确HEAD/run_id，安全解压不改写原report/log。各原metadata在artifacts-*.json。job-<id>.log为GitHub connector完整解码日志，未截断，不冒称GitHub原始run logs ZIP。
+
+## 桌面与安装语义
+
+Desktop双平台delivery passed、frozen自检、各150 GUI源SHA与候选Git对象匹配且前后稳定、4条命令正负对照0/1/0/1及原日志SHA独立通过；desktop-linux-checked.json /desktop-win32-checked.json。范围是冻结启动/自然退出与Python ROOT读写，不据此宣称全部原生交互验收。
+
+Full installation Linux10stage/23保留对象、Windows9stage/25保留对象均exit0且原日志/对象SHA核对；每平台889源码及候选workflow checkout身份匹配；实际summary completed5/5，SDK consumer/full application configure-build-run、host-tools身份、runtime/sdk卸载均通过。见installation-linux-checked.json /installation-windows-checked.json。只按候选.gitattributes建模允许的源码checkout换行；原证据日志按实际字节哈希。
+
+## 终态完整性与边界
+
+finalize.py离线汇总exit0，12个预期profile恰好到齐、无重复/缺失/额外profile；8个初始job全部终态、8原ZIP+8完整job日志齐全、Linux两负对照步骤成功。机器结论release_accepted=true的acceptance_scope明确仅CI证据。
+
+本机初始化和终态显式git -c core.longpaths=true status均tracked clean；7文件冻结SHA逐项核验。没有dispatch/rerun/取消CI、修改tracked/判据、本机Qt/native/backend/build/profile执行。main双build58124、本机formal、native补验与最终身份映射始终由main所有，不回填本CI报告，也未被本审复跑或重新观图。
+
+本轮收集已完成，无待收CI或本侧运行进程。阶段关闭、新原生scope、归档与后续工作由main定案；本收据不自动触发新动作。

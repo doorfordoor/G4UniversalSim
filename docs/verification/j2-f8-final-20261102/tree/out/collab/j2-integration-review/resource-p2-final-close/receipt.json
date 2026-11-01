@@ -1,0 +1,61 @@
+{
+  "scope": "independent replay of original actual-package alias counterexample; no backend/native",
+  "before": {
+    "gui/g4usim_gui/core/run_editor_resources.py": "51a5e11c53ff9072b5a07b174d24920cb3931c85338b0407d0316a6ea0609c46",
+    "gui/g4usim_gui/core/project_snapshot.py": "daed5db7923042fa4fb90beac447ce7fe91313ce15a254beae25656d6b800a97",
+    "scripts/test_j2_resource_bundle.py": "67bf4ba34658dea6c49a411b0172b1a2b3a175b0c7f294df64625b92ace5d919"
+  },
+  "after": {
+    "gui/g4usim_gui/core/run_editor_resources.py": "51a5e11c53ff9072b5a07b174d24920cb3931c85338b0407d0316a6ea0609c46",
+    "gui/g4usim_gui/core/project_snapshot.py": "daed5db7923042fa4fb90beac447ce7fe91313ce15a254beae25656d6b800a97",
+    "scripts/test_j2_resource_bundle.py": "67bf4ba34658dea6c49a411b0172b1a2b3a175b0c7f294df64625b92ace5d919"
+  },
+  "frozen_identity_matches": true,
+  "fixture_restored": true,
+  "cases": [
+    {
+      "alias": "parameterised",
+      "case": "intact",
+      "receipt_count": 1,
+      "sha256": "a868ce6022e3f6434cd695d51bd686adeb443d939e644979eb9ccfee3d35ce42",
+      "passed": true
+    },
+    {
+      "alias": "parameterised",
+      "case": "missing",
+      "rejected": true,
+      "error": "Snapshot package resource is missing: geometry.AliasCopies.copies_file: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-integration-review\\resource-p2-alias-1793552138787128200\\runs\\20261102_005538_new_simulation\\config\\geometry-resources\\g0000.csv",
+      "passed": true
+    },
+    {
+      "alias": "parameterised",
+      "case": "outside-root",
+      "rejected": true,
+      "error": "Snapshot package resource escapes through a symbolic link: geometry.AliasCopies.copies_file",
+      "passed": true
+    },
+    {
+      "alias": "parameterized",
+      "case": "intact",
+      "receipt_count": 1,
+      "sha256": "a868ce6022e3f6434cd695d51bd686adeb443d939e644979eb9ccfee3d35ce42",
+      "passed": true
+    },
+    {
+      "alias": "parameterized",
+      "case": "missing",
+      "rejected": true,
+      "error": "Snapshot package resource is missing: geometry.AliasCopies.copies_file: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-integration-review\\resource-p2-alias-1793552138787128200\\runs\\20261102_005538_new_simulation\\config\\geometry-resources\\g0000.csv",
+      "passed": true
+    },
+    {
+      "alias": "parameterized",
+      "case": "outside-root",
+      "rejected": true,
+      "error": "Snapshot package resource escapes through a symbolic link: geometry.AliasCopies.copies_file",
+      "passed": true
+    }
+  ],
+  "permanent_test_exit": 0,
+  "assertions": 101
+}

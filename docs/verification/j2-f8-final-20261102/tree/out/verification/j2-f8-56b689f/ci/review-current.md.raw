@@ -1,0 +1,75 @@
+# 56b689f 真实 CI 独立收集：当前失败收据
+
+精确候选：`56b689fb9ac920cbb1203b2b94dae2483d25f622`，branch `roadmap/J2-F8-editing`。四个workflow均由此HEAD的push触发，attempt 1。未dispatch/rerun/cancel、未修改产品/测试/workflows。
+
+**当前候选不能通过发布门禁。** 已产出的四份static报告均有相同5项失败；strict检查均拒绝。GUI/backend/integration因上游失败未产生报告，不算通过。安装workflow尚未结束，完成后补收，不能由其他workflow成功覆盖上述失败。
+
+## 真实运行身份与状态
+
+| workflow | run id | 当前状态 |
+|---|---:|---|
+| M0 static and GUI | 41330577407 | failure；Ubuntu与Windows static均失败 |
+| Linux Geant4 | 41330577426 | failure；11.3.2与11.4.3 static均失败 |
+| Full installation | 41330577328 | in_progress；Linux已success且独立收据通过，Windows尚处于runtime/SDK installation lifecycle |
+| Frozen desktop | 41330577359 | success；Linux/Windows两job成功 |
+
+源指纹：`9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a`。
+测试指纹：`a0b6ba859c87e276b2b602040c28376150ef8fa86a24e78e2adacebd9aa0df1e`。
+
+public API结果：`public-push-runs-initial.json`、`public-push-runs-2.json`。jobs原始connector结构与带时刻快照、原始artifact元数据、原ZIP均保留。原始job日志由connector解码后按UTF-8写成 `job-<id>.log`，未截断；不冒称为GitHub原始run日志ZIP。
+
+## 首错与逐例日志
+
+首个观测失败job为 M0 Ubuntu `124919607946`，对应artifact `13093800091`。其static报告为41 pass / 5 fail / 0 skip，46 cases，3628个v3已执行入口。
+
+| 失败用例 | 首错位置与事实 |
+|---|---|
+| k1_bundle | scripts/test_k1_bundle.py:592，仍断言 geometryEditor.round_trip_blockers 非空 |
+| f4_producers | scripts/test_f4_producers.py:104，manual physics期望 mode.unsupported，实际只有 physics.structured.invalid |
+| f4_document_diagnostics | scripts/test_f4_document_diagnostics.py:100，density诊断行号列表 `[1,2]` 断言失败 |
+| doc_links | scripts/check_doc_links.py:116，docs/collab/outbox/20261101-deepseek-j2-f8-design.md 引用7个缺失out/collab相对链接 |
+| config_migration | scripts/test_config_migration.py:146，仍断言迁移后存在J2编辑blocker |
+
+其他三份static报告已独立收齐，对应job：M0 Windows `124919608147`、Linux11.3 `124919607906`、Linux11.4 `124919607744`。每份均41 pass / 5 fail / 0 skip；上述五项在各自原日志重复成立。不擅自将全部归为“仅旧测试问题”，修复/解冻由主代理裁决。
+
+详细首错及每个失败原log SHA见 `report-gates-current.json`；Ubuntu首次短报还保存在 `m0-ubuntu-failure-triage.json`。7个失效链接为设计outbox第19–24、95行的request.json、response.json、deepseek-design.md、request_design.py、acceptance-checklist.md、progress.md及重复checklist引用。
+
+## strict与历史matching baseline
+
+| 新报告lane | matching历史baseline | 当前入口 / 历史入口 | strict |
+|---|---|---:|---|
+| M0 Ubuntu static | linux-m0-6310969-static | 3628 / 3966 | fail |
+| M0 Windows static | windows-m0-6310969-static | 3620 / 3959 | fail |
+| Linux11.3 static | linux113-static | 3628 / 3966 | fail |
+| Linux11.4 static | linux114-static | 3628 / 3966 | fail |
+
+每份报告HEAD/源指纹/测试指纹均与候选相符。逐份从指定归档重建matching历史报告和日志，核对原始对象SHA并先通过历史strict检查；新报告严格调用当前check_report_evidence.validate_report，无allow-incomplete/legacy等放宽。由于strict在非pass状态处先拒绝，另独立重哈希了**全部新报告原始逐例日志**并核对逐例入口求和，均与报告一致；这不会把失败报告变成发布证据。
+
+逐例比较保存在 `old_case_comparison`：没有历史旧例缺失；4个旧例k1_bundle、f4_producers、f4_document_diagnostics、config_migration入口下降。新增static例仅j2_resources、solid_registry；不能以新增用例数量掩盖旧例失败或入口回退。下游未运行的profile不拿其他平台/版本代替。
+
+## 已收原ZIP
+
+| artifact | id | 原ZIP SHA-256 |
+|---|---:|---|
+| m0-report-ubuntu-latest | 13093800091 | 58a4707d685ca283da0c62e9a6d650492a9c68d962addb6292e67ee5063dea16 |
+| m0-report-windows-latest | 13092893947 | dec2a13e2bad6e530d4724d2ac81c8d1e96571153b7edf0dd763f6fa3f481d76 |
+| linux-evidence-11.3.2 | 13093695553 | ee10045c60041fd2b076648a80327be61f0659ef90c626808ac075ecd72a4951 |
+| linux-evidence-11.4.3 | 13092839619 | 2201f5f8d3d6d91aec07fc73825733019d95e1004a0bc157b2e296877a88e0a9 |
+| frozen-desktop-Linux | 13093895065 | b478b6c39b4415b34fdaf4709a70885cc66eac23ac503448336644e32f351438 |
+| frozen-desktop-Windows | 13093860061 | 785bdfbe364c8cf7f66f2dbd68ec8527141dfc60780d65c138c568364114ea47 |
+
+6个ZIP实际SHA和大小均与GitHubartifact元数据相符；workflow_run.id/head_sha归属逐项核对。解压没有改写report字节或原日志。
+
+## Desktop成功的具体边界
+
+Linux/Windows delivery.json状态passed；frozen GUI自检ok且frozen=true；sources_before/after稳定且各150个GUI源SHA匹配候选。每平台4条命令的日志SHA及期望exit分别为：frozen-gui=0、existing-gui-report=1、frozen-python-root=0、frozen-gui-import-failure=1，两个非零为预期负对照。实际job日志中Windows探针14入口，Linux冻结程序14与VTK actor专项52入口。
+
+这些证明冻结GUI启动/自然退出及Python ROOT读写边界，不含Geant4模拟或J2物理验收。收据摘要见 `desktop-receipts-checked.json`，原job日志为 `job-124919607718.log` / `job-124919607965.log`。
+
+## 剩余收集
+
+Linux安装job124919608140已success，artifact full-installation-Linux / 13093212578 的原ZIP SHA `8bb396778f082cd0debb31ec921b63c22d64ed36f9b964648a8b502432e14ed8` 与GitHubdigest一致。独立核对delivery-report verified；10阶段全部exit0且原日志SHA匹配；retained evidence/index的23份对象SHA匹配；runtime实际run_summary completed 5/5；SDK consumer与完整应用configure/build/run全部exit0；runtime/sdk卸载均uninstalled。源码snapshot889个文件与候选checkout身份一致，887直接匹配git blob，另2个脚本遵守该HEAD.gitattributes明确CRLF要求。未归一化证据日志。
+
+详见installation-linux-checked.json。仅等待Windows安装job124919607941完成并收齐其原日志、artifact与生命周期收据；随后刷新最终public状态形成四workflow最终汇总。安装成功也不能使此候选的回归strict转绿。
+
+本机73个超长历史文档D记录在local-worktree-observation.json，均为前序已观测路径；产品/测试无本侧修改。连接器出现过两个读请求transport send error，经先核对public状态后单次重读成功，不是CI失败。所有历史失败和候选身份保持原样，主代理统筹下一步。

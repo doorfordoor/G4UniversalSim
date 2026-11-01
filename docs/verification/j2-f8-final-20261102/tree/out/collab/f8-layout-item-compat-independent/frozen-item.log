@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\f8-layout-item-compat-independent\review.py", line 48, in <module>
+    replay(mode.removeprefix('frozen-'))
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\f8-layout-item-compat-independent\review.py", line 39, in replay
+    if boundary=='item':assert api._item_field(spacer) is None
+                               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\accessibility.py", line 39, in _item_field
+    return next((found for i in range(layout.count()) if (found := _item_field(layout.itemAt(i))) is not None), None)
+                                      ^^^^^^^^^^^^
+AttributeError: 'PySide6.QtWidgets.QSpacerItem' object has no attribute 'count'

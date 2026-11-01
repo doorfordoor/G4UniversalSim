@@ -1,0 +1,45 @@
+{
+  "schema": "G4UniversalSimScan",
+  "version": 1,
+  "name": "energy",
+  "parameter": "source.energy",
+  "parameter_label": "source energy",
+  "values": [
+    "50 MeV",
+    "100 MeV",
+    "200 MeV"
+  ],
+  "scan_dir": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021155_scan_energy",
+  "created": "2026-11-02T02:11:55",
+  "threads": 2,
+  "seed": 12345,
+  "points": [
+    {
+      "index": 0,
+      "value": "50 MeV",
+      "package_dir": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021155_scan_energy\\20261102_021155_energy_p000",
+      "output_dir": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021155_scan_energy\\20261102_021155_energy_p000\\output",
+      "main_ini": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021155_scan_energy\\20261102_021155_energy_p000\\config\\main.ini",
+      "macro": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021155_scan_energy\\20261102_021155_energy_p000\\macros\\run.mac",
+      "seed": 12345
+    },
+    {
+      "index": 1,
+      "value": "100 MeV",
+      "package_dir": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021155_scan_energy\\20261102_021155_energy_p001",
+      "output_dir": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021155_scan_energy\\20261102_021155_energy_p001\\output",
+      "main_ini": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021155_scan_energy\\20261102_021155_energy_p001\\config\\main.ini",
+      "macro": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021155_scan_energy\\20261102_021155_energy_p001\\macros\\run.mac",
+      "seed": 12345
+    },
+    {
+      "index": 2,
+      "value": "200 MeV",
+      "package_dir": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021155_scan_energy\\20261102_021155_energy_p002",
+      "output_dir": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021155_scan_energy\\20261102_021155_energy_p002\\output",
+      "main_ini": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021155_scan_energy\\20261102_021155_energy_p002\\config\\main.ini",
+      "macro": "D:\\Temp\\g4usim-scans-backend-9lhoak2w\\20261102_021155_scan_energy\\20261102_021155_energy_p002\\macros\\run.mac",
+      "seed": 12345
+    }
+  ]
+}

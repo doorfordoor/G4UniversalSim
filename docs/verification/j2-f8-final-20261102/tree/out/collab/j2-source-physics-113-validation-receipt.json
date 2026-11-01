@@ -1,0 +1,48 @@
+{
+  "schema": "g4usim_j2_sources_physics_validation_v1",
+  "platform": "Windows Geant4 11.3.2",
+  "status": "passed",
+  "source_fingerprint": "e44d005a039448d083008c0c6ba3f824b2f1b680b8d6b2b63f297137754d76f6",
+  "executable_sha256": "d5c179c2540a4f0e7e146bb5faffa39cd718549d11cae0a0bb87e1359e1d740b",
+  "executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\G4UniversalSim.exe",
+  "source_unchanged_across_both_rounds": true,
+  "total_assertions_executed": 4891,
+  "results": [
+    {
+      "script": "test_j2_sources_physics.py",
+      "exit_code": 0,
+      "elapsed_seconds": 32.683,
+      "script_sha256": "4b115fb7f7fd89d08f1171f6b00db0c7f57d83706811da4a302dec44feaa8686",
+      "log_sha256": "b1f2e8f90969e188dd4a8ab39e3531bd85a7aede47b8786a9f579801fade2095",
+      "assertions_executed": 4601,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-source-physics-113-r2\\test_j2_sources_physics\\test.log"
+    },
+    {
+      "script": "test_gps_sources.py",
+      "exit_code": 0,
+      "elapsed_seconds": 82.459,
+      "script_sha256": "9a4b2cc215141be10e031bf1aea6839f18e239e8383bd2a9363cba4943888d12",
+      "log_sha256": "77999194e3082079745ab8f240cd4f3ad8f39768958c65d7802d88d78e6b7166",
+      "assertions_executed": 219,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-source-physics-113-r1\\test_gps_sources\\test.log"
+    },
+    {
+      "script": "test_physics_a6.py",
+      "exit_code": 0,
+      "elapsed_seconds": 131.29,
+      "script_sha256": "eb9cb3431bed1c394706bd6d958e5cf4d19b19f334b63353024203bf467c8882",
+      "log_sha256": "aee08f6f5e33ceda0dd32f1434ea8a698eee23b46387684fd7288b35237691e5",
+      "assertions_executed": 71,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-source-physics-113-r1\\test_physics_a6\\test.log"
+    }
+  ],
+  "first_failure": {
+    "script": "test_j2_sources_physics.py",
+    "exit_code": 1,
+    "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-source-physics-113-r1\\test_j2_sources_physics\\test.log",
+    "reason": "Test incorrectly excluded any Livermore model from the standard EM gamma baseline; corrected only the new script to compare actual Compton models.",
+    "unchanged_cpp_schema": true
+  },
+  "new_test_evidence_directory": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-source-physics-113-r2\\test_j2_sources_physics\\evidence\\6b216ee9512e4374985434b7ca6f4de6",
+  "scope": "supplemental direct-script runs under existing v3 probe, not a full runner/strict-gate/dual-platform matrix report"
+}

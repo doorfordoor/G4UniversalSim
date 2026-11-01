@@ -1,0 +1,100 @@
+--- a/gui/g4usim_gui/core/experiment_bundle.py
++++ b/gui/g4usim_gui/core/experiment_bundle.py
+@@ -162,7 +162,14 @@
+     def __init__(self, cwd: Path, policy=None, *, root: Path | None = None, reader=None):
+         self.cwd = cwd
+         self.root = root
+-        self.policy = dict(policy or {})
++        self.policy = {}
++        for name, decision in dict(policy or {}).items():
++            # Match real ordinary-file identities across Windows 8.3/case
++            # spellings, but reject lexical links before resolving either side.
++            key = str(_no_links(Path(name)).resolve()) if isinstance(name, str) and Path(name).is_absolute() else name
++            if key in self.policy:
++                raise ValueError(f"Duplicate resource policy entries for the same file: {name}")
++            self.policy[key] = decision
+         self.used_policy: set[str] = set()
+         self.nodes: dict[tuple, dict] = {}
+         self.active: set[tuple] = set()
+@@ -209,9 +216,10 @@
+             raise ValueError("Bundle member limit exceeded")
+         name = re.sub(r"[^A-Za-z0-9_.-]", "_", path.name).strip("._") or "input"
+         relative = relative if self.root is not None else f"resources/r{len(self.nodes):04d}-{name}"
+-        decision = self.policy.get(str(path), {})
+-        if str(path) in self.policy:
+-            self.used_policy.add(str(path))
++        policy_key = str(_no_links(path).resolve())
++        decision = self.policy.get(policy_key, {})
++        if policy_key in self.policy:
++            self.used_policy.add(policy_key)
+         if type(decision) is not dict or set(decision) - {"distribution", "allow_redistribution"}:
+             raise ValueError(f"Invalid resource policy: {path}")
+         distribution = decision.get("distribution", "unknown")
+--- a/scripts/test_k1_bundle.py
++++ b/scripts/test_k1_bundle.py
+@@ -97,6 +97,56 @@
+     data = json.loads(file.read_bytes())
+     mutate(data)
+     file.write_bytes(bundle._json(data))
++
++
++def test_resource_policy_path_identity(root):
++    """An actual ordinary-file alias must not detach its redistribution decision."""
++    source = (root / "resource policy source").resolve()
++    snapshot = fixture(source)
++    main = Path(snapshot.project.configPath)
++    variants = [source]
++    if sys.platform == "win32":
++        import ctypes
++        upper = Path(str(source).upper())
++        if upper.exists() and os.path.samefile(upper, source):
++            variants.append(upper)
++        get_short = ctypes.windll.kernel32.GetShortPathNameW
++        get_short.argtypes = [ctypes.c_wchar_p, ctypes.c_wchar_p, ctypes.c_uint]
++        get_short.restype = ctypes.c_uint
++        buffer = ctypes.create_unicode_buffer(32768)
++        count = get_short(str(source), buffer, len(buffer))
++        if 0 < count < len(buffer) and "~" in buffer.value:
++            short = Path(buffer.value)
++            assert os.path.samefile(short, source)
++            variants.append(short)
++    original = copy.deepcopy(snapshot)
++    policy = {str(main.resolve()): {"distribution": "restricted"}}
++    for variant in variants:
++        selected = fixture(variant)
++        assert os.path.samefile(selected.project.configPath, main)
++        refused(lambda: bundle.collect_bundle_resources(selected, resource_policy=policy),
++                "Restricted resource requires explicit redistribution policy")
++        approved = copy.deepcopy(policy)
++        approved[str(main.resolve())]["allow_redistribution"] = True
++        collected = bundle.collect_bundle_resources(selected, resource_policy=approved)
++        node = next(row for row in collected["resources"] if row["role"] == "main")
++        assert node["distribution"] == "restricted" and node["redistribution_override"] is True
++        # Existing absolute spellings remain accepted; no policy is auto-created.
++        spelling = {str(variant / main.name): {"distribution": "restricted", "allow_redistribution": True}}
++        assert bundle.collect_bundle_resources(selected, resource_policy=spelling)["resources"]
++        ordinary = bundle.collect_bundle_resources(selected)
++        assert next(row for row in ordinary["resources"] if row["role"] == "main")["distribution"] == "unknown"
++    assert snapshot == original
++    assert policy == {str(main.resolve()): {"distribution": "restricted"}}
++    unused = write(source / "not-an-input.ini", "# unused decision\n")
++    refused(lambda: bundle.collect_bundle_resources(snapshot, resource_policy={str(unused): {}}), "Unused resource policy entries")
++    for variant in variants[1:]:
++        spelling = str(variant / main.name)
++        if spelling != str(main.resolve()):
++            refused(lambda: bundle.collect_bundle_resources(snapshot, resource_policy={
++                str(main.resolve()): {"distribution": "restricted"},
++                spelling: {"distribution": "restricted", "allow_redistribution": True}}),
++                "Duplicate resource policy entries for the same file")
+ 
+ 
+ def test_safe_environment_history(root):
+@@ -754,7 +804,7 @@
+         root = Path(temporary.name)
+     cases = []
+     try:
+-        for case in (test_safe_environment_history, test_build_version_text, test_reference_source_urls, test_move_and_history, test_resource_kinds_and_identity, test_generated,
++        for case in (test_resource_policy_path_identity, test_safe_environment_history, test_build_version_text, test_reference_source_urls, test_move_and_history, test_resource_kinds_and_identity, test_generated,
+                      test_refusals, test_atomic_and_tamper, test_gdml, test_independent_review_regressions,
+                      test_unknown_geometry_blocker_controls):
+             folder = root / case.__name__

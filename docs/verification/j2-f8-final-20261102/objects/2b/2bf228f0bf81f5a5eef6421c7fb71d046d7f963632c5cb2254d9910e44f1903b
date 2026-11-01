@@ -1,0 +1,8 @@
+# 独立审查进度
+
+- 任务：只读审查J2空白/模板无来源链路，独立反例与报告，不修改产品。
+- 已完成：8组主反例、4条实际CLI replay生成/字段校验、无源几何恢复/Undo/重新导入专项；原始日志和JSON均在本目录。
+- 确认：1项P2，几何无来源时“恢复来源”清空全部体积，Undo可恢复；未证实P1。
+- 当前边界：主脚本9文件SHA运行内一致，reload专项5文件SHA运行内一致；之后content/bundle/package_writer及materials发生并行变化。geometry_editor_model新增调用缺少_validate_solid定义，追加source_undo组合反例实际NameError，日志已留。
+- 交付：review.md；results.json；reload-results.json；replay-results.json；source-undo.log；concurrent-edit-observation.json。
+- 尚需：主负责人修复/冻结当前快照后重跑P2和source_undo组合反例、GUI导入/CLI重放；正式后端/严格门禁及实窗另验。无运行中的测试会话。未宣称最新产品验收通过。

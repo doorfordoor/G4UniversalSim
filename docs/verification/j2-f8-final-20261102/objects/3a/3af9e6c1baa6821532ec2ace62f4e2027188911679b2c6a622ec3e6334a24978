@@ -1,0 +1,12 @@
+failure_state {'material_summary_none': True, 'geometry_summary_none': False, 'material_source': '', 'material_raw_empty': True, 'geometry_source': ''}
+Traceback (most recent call last):
+  File "<stdin>", line 5, in <module>
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "gui/smoke_tests/smoke_j2_blank.py", line 112, in <module>
+    main()
+  File "gui/smoke_tests/smoke_j2_blank.py", line 96, in main
+    assert page.materials_summary is None and page.geometry_summary is None
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

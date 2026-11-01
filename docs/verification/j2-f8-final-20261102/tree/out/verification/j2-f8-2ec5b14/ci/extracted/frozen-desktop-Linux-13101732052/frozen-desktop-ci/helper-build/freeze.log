@@ -1,0 +1,293 @@
+48 INFO: PyInstaller: 6.22.3, contrib hooks: 2026.9
+48 INFO: Python: 3.11.17
+49 INFO: Platform: Linux-7.0.0-1017-azure-x86_64-with-glibc2.39
+49 INFO: Python environment: /opt/hostedtoolcache/Python/3.11.17/x64
+50 INFO: wrote /home/runner/work/G4UniversalSim/G4UniversalSim/out/frozen-desktop-ci/helper-build/G4USimPython.spec
+53 INFO: UPX is available but is disabled on non-Windows due to known compatibility problems.
+53 INFO: Removing temporary files and cleaning cache in /home/runner/.cache/pyinstaller
+211 WARNING: Failed to collect submodules for 'awkward._connect.jax' because importing 'awkward._connect.jax' raised: ModuleNotFoundError: No module named 'jax'
+173 WARNING: Failed to collect submodules for 'numpy.f2py.tests' because importing 'numpy.f2py.tests' raised: ModuleNotFoundError: No module named 'pytest'
+1909 INFO: Module search paths (PYTHONPATH):
+['/home/runner/work/G4UniversalSim/G4UniversalSim/out/frozen-desktop-ci/helper-build',
+ '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python311.zip',
+ '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11',
+ '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/lib-dynload',
+ '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages',
+ '/home/runner/work/G4UniversalSim/G4UniversalSim/packaging']
+2097 INFO: Appending 'binaries' from .spec
+2097 INFO: Appending 'datas' from .spec
+2124 INFO: checking Analysis
+2124 INFO: Building Analysis because Analysis-00.toc is non existent
+2124 INFO: Looking for Python shared library...
+2133 INFO: Using Python shared library: /opt/hostedtoolcache/Python/3.11.17/x64/lib/libpython3.11.so.1.0
+2133 INFO: Running Analysis Analysis-00.toc
+2133 INFO: Target bytecode optimization level: 0
+2133 INFO: Initializing module dependency graph...
+2133 INFO: Initializing module graph hook caches...
+2141 INFO: Analyzing modules for base_library.zip ...
+2624 INFO: Processing standard module hook 'hook-heapq.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks'
+2705 INFO: Processing standard module hook 'hook-encodings.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks'
+4357 INFO: Processing standard module hook 'hook-math.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks'
+4457 INFO: Processing standard module hook 'hook-pickle.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks'
+6287 INFO: Caching module dependency graph...
+6322 INFO: Analyzing /home/runner/work/G4UniversalSim/G4UniversalSim/packaging/python_helper.py
+6365 INFO: Analyzing hidden import 'concurrent.futures'
+6431 INFO: Processing standard module hook 'hook-multiprocessing.util.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks'
+6635 INFO: Processing standard module hook 'hook-xml.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks'
+6805 INFO: Processing standard module hook 'hook-_ctypes.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks'
+6826 INFO: Analyzing hidden import 'uproot'
+6856 INFO: Processing standard module hook 'hook-numpy.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks'
+7236 INFO: Processing pre-safe-import-module hook 'hook-typing_extensions.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks/pre_safe_import_module'
+7237 INFO: SetuptoolsInfo: initializing cached setuptools info...
+11129 INFO: Processing standard module hook 'hook-difflib.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks'
+11526 INFO: Processing standard module hook 'hook-sysconfig.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks'
+11636 INFO: Processing standard module hook 'hook-platform.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks'
+12065 INFO: Processing standard module hook 'hook-webbrowser.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks'
+13244 INFO: Processing standard module hook 'hook-charset_normalizer.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/_pyinstaller_hooks_contrib/stdhooks'
+13516 INFO: Processing pre-safe-import-module hook 'hook-packaging.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks/pre_safe_import_module'
+15302 INFO: Processing standard module hook 'hook-fsspec.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/_pyinstaller_hooks_contrib/stdhooks'
+15751 INFO: Processing pre-safe-import-module hook 'hook-backports.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks/pre_safe_import_module'
+15752 INFO: Setuptools: 'backports' appears to be a full setuptools-vendored copy - creating alias to 'setuptools._vendor.backports'!
+15758 INFO: Processing standard module hook 'hook-setuptools.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks'
+15768 INFO: Processing pre-safe-import-module hook 'hook-distutils.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks/pre_safe_import_module'
+15768 INFO: Processing pre-find-module-path hook 'hook-distutils.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks/pre_find_module_path'
+15937 INFO: Processing standard module hook 'hook-distutils.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks'
+16012 INFO: Processing standard module hook 'hook-distutils.util.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks'
+16047 INFO: Processing standard module hook 'hook-_osx_support.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks'
+16242 INFO: Processing pre-safe-import-module hook 'hook-jaraco.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks/pre_safe_import_module'
+16242 INFO: Setuptools: 'jaraco' appears to be a full setuptools-vendored copy - creating alias to 'setuptools._vendor.jaraco'!
+16250 INFO: Processing standard module hook 'hook-setuptools._vendor.jaraco.text.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks'
+16251 INFO: Processing pre-safe-import-module hook 'hook-importlib_resources.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks/pre_safe_import_module'
+16259 INFO: Processing pre-safe-import-module hook 'hook-more_itertools.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks/pre_safe_import_module'
+16259 INFO: Setuptools: 'more_itertools' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.more_itertools'!
+16541 INFO: Processing pre-safe-import-module hook 'hook-importlib_metadata.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks/pre_safe_import_module'
+16564 INFO: Processing standard module hook 'hook-importlib_metadata.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks'
+16587 INFO: Processing pre-safe-import-module hook 'hook-zipp.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks/pre_safe_import_module'
+16852 INFO: Processing pre-safe-import-module hook 'hook-tomli.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks/pre_safe_import_module'
+16852 INFO: Setuptools: 'tomli' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.tomli'!
+17306 INFO: Processing standard module hook 'hook-pkg_resources.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks'
+17445 INFO: Processing pre-safe-import-module hook 'hook-platformdirs.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks/pre_safe_import_module'
+17455 INFO: Processing standard module hook 'hook-platformdirs.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/_pyinstaller_hooks_contrib/stdhooks'
+17723 INFO: Processing pre-safe-import-module hook 'hook-wheel.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks/pre_safe_import_module'
+17723 INFO: Setuptools: 'wheel' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.wheel'!
+17903 INFO: Processing pre-safe-import-module hook 'hook-tensorflow.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/_pyinstaller_hooks_contrib/pre_safe_import_module'
+19779 INFO: Processing standard module hook 'hook-urllib3.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/_pyinstaller_hooks_contrib/stdhooks'
+20256 INFO: Processing standard module hook 'hook-certifi.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/_pyinstaller_hooks_contrib/stdhooks'
+20829 INFO: Analyzing hidden import 'uproot.behaviors.RooCurve'
+20832 INFO: Analyzing hidden import 'uproot.behaviors.RooHist'
+20835 INFO: Analyzing hidden import 'uproot.behaviors.TBranchElement'
+20835 INFO: Analyzing hidden import 'uproot.behaviors.TH2Poly'
+20836 INFO: Analyzing hidden import 'uproot.behaviors.TParameter'
+20838 INFO: Analyzing hidden import 'uproot.interpretation.custom'
+20842 INFO: Analyzing hidden import 'awkward._connect.cpu.helpers'
+20846 INFO: Analyzing hidden import 'awkward._connect.cpu.ir_nodes'
+20848 INFO: Analyzing hidden import 'awkward._connect.cuda.ir_nodes'
+20850 INFO: Analyzing hidden import 'awkward._experimental'
+20852 INFO: Analyzing hidden import 'awkward._prettyprint'
+20853 INFO: Analyzing hidden import 'awkward._v2'
+20853 INFO: Analyzing hidden import 'awkward.behaviors.categorical'
+20853 INFO: Analyzing hidden import 'awkward.behaviors.string'
+20854 INFO: Analyzing hidden import 'numpy._configtool'
+20856 INFO: Analyzing hidden import 'numpy._core._exceptions'
+20860 INFO: Analyzing hidden import 'numpy._core._multiarray_tests'
+20860 INFO: Analyzing hidden import 'numpy._core._operand_flag_tests'
+20861 INFO: Analyzing hidden import 'numpy._core._rational_tests'
+20861 INFO: Analyzing hidden import 'numpy._core._simd'
+20862 INFO: Analyzing hidden import 'numpy._core._struct_ufunc_tests'
+20862 INFO: Analyzing hidden import 'numpy._core._umath_tests'
+20865 INFO: Analyzing hidden import 'numpy._core.cversions'
+20866 INFO: Analyzing hidden import 'numpy._pyinstaller'
+20866 INFO: Analyzing hidden import 'numpy._pyinstaller.hook-numpy'
+21100 INFO: Analyzing hidden import 'numpy._typing._extended_precision'
+21101 INFO: Analyzing hidden import 'numpy._utils._pep440'
+21110 INFO: Analyzing hidden import 'numpy.conftest'
+21116 INFO: Analyzing hidden import 'numpy.core._dtype'
+21116 INFO: Analyzing hidden import 'numpy.core._dtype_ctypes'
+21117 INFO: Analyzing hidden import 'numpy.core._internal'
+21118 INFO: Analyzing hidden import 'numpy.core._multiarray_umath'
+21119 INFO: Analyzing hidden import 'numpy.core.arrayprint'
+21120 INFO: Analyzing hidden import 'numpy.core.defchararray'
+21121 INFO: Analyzing hidden import 'numpy.core.einsumfunc'
+21121 INFO: Analyzing hidden import 'numpy.core.fromnumeric'
+21122 INFO: Analyzing hidden import 'numpy.core.function_base'
+21123 INFO: Analyzing hidden import 'numpy.core.getlimits'
+21123 INFO: Analyzing hidden import 'numpy.core.multiarray'
+21124 INFO: Analyzing hidden import 'numpy.core.numeric'
+21125 INFO: Analyzing hidden import 'numpy.core.numerictypes'
+21125 INFO: Analyzing hidden import 'numpy.core.overrides'
+21126 INFO: Analyzing hidden import 'numpy.core.records'
+21127 INFO: Analyzing hidden import 'numpy.core.shape_base'
+21127 INFO: Analyzing hidden import 'numpy.core.umath'
+21128 INFO: Analyzing hidden import 'numpy.distutils'
+21664 INFO: Analyzing hidden import 'numpy.distutils.armccompiler'
+21664 INFO: Analyzing hidden import 'numpy.distutils.fcompiler.absoft'
+21669 INFO: Analyzing hidden import 'numpy.distutils.fcompiler.arm'
+21671 INFO: Analyzing hidden import 'numpy.distutils.fcompiler.compaq'
+21676 INFO: Analyzing hidden import 'numpy.distutils.fcompiler.fujitsu'
+21677 INFO: Analyzing hidden import 'numpy.distutils.fcompiler.g95'
+21678 INFO: Analyzing hidden import 'numpy.distutils.fcompiler.gnu'
+21692 INFO: Analyzing hidden import 'numpy.distutils.fcompiler.hpux'
+21694 INFO: Analyzing hidden import 'numpy.distutils.fcompiler.ibm'
+21697 INFO: Analyzing hidden import 'numpy.distutils.fcompiler.intel'
+21702 INFO: Analyzing hidden import 'numpy.distutils.fcompiler.lahey'
+21704 INFO: Analyzing hidden import 'numpy.distutils.fcompiler.mips'
+21706 INFO: Analyzing hidden import 'numpy.distutils.fcompiler.nag'
+21708 INFO: Analyzing hidden import 'numpy.distutils.fcompiler.none'
+21709 INFO: Analyzing hidden import 'numpy.distutils.fcompiler.nv'
+21711 INFO: Analyzing hidden import 'numpy.distutils.fcompiler.pathf95'
+21712 INFO: Analyzing hidden import 'numpy.distutils.fcompiler.pg'
+21715 INFO: Analyzing hidden import 'numpy.distutils.fcompiler.sun'
+21717 INFO: Analyzing hidden import 'numpy.distutils.fcompiler.vast'
+21719 INFO: Analyzing hidden import 'numpy.distutils.fujitsuccompiler'
+21719 INFO: Analyzing hidden import 'numpy.distutils.intelccompiler'
+21724 INFO: Analyzing hidden import 'numpy.distutils.line_endings'
+21726 INFO: Analyzing hidden import 'numpy.distutils.pathccompiler'
+21727 INFO: Analyzing hidden import 'numpy.distutils.tests'
+21727 INFO: Analyzing hidden import 'numpy.distutils.tests.test_build_ext'
+21731 INFO: Analyzing hidden import 'numpy.distutils.tests.test_ccompiler_opt'
+21746 INFO: Analyzing hidden import 'numpy.distutils.tests.test_ccompiler_opt_conf'
+21752 INFO: Analyzing hidden import 'numpy.distutils.tests.test_exec_command'
+21759 INFO: Analyzing hidden import 'numpy.distutils.tests.test_fcompiler'
+21761 INFO: Analyzing hidden import 'numpy.distutils.tests.test_fcompiler_gnu'
+21763 INFO: Analyzing hidden import 'numpy.distutils.tests.test_fcompiler_intel'
+21764 INFO: Analyzing hidden import 'numpy.distutils.tests.test_fcompiler_nagfor'
+21765 INFO: Analyzing hidden import 'numpy.distutils.tests.test_from_template'
+21766 INFO: Analyzing hidden import 'numpy.distutils.tests.test_log'
+21767 INFO: Analyzing hidden import 'numpy.distutils.tests.test_mingw32ccompiler'
+21769 INFO: Analyzing hidden import 'numpy.distutils.tests.test_misc_util'
+21773 INFO: Analyzing hidden import 'numpy.distutils.tests.test_npy_pkg_config'
+21776 INFO: Analyzing hidden import 'numpy.distutils.tests.test_shell_utils'
+21778 INFO: Analyzing hidden import 'numpy.distutils.tests.test_system_info'
+21788 INFO: Analyzing hidden import 'numpy.f2py.__main__'
+21789 INFO: Analyzing hidden import 'numpy.f2py._src_pyf'
+21795 INFO: Analyzing hidden import 'numpy.fft.tests'
+21795 INFO: Analyzing hidden import 'numpy.fft.tests.test_helper'
+21801 INFO: Analyzing hidden import 'numpy.fft.tests.test_pocketfft'
+21830 INFO: Analyzing hidden import 'numpy.lib._user_array_impl'
+21839 INFO: Analyzing hidden import 'numpy.lib.tests'
+21839 INFO: Analyzing hidden import 'numpy.lib.tests.test__datasource'
+21849 INFO: Analyzing hidden import 'numpy.lib.tests.test__iotools'
+21861 INFO: Analyzing hidden import 'numpy.lib.tests.test__version'
+21864 INFO: Analyzing hidden import 'numpy.lib.tests.test_array_utils'
+21865 INFO: Analyzing hidden import 'numpy.lib.tests.test_arraypad'
+21944 INFO: Analyzing hidden import 'numpy.lib.tests.test_arraysetops'
+21990 INFO: Analyzing hidden import 'numpy.lib.tests.test_arrayterator'
+21993 INFO: Analyzing hidden import 'numpy.lib.tests.test_format'
+22017 INFO: Analyzing hidden import 'numpy.lib.tests.test_function_base'
+22297 INFO: Analyzing hidden import 'numpy.lib.tests.test_histograms'
+22331 INFO: Analyzing hidden import 'numpy.lib.tests.test_index_tricks'
+22357 INFO: Analyzing hidden import 'numpy.lib.tests.test_io'
+22504 INFO: Analyzing hidden import 'numpy.lib.tests.test_loadtxt'
+22572 INFO: Analyzing hidden import 'numpy.lib.tests.test_mixins'
+22580 INFO: Analyzing hidden import 'numpy.lib.tests.test_nanfunctions'
+22643 INFO: Analyzing hidden import 'numpy.lib.tests.test_packbits'
+22659 INFO: Analyzing hidden import 'numpy.lib.tests.test_polynomial'
+22673 INFO: Analyzing hidden import 'numpy.lib.tests.test_recfunctions'
+22719 INFO: Analyzing hidden import 'numpy.lib.tests.test_regression'
+22728 INFO: Analyzing hidden import 'numpy.lib.tests.test_shape_base'
+22766 INFO: Analyzing hidden import 'numpy.lib.tests.test_stride_tricks'
+22791 INFO: Analyzing hidden import 'numpy.lib.tests.test_twodim_base'
+22841 INFO: Analyzing hidden import 'numpy.lib.tests.test_type_check'
+22861 INFO: Analyzing hidden import 'numpy.lib.tests.test_ufunclike'
+22866 INFO: Analyzing hidden import 'numpy.lib.tests.test_utils'
+22869 INFO: Analyzing hidden import 'numpy.lib.user_array'
+22869 INFO: Analyzing hidden import 'numpy.linalg.lapack_lite'
+22873 INFO: Analyzing hidden import 'numpy.linalg.tests'
+22873 INFO: Analyzing hidden import 'numpy.linalg.tests.test_deprecations'
+22874 INFO: Analyzing hidden import 'numpy.linalg.tests.test_linalg'
+22977 INFO: Analyzing hidden import 'numpy.linalg.tests.test_regression'
+22985 INFO: Analyzing hidden import 'numpy.ma.tests'
+22985 INFO: Analyzing hidden import 'numpy.ma.tests.test_arrayobject'
+22987 INFO: Analyzing hidden import 'numpy.ma.tests.test_core'
+23308 INFO: Analyzing hidden import 'numpy.ma.tests.test_deprecations'
+23311 INFO: Analyzing hidden import 'numpy.ma.tests.test_extras'
+23409 INFO: Analyzing hidden import 'numpy.ma.tests.test_mrecords'
+23454 INFO: Analyzing hidden import 'numpy.ma.tests.test_old_ma'
+23506 INFO: Analyzing hidden import 'numpy.ma.tests.test_regression'
+23509 INFO: Analyzing hidden import 'numpy.ma.tests.test_subclassing'
+23525 INFO: Analyzing hidden import 'numpy.matrixlib.tests'
+23525 INFO: Analyzing hidden import 'numpy.matrixlib.tests.test_defmatrix'
+23547 INFO: Analyzing hidden import 'numpy.matrixlib.tests.test_interaction'
+23560 INFO: Analyzing hidden import 'numpy.matrixlib.tests.test_masked_matrix'
+23571 INFO: Analyzing hidden import 'numpy.matrixlib.tests.test_matrix_linalg'
+23574 INFO: Analyzing hidden import 'numpy.matrixlib.tests.test_multiarray'
+23575 INFO: Analyzing hidden import 'numpy.matrixlib.tests.test_numeric'
+23576 INFO: Analyzing hidden import 'numpy.matrixlib.tests.test_regression'
+23578 INFO: Analyzing hidden import 'numpy.polynomial.tests'
+23578 INFO: Analyzing hidden import 'numpy.polynomial.tests.test_chebyshev'
+23605 INFO: Analyzing hidden import 'numpy.polynomial.tests.test_classes'
+23629 INFO: Analyzing hidden import 'numpy.polynomial.tests.test_hermite'
+23652 INFO: Analyzing hidden import 'numpy.polynomial.tests.test_hermite_e'
+23676 INFO: Analyzing hidden import 'numpy.polynomial.tests.test_laguerre'
+23697 INFO: Analyzing hidden import 'numpy.polynomial.tests.test_legendre'
+23721 INFO: Analyzing hidden import 'numpy.polynomial.tests.test_polynomial'
+23774 INFO: Analyzing hidden import 'numpy.polynomial.tests.test_polyutils'
+23779 INFO: Analyzing hidden import 'numpy.polynomial.tests.test_printing'
+23794 INFO: Analyzing hidden import 'numpy.polynomial.tests.test_symbol'
+23801 INFO: Analyzing hidden import 'numpy.random.tests'
+23802 INFO: Analyzing hidden import 'numpy.random.tests.data'
+23802 INFO: Analyzing hidden import 'numpy.random.tests.test_direct'
+23824 INFO: Analyzing hidden import 'numpy.random.tests.test_extending'
+23842 INFO: Analyzing hidden import 'numpy.random.tests.test_generator_mt19937'
+23968 INFO: Analyzing hidden import 'numpy.random.tests.test_generator_mt19937_regressions'
+23976 INFO: Analyzing hidden import 'numpy.random.tests.test_random'
+24070 INFO: Analyzing hidden import 'numpy.random.tests.test_randomstate'
+24153 INFO: Analyzing hidden import 'numpy.random.tests.test_randomstate_regression'
+24161 INFO: Analyzing hidden import 'numpy.random.tests.test_regression'
+24167 INFO: Analyzing hidden import 'numpy.random.tests.test_seed_sequence'
+24170 INFO: Analyzing hidden import 'numpy.random.tests.test_smoke'
+24206 INFO: Analyzing hidden import 'numpy.testing.print_coercion_tables'
+24212 INFO: Analyzing hidden import 'numpy.testing.tests'
+24212 INFO: Analyzing hidden import 'numpy.testing.tests.test_utils'
+24283 INFO: Analyzing hidden import 'numpy.tests'
+24283 INFO: Analyzing hidden import 'numpy.tests.test__all__'
+24284 INFO: Analyzing hidden import 'numpy.tests.test_configtool'
+24286 INFO: Analyzing hidden import 'numpy.tests.test_ctypeslib'
+24300 INFO: Analyzing hidden import 'numpy.tests.test_lazyloading'
+24300 INFO: Analyzing hidden import 'numpy.tests.test_matlib'
+24303 INFO: Analyzing hidden import 'numpy.tests.test_numpy_config'
+24405 INFO: Analyzing hidden import 'numpy.tests.test_numpy_version'
+24406 INFO: Analyzing hidden import 'numpy.tests.test_public_api'
+24419 INFO: Analyzing hidden import 'numpy.tests.test_reloading'
+24421 INFO: Analyzing hidden import 'numpy.tests.test_scripts'
+24423 INFO: Analyzing hidden import 'numpy.tests.test_warnings'
+24426 INFO: Analyzing hidden import 'numpy.typing.mypy_plugin'
+24431 INFO: Analyzing hidden import 'numpy.typing.tests'
+24431 INFO: Analyzing hidden import 'numpy.typing.tests.test_isfile'
+24432 INFO: Analyzing hidden import 'numpy.typing.tests.test_runtime'
+24436 INFO: Analyzing hidden import 'numpy.typing.tests.test_typing'
+24442 INFO: Processing module hooks (post-graph stage)...
+25228 INFO: Performing binary vs. data reclassification (1611 entries)
+25258 INFO: Looking for ctypes DLLs
+25429 WARNING: Library ole32 required via ctypes not found
+25440 WARNING: Library shell32 required via ctypes not found
+25712 INFO: Analyzing run-time hooks ...
+25719 INFO: Including run-time hook 'pyi_rth_inspect.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks/rthooks'
+25721 INFO: Including run-time hook 'pyi_rth_pkgutil.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks/rthooks'
+25723 INFO: Including run-time hook 'pyi_rth_multiprocessing.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks/rthooks'
+25725 INFO: Including run-time hook 'pyi_rth_setuptools.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks/rthooks'
+25726 INFO: Including run-time hook 'pyi_rth_pkgres.py' from '/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/hooks/rthooks'
+25781 INFO: Creating base_library.zip...
+25798 INFO: Looking for dynamic libraries
+26536 INFO: Warnings written to /home/runner/work/G4UniversalSim/G4UniversalSim/out/frozen-desktop-ci/helper-build/build/G4USimPython/warn-G4USimPython.txt
+26607 INFO: Graph cross-reference written to /home/runner/work/G4UniversalSim/G4UniversalSim/out/frozen-desktop-ci/helper-build/build/G4USimPython/xref-G4USimPython.html
+26685 INFO: checking PYZ
+26685 INFO: Building PYZ because PYZ-00.toc is non existent
+26685 INFO: Building PYZ (ZlibArchive) /home/runner/work/G4UniversalSim/G4UniversalSim/out/frozen-desktop-ci/helper-build/build/G4USimPython/PYZ-00.pyz
+27749 INFO: Building PYZ (ZlibArchive) /home/runner/work/G4UniversalSim/G4UniversalSim/out/frozen-desktop-ci/helper-build/build/G4USimPython/PYZ-00.pyz completed successfully.
+27778 INFO: checking PKG
+27778 INFO: Building PKG because PKG-00.toc is non existent
+27778 INFO: Building PKG (CArchive) G4USimPython.pkg
+27796 INFO: Building PKG (CArchive) G4USimPython.pkg completed successfully.
+27797 INFO: Bootloader /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PyInstaller/bootloader/Linux-64bit-intel/run
+27797 INFO: checking EXE
+27797 INFO: Building EXE because EXE-00.toc is non existent
+27797 INFO: Building EXE from EXE-00.toc
+27797 INFO: Copying bootloader EXE to /home/runner/work/G4UniversalSim/G4UniversalSim/out/frozen-desktop-ci/helper-build/build/G4USimPython/G4USimPython
+27797 INFO: Appending PKG archive to custom ELF section in EXE
+27822 INFO: Building EXE from EXE-00.toc completed successfully.
+27832 INFO: checking COLLECT
+27833 INFO: Building COLLECT because COLLECT-00.toc is non existent
+27833 INFO: Building COLLECT COLLECT-00.toc
+28076 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+28101 INFO: Build complete! The results are available in: /home/runner/work/G4UniversalSim/G4UniversalSim/out/frozen-desktop-ci/helper-build/dist

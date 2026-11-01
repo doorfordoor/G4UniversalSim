@@ -1,0 +1,16 @@
+# History v2三标签独审
+
+结论：本次定点通过，未发现本范围P1/P2。只在out加载候选，125/150两个独立Dvenv/offscreen进程exit0；未运行旧完整519组、不操作native、不运行backend、不修改tracked。主线程其他native排程不受占用。
+
+产品原型SHA cc98442e975cec3f1b33d556a8dabdd7381ec22368e94bd6124178edacb5a463，LF patch c6f9a716e3f6d58050593bb33f8ada02f4432585ff03b8927aeac69f72a794de。永久smoke原型1620ccc2168cfeaf45802339aef41d9e16b7d028d7e3630ac11b616d77f3b086，patch eefb54ee53de668796149d9c5d8de61ae8e18d7e6f100bbc6c0f5d65ff72cad8。
+
+静态独立核对：只新增既有_buddy导入与三明确关联（Runs root→runs_root，Search→search，Status→status_filter）；全类除_build_layout外所有方法AST一致，没有全局QHBox猜配。core/shell/i18n原件不改。全部旧416测试函数AST原样，main仅追加新History测试调用；冻结union helper保持原字节。两个补丁组合git apply --check0，未apply。作者两份519日志原字节SHA与receipt相符，但本独审不冒称重新跑519。
+
+独立新例review.py（不用作者probe/测试函数）：实际生产MainWindow+仅候选History模块，中文字体/Fusion/760x640，Config/F6保留docks后自然CtrlAlt8进入History。通过生产window._set_language连续en→zh_CN→en，三label.buddy及_f8_accessible_label逐项对应真实控件，QWidget.accessibleName与QAccessible.queryAccessibleInterface(Name)同时等于实际标签/既有ui_text（Runs root/Search/Status→运行包根目录/搜索/状态→英文）。既有语言刷新链有效，无新增翻译或回调。
+
+边界实证：两档本探针窄视口实测540px、联合框590px，都保留自然非零pan；先前590>530与本次590>540均属于不能完整同容纳的边界，不被当成可完整容纳；label+128px可读前缀在所有祖先viewport可见，settle后pan稳定。实际Tab到Search和Status并测其关联上下文。随后自然resize1600x900/离开再回History，所有内层可容纳时要求完整joint包含于viewport并通过。既无强归零/直接ensure，也没有降低可容纳joint判据；不能声称590px全field+label能同时放进530px。
+
+两档业务fingerprint、Undo/Redo/modified均不变，docks不换实例，不创建runs目录。tracked History/core/shell/smoke/i18n五源码SHA前后一致。原三Name空负向已由此前独立receipt out/collab/f8-preview-focus150-independent/receipt.json实际QAccessible证明；作者frozen-negative原证据保留。本次不采native UIA provider，实际验证范围是Qt accessibility接口。
+
+证据：processes.json、scale1.25/receipt.json、scale1.5/receipt.json及两原日志；独立review.py/launch.py。所有进程现已结束，可交main后续统一集成/冻结；CI QSpacerItem兼容候选独立另审，不在此报告捎带通过。
+

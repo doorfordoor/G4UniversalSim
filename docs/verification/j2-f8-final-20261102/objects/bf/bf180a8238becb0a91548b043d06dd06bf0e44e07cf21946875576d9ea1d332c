@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "scale": "1.25",
+  "observations": [
+    {
+      "stage": "stale-project-queued",
+      "page": 1,
+      "pending_is_project": true,
+      "timer_active": true
+    },
+    {
+      "stage": "stale-start-supersedes",
+      "page": 0,
+      "old_project_pending": false,
+      "pending_is_current_start": true,
+      "pending_cancelled": false
+    }
+  ],
+  "exact_permanent_stale_block_executed": true,
+  "old_functions_ast_unchanged": true,
+  "main_only_appends_call": true,
+  "both_patches_check_exit": 0,
+  "LF": true,
+  "tracked_unchanged": true,
+  "product_sha256": "677a7b54c5ce876d663b6d986642ee5393a385b782a29dad695c2ed20d280b39",
+  "test_sha256": "69b11a915a0864110171df75a1a2402ea3025f0a3a01b79d31af8ee26bd9f0e6",
+  "scope": "stale-only offscreen, not full416 rerun"
+}

@@ -1,0 +1,83 @@
+{
+  "status": "prepared_for_next_round_not_executed",
+  "historical_windows114_log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\i2-j1-03d2c48\\windows114-integration\\20261101-221315-6389b5dd\\effective_gdml.log",
+  "historical_evidence": {
+    "scope": "standalone native Xerces exact-byte adapter; not selected application GDML support",
+    "selection": "explicit",
+    "helper": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\i2-xerces-standalone-proposal\\build\\Release\\gdmlInputCaptureCheck.exe",
+    "helper_sha256": "f1e850ce7dda1f71cc7283a8d4390e2689ed15821e4b40e57f06f6446e1d7025",
+    "selected_application": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-windows114\\Release\\G4UniversalSim.exe",
+    "current_source_sha256": {
+      "tools/gdmlInputCaptureCheck.cc": "44861cec93a1d1b5f8ca8aebbd40b270453b5e63260fcf8eb9a76b2f1a51c94e",
+      "src/Geometry/GdmlInputCapture.cc": "a0ee9349399e137f3ff34c3ffd2d347e097602d0d63566705b120d9df4fbb855",
+      "include/Geometry/GdmlInputCapture.hh": "454188028b4e7960f191748cdf0a8b1b226d7a9d25fb0459f237c930a1a60891",
+      "src/Config/InputProvenance.cc": "c1051668c8601acac3c1225e7aff3e0f9016496d5afbf39e25dd869d463e810f",
+      "include/Config/InputProvenance.hh": "be541ec48bd7d4d50be804e4f3a538049b1a5339a477e6d1d8c96c07236d012d"
+    }
+  },
+  "current_113_pass_log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows113-integration\\20261102-014658-5f26cf76\\effective_gdml.log",
+  "current_113_helper_evidence": {
+    "scope": "standalone native Xerces exact-byte adapter; not selected application GDML support",
+    "selection": "adjacent",
+    "helper": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\gdmlInputCaptureCheck.exe",
+    "helper_sha256": "86d9aac227016f946a02724d3b22e2823430b7a0972de7a5e16bf3acc295a39a",
+    "selected_application": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\G4UniversalSim.exe",
+    "current_source_sha256": {
+      "tools/gdmlInputCaptureCheck.cc": "44861cec93a1d1b5f8ca8aebbd40b270453b5e63260fcf8eb9a76b2f1a51c94e",
+      "src/Geometry/GdmlInputCapture.cc": "a0ee9349399e137f3ff34c3ffd2d347e097602d0d63566705b120d9df4fbb855",
+      "include/Geometry/GdmlInputCapture.hh": "454188028b4e7960f191748cdf0a8b1b226d7a9d25fb0459f237c930a1a60891",
+      "src/Config/InputProvenance.cc": "c1051668c8601acac3c1225e7aff3e0f9016496d5afbf39e25dd869d463e810f",
+      "include/Config/InputProvenance.hh": "be541ec48bd7d4d50be804e4f3a538049b1a5339a477e6d1d8c96c07236d012d"
+    }
+  },
+  "current_input_sha256_verified": {
+    "tools/gdmlInputCaptureCheck.cc": "44861cec93a1d1b5f8ca8aebbd40b270453b5e63260fcf8eb9a76b2f1a51c94e",
+    "src/Geometry/GdmlInputCapture.cc": "a0ee9349399e137f3ff34c3ffd2d347e097602d0d63566705b120d9df4fbb855",
+    "include/Geometry/GdmlInputCapture.hh": "454188028b4e7960f191748cdf0a8b1b226d7a9d25fb0459f237c930a1a60891",
+    "src/Config/InputProvenance.cc": "c1051668c8601acac3c1225e7aff3e0f9016496d5afbf39e25dd869d463e810f",
+    "include/Config/InputProvenance.hh": "be541ec48bd7d4d50be804e4f3a538049b1a5339a477e6d1d8c96c07236d012d"
+  },
+  "helper": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\gdmlInputCaptureCheck.exe",
+    "sha256": "86d9aac227016f946a02724d3b22e2823430b7a0972de7a5e16bf3acc295a39a",
+    "size_bytes": 99328
+  },
+  "build_identity": {
+    "head": "56b689fb9ac920cbb1203b2b94dae2483d25f622",
+    "commands": [
+      [
+        "D:\\Program Files 1\\Cmake\\bin\\cmake.exe",
+        "-S",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113"
+      ],
+      [
+        "D:\\Program Files 1\\Cmake\\bin\\cmake.exe",
+        "--build",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113",
+        "--config",
+        "Release",
+        "--parallel",
+        "6"
+      ]
+    ],
+    "exit_codes": [
+      0,
+      0
+    ],
+    "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\identity\\build-1132.log",
+    "log_sha256": "0d6e8d9b423d56ef15ab1c45be2b40cafd9830d9425908eba547a7d6849a66eb"
+  },
+  "next_child_environment": {
+    "G4USIM_GDML_CAPTURE_HELPER": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\gdmlInputCaptureCheck.exe"
+  },
+  "selected_114_application": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-windows114\\Release\\G4UniversalSim.exe",
+    "gdml_template_capability": {
+      "id": "gdml",
+      "runtime": false
+    }
+  },
+  "scope": "Standalone Xerces input-byte adapter only; does not enable or prove GDML in the selected 114 application. Original 114 failure is retained; no rerun in this round."
+}

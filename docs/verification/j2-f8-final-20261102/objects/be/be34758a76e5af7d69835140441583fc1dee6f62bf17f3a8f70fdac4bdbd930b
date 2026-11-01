@@ -1,0 +1,110 @@
+{
+  "schema": "j2_f8_third_candidate_docs_frozen_v3",
+  "base_head": "2901f4254303c3a9089c9025717908c0d77ff190",
+  "applied": false,
+  "stage_completed": false,
+  "files": [
+    {
+      "path": "STATUS.md",
+      "original_sha256": "50fe07c270a9d9077807d81c8f15c230217d0a8da3b9c28e3cb523c53f1ceba5",
+      "candidate_sha256": "6dbd513b352443b66151055a6feb6c3fba7f0a02a137b0a8ae7d73b2074a4e90",
+      "patch": "patches/STATUS.md.patch",
+      "bytes": 39409,
+      "BOM_preserved": false,
+      "line_endings_preserved": true
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "original_sha256": "847626efce5f3683eb068364eba872dc6933516e0397878eab25593bb5882af4",
+      "candidate_sha256": "1082cc0d20f8c9e82e4c4675828acd5266007c07cec14e9ac6f363c10d197806",
+      "patch": "patches/docs__ROADMAP.md.patch",
+      "bytes": 78206,
+      "BOM_preserved": false,
+      "line_endings_preserved": true
+    },
+    {
+      "path": "AGENTS.md",
+      "original_sha256": "a90773593c13d778c29bff4aa409194873b38907e11eb9cba482eb615e52f284",
+      "candidate_sha256": "8f01ba46ebce3ed02f905f90e565fdf00411c1272da75ef15246381705ab23f0",
+      "patch": "patches/AGENTS.md.patch",
+      "bytes": 58230,
+      "BOM_preserved": false,
+      "line_endings_preserved": true
+    },
+    {
+      "path": "gui/AGENTS.md",
+      "original_sha256": "461a276cde56bdfa03f67e51702b35471384459ecc282211726376ae768c6df3",
+      "candidate_sha256": "612345ef6198b92de7b96c0acccb6964b2aec34aacf838c962ddd6a08ad24fe2",
+      "patch": "patches/gui__AGENTS.md.patch",
+      "bytes": 49706,
+      "BOM_preserved": false,
+      "line_endings_preserved": true
+    },
+    {
+      "path": "docs/agent-history.md",
+      "original_sha256": "c4a40aefc6af27cdecc82fe68d2b4494cbe66a2b102a2d0e87513df0a4344930",
+      "candidate_sha256": "c720691a1e7a3fa831158b52b33f9a29f7688ed470788289a1c28bace7c88605",
+      "patch": "patches/docs__agent-history.md.patch",
+      "bytes": 146803,
+      "BOM_preserved": false,
+      "line_endings_preserved": true
+    },
+    {
+      "path": "docs/J2编辑覆盖与F8验收.md",
+      "original_sha256": "0dcabc185dd5ec6b6b17f9276d18c92d3c09472427d4eea7d3373f75168e1625",
+      "candidate_sha256": "df144f2dc34be5476b714ed18a6c529cde11648e889010c297ae380229c8cdc5",
+      "patch": "patches/docs__J2编辑覆盖与F8验收.md.patch",
+      "bytes": 8826,
+      "BOM_preserved": false,
+      "line_endings_preserved": true
+    },
+    {
+      "path": "gui/docs/中文快速使用说明.md",
+      "original_sha256": "911186d8fb8eeb46688b7b368b000f538486d85147cd781615e7869982081ad9",
+      "candidate_sha256": "61f8965df61a3aae8dcb1b36b8c78d8e6949ba92177889c2ed2be74b42d84ba6",
+      "patch": "patches/gui__docs__中文快速使用说明.md.patch",
+      "bytes": 42322,
+      "BOM_preserved": false,
+      "line_endings_preserved": true
+    },
+    {
+      "path": "docs/功能支持矩阵.md",
+      "original_sha256": "f6dd1c5874e06c377544de186c59a4e1f79c1e135d2e22d4b31df61e2f9adf57",
+      "candidate_sha256": "482aaaa1ef451723477bce8bbba9cefceeca3cf65d8818a99d0ec312edae9c72",
+      "patch": "patches/docs__功能支持矩阵.md.patch",
+      "bytes": 189925,
+      "BOM_preserved": false,
+      "line_endings_preserved": true
+    },
+    {
+      "path": "docs/开发路线图.md",
+      "original_sha256": "eda92cfc5f24be3838809061b799ba972d97217cfd0a37347bd295fe14d7da19",
+      "candidate_sha256": "79f715e60ab0ca05488979f4e40b6e1fab9fe3eddfcc20bd60affb5eb022c516",
+      "patch": "patches/docs__开发路线图.md.patch",
+      "bytes": 31469,
+      "BOM_preserved": false,
+      "line_endings_preserved": true
+    }
+  ],
+  "docs_patch_sha256": "721f9bc9a646ebc15524ac68d0dd0080badce7f2454c8d1b5e2b63699cc229f7",
+  "facts": "evidence-snapshot.json",
+  "before_main_apply": [
+    "Nine doc source SHA pins and frozen v3 delta review must match",
+    "Six authorized main code/test diffs already applied; doc generator leaves them byte-identical",
+    "New candidate full formal/native/CI acceptance required; old failures retained"
+  ],
+  "historical_policy": "Only STATUS current section replaced; dated historical paragraphs elsewhere preserved; agent-history append-only; roadmap undated current F5 version line minimally v8; quick current schema sentence v6->v8",
+  "public_links": "No new unarchived out Markdown links; local evidence roots are prose/code only",
+  "docs_patch_bytes": 28699,
+  "frozen": true,
+  "frozen_at_utc": "2026-11-01T19:54:14.689575+00:00",
+  "previous_draft": {
+    "path": "out/collab/j2-f8-third-doc-draft/v2",
+    "docs_patch_sha256": "841da554af311ac5af84630311b79d3ee54f47963ad8ab8e4faad9f1da34ffab",
+    "manifest_sha256": "dee8d8909952a7f97085e80061f2413f2e0ee568932e266c03d4c9980ce80aa2",
+    "all_files_unchanged": true
+  },
+  "validation_sha256": "09042330813d7611f99144133513628eaa5803c50833c81ac090a1a13a059740",
+  "facts_sha256": "bf7d95b9755d7d8df706b722346a9ca22502aea2003606f1b20347e223df5dd8",
+  "corrections_sha256": "a1ea963c0ca8e4a562713986deac8ee7c49db1eb27775bedef57256c60e004a5"
+}

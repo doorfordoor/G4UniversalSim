@@ -1,0 +1,24 @@
+# 下一轮正式启动器只读审查
+
+审查out/collab/j2-f8-formal-launch.py最新SHA3d8ff97c31c28b7781f504884fa5a6af34a28d86e65bb02ea62e6633c4ce5509，以及j2-candidate-build-v2.py。未运行启动器、build、profile或Qt，未修改两脚本。
+
+启动前建议修复的两个P2：
+
+1. 最终status只约束ending.exe_sha256，不比较ending.merge_sha256与启动时receipt.merge.sha256。Merge前后SHA都记录了却不参与门禁；只读提取原最终IfExp，模拟mergeChanged且其他正常，实际返回passed。应对merge和所选helper做首尾SHA一致性门禁，保持执行身份；helper测试自身虽有单次执行内首尾检查，正式整轮的helper身份仍建议与launch同一身份闭合。
+2. 最终status未核对payload.git_head/source_fingerprint/profile/backend_executable/merge_executable等与传入期望/预检。check_report_evidence校验摘要/断言与baseline，不负责这些字段与本次head/exe参数匹配。独立原表达式反例证明错误report head、source、profile、backend路径均仍passed。建议明确核对report.git_head==a.head、source_fingerprint==a.source_fingerprint、profile==a.profile、resolved backend/merge paths、backend_build_identity中的Geant4版本（有exe时），并预存runner.tests_content_fingerprint、merge_source_fingerprint后核对report与结束当前值。不以启动前caps匹配代替落盘报告身份匹配。
+
+predicate-probes.json保存提取原表达式的只读计算；没有伪造/修改任何真实报告，没有实际profile产生该结果。不是已有真实报告污染的断言。
+
+已确认正确的新版逻辑：
+- 完整Dvenv启动runner，删除CXX与Qt SCALE_FACTOR/SCREEN_SCALE_FACTORS/AUTO_SCREEN_SCALE_FACTOR/DEVICE_PIXEL_RATIO；当前其他Qt plugin/DPI/PYTHONPATH/PyVistaoffscreen开关均未设置，本机没有额外已观察环境污染。
+- longpaths通过GIT_CONFIG_COUNT追加到同一env，checked/git和Popen runner及其子进程一致继承；clean预检无外层-c替代问题。
+- exact fullhead/clean caps、sourcefp、EXE SHA、actual1132/1143预检存在；路径限制out/verification且拒绝重用证据目录，旧报告不拼接。
+- 113 GDML预期true/114false由SDK配置检查，114 explicit standalone113 Xerces helper用途说明正确，不冒充114 appGDML。
+- helper现在必须存在、SHA和5个当前输入绑定新候选identity/build-1132.json；successful configure/build [0,0]、同head、输入前后不变；build-v2将longpaths传CMake子进程，正常CMake依赖链对应新产物。旧56b收据不覆盖。
+- baseline选同host/series/backend+integration，static/gui明确windows113基线；原baseline字节SHA验证，最终严格gate无allow/legacy。
+
+非阻断的证据补充建议：data preflight目前required_complete + all(found且root/folder吻合)，不是独立SDK版本证明；对114应同时核对12项及folder集合等于Geant4Config的DATASET_DESCRIPTIONS，或绑定既有j2-114-data-reuse版本/发布payload验证receipt。本机旧12项版本/43527hash验证是已有独立证据，不能仅凭本启动器的required_complete重新声称版本匹配。
+
+依赖导入预检给版本但不记录__file__/Qt plugin路径；当前已独立验证同Dvenv且无PYTHONPATH/Qtplugin覆写，因此无本机立即阻断项。可将之前import/path receipt与下一轮launch identity绑定，保持完整venv证据。
+
+所有审查进程已结束，仍未启动profile。等main修改/裁决及新HEAD/EXE就绪后重新preflight再整份启动；native子路径排程由main保持不并发。

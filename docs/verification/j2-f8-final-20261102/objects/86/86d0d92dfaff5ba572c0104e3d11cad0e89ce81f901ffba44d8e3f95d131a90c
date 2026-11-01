@@ -1,0 +1,32 @@
+
+[run]
+threads = 2
+seed = 4242
+[output]
+format = csv
+[materials]
+file = C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/config/materials/material.ini
+[geometry]
+template = hierarchical
+config = C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/j2-source-physics-113-r1/test_physics_a6/retained-work/g4usim_a6_onm6v74h/case12_geometry.ini
+[physics]
+reference = FTFP_BERT
+default_cut = 1 mm
+[physics.radioactive_decay]
+enabled = true
+time_threshold = 1000 y
+
+[scoring]
+enabled = true
+hits = true
+event_edep = false
+edep = false
+auto_create_default_scorers = true
+[source]
+particle = ion
+ion = 27 60
+energy = 0 keV
+position_type = point
+position = 0,0,0 mm
+angular = isotropic
+

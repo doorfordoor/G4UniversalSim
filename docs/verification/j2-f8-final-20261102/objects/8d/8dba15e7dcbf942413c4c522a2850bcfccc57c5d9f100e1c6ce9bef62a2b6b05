@@ -1,0 +1,158 @@
+{
+  "base_head": "2901f4254303c3a9089c9025717908c0d77ff190",
+  "snapshot_utc": "2026-11-01T19:45:15.518642+00:00",
+  "local_profiles": [
+    {
+      "profile": "windows-static",
+      "status": "verified_terminal_pass",
+      "report": "out/verification/j2-f8-2901f42/windows-static/20261102-023100-10bc6193/report.json",
+      "report_sha256": "d038cc1adb2d6baac4f2ca515c781cfbb0de99579e84bf234aa356ceb75a0fef",
+      "cases": 46,
+      "assertions": 4545,
+      "pass_count": 46,
+      "fail_count": 0,
+      "skip_count": 0,
+      "launcher_status": "passed",
+      "runner_exit": 0,
+      "gate_exit": 0,
+      "identity_errors": [],
+      "git_dirty": false
+    },
+    {
+      "profile": "windows-gui",
+      "status": "verified_terminal_pass",
+      "report": "out/verification/j2-f8-2901f42/windows-gui/20261102-023116-d6e6dd42/report.json",
+      "report_sha256": "09de9901db5821230f8b83b491f9b97198e61d85d7da35b46e504f2c57a533de",
+      "cases": 66,
+      "assertions": 8394,
+      "pass_count": 66,
+      "fail_count": 0,
+      "skip_count": 0,
+      "launcher_status": "passed",
+      "runner_exit": 0,
+      "gate_exit": 0,
+      "identity_errors": [],
+      "git_dirty": false
+    },
+    {
+      "profile": "windows113-backend",
+      "status": "verified_terminal_pass",
+      "report": "out/verification/j2-f8-2901f42/windows113-backend/20261102-023135-4649d145/report.json",
+      "report_sha256": "f807698579865dbdb532a6f422c32ff1d8fcb6f77bb9796257021699a594bafd",
+      "cases": 63,
+      "assertions": 81988,
+      "pass_count": 63,
+      "fail_count": 0,
+      "skip_count": 0,
+      "launcher_status": "passed",
+      "runner_exit": 0,
+      "gate_exit": 0,
+      "identity_errors": [],
+      "git_dirty": false
+    },
+    {
+      "profile": "windows114-backend",
+      "status": "verified_terminal_pass",
+      "report": "out/verification/j2-f8-2901f42/windows114-backend/20261102-023110-c5f5a096/report.json",
+      "report_sha256": "54f8189f412689ae5b6825e53afb72e600c734c8503b33eabc07b7973f49c655",
+      "cases": 63,
+      "assertions": 72495,
+      "pass_count": 63,
+      "fail_count": 0,
+      "skip_count": 0,
+      "launcher_status": "passed",
+      "runner_exit": 0,
+      "gate_exit": 0,
+      "identity_errors": [],
+      "git_dirty": false
+    },
+    {
+      "profile": "windows113-integration",
+      "status": "verified_terminal_pass",
+      "report": "out/verification/j2-f8-2901f42/windows113-integration/20261102-032113-f31d9133/report.json",
+      "report_sha256": "4d8c5c89c945639c0ce8be887c64fe58a8bb0e492f970ad7052a6464566e3713",
+      "cases": 31,
+      "assertions": 6790,
+      "pass_count": 31,
+      "fail_count": 0,
+      "skip_count": 0,
+      "launcher_status": "passed",
+      "runner_exit": 0,
+      "gate_exit": 0,
+      "identity_errors": [],
+      "git_dirty": false
+    },
+    {
+      "profile": "windows114-integration",
+      "status": "not_terminal_at_snapshot",
+      "report": null
+    }
+  ],
+  "CI_runs": [
+    {
+      "id": 41336912644,
+      "path": ".github/workflows/linux-geant4.yml",
+      "head_sha": "2901f4254303c3a9089c9025717908c0d77ff190",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_attempt": 1
+    },
+    {
+      "id": 41336912651,
+      "path": ".github/workflows/m0-static-gui.yml",
+      "head_sha": "2901f4254303c3a9089c9025717908c0d77ff190",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_attempt": 1
+    },
+    {
+      "id": 41336912646,
+      "path": ".github/workflows/desktop-package.yml",
+      "head_sha": "2901f4254303c3a9089c9025717908c0d77ff190",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1
+    },
+    {
+      "id": 41336912645,
+      "path": ".github/workflows/full-installation.yml",
+      "head_sha": "2901f4254303c3a9089c9025717908c0d77ff190",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1
+    }
+  ],
+  "CI_release_accepted": false,
+  "native_audit_sha256": "0b2484f606a8f43f9f72f4a8beb99fdcc97e2930153ab4966bafd3ef16f9a91e",
+  "native_overall_pass": false,
+  "policy_final_v1_patch_sha256": "f705dc96bcfb4706e03d045a00e281c53ce0e8fe6eb9912c27579188e8a446de",
+  "policy_independent_review": {
+    "status": "pass",
+    "execution": "out/collab/j2-policy-final-v1-independent/execution.json",
+    "sha256": "1be83e73e78d3cbd6b929441fa1907ffcc1a8e101f6b6d0e579e083c4d6ba2eb",
+    "review": "out/collab/j2-policy-final-v1-independent/review.md",
+    "review_sha256": "de31b3715ee785c5cfc44595efcedb70d2f1598822ae1eb91cabe4947b51e444",
+    "full_assertions": 603,
+    "groups": 13,
+    "original_short_path_assertions": 30,
+    "junction_groups": [
+      3,
+      5
+    ]
+  },
+  "History_spacer_combination_independent_review": {
+    "receipt": "out/collab/f8-history-spacer-combined-independent/receipt.json",
+    "sha256": "39da5266430ecf653a3cf51557daac561f041b2154d8b32e9f3ef86eea588f48",
+    "author_counts_each_125_150": 595
+  },
+  "applied": false,
+  "local_profile_snapshot_policy": "Original v1 snapshot retained: five profiles passed; windows114-integration explicitly running per main at freeze; do not wait/rewrite historical report.",
+  "STL_review": {
+    "status": "pass",
+    "source": "main explicitly confirmed accepted independent review; exact resolve/samefile test-only; no product semantics changes"
+  }
+}

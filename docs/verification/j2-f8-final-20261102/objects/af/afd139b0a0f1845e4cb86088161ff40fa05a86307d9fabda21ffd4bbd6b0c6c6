@@ -1,0 +1,21 @@
+# Windows114 formal validation checkpoint
+
+Candidate: 56b689fb9ac920cbb1203b2b94dae2483d25f622. Source fingerprint: 9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a. Exact build HEAD, clean source state and backend SHA checked against identity/build-identities.json. Only out artifacts are written; product/tests frozen.
+
+Coordinator process session: 19601. The runner PID/current progress/report/gate paths are in receipt.json. Profiles run sequentially: backend 63 cases, integration 31 cases. Both use --require-tracked-sources and --fail-on-skip; no case filter, no legacy/incomplete bypass and no automatic retry/criterion edits.
+
+Report roots: ../windows114-backend and ../windows114-integration. Matching historical baselines were selected from out/collab/j2-f8-baselines.json and their report bytes matched recorded SHA. Backend baseline windows114-backend: 61 cases/67321 entrances; integration baseline windows114-integration: 29/6045. Strict checker uses --report <actual report.json> --baseline <that matching historical report.json>.
+
+Child launch clears every inherited G4*DATA/GEANT4_DATA_DIR then sets GEANT4_DATA_DIR and the test-harness G4USIM_GEANT4_DATA to the same fully verified 114 root out/i2-controlled/windows114-data/data. PATH starts with actual 114 SDK/bin. EXE/merge are the exact out/build-i2-windows114/Release files. QT_QPA_PLATFORM=offscreen, CXX uses the available absolute MinGW g++ path. Git core.longpaths is enabled only in these children, avoiding false deleted historical long-path documents; a read-only longpaths status was empty before launch.
+
+capabilities.json and discovery.json are from the current candidate EXE in that child environment: actual Geant4 1143, all 12 canonical dataset paths exactly within the previously SHA-verified root. required_complete is not used as the sole version proof.
+
+The coordinator preserves each raw runner log, the generated per-case logs/report/evidence, first failure marker and strict gate output. It does not rerun or alter failures. On context resume inspect receipt.json and existing session 19601; do not start a duplicate profile. Main owns native UI and any fixes. No formal result is claimed while status is running.
+
+## Backend terminal milestone
+
+Backend completed: 62 pass / 1 fail / 0 skip of 63, 72428 assertion entrances. Report windows114-backend/20261102-012049-57371f8c/report.json. Only k1_bundle_backend failed at scripts/test_k1_bundle.py:592 (expected nonempty round_trip_blockers, 523 entrances). Raw first failure in first-failure.json and the original case log. Strict checker with matching Windows114 baseline exited 1 because failed reports cannot be release evidence; no incomplete/legacy bypass. Git/head/source fingerprint/tracked gate match. Main was notified. Integration 31 cases has now started in the SAME coordinator session 19601; continue it, do not restart backend.
+
+## Final terminal sync
+
+Session 19601 returned exit 1. Backend: 62/1/0, 72428 entrances, runner/gate 1/1. Integration: 28/3/0, 6659 entrances, runner/gate 1/1. Both original runner PIDs 16020/19568 are absent; no process was stopped and no case was rerun. Final HEAD/sourcefp match candidate; EXE/merge unchanged; both reports git_dirty=false/tracked gate pass and share tests fingerprint a0b6ba859c87e276b2b602040c28376150ef8fa86a24e78e2adacebd9aa0df1e. These reports are failures, not release evidence. terminal-sync.json records exact report SHA/path and failures. External F4 false refusal diagnosis is captured under f4-inspect-diagnostic; next-round standalone Xerces helper plan is gdml-helper-next-round.json. Main owns unfreezing only after all other owners' source readers have also exited.

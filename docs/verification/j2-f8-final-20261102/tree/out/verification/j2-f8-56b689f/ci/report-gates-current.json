@@ -1,0 +1,1698 @@
+{
+  "candidate_head": "56b689fb9ac920cbb1203b2b94dae2483d25f622",
+  "observed_at": "2026-11-01T17:33:11.606099+00:00",
+  "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+  "tests_content_fingerprint": "a0b6ba859c87e276b2b602040c28376150ef8fa86a24e78e2adacebd9aa0df1e",
+  "strict_pass": 0,
+  "strict_fail": 4,
+  "artifacts": [
+    {
+      "artifact_id": 13093895065,
+      "name": "frozen-desktop-Linux",
+      "run_id": 41330577359,
+      "zip_sha256": "b478b6c39b4415b34fdaf4709a70885cc66eac23ac503448336644e32f351438",
+      "reports": []
+    },
+    {
+      "artifact_id": 13093860061,
+      "name": "frozen-desktop-Windows",
+      "run_id": 41330577359,
+      "zip_sha256": "785bdfbe364c8cf7f66f2dbd68ec8527141dfc60780d65c138c568364114ea47",
+      "reports": []
+    },
+    {
+      "artifact_id": 13093695553,
+      "name": "linux-evidence-11.3.2",
+      "run_id": 41330577426,
+      "zip_sha256": "ee10045c60041fd2b076648a80327be61f0659ef90c626808ac075ecd72a4951",
+      "reports": [
+        {
+          "report": "extracted\\linux-evidence-11.3.2-13093695553\\linux-static\\20261101-171806-f37917ae\\report.json",
+          "report_sha256": "90f146754ef3a91e837c55e3505f96a3e4779a692ffccd5d5fbdaacfa105b907",
+          "lane": "linux113",
+          "profile": "static",
+          "strict_gate": "fail",
+          "strict_error": "report is not release evidence: 5 case(s) did not pass (['k1_bundle', 'f4_producers', 'f4_document_diagnostics', 'doc_links', 'config_migration']); pass --allow-incomplete only for triage",
+          "baseline_id": "linux113-static",
+          "baseline_report_sha256": "2afda74e1ac4d633e1629fdd4f07f7ba9769e8b600f6ae4dcf144b366288c0e5",
+          "every_raw_log_sha_verified": true,
+          "assertions_before": 3966,
+          "assertions_after": 3628,
+          "old_case_comparison": [
+            {
+              "name": "platform_install_layout",
+              "before": 9,
+              "after": 9,
+              "status": "pass"
+            },
+            {
+              "name": "frozen_startup",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "install_plan",
+              "before": 71,
+              "after": 71,
+              "status": "pass"
+            },
+            {
+              "name": "install_service",
+              "before": 71,
+              "after": 71,
+              "status": "pass"
+            },
+            {
+              "name": "run_summary_mt_observation",
+              "before": 11,
+              "after": 11,
+              "status": "pass"
+            },
+            {
+              "name": "ci_geant4_data",
+              "before": 105,
+              "after": 105,
+              "status": "pass"
+            },
+            {
+              "name": "install_ci_delivery",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            },
+            {
+              "name": "backend_launch",
+              "before": 151,
+              "after": 151,
+              "status": "pass"
+            },
+            {
+              "name": "k1_bundle",
+              "before": 530,
+              "after": 524,
+              "status": "fail"
+            },
+            {
+              "name": "k1_staging_alias",
+              "before": 33,
+              "after": 33,
+              "status": "pass"
+            },
+            {
+              "name": "i1_environment",
+              "before": 142,
+              "after": 142,
+              "status": "pass"
+            },
+            {
+              "name": "f5_source_snapshots",
+              "before": 84,
+              "after": 84,
+              "status": "pass"
+            },
+            {
+              "name": "f5_project_receipts",
+              "before": 22,
+              "after": 22,
+              "status": "pass"
+            },
+            {
+              "name": "f5_transactions",
+              "before": 321,
+              "after": 345,
+              "status": "pass"
+            },
+            {
+              "name": "f5_recovery",
+              "before": 119,
+              "after": 119,
+              "status": "pass"
+            },
+            {
+              "name": "f4_diagnostics",
+              "before": 48,
+              "after": 48,
+              "status": "pass"
+            },
+            {
+              "name": "f4_producers",
+              "before": 593,
+              "after": 287,
+              "status": "fail"
+            },
+            {
+              "name": "f4_document_diagnostics",
+              "before": 119,
+              "after": 27,
+              "status": "fail"
+            },
+            {
+              "name": "build_identity",
+              "before": 47,
+              "after": 47,
+              "status": "pass"
+            },
+            {
+              "name": "f1_input_provenance",
+              "before": 37,
+              "after": 37,
+              "status": "pass"
+            },
+            {
+              "name": "f1_artifact_model",
+              "before": 97,
+              "after": 97,
+              "status": "pass"
+            },
+            {
+              "name": "output_auto_model",
+              "before": 4,
+              "after": 4,
+              "status": "pass"
+            },
+            {
+              "name": "merge_outputs",
+              "before": 18,
+              "after": 18,
+              "status": "pass"
+            },
+            {
+              "name": "output_extensions",
+              "before": 25,
+              "after": 25,
+              "status": "pass"
+            },
+            {
+              "name": "runner_contract",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "doc_links",
+              "before": 11,
+              "after": 11,
+              "status": "fail"
+            },
+            {
+              "name": "platform_paths",
+              "before": 3,
+              "after": 3,
+              "status": "pass"
+            },
+            {
+              "name": "platform_path_fixture_policy",
+              "before": 51,
+              "after": 51,
+              "status": "pass"
+            },
+            {
+              "name": "ci_annotations",
+              "before": 12,
+              "after": 12,
+              "status": "pass"
+            },
+            {
+              "name": "report_evidence",
+              "before": 77,
+              "after": 77,
+              "status": "pass"
+            },
+            {
+              "name": "writer_boundary",
+              "before": 24,
+              "after": 24,
+              "status": "pass"
+            },
+            {
+              "name": "shielding_scenario_model",
+              "before": 93,
+              "after": 93,
+              "status": "pass"
+            },
+            {
+              "name": "shielding_analysis",
+              "before": 113,
+              "after": 113,
+              "status": "pass"
+            },
+            {
+              "name": "effective_config_model",
+              "before": 18,
+              "after": 18,
+              "status": "pass"
+            },
+            {
+              "name": "main_config_version_component",
+              "before": 4,
+              "after": 4,
+              "status": "pass"
+            },
+            {
+              "name": "main_ini_migration",
+              "before": 60,
+              "after": 60,
+              "status": "pass"
+            },
+            {
+              "name": "config_migration",
+              "before": 447,
+              "after": 138,
+              "status": "fail"
+            },
+            {
+              "name": "project_snapshot_compat",
+              "before": 78,
+              "after": 80,
+              "status": "pass"
+            },
+            {
+              "name": "duplicate_generated_package_model",
+              "before": 128,
+              "after": 128,
+              "status": "pass"
+            },
+            {
+              "name": "geometry_diagnostic_identity",
+              "before": 4,
+              "after": 4,
+              "status": "pass"
+            },
+            {
+              "name": "input_provenance",
+              "before": 15,
+              "after": 15,
+              "status": "pass"
+            },
+            {
+              "name": "effective_consumer_state",
+              "before": 3,
+              "after": 3,
+              "status": "pass"
+            },
+            {
+              "name": "effective_receipt_view",
+              "before": 14,
+              "after": 14,
+              "status": "pass"
+            },
+            {
+              "name": "output_provenance",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            }
+          ],
+          "new_cases": [
+            "j2_resources",
+            "solid_registry"
+          ],
+          "failures": [
+            {
+              "name": "k1_bundle",
+              "log": "extracted\\linux-evidence-11.3.2-13093695553\\linux-static\\20261101-171806-f37917ae\\k1_bundle.log",
+              "sha256": "ecff87fbf49336e5efcc633777ba552ef09fc4c9cb066b2296930c3b7df21fcb",
+              "tail": [
+                "G4USIM_ASSERTS=524",
+                "Traceback (most recent call last):",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_k1_bundle.py\", line 695, in <module>",
+                "    main()",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_k1_bundle.py\", line 678, in main",
+                "    case(folder)",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_k1_bundle.py\", line 592, in test_independent_review_regressions",
+                "    assert collected[\"snapshot\"][\"project\"][\"geometryEditor\"][\"round_trip_blockers\"]",
+                "           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^",
+                "AssertionError"
+              ]
+            },
+            {
+              "name": "f4_producers",
+              "log": "extracted\\linux-evidence-11.3.2-13093695553\\linux-static\\20261101-171806-f37917ae\\f4_producers.log",
+              "sha256": "c5a658482c052c2a825c9714c5c6401f0d3fbfb729885430eff2ebd73f6dd60a",
+              "tail": [
+                "G4USIM_ASSERTS=287",
+                "Traceback (most recent call last):",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_f4_producers.py\", line 292, in <module>",
+                "    main()",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_f4_producers.py\", line 281, in main",
+                "    model_cases()",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_f4_producers.py\", line 104, in model_cases",
+                "    assert item is not None, (editor,values,code,tuple(by_code))",
+                "           ^^^^^^^^^^^^^^^^",
+                "AssertionError: ('physics', {'mode': 'manual'}, 'mode.unsupported', ('physics.structured.invalid',))"
+              ]
+            },
+            {
+              "name": "f4_document_diagnostics",
+              "log": "extracted\\linux-evidence-11.3.2-13093695553\\linux-static\\20261101-171806-f37917ae\\f4_document_diagnostics.log",
+              "sha256": "52ec44cdb26b556bab262829772cca8e65b6840951e50ac743023d463dd03b5e",
+              "tail": [
+                "Traceback (most recent call last):",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_f4_document_diagnostics.py\", line 340, in <module>",
+                "    raise SystemExit(main())",
+                "                     ^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_f4_document_diagnostics.py\", line 330, in main",
+                "    check_material_rows()",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_f4_document_diagnostics.py\", line 100, in check_material_rows",
+                "    assert [item.location.row for item in density] == [1, 2]",
+                "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+                "AssertionError"
+              ]
+            },
+            {
+              "name": "doc_links",
+              "log": "extracted\\linux-evidence-11.3.2-13093695553\\linux-static\\20261101-171806-f37917ae\\doc_links.log",
+              "sha256": "5268b50ace9b24994d8ffac3872fa92a1c59cd6a6c7b0c35295865f4a0fb964c",
+              "tail": [
+                "doc_links: 859 relative links in 251 files, 7 broken",
+                "G4USIM_ASSERTS=11",
+                "Traceback (most recent call last):",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/check_doc_links.py\", line 121, in <module>",
+                "    sys.exit(main())",
+                "             ^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/check_doc_links.py\", line 116, in main",
+                "    assert not broken, f\"doc_links: {len(broken)} broken relative link(s); see the lines above\"",
+                "           ^^^^^^^^^^",
+                "AssertionError: doc_links: 7 broken relative link(s); see the lines above"
+              ]
+            },
+            {
+              "name": "config_migration",
+              "log": "extracted\\linux-evidence-11.3.2-13093695553\\linux-static\\20261101-171806-f37917ae\\config_migration.log",
+              "sha256": "1328f585595e27ec9d83622c3526d83fd636467362227a1f06f9c56c6835dac8",
+              "tail": [
+                "Traceback (most recent call last):",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_config_migration.py\", line 333, in <module>",
+                "    raise SystemExit(main())",
+                "                     ^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_config_migration.py\", line 324, in main",
+                "    geometry_contract(work)",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_config_migration.py\", line 146, in geometry_contract",
+                "    assert doc.round_trip_blockers  # migration cannot confer J2 editing support",
+                "           ^^^^^^^^^^^^^^^^^^^^^^^",
+                "AssertionError"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "artifact_id": 13092839619,
+      "name": "linux-evidence-11.4.3",
+      "run_id": 41330577426,
+      "zip_sha256": "2201f5f8d3d6d91aec07fc73825733019d95e1004a0bc157b2e296877a88e0a9",
+      "reports": [
+        {
+          "report": "extracted\\linux-evidence-11.4.3-13092839619\\linux-static\\20261101-171938-c32708b9\\report.json",
+          "report_sha256": "39da8fa9162a4acce54b403d43504c88b7874c711ca4fab0a6eb83829e1b6269",
+          "lane": "linux114",
+          "profile": "static",
+          "strict_gate": "fail",
+          "strict_error": "report is not release evidence: 5 case(s) did not pass (['k1_bundle', 'f4_producers', 'f4_document_diagnostics', 'doc_links', 'config_migration']); pass --allow-incomplete only for triage",
+          "baseline_id": "linux114-static",
+          "baseline_report_sha256": "61b64854609752c8e58892179276eac5ca88b6eff4f29d09b0ebeaf86d614806",
+          "every_raw_log_sha_verified": true,
+          "assertions_before": 3966,
+          "assertions_after": 3628,
+          "old_case_comparison": [
+            {
+              "name": "platform_install_layout",
+              "before": 9,
+              "after": 9,
+              "status": "pass"
+            },
+            {
+              "name": "frozen_startup",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "install_plan",
+              "before": 71,
+              "after": 71,
+              "status": "pass"
+            },
+            {
+              "name": "install_service",
+              "before": 71,
+              "after": 71,
+              "status": "pass"
+            },
+            {
+              "name": "run_summary_mt_observation",
+              "before": 11,
+              "after": 11,
+              "status": "pass"
+            },
+            {
+              "name": "ci_geant4_data",
+              "before": 105,
+              "after": 105,
+              "status": "pass"
+            },
+            {
+              "name": "install_ci_delivery",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            },
+            {
+              "name": "backend_launch",
+              "before": 151,
+              "after": 151,
+              "status": "pass"
+            },
+            {
+              "name": "k1_bundle",
+              "before": 530,
+              "after": 524,
+              "status": "fail"
+            },
+            {
+              "name": "k1_staging_alias",
+              "before": 33,
+              "after": 33,
+              "status": "pass"
+            },
+            {
+              "name": "i1_environment",
+              "before": 142,
+              "after": 142,
+              "status": "pass"
+            },
+            {
+              "name": "f5_source_snapshots",
+              "before": 84,
+              "after": 84,
+              "status": "pass"
+            },
+            {
+              "name": "f5_project_receipts",
+              "before": 22,
+              "after": 22,
+              "status": "pass"
+            },
+            {
+              "name": "f5_transactions",
+              "before": 321,
+              "after": 345,
+              "status": "pass"
+            },
+            {
+              "name": "f5_recovery",
+              "before": 119,
+              "after": 119,
+              "status": "pass"
+            },
+            {
+              "name": "f4_diagnostics",
+              "before": 48,
+              "after": 48,
+              "status": "pass"
+            },
+            {
+              "name": "f4_producers",
+              "before": 593,
+              "after": 287,
+              "status": "fail"
+            },
+            {
+              "name": "f4_document_diagnostics",
+              "before": 119,
+              "after": 27,
+              "status": "fail"
+            },
+            {
+              "name": "build_identity",
+              "before": 47,
+              "after": 47,
+              "status": "pass"
+            },
+            {
+              "name": "f1_input_provenance",
+              "before": 37,
+              "after": 37,
+              "status": "pass"
+            },
+            {
+              "name": "f1_artifact_model",
+              "before": 97,
+              "after": 97,
+              "status": "pass"
+            },
+            {
+              "name": "output_auto_model",
+              "before": 4,
+              "after": 4,
+              "status": "pass"
+            },
+            {
+              "name": "merge_outputs",
+              "before": 18,
+              "after": 18,
+              "status": "pass"
+            },
+            {
+              "name": "output_extensions",
+              "before": 25,
+              "after": 25,
+              "status": "pass"
+            },
+            {
+              "name": "runner_contract",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "doc_links",
+              "before": 11,
+              "after": 11,
+              "status": "fail"
+            },
+            {
+              "name": "platform_paths",
+              "before": 3,
+              "after": 3,
+              "status": "pass"
+            },
+            {
+              "name": "platform_path_fixture_policy",
+              "before": 51,
+              "after": 51,
+              "status": "pass"
+            },
+            {
+              "name": "ci_annotations",
+              "before": 12,
+              "after": 12,
+              "status": "pass"
+            },
+            {
+              "name": "report_evidence",
+              "before": 77,
+              "after": 77,
+              "status": "pass"
+            },
+            {
+              "name": "writer_boundary",
+              "before": 24,
+              "after": 24,
+              "status": "pass"
+            },
+            {
+              "name": "shielding_scenario_model",
+              "before": 93,
+              "after": 93,
+              "status": "pass"
+            },
+            {
+              "name": "shielding_analysis",
+              "before": 113,
+              "after": 113,
+              "status": "pass"
+            },
+            {
+              "name": "effective_config_model",
+              "before": 18,
+              "after": 18,
+              "status": "pass"
+            },
+            {
+              "name": "main_config_version_component",
+              "before": 4,
+              "after": 4,
+              "status": "pass"
+            },
+            {
+              "name": "main_ini_migration",
+              "before": 60,
+              "after": 60,
+              "status": "pass"
+            },
+            {
+              "name": "config_migration",
+              "before": 447,
+              "after": 138,
+              "status": "fail"
+            },
+            {
+              "name": "project_snapshot_compat",
+              "before": 78,
+              "after": 80,
+              "status": "pass"
+            },
+            {
+              "name": "duplicate_generated_package_model",
+              "before": 128,
+              "after": 128,
+              "status": "pass"
+            },
+            {
+              "name": "geometry_diagnostic_identity",
+              "before": 4,
+              "after": 4,
+              "status": "pass"
+            },
+            {
+              "name": "input_provenance",
+              "before": 15,
+              "after": 15,
+              "status": "pass"
+            },
+            {
+              "name": "effective_consumer_state",
+              "before": 3,
+              "after": 3,
+              "status": "pass"
+            },
+            {
+              "name": "effective_receipt_view",
+              "before": 14,
+              "after": 14,
+              "status": "pass"
+            },
+            {
+              "name": "output_provenance",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            }
+          ],
+          "new_cases": [
+            "j2_resources",
+            "solid_registry"
+          ],
+          "failures": [
+            {
+              "name": "k1_bundle",
+              "log": "extracted\\linux-evidence-11.4.3-13092839619\\linux-static\\20261101-171938-c32708b9\\k1_bundle.log",
+              "sha256": "ecff87fbf49336e5efcc633777ba552ef09fc4c9cb066b2296930c3b7df21fcb",
+              "tail": [
+                "G4USIM_ASSERTS=524",
+                "Traceback (most recent call last):",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_k1_bundle.py\", line 695, in <module>",
+                "    main()",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_k1_bundle.py\", line 678, in main",
+                "    case(folder)",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_k1_bundle.py\", line 592, in test_independent_review_regressions",
+                "    assert collected[\"snapshot\"][\"project\"][\"geometryEditor\"][\"round_trip_blockers\"]",
+                "           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^",
+                "AssertionError"
+              ]
+            },
+            {
+              "name": "f4_producers",
+              "log": "extracted\\linux-evidence-11.4.3-13092839619\\linux-static\\20261101-171938-c32708b9\\f4_producers.log",
+              "sha256": "c5a658482c052c2a825c9714c5c6401f0d3fbfb729885430eff2ebd73f6dd60a",
+              "tail": [
+                "G4USIM_ASSERTS=287",
+                "Traceback (most recent call last):",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_f4_producers.py\", line 292, in <module>",
+                "    main()",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_f4_producers.py\", line 281, in main",
+                "    model_cases()",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_f4_producers.py\", line 104, in model_cases",
+                "    assert item is not None, (editor,values,code,tuple(by_code))",
+                "           ^^^^^^^^^^^^^^^^",
+                "AssertionError: ('physics', {'mode': 'manual'}, 'mode.unsupported', ('physics.structured.invalid',))"
+              ]
+            },
+            {
+              "name": "f4_document_diagnostics",
+              "log": "extracted\\linux-evidence-11.4.3-13092839619\\linux-static\\20261101-171938-c32708b9\\f4_document_diagnostics.log",
+              "sha256": "52ec44cdb26b556bab262829772cca8e65b6840951e50ac743023d463dd03b5e",
+              "tail": [
+                "Traceback (most recent call last):",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_f4_document_diagnostics.py\", line 340, in <module>",
+                "    raise SystemExit(main())",
+                "                     ^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_f4_document_diagnostics.py\", line 330, in main",
+                "    check_material_rows()",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_f4_document_diagnostics.py\", line 100, in check_material_rows",
+                "    assert [item.location.row for item in density] == [1, 2]",
+                "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+                "AssertionError"
+              ]
+            },
+            {
+              "name": "doc_links",
+              "log": "extracted\\linux-evidence-11.4.3-13092839619\\linux-static\\20261101-171938-c32708b9\\doc_links.log",
+              "sha256": "5268b50ace9b24994d8ffac3872fa92a1c59cd6a6c7b0c35295865f4a0fb964c",
+              "tail": [
+                "doc_links: 859 relative links in 251 files, 7 broken",
+                "G4USIM_ASSERTS=11",
+                "Traceback (most recent call last):",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/check_doc_links.py\", line 121, in <module>",
+                "    sys.exit(main())",
+                "             ^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/check_doc_links.py\", line 116, in main",
+                "    assert not broken, f\"doc_links: {len(broken)} broken relative link(s); see the lines above\"",
+                "           ^^^^^^^^^^",
+                "AssertionError: doc_links: 7 broken relative link(s); see the lines above"
+              ]
+            },
+            {
+              "name": "config_migration",
+              "log": "extracted\\linux-evidence-11.4.3-13092839619\\linux-static\\20261101-171938-c32708b9\\config_migration.log",
+              "sha256": "1328f585595e27ec9d83622c3526d83fd636467362227a1f06f9c56c6835dac8",
+              "tail": [
+                "Traceback (most recent call last):",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_config_migration.py\", line 333, in <module>",
+                "    raise SystemExit(main())",
+                "                     ^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_config_migration.py\", line 324, in main",
+                "    geometry_contract(work)",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_config_migration.py\", line 146, in geometry_contract",
+                "    assert doc.round_trip_blockers  # migration cannot confer J2 editing support",
+                "           ^^^^^^^^^^^^^^^^^^^^^^^",
+                "AssertionError"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "artifact_id": 13093800091,
+      "name": "m0-report-ubuntu-latest",
+      "run_id": 41330577407,
+      "zip_sha256": "58a4707d685ca283da0c62e9a6d650492a9c68d962addb6292e67ee5063dea16",
+      "reports": [
+        {
+          "report": "extracted\\m0-report-ubuntu-latest-13093800091\\20261101-171631-fa098b72\\report.json",
+          "report_sha256": "42aeacc5d6ccdfc09eee04af661b99dee2fb66a4b84e6a15ae56e908524d2b7a",
+          "lane": "m0-linux",
+          "profile": "static",
+          "strict_gate": "fail",
+          "strict_error": "report is not release evidence: 5 case(s) did not pass (['k1_bundle', 'f4_producers', 'f4_document_diagnostics', 'doc_links', 'config_migration']); pass --allow-incomplete only for triage",
+          "baseline_id": "linux-m0-6310969-static",
+          "baseline_report_sha256": "665b8bdaab8eb061a751d82690bbe0a3a4d64b1875b9fbfba1c78d86c6ab5a15",
+          "every_raw_log_sha_verified": true,
+          "assertions_before": 3966,
+          "assertions_after": 3628,
+          "old_case_comparison": [
+            {
+              "name": "platform_install_layout",
+              "before": 9,
+              "after": 9,
+              "status": "pass"
+            },
+            {
+              "name": "frozen_startup",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "install_plan",
+              "before": 71,
+              "after": 71,
+              "status": "pass"
+            },
+            {
+              "name": "install_service",
+              "before": 71,
+              "after": 71,
+              "status": "pass"
+            },
+            {
+              "name": "run_summary_mt_observation",
+              "before": 11,
+              "after": 11,
+              "status": "pass"
+            },
+            {
+              "name": "ci_geant4_data",
+              "before": 105,
+              "after": 105,
+              "status": "pass"
+            },
+            {
+              "name": "install_ci_delivery",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            },
+            {
+              "name": "backend_launch",
+              "before": 151,
+              "after": 151,
+              "status": "pass"
+            },
+            {
+              "name": "k1_bundle",
+              "before": 530,
+              "after": 524,
+              "status": "fail"
+            },
+            {
+              "name": "k1_staging_alias",
+              "before": 33,
+              "after": 33,
+              "status": "pass"
+            },
+            {
+              "name": "i1_environment",
+              "before": 142,
+              "after": 142,
+              "status": "pass"
+            },
+            {
+              "name": "f5_source_snapshots",
+              "before": 84,
+              "after": 84,
+              "status": "pass"
+            },
+            {
+              "name": "f5_project_receipts",
+              "before": 22,
+              "after": 22,
+              "status": "pass"
+            },
+            {
+              "name": "f5_transactions",
+              "before": 321,
+              "after": 345,
+              "status": "pass"
+            },
+            {
+              "name": "f5_recovery",
+              "before": 119,
+              "after": 119,
+              "status": "pass"
+            },
+            {
+              "name": "f4_diagnostics",
+              "before": 48,
+              "after": 48,
+              "status": "pass"
+            },
+            {
+              "name": "f4_producers",
+              "before": 593,
+              "after": 287,
+              "status": "fail"
+            },
+            {
+              "name": "f4_document_diagnostics",
+              "before": 119,
+              "after": 27,
+              "status": "fail"
+            },
+            {
+              "name": "build_identity",
+              "before": 47,
+              "after": 47,
+              "status": "pass"
+            },
+            {
+              "name": "f1_input_provenance",
+              "before": 37,
+              "after": 37,
+              "status": "pass"
+            },
+            {
+              "name": "f1_artifact_model",
+              "before": 97,
+              "after": 97,
+              "status": "pass"
+            },
+            {
+              "name": "output_auto_model",
+              "before": 4,
+              "after": 4,
+              "status": "pass"
+            },
+            {
+              "name": "merge_outputs",
+              "before": 18,
+              "after": 18,
+              "status": "pass"
+            },
+            {
+              "name": "output_extensions",
+              "before": 25,
+              "after": 25,
+              "status": "pass"
+            },
+            {
+              "name": "runner_contract",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "doc_links",
+              "before": 11,
+              "after": 11,
+              "status": "fail"
+            },
+            {
+              "name": "platform_paths",
+              "before": 3,
+              "after": 3,
+              "status": "pass"
+            },
+            {
+              "name": "platform_path_fixture_policy",
+              "before": 51,
+              "after": 51,
+              "status": "pass"
+            },
+            {
+              "name": "ci_annotations",
+              "before": 12,
+              "after": 12,
+              "status": "pass"
+            },
+            {
+              "name": "report_evidence",
+              "before": 77,
+              "after": 77,
+              "status": "pass"
+            },
+            {
+              "name": "writer_boundary",
+              "before": 24,
+              "after": 24,
+              "status": "pass"
+            },
+            {
+              "name": "shielding_scenario_model",
+              "before": 93,
+              "after": 93,
+              "status": "pass"
+            },
+            {
+              "name": "shielding_analysis",
+              "before": 113,
+              "after": 113,
+              "status": "pass"
+            },
+            {
+              "name": "effective_config_model",
+              "before": 18,
+              "after": 18,
+              "status": "pass"
+            },
+            {
+              "name": "main_config_version_component",
+              "before": 4,
+              "after": 4,
+              "status": "pass"
+            },
+            {
+              "name": "main_ini_migration",
+              "before": 60,
+              "after": 60,
+              "status": "pass"
+            },
+            {
+              "name": "config_migration",
+              "before": 447,
+              "after": 138,
+              "status": "fail"
+            },
+            {
+              "name": "project_snapshot_compat",
+              "before": 78,
+              "after": 80,
+              "status": "pass"
+            },
+            {
+              "name": "duplicate_generated_package_model",
+              "before": 128,
+              "after": 128,
+              "status": "pass"
+            },
+            {
+              "name": "geometry_diagnostic_identity",
+              "before": 4,
+              "after": 4,
+              "status": "pass"
+            },
+            {
+              "name": "input_provenance",
+              "before": 15,
+              "after": 15,
+              "status": "pass"
+            },
+            {
+              "name": "effective_consumer_state",
+              "before": 3,
+              "after": 3,
+              "status": "pass"
+            },
+            {
+              "name": "effective_receipt_view",
+              "before": 14,
+              "after": 14,
+              "status": "pass"
+            },
+            {
+              "name": "output_provenance",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            }
+          ],
+          "new_cases": [
+            "j2_resources",
+            "solid_registry"
+          ],
+          "failures": [
+            {
+              "name": "k1_bundle",
+              "log": "extracted\\m0-report-ubuntu-latest-13093800091\\20261101-171631-fa098b72\\k1_bundle.log",
+              "sha256": "ecff87fbf49336e5efcc633777ba552ef09fc4c9cb066b2296930c3b7df21fcb",
+              "tail": [
+                "G4USIM_ASSERTS=524",
+                "Traceback (most recent call last):",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_k1_bundle.py\", line 695, in <module>",
+                "    main()",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_k1_bundle.py\", line 678, in main",
+                "    case(folder)",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_k1_bundle.py\", line 592, in test_independent_review_regressions",
+                "    assert collected[\"snapshot\"][\"project\"][\"geometryEditor\"][\"round_trip_blockers\"]",
+                "           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^",
+                "AssertionError"
+              ]
+            },
+            {
+              "name": "f4_producers",
+              "log": "extracted\\m0-report-ubuntu-latest-13093800091\\20261101-171631-fa098b72\\f4_producers.log",
+              "sha256": "c5a658482c052c2a825c9714c5c6401f0d3fbfb729885430eff2ebd73f6dd60a",
+              "tail": [
+                "G4USIM_ASSERTS=287",
+                "Traceback (most recent call last):",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_f4_producers.py\", line 292, in <module>",
+                "    main()",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_f4_producers.py\", line 281, in main",
+                "    model_cases()",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_f4_producers.py\", line 104, in model_cases",
+                "    assert item is not None, (editor,values,code,tuple(by_code))",
+                "           ^^^^^^^^^^^^^^^^",
+                "AssertionError: ('physics', {'mode': 'manual'}, 'mode.unsupported', ('physics.structured.invalid',))"
+              ]
+            },
+            {
+              "name": "f4_document_diagnostics",
+              "log": "extracted\\m0-report-ubuntu-latest-13093800091\\20261101-171631-fa098b72\\f4_document_diagnostics.log",
+              "sha256": "52ec44cdb26b556bab262829772cca8e65b6840951e50ac743023d463dd03b5e",
+              "tail": [
+                "Traceback (most recent call last):",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_f4_document_diagnostics.py\", line 340, in <module>",
+                "    raise SystemExit(main())",
+                "                     ^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_f4_document_diagnostics.py\", line 330, in main",
+                "    check_material_rows()",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_f4_document_diagnostics.py\", line 100, in check_material_rows",
+                "    assert [item.location.row for item in density] == [1, 2]",
+                "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+                "AssertionError"
+              ]
+            },
+            {
+              "name": "doc_links",
+              "log": "extracted\\m0-report-ubuntu-latest-13093800091\\20261101-171631-fa098b72\\doc_links.log",
+              "sha256": "5268b50ace9b24994d8ffac3872fa92a1c59cd6a6c7b0c35295865f4a0fb964c",
+              "tail": [
+                "doc_links: 859 relative links in 251 files, 7 broken",
+                "G4USIM_ASSERTS=11",
+                "Traceback (most recent call last):",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/check_doc_links.py\", line 121, in <module>",
+                "    sys.exit(main())",
+                "             ^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/check_doc_links.py\", line 116, in main",
+                "    assert not broken, f\"doc_links: {len(broken)} broken relative link(s); see the lines above\"",
+                "           ^^^^^^^^^^",
+                "AssertionError: doc_links: 7 broken relative link(s); see the lines above"
+              ]
+            },
+            {
+              "name": "config_migration",
+              "log": "extracted\\m0-report-ubuntu-latest-13093800091\\20261101-171631-fa098b72\\config_migration.log",
+              "sha256": "1328f585595e27ec9d83622c3526d83fd636467362227a1f06f9c56c6835dac8",
+              "tail": [
+                "Traceback (most recent call last):",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_config_migration.py\", line 333, in <module>",
+                "    raise SystemExit(main())",
+                "                     ^^^^^^",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_config_migration.py\", line 324, in main",
+                "    geometry_contract(work)",
+                "  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_config_migration.py\", line 146, in geometry_contract",
+                "    assert doc.round_trip_blockers  # migration cannot confer J2 editing support",
+                "           ^^^^^^^^^^^^^^^^^^^^^^^",
+                "AssertionError"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "artifact_id": 13092893947,
+      "name": "m0-report-windows-latest",
+      "run_id": 41330577407,
+      "zip_sha256": "dec2a13e2bad6e530d4724d2ac81c8d1e96571153b7edf0dd763f6fa3f481d76",
+      "reports": [
+        {
+          "report": "extracted\\m0-report-windows-latest-13092893947\\20261101-171724-98f36bb8\\report.json",
+          "report_sha256": "20c35508388e50b68dc1559730c537762b7e84dc0318c92657427bea72a423e5",
+          "lane": "m0-windows",
+          "profile": "static",
+          "strict_gate": "fail",
+          "strict_error": "report is not release evidence: 5 case(s) did not pass (['k1_bundle', 'f4_producers', 'f4_document_diagnostics', 'doc_links', 'config_migration']); pass --allow-incomplete only for triage",
+          "baseline_id": "windows-m0-6310969-static",
+          "baseline_report_sha256": "7df971949de5806c10127bc50db3abf9be0c89eb21a5b6b257c1e3911f74c857",
+          "every_raw_log_sha_verified": true,
+          "assertions_before": 3959,
+          "assertions_after": 3620,
+          "old_case_comparison": [
+            {
+              "name": "platform_install_layout",
+              "before": 9,
+              "after": 9,
+              "status": "pass"
+            },
+            {
+              "name": "frozen_startup",
+              "before": 33,
+              "after": 33,
+              "status": "pass"
+            },
+            {
+              "name": "install_plan",
+              "before": 71,
+              "after": 71,
+              "status": "pass"
+            },
+            {
+              "name": "install_service",
+              "before": 70,
+              "after": 70,
+              "status": "pass"
+            },
+            {
+              "name": "run_summary_mt_observation",
+              "before": 11,
+              "after": 11,
+              "status": "pass"
+            },
+            {
+              "name": "ci_geant4_data",
+              "before": 106,
+              "after": 106,
+              "status": "pass"
+            },
+            {
+              "name": "install_ci_delivery",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            },
+            {
+              "name": "backend_launch",
+              "before": 151,
+              "after": 151,
+              "status": "pass"
+            },
+            {
+              "name": "k1_bundle",
+              "before": 529,
+              "after": 523,
+              "status": "fail"
+            },
+            {
+              "name": "k1_staging_alias",
+              "before": 34,
+              "after": 34,
+              "status": "pass"
+            },
+            {
+              "name": "i1_environment",
+              "before": 142,
+              "after": 142,
+              "status": "pass"
+            },
+            {
+              "name": "f5_source_snapshots",
+              "before": 84,
+              "after": 84,
+              "status": "pass"
+            },
+            {
+              "name": "f5_project_receipts",
+              "before": 22,
+              "after": 22,
+              "status": "pass"
+            },
+            {
+              "name": "f5_transactions",
+              "before": 321,
+              "after": 345,
+              "status": "pass"
+            },
+            {
+              "name": "f5_recovery",
+              "before": 119,
+              "after": 119,
+              "status": "pass"
+            },
+            {
+              "name": "f4_diagnostics",
+              "before": 48,
+              "after": 48,
+              "status": "pass"
+            },
+            {
+              "name": "f4_producers",
+              "before": 593,
+              "after": 287,
+              "status": "fail"
+            },
+            {
+              "name": "f4_document_diagnostics",
+              "before": 119,
+              "after": 27,
+              "status": "fail"
+            },
+            {
+              "name": "build_identity",
+              "before": 47,
+              "after": 47,
+              "status": "pass"
+            },
+            {
+              "name": "f1_input_provenance",
+              "before": 36,
+              "after": 36,
+              "status": "pass"
+            },
+            {
+              "name": "f1_artifact_model",
+              "before": 96,
+              "after": 96,
+              "status": "pass"
+            },
+            {
+              "name": "output_auto_model",
+              "before": 3,
+              "after": 3,
+              "status": "pass"
+            },
+            {
+              "name": "merge_outputs",
+              "before": 18,
+              "after": 18,
+              "status": "pass"
+            },
+            {
+              "name": "output_extensions",
+              "before": 25,
+              "after": 25,
+              "status": "pass"
+            },
+            {
+              "name": "runner_contract",
+              "before": 31,
+              "after": 31,
+              "status": "pass"
+            },
+            {
+              "name": "doc_links",
+              "before": 11,
+              "after": 11,
+              "status": "fail"
+            },
+            {
+              "name": "platform_paths",
+              "before": 3,
+              "after": 3,
+              "status": "pass"
+            },
+            {
+              "name": "platform_path_fixture_policy",
+              "before": 51,
+              "after": 51,
+              "status": "pass"
+            },
+            {
+              "name": "ci_annotations",
+              "before": 12,
+              "after": 12,
+              "status": "pass"
+            },
+            {
+              "name": "report_evidence",
+              "before": 77,
+              "after": 77,
+              "status": "pass"
+            },
+            {
+              "name": "writer_boundary",
+              "before": 24,
+              "after": 24,
+              "status": "pass"
+            },
+            {
+              "name": "shielding_scenario_model",
+              "before": 93,
+              "after": 93,
+              "status": "pass"
+            },
+            {
+              "name": "shielding_analysis",
+              "before": 113,
+              "after": 113,
+              "status": "pass"
+            },
+            {
+              "name": "effective_config_model",
+              "before": 17,
+              "after": 17,
+              "status": "pass"
+            },
+            {
+              "name": "main_config_version_component",
+              "before": 3,
+              "after": 3,
+              "status": "pass"
+            },
+            {
+              "name": "main_ini_migration",
+              "before": 60,
+              "after": 60,
+              "status": "pass"
+            },
+            {
+              "name": "config_migration",
+              "before": 447,
+              "after": 138,
+              "status": "fail"
+            },
+            {
+              "name": "project_snapshot_compat",
+              "before": 78,
+              "after": 80,
+              "status": "pass"
+            },
+            {
+              "name": "duplicate_generated_package_model",
+              "before": 128,
+              "after": 128,
+              "status": "pass"
+            },
+            {
+              "name": "geometry_diagnostic_identity",
+              "before": 3,
+              "after": 3,
+              "status": "pass"
+            },
+            {
+              "name": "input_provenance",
+              "before": 14,
+              "after": 14,
+              "status": "pass"
+            },
+            {
+              "name": "effective_consumer_state",
+              "before": 2,
+              "after": 2,
+              "status": "pass"
+            },
+            {
+              "name": "effective_receipt_view",
+              "before": 13,
+              "after": 13,
+              "status": "pass"
+            },
+            {
+              "name": "output_provenance",
+              "before": 46,
+              "after": 46,
+              "status": "pass"
+            }
+          ],
+          "new_cases": [
+            "j2_resources",
+            "solid_registry"
+          ],
+          "failures": [
+            {
+              "name": "k1_bundle",
+              "log": "extracted\\m0-report-windows-latest-13092893947\\20261101-171724-98f36bb8\\k1_bundle.log",
+              "sha256": "15fc917be181b6fb5b87be0cc192026563f83df7151c12fd5b7ac937f2d51ccf",
+              "tail": [
+                "G4USIM_ASSERTS=523",
+                "Traceback (most recent call last):",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\tools\\test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\tools\\test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\scripts\\test_k1_bundle.py\", line 695, in <module>",
+                "    main()",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\scripts\\test_k1_bundle.py\", line 678, in main",
+                "    case(folder)",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\scripts\\test_k1_bundle.py\", line 592, in test_independent_review_regressions",
+                "    assert collected[\"snapshot\"][\"project\"][\"geometryEditor\"][\"round_trip_blockers\"]",
+                "           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^",
+                "AssertionError"
+              ]
+            },
+            {
+              "name": "f4_producers",
+              "log": "extracted\\m0-report-windows-latest-13092893947\\20261101-171724-98f36bb8\\f4_producers.log",
+              "sha256": "15ed7034aa799921f41b58adf1fcca69fdbc41fa3cd8a23ca265d40a0f33ec3d",
+              "tail": [
+                "G4USIM_ASSERTS=287",
+                "Traceback (most recent call last):",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\tools\\test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\tools\\test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\scripts\\test_f4_producers.py\", line 292, in <module>",
+                "    main()",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\scripts\\test_f4_producers.py\", line 281, in main",
+                "    model_cases()",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\scripts\\test_f4_producers.py\", line 104, in model_cases",
+                "    assert item is not None, (editor,values,code,tuple(by_code))",
+                "           ^^^^^^^^^^^^^^^^",
+                "AssertionError: ('physics', {'mode': 'manual'}, 'mode.unsupported', ('physics.structured.invalid',))"
+              ]
+            },
+            {
+              "name": "f4_document_diagnostics",
+              "log": "extracted\\m0-report-windows-latest-13092893947\\20261101-171724-98f36bb8\\f4_document_diagnostics.log",
+              "sha256": "ed565b49b482121baae9d8ae0498496f0d0f64fa48bd73826a8c855deccd450b",
+              "tail": [
+                "Traceback (most recent call last):",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\tools\\test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\tools\\test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\scripts\\test_f4_document_diagnostics.py\", line 340, in <module>",
+                "    raise SystemExit(main())",
+                "                     ^^^^^^",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\scripts\\test_f4_document_diagnostics.py\", line 330, in main",
+                "    check_material_rows()",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\scripts\\test_f4_document_diagnostics.py\", line 100, in check_material_rows",
+                "    assert [item.location.row for item in density] == [1, 2]",
+                "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+                "AssertionError"
+              ]
+            },
+            {
+              "name": "doc_links",
+              "log": "extracted\\m0-report-windows-latest-13092893947\\20261101-171724-98f36bb8\\doc_links.log",
+              "sha256": "eed10973dc53d02f3a4e0f73e8435049220ba8eb2903ba834860a8a208ee9f09",
+              "tail": [
+                "doc_links: 859 relative links in 251 files, 7 broken",
+                "G4USIM_ASSERTS=11",
+                "Traceback (most recent call last):",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\tools\\test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\tools\\test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\scripts\\check_doc_links.py\", line 121, in <module>",
+                "    sys.exit(main())",
+                "             ^^^^^^",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\scripts\\check_doc_links.py\", line 116, in main",
+                "    assert not broken, f\"doc_links: {len(broken)} broken relative link(s); see the lines above\"",
+                "           ^^^^^^^^^^",
+                "AssertionError: doc_links: 7 broken relative link(s); see the lines above"
+              ]
+            },
+            {
+              "name": "config_migration",
+              "log": "extracted\\m0-report-windows-latest-13092893947\\20261101-171724-98f36bb8\\config_migration.log",
+              "sha256": "7c550f7fefa3e100199f8c48ae764a4dbe76c26ed9031c6e44fc3aebbecceece",
+              "tail": [
+                "Traceback (most recent call last):",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\tools\\test_assert_probe.py\", line 177, in <module>",
+                "    raise SystemExit(main(sys.argv))",
+                "                     ^^^^^^^^^^^^^^",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\tools\\test_assert_probe.py\", line 153, in main",
+                "    runpy.run_path(str(target), run_name=\"__main__\")",
+                "  File \"<frozen runpy>\", line 291, in run_path",
+                "  File \"<frozen runpy>\", line 98, in _run_module_code",
+                "  File \"<frozen runpy>\", line 88, in _run_code",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\scripts\\test_config_migration.py\", line 333, in <module>",
+                "    raise SystemExit(main())",
+                "                     ^^^^^^",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\scripts\\test_config_migration.py\", line 324, in main",
+                "    geometry_contract(work)",
+                "  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\scripts\\test_config_migration.py\", line 146, in geometry_contract",
+                "    assert doc.round_trip_blockers  # migration cannot confer J2 editing support",
+                "           ^^^^^^^^^^^^^^^^^^^^^^^",
+                "AssertionError"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "release_accepted": false,
+  "note": "No allow-incomplete/legacy flags; non-pass reports remain failed. Only available report profiles compared; absent downstream profiles are not success."
+}

@@ -1,0 +1,11 @@
+# F8 v3 stale增量独审
+
+通过：只执行实际v3新增stale代码段，不重复完整416或旧8组。独立125/150两进程exit0，v3-stale-processes.json及v3-stale/receipt-1.25.json、receipt-1.5.json和独立日志保存新证据。
+
+产品仍677a7b54...；测试69b11a915a0864110171df75a1a2402ea3025f0a3a01b79d31af8ee26bd9f0e6，patch247e4a6925906471d0b40dd70800149c37fc4aa963d379888c6ada321c3cb6ce。独立extract保存extracted-stale.py，原样执行草案该段真实assert，不重写判断条件。
+
+两档实证：CtrlAlt1/settle后Start焦点与pending=None；不pump转Project时真实field焦点、pending weakref指向field、timer_active=true；连续转Start时old_project_pending=false、pending_is_current_start=true；settle后pending=None、新Start焦点保持且viewport包含目标。F5 snapshot和Undo/Redo/modified不变，原tracked smoke SHA仍7087edc6...。
+
+原全部旧函数AST原样，main仅追加test_retained_dock_focus调用；两个LF补丁组合git apply --check exit0，未apply。原406和独立发现的P2记录保留；当前stale缺口闭合。未用冻结产品负向x711报告冒充stale反例，该负向仍仅证明retained viewport回归敏感性。
+
+所有独立out Qt进程现已退出；可以交main统一落产品v2/F8/测试文档。待集成后以最终LF源码重新冻结，旧677a CRLF原型身份不充当最终tracked身份；正式完整profile按新HEAD/EXE和子进程core.longpaths配置另跑。

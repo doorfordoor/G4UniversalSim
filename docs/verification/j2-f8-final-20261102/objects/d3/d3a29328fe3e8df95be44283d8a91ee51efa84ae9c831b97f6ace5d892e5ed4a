@@ -1,0 +1,9 @@
+# Material density P2-M01 / P2-M02 独立复核关闭
+
+2026-11-02。仅复核已冻结material_editor_model.py与smoke_j2_materials.py，不改产品、不覆盖旧证据。
+
+独立新fixture：`1 G/CM3`、`2.7 * g/cm3`、`0x1p0 * KG/M^3`三个合法值均经模型/writer接受，并由已核验SHA的原11.3.2后端各实际完成1事件；`1e308 g/cm3`、`1e287 g/cm3`（字面量有限但CLHEP中间乘法溢出）、`1e-999 mg/cm3`三个非法值均被模型/writer拒绝，真实后端均退出1。
+
+结论：M01/M02在结果记录的两文件字节上独立关闭。未重跑作者全套材料专项，不代表当前共享C++新构建/正式矩阵。原始问题报告和首次后端日志均保留。
+
+证据：[独立脚本](density_recheck.py)、[结构化结果与两文件SHA](density-recheck/results.json)、[原始日志](density-recheck.log)，后端每例日志见结果runtime_root。

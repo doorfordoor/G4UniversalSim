@@ -1,0 +1,39 @@
+{
+  "scope": "pure local file audit; no Qt/native/profile/build/launcher execution",
+  "created_utc": "2026-11-01T20:40:12.209812+00:00",
+  "profiles": [
+    {
+      "scale": "150",
+      "result": "file_integrity_checked_with_scope_limits",
+      "images": 39,
+      "mime_counts": {
+        "image/jpeg": 39
+      },
+      "passive_rows": 30,
+      "visual_records": 32,
+      "issues": [],
+      "empty_text_snapshots": [
+        "023-new-blank-action.txt",
+        "031-theme-dark-transition.txt"
+      ],
+      "pid_values_equal": false
+    },
+    {
+      "scale": "125",
+      "result": "file_integrity_checked_with_scope_limits",
+      "images": 13,
+      "mime_counts": {
+        "image/jpeg": 13
+      },
+      "passive_rows": 13,
+      "visual_records": 14,
+      "issues": [],
+      "empty_text_snapshots": [],
+      "pid_values_equal": false
+    }
+  ],
+  "receipt_sha256": {
+    "150": "e1d3557540b1cd77864b493dcb925ceeb3fda388c10430dcf2b5b1ebbab1513b",
+    "125": "bcc9bba359f1e15b1e8e7feb569664af611925c91d608671f0efed2f3ab17980"
+  }
+}

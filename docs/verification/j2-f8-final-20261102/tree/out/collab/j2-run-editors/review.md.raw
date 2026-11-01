@@ -1,0 +1,19 @@
+# Independent review receipt
+
+Reviewer: Sagan `01a197d6-adc1-75b0-bb56-7123f75bab20`, inherited model, medium reasoning. Scope: J2 run editor model/UI/writer/project hydration and own smoke only. Read-only; no edits, no global build, no native window or physical acceptance claim.
+
+Initial findings (all fixed):
+
+1. P1: shared display length units were emitted into a backend comma parser that applies units per component; nonzero X/Y could be scaled incorrectly. Fixed by normalizing center/focus to base mm before emitting, with independent per-component cm/m regression and conversion-overflow rejection.
+2. P2: process-case variants could collide in case-insensitive INI section names. Fixed by normalized particle/process section collision detection while preserving original process values/case for real backend matching.
+3. P2: raw rotation dot-product squares could raise OverflowError on finite `1e200` vectors. Fixed by scaled stable normalization and finite unit-vector emission; parallel vectors remain rejected.
+
+Reviewer final response:
+
+> 当前交接版本复核通过，原三项发现均保持关闭：
+> center/focus 单位转换正确，换算溢出被拒绝。
+> bias process 大小写碰撞被阻断，writer 保留原始大小写。
+> 1e200 向量稳定归一化，平行向量仍被拒绝。
+> 已重跑 own smoke 和三个独立反例，均通过、退出码 0。未编辑文件、未扩大审查范围；不涉及阶段完成评定。
+
+Implementation-side final test receipt: `smoke-final.log`, exit 0, `G4USIM_ASSERTS=223` (v3 entrance count, not number of independent physical claims). Main agent still owns cross-module F5/diagnostic/current-package/preview integration and formal platform/native acceptance.

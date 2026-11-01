@@ -1,0 +1,27 @@
+[
+  {
+    "case": "nist",
+    "exit_code": 0,
+    "expected_valid": true
+  },
+  {
+    "case": "custom",
+    "exit_code": 0,
+    "expected_valid": true
+  },
+  {
+    "case": "typo",
+    "exit_code": 1,
+    "expected_valid": false
+  },
+  {
+    "case": "volume_element",
+    "exit_code": 1,
+    "expected_valid": false
+  },
+  {
+    "case": "volume_material",
+    "exit_code": 0,
+    "expected_valid": true
+  }
+]

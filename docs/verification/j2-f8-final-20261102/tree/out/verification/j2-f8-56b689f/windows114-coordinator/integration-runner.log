@@ -1,0 +1,93 @@
+PASS backend_working_directory: asserts=77/41
+PASS k1_history_scope_backend: asserts=150/106
+PASS k1_workflow_backend: asserts=455/193
+PASS k1_roundtrip: asserts=34/25
+PASS k1_relocation_backend: asserts=163/54
+PASS k1_cli_backend: asserts=160/69
+PASS gui_i1_environment_backend: asserts=492/103
+PASS f5_transactions_backend: asserts=63/34
+FAIL gui_f4_inspect_backend: G4USIM_ASSERTS=3
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_f4_inspect_backend.py", line 201, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_f4_inspect_backend.py", line 196, in main
+    check_backend(app, temp, executable)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_f4_inspect_backend.py", line 89, in check_backend
+    assert Path(process.program()) == executable, window.experiment.records()[-1].get('reason')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: experiment.fields_rejected
+ asserts=3/44
+PASS config_migration_backend: asserts=160/26
+PASS effective_lifecycle: asserts=3102/45
+FAIL effective_gdml: aceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_effective_gdml.py", line 77, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_effective_gdml.py", line 49, in main
+    assert compiled.returncode==0, compiled.stdout+compiled.stderr
+           ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: D:\Temp\g4usim-gdml-capture-n7d4zfjg\capture.cc:4:10: fatal error: xercesc/util/PlatformUtils.hpp: No such file or directory
+    4 | #include <xercesc/util/PlatformUtils.hpp>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\src\Geometry\GdmlInputCapture.cc:4:10: fatal error: xercesc/util/XMLFileMgr.hpp: No such file or directory
+    4 | #include <xercesc/util/XMLFileMgr.hpp>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+
+ asserts=2/11
+PASS j2_materials_backend: asserts=28/68
+PASS gui_j2_end_to_end: asserts=674/60
+PASS gui_live_progress_backend: asserts=16/12
+PASS gui_scenario_backend: asserts=32/32
+PASS output_provenance_backend: asserts=60/26
+PASS q1_results_backend: asserts=125/25
+PASS geometry_roundtrip: asserts=45/17
+PASS gui_run_inputs: asserts=108/99
+PASS gui_backend_geometry: asserts=24/19
+PASS gui_backend_package: asserts=74/22
+PASS gui_plots_backend: asserts=32/19
+PASS gui_new_simulation_backend: asserts=17/9
+FAIL gui_scans_backend: G4USIM_ASSERTS=2
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_scans_backend.py", line 126, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_scans_backend.py", line 82, in main
+    assert page.create_scan(), page.status.text()
+           ^^^^^^^^^^^^^^^^^^
+AssertionError: Scan not created: 50 MeV: Materials config is required.
+100 MeV: Materials config is required.
+200 MeV: Materials config is required.
+ asserts=2/14
+PASS gui_backend_agreement: asserts=110/2
+PASS gui_backend_geometry_auto: asserts=30/30
+PASS gui_trajectory_view: asserts=23/35
+PASS gui_sketch_accuracy: asserts=55/3
+PASS gui_source_glyphs: asserts=34/32
+PASS config_schema: asserts=309/12
+Report: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\j2-f8-56b689f\windows114-integration\20261102-015023-8bc66545\report.json
+28 pass / 3 fail / 0 skip of 31 cases; assertions executed 6659 (31 cases reported counts, 0 cases asserted nothing)

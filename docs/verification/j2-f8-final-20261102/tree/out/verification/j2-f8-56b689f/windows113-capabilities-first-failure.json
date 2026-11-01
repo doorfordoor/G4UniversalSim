@@ -1,0 +1,13 @@
+{
+  "head": "56b689fb9ac920cbb1203b2b94dae2483d25f622",
+  "case": "backend_capabilities",
+  "location": "scripts/test_backend_capabilities.py:59",
+  "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows113-backend\\20261102-011748-9a34c5d0\\backend_capabilities.log",
+  "log_sha256": "5414d743da8506b97a6b0128f905df5d253b84691d6bfbe30bfb5d8c5397f6ab",
+  "assertions_executed": 6,
+  "expected_override_in_initial_environment": false,
+  "sdk_config": "D:/ProgramFiles/Geant4/lib/cmake/Geant4/Geant4Config.cmake:307",
+  "sdk_fact": "set(Geant4_gdml_FOUND ON)",
+  "cause": "No G4USIM_EXPECT_GDML override. Test fallback scans repository root build* only, missing out/build-i2-formal113. Initial failure preserved; no rerun or changed criterion.",
+  "status": "failed_original_run"
+}

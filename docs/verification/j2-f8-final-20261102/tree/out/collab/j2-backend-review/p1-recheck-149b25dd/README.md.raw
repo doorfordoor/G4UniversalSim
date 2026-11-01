@@ -1,0 +1,17 @@
+# J2 后端 P1 独立修复复核
+
+结论：原报告的 EM replacement 覆盖成功 setEM 问题，在本次核验的 Geant4 11.3.2/11.4.3 二进制上均关闭。未修改产品 C++、未构建、未评定阶段完成。
+
+源指纹在运行前后均为 `149b25dd00773898c324d09a53dd1ef64b0bf37bc105ca0f74d0c4933245756f`；两版 capabilities 均一致。exe SHA-256 与主代理身份记录逐字节核验相符，见各版本 `identity.json`。114 使用已存在的 `out/i2-controlled/windows114-data/data`，两版子进程均清除继承的逐数据集 G4*DATA 环境变量后使用各自数据根与 SDK DLL 路径；未更改父进程环境。
+
+| 反例/对照 | 11.3.2 | 11.4.3 |
+|---|---|---|
+| INI replace_modules=penelope；macro 第1行 setEM livermore | exit 1 / failed / 0 run / 0事件 | exit 1 / failed / 0 run / 0事件 |
+| 同一 macro，INI 不含 replacement | exit 0 / completed / 8事件 / 实际 G4EmLivermorePhysics | exit 0 / completed / 8事件 / 实际 G4EmLivermorePhysics |
+| replacement-only，不执行 setEM | exit 0 / completed / 8事件 / 实际 G4EmPenelopePhysics | exit 0 / completed / 8事件 / 实际 G4EmPenelopePhysics |
+
+冲突组额外确认：摘要保存 `/AIHL/physics/setEM livermore` 与失败行号 1；后续 initialize/beamOn/dump 均未执行，没有 processes.json；configure 与 finalization 的全部 `/physics/` 字段在 requested/resolved/origins/revision/configuration_generation 五项上完全相同，因此没有成功发布被拒绝的 Manager 修改或来源。
+
+原始输入、stdout/stderr、摘要、完整 EffectiveConfig 与实际 constructor/process dump 均按 `1132/`、`1143/` 的三组目录保留；日志 SHA 与实际 argv 在 receipt.json。`results.json` 汇总独立比较结果，`complete.json` 仅在全部6组断言与前后源指纹核验通过后写入。本轮 Python 驱动会话退出码为0。
+
+历史首轮反例仍在父目录 em-macro/ 中，保留原失败身份；本报告不追改旧证据。历史 SourceMessenger FatalException 不计 J2 新回归，也未扩展重测。此复核不替代永久专项、完整矩阵或物理验证。

@@ -1,0 +1,20 @@
+# F4 workspace viewport 最小修复独立复核关闭
+
+2026-11-02，候选HEAD `56b689fb9ac920cbb1203b2b94dae2483d25f622`。只读产品和原测试，未使用原生UI。
+
+结论：**workspace_layout.py cd5f7e0c1761085abe5c68a849753f939f965e252a9d46a1c637d9d17f4ef34c 的最小修复独审通过，原F4 layout缺口在本次被测边界关闭。** 不是整个Windows GUI profile或原生验收已通过；完整profile随后由本任务执行。
+
+独立实际执行未改动的 `gui/smoke_tests/smoke_f4_layout.py`：
+
+| 环境 | 进程退出 | v3执行断言 |
+| --- | --- | --- |
+| offscreen默认缩放（清除scale覆盖） | 0 | 265 |
+| offscreen125% | 0 | 265 |
+
+[结果与六文件SHA](f4-viewport-final/results.json)、[默认日志](f4-viewport-final/default.log)、[125日志](f4-viewport-final/125.log)、[独立启动脚本](f4_minimal_recheck.py)。Qt设置与history/recovery临时目录隔离，不影响main原生窗口。断言来自原脚本，未修改stdout中心契约，原脚本SHA `abc7a3b83a27e01558dae82e1103ee3851dc4dc929bee7bfe1987653079d8cb6` 与作者freeze一致。两个进程自然退出0，本轮没有重现异常清理AV；不把作者旧失败擦成通过。
+
+同时最小重跑125%的自然焦点保真，不重跑完整F8套件：[结果](f4-final-focus125/results.json)、[日志](f4-final-focus125.log)。项目/配置自然CtrlAlt导航、label+完整字段viewport、九页/F6、自然Tab和foreign过滤边界5组全部通过，原非法seed、业务快照和runner/workflow实例保持。未写滚动条、未强归零、未直接调用ensure来修正视图。
+
+源码审阅：仅workspace_layout.py新增按实际central widget/anchor返回hint；不使用返回逻辑dock page的widget()路径。active preferred宽度保留可读性，vertical只传播active最小高度；不再聚合inactive history/scans最大hint。导航与restore后updateGeometry。没有新增dock重建/隐藏，没有shell/accessibility/翻译增量，没有改业务模型或另建owner。未发现本次差异的新P1/P2。
+
+六文件与freeze.json逐项匹配且运行前后未变，原F4测试未改。此前原五文件独审、F4首次失败/66px候选反例均保持各自历史身份。本结论允许进入候选56b689f的Windows GUI完整profile；该正式运行只用默认缩放offscreen、require-tracked-sources/fail-on-skip和同probe历史严格baseline，main继续独占原生UI。

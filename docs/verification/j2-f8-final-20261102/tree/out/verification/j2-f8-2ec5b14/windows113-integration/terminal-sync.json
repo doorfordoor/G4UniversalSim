@@ -1,0 +1,49 @@
+{
+  "status": "passed",
+  "head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+  "session_id": 47001,
+  "session_real_exit_code": 0,
+  "runner_pid": 46312,
+  "runner_exit_code": 0,
+  "gate_exit_code": 0,
+  "identity_errors": [],
+  "pass": 31,
+  "fail": 0,
+  "skip": 0,
+  "assertions": 6790,
+  "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-2ec5b14\\windows113-integration\\20261102-060158-291be458\\report.json",
+  "report_sha256": "47a54dceb0cc575a25f2283d8e745e48d51bbcada16d61bbbb8b1293bf2df088",
+  "historical_baseline": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\i2-j1-5fe0a10\\windows113-integration\\20261101-213823-a10c064e\\report.json",
+    "sha256": "193f85ac437775d8c84bd5173d97eea5973c35a70ec12799ca44e498558113de"
+  },
+  "historical_baseline_cases": 29,
+  "historical_baseline_assertions": 6054,
+  "per_case_assertion_regressions": [],
+  "historical_cases_missing": [],
+  "first_failure": null,
+  "ending_identity": {
+    "head": "2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8",
+    "git_status": "",
+    "exe_sha256": "fe5d23d309106d9fca7ad179f6c0cb39fa8b98c6ef35286a0b21866b90d89f89",
+    "merge_sha256": "03bf4d13996aa7b9e100feca4e3ae1579c047419c8c8b4b5f4800a016b8ba089",
+    "sources": {
+      "source_fingerprint": "9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a",
+      "tests_content_fingerprint": "ce90974c37eb78f3aa8c14d52e340db163bf57432a8529da10547d4f8fc20cf8",
+      "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d"
+    },
+    "helper_sha256": "86d9aac227016f946a02724d3b22e2823430b7a0972de7a5e16bf3acc295a39a",
+    "helper_inputs": {
+      "tools/gdmlInputCaptureCheck.cc": "44861cec93a1d1b5f8ca8aebbd40b270453b5e63260fcf8eb9a76b2f1a51c94e",
+      "src/Geometry/GdmlInputCapture.cc": "a0ee9349399e137f3ff34c3ffd2d347e097602d0d63566705b120d9df4fbb855",
+      "include/Geometry/GdmlInputCapture.hh": "454188028b4e7960f191748cdf0a8b1b226d7a9d25fb0459f237c930a1a60891",
+      "src/Config/InputProvenance.cc": "c1051668c8601acac3c1225e7aff3e0f9016496d5afbf39e25dd869d463e810f",
+      "include/Config/InputProvenance.hh": "be541ec48bd7d4d50be804e4f3a538049b1a5339a477e6d1d8c96c07236d012d"
+    }
+  },
+  "native_slot_released": true,
+  "process_count": 0,
+  "process_check": "CIM own runner46312/base37860 plus exact113EXE and scoped workspace formal/UI Python",
+  "no_stop_operation": true,
+  "confirmed_utc": "2026-11-01T22:14:37.062019+00:00"
+}

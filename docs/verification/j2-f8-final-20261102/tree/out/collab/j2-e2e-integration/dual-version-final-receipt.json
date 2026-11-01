@@ -1,0 +1,75 @@
+{
+  "status": "passed_both_versions",
+  "test_sha256": "5b112036e184afac3e97bd9c5257142b197a36c83c119f822318ec972f9b082f",
+  "source_fingerprint": "88c32e8c7ae6052083f975b710d91625e0bf9ed5239f86d6624b961cf3f42488",
+  "runs": [
+    {
+      "version": "11.3.2",
+      "executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-formal113\\Release\\G4UniversalSim.exe",
+      "executable_sha256": "1bb85ddbbd4c9690b86f14176b1173445e106789a7d49391ed1f137c97c6bbd1",
+      "source_fingerprint": "88c32e8c7ae6052083f975b710d91625e0bf9ed5239f86d6624b961cf3f42488",
+      "exit_code": 0,
+      "assertions_executed": 674,
+      "receipt": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-e2e-integration\\boolean113-final\\receipt.json",
+      "receipt_sha256": "842b41d68e851008ecef943f867e9b82b77c3fbd2ef97840fb262ef6a7e04a43",
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-e2e-integration\\boolean113-final.log",
+      "log_sha256": "81898ddc9afe51f57d8bdc8bbe21303f18fd0697efd7ec2845eb579ee3ea1ace",
+      "qt_run": {
+        "events": 4,
+        "hits": 64,
+        "volumes": [
+          "Upstream",
+          "Downstream"
+        ],
+        "primaries_per_event_per_volume": 2,
+        "max_step_mm": 0.5
+      },
+      "cli_run": {
+        "events": 4,
+        "hits": 64,
+        "volumes": [
+          "Upstream",
+          "Downstream"
+        ],
+        "primaries_per_event_per_volume": 2,
+        "max_step_mm": 0.5
+      }
+    },
+    {
+      "version": "11.4.3",
+      "executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-i2-windows114\\Release\\G4UniversalSim.exe",
+      "executable_sha256": "eafe9aa121bbbf4d737a611ae1c57f4ca63804a387727874d20e35cd196aa82e",
+      "source_fingerprint": "88c32e8c7ae6052083f975b710d91625e0bf9ed5239f86d6624b961cf3f42488",
+      "exit_code": 0,
+      "assertions_executed": 674,
+      "receipt": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-e2e-integration\\boolean114-final\\receipt.json",
+      "receipt_sha256": "350a8ebad1ba99e9f97fa2452f7a7c46f9765ef168e75c3a7674f32f49123a9f",
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-e2e-integration\\boolean114-final.log",
+      "log_sha256": "81898ddc9afe51f57d8bdc8bbe21303f18fd0697efd7ec2845eb579ee3ea1ace",
+      "qt_run": {
+        "events": 4,
+        "hits": 64,
+        "volumes": [
+          "Upstream",
+          "Downstream"
+        ],
+        "primaries_per_event_per_volume": 2,
+        "max_step_mm": 0.5
+      },
+      "cli_run": {
+        "events": 4,
+        "hits": 64,
+        "volumes": [
+          "Upstream",
+          "Downstream"
+        ],
+        "primaries_per_event_per_volume": 2,
+        "max_step_mm": 0.5
+      }
+    }
+  ],
+  "runner_case_owner": "main",
+  "formal_runner_report_not_claimed": true,
+  "data114_verification_receipt": "out/collab/j2-114-data-reuse/receipt.json",
+  "launch114": "out/collab/j2-e2e-integration/boolean114-launch.json"
+}

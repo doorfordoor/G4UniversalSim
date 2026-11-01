@@ -1,0 +1,14 @@
+# History 三标签最小显式关联候选（out-only v2）
+
+适用控件仅RunHistoryPage的runs_root、search、status_filter；为三个现有相邻QHBox标签Runs root/Search/Status显式调用既有core.accessibility._buddy。没有全局QHBox猜测，不改core/shell/最小滚动/联合框合同，不改F6布局，不改动作/runner/业务状态。旧目录单标签探索461日志保留在父目录，不代表本三标签最终候选。
+
+原标签翻译键Runs root/Search/Status均已在central i18n.py（运行包根目录/搜索/状态），无新增翻译。_buddy建立QLabel.buddy与_f8_accessible_label，初始Name来自标签；现有shell._set_language→apply_language→_refresh_accessibility→decorate_accessibility会按关联的当前label.text重新设置名称。无需新翻译回调或集中词典改动。
+
+产品提案run_history_page.proposed.py SHA cc98442e975cec3f1b33d556a8dabdd7381ec22368e94bd6124178edacb5a463；LF补丁run_history_page.patch SHA c6f9a716e3f6d58050593bb33f8ada02f4432585ff03b8927aeac69f72a794de。
+永久smoke提案SHA 1620ccc2168cfeaf45802339aef41d9e16b7d028d7e3630ac11b616d77f3b086；LF测试patch SHA eefb54ee53de668796149d9c5d8de61ae8e18d7e6f100bbc6c0f5d65ff72cad8。所有旧416测试函数/union helper的AST不变，main仅追加新test_history_directory_accessibility调用。两patch git apply --check通过，未应用。
+
+作者用指定Dvenv，Qt offscreen125/150，各一次完整smoke草案（只内存加载History候选，无CI layout补丁），两进程均已结束exit0，各519个官方v3入口。scale1.25.log/scale1.5.log；各目录history-label.json保存三控件在en→zh_CN→en下的QWidget.accessibleName及真实QAccessible接口Name/role，相互一致且与实际标签/已有ui_text相同。还检查真实Tab到Search/Status、保留dock实例、过宽joint时标签+128px阅读前缀可见及非零稳定平移、业务fingerprint/Undo/Redo不变、不创建runs目录。未强求590>530时全field同时可见，不调用ensure补测试结果。
+
+冻结负向frozen-negative.json/log：实际Qt查询三控件Name均空且buddy未关联，预期exit1。receipt.json记录SHA/进程终态。此验证不是native UIA，不冒充正式矩阵。
+
+tracked core仍631df886...、smoke仍69b11a...，无产品写入/原生操作或Geant4后端运行。与新增CI QSpacerItem问题独立；后者另在out/collab/f8-layout-item-compat诊断。两个独立测试patch未来同时整合时需合并各自新函数/调用，不能以覆盖方式丢掉对方新增回归。

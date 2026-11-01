@@ -1,0 +1,13 @@
+{
+  "head": "56b689fb9ac920cbb1203b2b94dae2483d25f622",
+  "profile": "integration",
+  "case": "gui_scans_backend",
+  "location": "gui/smoke_tests/smoke_scans_backend.py:82",
+  "reason": "Scan not created: 50/100/200 MeV: Materials config is required.",
+  "assertions_executed": 2,
+  "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\j2-f8-56b689f\\windows113-integration\\20261102-014658-5f26cf76\\gui_scans_backend.log",
+  "log_sha256": "fa9af382affe28e52b4e189bc04b152a1403847209cd59eaa75c7d42851c2452",
+  "fixture_observation": "provider sets PathSettings.materials_config to config/materials/material.ini before wz.apply_to_project; rejection reported by scan creation. Exact state transition needs main diagnosis.",
+  "product_or_test_changes": false,
+  "rerun": false
+}

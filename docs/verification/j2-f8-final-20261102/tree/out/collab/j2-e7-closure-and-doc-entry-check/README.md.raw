@@ -1,0 +1,33 @@
+# E7条件关闭依据／文档当前态入口清单
+
+**可以在J2最终适用全矩阵、严格证据门禁通过且无未决E7独审问题后，由main关闭E7本轮约定范围。当前不预先关闭。** ROADMAP E7行已限定为既有15原语／7布尔工具注册与GUI元数据接线，待本阶段冻结矩阵；不是新增实体或科学基准。
+
+| 依据 | 实现／永久验证及适用边界 |
+|---|---|
+| 实际共源链 | SolidRegistry绑定15路真实factory；VolumeBuilder普通／BooleanTool共用分派；BackendCapabilities的registry与兼容solids投影来自同表；生成器产出离线定义供GUI model/parser消费。原GeometryConfig数值、关系与来源校验仍保留，符合“逐步归一”，不能说完整数值校验器已全面重写。 |
+| 独立审查 | j2-e7-independent-review.md及checks的10项对照通过，无确认P0/P1/P2；逐项核对15路分派、7工具、8类A5缓存策略、构造／布尔变换／对象所有权及生命周期。该审查保留原e44身份，未冒充新矩阵。 |
+| 身份限制 | 原审registry及VolumeBuilder共4个文件目前字节完全一致；BackendCapabilities.hh整文件SHA已不同，不能称5文件整体未变。当前registry接线须结合现源码及新构建capabilities对应证明；最终矩阵仍以新HEAD/源码/EXE身份为准。 |
+| 永久组件入口 | scripts/test_solid_registry.py：生产registry组件编译配factory/solid替身，核15路分派、身份、alias/parser一致、7工具与A5拒绝、异常/null/unknown、查询无构造副作用及缓存资格/次数。替身不冒充真实Geant4；18c正式static为248入口，仅作对应历史证据。 |
+| 永久真实入口 | 同脚本--backend读取G4USIM_EXE，要求源码指纹与capabilities.registry一致；复用A5实体验证及负例，旧7类解析体积／质量、400事件/2线程，trd/trap布尔工具实际8事件及命名字段/未知键反例。18c双版本各288入口保留原身份；最终候选须以自身完整报告及逐例严格门禁归档。 |
+| 缓存／线程兼容 | A5八类只在原master-owned构建链预计算，旧7类及Boolean组合不新增GetCubicVolume；Describe不建实体、不触store/RNG。不新增任意worker调用安全保证，也不把代码差分当逐seed随机流／竞态压力证明。 |
+
+最终E7行可写：“本轮约定范围已完成：既有15原语／7布尔工具的统一factory注册、能力元数据与GUI离线定义接线；兼容、缓存／生命周期及适用矩阵通过，见最终证据。实体集合与A5实验性等级不变。”具体HEAD、报告数、CI run及稳定归档链接由main终态填写。
+
+不随关闭承诺新增实体、assembly、每体积GDML、全GeometryConfig归一、全部Boolean组合、异常介质、任意worker构造或新的输运物理验证。ellipsoid省略尾参数的0是构造哨兵，不成为通用表单补0,0规则；H2/H7/Q2保持独立。
+
+## 给Beauvoir的入口清单（不代写）
+
+| 当前态入口 | 最终需核对／同步 |
+|---|---|
+| STATUS.md顶部摘要、当前顺序与导航 | 最终J2/F8及E7限定范围、冻结身份、真实矩阵/CI/原生范围与证据；若“SolidRegistry未实现”等仍充当当前导航需纠偏，dated历史不追改。 |
+| docs/ROADMAP.md E7、J2、F8行及当前摘要／依赖导航 | 三者状态与最终证据一致；E7仅关闭本轮15/7注册元数据约定，不升级实体／物理支持等级。 |
+| docs/J2编辑覆盖与F8验收.md当前首段、E7段、F8验收边界 | 当前候选与终态证据；原18c三档身份映射、新2ec代表性125补验分开；125不冒九页、预览不冒事件Run。 |
+| docs/功能支持矩阵.md顶部当前摘要及相关GUI／几何说明 | 同步“候选／尚未整体验收”的当前态、实际编辑与registry范围和最终链接；A5实验性、assembly拒绝、GDML版本限制及科学等级保持。 |
+| docs/开发路线图.md顶部当前接续 | 当前第三候选／原生pending提示与唯一ROADMAP状态一致；下方有日期的长期目标／旧失败原样保留。 |
+| AGENTS.md、gui/AGENTS.md当前索引；docs/agent-history.md | 按仓库规则追加终态／永久契约与证据指针，再同步当前索引；旧条目全文、失败与原身份保留，不能追改成当时已通过。 |
+| docs/开发接续计划.md、README.md（若含当前态直述） | 核对与ROADMAP一致；仅作导航链接且无冲突的段落无需机械改写；旧计划和dated历史不批量替换。 |
+| 最终verification归档README、identity映射、scope与报告门禁索引（最终路径由main指定） | 最终HEAD/EXE/源码/测试指纹、registry两入口逐例结果、真实CI run、独审、旧原生映射及新125补验收据；原图local-only。 |
+
+唯一文档作者为Beauvoir，本任务只给清单。旧56b/2901/18c报告、首败、dated状态及独审原件不覆盖、不改绿；当前态通过新增终态入口或明确历史折叠表达。生成的solid_registry_data/schema/C++表不是状态文案入口，不为“同步文档”手改或重生成。
+
+本次仅文件读取、AST/literal解析、哈希和既存报告摘录；未运行测试、Qt、后端、profile、生成器或构建，未改产品／文档／阶段状态。新矩阵和实际CI由现有负责人继续。完整原件路径、SHA、原审与现文件身份及历史逐例摘录见receipt.json。

@@ -1,0 +1,20 @@
+# F8 左裁切/向导按钮最终候选冻结
+
+本轮仅改 core/accessibility.py 与 smoke_f8_accessibility.py；shell.py未增改，未改变dock实例/parent/runner/安装所有权，无原生鼠标键盘动作。五文件完整SHA在freeze.json。产品与测试此刻停止编辑，交Ptolemy独审/main原生复验。
+
+core SHA 8f597259072c4ca7c929b6c9021716da5a6011fc6b6d4a4907af96dc8ba89fca
+smoke SHA 7087edc6ae93bb666020eb06fb46bd8a60b2539c0213b5058276daf385d04c8e
+
+首焦点排除scroll/viewport/普通容器，只选实际控件；内部spin/combo编辑器按真实owner规范化。ensure_focus_visible先算label+完整control联合框，能放下时精确最小平移（明确5px反例）；超大矩形才选当前cell/cursor/阅读锚点；每一轴独立保留可容纳的完整维度。不设置任何FocusIn水平强归零，不重建dock。自然show→九页→Config dock已显示→12次Tab和回Start不再通过预先H=0准备。
+
+owned QWizard显示、page切换及应用语言refresh更新Next/Back/Finish/Cancel文字和可访问名称。Qt隐藏Back按钮可能暂时text为空，显式f8AccessibleSource优先于普通按钮文本推导，避免其名称被空text清掉；全部setButtonText之后才给最终按钮集命名。未改变wizard spec/apply逻辑。
+
+新增翻译：out/collab/f8-wizard-i18n.json，仅Next=下一步、Back=上一步、Finish=完成；Cancel复用已有。主词典未由我改；main此前15键之外本轮新增3键，合并后无需测试translations参数。
+
+通过：125.log/150.log各280个v3入口，含自然导航和完整联合框/非零手动pan保持/超宽锚点、非法seed草稿的两次modal取消、en→zh→en四按钮text/name回切、dock实例身份。f4-navigation.log 224入口通过。py_compile和限定diff --check通过。
+
+未通过：f4-layout.log（125%）与f4-layout-default.log（原默认缩放）同一首断言失败，smoke_f4_layout.py:173→target_visible_through_ancestors:60。stdout_view全矩形(229,665,1538,87)，祖先可见片段(229,665,1043,32)，中心不在clip内；只完成16个入口。随后因失败分支未正常关闭出现recovery lock占用和访问违例。不能把清理错误当首因，也不能报旧F4布局通过。原日志保留；产品仍冻结，尚未为此另改shell/布局，不擅自削弱旧断言。这个遗留/新增边界需要main协调后单独处理或明确拒绝进入完整验收，不属于本次已证实的label+control修复通过结论。
+
+修前只读量化与本轮修后量化：out/collab/f8-native-clipping-readonly.jsonl、out/collab/f8-native-clipping-fixed.jsonl。项目名label从修前x=-3恢复34，外层H保持0；container helper不再0→37。125/natural-navigation.json和150/natural-navigation.json保留九页实际焦点类型与H值。自然导航截图natural-start.png保留显示Config等peer dock后的真实布局；小屏开始页start.png/start-zh.png也保留，没有归零H补救。多dock太宽时未聚焦的peer可自然在scroll之外，不宣称同时全部可见。
+
+通知已发送给真实父任务ID，请转Ptolemy复核（当前只掌握姓名，不猜其UUID）。main原生旧125截图和passive原件不追改；本轮离屏成功不冒充原生已通过。没有提交、全局构建、正式全矩阵或阶段状态修改。

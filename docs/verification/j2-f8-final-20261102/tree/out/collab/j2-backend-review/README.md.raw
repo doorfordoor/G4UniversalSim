@@ -1,0 +1,56 @@
+# J2 Source/Physics 独立只读审查
+
+审查 baseline `fc606739`，工作分支 `roadmap/J2-F8-editing`。仅检查本轮 Source/Physics/include 差异及必要的调用链；未修改产品、未构建、未重跑 `test_j2_sources_physics`、`test_gps_sources`、`test_physics_a6`，不涉及 E7 或阶段完成判定。
+
+## 可操作问题
+
+### [P1] EM replacement 会静默覆盖后续成功执行的 setEM macro
+
+位置：`src/Physics/PhysicsFactory.cc:535–537`；缺少跨入口检查的位置：`src/Physics/PhysicsManager.cc:581–583`（只读原 INI 的 `em`，不能识别后续 macro 的 EM 请求）。
+
+复现输入：
+
+```ini
+[physics]
+reference=FTFP_BERT
+replace_modules=penelope
+```
+
+```text
+/AIHL/physics/setEM livermore
+/run/initialize
+/run/beamOn 8
+/AIHL/physics/dumpProcesses processes.json
+```
+
+在 `em-macro/` 中执行：
+
+```powershell
+& C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\build-i2-formal113\Release\G4UniversalSim.exe --config main.ini --macro run.mac --output output
+```
+
+复现所需 DLL 路径为 `D:\ProgramFiles\Geant4\bin` 与 `D:\ProgramFiles\Qt\5.15.2\msvc2019_64\bin`，`GEANT4_DATA_DIR=D:\ProgramFiles\Geant4\share\Geant4\data`。独立驱动 `review.py` 中有完整绝对路径及环境设置；每次运行的实际 argv 记录于各目录 `receipt.json`。
+
+结果：退出 0、status=completed、8/8 事件；`em-macro/stdout.log:24–25` 明确记录 `G4EmLivermore -> G4EmPenelope`。`processes.json` 实际 C++ constructor 是 `G4EmPenelopePhysics`，gamma Compton 的实际 model 为 `PenCompton`。`effective_config_run_0_t-1.json` 的 Manager 请求同时保留 `requested_em=livermore`、reference=`FTFP_BERT_LIV` 和旧 Penelope replacement（均未伪造 applied）。
+
+同一 exe、同一 macro、去掉 `replace_modules` 的 `em-macro-control/` 正确得到 `G4EmLivermorePhysics`。这证明问题由本轮新 replacement 在物理列表重绑时重新执行引入。
+
+建议在成功接受 macro EM 请求前解决与已有 EM replacement 的冲突：明确拒绝且传播失败，或按定义的优先级一致更新/撤销旧 replacement。不能接受新请求后仍无提示地运行旧 EM constructor。增加上述 INI→macro→实际 constructor/process 的回归。
+
+## 其他已检查边界
+
+- `clear-reference/`：保留 replacement 后通过 macro 退出 reference 模式，受控退出 1、failed、0 事件，后续 beamOn 未执行。
+- `csh-em-idle/`：初始化后交互 setEM 被拒绝，受控退出 1、failed、0 事件。
+- `native-single/`、`native-multiple/`、`mt-switch-600/`：原生 multiplevertex 切换保持有效。最后一组实际 worker 0/1 均参与两轮，各轮 600 事件；首轮每事件一个 vertex、次轮两个，共 1800 初级记录、1200 完成事件。
+- `surface-native-point/`：命名 Surface/Sphere 经原生命令改为 Point 后，worker 0/1 的全部 600 初级顶点均为 `(2,3,4) mm`，没有被缓存球面设置重放。
+- `extreme-intensity/`：同时模式强度 `1e-300` 与 `1e300`，64 个事件均有两个顶点，primary/vertex weight 都为 1。仅证明此数值和调用边界，不作分布或物理正确性结论。
+
+## 历史错误传播边界（不计作 J2 新回归）
+
+`multi-single-field/` 在命名多源模式调用 `/AIHL/source/energy 5 MeV`，拒绝路径触发 `AIHL_SOURCE_001 / FatalException`，实际退出 `3221226505`，未生成 `run_summary.txt`。`src/Source/SourceMessenger.cc:107` 的 FatalException 与 `SourceManager::RequireSingleSourceForCommand` 在 baseline 已存在；既有 `test_gps_sources.py:337–338` 只要求非零退出和错误文本，因此现有“拒绝”测试不证明受控失败收尾。此处保留实证，不能归因于本轮新 multiple_vertex 实现。
+
+## 身份、证据与限制
+
+`identity.json` 含 exe SHA-256、capabilities 源指纹和当时工作区源指纹，三者身份关系经独立检查。运行前后源指纹均为 `e44d005a039448d083008c0c6ba3f824b2f1b680b8d6b2b63f297137754d76f6`。原始 stdout/stderr、INI、macro、初级 JSONL、摘要、EffectiveConfig 与 process dump 分目录保留，日志原始字节 SHA 存于 receipt。
+
+`python -B out/collab/j2-backend-review/verify.py` 仅验证已有证据，不运行后端。`verification.json` 是独立审查记录，不是统一测试平台报告，也不冒称 149/223 等探针入口数量。未运行 WSL/Linux 矩阵，不验证任意原生命令、一般无偏性或物理基准。

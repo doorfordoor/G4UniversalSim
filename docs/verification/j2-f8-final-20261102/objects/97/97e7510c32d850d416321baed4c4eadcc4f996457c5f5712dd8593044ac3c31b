@@ -1,0 +1,93 @@
+{
+  "status": "pass",
+  "scope": "five-doc narrow file review only; no product/native/profile/300logs rerun",
+  "base_head": "18c5858fd6e80a5cb6096beacebfef69c479ad49",
+  "patch_sha256": "3cbdb2975abcb36a88325f49851cddef0d025c2ca6cf8c82a62cb8ce1bcc1a03",
+  "manifest_sha256": "e094037f010be282fc9ee91572103913e58199a9a22009b96333823fa53efbea",
+  "files": [
+    {
+      "path": "STATUS.md",
+      "source_sha256": "6dbd513b352443b66151055a6feb6c3fba7f0a02a137b0a8ae7d73b2074a4e90",
+      "candidate_sha256": "7b297322e3120dfdbf414a91bfccca843617ba6cfe31268280296ab783ecfd64"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "source_sha256": "1082cc0d20f8c9e82e4c4675828acd5266007c07cec14e9ac6f363c10d197806",
+      "candidate_sha256": "6a84486b3d252acc14d1fede072f04ad327411d0e74baeaa2987f763fab69153"
+    },
+    {
+      "path": "docs/agent-history.md",
+      "source_sha256": "c720691a1e7a3fa831158b52b33f9a29f7688ed470788289a1c28bace7c88605",
+      "candidate_sha256": "1090ce752438606df3972047c4f4bb2b9b48aef3c7af9e6fe566182e54d3c7b2"
+    },
+    {
+      "path": "docs/J2编辑覆盖与F8验收.md",
+      "source_sha256": "df144f2dc34be5476b714ed18a6c529cde11648e889010c297ae380229c8cdc5",
+      "candidate_sha256": "00f7c6631793f3b8f9987d200e0ca7a0ad83461a3eda1e7d851986a082a119d4"
+    },
+    {
+      "path": "AGENTS.md",
+      "source_sha256": "8f01ba46ebce3ed02f905f90e565fdf00411c1272da75ef15246381705ab23f0",
+      "candidate_sha256": "e9de523c3d3c96e0b5de212b285bd2b642668c0027d9e572ae669d27589babb9"
+    }
+  ],
+  "six_profiles": [
+    {
+      "profile": "windows-static",
+      "cases": 46,
+      "assertions": 4586,
+      "report_sha256": "e6f47552fb7cf2f22c491802d76f6807cb29bd63bbbf61ec55e953e73c396dd4",
+      "launch_sha256": "166fbbfbc0e1ab9b060df955d2020669767a94a92cc9ba377f18f0a33f84d49a"
+    },
+    {
+      "profile": "windows-gui",
+      "cases": 66,
+      "assertions": 8574,
+      "report_sha256": "4c91c9f2971ae618821a00d3e22ccc196bbf8ebf9449bd3f7bda2da69ba5ad22",
+      "launch_sha256": "1430e1bc7c39248210a316cf99df2e80d9fb5d5f8093d01d6995b193a95ab783"
+    },
+    {
+      "profile": "windows113-backend",
+      "cases": 63,
+      "assertions": 82029,
+      "report_sha256": "b967b64baa226e29f9516e0c888b0a5c11f02b6e8dcd1ca90d0111bebb7d530a",
+      "launch_sha256": "74078adfa69d753278eb33239131453532242298f92939a492c5c1332f715da4"
+    },
+    {
+      "profile": "windows114-backend",
+      "cases": 63,
+      "assertions": 72536,
+      "report_sha256": "5478271454bf3842d29dd10641ce1df5c2e408c9418619c7313d7dccd6d4a91d",
+      "launch_sha256": "6b15b8c0de9da923f54514584f5b13f83d2fcf0c96c1caf379072ea08a28130f"
+    },
+    {
+      "profile": "windows113-integration",
+      "cases": 31,
+      "assertions": 6790,
+      "report_sha256": "fc49d072e421011e655b59859ede40ab11839e960beca3b793ca206a23a9fbc7",
+      "launch_sha256": "ee668b6d4c0b906bd35dc0650eaaca223b526942a8e47fb2495ac6558e13bebd"
+    },
+    {
+      "profile": "windows114-integration",
+      "cases": 31,
+      "assertions": 6780,
+      "report_sha256": "73612c300a9b06d168ebb70fa41e2979edc9192f40b47da16db7cad48a4573fa",
+      "launch_sha256": "96f536f8ab29c701aa20c4cdcf449a0f2f4bf800813dbdcaa3d2b6686756c3c8"
+    }
+  ],
+  "sum_cases": 300,
+  "sum_assertions": 181295,
+  "aggregate_sha256": "bff2dd04d5143d33687b08a85ba80f68707d4297b6955e67cc50c640cbd51113",
+  "findings": [],
+  "main_origin_corrections": [
+    "STATUS launch.identity_errors vs report.git_dirty",
+    "AGENTS section0 new history index"
+  ],
+  "expected_test_diffs_allowed": true,
+  "tracked_writes": false,
+  "stage_closed": false,
+  "future_HEAD_mapping": "pending",
+  "additional_native": "pending",
+  "review_helper_note": "First helper over-asserted whole STATUS body contiguous despite historical wrapper; corrected to original header/current snapshot/dated tail independent exact byte checks. No candidate defect or original evidence change.",
+  "AGENTS_history_anchor_verified": "2026-11-02-j2f8-第四修复候选18c5858平台测试接口与证据映射"
+}

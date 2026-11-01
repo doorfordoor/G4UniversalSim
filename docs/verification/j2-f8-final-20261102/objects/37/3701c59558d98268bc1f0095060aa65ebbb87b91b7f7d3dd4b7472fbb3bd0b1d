@@ -1,0 +1,53 @@
+{
+  "scope": "out-only; no tracked files changed; candidate tests not formal native acceptance",
+  "tracked_baseline": {
+    "gui/g4usim_gui/core/accessibility.py": "8f597259072c4ca7c929b6c9021716da5a6011fc6b6d4a4907af96dc8ba89fca",
+    "gui/smoke_tests/smoke_f8_accessibility.py": "7087edc6ae93bb666020eb06fb46bd8a60b2539c0213b5058276daf385d04c8e"
+  },
+  "files": {
+    "smoke_f8_accessibility.patch": {
+      "sha256": "f5102d8367bd9779b587294613c5487d5b197c1235ff88a1a2dee6f7ecd2d784",
+      "normalized_lf_sha256": "f5102d8367bd9779b587294613c5487d5b197c1235ff88a1a2dee6f7ecd2d784",
+      "bytes": 12537
+    },
+    "smoke_f8_accessibility.proposed.py": {
+      "sha256": "df8db0fe6ce906651f224699de6d360b6f811a6752ae4a32045a4699e97459b2",
+      "normalized_lf_sha256": "28ec235172d1d738beb49a6aa562e98ba1ac2942dc6d180d649eee7ac6efb428",
+      "bytes": 30877
+    },
+    "accessibility.lf.patch": {
+      "sha256": "e7c29590423e618d32a79c7071f754cbea94ad975c3105ca6904f6e546344261",
+      "normalized_lf_sha256": "e7c29590423e618d32a79c7071f754cbea94ad975c3105ca6904f6e546344261",
+      "bytes": 3779
+    },
+    "accessibility.proposed.py": {
+      "sha256": "677a7b54c5ce876d663b6d986642ee5393a385b782a29dad695c2ed20d280b39",
+      "normalized_lf_sha256": "631df8861ca70524b3ab9d3941a4e9a263cbd5a017824b7647c64ded90025a37",
+      "bytes": 15323
+    }
+  },
+  "tests": [
+    {
+      "path": "permanent-v2-smoke-1.25.log",
+      "exit_code": 0,
+      "assertions_v3": 406,
+      "sha256": "a7f3c012ac4c02e2587fb2a4fa3b2bb0aed2645b36302f120509f25f095e72ed"
+    },
+    {
+      "path": "permanent-v2-smoke-1.5.log",
+      "exit_code": 0,
+      "assertions_v3": 406,
+      "sha256": "2614c63c95f41e09d19db39362534e880508684eb49c091644982354e1a58f67"
+    },
+    {
+      "path": "permanent-v2-baseline150.log",
+      "exit_code": 1,
+      "expected_failure": true,
+      "reason": "unchanged product fails new retained Project visibility assertion; x711 outside width540",
+      "sha256": "132b3b1f0a2ff1735af234a6f6e07d0ad751c7c4353f0dcd2bfce1444f6ff5a0"
+    }
+  ],
+  "old_test_functions_ast_unchanged": true,
+  "old_main_only_appends_new_test_call": true,
+  "old_smoke_v3_baseline": 280
+}

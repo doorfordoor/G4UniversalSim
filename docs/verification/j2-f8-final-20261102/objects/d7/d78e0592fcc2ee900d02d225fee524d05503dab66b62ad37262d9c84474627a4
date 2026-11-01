@@ -1,0 +1,177 @@
+当前接续：2026-11-02 正准备J2/F8第三修复候选；第二冻结2901f42的本机已过范围不代替明确失败的M0/Linux CI及原生开放项，阶段仍未关闭。History／QLayout组合已专项独审，K1 policy终稿待独审和新candidate完整复验。下方有日期的旧段保留当时状态，当前以[STATUS](../STATUS.md)与[ROADMAP](ROADMAP.md)为准。
+
+2026-11-02 J2/F8：完整实施后的首轮候选 `56b689f` 未通过正式矩阵；定点修复已独审，正准备第二冻结。完整venv的真实3D、逐例断言基线、报告/构建身份及跨页原生复验均保留为关闭条件；当前不标阶段完成。用法与边界见[J2/F8说明](J2编辑覆盖与F8验收.md)。
+
+2026-10-31 F5：**已完成**。冻结验收5c1eec5；Windows160/160、50898个v3入口，Linux11.3.2/11.4.3各160、M0两平台各79，原F4逐例与总量门禁通过。原生22份观察/28截图/真实退出0保持5d身份，经明确映射关联新冻结；不新增物理验证结论。[最终证据](verification/f5-final-20261031/README.md)。下方带日期的旧状态保留其历史范围。
+
+2026-10-29 Q1实现契约更新：统计按事件归一化、网格投影不假设未知协方差、自动输出以本轮manifest登记为准、原生非csh执行入口明确拒绝。当前阶段状态与平台验收仅以 [ROADMAP](ROADMAP.md) 和 [最终验收记录](verification/q1-final-20261029/README.md) 为准；下方保留历史规划，不据此重开已完成阶段。
+
+2026-10-30 F5正在实现、交叉审查与准备完整验收。范围为主项目配置事务、撤销/重做及独立自动恢复；新增测试通过记录不代替冻结矩阵。状态以 [ROADMAP](ROADMAP.md) 为准，契约见 [配置撤销与恢复](配置撤销与恢复.md)。下方F4及更早记录保留各自日期边界。
+
+2026-10-30 当前状态：F4 已完成。产品 `7d718d038a00d89995ea773b4772764116b620c3`；Windows 152/152、49913 个 v3 入口与 F1 原始143/48511同代基线门禁；Linux11.3.2 为 152 项、11.4.3 为 152 项（run 41056994075），M0 Windows 为 72 项、Ubuntu 为 72 项（run 41056993987）。CI实际提交 `a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9`，与产品的关系见[提交身份映射](verification/f4-final-20261030/identity/identity-map.json)。Windows原生 13 态、19 次实际观察与进程退出 0；[最终证据](verification/f4-final-20261030/README.md)，[独立审查](collab/reviews/20261030-astra-f4-close-review.md)。下方带日期的候选表述保留为当时实现记录；不扩张物理支持等级。F5待开始。
+
+# G4UniversalSim 长期开发路线图
+
+2026-11-01 用户实测反馈已补入 [ROADMAP](ROADMAP.md#2026-11-01-实际使用反馈与排期调整)：J1承担可调整工作区/主题及3D颜色透明度；J2承担空白创建、无预备文件输入、NIST来源辅助、命名多源/球面源、物理模块组合替换与多敏感体操作，并前移至L1之前。E7支撑需要实体能力归一的部分；F8验收完整桌面路径，H2/H7继续负责过滤能谱与微观径迹结构。该调整不把当前未开放能力标为已支持，I2/J1状态仅以ROADMAP为准。
+
+2026-10-30 F4候选正在实施结构化诊断与点击定位，共用模型供后续F5/K1/L1衔接；不提前实现撤销、动作执行或AI Agent。使用与限制见 [结构化诊断与定位](结构化诊断与定位.md)，正式状态仅在 [ROADMAP](ROADMAP.md) 维护。
+
+2026-10-29 目标映射：本文件继续保存 M0–M5 长期目标与历史记录；当前未完成工作已统一映射到 [ROADMAP](ROADMAP.md) 的 Q1/Q2、2C、原 E/F/H 及 I/J/K/L。M0–M5 是汇总目标，不再另建实现队列或当前状态表。SolidRegistry 改归 E7，schema/迁移归 E6，科学验证归 Q2，第三方扩展继续保留 M5；旧“GDML/LET/region 未实现”等描述不能覆盖后来的 A 系列实现。
+
+2026-10-27 阶段 0 审计修复（提交 `2e87f18`）：位移损伤粒子名改为按 Geant4 粒子表大小写不敏感解析并在首个事件前校验；主 INI 重复声明改为 `[ConfigWarning] duplicate declaration` 并计入 `config_duplicate_count`（后值仍生效）；敏感探测器按配置名创建，`/AIHL/detector/enableSD`、`setSDName` 与 `/AIHL/app/setSeed` 仅在初始化前可用；GUI 不再因 Setup 栏填写而把源几何重置为点源，进度终态与日志缓冲同步修正。统一测试平台 76 PASS / 0 FAIL / 0 SKIP、`tracked_source_gate=pass`（证据副本见 [docs/verification/stage0-20261027](verification/stage0-20261027/README.md)），状态与剩余缺口见 [功能支持矩阵](功能支持矩阵.md) 与 [ROADMAP](ROADMAP.md)。
+
+2026-10-27 F6：新增按 run 的实时事件进度、速率与 ETA；中止/失联时保留最后观察值并在状态文字显示终态，最终成功仍由摘要判定。实现及验收证据见 [F6接续检查点](F6接续检查点.md)，不因此启动 F2 参数调整会话。
+
+2026-10-24 接续说明：本文保留 M0–M5 长期目标和历史验收记录；当前 A–H 工作项进度统一见 [ROADMAP.md](ROADMAP.md)，接下来各批工作的范围和验收见[开发接续计划](开发接续计划.md)。下文带日期的能力描述不可直接当作最新实现状态，仍须对照源码、专项测试与[功能支持矩阵](功能支持矩阵.md)；A–H 切片完成也不自动代表 M0–M5 总体验收通过。
+
+2026-10-21 M3/M5 交叉原型：Results 新增内置 `dose_json`、`fluence_json` 异步 JSON 导出入口，调用现有 M5 CLI，支持取消、禁止覆盖、进程失败报告、schema 校验及文件列表刷新；GUI 显示 worker 文件完整性与独立物理 benchmark 尚未验证的限制。测试见 `gui/smoke_tests/smoke_output_extensions_gui.py`，完整回归与 M0–M5 分阶段进度见 `docs/archive/M0-M5-原型推进看板.md`。仍需人工 GUI 操作验收与跨平台交付验证。
+
+2026-10-21 最新跨阶段进展：M2 Track-Length Fluence 已形成真实 Geant4 敏感体计分、CSV 与 GUI Results 端到端实验性原型；M5 新增 `fluence_json`，对已完成的真实双线程、双 run CSV 作 JSON 聚合和逐 worker 对账。Dose 与 Fluence 都仅部分支持，物理 benchmark 尚未完成，LET 仍拒绝。旧段落中“Fluence 尚不支持”描述的是之前的开发状态，以本条和功能支持矩阵为准。
+
+2026-10-21 第三条跨阶段原型（M5 输出后处理）：已添加 Python `OutputExtensionRegistry` API v1、显式可信模块加载、`dose_json` 输出聚合与独占发布。`scripts/test_output_extensions.py` 覆盖注册/拒绝和构造输入；`scripts/test_dose_scoring.py` 使用真实 Geant4 双线程双 run CSV 经 CLI 生成 JSON 并对账。范围仅为完成模拟后的 Python 输出扩展，不属于内核插件系统或 M5 全阶段验收。接口与后续目标见 `docs/输出扩展原型说明.md`、`docs/archive/M0-M5-原型推进看板.md`。
+
+2026-10-21 第二条跨阶段原型（M1 Source + M3 编辑器）：XY 平面矩形源已连接 C++ GPS `Rectangle`、主 INI、GUI writer、负向校验与 128 事件初级命中采样；不支持旋转平面或其他高级 GPS 形状。`scripts/test_run_summary.py` 后端回归通过；支持等级保持实验性，当前进度与下一条功能切片见 `docs/archive/M0-M5-原型推进看板.md`。
+
+2026-10-21 路线调整：用户要求 M0–M5 同步孵化原型，以贯通后端、GUI、数据输出的实际功能为优先，随后逐步修复缺陷并完成各阶段正式验收。首条切片是敏感体 Dose MVP：已真实运行生成 Gy CSV，`scripts/test_dose_scoring.py` 通过单/双 worker、双 run、质量与公式专项；GUI 提供原型开关及 Dose Results 聚合，详见各自 smoke。后续已增加受限的 Track-Length Fluence，通用剂量网格和 LET 仍未支持；Dose/Fluence 暂未通过独立物理 benchmark。M0 仍有未闭合项，不能因启动 M1–M5 原型开发将其标为通过。
+
+2026-10-21 M0 源字段相互排斥的配置闭合：针对角分布 `isotropic=true` 与指定 `direction`、位置 `point`/`plane` 字段混用或缺失类型导致字段丢弃的旧行为，新增前置冲突拒绝及 GUI writer 对齐。保留无类型点源和 plane 默认中心/半径作为兼容输入。后续 Source/GPS 原生状态和实际应用、完整 EffectiveConfig、几何迁移、输出故障、Linux/CI 和物理 benchmark 仍需 M0 验收。
+
+2026-10-21 M0 源字段空值闭合增量：主 INI 显式空白 `preset`、`particle`、`energy` 已改为前置失败，防止悄然继承 preset；后端负向回归及 GUI 原有空值校验通过。尚须继续审核 `position_type`、`center`、`radius`、`direction`、`isotropic` 的组合与实际采样，并完成有效配置来源、输出/几何契约、跨平台 CI 和物理基准；未达到 M0 → M1 切换条件。
+
+2026-10-19 M0 浮点输入安全补充：通用 `UnitParser` 与 `SourceManager` 拒绝 `NaN`、`Inf` 和溢出数值，防止配置成功后向 GPS 传递无效物理量；GUI Source Editor 同步增加生成前校验，负向用例进入统一 M0 测试。全模块有效配置、生命周期、几何迁移和跨平台物理验收仍是 M0 缺口，M1 尚未切换为当前阶段。
+
+2026-10-19 M0 固定方向后端校正：`SourceManager` 把 GPS 固定方向类型从 `beam1d` 更正为 `planar`，防止显式 +Z/斜向被实际输运成 -Z；显式关闭各向同性预设时如未提供方向则拒绝。真实主粒子动量检查纳入摘要专项；其他高级 GPS、完整源 schema、物理基准与跨平台仍待完成。
+
+2026-10-19 M0 源平面中心修复：真实 Geant4 输出证明旧 `[source]/center` 的 x/y 被丢弃；后端已改为传递完整 x/y/z，GUI writer 对 plane 使用 `center`，以 12 个事件的初级 hits 验证。旧 `SetPlaneBeam` 保持兼容；全源 schema、物理基准和跨平台 CI 仍待验收，M0 不标为完成。
+
+2026-10-19 M0 源 INI 校验增量：在 Geant4 初始化前拒绝未实现的 `[source]/position_type` 与 `point` 缺失 `position`，覆盖原先无效类型静默继承 preset 位置并运行的真实反例。其余 Source/GPS 参数组合、来源与宏原生命令仍待验证，M0 未完成。
+
+2026-10-19 M0 GPS 生命周期增量：`SourceManager` 已修复 GPS 实例化后单字段更新导致全量缓存重放的缺陷；`scripts/test_run_summary.py` 在真实两线程连续三轮输运中检验能量 1/2/2 MeV、粒子 e-/e-/proton。原生 `/gps/*` 的状态来源与 Manager 摘要仍不完全一致，M0 继续未完成。
+
+2026-10-19 M0 计分命令生命周期：实测初始化后 `/AIHL/scoring/eventEdep false` 仅改 master，双 worker 继续生成事件 CSV；两轮运行之间同样错误地接受修改。全部计分修改命令现只在 `PreInit` 开放，`print` 只读查询可在初始化后使用。真实双线程 batch 和 `csh` 已加入前置成功、后置拒绝、首轮输出保留回归；仍需完整运行期协议、计分物理基准和跨平台验收，M0 未完成。
+
+2026-10-19 M0 输出线程后缀契约：实测 `setThreadSuffix false` 曾在 PreInit 被接受却不改变 worker `_tN` 文件。现在对 `false` 明确拒绝，`true` 继续使用唯一线程文件名；单/双线程 batch 和 `csh` 专项已验证。M0-4 仍欠缺后缀可配置性、完整输出统计契约、真实介质故障及物理基准；不得据此宣布 M0 完成。
+
+2026-10-19 M0 线程数守卫：根据真实 Geant4 `Run0112` 反例，初始化后修改 `/AIHL/app/setNumThreads` 会被内核忽略，现在限制为 `PreInit` 并在 Manager setter 防御性拒绝。已针对 batch 与 `csh` 加入正反例；后续仍需复验原生命令、其他 UI、MT 输出与跨平台生命周期。M0 未完成。
+
+2026-10-19 M0 几何生命周期补充：真实 batch 反例证实 Geant4 初始化后修改 GeometryManager 仍可能完成 `beamOn` 并误导摘要；当前将几何修改及 app overlap 修改限定 `PreInit`，真实 batch 与 `csh` 专项覆盖已识别状态拒绝及失败传播。后续应独立设计、实现和验证可安全运行的几何重建（包括敏感探测器、region 与偏置 operator 生命周期），在完成前建议每次几何变更使用新进程。M0 仍未验收。
+
+基线日期：2026-07-11。本文依据当前 src/、include/、main.cc、gui/ 和可运行测试整理。功能当前状态以功能支持矩阵为准；本文是开发顺序和完成门槛，不是对未来功能的承诺。
+
+## 1. 项目目标
+
+把 G4UniversalSim 建成一个配置驱动、可复现、可验证的 Geant4 桌面工作台：同一份有效配置可以由 CLI、macro 和 PySide6 GUI 运行，后端行为、输出契约、GUI 显示和中文文档保持一致。
+
+长期目标不等于覆盖 Geant4 全部接口。每个公开能力都必须有清楚的输入契约、运行时语义、输出契约和验证证据。
+
+2026-10-19 M0 继续推进：交互 `csh` 已从固定错误文本升级为审计每次直接 `ApplyCommand()` 返回码；新增原先漏判的候选参数拒绝 500 反例，摘要诊断做单行归一化。后续增量已使脚本化 `csh` 在已识别失败后停止读取后续命令，真实 Geant4 哨兵与先失败再运行反例通过；非 csh UI、动态嵌套命令及未明确报告的内核失败仍待验证，M0 不改验收状态。
+
+2026-10-19 源应用专项：单线程 Geant4 双 run 已用实际主粒子 hit 验证宏命令将 SourceManager 从 `e-`/1 MeV 切换到 `proton`/3 MeV，详见 `docs/archive/M0-接续检查点.md`。仅覆盖受控点源/单能配置，不改变全模块 EffectiveConfig 与原生 GPS 未验收的判断。
+
+## 2. 早期基线（历史记录，非当前支持清单）
+
+- 已有 C++17 后端、INI 配置、Geant4 macro、多个几何模板、材料构建、GPS 源、参考/手动物理列表、敏感探测器、hit 与 event edep 输出、Edep 计分和 process-level 截面 biasing。
+- 已有 PySide6 外部运行器、项目 JSON、运行包生成、材料/几何/源/物理/计分编辑器、输出查看和多线程文件合并工具。
+- M0-1/M0-1b 已为 `output`、`threads`、`seed`、`check_overlaps`、`run_name` 和 `macro` 等启动字段建立 `SimulationCommandLineOverrides` 过渡层，闭合最终上下文驱动的启动流程，并对静态 macro 做递归 preflight；实际优先级为“默认值 < 主配置文件 < macro 运行时命令 < 显式 CLI 参数”。当前仅有部分字段来源追踪，不具备完整 EffectiveConfig。
+- placement = assembly、GDML、材料温压（replica/parameterised 自路线图 A5 起为实验性支持）、Physics region cuts 和 LET 开启仍由 M0-3A fail-fast 拒绝；Dose 和 Track-Length Fluence 限于已配置敏感体的实验性体积聚合，Fluence 还要求 daughter-free solid。
+- GUI 当前只生成后端已验证的子集，部分控件是预览或编辑器模型字段；2026-10-03 工作区已有集中式双语和主题实现，但尚未提交，完整 QTranslator、人工视觉及可访问性验证仍未闭合。
+
+2026-10-03 执行位置：HEAD `018345c` 已包含 B2B2；GUI 展示整理已通过候选复审，C0A 工作区已补充启动边界并用真实 QProcess 完成 3/3 事件。后续仍按“GUI 独立提交 → C0A 独立提交 → C0B/C4 → D/E → B3 → M0-4/5 → M1 → M2 → M3 → M4 → M5”推进，具体队列见 `docs/archive/持续开发执行规划.md`。提交前独立核对未跟踪 GUI 输出源码和测试 fixture，不能用本机测试替代全新检出验证。
+
+目标澄清：当前必须先完成 M0 并通过阶段验收。C0B 原先的 `--inspect-macro` 只读接口仍保留，仅提供 macro 静态计划。
+
+C0B 后续工作区已增加 `--inspect-run` 联合查询及 GUI 外部 Run 的自动预检门槛：覆盖 config-only、macro-only、CLI 覆盖、来源行号和递归命令，未执行 Geant4 run。当前可窄复审；全模块 EffectiveConfig 仍待闭合，C4 有未提交工作区候选。M0-1/M0-2 回归脚本改用临时工作区，防止失败摘要或随机引擎文件污染仓库示例。
+
+C4 工作区候选现已让 Runner、运行页和历史页共用摘要事实判定：退出码 0 且没有新摘要或实际 run 不再视为模拟成功；逐 run 核对计划和完成事件，并拒绝各轮不一致但合计相等的摘要；dry-run、交互无 run、正常结束无 run、失败、用户终止和未证实分别呈现。反例 smoke 与 GUI 真实 3/3 事件 smoke 已通过；这尚非提交基线，也不替代完整 M0 验收。
+
+M0-3D 工作区部分进度：复杂示例冷却管已调整为位于母体内，四种示例颜色已有明确后端 RGB，新增无可视化批处理入口，真实后端完成 3/3 事件且 overlap 检查无报警；回归还验证旧坐标会被 overlap 检测识别。B3 工作区现已让 GUI 默认复杂源无 blocker，并证明生成包 3/3 事件。旧 `test/main_hierarchical.ini` 的无效体积和 legacy 粒子/process 交叉组合已改为两条显式规则；与 batch macro 运行 3/3、与完整 macro 运行 100/100，两个 wrapped process 匹配。实际偏置发生与物理等价性仍未验证，不提升 E/M2 支持等级。
+
+M0-3E 工作区候选已修正 macro biasing 配置未进入实际物理列表的生命周期问题，并在初始化后、事件前对实际 wrapped process 做 fail-fast。专项真实运行覆盖有效和无效目标、MT、多次 run、隐式初始化、physicsModified 后重新初始化及日志去重；摘要明示“规则已配置、operator 已挂接、process 已匹配、实际效果未知”。GUI generated 不再允许只开启无规则的 hook。biasing 挂接后几何重建现先明确拒绝以免访问违例；`--ui` 与启用 biasing 的配置或修改 biasing 的 macro 也会在会话前失败。实际 UI 命令、几何重建安全实现和偏置效果仍未完整验收，物理结果验证仍属 M2。
+
+## 3. 开发阶段
+
+### 阶段一：配置和生命周期契约
+
+目标是让“最终到底运行了什么”可检查、可复现。
+
+- 引入统一的有效配置模型，记录默认值、Profile、主 INI、CLI 和 macro 的来源以及最终值。
+- M0-1/M0-1b 已完成当前启动字段的覆盖优先级、启动流程、共享规范化 macro 解析/执行和静态 preflight 回归；后续仍需把 `SimulationCommandLineOverrides` 迁移为可记录来源的完整 EffectiveConfig，同时处理未知字段、schema_version、默认值和向后兼容。
+- 2026-10-19 扩大有效配置来源子集：六个启动字段之外新增几何模板、几何配置路径和世界默认材料来源；成功 batch macro 才更新来源，并记录当前世界默认材料 Manager 值。仅对应配置来源和 Manager 状态，Geant4 实际应用仍未知。
+- 同日后续为 SourceManager 粒子增加来源：主 INI 显式粒子优先于 preset、成功的源粒子/预设/reset 批处理命令更新来源；原生 GPS 命令不在覆盖范围内。
+- 2026-10-19 源单能量来源补充：主 INI 非空 `energy` 覆盖 preset 能量，已识别成功 batch `/AIHL/source/energy|preset|reset` 更新来源；`effective_source_energy_MeV` 仅记录最终 SourceManager 单能值，0 表示未设置。对应 `startup_geometry_and_source_particle_energy` 覆盖枚举是旧粒子枚举的增量，尚未审计 `/gps/*` 以及实际初级粒子采样。
+- 2026-10-19 物理 reference 来源补充：`[physics]/reference` 及 reference 模式下非空 `[physics]/em` 记录最终物理列表名称来源；仅对成功 batch `/AIHL/physics/setReferenceList|setBaseReferenceList|clearReferenceList` 和 reference 模式的 `setEM` 更新来源。`effective_physics_reference` 为 PhysicsManager 当前名称；`startup_geometry_source_and_physics_reference` 是新的子集覆盖枚举，历史值继续兼容。尚不证明 Geant4 内核所用物理列表、偏置效果或全模块 EffectiveConfig。
+- 2026-10-16 工作区新增最终 Manager 状态子集快照及材料加载来源清单：材料文件多次加载或通过 macro 编辑材料时不再把初始主配置路径写作唯一有效来源；初始化后批处理材料修改现提前拒绝。真实摘要回归只覆盖这些可观察事实，全模块来源追踪、交互生命周期和配置应用状态仍未完成。
+- 2026-10-17 工作区补充输出路径修改的状态原子性：`OutputManager::SetOutputDir()` 失败不再提前修改 `SimulationManager` 的最终输出路径与来源；批处理输出 Messenger 即使被 Geant4 转换为 warning，也由独立错误记录阻止后续 macro 执行。两个测试专用异常注入模式已在真实后端摘要专项回归中通过，尚缺交互式命令和实际存储故障覆盖；此项仍属 M0 工作区候选。
+- 2026-10-18 接续阶段：新增 `--ui --ui-session csh` 的真实命令行交互回归；会话结束后检查材料和输出 Messenger 失败，并写入交互失败类别/消息、非零退出和失败摘要。无 macro 的交互失败保留 `macro_execution_status=not_run`。2026-10-19 补充识别 `/run/beamOn wrong` 参数类型拒绝、`/run/beamOn -1` 和 `/run/verbose -1` 参数越界，以及 PreInit `/run/abort` 的非法状态拒绝，阻止退出码 0 的 `interactive_no_run` 误报；该识别仍基于明确诊断文本，逐条即时中止、其他交互命令、完整生命周期和真实设备故障仍未闭合。
+- 2026-10-19 M0-4 接续：交互 `/run/beamOn` 的已知 CSV 目标目录冲突现于 master/sequential `BeginOfRunAction` 前置拦截，失败来源 `run_begin_validate_targets`；真实 Geant4 单/双线程首轮和第二轮反例通过，第二轮失败保留第一轮 CSV。最新 33 项严格统一测试通过（证据见 `docs/测试平台说明.md`），仅提升这一运行路径的验证覆盖，M0-4 及 M0 整体仍为部分支持。
+- 2026-10-19 M0-4 输出生命周期：真实后端确认第一轮与第二轮 worker CSV 留在原目录，初始化后 `/AIHL/output/setDir` 却能把最终摘要移到新目录并以退出码 0 结束。现将 `/AIHL/output/setDir`、`setThreadSuffix` 及 `/AIHL/app/setOutputDir` 限定于 Geant4 `PreInit`，并为 SimulationManager setter 增加运行时守卫。6 组真实 Geant4 反例在初始化后或完成一轮后拒绝变更，保留已完成文件和来源，输出失败摘要、非零退出。完整 M0 仍未验收。
+- 2026-10-19 交互物理生命周期守卫：在 Geant4 物理列表已注册后，交互 `/AIHL/physics/*` 修改不能可靠重绑物理列表，现显式拒绝并记载 `physics` 失败类别；只读 print/list 查询继续可用。真实 `csh` 拒绝和成功查询专项通过，完整统一回归见 `docs/测试平台说明.md`；batch 初始化前的物理修改仍有效。Geant4 原生命令逐条返回码、交互几何重建及物理核实际状态仍待核验，M0 未完成。
+- 2026-10-19 宏转交交互初始化补充：修复 batch 物理修改结束后 `physicsListDirty` 在进入 UI 前遗失的问题；在 SessionStart 前重注册物理列表。batch 对 `listAvailableReferences` 与 `listAvailableEMReferences` 改为只读判定，初始化后仍可查询。已增加真实交接与两事件回归，完整物理效果、UI 内核状态和剩余 M0 验收仍待核验。
+- M0-2 已完成最终生命周期摘要：记录状态、每次 run、计划/完成事件、实际线程、seed 修改、最终输出目录、生成文件和失败命令位置。M0-3 审计配置被接受但运行时无效的入口；M0-4 工作区已修正 CSV/直方图合并，按 run 分文件并将当前已验证的能量/长度列升级为带单位的 CSV v3 表头，移除 hits 中未计算的 LET 占位列；真实单线程/双线程多 run 测试通过。通用直方图单位、完整逐文件数据契约与故障注入仍待完成。M0-5 已有分层测试、构建身份及无 Geant4 CI workflow；2026-10-17 Windows 干净检出复现已通过，2026-10-19 新增的交互测试源码亦已入 Git 并通过严格源码追踪。CI 尚未实际运行，仍需跨平台构建和多线程验证。
+- M0-3A 已完成第一阶段 fail-fast 防护：对尚未完整支持的 placement、GDML、材料温压、Physics region cuts 和 LET/Dose/Fluence 开启统一拒绝，并同步 GUI validator 与中文文档；本阶段不实现新的 Geant4 功能。
+- M0-3B1 已完成主配置字段消费追踪和未消费字段 warning：warning 按文件、行号稳定排序，写入控制台和 `run_summary.txt`；材料文件与几何文件的独立解析器留给 M0-3B2。
+- M0-3B2A 已完成材料独立配置文件闭合 schema：未知 section/key、隐式 `global` 字段和空动态后缀在 Geant4 初始化前失败；temperature/pressure 继续使用 M0-3A 专用拒绝路径；旧 GUI run package 的 `[material.<name>] type = material` 作为已弃用输入保持兼容，新 writer 不再生成。
+- M0-3B2B1 已完成几何安全闭环：production cut 与 region 依赖、固定模板 box 限制、hierarchical/boolean 逐 shape 参数、`copyNo` 和 placement 均在首个 geometry object 创建前校验；GUI 对无法无损保存的字段阻断 editable writer/package，并提供明确的原始文件复制模式。
+- M0-3B2B2 已完成几何来源诊断与兼容 warning：保留原始 section/key/value 来源，统一输出未知 section、未消费字段、legacy metadata 和 boolean ignored key，并分开记录主配置与几何配置 warning 计数。严格 `version=2`、自动 metadata 迁移和完整无损 round-trip 留给 M0-3B3。
+- M0-3B3 工作区已闭合 hierarchical 普通体积的已知 `vis.*`/`cut.*` 与 `trd` 五参数往返：GUI 保留原值和项目快照，`trd` 可在表格编辑，默认复杂源生成后再读取体积语义一致；源文件、生成文件及 GUI package 各自通过真实后端 3/3 事件。后端现有显式 `[global] version = 2` 严格诊断候选，五模板干净文件和错误字段前置拒绝已通过专项；GUI 可在当前可编辑子集保留并写回该标记，严格源/生成文件分别完成真实后端 2/2 事件。自动迁移、布尔工具扩展和完整 schema/诊断去重仍未完成。
+- 增加只校验、不运行的入口，以及运行前计划和有效配置导出；输出中应包含实际启用/关闭的模块和依赖。
+- 把配置校验从“各模块分别读取后才失败”提升为可组合的前置校验，但不能用 GUI 校验替代后端校验。
+
+完成门槛：同一配置在 CLI、macro 和 GUI 生成包中的最终值可追踪；覆盖优先级有测试；错误包含文件、section、key 和依赖上下文。
+
+### 阶段二：补齐后端已声明但未闭合的能力
+
+先修复会让用户误以为功能已生效的灰色状态：
+
+- 实现或明确拒绝 replica、parameterised、assembly，不能继续只解析 placement 类型。
+- 统一 geometry region cuts 与 [physics.region.*] 的语义，确保保存的 region cut 真正应用到对应 G4Region。
+- 让材料 temperature、pressure 要么进入 G4Material 构造/状态语义，要么在解析时明确拒绝；不能只保存字符串。
+- 固化 sensitive、bias、copy number、可视化属性和几何重建的生命周期测试。
+- 完善输出列单位、量纲和版本化契约，避免同一列名在不同输出路径表示不同物理量。
+
+完成门槛：每个字段都有“解析—校验—运行—输出/日志—测试”证据；没有仅因字段存在而标记为支持的能力。
+
+### 阶段三：完成可发表的计分链路
+
+- 先定义 LET 的物理量、步长/材料/密度依赖、权重处理、单位和统计方式，再实现 hit 到 LET 的计算链路。
+- 使用明确的体积质量或材料几何契约实现 dose；定义零质量、复合材料和权重结果的处理。
+- 定义 fluence 的面/体积/track-length 语义，优先评估 Geant4 原生 primitive scorer 或 G4MultiFunctionalDetector，避免另造无契约的统计器。
+- 为 analog 与 biased 运行建立同一场景、固定随机种子、误差和收敛比较；process-level biasing 的现有 smoke 只能证明挂接，不代表物理结果已验证。
+
+完成门槛：scorer 不再是空实现；每个量有单位、参考结果或基准场景、单线程/多线程行为和输出 schema；GUI 只在这些条件满足后开放开关。
+
+### 阶段四：几何能力和 GUI 能力对齐
+
+- 建立后端能力清单/版本化 schema，GUI 由能力清单生成或校验控件，而不是维护独立白名单。
+- 完成通用几何编辑器的 round-trip：读取后端支持的字段、编辑、写出、再次读取，未知字段不静默丢失。
+- 对复杂实体、GDML、CAD/STL 和高级 GPS 采用“后端先行、GUI 后开”的顺序；预览几何必须显示近似和不可用状态。
+- GUI中文、主题和可调整工作区归J1：先改善区域区分、视觉层次、配色、间距和信息密度，主题/布局稳定后统一易懂中文；F8做跨页DPI、键盘和可访问性验收。设计可在K1期间先行，实施须服务/状态所有权稳定，可与I2独占文件并行；主题与翻译继续集中维护。
+
+完成门槛：GUI 生成包可被后端独立运行；后端报错能回指 GUI 字段；源配置不被覆盖；所有可编辑字段都有校验和测试。
+
+### 阶段五：测试、发布和兼容性
+
+- 工作区已将现有 C++ smoke、GUI smoke、输出合并测试接入分层 `scripts/run_m0_tests.py` 与 CTest，并对当前源码和后端可执行文件做指纹比对；仍需干净检出、Windows/Linux、依赖版本矩阵及持续集成，见 `docs/测试平台说明.md`。
+- 建立单线程/多线程、Windows/Linux、可选 MicroElec/3D 依赖和 Geant4 工具链的兼容矩阵。
+- 为配置 schema、输出 CSV、run summary、项目 JSON 和生成包建立版本迁移策略。
+- 发布前只把通过后端运行测试、配置校验、GUI 生成、输出检查和中文文档审查的能力标为完整支持。
+
+## 4. 暂不提前开放的方向
+
+高级 GPS 分布、GDML/CAD 导入、光学材料与 digitization、重要性偏置/权重窗口/分裂/俄罗斯轮盘、参数扫描和结果数据库，都必须等到各自的数据契约、后端实现和基准测试齐备后再进入 GUI。仅增加枚举、表单或预览不能改变支持等级。
+
+## 5. 每个开发任务的完成清单
+
+- 后端配置解析和默认值已核对。
+- 校验、依赖和错误路径已覆盖。
+- 运行时对象和生命周期已验证。
+- GUI 只展示并生成后端已实现的子集。
+- 相关测试已运行，未运行部分已记录。
+- M0-1/M0-1b 的配置优先级测试入口为 `python scripts/test_config_precedence.py`；涉及后端改动时还要运行构建、`--help`、配置 dry-run、macro preflight 和真实后端 smoke。
+- docs/功能支持矩阵.md、相关中文手册和 AGENTS.md 已同步。
+- git diff 未包含无关代码或覆盖工作区已有改动。
+
+
+### 2026-10-29：有效配置审查（2C 开发中）
+
+新增配置阶段 Manager 子集导出与只读查看器，完整消费者、运行应用证据与模块三态仍未交付；不提升现有功能支持等级。契约见 [有效配置快照](EffectiveConfig.md)。

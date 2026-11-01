@@ -1,0 +1,154 @@
+{
+  "status": "offline_prepared_not_candidate_acceptance",
+  "baseline_count": 18,
+  "baselines": [
+    {
+      "id": "windows113-static",
+      "profile": "static",
+      "report_sha256": "5b72c84e71c6e1b096ad81566c0adb5d7809fd590506dc9f37559ea8b3526c99",
+      "cases": 44,
+      "assertions": 3964
+    },
+    {
+      "id": "windows113-gui",
+      "profile": "gui",
+      "report_sha256": "178d2a42b041fe1ed6018d79d6b7b27a72c73cdc348d7204c20dc2b26d5a1e6c",
+      "cases": 59,
+      "assertions": 6760
+    },
+    {
+      "id": "windows113-backend",
+      "profile": "backend",
+      "report_sha256": "2735fc3250511af3ac8db604f5a33ddba848676496a3027c05ece520a5d93536",
+      "cases": 61,
+      "assertions": 76814
+    },
+    {
+      "id": "windows113-integration",
+      "profile": "integration",
+      "report_sha256": "193f85ac437775d8c84bd5173d97eea5973c35a70ec12799ca44e498558113de",
+      "cases": 29,
+      "assertions": 6054
+    },
+    {
+      "id": "windows114-backend",
+      "profile": "backend",
+      "report_sha256": "c0de0742a3ec2b2cdafbaf7b0d79cf58e489737a3479001c621b76f4607426df",
+      "cases": 61,
+      "assertions": 67321
+    },
+    {
+      "id": "windows114-integration",
+      "profile": "integration",
+      "report_sha256": "2b6031df0b82040afc5d0b050c4dd62cf2744e18f2cb0a7dc6dc5fb9c49e1a47",
+      "cases": 29,
+      "assertions": 6045
+    },
+    {
+      "id": "linux-m0-6310969-static",
+      "profile": "static",
+      "report_sha256": "665b8bdaab8eb061a751d82690bbe0a3a4d64b1875b9fbfba1c78d86c6ab5a15",
+      "cases": 44,
+      "assertions": 3966
+    },
+    {
+      "id": "linux-m0-6310969-gui",
+      "profile": "gui",
+      "report_sha256": "485ab4beadc3f7dedb4ab8f430e12e6371d2312f2ed262f48792da52e82a1827",
+      "cases": 59,
+      "assertions": 6739
+    },
+    {
+      "id": "windows-m0-6310969-static",
+      "profile": "static",
+      "report_sha256": "7df971949de5806c10127bc50db3abf9be0c89eb21a5b6b257c1e3911f74c857",
+      "cases": 44,
+      "assertions": 3959
+    },
+    {
+      "id": "windows-m0-6310969-gui",
+      "profile": "gui",
+      "report_sha256": "59dbd5060da518458185c2d323518ea01ab3b98644e5637e56b095f1c1de2e9e",
+      "cases": 59,
+      "assertions": 6739
+    },
+    {
+      "id": "linux113-backend",
+      "profile": "backend",
+      "report_sha256": "4115a80ed9994870fc1e52e21b570cf2e4db749765806bc9939aea2677456382",
+      "cases": 61,
+      "assertions": 76820
+    },
+    {
+      "id": "linux113-gui",
+      "profile": "gui",
+      "report_sha256": "fdf42185f92f698ce714254552509b2b3f1e43848d5545efd786c9e7f9821f11",
+      "cases": 59,
+      "assertions": 6739
+    },
+    {
+      "id": "linux113-integration",
+      "profile": "integration",
+      "report_sha256": "218dccca25449f764fc236da45e7dd1f3cd7064acffe39f132245a0d0c3ba5ed",
+      "cases": 29,
+      "assertions": 6035
+    },
+    {
+      "id": "linux113-static",
+      "profile": "static",
+      "report_sha256": "2afda74e1ac4d633e1629fdd4f07f7ba9769e8b600f6ae4dcf144b366288c0e5",
+      "cases": 44,
+      "assertions": 3966
+    },
+    {
+      "id": "linux114-backend",
+      "profile": "backend",
+      "report_sha256": "9821147d634e0bd5b0fd8878c1a55c45b59399c399dfea723893f720473b5e64",
+      "cases": 61,
+      "assertions": 67674
+    },
+    {
+      "id": "linux114-gui",
+      "profile": "gui",
+      "report_sha256": "91d55d0745de3c56bdb7fae632ae13a11c984fdd013ea079ca9d0544ed921caa",
+      "cases": 59,
+      "assertions": 6739
+    },
+    {
+      "id": "linux114-integration",
+      "profile": "integration",
+      "report_sha256": "9d7c3bc095f356de17a57fbe2e487f22491beb6b9b81b5fd71fa2b92012127a0",
+      "cases": 29,
+      "assertions": 6035
+    },
+    {
+      "id": "linux114-static",
+      "profile": "static",
+      "report_sha256": "61b64854609752c8e58892179276eac5ca88b6eff4f29d09b0ebeaf86d614806",
+      "cases": 44,
+      "assertions": 3966
+    }
+  ],
+  "workflows": {
+    "m0-static-gui.yml": [
+      "m0-report-ubuntu-latest",
+      "m0-report-windows-latest"
+    ],
+    "linux-geant4.yml": [
+      "linux-evidence-11.3.2",
+      "linux-evidence-11.4.3"
+    ],
+    "full-installation.yml": [
+      "full-installation-Linux",
+      "full-installation-Windows"
+    ],
+    "desktop-package.yml": [
+      "frozen-desktop-Linux",
+      "frozen-desktop-Windows"
+    ]
+  },
+  "repository": "doorfordoor/G4UniversalSim",
+  "remote_requests": 0,
+  "archive_route": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\i2-j1-final-20261101\\automated-delivery\\verify_archive.py",
+  "note": "Metadata/report bytes checked; raw log strict replay runs when each matching baseline is materialized"
+}

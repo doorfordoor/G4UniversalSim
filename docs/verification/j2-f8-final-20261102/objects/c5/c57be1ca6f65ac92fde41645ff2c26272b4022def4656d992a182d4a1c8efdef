@@ -1,0 +1,943 @@
+{
+  "action": "export",
+  "bundle": {
+    "manifest": {
+      "history_trust": "stale_requires_revalidation",
+      "integrity": "sha256_not_signature",
+      "members": [
+        {
+          "bytes": 1284,
+          "captured_text": false,
+          "distribution": "unknown",
+          "path": "resources/r0000-main.ini",
+          "redistribution_override": false,
+          "role": "main",
+          "sha256": "c6ea69d9d32c1aa66946462aec5fb1610030bd3bba0c86f4f242d9e683500c53",
+          "source_sha256": "d1ae21dd57515dd2b349aa69109c71bd6a44e36794d25f116ef758b687a4bfdf"
+        },
+        {
+          "bytes": 77,
+          "captured_text": false,
+          "distribution": "unknown",
+          "path": "resources/r0001-material.ini",
+          "redistribution_override": false,
+          "role": "materials",
+          "sha256": "1f1d80c69daa3a2a0a0dc8b7f25631c3059cbf644d978704af9fa1eee6cb6a02",
+          "source_sha256": "1f1d80c69daa3a2a0a0dc8b7f25631c3059cbf644d978704af9fa1eee6cb6a02"
+        },
+        {
+          "bytes": 500,
+          "captured_text": false,
+          "distribution": "unknown",
+          "path": "resources/r0002-geometry.ini",
+          "redistribution_override": false,
+          "role": "geometry",
+          "sha256": "77fd03c325194e3cfe79e5de920a0f94e03a6c2e95b82fe79cb448e5c758cc3e",
+          "source_sha256": "77fd03c325194e3cfe79e5de920a0f94e03a6c2e95b82fe79cb448e5c758cc3e"
+        },
+        {
+          "bytes": 147,
+          "captured_text": false,
+          "distribution": "unknown",
+          "path": "resources/r0003-run.mac",
+          "redistribution_override": false,
+          "role": "macro",
+          "sha256": "9ad9383d5c386bd45621c1f1b1bf113c8c475c55aca2197cef6f844e7f2cdd02",
+          "source_sha256": "9ad9383d5c386bd45621c1f1b1bf113c8c475c55aca2197cef6f844e7f2cdd02"
+        },
+        {
+          "bytes": 11777,
+          "path": "workspace.json",
+          "role": "snapshot",
+          "sha256": "807198274402de3bb91d174ddda3000e09735bd4e64ab521031802fac7bcede3"
+        },
+        {
+          "bytes": 32906,
+          "path": "validation_records.json",
+          "role": "validation_history",
+          "sha256": "0378ed4c650f29233c43bd5bf68e7035f4e8597ba70b3af450c195b54281fac3"
+        },
+        {
+          "bytes": 329,
+          "path": "replay.py",
+          "role": "replay_entry",
+          "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+        }
+      ],
+      "outputs_included": false,
+      "replay_entry": "replay.py",
+      "replay_inputs": {
+        "config": "resources/r0000-main.ini",
+        "macro": "resources/r0003-run.mac",
+        "working_directory": "."
+      },
+      "replay_verified": false,
+      "schema": "g4usim_experiment_bundle",
+      "snapshot": "workspace.json",
+      "validation_history": "validation_records.json",
+      "version": 1
+    },
+    "manifest_sha256": "30b0abb6665991f844b830cdb2d9d65d866b3b025ffd9978450a08e7128279e0",
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-e2e-integration\\boolean114-final\\export\\portable",
+    "replay_inputs": {
+      "config": "resources/r0000-main.ini",
+      "macro": "resources/r0003-run.mac",
+      "working_directory": "."
+    },
+    "replay_verified": false,
+    "validation_records": [
+      {
+        "record": {
+          "action": "validate",
+          "actual_inputs": [
+            {
+              "capture_method": "binary_buffer",
+              "kind": "main_ini",
+              "role": "configuration_parse",
+              "sequence": 1,
+              "sha256": "ddbae92fdb5399c66e933ed28d99c2c981b8c6da53f065f2295e0a89002c54aa",
+              "size_bytes": 937,
+              "status": "recorded"
+            },
+            {
+              "capture_method": "binary_buffer",
+              "kind": "material_ini",
+              "role": "material_parse",
+              "sequence": 2,
+              "sha256": "1f1d80c69daa3a2a0a0dc8b7f25631c3059cbf644d978704af9fa1eee6cb6a02",
+              "size_bytes": 77,
+              "status": "recorded"
+            },
+            {
+              "capture_method": "binary_buffer",
+              "kind": "geometry_ini",
+              "role": "geometry_parse",
+              "sequence": 3,
+              "sha256": "6749b52bf23fde2e47cad8322cb6a50f6d85bf078bc1c89b065067579400dfb7",
+              "size_bytes": 237,
+              "status": "recorded"
+            },
+            {
+              "capture_method": "binary_buffer",
+              "kind": "macro",
+              "role": "recursive_preflight",
+              "sequence": 4,
+              "sha256": "b8f709c884e67ca06f7d5364748a74ed54b75ab3da6908488ef58479d129d4ad",
+              "size_bytes": 324,
+              "status": "recorded"
+            }
+          ],
+          "build": {
+            "compiler_id": "MSVC",
+            "compiler_version": "19.51.36246.0",
+            "configuration": "Release",
+            "geant4_version": "$Name: geant4-11-04-patch-03 [MT]$",
+            "git_commit": "fc606739b9bb5b381b87d5ffd2870844c10afee2",
+            "git_source_state": "dirty",
+            "git_state_scope": "cpp_build_inputs",
+            "source_fingerprint": "88c32e8c7ae6052083f975b710d91625e0bf9ed5239f86d6624b961cf3f42488"
+          },
+          "created_at": "2026-11-01T16:46:22.896459+00:00",
+          "execution_id": "e736b9949b32f0a107d5bb14f78d6951",
+          "exit_code": 0,
+          "finished_at": "2026-11-01T16:46:27.267520+00:00",
+          "geometry_check": "executed_no_reported_overlap",
+          "history_trust": "historical_requires_local_revalidation",
+          "identity": {
+            "backend": {
+              "sha256": "eafe9aa121bbbf4d737a611ae1c57f4ca63804a387727874d20e35cd196aa82e",
+              "size_bytes": 2432000,
+              "status": "recorded"
+            },
+            "configuration_fingerprint": "9a0d34e251291586e0bc28f84c311428defa7a204d9a808263b205e085ecd07e",
+            "coverage": "closed_resource_tree",
+            "environment": {
+              "architecture": {
+                "bits": 64,
+                "format": "PE",
+                "machine": "x86_64"
+              },
+              "binary": {
+                "sha256": "eafe9aa121bbbf4d737a611ae1c57f4ca63804a387727874d20e35cd196aa82e",
+                "stable": true
+              },
+              "build": {
+                "compiler_id": "MSVC",
+                "compiler_version": "19.51.36246.0",
+                "geant4_version_number": 1143
+              },
+              "capabilities": {
+                "data": {
+                  "configuration": "Release",
+                  "geant4_version_number": 1143,
+                  "git_commit": "fc606739b9bb5b381b87d5ffd2870844c10afee2",
+                  "git_source_state": "dirty",
+                  "multithreaded": true,
+                  "schema": "G4UniversalSimCapabilities",
+                  "source_fingerprint": "88c32e8c7ae6052083f975b710d91625e0bf9ed5239f86d6624b961cf3f42488",
+                  "version": 1
+                },
+                "status": "available"
+              },
+              "coverage": "observed_selection_and_presence_not_dataset_bytes",
+              "data": {
+                "datasets": [
+                  {
+                    "env": "G4LEDATA",
+                    "folder": "G4EMLOW8.8",
+                    "found": true,
+                    "required": true,
+                    "selected_path_sha256": "2513b70887f87b87d23f5f9ab62f48f0b68c305438de9f976c6711dcfa0ba4b4"
+                  },
+                  {
+                    "env": "G4LEVELGAMMADATA",
+                    "folder": "PhotonEvaporation6.1.2",
+                    "found": true,
+                    "required": true,
+                    "selected_path_sha256": "fb63dada1d16146fad62ce3bcdc45cf6a1ace775e83edd071a2ce5a652afa868"
+                  },
+                  {
+                    "env": "G4RADIOACTIVEDATA",
+                    "folder": "RadioactiveDecay6.1.2",
+                    "found": true,
+                    "required": true,
+                    "selected_path_sha256": "3f79a55471c4ff88d335261dec6d10d753bf3b2238519f41bb301723e6eb4af8"
+                  },
+                  {
+                    "env": "G4PARTICLEXSDATA",
+                    "folder": "G4PARTICLEXS4.2",
+                    "found": true,
+                    "required": true,
+                    "selected_path_sha256": "188d8a6ac333b4157b0f4f146ec5dacdf2b62b01b26cb4902b0e978f59b1160f"
+                  },
+                  {
+                    "env": "G4ENSDFSTATEDATA",
+                    "folder": "G4ENSDFSTATE3.0",
+                    "found": true,
+                    "required": true,
+                    "selected_path_sha256": "1f765484ec92c6bbd9b6749293bc671082bb6cd894279a6ad87043fd80b428ed"
+                  },
+                  {
+                    "env": "G4NEUTRONHPDATA",
+                    "folder": "G4NDL4.7.1",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "3ea1389434e4e87df1b6a469b5d19f556f1d25ffed68024c0f1a91159ecaf457"
+                  },
+                  {
+                    "env": "G4PIIDATA",
+                    "folder": "G4PII1.3",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "849140f6ce1ca4dcdc973e2c519f3e90ee3de0ec627caf27995899ce546caafc"
+                  },
+                  {
+                    "env": "G4REALSURFACEDATA",
+                    "folder": "RealSurface2.2",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "5e428627fbf72e291914094bea30aa9b4dc325d7cdcb7ce2990073c8b5c1b635"
+                  },
+                  {
+                    "env": "G4SAIDXSDATA",
+                    "folder": "G4SAIDDATA2.0",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "d5c2ad5cae8a6e679aa459c6fb8a0b69e145a3e553a1750fcf98931c776fc947"
+                  },
+                  {
+                    "env": "G4ABLADATA",
+                    "folder": "G4ABLA3.3",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "3e328c162d0ca1df18861e35e723895a93ae643c60d9b44b958b40bc5c76e1b9"
+                  },
+                  {
+                    "env": "G4INCLDATA",
+                    "folder": "G4INCL1.3",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "c43d1da4aa111a26326bcbf1e5879e65f21c1d2cd85e8bc1e07df4fd4ae73b94"
+                  },
+                  {
+                    "env": "G4CHANNELINGDATA",
+                    "folder": "G4CHANNELING2.0",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "98c9ed92e3d07b74085ed4f2e18389334308dc6067affbd4e193df62894e3a77"
+                  }
+                ],
+                "required_complete": true,
+                "status": "available"
+              },
+              "dataset_content_identity": "unknown",
+              "schema": "g4usim_environment_v1",
+              "status": "ready"
+            },
+            "execution_fingerprint": "c3c8b6fbe831404a97778601609a2a951524c05a4ecdb7d6c6acdceb9f6b888b",
+            "fingerprint": "4c425654bfe11fc79fc124a5c2f7f3a7689f13de821a9ca7d2920bcacb78ad47",
+            "resource_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "resources": [],
+            "revision": 2,
+            "schema": "g4usim_experiment_identity_v1"
+          },
+          "initialization_mesh_identity": {
+            "sha256": "18f901c3d6600efa8043171974a32e72f1c9979ad91d005107626505d68bf0fc",
+            "size_bytes": 497
+          },
+          "input_coverage": "project_readers_observed",
+          "input_exclusions": [
+            "Geant4 internal datasets and external physics-table reads are not byte-captured",
+            "Native command input IO outside the project readers is not comprehensively observed; known references are marked unobserved"
+          ],
+          "input_locations": "historical_locations_omitted_not_rebound",
+          "level": "initialization",
+          "metadata_sha256": "5088d86759852fbcc1ec2599ea74006c67b1bc56290ae6f68b63514474ac21f1",
+          "observed_run_name": "new_simulation",
+          "random_origin_locations": "omitted_paths_hashed_as_text_not_file_bytes",
+          "random_settings": {
+            "configured_seed": "12345",
+            "effective_configured_seed": "12345",
+            "effective_seed_origin_file": "not_applicable",
+            "effective_seed_origin_key": "not_applicable",
+            "effective_seed_origin_kind": "cli",
+            "effective_seed_origin_line": "0",
+            "effective_seed_origin_section": "not_applicable",
+            "initial_engine_seed": "unknown",
+            "initial_seed": "12345",
+            "macro_seed_modified": "false",
+            "planned_seed": "12345",
+            "seed": "12345"
+          },
+          "reason": "experiment.initialization_evidence_confirmed",
+          "record_id": "024bd911619642e4925a057a5ca3c11d",
+          "requested_run_name": "new_simulation",
+          "result": {
+            "completed_events": 0,
+            "planned_events": 0,
+            "reason": "Process completed but no Geant4 run occurred.",
+            "run_count": 0,
+            "state": "no_run",
+            "summary_status": "completed"
+          },
+          "revision": 2,
+          "run_id": "024bd911619642e4925a057a5ca3c11d",
+          "schema": "g4usim_experiment_record_v1",
+          "session_id": "df5ae7c2d63a46509a7f6ce32d5c5d3e",
+          "stale": true,
+          "status": "passed"
+        },
+        "stale": true,
+        "stale_reason": "bundle_loaded_requires_revalidation"
+      },
+      {
+        "record": {
+          "action": "apply",
+          "created_at": "2026-11-01T16:46:27.568304+00:00",
+          "finished_at": "2026-11-01T16:46:27.962327+00:00",
+          "history_trust": "historical_requires_local_revalidation",
+          "identity": {
+            "backend": {
+              "sha256": "eafe9aa121bbbf4d737a611ae1c57f4ca63804a387727874d20e35cd196aa82e",
+              "size_bytes": 2432000,
+              "status": "recorded"
+            },
+            "configuration_fingerprint": "cf6dbf4784d57b2f6ba1292c8d21abc0c7ac542255a38fedafc388bb541f707b",
+            "coverage": "closed_resource_tree",
+            "environment": {
+              "status": "unknown"
+            },
+            "execution_fingerprint": "4f9e41102ccd9d9c42e587f6daae7dc8da8c558b30ba5ea319f820c246d99172",
+            "fingerprint": "d5d7507327d58174564483b6615581434f91180c9fce4e581bd70418bc3e6560",
+            "resource_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "resources": [],
+            "revision": 3,
+            "schema": "g4usim_experiment_identity_v1"
+          },
+          "level": "fields",
+          "reason": "experiment.configuration_applied",
+          "record_id": "800fda78bac14a4f949822bc0e9b23e4",
+          "revision": 3,
+          "run_id": "800fda78bac14a4f949822bc0e9b23e4",
+          "schema": "g4usim_experiment_record_v1",
+          "session_id": "df5ae7c2d63a46509a7f6ce32d5c5d3e",
+          "stale": true,
+          "status": "passed"
+        },
+        "stale": true,
+        "stale_reason": "bundle_loaded_requires_revalidation"
+      },
+      {
+        "record": {
+          "action": "validate",
+          "created_at": "2026-11-01T16:46:28.482230+00:00",
+          "finished_at": "2026-11-01T16:46:28.707751+00:00",
+          "history_trust": "historical_requires_local_revalidation",
+          "identity": {
+            "backend": {
+              "sha256": "eafe9aa121bbbf4d737a611ae1c57f4ca63804a387727874d20e35cd196aa82e",
+              "size_bytes": 2432000,
+              "status": "recorded"
+            },
+            "configuration_fingerprint": "41b041aa57ddad3df4fa26950189d47e65349842aa5556642ca735c96e629b25",
+            "coverage": "closed_resource_tree",
+            "environment": {
+              "status": "not_probed"
+            },
+            "execution_fingerprint": "6ea815292c3e2ceeaf6c4c72df565f78973b6fbf6b41d618266428bcee7c5765",
+            "fingerprint": "f6e31a0f44e6a0a735c12f3c90350ca558749eaf376dafd6ea858dfe8cae401e",
+            "resource_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "resources": [],
+            "revision": 4,
+            "schema": "g4usim_experiment_identity_v1"
+          },
+          "level": "fields",
+          "reason": "experiment.fields_completed",
+          "record_id": "c0970dc808b84a98b980d866b0e03ec5",
+          "revision": 4,
+          "run_id": "c0970dc808b84a98b980d866b0e03ec5",
+          "schema": "g4usim_experiment_record_v1",
+          "session_id": "df5ae7c2d63a46509a7f6ce32d5c5d3e",
+          "stale": true,
+          "status": "passed"
+        },
+        "stale": true,
+        "stale_reason": "bundle_loaded_requires_revalidation"
+      },
+      {
+        "record": {
+          "action": "generate",
+          "created_at": "2026-11-01T16:46:29.074049+00:00",
+          "finished_at": "2026-11-01T16:46:30.464075+00:00",
+          "history_trust": "historical_requires_local_revalidation",
+          "identity": {
+            "backend": {
+              "sha256": "eafe9aa121bbbf4d737a611ae1c57f4ca63804a387727874d20e35cd196aa82e",
+              "size_bytes": 2432000,
+              "status": "recorded"
+            },
+            "configuration_fingerprint": "41b041aa57ddad3df4fa26950189d47e65349842aa5556642ca735c96e629b25",
+            "coverage": "closed_resource_tree",
+            "environment": {
+              "status": "not_probed"
+            },
+            "execution_fingerprint": "6ea815292c3e2ceeaf6c4c72df565f78973b6fbf6b41d618266428bcee7c5765",
+            "fingerprint": "f6e31a0f44e6a0a735c12f3c90350ca558749eaf376dafd6ea858dfe8cae401e",
+            "resource_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "resources": [],
+            "revision": 4,
+            "schema": "g4usim_experiment_identity_v1"
+          },
+          "level": "generation",
+          "reason": "experiment.generate_completed",
+          "record_id": "d796b23555164cdf8ab9579499046e5d",
+          "requested_run_name": "new_simulation",
+          "revision": 4,
+          "run_id": "d796b23555164cdf8ab9579499046e5d",
+          "schema": "g4usim_experiment_record_v1",
+          "session_id": "df5ae7c2d63a46509a7f6ce32d5c5d3e",
+          "stale": true,
+          "status": "passed"
+        },
+        "stale": true,
+        "stale_reason": "bundle_loaded_requires_revalidation"
+      },
+      {
+        "record": {
+          "action": "validate",
+          "actual_inputs": [
+            {
+              "capture_method": "binary_buffer",
+              "kind": "main_ini",
+              "role": "configuration_parse",
+              "sequence": 1,
+              "sha256": "c6ea69d9d32c1aa66946462aec5fb1610030bd3bba0c86f4f242d9e683500c53",
+              "size_bytes": 1284,
+              "status": "recorded"
+            },
+            {
+              "capture_method": "binary_buffer",
+              "kind": "material_ini",
+              "role": "material_parse",
+              "sequence": 2,
+              "sha256": "1f1d80c69daa3a2a0a0dc8b7f25631c3059cbf644d978704af9fa1eee6cb6a02",
+              "size_bytes": 77,
+              "status": "recorded"
+            },
+            {
+              "capture_method": "binary_buffer",
+              "kind": "geometry_ini",
+              "role": "geometry_parse",
+              "sequence": 3,
+              "sha256": "77fd03c325194e3cfe79e5de920a0f94e03a6c2e95b82fe79cb448e5c758cc3e",
+              "size_bytes": 500,
+              "status": "recorded"
+            },
+            {
+              "capture_method": "binary_buffer",
+              "kind": "macro",
+              "role": "recursive_preflight",
+              "sequence": 4,
+              "sha256": "57906e43b686f0ada5ce0a84db3d4f99da83ed68982b5f1afaf9a17a761fdc49",
+              "size_bytes": 324,
+              "status": "recorded"
+            }
+          ],
+          "build": {
+            "compiler_id": "MSVC",
+            "compiler_version": "19.51.36246.0",
+            "configuration": "Release",
+            "geant4_version": "$Name: geant4-11-04-patch-03 [MT]$",
+            "git_commit": "fc606739b9bb5b381b87d5ffd2870844c10afee2",
+            "git_source_state": "dirty",
+            "git_state_scope": "cpp_build_inputs",
+            "source_fingerprint": "88c32e8c7ae6052083f975b710d91625e0bf9ed5239f86d6624b961cf3f42488"
+          },
+          "created_at": "2026-11-01T16:46:30.913227+00:00",
+          "execution_id": "5dad918c5ca80e45a94b6b98cd8d6f6a",
+          "exit_code": 0,
+          "finished_at": "2026-11-01T16:46:35.461864+00:00",
+          "geometry_check": "executed_no_reported_overlap",
+          "history_trust": "historical_requires_local_revalidation",
+          "identity": {
+            "backend": {
+              "sha256": "eafe9aa121bbbf4d737a611ae1c57f4ca63804a387727874d20e35cd196aa82e",
+              "size_bytes": 2432000,
+              "status": "recorded"
+            },
+            "configuration_fingerprint": "41b041aa57ddad3df4fa26950189d47e65349842aa5556642ca735c96e629b25",
+            "coverage": "closed_resource_tree",
+            "environment": {
+              "architecture": {
+                "bits": 64,
+                "format": "PE",
+                "machine": "x86_64"
+              },
+              "binary": {
+                "sha256": "eafe9aa121bbbf4d737a611ae1c57f4ca63804a387727874d20e35cd196aa82e",
+                "stable": true
+              },
+              "build": {
+                "compiler_id": "MSVC",
+                "compiler_version": "19.51.36246.0",
+                "geant4_version_number": 1143
+              },
+              "capabilities": {
+                "data": {
+                  "configuration": "Release",
+                  "geant4_version_number": 1143,
+                  "git_commit": "fc606739b9bb5b381b87d5ffd2870844c10afee2",
+                  "git_source_state": "dirty",
+                  "multithreaded": true,
+                  "schema": "G4UniversalSimCapabilities",
+                  "source_fingerprint": "88c32e8c7ae6052083f975b710d91625e0bf9ed5239f86d6624b961cf3f42488",
+                  "version": 1
+                },
+                "status": "available"
+              },
+              "coverage": "observed_selection_and_presence_not_dataset_bytes",
+              "data": {
+                "datasets": [
+                  {
+                    "env": "G4LEDATA",
+                    "folder": "G4EMLOW8.8",
+                    "found": true,
+                    "required": true,
+                    "selected_path_sha256": "2513b70887f87b87d23f5f9ab62f48f0b68c305438de9f976c6711dcfa0ba4b4"
+                  },
+                  {
+                    "env": "G4LEVELGAMMADATA",
+                    "folder": "PhotonEvaporation6.1.2",
+                    "found": true,
+                    "required": true,
+                    "selected_path_sha256": "fb63dada1d16146fad62ce3bcdc45cf6a1ace775e83edd071a2ce5a652afa868"
+                  },
+                  {
+                    "env": "G4RADIOACTIVEDATA",
+                    "folder": "RadioactiveDecay6.1.2",
+                    "found": true,
+                    "required": true,
+                    "selected_path_sha256": "3f79a55471c4ff88d335261dec6d10d753bf3b2238519f41bb301723e6eb4af8"
+                  },
+                  {
+                    "env": "G4PARTICLEXSDATA",
+                    "folder": "G4PARTICLEXS4.2",
+                    "found": true,
+                    "required": true,
+                    "selected_path_sha256": "188d8a6ac333b4157b0f4f146ec5dacdf2b62b01b26cb4902b0e978f59b1160f"
+                  },
+                  {
+                    "env": "G4ENSDFSTATEDATA",
+                    "folder": "G4ENSDFSTATE3.0",
+                    "found": true,
+                    "required": true,
+                    "selected_path_sha256": "1f765484ec92c6bbd9b6749293bc671082bb6cd894279a6ad87043fd80b428ed"
+                  },
+                  {
+                    "env": "G4NEUTRONHPDATA",
+                    "folder": "G4NDL4.7.1",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "3ea1389434e4e87df1b6a469b5d19f556f1d25ffed68024c0f1a91159ecaf457"
+                  },
+                  {
+                    "env": "G4PIIDATA",
+                    "folder": "G4PII1.3",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "849140f6ce1ca4dcdc973e2c519f3e90ee3de0ec627caf27995899ce546caafc"
+                  },
+                  {
+                    "env": "G4REALSURFACEDATA",
+                    "folder": "RealSurface2.2",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "5e428627fbf72e291914094bea30aa9b4dc325d7cdcb7ce2990073c8b5c1b635"
+                  },
+                  {
+                    "env": "G4SAIDXSDATA",
+                    "folder": "G4SAIDDATA2.0",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "d5c2ad5cae8a6e679aa459c6fb8a0b69e145a3e553a1750fcf98931c776fc947"
+                  },
+                  {
+                    "env": "G4ABLADATA",
+                    "folder": "G4ABLA3.3",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "3e328c162d0ca1df18861e35e723895a93ae643c60d9b44b958b40bc5c76e1b9"
+                  },
+                  {
+                    "env": "G4INCLDATA",
+                    "folder": "G4INCL1.3",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "c43d1da4aa111a26326bcbf1e5879e65f21c1d2cd85e8bc1e07df4fd4ae73b94"
+                  },
+                  {
+                    "env": "G4CHANNELINGDATA",
+                    "folder": "G4CHANNELING2.0",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "98c9ed92e3d07b74085ed4f2e18389334308dc6067affbd4e193df62894e3a77"
+                  }
+                ],
+                "required_complete": true,
+                "status": "available"
+              },
+              "dataset_content_identity": "unknown",
+              "schema": "g4usim_environment_v1",
+              "status": "ready"
+            },
+            "execution_fingerprint": "14f631fed70e6afe9556c023242b43f7271b4f7513f83a58d5895981a88950e3",
+            "fingerprint": "f6e31a0f44e6a0a735c12f3c90350ca558749eaf376dafd6ea858dfe8cae401e",
+            "resource_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "resources": [],
+            "revision": 4,
+            "schema": "g4usim_experiment_identity_v1"
+          },
+          "initialization_mesh_identity": {
+            "sha256": "e463597a35b1b6804dd4d3b9fc7906aaa7873a88fc392d840c4527ce1434bf4b",
+            "size_bytes": 1235
+          },
+          "input_coverage": "project_readers_observed",
+          "input_exclusions": [
+            "Geant4 internal datasets and external physics-table reads are not byte-captured",
+            "Native command input IO outside the project readers is not comprehensively observed; known references are marked unobserved"
+          ],
+          "input_locations": "historical_locations_omitted_not_rebound",
+          "level": "initialization",
+          "metadata_sha256": "a447c5fbc133bbd9224fd8561dc88ee1528bb388efe51494d88cc2c14227e02e",
+          "observed_run_name": "new_simulation",
+          "random_origin_locations": "omitted_paths_hashed_as_text_not_file_bytes",
+          "random_settings": {
+            "configured_seed": "12345",
+            "effective_configured_seed": "12345",
+            "effective_seed_origin_file": "not_applicable",
+            "effective_seed_origin_key": "not_applicable",
+            "effective_seed_origin_kind": "cli",
+            "effective_seed_origin_line": "0",
+            "effective_seed_origin_section": "not_applicable",
+            "initial_engine_seed": "unknown",
+            "initial_seed": "12345",
+            "macro_seed_modified": "false",
+            "planned_seed": "12345",
+            "seed": "12345"
+          },
+          "reason": "experiment.initialization_evidence_confirmed",
+          "record_id": "24dd3b6802de4549891b56f36b1a0442",
+          "requested_run_name": "new_simulation",
+          "result": {
+            "completed_events": 0,
+            "planned_events": 0,
+            "reason": "Process completed but no Geant4 run occurred.",
+            "run_count": 0,
+            "state": "no_run",
+            "summary_status": "completed"
+          },
+          "revision": 4,
+          "run_id": "24dd3b6802de4549891b56f36b1a0442",
+          "schema": "g4usim_experiment_record_v1",
+          "session_id": "df5ae7c2d63a46509a7f6ce32d5c5d3e",
+          "stale": true,
+          "status": "passed"
+        },
+        "stale": true,
+        "stale_reason": "bundle_loaded_requires_revalidation"
+      },
+      {
+        "record": {
+          "action": "run",
+          "actual_inputs": [
+            {
+              "capture_method": "binary_buffer",
+              "kind": "main_ini",
+              "role": "configuration_parse",
+              "sequence": 1,
+              "sha256": "c6ea69d9d32c1aa66946462aec5fb1610030bd3bba0c86f4f242d9e683500c53",
+              "size_bytes": 1284,
+              "status": "recorded"
+            },
+            {
+              "capture_method": "binary_buffer",
+              "kind": "material_ini",
+              "role": "material_parse",
+              "sequence": 2,
+              "sha256": "1f1d80c69daa3a2a0a0dc8b7f25631c3059cbf644d978704af9fa1eee6cb6a02",
+              "size_bytes": 77,
+              "status": "recorded"
+            },
+            {
+              "capture_method": "binary_buffer",
+              "kind": "geometry_ini",
+              "role": "geometry_parse",
+              "sequence": 3,
+              "sha256": "77fd03c325194e3cfe79e5de920a0f94e03a6c2e95b82fe79cb448e5c758cc3e",
+              "size_bytes": 500,
+              "status": "recorded"
+            },
+            {
+              "capture_method": "binary_buffer",
+              "kind": "macro",
+              "role": "recursive_preflight",
+              "sequence": 4,
+              "sha256": "9ad9383d5c386bd45621c1f1b1bf113c8c475c55aca2197cef6f844e7f2cdd02",
+              "size_bytes": 147,
+              "status": "recorded"
+            }
+          ],
+          "build": {
+            "compiler_id": "MSVC",
+            "compiler_version": "19.51.36246.0",
+            "configuration": "Release",
+            "geant4_version": "$Name: geant4-11-04-patch-03 [MT]$",
+            "git_commit": "fc606739b9bb5b381b87d5ffd2870844c10afee2",
+            "git_source_state": "dirty",
+            "git_state_scope": "cpp_build_inputs",
+            "source_fingerprint": "88c32e8c7ae6052083f975b710d91625e0bf9ed5239f86d6624b961cf3f42488"
+          },
+          "created_at": "2026-11-01T16:46:35.963281+00:00",
+          "execution_id": "f244cf1a85993c8e6fb592923e680fa1",
+          "exit_code": 0,
+          "finished_at": "2026-11-01T16:46:41.375868+00:00",
+          "history_trust": "historical_requires_local_revalidation",
+          "identity": {
+            "backend": {
+              "sha256": "eafe9aa121bbbf4d737a611ae1c57f4ca63804a387727874d20e35cd196aa82e",
+              "size_bytes": 2432000,
+              "status": "recorded"
+            },
+            "configuration_fingerprint": "41b041aa57ddad3df4fa26950189d47e65349842aa5556642ca735c96e629b25",
+            "coverage": "closed_resource_tree",
+            "environment": {
+              "architecture": {
+                "bits": 64,
+                "format": "PE",
+                "machine": "x86_64"
+              },
+              "binary": {
+                "sha256": "eafe9aa121bbbf4d737a611ae1c57f4ca63804a387727874d20e35cd196aa82e",
+                "stable": true
+              },
+              "build": {
+                "compiler_id": "MSVC",
+                "compiler_version": "19.51.36246.0",
+                "geant4_version_number": 1143
+              },
+              "capabilities": {
+                "data": {
+                  "configuration": "Release",
+                  "geant4_version_number": 1143,
+                  "git_commit": "fc606739b9bb5b381b87d5ffd2870844c10afee2",
+                  "git_source_state": "dirty",
+                  "multithreaded": true,
+                  "schema": "G4UniversalSimCapabilities",
+                  "source_fingerprint": "88c32e8c7ae6052083f975b710d91625e0bf9ed5239f86d6624b961cf3f42488",
+                  "version": 1
+                },
+                "status": "available"
+              },
+              "coverage": "observed_selection_and_presence_not_dataset_bytes",
+              "data": {
+                "datasets": [
+                  {
+                    "env": "G4LEDATA",
+                    "folder": "G4EMLOW8.8",
+                    "found": true,
+                    "required": true,
+                    "selected_path_sha256": "2513b70887f87b87d23f5f9ab62f48f0b68c305438de9f976c6711dcfa0ba4b4"
+                  },
+                  {
+                    "env": "G4LEVELGAMMADATA",
+                    "folder": "PhotonEvaporation6.1.2",
+                    "found": true,
+                    "required": true,
+                    "selected_path_sha256": "fb63dada1d16146fad62ce3bcdc45cf6a1ace775e83edd071a2ce5a652afa868"
+                  },
+                  {
+                    "env": "G4RADIOACTIVEDATA",
+                    "folder": "RadioactiveDecay6.1.2",
+                    "found": true,
+                    "required": true,
+                    "selected_path_sha256": "3f79a55471c4ff88d335261dec6d10d753bf3b2238519f41bb301723e6eb4af8"
+                  },
+                  {
+                    "env": "G4PARTICLEXSDATA",
+                    "folder": "G4PARTICLEXS4.2",
+                    "found": true,
+                    "required": true,
+                    "selected_path_sha256": "188d8a6ac333b4157b0f4f146ec5dacdf2b62b01b26cb4902b0e978f59b1160f"
+                  },
+                  {
+                    "env": "G4ENSDFSTATEDATA",
+                    "folder": "G4ENSDFSTATE3.0",
+                    "found": true,
+                    "required": true,
+                    "selected_path_sha256": "1f765484ec92c6bbd9b6749293bc671082bb6cd894279a6ad87043fd80b428ed"
+                  },
+                  {
+                    "env": "G4NEUTRONHPDATA",
+                    "folder": "G4NDL4.7.1",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "3ea1389434e4e87df1b6a469b5d19f556f1d25ffed68024c0f1a91159ecaf457"
+                  },
+                  {
+                    "env": "G4PIIDATA",
+                    "folder": "G4PII1.3",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "849140f6ce1ca4dcdc973e2c519f3e90ee3de0ec627caf27995899ce546caafc"
+                  },
+                  {
+                    "env": "G4REALSURFACEDATA",
+                    "folder": "RealSurface2.2",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "5e428627fbf72e291914094bea30aa9b4dc325d7cdcb7ce2990073c8b5c1b635"
+                  },
+                  {
+                    "env": "G4SAIDXSDATA",
+                    "folder": "G4SAIDDATA2.0",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "d5c2ad5cae8a6e679aa459c6fb8a0b69e145a3e553a1750fcf98931c776fc947"
+                  },
+                  {
+                    "env": "G4ABLADATA",
+                    "folder": "G4ABLA3.3",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "3e328c162d0ca1df18861e35e723895a93ae643c60d9b44b958b40bc5c76e1b9"
+                  },
+                  {
+                    "env": "G4INCLDATA",
+                    "folder": "G4INCL1.3",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "c43d1da4aa111a26326bcbf1e5879e65f21c1d2cd85e8bc1e07df4fd4ae73b94"
+                  },
+                  {
+                    "env": "G4CHANNELINGDATA",
+                    "folder": "G4CHANNELING2.0",
+                    "found": true,
+                    "required": false,
+                    "selected_path_sha256": "98c9ed92e3d07b74085ed4f2e18389334308dc6067affbd4e193df62894e3a77"
+                  }
+                ],
+                "required_complete": true,
+                "status": "available"
+              },
+              "dataset_content_identity": "unknown",
+              "schema": "g4usim_environment_v1",
+              "status": "ready"
+            },
+            "execution_fingerprint": "14f631fed70e6afe9556c023242b43f7271b4f7513f83a58d5895981a88950e3",
+            "fingerprint": "f6e31a0f44e6a0a735c12f3c90350ca558749eaf376dafd6ea858dfe8cae401e",
+            "resource_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "resources": [],
+            "revision": 4,
+            "schema": "g4usim_experiment_identity_v1"
+          },
+          "input_coverage": "project_readers_observed",
+          "input_exclusions": [
+            "Geant4 internal datasets and external physics-table reads are not byte-captured",
+            "Native command input IO outside the project readers is not comprehensively observed; known references are marked unobserved"
+          ],
+          "input_locations": "historical_locations_omitted_not_rebound",
+          "level": "execution",
+          "metadata_sha256": "f24106c924065d5592f8b766aeaa79021fac0471e46d8dac0751c82e2337c362",
+          "observed_run_name": "new_simulation",
+          "random_origin_locations": "omitted_paths_hashed_as_text_not_file_bytes",
+          "random_settings": {
+            "configured_seed": "12345",
+            "effective_configured_seed": "12345",
+            "effective_seed_origin_file": "not_applicable",
+            "effective_seed_origin_key": "not_applicable",
+            "effective_seed_origin_kind": "cli",
+            "effective_seed_origin_line": "0",
+            "effective_seed_origin_section": "not_applicable",
+            "initial_engine_seed": "unknown",
+            "initial_seed": "12345",
+            "macro_seed_modified": "false",
+            "planned_seed": "12345",
+            "seed": "12345"
+          },
+          "reason": "experiment.run_evidence_confirmed",
+          "record_id": "0ceccc3378854352b2f1422a8b5174f8",
+          "requested_run_name": "new_simulation",
+          "result": {
+            "completed_events": 4,
+            "planned_events": 4,
+            "reason": "Events completed as planned.",
+            "run_count": 1,
+            "state": "success",
+            "summary_status": "completed"
+          },
+          "revision": 4,
+          "run_id": "0ceccc3378854352b2f1422a8b5174f8",
+          "schema": "g4usim_experiment_record_v1",
+          "session_id": "df5ae7c2d63a46509a7f6ce32d5c5d3e",
+          "stale": true,
+          "status": "passed"
+        },
+        "stale": true,
+        "stale_reason": "bundle_loaded_requires_revalidation"
+      }
+    ]
+  },
+  "created_at": "2026-11-01T16:46:43.403979+00:00",
+  "destination": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-e2e-integration\\boolean114-final\\export\\portable",
+  "finished_at": "2026-11-01T16:46:44.841311+00:00",
+  "level": "export",
+  "reason": "experiment.bundle_exported",
+  "record_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-e2e-integration\\boolean114-final\\runs\\experiment-records\\3f481cd02ad54979bcbdd09e2dcae2e3",
+  "record_id": "3f481cd02ad54979bcbdd09e2dcae2e3",
+  "revision": 5,
+  "run_id": "3f481cd02ad54979bcbdd09e2dcae2e3",
+  "schema": "g4usim_experiment_record_v1",
+  "session_id": "df5ae7c2d63a46509a7f6ce32d5c5d3e",
+  "stale": false,
+  "status": "passed"
+}

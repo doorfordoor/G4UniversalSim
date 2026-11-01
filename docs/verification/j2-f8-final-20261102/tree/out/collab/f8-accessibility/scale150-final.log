@@ -1,0 +1,19 @@
+F8 window DPR: 1.5 available: PySide6.QtCore.QRect(0, 0, 533, 533)
+G4USIM_ASSERTS=102
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_f8_accessibility.py", line 265, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_f8_accessibility.py", line 248, in main
+    test_layout(app, window, args.output)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_f8_accessibility.py", line 191, in test_layout
+    assert outer.rect().contains(external), (button.text(), external, outer.rect())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('New blank simulation', PySide6.QtCore.QRect(-37, 78, 865, 32), PySide6.QtCore.QRect(0, 0, 790, 430))

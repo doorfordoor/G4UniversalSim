@@ -1,0 +1,59 @@
+{
+  "head": "56b689fb9ac920cbb1203b2b94dae2483d25f622",
+  "patch_sha256": "37b15980b429fe2e9f39106c164682e885fc449a0204e9725d8a215b1f7ae399",
+  "scope": "Independent static review and novel pure mode/identity matrix; author real113/114 smoke evidence separately verified",
+  "candidate_product_sha256": "4efcf4f0443fce588780e7cee8ee363a6b62be829c723d4259b101b7ebe26325",
+  "original_product_sha256": "9f8f800aee380f8b060b95fcc8d1c776ed580ddbec0bbd398d104bda58156403",
+  "verified_author_files": [
+    "fix.patch",
+    "experiment_workflow.py",
+    "test_k1_workflow.py",
+    "test_external_inspect_source_scope.py",
+    "run_overlay.py",
+    "verify_candidate.py"
+  ],
+  "verified_author_logs": [
+    {
+      "name": "permanent-focused-final",
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-external-inspect-fix\\permanent-regression-v4.log",
+      "exit_code": 0,
+      "assertion_entrances": 30
+    },
+    {
+      "name": "registered-k1-component",
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-external-inspect-fix\\k1-component-candidate.log",
+      "exit_code": 0,
+      "assertion_entrances": 260
+    },
+    {
+      "name": "unchanged-product-negative-control",
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-external-inspect-fix\\unchanged-product-counterexample.log",
+      "exit_code": 1,
+      "assertion_entrances": 3
+    },
+    {
+      "name": "windows113-old-f4-inspect",
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-external-inspect-fix\\windows113-old-f4-inspect.log",
+      "exit_code": 0,
+      "assertion_entrances": 49
+    },
+    {
+      "name": "windows114-old-f4-inspect",
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\j2-external-inspect-fix\\windows114-old-f4-inspect.log",
+      "exit_code": 0,
+      "assertion_entrances": 49
+    }
+  ],
+  "product_ast_only_guard": true,
+  "permanent_ast_only_function_and_synthetic_call": true,
+  "git_apply_check_exit": 0,
+  "independent_probe": {
+    "baseline_exit": 1,
+    "candidate_exit": 0,
+    "candidate_assertions": 10,
+    "baseline_log_sha256": "4d67fdc89bad6012fc5d3885d681f1dda1158152f72da86d0aa11420462c7bc8",
+    "candidate_log_sha256": "0c7f6c8484195369c57f20df80a1d4d9df0f2479b5febe95fa02bbd621a08430"
+  },
+  "tracked_status": "",
+  "findings": []
+}

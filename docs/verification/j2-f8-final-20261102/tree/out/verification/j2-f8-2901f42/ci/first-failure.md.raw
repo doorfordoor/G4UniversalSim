@@ -1,0 +1,11 @@
+# 第二候选 CI 首因（原失败保持）
+
+HEAD 2901f4254303c3a9089c9025717908c0d77ff190；Linux run41336912644 attempt1；11.3.2 job124938588408 failure，首个失败步骤Run offscreen GUI tests on Linux。
+
+static通过：4547断言入口（matching linux113-static历史3966），strict pass。GUI两项失败：gui_start_page、gui_main_window。共同首因是切换语言触发shell._refresh_accessibility → controller.refresh → decorate_accessibility，gui/g4usim_gui/core/accessibility.py:80 对QSpacerItem调用current.count()，AttributeError。两个测试入口分别smoke_start_page.py:189、smoke_main_window_ui.py:104；不是assert门槛不足。
+
+完整connector解码job日志：job-124938588408.log。原artifact linux-evidence-11.3.2 /13095209403 ZIP SHA256 54c6373f99d96e65c005129bc6082465149d037209154b7e615e5b78d8726051，对GitHubdigest及HEAD归属核验通过。原始逐例日志：
+- extracted/linux-evidence-11.3.2-13095209403/linux-gui/20261101-183305-8caf9b13/gui_start_page.log；SHA1faaf56eb55cdd7436f1268e476d3af2102df7d966ac42a7ced4ad7fd3447a12。
+- 同目录gui_main_window.log；SHA44caf4f221e079cc59a9f733ef89bd25de520c91b9110f1356c42985b126f1f4。
+
+GUI8365入口（历史6739），仍strict fail，不能用总数增加掩盖两例失败；backend/integration未运行不计通过。逐例baseline比较及全部原日志SHA重核见report-gates-current.json。没有allow-incomplete/legacy放宽。未rerun、改产品/测试/判据；继续收集其余原CI终态。

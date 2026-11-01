@@ -1,0 +1,37 @@
+--- a/docs/collab/outbox/20261101-deepseek-j2-f8-design.md
++++ b/docs/collab/outbox/20261101-deepseek-j2-f8-design.md
+@@ -1,6 +1,6 @@
+ # J2/F8 DeepSeek 实际设计回信、可实现取舍与独立验收入口
+ 
+-日期：2026-11-01。工作区 `C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim`，分支 `roadmap/J2-F8-editing`，读取基线 `fc606739b9bb5b381b87d5ffd2870844c10afee2`。
++日期：2026-11-01。仓库 `G4UniversalSim`，分支 `roadmap/J2-F8-editing`，读取基线 `fc606739b9bb5b381b87d5ffd2870844c10afee2`。
+ 
+ 本交付为实际外部设计咨询及本地审阅建议。未改产品，未执行实现回归或实窗验收，不关闭 J2/F8。主负责人仍负责后端事实核对、接口裁决、集成及阶段验收。
+ 
+@@ -16,12 +16,12 @@
+ 
+ | 文件 | 用途 |
+ | --- | --- |
+-| [request.json](../../../out/collab/j2-f8-design/request.json) | 无鉴权头的实际 JSON 请求 body、时间及 prompt 哈希 |
+-| [response.json](../../../out/collab/j2-f8-design/response.json) | 原始 API JSON response 与最小传输元信息，无凭据 |
+-| [deepseek-design.md](../../../out/collab/j2-f8-design/deepseek-design.md) | 从 choices[0].message.content 原样抽出的中文回信 |
+-| [request_design.py](../../../out/collab/j2-f8-design/request_design.py) | 本次最小请求脚本；凭据仅读既有路径，不打印 |
+-| [acceptance-checklist.md](../../../out/collab/j2-f8-design/acceptance-checklist.md) | 在读取本轮回信前独立编制的正式验收待办，全部未执行 |
+-| [progress.md](../../../out/collab/j2-f8-design/progress.md) | 可续接进度和交付边界 |
++| [request.json](../reviews/20261101-j2-f8-design-evidence/raw/request.json) | 无鉴权头的实际 JSON 请求 body、时间及 prompt 哈希 |
++| [response.json](../reviews/20261101-j2-f8-design-evidence/raw/response.json) | 原始 API JSON response 与最小传输元信息，无凭据 |
++| [deepseek-design.md](../reviews/20261101-j2-f8-design-evidence/raw/deepseek-design.md) | 从 choices[0].message.content 原样抽出的中文回信 |
++| `out/collab/j2-f8-design/request_design.py`（仅本地 provenance；SHA-256 `4a8e471792b758315153c06c3bb99e89b411b9e9622e90d1fea7c520822c3a6a`） | 本次最小请求脚本；凭据仅读既有路径，不打印 |
++| [acceptance-checklist.md](../reviews/20261101-j2-f8-design-evidence/raw/acceptance-checklist.md) | 在读取本轮回信前独立编制的正式验收待办，全部未执行 |
++| `out/collab/j2-f8-design/progress.md`（仅本地 provenance；SHA-256 `105e0278b1cedb1d3fc62206de78bf3ab38eacd1e96ccafbf7fdd070ec020459`） | 可续接进度和交付边界 |
+ 
+ ## 依据与只读核对边界
+ 
+@@ -92,6 +92,6 @@
+ 
+ ## 独立验收与剩余责任
+ 
+-独立清单在读取DeepSeek回信前编制，详见 [acceptance-checklist.md](../../../out/collab/j2-f8-design/acceptance-checklist.md)。覆盖创建/来源/事务、元素材料与多体积、多源真实顶点、constructor真实替换与region机制、高级能力与field/bias、键盘/DPI/向导重入/环境衔接，以及六环节映射和正式证据门禁。其所有复选框均未执行。
++独立清单在读取DeepSeek回信前编制，详见 [acceptance-checklist.md](../reviews/20261101-j2-f8-design-evidence/raw/acceptance-checklist.md)。覆盖创建/来源/事务、元素材料与多体积、多源真实顶点、constructor真实替换与region机制、高级能力与field/bias、键盘/DPI/向导重入/环境衔接，以及六环节映射和正式证据门禁。其所有复选框均未执行。
+ 
+ 本轮只核验API回执、完整结束、交付文件与内容一致性。未运行Geant4、offscreen GUI或实窗测试；本地结构观察不替代后端支持审查。工作区原有STATUS/ROADMAP修改及长路径Git状态警告保持原状；本任务不处理这些状态。最终实施、跨平台/版本矩阵、真实窗口与正常退出、独立代码审查由主负责人后续组织。

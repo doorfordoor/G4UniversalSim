@@ -1,0 +1,15 @@
+# gui_scans 首因只读分类
+
+候选56b689f，未修改产品或冻结测试，原正式失败保留。
+
+调用链差异：
+
+- 原fixture `gui/smoke_tests/smoke_scans.py:35–45` 创建paths并赋给project.pathSettings（同对象），然后wizard.apply_to_project清空来源路径、创建dirty MaterialDocument，但fixture返回ScanBase时省略materials参数。ScanBase.materials因此为None，而project.materialEditor存在。
+- `core/scan.py:213–228` 深拷贝每点后把point.materials（仅dirty时）传validate_config_builder；该fixture没有文档也没有材料文件路径，所以10 MeV合法能量同样报Materials required。geometry=point.geometry始终显式传入，不是几何文档漏传。
+- 实际生产GUI `window/content.py:scan_base` 通过ConfigBuilder.update_project与validate_current后，构造ScanBase时明确传dirty材料文档和geometry_document；没有依赖被清空的来源文件。
+
+独立实际对照：原fixture得到[Materials required, lots非法]；只在独立诊断对象中补上materials=deepcopy(project.materialEditor)后仅lots错误。真实MainWindow应用shielding向导，再调用scan_base，得到同样仅lots错误；其无来源材料/几何dirty文档均存在，create_scan两合法能量点实际成功生成两套main.ini。没有启动后端，不把写文件正确当物理结果。
+
+原始结果scan-classification-r2/receipt.json记录三个分支、输出路径和五相关源码SHA前后不变；scan-classification.log保存运行输出。当前证据支持旧helper未携带J2新文档，不支持“实际GUI scan不支持无源”的结论。不得改lots len==1断言来吞掉Materials required。可由main统一更新fixture（同模式的smoke_scans_backend也需核查）；是否让纯ScanBase API自动从project推断materials是额外接口决策，不能据此伪造本轮通过。
+
+独审脚本最初ROOT父层数设置错误和重复诊断目录的两次harness错误分别保留scan-classification-harness-error.log、scan-classification-existing-directory.log；修的是out下诊断脚本，不计产品失败，也未重跑正式gui_scans或修改首轮profile。

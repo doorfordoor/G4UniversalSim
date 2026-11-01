@@ -1,0 +1,30 @@
+{
+  "scope": "parameterised/parameterized CURRENT copy-table receipts and gates",
+  "files": {
+    "gui/g4usim_gui/core/run_editor_resources.py": {
+      "sha256": "51a5e11c53ff9072b5a07b174d24920cb3931c85338b0407d0316a6ea0609c46",
+      "bytes": 6658
+    },
+    "gui/g4usim_gui/core/project_snapshot.py": {
+      "sha256": "daed5db7923042fa4fb90beac447ce7fe91313ce15a254beae25656d6b800a97",
+      "bytes": 20224
+    },
+    "scripts/test_j2_resource_bundle.py": {
+      "sha256": "67bf4ba34658dea6c49a411b0172b1a2b3a175b0c7f294df64625b92ace5d919",
+      "bytes": 18793
+    }
+  },
+  "baseline": "files.json / candidate-final.log (82)",
+  "test": {
+    "command": "python -B tools/test_assert_probe.py scripts/test_j2_resource_bundle.py",
+    "exit_code": 0,
+    "assertion_entrances": 101,
+    "log": "alias-candidate.log",
+    "log_sha256": "784c2f3356206fff28eee99d16a72f0817551e5d34c599ec02456e306c44b97f"
+  },
+  "compileall_gui_exit": 0,
+  "diff_check_exit": 0,
+  "status": "independently_closed",
+  "reviewer": "Beauvoir 01a197c9-4e28-7273-b9ce-ec59ebca9b21",
+  "review_report": "out/collab/j2-integration-review/resource-p2-final-close/README.md"
+}

@@ -1,0 +1,192 @@
+{
+  "passed": true,
+  "runtime": {
+    "platform": "linux",
+    "python": "/home/u123/venvs/g4-f4-qt-6.11.3-20261030/bin/python",
+    "pyside": "6.11.3",
+    "qt": "6.11.3"
+  },
+  "candidate_sha256": "5f234e69c00d602039cb8f2ebc7daadb4f69edc860e6010989628d06253b3814",
+  "old_functions_except_target_and_main_AST_unchanged": true,
+  "no_Name_provider_override_or_platform_faking": true,
+  "rows": [
+    {
+      "language": "en",
+      "control": "runs_root",
+      "property": "Runs root",
+      "name": "Runs root",
+      "value": "",
+      "currentText": null,
+      "role": "Role.EditableText",
+      "qt_label_name": "Runs root",
+      "qt_label_role": "Role.StaticText",
+      "qt_label_object_matches": true
+    },
+    {
+      "language": "en",
+      "control": "search",
+      "property": "Search",
+      "name": "Search",
+      "value": "",
+      "currentText": null,
+      "role": "Role.EditableText",
+      "qt_label_name": "Search",
+      "qt_label_role": "Role.StaticText",
+      "qt_label_object_matches": true
+    },
+    {
+      "language": "en",
+      "control": "status_filter",
+      "property": "Status",
+      "name": "all",
+      "value": "all",
+      "currentText": "all",
+      "role": "Role.ComboBox",
+      "qt_label_name": "Status",
+      "qt_label_role": "Role.StaticText",
+      "qt_label_object_matches": true
+    },
+    {
+      "language": "zh_CN",
+      "control": "runs_root",
+      "property": "运行包根目录",
+      "name": "运行包根目录",
+      "value": "",
+      "currentText": null,
+      "role": "Role.EditableText",
+      "qt_label_name": "运行包根目录",
+      "qt_label_role": "Role.StaticText",
+      "qt_label_object_matches": true
+    },
+    {
+      "language": "zh_CN",
+      "control": "search",
+      "property": "搜索",
+      "name": "搜索",
+      "value": "",
+      "currentText": null,
+      "role": "Role.EditableText",
+      "qt_label_name": "搜索",
+      "qt_label_role": "Role.StaticText",
+      "qt_label_object_matches": true
+    },
+    {
+      "language": "zh_CN",
+      "control": "status_filter",
+      "property": "状态",
+      "name": "all",
+      "value": "all",
+      "currentText": "all",
+      "role": "Role.ComboBox",
+      "qt_label_name": "状态",
+      "qt_label_role": "Role.StaticText",
+      "qt_label_object_matches": true
+    },
+    {
+      "language": "en",
+      "control": "runs_root",
+      "property": "Runs root",
+      "name": "Runs root",
+      "value": "",
+      "currentText": null,
+      "role": "Role.EditableText",
+      "qt_label_name": "Runs root",
+      "qt_label_role": "Role.StaticText",
+      "qt_label_object_matches": true
+    },
+    {
+      "language": "en",
+      "control": "search",
+      "property": "Search",
+      "name": "Search",
+      "value": "",
+      "currentText": null,
+      "role": "Role.EditableText",
+      "qt_label_name": "Search",
+      "qt_label_role": "Role.StaticText",
+      "qt_label_object_matches": true
+    },
+    {
+      "language": "en",
+      "control": "status_filter",
+      "property": "Status",
+      "name": "all",
+      "value": "all",
+      "currentText": "all",
+      "role": "Role.ComboBox",
+      "qt_label_name": "Status",
+      "qt_label_role": "Role.StaticText",
+      "qt_label_object_matches": true
+    },
+    {
+      "case": "actual_combo_selection",
+      "index": 5,
+      "currentText": "failed",
+      "name": "failed",
+      "value": "failed"
+    },
+    {
+      "case": "actual_combo_selection",
+      "index": -1,
+      "currentText": "",
+      "name": "Status",
+      "value": ""
+    },
+    {
+      "case": "actual_combo_selection",
+      "index": 0,
+      "currentText": "all",
+      "name": "all",
+      "value": "all"
+    }
+  ],
+  "negative": [
+    {
+      "language": "en",
+      "case": "missing_actual_buddy_with_correct_property",
+      "rejected": true
+    },
+    {
+      "language": "en",
+      "case": "same_text_wrong_real_label_object",
+      "rejected": true
+    },
+    {
+      "language": "en",
+      "case": "wrong_interface_object",
+      "rejected": true
+    },
+    {
+      "language": "zh_CN",
+      "case": "missing_actual_buddy_with_correct_property",
+      "rejected": true
+    },
+    {
+      "language": "zh_CN",
+      "case": "same_text_wrong_real_label_object",
+      "rejected": true
+    },
+    {
+      "language": "zh_CN",
+      "case": "wrong_interface_object",
+      "rejected": true
+    },
+    {
+      "language": "en",
+      "case": "missing_actual_buddy_with_correct_property",
+      "rejected": true
+    },
+    {
+      "language": "en",
+      "case": "same_text_wrong_real_label_object",
+      "rejected": true
+    },
+    {
+      "language": "en",
+      "case": "wrong_interface_object",
+      "rejected": true
+    }
+  ],
+  "tracked_unchanged": true,
+  "scope": "actual micro Qt provider helper only; not full655/native/profile/backend/CI acceptance"
+}

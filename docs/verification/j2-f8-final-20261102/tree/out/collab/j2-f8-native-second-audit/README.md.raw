@@ -1,0 +1,25 @@
+# 第二候选 native100/125/150 独立文件审计
+
+候选2901f4254303c3a9089c9025717908c0d77ff190。有效收据[v2/native-audit.json](v2/native-audit.json)，原证据SHA清单[v2/artifact-manifest.json](v2/artifact-manifest.json)。仅OUT；不native操作、不重启host、不运行后端、不改tracked或旧raw。
+
+## 已核对事实
+
+三档launch/identity/exit均指向同一head、ad0864...113 EXE及b9c216...host，launch前后head/exe一致、ending_git_status为空、launcher和实际host退出0。三个149项GUI SHA映射逐字节相同且匹配当前源码。D盘完整venv的Python、Qt6.11.1、PySide6/shiboken6、PyVista0.48.4、pyvistaqt0.11.4、VTK9.6.2、QtPy2.4.3路径和现存distribution metadata匹配；未启动Qt验证。
+
+有效DPR为1.0/1.25/1.5；不能把QT_SCALE_FACTOR 0.8/空/1.2误称物理显示器DPI。passive JSONL分别24/16/29条，main直接视觉观察分别21/16/26条，关联原图29/23/31张，全部存在并生成原字节SHA。原文件名虽为.png，实际编码是JPEG：不转换/重命名/重存，不把扩展名当损坏判据。
+
+host在show前明确设置生产MainWindow、测试exe/runs路径、隔离settings/history/recovery、初始project、历史reset、语言/theme及窗口位置大小。show后timer只读焦点/页/runner状态/project raw hash/Undo状态/Project viewport矩形；没有从observer派发按键、点击、run/export、setFocus或scroll setter。这是受控setup后的被动观察，不宣称setup本身完全不改变初始状态。
+
+native100：实际blank-native.json为v8、0自定义材料、单world且不敏感、beam_on100，并在被动记录中观察到该文件成为project_file。六个原record含两次fields Passed、initialization Passed(no_run/0 events/unobserved)、generation Passed、execution Passed(success、100/100)、export Passed；record/backend/build/expected与observed输入/运行metadata执行ID和SHA/initialized mesh/hash均交叉核对。原初始化摘要run_count0和实际运行摘要run_count1/100完成保持分开。离线offline-native的manifest及7个成员size/SHA一致，history_trust仍stale_requires_revalidation、replay_verified=false、outputs_included=false：这里只证明导出资源闭包，不宣称搬移执行或物理验证。
+
+## 视觉归属及未关闭边界
+
+main已直接观图每条；本审计只核源文件/原图引用/SHA/记录范围，未独立重新看像素。QQ overlay像素被main明确排除。125档向导before-move/moved条目仍有遮挡；仅geometry-clear及之后的明确观察条目覆盖拖移后的完整dialog。矩形containment只作坐标观测，不能证明无遮挡、文字或边框完整。
+
+150档Project retained缺陷在main的对应视觉记录中已消失；**F6窄dock边界与History名称/标签/accessibility遗漏仍开放**，overall_native_acceptance=false、stage_complete=false。不能因三个host exit0、source一致或Project包含矩形成立而升级为overall pass。后三档对新repair相关scope仍需补验，包括History三显式buddy/动态语言、仅真实QLayout遍历；F6窄dock属于明确不修范围，需记录其可用边界。
+
+host100 stderr有先前空/未验证output目录查询的legacy/unverified RuntimeWarnings，原日志保留；不把这类提示等同于已审实际run metadata缺失，也不据实际run成功宣布所有结果面板时刻均已完整验收。
+
+## 审计版本
+
+首版native-audit.json保留了审计器自己的过严PNG签名/错误相对路径解析结果，未改原证据。v2按实际JPEG编码保留原字节，并依各record声明launch_working_directory解析backend相对输入；完整文件审计errors=[]。脚本audit_native_v2.py全新编写并带root/head参数，没有复用首候选旧audit硬编码。其退出0只表示该文件审计完成，不代表原生阶段通过。

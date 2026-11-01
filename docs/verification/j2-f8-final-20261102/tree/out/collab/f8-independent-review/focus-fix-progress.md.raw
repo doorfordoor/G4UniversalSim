@@ -1,0 +1,14 @@
+# F8 focus/label修复独审续接
+
+- 原review.md与125-r2/150证据保持原五文件SHA，不追改。
+- main原生发现scroll容器首焦点导致水平居中/label裁切，Harvey获授权修复。
+- 已准备natural_focus_cases.py：自然CtrlAlt2/3与九页/F6/Tab，测实际label+field相对所有viewport的矩形；不写scrollbar、不强归零、不直接ensureWidgetVisible，不争用原生UI。
+- 等待Harvey新冻结SHA/交接后执行125/150，原永久E2E脚本不变。
+- 候选core/accessibility.py新hash9759bee2...已做自然125/150预检：原label左裁切/容器首焦点消失，九页/F6通过；额外自然Tab完整control断言发现右缘5px外溢，label/左阅读锚点可见。候选测试失败原文保留，不先升级P2，已报main/Harvey确认策略并等最终冻结。
+- 新helper15ab6f87...的自然focus-union125/150各5组独立检查通过：项目/配置label+field、九页/F6、自然Tab完整矩形、foreign不变，业务指纹不变；源码各次运行内一致。
+- focus-fix-review.md已按新身份单独记录。候选9759bee...的5px右裁失败均保留，未弱化断言/强归零。
+- 等待Harvey最终冻结SHA与15ab6f87...核对；作者向导按钮新增专项仍在完善，不拿本scope通过冒充整F8完成。
+- 最终freeze核对通过：helper8f597259...、smoke7087edc6...；focus-frozen125-r2/150-r2各6组独立定点检查全部通过，五文件开末SHA与作者freeze逐项一致。报告focus-fix-final-review.md。
+- 新增向导五页面阶段四角色en/zh/en：role text+accessible name正确；实际Back Space返回和Esc取消保持原业务草稿。首轮raw Back.text为空的误判与诊断保留，是本机Qt呈现边界，不计产品缺陷。
+- 未调用scrollbar写值/强归零/直接ensure来修视图；九页/F6/Tab/foreign均通过。
+- F4layout125 stdout中心clip及异常清理AV由main保持开放，不由本定点关闭。所有本任务进程已完成，原生UI未使用。
