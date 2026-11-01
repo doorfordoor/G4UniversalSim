@@ -21,6 +21,7 @@ from PySide6.QtWidgets import (
 
 from g4usim_gui.core.paths import open_directory
 from g4usim_gui.core.i18n import ui_text
+from g4usim_gui.core.accessibility import _buddy
 from g4usim_gui.history.run_history_model import RunHistoryEntry
 from g4usim_gui.history.run_history_scanner import scan_runs_root, publish_identity
 from g4usim_gui.core.evidence_job import EvidenceJob, verify_roots
@@ -87,15 +88,21 @@ class RunHistoryPage(QWidget):
 
     def _build_layout(self) -> None:
         top = QHBoxLayout()
-        top.addWidget(QLabel("Runs root"))
+        runs_root_label = QLabel("Runs root")
+        _buddy(runs_root_label, self.runs_root)
+        top.addWidget(runs_root_label)
         top.addWidget(self.runs_root, 1)
         top.addWidget(self.browse_button)
         top.addWidget(self.refresh_button)
         top.addWidget(self.open_root_button)
         filter_row = QHBoxLayout()
-        filter_row.addWidget(QLabel("Search"))
+        search_label = QLabel("Search")
+        _buddy(search_label, self.search)
+        filter_row.addWidget(search_label)
         filter_row.addWidget(self.search, 1)
-        filter_row.addWidget(QLabel("Status"))
+        status_label = QLabel("Status")
+        _buddy(status_label, self.status_filter)
+        filter_row.addWidget(status_label)
         filter_row.addWidget(self.status_filter)
 
         buttons = QHBoxLayout()

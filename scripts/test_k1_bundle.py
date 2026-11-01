@@ -99,6 +99,109 @@ def change_manifest(folder, mutate):
     file.write_bytes(bundle._json(data))
 
 
+def test_resource_policy_path_identity(root):
+    """An actual ordinary-file alias must not detach its redistribution decision."""
+    source = (root / "resource policy source").resolve()
+    snapshot = fixture(source)
+    main = Path(snapshot.project.configPath)
+    variants = [source]
+    if sys.platform == "win32":
+        import ctypes
+        upper = Path(str(source).upper())
+        if upper.exists() and os.path.samefile(upper, source):
+            variants.append(upper)
+        get_short = ctypes.windll.kernel32.GetShortPathNameW
+        get_short.argtypes = [ctypes.c_wchar_p, ctypes.c_wchar_p, ctypes.c_uint]
+        get_short.restype = ctypes.c_uint
+        buffer = ctypes.create_unicode_buffer(32768)
+        count = get_short(str(source), buffer, len(buffer))
+        if 0 < count < len(buffer) and "~" in buffer.value:
+            short = Path(buffer.value)
+            assert os.path.samefile(short, source)
+            variants.append(short)
+    original = copy.deepcopy(snapshot)
+    policy = {str(main.resolve()): {"distribution": "restricted"}}
+    for variant in variants:
+        selected = fixture(variant)
+        assert os.path.samefile(selected.project.configPath, main)
+        refused(lambda: bundle.collect_bundle_resources(selected, resource_policy=policy),
+                "Restricted resource requires explicit redistribution policy")
+        approved = copy.deepcopy(policy)
+        approved[str(main.resolve())]["allow_redistribution"] = True
+        collected = bundle.collect_bundle_resources(selected, resource_policy=approved)
+        node = next(row for row in collected["resources"] if row["role"] == "main")
+        assert node["distribution"] == "restricted" and node["redistribution_override"] is True
+        # Existing absolute spellings remain accepted; no policy is auto-created.
+        spelling = {str(variant / main.name): {"distribution": "restricted", "allow_redistribution": True}}
+        assert bundle.collect_bundle_resources(selected, resource_policy=spelling)["resources"]
+        ordinary = bundle.collect_bundle_resources(selected)
+        assert next(row for row in ordinary["resources"] if row["role"] == "main")["distribution"] == "unknown"
+    assert snapshot == original
+    assert policy == {str(main.resolve()): {"distribution": "restricted"}}
+    unused = write(source / "not-an-input.ini", "# unused decision\n")
+    refused(lambda: bundle.collect_bundle_resources(snapshot, resource_policy={str(unused): {}}), "Unused resource policy entries")
+    for variant in variants[1:]:
+        spelling = str(variant / main.name)
+        if spelling != str(main.resolve()):
+            refused(lambda: bundle.collect_bundle_resources(snapshot, resource_policy={
+                str(main.resolve()): {"distribution": "restricted"},
+                spelling: {"distribution": "restricted", "allow_redistribution": True}}),
+                "Duplicate resource policy entries for the same file")
+
+
+def test_resource_policy_paths_late_guard(root, *, actions=("collect", "export")):
+    """An original policy spelling remains guarded even if resources do not move."""
+    for action in actions:
+        case = (root / action).resolve()
+        snapshot = fixture(case / "ordinary")
+        source = Path(snapshot.project.configPath).parent
+        anchor = source / "policy-anchor"
+        anchor.mkdir()
+        original_policy_path = anchor / ".." / "main.ini"
+        assert os.path.samefile(original_policy_path, source / "main.ini")
+        policy = {str(original_policy_path): {"distribution": "restricted", "allow_redistribution": True}}
+        before = {name: (source / name).read_bytes() for name in ("main.ini", "materials.ini", "geometry.ini", "run.mac")}
+        destination = case / "must-not-publish"
+        observed = []
+
+        def replace_policy_component():
+            replacement = source / "redirected-policy-component"
+            backup = source / "policy-anchor-original"
+            replacement.mkdir()
+            assert anchor.resolve().is_relative_to(case) and backup.absolute().is_relative_to(case)
+            anchor.rename(backup)
+            if sys.platform == "win32":
+                result = subprocess.run(["cmd.exe", "/d", "/c", "mklink", "/J", str(anchor), str(replacement)],
+                                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                assert result.returncode == 0, result.stdout
+            else:
+                anchor.symlink_to(replacement, target_is_directory=True)
+            assert os.path.samefile(anchor, replacement)
+            observed.append(True)
+
+        if action == "collect":
+            original = bundle._finish_collection
+            def collected_then_replace(*args):
+                result = original(*args)
+                replace_policy_component()
+                return result
+            with patch.object(bundle, "_finish_collection", side_effect=collected_then_replace):
+                message = refused(lambda: bundle.collect_bundle_resources(snapshot, resource_policy=policy))
+        else:
+            original = bundle.inspect_bundle
+            def inspected_then_replace(*args):
+                result = original(*args)
+                replace_policy_component()
+                return result
+            with patch.object(bundle, "inspect_bundle", side_effect=inspected_then_replace):
+                message = refused(lambda: bundle.export_bundle(snapshot, destination, resource_policy=policy))
+        assert "linked path" in message or "reparse point" in message, message
+        assert observed == [True]
+        assert not destination.exists()
+        assert not list(case.glob(".must-not-publish.k1-*"))
+        assert all((source / name).read_bytes() == raw for name, raw in before.items())
+
+
 def test_safe_environment_history(root):
     from g4usim_gui.core.experiment_identity import canonical_digest, safe_environment
 
@@ -754,7 +857,7 @@ def main():
         root = Path(temporary.name)
     cases = []
     try:
-        for case in (test_safe_environment_history, test_build_version_text, test_reference_source_urls, test_move_and_history, test_resource_kinds_and_identity, test_generated,
+        for case in (test_resource_policy_path_identity, test_resource_policy_paths_late_guard, test_safe_environment_history, test_build_version_text, test_reference_source_urls, test_move_and_history, test_resource_kinds_and_identity, test_generated,
                      test_refusals, test_atomic_and_tamper, test_gdml, test_independent_review_regressions,
                      test_unknown_geometry_blocker_controls):
             folder = root / case.__name__

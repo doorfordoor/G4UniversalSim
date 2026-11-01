@@ -7,7 +7,7 @@ from shiboken6 import isValid
 from PySide6.QtCore import QEvent, QObject, QPoint, QRect, Qt, QTimer
 from PySide6.QtWidgets import (
     QApplication, QAbstractButton, QAbstractItemView, QAbstractSpinBox, QComboBox,
-    QDialog, QFormLayout, QGridLayout, QLabel, QLineEdit, QPlainTextEdit,
+    QDialog, QFormLayout, QGridLayout, QLabel, QLayout, QLineEdit, QPlainTextEdit,
     QScrollArea, QTabBar, QTextEdit, QWidget, QWizard, QVBoxLayout, QFrame,
 )
 from g4usim_gui.core.i18n import ui_text
@@ -35,7 +35,7 @@ def _item_field(item):
         return next((child for child in candidates if isinstance(child, FIELDS)
                      and not isinstance(child.parentWidget(), (QComboBox, QAbstractSpinBox))), None)
     layout = item.layout()
-    if layout is not None:
+    if isinstance(layout, QLayout):
         return next((found for i in range(layout.count()) if (found := _item_field(layout.itemAt(i))) is not None), None)
     return None
 
@@ -59,7 +59,7 @@ def decorate_accessibility(root: QWidget) -> None:
     widgets = [root, *root.findChildren(QWidget)]
     for parent in widgets:
         layout = parent.layout()
-        layouts = [] if layout is None else [layout]
+        layouts = [layout] if isinstance(layout, QLayout) else []
         while layouts:
             current = layouts.pop()
             if isinstance(current, QFormLayout):
@@ -79,7 +79,7 @@ def decorate_accessibility(root: QWidget) -> None:
                         _buddy(label, _item_field(current.itemAtPosition(row, column + column_span)))
             for i in range(current.count()):
                 child = current.itemAt(i).layout()
-                if child is not None:
+                if isinstance(child, QLayout):
                     layouts.append(child)
         source = parent.property('f8AccessibleSource')
         if source:

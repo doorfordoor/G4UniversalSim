@@ -162,7 +162,17 @@ class _Closure:
     def __init__(self, cwd: Path, policy=None, *, root: Path | None = None, reader=None):
         self.cwd = cwd
         self.root = root
-        self.policy = dict(policy or {})
+        self.policy = {}
+        self.policy_paths = {}
+        for name, decision in dict(policy or {}).items():
+            # Match real ordinary-file identities across Windows 8.3/case
+            # spellings, but reject lexical links before resolving either side.
+            key = str(_no_links(Path(name)).resolve()) if isinstance(name, str) and Path(name).is_absolute() else name
+            if key in self.policy:
+                raise ValueError(f"Duplicate resource policy entries for the same file: {name}")
+            self.policy[key] = decision
+            if isinstance(name, str) and Path(name).is_absolute():
+                self.policy_paths[name] = key
         self.used_policy: set[str] = set()
         self.nodes: dict[tuple, dict] = {}
         self.active: set[tuple] = set()
@@ -173,6 +183,13 @@ class _Closure:
         self.macro_depth = 0
         self.macro_mode = "hierarchical"
         self.macro_effects = {}
+
+    def validate_policy_paths(self):
+        # Keep the caller's lexical spelling: resolving it only at entry would
+        # hide a component replaced by a link before return/publication.
+        for spelling, expected in self.policy_paths.items():
+            if str(_no_links(Path(spelling)).resolve()) != expected:
+                raise ValueError(f"Resource policy path changed during collection: {spelling}")
 
     def add(self, path: Path, role: str, *, raw: bytes | None = None, mode: str = "hierarchical", base: Path | None = None) -> str:
         path = _no_links(path)
@@ -209,9 +226,10 @@ class _Closure:
             raise ValueError("Bundle member limit exceeded")
         name = re.sub(r"[^A-Za-z0-9_.-]", "_", path.name).strip("._") or "input"
         relative = relative if self.root is not None else f"resources/r{len(self.nodes):04d}-{name}"
-        decision = self.policy.get(str(path), {})
-        if str(path) in self.policy:
-            self.used_policy.add(str(path))
+        policy_key = str(_no_links(path).resolve())
+        decision = self.policy.get(policy_key, {})
+        if policy_key in self.policy:
+            self.used_policy.add(policy_key)
         if type(decision) is not dict or set(decision) - {"distribution", "allow_redistribution"}:
             raise ValueError(f"Invalid resource policy: {path}")
         distribution = decision.get("distribution", "unknown")
@@ -647,6 +665,7 @@ def collect_bundle_resources(snapshot: WorkspaceSnapshot, *, validation_records=
     for path, sha in closure.source_receipts.items():
         if digest(_read(path)) != sha:
             raise ValueError(f"Resource changed during identity collection: {path}")
+    closure.validate_policy_paths()
     return {"snapshot": data, "validation_records": records,
             "resources": [{**{k: v for k, v in node.items() if k != "data"},
                            "sha256": digest(node["data"]), "bytes": len(node["data"])}
@@ -756,6 +775,7 @@ def export_bundle(snapshot: WorkspaceSnapshot, destination: Path, *, validation_
                 continue
             if digest(_read(path)) != sha:
                 raise ValueError(f"Resource changed before publication: {path}")
+        closure.validate_policy_paths()
         _publish_directory(staging, target)
         committed = True
         result["path"] = str(target)

@@ -586,6 +586,233 @@ def test_retained_dock_focus(app, output=None):
             close_window(app, window)
 
 
+def test_history_directory_accessibility(app, output=None):
+    """Bind the explicit History directory label without broad QHBox guessing."""
+    from PySide6.QtGui import QAccessible
+    from g4usim_gui.core.accessibility import _reading_anchor, readable_label
+    from g4usim_gui.core.i18n import set_application_language
+
+    def settle():
+        for _ in range(8):
+            app.processEvents()
+        QTest.qWait(30)
+
+    def key(window, code, modifiers=Qt.NoModifier):
+        window.activateWindow()
+        QTest.qWait(20)
+        QTest.keyClick(window, code, modifiers)
+        settle()
+
+    observations = []
+    with tempfile.TemporaryDirectory(prefix='f8-history-label-') as temp:
+        QSettings.setPath(QSettings.IniFormat, QSettings.UserScope, temp)
+        apply_theme(app, 'light')
+        set_application_language(app, 'en')
+        window = MainWindow()
+        runs = Path(temp) / 'long-runs-root-for-history-keyboard-and-accessibility' / 'preserved-run-packages'
+        project = window.project
+        project.runsRoot = str(runs)
+        project.pathSettings.runs_root = project.runsRoot
+        window._set_project(project)
+        window._reset_edit_history()
+        window.config_builder_page._backend_timer.stop()
+        window.config_builder_page.schedule_backend_geometry = lambda *args, **kwargs: None
+        window.resize(760, 640)
+        before = snapshot_fingerprint(window.capture_workspace())
+        history = (window._edit_session.can_undo, window._edit_session.can_redo,
+                   window._edit_session.is_modified)
+        field = window.run_history_page.runs_root
+        page = window.run_history_page
+        top = page.layout().itemAt(0).layout()
+        filters = page.layout().itemAt(1).layout()
+        label = top.itemAt(0).widget()
+        pairs = ((label, field, 'Runs root'), (filters.itemAt(0).widget(), page.search, 'Search'),
+                 (filters.itemAt(2).widget(), page.status_filter, 'Status'))
+        try:
+            window.show()
+            window.activateWindow()
+            settle()
+            assert label.buddy() is field
+            assert getattr(field, '_f8_accessible_label', None) is label
+            # Retain the real Config/Preview docks before entering History.
+            key(window, Qt.Key_3, Qt.ControlModifier | Qt.AltModifier)
+            key(window, Qt.Key_F6)
+            docks = dict(window.workspace_layout.docks)
+            assert docks['configuration'].isVisible() and docks['preview'].isVisible()
+            for language in ('en', 'zh_CN', 'en'):
+                window._set_language(language, persist=False)
+                settle()
+                key(window, Qt.Key_8, Qt.ControlModifier | Qt.AltModifier)
+                assert window.page_stack.currentIndex() == 7
+                assert QApplication.focusWidget() is field
+                assert label.text() == ui_text('Runs root')
+                assert field.accessibleName() == readable_label(label.text()) == ui_text('Runs root')
+                assert label.buddy() is field and field._f8_accessible_label is label
+                accessible = []
+                for text_label, control, source in pairs:
+                    assert text_label.buddy() is control
+                    assert getattr(control, '_f8_accessible_label', None) is text_label
+                    assert text_label.text() == ui_text(source)
+                    assert control.accessibleName() == readable_label(text_label.text()) == ui_text(source)
+                    interface = QAccessible.queryAccessibleInterface(control)
+                    assert interface is not None
+                    assert interface.text(QAccessible.Name) == ui_text(source)
+                    accessible.append({'source': source, 'name': control.accessibleName(),
+                                       'qt_accessible_name': interface.text(QAccessible.Name),
+                                       'role': str(interface.role())})
+                parent = field.parentWidget()
+                inner_can_fit_union = True
+                details = []
+                while parent is not None:
+                    if isinstance(parent, QScrollArea) and parent.widget() is not None and parent.widget().isAncestorOf(field):
+                        viewport = parent.viewport()
+                        full = QRect(field.mapTo(viewport, QPoint(0, 0)), field.size())
+                        label_rect = QRect(label.mapTo(viewport, QPoint(0, 0)), label.size())
+                        union = full.united(label_rect)
+                        inner_can_fit_union = inner_can_fit_union and union.width() <= viewport.width()
+                        # Once an inner viewport cannot fit the joint, preserve
+                        # label + readable field prefix; do not promise a whole
+                        # field through that narrower clipping ancestor.
+                        prefix = QRect(full)
+                        prefix.setWidth(min(prefix.width(), 128))
+                        context = label_rect.united(prefix)
+                        assert viewport.rect().contains(context), (language, parent.objectName(), context, viewport.rect())
+                        if inner_can_fit_union:
+                            assert viewport.rect().contains(union), (language, parent.objectName(), union)
+                        details.append({'scroll': parent.objectName(), 'viewport': list(viewport.rect().getRect()),
+                                        'field': list(full.getRect()), 'label': list(label_rect.getRect()),
+                                        'joint': list(union.getRect()), 'anchor': list(_reading_anchor(field, viewport).getRect()),
+                                        'h': parent.horizontalScrollBar().value()})
+                    parent = parent.parentWidget()
+                assert details
+                assert field.text() == str(runs)
+                assert not runs.exists()
+                assert all(window.workspace_layout.docks[name] is dock for name, dock in docks.items())
+                assert snapshot_fingerprint(window.capture_workspace()) == before
+                assert (window._edit_session.can_undo, window._edit_session.can_redo,
+                        window._edit_session.is_modified) == history
+                observations.append({'language': language, 'name': field.accessibleName(),
+                                     'label': label.text(), 'accessible_controls': accessible, 'viewports': details})
+            # The helper must be idempotent at the readable nonzero pan; the
+            # test never supplies an offset or reveals the field itself.
+            offset = window.content_scroll.horizontalScrollBar().value()
+            assert offset > 0
+            settle()
+            assert window.content_scroll.horizontalScrollBar().value() == offset
+            # Exercise the same controls through actual Tab navigation, with
+            # no direct setFocus or scroll writes in this test.
+            visited = {field}
+            for _ in range(16):
+                QTest.keyClick(QApplication.focusWidget(), Qt.Key_Tab)
+                settle()
+                current = _focus_control(QApplication.focusWidget())
+                if current in (page.search, page.status_filter):
+                    assert current.accessibleName()
+                    visited.add(current)
+                if page.search in visited and page.status_filter in visited:
+                    break
+            assert page.search in visited and page.status_filter in visited
+            assert snapshot_fingerprint(window.capture_workspace()) == before
+            if output:
+                output.mkdir(parents=True, exist_ok=True)
+                assert window.grab().save(str(output / 'history-label.png'))
+        finally:
+            if output:
+                output.mkdir(parents=True, exist_ok=True)
+                (output / 'history-label.json').write_text(
+                    json.dumps(observations, ensure_ascii=False, indent=2), encoding='utf-8')
+            close_window(app, window)
+
+
+def test_layout_item_compatibility(app):
+    """Actual Qt layouts/spacers, plus a controlled replay of the CI return type.
+
+    Stock Qt usually returns None from spacer.layout(). The CI failure supplied
+    a real QSpacerItem instead; replay only that Python provider value, never a
+    mock layout or an invented Qt class. The underlying Qt objects stay real.
+    """
+    from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout, QFormLayout, QGridLayout, QSpacerItem, QSizePolicy, QLayout
+    from g4usim_gui.core.accessibility import _item_field, decorate_accessibility
+    from g4usim_gui.core.i18n import apply_language, set_application_language
+    from g4usim_gui.widgets.start_page import StartPage
+
+    for replay_nonlayout in (False, True):
+        root = QWidget()
+        outer = QVBoxLayout(root)
+        form = QFormLayout()
+        form_label = QLabel('Search')
+        first = QLineEdit('unchanged search draft')
+        field_row = QHBoxLayout()
+        field_row.addSpacing(8)
+        field_row.addWidget(first)
+        field_row.addStretch()
+        form.addRow(form_label, field_row)
+        outer.addLayout(form)
+        grid = QGridLayout()
+        empty_label = QLabel('Status')
+        grid.addWidget(empty_label, 0, 0)
+        empty = QSpacerItem(12, 12, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        grid.addItem(empty, 0, 1)
+        grid_label = QLabel('Runs root')
+        second = QLineEdit('unchanged directory draft')
+        nested = QVBoxLayout()
+        nested.addSpacing(4)
+        nested.addWidget(second)
+        grid.addWidget(grid_label, 1, 0)
+        grid.addLayout(nested, 1, 1)
+        outer.addLayout(grid)
+        spacer = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        outer.addItem(spacer)
+        assert isinstance(outer.itemAt(2), QSpacerItem)
+        assert not isinstance(spacer, QLayout)
+        if replay_nonlayout:
+            # Deterministic boundary replay of the exact CI-observed type.
+            # Restore the original Qt accessor before the C++ owner is deleted.
+            spacer.layout = lambda: spacer
+        try:
+            root.show()
+            app.processEvents()
+            for language in ('en', 'zh_CN', 'en'):
+                set_application_language(app, language)
+                apply_language(root, language)
+                decorate_accessibility(root)
+                assert form_label.buddy() is first
+                assert grid_label.buddy() is second
+                assert first.accessibleName() == ui_text('Search')
+                assert second.accessibleName() == ui_text('Runs root')
+                assert empty_label.buddy() is None
+                assert _item_field(empty) is None
+                assert _item_field(spacer) is None
+                assert _item_field(field_row) is first
+                assert first.text() == 'unchanged search draft'
+                assert second.text() == 'unchanged directory draft'
+        finally:
+            if replay_nonlayout:
+                del spacer.layout
+            root.close()
+            root.deleteLater()
+            app.processEvents()
+    # Real responsive StartPage layout reflow + language switching, the original
+    # CI product path. No backend, fake widget or patched Qt accessor here.
+    start = StartPage()
+    try:
+        start.show()
+        for width in (760, 1200):
+            start.resize(width, 640)
+            start.adapt_to_width(width)
+            app.processEvents()
+            for language in ('en', 'zh_CN', 'en'):
+                set_application_language(app, language)
+                apply_language(start, language)
+                decorate_accessibility(start)
+                assert start.start_actions
+                assert all(button.accessibleName() for button in start.start_actions)
+    finally:
+        start.close()
+        start.deleteLater()
+        app.processEvents()
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--translations', type=Path)
@@ -635,6 +862,8 @@ def main():
         finally:
             close_window(app, window)
     test_retained_dock_focus(app, args.output)
+    test_history_directory_accessibility(app, args.output)
+    test_layout_item_compatibility(app)
     print('F8 keyboard/start/environment/wizard/layout offscreen checks passed')
 
 
