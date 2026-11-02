@@ -2,6 +2,11 @@
 
 主题切换须保留焦点、草稿和结果选择。浮动 Dock 和独立向导分别设置数值显示区域，历史草稿校验沿用进程原区域。Qt、图表和 VTK 字体偏好集中在 core/fonts.py。回归入口为 gui_theme_response 和 gui_main_window。
 
+Linux原生通道补充（主审已签收）：main已实际操作独立真实X11/xcb桌面，一次固定HTTP计划passed，操作观察时曾停在awaiting_approval、0事件；随后在观察期间触及300秒预算，整任务保留failed／agent.task_timeout，不称整任务成功。原host exit0、slot_released=true、host与显示服务两组remaining_owned均空、HTTP已关闭；显示辅助子进程退出码[0,1,0]（twm非零保留），不能写全部子进程exit0；代表性原生签收结果为 **独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**。WSLg RAIL任务栏无法展开，第三次host退出且0请求，原失败保留，绝不称该通道成功。Ubuntu实际系统安装x11-xkb-utils，其它本次依赖保持隔离OUT前缀；具体包版本／SHA及安装收据见最终证据，不把早期准备收据system_installs=0外推到之后。
+
+2026-11-02 L1本轮验收：阶段签收 **本轮约定范围验收完成**，WSLg **独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**。冻结246e4f6；真实六本机／十二CI与安装重试、两档有限原生见[最终证据](../docs/verification/l1-final-20261102/README.md)和[完整历史](../docs/agent-history.md#2026-11-02-l1本轮验收与交付)。原F5／K1所有者不变；恢复只查询旧身份不重发、不恢复授权／当前资格，默认evaluate仅完成性。已有EE云任务与一对操作者记录不冒新native／模型质量／提速；图像/UIA永久local-only。原日期候选规则保留。
+
+
 2026-11-02 L1 AI布局后续候选：52px导致AI全控件不可读是必须修复的新P2，不以旧F6窄边界豁免。OUT候选仅panel按当前文字／样式计算两列最小宽度及footer inset／reflow，不改workspace／core／F5／K1或翻译；125%／150%各1216组件入口与原产品负向分别保留，候选已收限定独审PASS并由main精确apply两path；按当前focused-target及可容纳joint合同核验，retained125非焦点右列可裁剪、不保证全footer同时同屏；新候选完整验收及新native仍待。见[候选历史](../docs/agent-history.md#2026-11-02-l1-ee验收快照与原生布局后续候选)。
 
 2026-11-02 L1 路径显示 raw 修复候选：`ProjectPage.show_generated_paths` 仅回显 config/macro/output 三条路径，实际 K1 display binder 不得为显示刷新其它控件原文、revision 或验证资格；正常业务载入和 legacy 全量投影仍走原 `set_project`。原 D1 五域任务失败、窄修及后续待验身份分别计证，见[候选历史](../docs/agent-history.md#2026-11-02-l1-路径显示-raw-修复候选)。

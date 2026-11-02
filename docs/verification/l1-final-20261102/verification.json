@@ -1,0 +1,21 @@
+{
+  "schema": "l1_public_nonvisual_and_limited_native_verification_v1",
+  "status": "PASS",
+  "generated_utc": "2026-11-02T12:29:22.430010+00:00",
+  "tested_HEAD": "246e4f6f1b97cc5e0651ff01262c85cf2e9c28d3",
+  "nonvisual_payload_raw_files": 1285,
+  "nonvisual_payload_raw_bytes": 7409082,
+  "original_report_count": 18,
+  "original_case_log_count": 970,
+  "raw_byte_and_relocated_strict_baselines": "verify.py actual exit0",
+  "limited_native_and_dependency_scope": "verify_scope.py actual exit0",
+  "initial_scope_helper_check": "local OUT-only helper r1 incorrectly required identical scope subtype; corrected to exact Windows/Linux subtype allowlists; original failure log retained locally",
+  "original_report_log_bytes_changed": false,
+  "product_or_simulation_rerun": false,
+  "new_native_metadata_only_entries": 138,
+  "public_raw_images_UIA": 0,
+  "strict_replay_source_sha256": "b28046e0a140548c134ddf6b44f0175a6782528f03f7e97f81587b0e326cc82c",
+  "historical_baselines": "external stable committed J2 tree/object members with exact original SHA; no origin OUT fallback",
+  "main_stage_signoff": "limited L1 scope accepted; Linux whole-task timeout and WSLg limitation retained",
+  "public_file_seal": "public-files.manifest.json exact files, itself sole exclusion"
+}

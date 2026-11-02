@@ -1,0 +1,26 @@
+{
+  "status": "SOURCE_BYTE_EXACT_DEPENDENCY_RECEIPTS",
+  "system_install": "x11-xkb-utils7.7+8build2 only; actual dpkg exit0",
+  "other_dependencies": "OUT-isolated, no .deb or executable payload published",
+  "historical_preparation_system_installs0_is_not_later_state": true,
+  "files": [
+    {
+      "source": "out/collab/l1-linux-dedicated-xvnc-assets-246/system-xkbcomp-receipt.json",
+      "path": "system-xkbcomp-receipt.json",
+      "bytes": 407,
+      "sha256": "7c8322d6006e72aaa1848c408c6196c85318edddbee67f53d8e45b4dc79810af"
+    },
+    {
+      "source": "out/collab/l1-linux-native-deps-246/receipt.json",
+      "path": "isolated-xcb-receipt.json",
+      "bytes": 1149,
+      "sha256": "53cd418115e086ac7e949ee7a57ac54d9471b1c4a29d8b0f811fd6d81d9eb583"
+    },
+    {
+      "source": "out/collab/l1-linux-dedicated-xvnc-assets-246/preparation.json",
+      "path": "historical-isolated-display-preparation.json",
+      "bytes": 3616,
+      "sha256": "c7b7e795d4ced16ebd37981d01bf106b3ecfed02085e123c83c9cfd272b2e48c"
+    }
+  ]
+}

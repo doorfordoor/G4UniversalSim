@@ -1,4 +1,13 @@
-# L1 配置 Agent（初稿）
+# L1 配置 Agent（本轮约定范围）
+
+Linux原生通道补充（主审已签收）：main已实际操作独立真实X11/xcb桌面，一次固定HTTP计划passed，操作观察时曾停在awaiting_approval、0事件；随后在观察期间触及300秒预算，整任务保留failed／agent.task_timeout，不称整任务成功。原host exit0、slot_released=true、host与显示服务两组remaining_owned均空、HTTP已关闭；显示辅助子进程退出码[0,1,0]（twm非零保留），不能写全部子进程exit0；代表性原生签收结果为 **独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**。WSLg RAIL任务栏无法展开，第三次host退出且0请求，原失败保留，绝不称该通道成功。Ubuntu实际系统安装x11-xkb-utils，其它本次依赖保持隔离OUT前缀；具体包版本／SHA及安装收据见最终证据，不把早期准备收据system_installs=0外推到之后。
+
+## 当前验收入口（2026-11-02）
+
+阶段签收：**本轮约定范围验收完成**；Linux独立X11/xcb代表性原生：**独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**。产品／测试冻结 `246e4f6f1b97cc5e0651ff01262c85cf2e9c28d3`。当前结果以文末“L1本轮验收与交付”及[最终证据](verification/l1-final-20261102/README.md)为准。下方旧实施稿、D1／EE进度快照和待验文字保留原日期，不反向改写原失败，也不以文档提交替换实际构建身份。
+
+
+### 开工初稿原文（保留当时状态）
 
 本文描述正在实施的 L1 目标、接口和验收方法，不代表功能已交付。开工基线为 `4840e62e6c2efe935e74e5b934f6194c6aa7731c`，分支 `roadmap/L1-config-agent`；范围与写权见[开工契约](collab/inbox/20261102-l1-execution.md)。[ROADMAP](ROADMAP.md) 仍是阶段状态入口，本次不修改其状态。
 
@@ -260,3 +269,32 @@ Task03 五域真实云链和应用恢复02分别已收 Ptolemy 限定文件独�
 native125 的人工操作臂／Agent臂单对描述性比较、原保存与导出文件链，以及另行授权的生产 closed-load 模型 IO 已分别有限通过；closed-load收据1beea485仅允许QtCore import、无QCoreApplication／QApplication实例，不冒第二次实窗或CLI回放；不是受试者成功率／提速结论，文件审不冒像素或第二次原生观察。原EE native150虽正常退出，仍发现52px下L1 AI全控件不可读的布局P2；该次原生失败按原身份保留，不改记原生总体通过。此为L1新缺陷，不套用旧F6按钮82>56的历史窄边界或改写其原结论。真实 NL 诊断修复02已由 main 单次运行，外层原13956／child63728均实际exit0、owned0，作者receipt为1request／8ops／4events／export／Undo passed；其实际链路纯文件独审已限定 PASS：一次真实回复共1295tokens，initial→capture恰5叶差异（4个energy同步表示及派生errors清空），其它raw保持；Undo完整JSON回S_invalid已核。expected/captured只差旧sourceEditor.errors清空，原生产语义指纹相同，不称全JSON相同。该审不代表native／科学／通用NL可靠性或生产load／CLI回放。原01为driver注入夹具失败、0modelcalls，v1/01原件保留，不被02成功替换。
 
 Harvey 的52px布局后续候选已仅在OUT冻结：产品SHA为 `05e4ec9077bbd0d8e08f8381a63b5ada86e3ad8566d436d6b04fae484a3038ae`，仅动态两列可读最小宽度提示及固定footer inset／reflow；测试SHA为 `6f06b0277c10b5ff27a21691a2b7c63f2a2f5d3124602b18a2f1af7cabd748e9`，保留原函数AST（main仅增新调用），新增真实MainWindow自然show的QAction／F6／Tab回归。候选注入后的125%／150%完整组件入口各1216、实际exit0；同一新回归在原产品52px负向实际exit1。workspace layout／core accessibility、Controller／F5／K1和翻译不改。上述作者专项与Ptolemy候选限定独审PASS分别计证；独审按当前focused-target及可容纳标签／控件joint合同关闭原52px P2，无其它确认P1/P2，不冒新candidate正式矩阵或新native通过。retained语言补验仅125%，英→中→英每轮9Tab的当前焦点完整可见、可容纳joint通过，非焦点右列仍可裁剪，不保证全footer同时同屏，新native仍待。main已精确apply已审panel／test两path，实际tracked两档各exit0／1233，另按原收据保留wrapper计数假设失败及更正，不与作者各1216混计；新提交身份、新构建、完整Windows六profile、真实CI和对应原生补验均待，不预填future HEAD或继承EE资格。当前不关闭 L1，F2／L2 顺序及既有白名单、raw／同指纹、授权／预算／只读恢复合同不变。 见[候选历史](agent-history.md#2026-11-02-l1-ee验收快照与原生布局后续候选)。
+
+
+## 2026-11-02 L1本轮验收与交付
+
+阶段签收：**本轮约定范围验收完成**。Linux独立X11/xcb代表性原生：**独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**；正式产品／测试身份为 `246e4f6f1b97cc5e0651ff01262c85cf2e9c28d3`，CPP源指纹 `9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a`，测试指纹 `e4a95aa36b5fc262c01516a28365c6ec00374f36907dfd1b95fc6f8da2eade86`。所有后续文档／证据提交只追加身份映射，不要求原BuildInfo改报未来HEAD。
+
+### 正式自动证据与重试
+
+Windows 六 profile **308 次用例／183347 个实际入口**；CI 十二原报告 **662 次用例／228978 个实际入口**，各原报告／日志身份、非零断言及匹配 J2 基线均经严格重放。 六本机分别static48/5031、GUI70/10131、11.3 backend63/82029、11.4 backend63/72536、11.3 integration32/6815、11.4 integration32/6805；合计308/183347。CI合计662/228978，不与旧EE244/169391或662/227634混算。
+
+CI 保留一次显式重试：M0 `41415360785`、Linux 双版 `41415360846`、desktop `41415360995` 均 attempt1；installation `41415360795` 的原 Windows job `125177769617` 在数据集上游 MD5 校验时拒绝，授权仅重试 Windows 后 attempt2 job `125215598259` 成功。原 Linux 安装成功结果沿用，原失败 collection／strict 总状态不改绿；最终以 `passed_with_explicit_retry` 聚合，不称首次全过。 原失败是官方数据包传输结果不完整后MD5不匹配的明确拒绝，证据支持暂时不完整传输，不证明更深网络／服务器根因。SDK声明MD5只是legacy完整性检查，不冒SHA签名或来源认证；HTTPS、实际SHA及SDK／运行范围分别记收据。
+
+最终非视觉精选包含18份原report、970份原case log；原件SHA／字节验证、重定位冻结checker及匹配J2原基线通过，篡改摘要负例被拒。J2以稳定公开原成员作外部基线引用，不批量复制旧J2或EE绿矩阵；不得把精选包说成完整历史自含环境。最终精确清单／数量／遗漏以[最终证据](verification/l1-final-20261102/README.md)为准，不以准备时估计代替实际manifest。
+
+### 新原生与继承的EE任务
+
+新 246 Windows 125%／150% 仅按受限原生范围计证：AI dock 的自然显示、F6／Tab 当前焦点与可容纳标签＋控件联合范围、只读恢复代表及正常关闭。两档 host 实际 exit0；不承诺所有非焦点 footer 同时同屏，不声称物理多屏热插拔或全面可访问性。旧 EE native150 的 52px 不可读布局失败按原身份保留。 代表性恢复由实际旧running记录的隔离副本演示，只读interrupted／query_only；不能靠重新授权或点击重复执行旧task。Linux独立X11/xcb代表性原生：**独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**，不把准备review、Python/PySide metadata、后台HTTP或exit0本身当成可见目标验证。
+
+EE→246 的全树精确映射仅 panel、其 smoke 与八文档变化；157 GUI 源中其余156及 Agent 五核心／adapter 未变。真实云五域 Task03、NL 诊断修复02、人工对照及受控恢复／production closed-load 均保留 EE 原 HEAD／EXE／脚本与各自范围，不改签新 246 模型请求、窗口或运行。 五域Task03是一次真实deepseek-flash规划和程序化审阅后的K1 run4/export/Undo限定链；三次五域尝试总数3、失败2、成功1，Task01的raw数字漂移和Task02的OUT serializer失败保持。NL诊断修复02是另一次真实请求1295tokens、8ops/4events/export/Undo；01为driver夹具失败且0modelcalls。expected/captured仅derived errors清空不同但生产语义指纹相同，不称完整JSON相等。均不宣称通用NL成功率或科学判据。
+
+### 人工单对、production IO与恢复边界
+
+人工操作臂与 Agent 臂仅一对 Codex 操作者案例：原 actions 记录 64／48 行，其中 measured 57／38 行；measured 首尾跨度 1003.298／1015.809 秒，全日志跨度 1088.615／1234.068 秒。包含工具周转、观察等待、修正与不对称 setup，记录行不等于工具或物理输入总数；不推导提速、受试者成功率或统计优势。两臂各完成4事件、资源输入一致，模型 wire 总请求／token 未独立采样，不能借 Task03 的用量补填。 两臂独立run身份不混用，导出资源SHA相同；撤销还原配置不撤销已发生的模拟、费用或导出。早期文件审“production closed-load pending”由后续真实inspect_bundle/load_bundle/project reader/codec补齐：无Application／事件循环，两包历史均stale，不是CLI replay或再次科学运行；旧文件审当时的pending字节不改。
+
+恢复02仅固定HTTP夹具单一受控点，原阶段73→0；恢复仅补旧operation/run历史result，不改原授权、usage或增加events，不发新请求、不重跑。正常close退役cancelled与backend失败分开，原恢复01失败仍保留。恢复没有覆盖任意断电／存储故障／所有inflight阶段，实际本地权重质量未验。
+
+### 最终支持与交付规则
+
+固定既有对象／字段白名单、默认只规划、审阅后新授权同 plan 建新 task、旧授权留史及恢复仅旧 ID 只读查询不重发保持。默认 evaluate 仅运行完成性；本地仅 OpenAI-compatible HTTP 协议，未测本地权重质量，不执行模型代码，不扩科学验证、任意新目标或 L2 持久代码工作流。 原图、QQ raw 与原 UIA 永久仅本机；最终公共证据只给限定 scope／path／size／SHA／MIME 元数据，不复制、上传、裁剪或 AI 重绘。发布包不含真实密钥、原始云请求／回复、任务 journal、完整 F5 capture、机器 QSettings、EXE／SDK／数据集或巨大 CSV。 本轮不扩F2受控热会话、L2代码执行／持久工作流、K2完整工程、任意实体或物理验证等级。F2按原顺序在L1主审签收后单独启动；原生与非视觉按主审实际原件签收；正式文档／归档／集成只做身份和交付校验，不新增科学或模型质量结论。

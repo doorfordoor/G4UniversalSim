@@ -2,6 +2,19 @@
 
 2026-11-02 D 盘桌面修订已同步。字体、数字显示与主题切换修复见[测量与进度](docs/verification/gui-theme-response-20261102/README.md)。
 
+Linux原生通道补充（主审已签收）：main已实际操作独立真实X11/xcb桌面，一次固定HTTP计划passed，操作观察时曾停在awaiting_approval、0事件；随后在观察期间触及300秒预算，整任务保留failed／agent.task_timeout，不称整任务成功。原host exit0、slot_released=true、host与显示服务两组remaining_owned均空、HTTP已关闭；显示辅助子进程退出码[0,1,0]（twm非零保留），不能写全部子进程exit0；代表性原生签收结果为 **独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**。WSLg RAIL任务栏无法展开，第三次host退出且0请求，原失败保留，绝不称该通道成功。Ubuntu实际系统安装x11-xkb-utils，其它本次依赖保持隔离OUT前缀；具体包版本／SHA及安装收据见最终证据，不把早期准备收据system_installs=0外推到之后。
+
+## 2026-11-02 L1 本轮验收与最终证据
+
+本轮阶段签收：**本轮约定范围验收完成**。产品／测试冻结 `246e4f6f1b97cc5e0651ff01262c85cf2e9c28d3`；后续仅 docs/evidence，不伪改原 EXE／report 的 BuildInfo 或提交。Windows 六 profile **308 次用例／183347 个实际入口**；CI 十二原报告 **662 次用例／228978 个实际入口**，各原报告／日志身份、非零断言及匹配 J2 基线均经严格重放。 CI 保留一次显式重试：M0 `41415360785`、Linux 双版 `41415360846`、desktop `41415360995` 均 attempt1；installation `41415360795` 的原 Windows job `125177769617` 在数据集上游 MD5 校验时拒绝，授权仅重试 Windows 后 attempt2 job `125215598259` 成功。原 Linux 安装成功结果沿用，原失败 collection／strict 总状态不改绿；最终以 `passed_with_explicit_retry` 聚合，不称首次全过。
+
+新 246 Windows 125%／150% 仅按受限原生范围计证：AI dock 的自然显示、F6／Tab 当前焦点与可容纳标签＋控件联合范围、只读恢复代表及正常关闭。两档 host 实际 exit0；不承诺所有非焦点 footer 同时同屏，不声称物理多屏热插拔或全面可访问性。旧 EE native150 的 52px 不可读布局失败按原身份保留。 Linux独立X11/xcb代表性原生：**独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**。最终范围与原件身份以[最终证据](docs/verification/l1-final-20261102/README.md)为准。
+
+EE→246 的全树精确映射仅 panel、其 smoke 与八文档变化；157 GUI 源中其余156及 Agent 五核心／adapter 未变。真实云五域 Task03、NL 诊断修复02、人工对照及受控恢复／production closed-load 均保留 EE 原 HEAD／EXE／脚本与各自范围，不改签新 246 模型请求、窗口或运行。 人工操作臂与 Agent 臂仅一对 Codex 操作者案例：原 actions 记录 64／48 行，其中 measured 57／38 行；measured 首尾跨度 1003.298／1015.809 秒，全日志跨度 1088.615／1234.068 秒。包含工具周转、观察等待、修正与不对称 setup，记录行不等于工具或物理输入总数；不推导提速、受试者成功率或统计优势。两臂各完成4事件、资源输入一致，模型 wire 总请求／token 未独立采样，不能借 Task03 的用量补填。
+
+固定既有对象／字段白名单、默认只规划、审阅后新授权同 plan 建新 task、旧授权留史及恢复仅旧 ID 只读查询不重发保持。默认 evaluate 仅运行完成性；本地仅 OpenAI-compatible HTTP 协议，未测本地权重质量，不执行模型代码，不扩科学验证、任意新目标或 L2 持久代码工作流。 下方“实施中”、EE快照及失败按各原时点保留，不能覆盖本段的新事实，也不能把历史失败删除。F2 在本轮主审签收后按原依赖推进，L2／K2另阶段。
+
+
 更新：2026-11-02。本页只做导航与快照；**阶段状态以 [docs/ROADMAP.md](docs/ROADMAP.md) 为准，支持等级以 [docs/功能支持矩阵.md](docs/功能支持矩阵.md) 为准**，两者冲突时先改事实再改文档。
 
 ## 2026-11-02 L1 配置 Agent 实施中

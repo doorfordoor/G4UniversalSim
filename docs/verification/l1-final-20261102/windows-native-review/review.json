@@ -1,0 +1,3399 @@
+{
+  "schema": "l1_windows_native_independent_file_review_v1",
+  "created_utc": "2026-11-02T11:19:37.950084+00:00",
+  "status": "PASS_WITH_EXPLICIT_SCOPE_LIMITS",
+  "reviewer_scope": "Read structured files, hash raw local evidence; no Qt process, desktop control, PNG decoding or UIA text reading.",
+  "head": "246e4f6f1b97cc5e0651ff01262c85cf2e9c28d3",
+  "current_source_clean": true,
+  "lanes": [
+    {
+      "scale_label_percent": 125,
+      "head": "246e4f6f1b97cc5e0651ff01262c85cf2e9c28d3",
+      "exe_sha256": "1cb8dc7267f8191792969ba1ab280f1a4936d05799b9a98991a2517fb358a758",
+      "host_sha256": "e0b14c3bf4300f46552f66a0c64eaa93a88c98b03522777a08336ef2bdce701a",
+      "launcher_sha256": "a0fc42e993f9d3f4504b6856bc4d8fa15898c3307a25ab3114fad7ec6fa484b6",
+      "config_sha256": "3b4976409872648bcca94b62a743ea3123308858bc2e3f2d63475b050bfd81ff",
+      "gui_files_verified": 157,
+      "gui_identity_sha256": "63d4176f08432291baf56065ca65d8763f13e4138e5e3b496ea05067106069eb",
+      "DPR": 1.25,
+      "logical_dpi": 96.0,
+      "screen": [
+        0,
+        0,
+        2048,
+        1280
+      ],
+      "available": [
+        0,
+        0,
+        2048,
+        1232
+      ],
+      "qpa": "windows",
+      "scale_environment": null,
+      "scaling_scope": "Measured Qt DPR; 150% uses inherited desktop125% times explicit QT_SCALE_FACTOR1.2; no physical display change claimed.",
+      "launcher_exit": 0,
+      "host_exit": 0,
+      "ending_git_clean": true,
+      "owned_cleanup_remaining": [],
+      "process_observation_errors": [],
+      "no_process_termination_or_global_cleanup": true,
+      "observations": 34,
+      "signal_records": 3,
+      "historical_calls": 6,
+      "historical_events": 4,
+      "historical_operations_unchanged": true,
+      "historical_authorization_preserved_in_journal_but_not_restored_to_controller": true,
+      "original_records_retained": 18,
+      "isolated_journal_added_state_records": 1,
+      "old_source_journal_unchanged": true,
+      "observed_new_model_calls": 0,
+      "observed_new_operations": 0,
+      "observed_new_run_export_events": 0,
+      "no_network_telemetry_claim": true,
+      "passive_signal_caches_not_full_network_audit": true,
+      "busy_or_provider_alive_observations": 0,
+      "mutating_footer_roles_disabled_after_recovery": [
+        "submit",
+        "apply",
+        "continue",
+        "run",
+        "cancel",
+        "confirm",
+        "export"
+      ],
+      "plan_and_resume_buttons_enabled_scope": "Plan starts a separately authorized future task; Resume reads a saved journal. Neither restores saved authority.",
+      "cached_f5_flags_stable": {
+        "undo": false,
+        "redo": false,
+        "modified": false
+      },
+      "prompt_or_permissions_prefilled": false,
+      "automatic_task_or_K1_execution": false,
+      "automatic_backend_preview": false,
+      "focused_button_geometry_checks": 11,
+      "fitting_focus_ancestor_checks": 57,
+      "nonfitting_target_observations": [
+        {
+          "observation": 5,
+          "widget_class": "QPlainTextEdit",
+          "target_rect": [
+            84,
+            0,
+            170,
+            110
+          ],
+          "nearest_viewport": [
+            0,
+            0,
+            254,
+            88
+          ]
+        },
+        {
+          "observation": 21,
+          "widget_class": "QPlainTextEdit",
+          "target_rect": [
+            1,
+            59,
+            252,
+            309
+          ],
+          "nearest_viewport": [
+            0,
+            0,
+            254,
+            88
+          ]
+        }
+      ],
+      "focus_geometry": [
+        {
+          "observation": 3,
+          "ancestor": 0,
+          "widget_class": "QToolButton",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            14,
+            99,
+            83,
+            38
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 4,
+          "ancestor": 0,
+          "widget_class": "QPushButton",
+          "viewport": [
+            0,
+            0,
+            520,
+            445
+          ],
+          "target_rect": [
+            127,
+            131,
+            165,
+            32
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 4,
+          "ancestor": 1,
+          "widget_class": "QPushButton",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            127,
+            131,
+            165,
+            32
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 4,
+          "ancestor": 2,
+          "widget_class": "QPushButton",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            347,
+            212,
+            165,
+            32
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 5,
+          "ancestor": 0,
+          "widget_class": "QPlainTextEdit",
+          "viewport": [
+            0,
+            0,
+            254,
+            88
+          ],
+          "target_rect": [
+            84,
+            0,
+            170,
+            110
+          ],
+          "contained": false,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 5,
+          "ancestor": 1,
+          "widget_class": "QPlainTextEdit",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            370,
+            117,
+            170,
+            110
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            258,
+            0
+          ]
+        },
+        {
+          "observation": 5,
+          "ancestor": 2,
+          "widget_class": "QPlainTextEdit",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            590,
+            198,
+            170,
+            110
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 6,
+          "ancestor": 0,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            254,
+            88
+          ],
+          "target_rect": [
+            0,
+            70,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            88
+          ]
+        },
+        {
+          "observation": 6,
+          "ancestor": 1,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            286,
+            187,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            258,
+            0
+          ]
+        },
+        {
+          "observation": 6,
+          "ancestor": 2,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            506,
+            268,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 7,
+          "ancestor": 0,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            254,
+            88
+          ],
+          "target_rect": [
+            0,
+            70,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            112
+          ]
+        },
+        {
+          "observation": 7,
+          "ancestor": 1,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            286,
+            187,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            258,
+            0
+          ]
+        },
+        {
+          "observation": 7,
+          "ancestor": 2,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            506,
+            268,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 8,
+          "ancestor": 0,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            254,
+            88
+          ],
+          "target_rect": [
+            0,
+            70,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            136
+          ]
+        },
+        {
+          "observation": 8,
+          "ancestor": 1,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            286,
+            187,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            258,
+            0
+          ]
+        },
+        {
+          "observation": 8,
+          "ancestor": 2,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            506,
+            268,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 9,
+          "ancestor": 0,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            254,
+            88
+          ],
+          "target_rect": [
+            0,
+            70,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            160
+          ]
+        },
+        {
+          "observation": 9,
+          "ancestor": 1,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            286,
+            187,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            258,
+            0
+          ]
+        },
+        {
+          "observation": 9,
+          "ancestor": 2,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            506,
+            268,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 10,
+          "ancestor": 0,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            254,
+            88
+          ],
+          "target_rect": [
+            0,
+            70,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            184
+          ]
+        },
+        {
+          "observation": 10,
+          "ancestor": 1,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            286,
+            187,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            258,
+            0
+          ]
+        },
+        {
+          "observation": 10,
+          "ancestor": 2,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            506,
+            268,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 11,
+          "ancestor": 0,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            254,
+            88
+          ],
+          "target_rect": [
+            0,
+            70,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            208
+          ]
+        },
+        {
+          "observation": 11,
+          "ancestor": 1,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            286,
+            187,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            258,
+            0
+          ]
+        },
+        {
+          "observation": 11,
+          "ancestor": 2,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            506,
+            268,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 12,
+          "ancestor": 0,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            254,
+            88
+          ],
+          "target_rect": [
+            0,
+            70,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            232
+          ]
+        },
+        {
+          "observation": 12,
+          "ancestor": 1,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            286,
+            187,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            258,
+            0
+          ]
+        },
+        {
+          "observation": 12,
+          "ancestor": 2,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            506,
+            268,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 13,
+          "ancestor": 0,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            254,
+            88
+          ],
+          "target_rect": [
+            0,
+            70,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            256
+          ]
+        },
+        {
+          "observation": 13,
+          "ancestor": 1,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            286,
+            187,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            258,
+            0
+          ]
+        },
+        {
+          "observation": 13,
+          "ancestor": 2,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            506,
+            268,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 14,
+          "ancestor": 0,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            254,
+            88
+          ],
+          "target_rect": [
+            0,
+            70,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            280
+          ]
+        },
+        {
+          "observation": 14,
+          "ancestor": 1,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            286,
+            187,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            258,
+            0
+          ]
+        },
+        {
+          "observation": 14,
+          "ancestor": 2,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            506,
+            268,
+            254,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 15,
+          "ancestor": 0,
+          "widget_class": "QSpinBox",
+          "viewport": [
+            0,
+            0,
+            254,
+            88
+          ],
+          "target_rect": [
+            97,
+            53,
+            157,
+            35
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            369
+          ]
+        },
+        {
+          "observation": 15,
+          "ancestor": 1,
+          "widget_class": "QSpinBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            383,
+            170,
+            157,
+            35
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            258,
+            0
+          ]
+        },
+        {
+          "observation": 15,
+          "ancestor": 2,
+          "widget_class": "QSpinBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            603,
+            251,
+            157,
+            35
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 16,
+          "ancestor": 0,
+          "widget_class": "QSpinBox",
+          "viewport": [
+            0,
+            0,
+            254,
+            88
+          ],
+          "target_rect": [
+            97,
+            53,
+            157,
+            35
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            410
+          ]
+        },
+        {
+          "observation": 16,
+          "ancestor": 1,
+          "widget_class": "QSpinBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            383,
+            170,
+            157,
+            35
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            258,
+            0
+          ]
+        },
+        {
+          "observation": 16,
+          "ancestor": 2,
+          "widget_class": "QSpinBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            603,
+            251,
+            157,
+            35
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 17,
+          "ancestor": 0,
+          "widget_class": "QSpinBox",
+          "viewport": [
+            0,
+            0,
+            254,
+            88
+          ],
+          "target_rect": [
+            97,
+            53,
+            157,
+            35
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            451
+          ]
+        },
+        {
+          "observation": 17,
+          "ancestor": 1,
+          "widget_class": "QSpinBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            383,
+            170,
+            157,
+            35
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            258,
+            0
+          ]
+        },
+        {
+          "observation": 17,
+          "ancestor": 2,
+          "widget_class": "QSpinBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            603,
+            251,
+            157,
+            35
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 18,
+          "ancestor": 0,
+          "widget_class": "QToolButton",
+          "viewport": [
+            0,
+            0,
+            254,
+            88
+          ],
+          "target_rect": [
+            0,
+            63,
+            88,
+            25
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            482
+          ]
+        },
+        {
+          "observation": 18,
+          "ancestor": 1,
+          "widget_class": "QToolButton",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            286,
+            180,
+            88,
+            25
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            258,
+            0
+          ]
+        },
+        {
+          "observation": 18,
+          "ancestor": 2,
+          "widget_class": "QToolButton",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            506,
+            261,
+            88,
+            25
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 19,
+          "ancestor": 0,
+          "widget_class": "QTabBar",
+          "viewport": [
+            0,
+            0,
+            254,
+            88
+          ],
+          "target_rect": [
+            0,
+            52,
+            254,
+            36
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            524
+          ]
+        },
+        {
+          "observation": 19,
+          "ancestor": 1,
+          "widget_class": "QTabBar",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            286,
+            169,
+            254,
+            36
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            258,
+            0
+          ]
+        },
+        {
+          "observation": 19,
+          "ancestor": 2,
+          "widget_class": "QTabBar",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            506,
+            250,
+            254,
+            36
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 20,
+          "ancestor": 0,
+          "widget_class": "QToolButton",
+          "viewport": [
+            0,
+            0,
+            254,
+            88
+          ],
+          "target_rect": [
+            238,
+            52,
+            16,
+            36
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            524
+          ]
+        },
+        {
+          "observation": 20,
+          "ancestor": 1,
+          "widget_class": "QToolButton",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            524,
+            169,
+            16,
+            36
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            258,
+            0
+          ]
+        },
+        {
+          "observation": 20,
+          "ancestor": 2,
+          "widget_class": "QToolButton",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            744,
+            250,
+            16,
+            36
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 21,
+          "ancestor": 0,
+          "widget_class": "QPlainTextEdit",
+          "viewport": [
+            0,
+            0,
+            254,
+            88
+          ],
+          "target_rect": [
+            1,
+            59,
+            252,
+            309
+          ],
+          "contained": false,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            553
+          ]
+        },
+        {
+          "observation": 21,
+          "ancestor": 1,
+          "widget_class": "QPlainTextEdit",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            287,
+            176,
+            252,
+            309
+          ],
+          "contained": false,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            258,
+            0
+          ]
+        },
+        {
+          "observation": 21,
+          "ancestor": 2,
+          "widget_class": "QPlainTextEdit",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            507,
+            257,
+            252,
+            309
+          ],
+          "contained": false,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 22,
+          "ancestor": 0,
+          "widget_class": "QPushButton",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            416,
+            211,
+            124,
+            32
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            258,
+            0
+          ]
+        },
+        {
+          "observation": 22,
+          "ancestor": 1,
+          "widget_class": "QPushButton",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            636,
+            292,
+            124,
+            32
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 23,
+          "ancestor": 0,
+          "widget_class": "QPushButton",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            286,
+            325,
+            124,
+            32
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            258,
+            0
+          ]
+        },
+        {
+          "observation": 23,
+          "ancestor": 1,
+          "widget_class": "QPushButton",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            506,
+            406,
+            124,
+            32
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 28,
+          "ancestor": 0,
+          "widget_class": "QPushButton",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            286,
+            343,
+            176,
+            32
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            258,
+            0
+          ]
+        },
+        {
+          "observation": 28,
+          "ancestor": 1,
+          "widget_class": "QPushButton",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            506,
+            424,
+            176,
+            32
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 29,
+          "ancestor": 0,
+          "widget_class": "QPushButton",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            364,
+            229,
+            176,
+            32
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            362,
+            0
+          ]
+        },
+        {
+          "observation": 29,
+          "ancestor": 1,
+          "widget_class": "QPushButton",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            584,
+            310,
+            176,
+            32
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        }
+      ],
+      "parent_visual_observation": {
+        "attribution": "Parent /root observed actual native images; this reviewer did not decode images or read UIA.",
+        "image_paths": [
+          "out/verification/l1-246e4f6/resumed-acceptance/native125-agent/07-f6-agent.png",
+          "out/verification/l1-246e4f6/resumed-acceptance/native125-agent/17-tab.png",
+          "out/verification/l1-246e4f6/resumed-acceptance/native125-agent/24-tab-footer.png",
+          "out/verification/l1-246e4f6/resumed-acceptance/native125-agent/25-tab-resume.png",
+          "out/verification/l1-246e4f6/resumed-acceptance/native125-agent/36-readonly-result.png",
+          "out/verification/l1-246e4f6/resumed-acceptance/native125-agent/37-en-focus.png",
+          "out/verification/l1-246e4f6/resumed-acceptance/native125-agent/39-retained-zh.png",
+          "out/verification/l1-246e4f6/resumed-acceptance/native125-agent/41-retained-en.png"
+        ],
+        "reported": [
+          "focused buttons readable",
+          "natural F6/Tab",
+          "en-zh-en retained focus",
+          "Task interrupted read-only recovery"
+        ]
+      },
+      "png_files": 24,
+      "uia_files": 40
+    },
+    {
+      "scale_label_percent": 150,
+      "head": "246e4f6f1b97cc5e0651ff01262c85cf2e9c28d3",
+      "exe_sha256": "1cb8dc7267f8191792969ba1ab280f1a4936d05799b9a98991a2517fb358a758",
+      "host_sha256": "e0b14c3bf4300f46552f66a0c64eaa93a88c98b03522777a08336ef2bdce701a",
+      "launcher_sha256": "a0fc42e993f9d3f4504b6856bc4d8fa15898c3307a25ab3114fad7ec6fa484b6",
+      "config_sha256": "3b4976409872648bcca94b62a743ea3123308858bc2e3f2d63475b050bfd81ff",
+      "gui_files_verified": 157,
+      "gui_identity_sha256": "63d4176f08432291baf56065ca65d8763f13e4138e5e3b496ea05067106069eb",
+      "DPR": 1.5,
+      "logical_dpi": 96.0,
+      "screen": [
+        0,
+        0,
+        1707,
+        1067
+      ],
+      "available": [
+        0,
+        0,
+        1707,
+        1027
+      ],
+      "qpa": "windows",
+      "scale_environment": "1.2",
+      "scaling_scope": "Measured Qt DPR; 150% uses inherited desktop125% times explicit QT_SCALE_FACTOR1.2; no physical display change claimed.",
+      "launcher_exit": 0,
+      "host_exit": 0,
+      "ending_git_clean": true,
+      "owned_cleanup_remaining": [],
+      "process_observation_errors": [],
+      "no_process_termination_or_global_cleanup": true,
+      "observations": 31,
+      "signal_records": 3,
+      "historical_calls": 6,
+      "historical_events": 4,
+      "historical_operations_unchanged": true,
+      "historical_authorization_preserved_in_journal_but_not_restored_to_controller": true,
+      "original_records_retained": 18,
+      "isolated_journal_added_state_records": 1,
+      "old_source_journal_unchanged": true,
+      "observed_new_model_calls": 0,
+      "observed_new_operations": 0,
+      "observed_new_run_export_events": 0,
+      "no_network_telemetry_claim": true,
+      "passive_signal_caches_not_full_network_audit": true,
+      "busy_or_provider_alive_observations": 0,
+      "mutating_footer_roles_disabled_after_recovery": [
+        "submit",
+        "apply",
+        "continue",
+        "run",
+        "cancel",
+        "confirm",
+        "export"
+      ],
+      "plan_and_resume_buttons_enabled_scope": "Plan starts a separately authorized future task; Resume reads a saved journal. Neither restores saved authority.",
+      "cached_f5_flags_stable": {
+        "undo": false,
+        "redo": false,
+        "modified": false
+      },
+      "prompt_or_permissions_prefilled": false,
+      "automatic_task_or_K1_execution": false,
+      "automatic_backend_preview": false,
+      "focused_button_geometry_checks": 9,
+      "fitting_focus_ancestor_checks": 25,
+      "nonfitting_target_observations": [
+        {
+          "observation": 5,
+          "widget_class": "QPlainTextEdit",
+          "target_rect": [
+            100,
+            0,
+            258,
+            110
+          ],
+          "nearest_viewport": [
+            0,
+            0,
+            358,
+            78
+          ]
+        },
+        {
+          "observation": 6,
+          "widget_class": "QCheckBox",
+          "target_rect": [
+            0,
+            31,
+            365,
+            18
+          ],
+          "nearest_viewport": [
+            0,
+            0,
+            358,
+            78
+          ]
+        },
+        {
+          "observation": 7,
+          "widget_class": "QCheckBox",
+          "target_rect": [
+            0,
+            31,
+            365,
+            18
+          ],
+          "nearest_viewport": [
+            0,
+            0,
+            358,
+            78
+          ]
+        },
+        {
+          "observation": 8,
+          "widget_class": "QCheckBox",
+          "target_rect": [
+            0,
+            31,
+            365,
+            18
+          ],
+          "nearest_viewport": [
+            0,
+            0,
+            358,
+            78
+          ]
+        },
+        {
+          "observation": 9,
+          "widget_class": "QCheckBox",
+          "target_rect": [
+            0,
+            31,
+            365,
+            18
+          ],
+          "nearest_viewport": [
+            0,
+            0,
+            358,
+            78
+          ]
+        },
+        {
+          "observation": 10,
+          "widget_class": "QCheckBox",
+          "target_rect": [
+            0,
+            31,
+            365,
+            18
+          ],
+          "nearest_viewport": [
+            0,
+            0,
+            358,
+            78
+          ]
+        },
+        {
+          "observation": 11,
+          "widget_class": "QCheckBox",
+          "target_rect": [
+            0,
+            31,
+            365,
+            18
+          ],
+          "nearest_viewport": [
+            0,
+            0,
+            358,
+            78
+          ]
+        },
+        {
+          "observation": 12,
+          "widget_class": "QCheckBox",
+          "target_rect": [
+            0,
+            31,
+            365,
+            18
+          ],
+          "nearest_viewport": [
+            0,
+            0,
+            358,
+            78
+          ]
+        },
+        {
+          "observation": 13,
+          "widget_class": "QCheckBox",
+          "target_rect": [
+            -3,
+            31,
+            365,
+            18
+          ],
+          "nearest_viewport": [
+            0,
+            0,
+            358,
+            78
+          ]
+        },
+        {
+          "observation": 14,
+          "widget_class": "QCheckBox",
+          "target_rect": [
+            0,
+            31,
+            365,
+            18
+          ],
+          "nearest_viewport": [
+            0,
+            0,
+            358,
+            78
+          ]
+        },
+        {
+          "observation": 15,
+          "widget_class": "QCheckBox",
+          "target_rect": [
+            0,
+            31,
+            365,
+            18
+          ],
+          "nearest_viewport": [
+            0,
+            0,
+            358,
+            78
+          ]
+        },
+        {
+          "observation": 20,
+          "widget_class": "QTabBar",
+          "target_rect": [
+            0,
+            22,
+            365,
+            36
+          ],
+          "nearest_viewport": [
+            0,
+            0,
+            358,
+            78
+          ]
+        },
+        {
+          "observation": 22,
+          "widget_class": "QPlainTextEdit",
+          "target_rect": [
+            1,
+            29,
+            363,
+            309
+          ],
+          "nearest_viewport": [
+            0,
+            0,
+            358,
+            78
+          ]
+        }
+      ],
+      "focus_geometry": [
+        {
+          "observation": 3,
+          "ancestor": 0,
+          "widget_class": "QToolButton",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            14,
+            99,
+            84,
+            38
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 4,
+          "ancestor": 0,
+          "widget_class": "QPushButton",
+          "viewport": [
+            0,
+            0,
+            520,
+            445
+          ],
+          "target_rect": [
+            127,
+            131,
+            340,
+            32
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 4,
+          "ancestor": 1,
+          "widget_class": "QPushButton",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            127,
+            131,
+            340,
+            32
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 4,
+          "ancestor": 2,
+          "widget_class": "QPushButton",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            347,
+            212,
+            340,
+            32
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 5,
+          "ancestor": 0,
+          "widget_class": "QPlainTextEdit",
+          "viewport": [
+            0,
+            0,
+            358,
+            78
+          ],
+          "target_rect": [
+            100,
+            0,
+            258,
+            110
+          ],
+          "contained": false,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            7,
+            0
+          ]
+        },
+        {
+          "observation": 5,
+          "ancestor": 1,
+          "widget_class": "QPlainTextEdit",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            282,
+            135,
+            258,
+            110
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            362,
+            0
+          ]
+        },
+        {
+          "observation": 5,
+          "ancestor": 2,
+          "widget_class": "QPlainTextEdit",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            502,
+            216,
+            258,
+            110
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 6,
+          "ancestor": 0,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            358,
+            78
+          ],
+          "target_rect": [
+            0,
+            31,
+            365,
+            18
+          ],
+          "contained": false,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            127
+          ]
+        },
+        {
+          "observation": 6,
+          "ancestor": 1,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            175,
+            166,
+            365,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            369,
+            0
+          ]
+        },
+        {
+          "observation": 6,
+          "ancestor": 2,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            395,
+            247,
+            365,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 7,
+          "ancestor": 0,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            358,
+            78
+          ],
+          "target_rect": [
+            0,
+            31,
+            365,
+            18
+          ],
+          "contained": false,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            151
+          ]
+        },
+        {
+          "observation": 7,
+          "ancestor": 1,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            175,
+            166,
+            365,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            369,
+            0
+          ]
+        },
+        {
+          "observation": 7,
+          "ancestor": 2,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            395,
+            247,
+            365,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 8,
+          "ancestor": 0,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            358,
+            78
+          ],
+          "target_rect": [
+            0,
+            31,
+            365,
+            18
+          ],
+          "contained": false,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            175
+          ]
+        },
+        {
+          "observation": 8,
+          "ancestor": 1,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            175,
+            166,
+            365,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            369,
+            0
+          ]
+        },
+        {
+          "observation": 8,
+          "ancestor": 2,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            395,
+            247,
+            365,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 9,
+          "ancestor": 0,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            358,
+            78
+          ],
+          "target_rect": [
+            0,
+            31,
+            365,
+            18
+          ],
+          "contained": false,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            199
+          ]
+        },
+        {
+          "observation": 9,
+          "ancestor": 1,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            175,
+            166,
+            365,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            369,
+            0
+          ]
+        },
+        {
+          "observation": 9,
+          "ancestor": 2,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            395,
+            247,
+            365,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 10,
+          "ancestor": 0,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            358,
+            78
+          ],
+          "target_rect": [
+            0,
+            31,
+            365,
+            18
+          ],
+          "contained": false,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            223
+          ]
+        },
+        {
+          "observation": 10,
+          "ancestor": 1,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            175,
+            166,
+            365,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            369,
+            0
+          ]
+        },
+        {
+          "observation": 10,
+          "ancestor": 2,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            395,
+            247,
+            365,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 11,
+          "ancestor": 0,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            358,
+            78
+          ],
+          "target_rect": [
+            0,
+            31,
+            365,
+            18
+          ],
+          "contained": false,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            247
+          ]
+        },
+        {
+          "observation": 11,
+          "ancestor": 1,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            175,
+            166,
+            365,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            369,
+            0
+          ]
+        },
+        {
+          "observation": 11,
+          "ancestor": 2,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            395,
+            247,
+            365,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 12,
+          "ancestor": 0,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            358,
+            78
+          ],
+          "target_rect": [
+            0,
+            31,
+            365,
+            18
+          ],
+          "contained": false,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            271
+          ]
+        },
+        {
+          "observation": 12,
+          "ancestor": 1,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            175,
+            166,
+            365,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            369,
+            0
+          ]
+        },
+        {
+          "observation": 12,
+          "ancestor": 2,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            395,
+            247,
+            365,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 13,
+          "ancestor": 0,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            358,
+            78
+          ],
+          "target_rect": [
+            -3,
+            31,
+            365,
+            18
+          ],
+          "contained": false,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            3,
+            295
+          ]
+        },
+        {
+          "observation": 13,
+          "ancestor": 1,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            172,
+            166,
+            365,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            369,
+            0
+          ]
+        },
+        {
+          "observation": 13,
+          "ancestor": 2,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            392,
+            247,
+            365,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 14,
+          "ancestor": 0,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            358,
+            78
+          ],
+          "target_rect": [
+            0,
+            31,
+            365,
+            18
+          ],
+          "contained": false,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            295
+          ]
+        },
+        {
+          "observation": 14,
+          "ancestor": 1,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            175,
+            166,
+            365,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            369,
+            0
+          ]
+        },
+        {
+          "observation": 14,
+          "ancestor": 2,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            395,
+            247,
+            365,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 15,
+          "ancestor": 0,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            358,
+            78
+          ],
+          "target_rect": [
+            0,
+            31,
+            365,
+            18
+          ],
+          "contained": false,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            319
+          ]
+        },
+        {
+          "observation": 15,
+          "ancestor": 1,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            175,
+            166,
+            365,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            369,
+            0
+          ]
+        },
+        {
+          "observation": 15,
+          "ancestor": 2,
+          "widget_class": "QCheckBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            395,
+            247,
+            365,
+            18
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 16,
+          "ancestor": 0,
+          "widget_class": "QSpinBox",
+          "viewport": [
+            0,
+            0,
+            358,
+            78
+          ],
+          "target_rect": [
+            95,
+            43,
+            263,
+            35
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            7,
+            379
+          ]
+        },
+        {
+          "observation": 16,
+          "ancestor": 1,
+          "widget_class": "QSpinBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            270,
+            178,
+            263,
+            35
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            369,
+            0
+          ]
+        },
+        {
+          "observation": 16,
+          "ancestor": 2,
+          "widget_class": "QSpinBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            490,
+            259,
+            263,
+            35
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 17,
+          "ancestor": 0,
+          "widget_class": "QSpinBox",
+          "viewport": [
+            0,
+            0,
+            358,
+            78
+          ],
+          "target_rect": [
+            95,
+            43,
+            263,
+            35
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            7,
+            421
+          ]
+        },
+        {
+          "observation": 17,
+          "ancestor": 1,
+          "widget_class": "QSpinBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            270,
+            178,
+            263,
+            35
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            369,
+            0
+          ]
+        },
+        {
+          "observation": 17,
+          "ancestor": 2,
+          "widget_class": "QSpinBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            490,
+            259,
+            263,
+            35
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 18,
+          "ancestor": 0,
+          "widget_class": "QSpinBox",
+          "viewport": [
+            0,
+            0,
+            358,
+            78
+          ],
+          "target_rect": [
+            95,
+            43,
+            263,
+            35
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            7,
+            463
+          ]
+        },
+        {
+          "observation": 18,
+          "ancestor": 1,
+          "widget_class": "QSpinBox",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            270,
+            178,
+            263,
+            35
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            369,
+            0
+          ]
+        },
+        {
+          "observation": 18,
+          "ancestor": 2,
+          "widget_class": "QSpinBox",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            490,
+            259,
+            263,
+            35
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 19,
+          "ancestor": 0,
+          "widget_class": "QToolButton",
+          "viewport": [
+            0,
+            0,
+            358,
+            78
+          ],
+          "target_rect": [
+            0,
+            53,
+            150,
+            25
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            495
+          ]
+        },
+        {
+          "observation": 19,
+          "ancestor": 1,
+          "widget_class": "QToolButton",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            175,
+            188,
+            150,
+            25
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            369,
+            0
+          ]
+        },
+        {
+          "observation": 19,
+          "ancestor": 2,
+          "widget_class": "QToolButton",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            395,
+            269,
+            150,
+            25
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 20,
+          "ancestor": 0,
+          "widget_class": "QTabBar",
+          "viewport": [
+            0,
+            0,
+            358,
+            78
+          ],
+          "target_rect": [
+            0,
+            22,
+            365,
+            36
+          ],
+          "contained": false,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            557
+          ]
+        },
+        {
+          "observation": 20,
+          "ancestor": 1,
+          "widget_class": "QTabBar",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            175,
+            157,
+            365,
+            36
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            369,
+            0
+          ]
+        },
+        {
+          "observation": 20,
+          "ancestor": 2,
+          "widget_class": "QTabBar",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            395,
+            238,
+            365,
+            36
+          ],
+          "contained": true,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 21,
+          "ancestor": 0,
+          "widget_class": "QToolButton",
+          "viewport": [
+            0,
+            0,
+            358,
+            78
+          ],
+          "target_rect": [
+            342,
+            22,
+            16,
+            36
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            7,
+            557
+          ]
+        },
+        {
+          "observation": 21,
+          "ancestor": 1,
+          "widget_class": "QToolButton",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            517,
+            157,
+            16,
+            36
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            369,
+            0
+          ]
+        },
+        {
+          "observation": 21,
+          "ancestor": 2,
+          "widget_class": "QToolButton",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            737,
+            238,
+            16,
+            36
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 22,
+          "ancestor": 0,
+          "widget_class": "QPlainTextEdit",
+          "viewport": [
+            0,
+            0,
+            358,
+            78
+          ],
+          "target_rect": [
+            1,
+            29,
+            363,
+            309
+          ],
+          "contained": false,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            586
+          ]
+        },
+        {
+          "observation": 22,
+          "ancestor": 1,
+          "widget_class": "QPlainTextEdit",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            176,
+            164,
+            363,
+            309
+          ],
+          "contained": false,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            369,
+            0
+          ]
+        },
+        {
+          "observation": 22,
+          "ancestor": 2,
+          "widget_class": "QPlainTextEdit",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            396,
+            245,
+            363,
+            309
+          ],
+          "contained": false,
+          "full_target_contract_applicable": false,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 23,
+          "ancestor": 0,
+          "widget_class": "QPushButton",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            357,
+            229,
+            176,
+            32
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            369,
+            0
+          ]
+        },
+        {
+          "observation": 23,
+          "ancestor": 1,
+          "widget_class": "QPushButton",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            577,
+            310,
+            176,
+            32
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 24,
+          "ancestor": 0,
+          "widget_class": "QPushButton",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            175,
+            343,
+            176,
+            32
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            369,
+            0
+          ]
+        },
+        {
+          "observation": 24,
+          "ancestor": 1,
+          "widget_class": "QPushButton",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            395,
+            424,
+            176,
+            32
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        },
+        {
+          "observation": 27,
+          "ancestor": 0,
+          "widget_class": "QPushButton",
+          "viewport": [
+            0,
+            0,
+            540,
+            445
+          ],
+          "target_rect": [
+            175,
+            343,
+            176,
+            32
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            369,
+            0
+          ]
+        },
+        {
+          "observation": 27,
+          "ancestor": 1,
+          "widget_class": "QPushButton",
+          "viewport": [
+            0,
+            0,
+            760,
+            536
+          ],
+          "target_rect": [
+            395,
+            424,
+            176,
+            32
+          ],
+          "contained": true,
+          "full_target_contract_applicable": true,
+          "scroll_offset": [
+            0,
+            0
+          ]
+        }
+      ],
+      "parent_visual_observation": {
+        "attribution": "Parent /root observed actual native images; this reviewer did not decode images or read UIA.",
+        "image_paths": [
+          "out/verification/l1-246e4f6/resumed-acceptance/native150-agent/09-prompt.png",
+          "out/verification/l1-246e4f6/resumed-acceptance/native150-agent/19-budget.png",
+          "out/verification/l1-246e4f6/resumed-acceptance/native150-agent/26-footer-plan.png",
+          "out/verification/l1-246e4f6/resumed-acceptance/native150-agent/27-footer-resume.png",
+          "out/verification/l1-246e4f6/resumed-acceptance/native150-agent/34-recovered.png",
+          "out/verification/l1-246e4f6/resumed-acceptance/native150-agent/36-retained-zh.png",
+          "out/verification/l1-246e4f6/resumed-acceptance/native150-agent/38-retained-en.png"
+        ],
+        "reported": [
+          "focused buttons readable",
+          "natural F6/Tab",
+          "en-zh-en retained focus",
+          "Task interrupted read-only recovery"
+        ]
+      },
+      "png_files": 20,
+      "uia_files": 38
+    }
+  ],
+  "confirmed_P0": [],
+  "confirmed_P1": [],
+  "confirmed_P2": [],
+  "public_images": 0,
+  "public_UIA_payloads": 0,
+  "original_assets_copied": 0,
+  "asset_metadata_whitelist": [
+    "scope",
+    "path",
+    "size_bytes",
+    "sha256",
+    "mime"
+  ],
+  "public_receipt_policy": "Explicit fields only; no prompt, task text, credentials, endpoint/model configuration, journal authorization payload, UI strings, screenshots or UIA contents.",
+  "recovery_code_scope": {
+    "path": "gui/g4usim_gui/agent/controller.py",
+    "function": "recover",
+    "resets": [
+      "scheduled callback",
+      "current plan",
+      "pending steps",
+      "execution authorization"
+    ],
+    "behavior": "Read-only historical workflow query; recovered tasks guarded from approve/queue/timeout; saved authorization is never reused."
+  },
+  "limits": [
+    "Parent visual observations are attributed, not a second independent pixel observation.",
+    "Focused fitting target/label union only; oversized editors and wider-than-nearest-viewport controls excluded from full-control visibility assertions.",
+    "Nested editor rectangles extending past outer viewport are preserved numerically; nearest viewport clips oversized content. No whole-viewport or all-footer simultaneity support claim.",
+    "Observed zero new dispatch is based on historical identity/count closure, signal caches and recovery code; not independently captured network traffic.",
+    "Read-only recovery may persist a terminal state to isolated copies. It does not mean journal bytes never change.",
+    "No task speed, participant reliability, general NLP, new cloud execution or physical validation claim."
+  ],
+  "historical_failed_125": {
+    "path": "out/verification/l1-246e4f6/native125-agent",
+    "preserved": true,
+    "status_scope": "Earlier125 attempt remains separate as requested by parent; its launcher exit0 does not erase its failed observation/setup scope.",
+    "raw_assets_not_relabelled": true,
+    "not_replaced_or_deleted": true
+  },
+  "historical_EE150_layout_failure_preserved": true,
+  "raw_asset_inventory": "native-assets-metadata.json",
+  "structured_source_metadata": "source-metadata.json"
+}

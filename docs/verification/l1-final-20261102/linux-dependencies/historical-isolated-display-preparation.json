@@ -1,0 +1,71 @@
+{
+  "status": "OFFICIAL_XVNC_ASSETS_STAGED_NOT_RUNNING",
+  "packages": [
+    {
+      "package": "tigervnc-standalone-server",
+      "version": "1.13.1+dfsg-2build2",
+      "path": "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-dedicated-xvnc-assets-246/tigervnc-standalone-server_1.13.1+dfsg-2build2_amd64.deb",
+      "sha256": "a51c4686dc0e95fdc8fb7109ef17a7399267eb70a1a58df2ab2c6f155448584b",
+      "size": 1141656,
+      "archive_filename": "pool/universe/t/tigervnc/tigervnc-standalone-server_1.13.1+dfsg-2build2_amd64.deb"
+    },
+    {
+      "package": "tigervnc-common",
+      "version": "1.13.1+dfsg-2build2",
+      "path": "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-dedicated-xvnc-assets-246/tigervnc-common_1.13.1+dfsg-2build2_amd64.deb",
+      "sha256": "69be5ad23b703a8f199e5aa6571f6c2dbb73f131926dd14dd06766b04515589e",
+      "size": 84370,
+      "archive_filename": "pool/universe/t/tigervnc/tigervnc-common_1.13.1+dfsg-2build2_amd64.deb"
+    },
+    {
+      "package": "libxfont2",
+      "version": "1:2.0.6-1+deb13u1build0.24.04.2",
+      "path": "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-dedicated-xvnc-assets-246/libxfont2_1%3a2.0.6-1+deb13u1build0.24.04.2_amd64.deb",
+      "sha256": "e2ed49a20ccff6ffa52719a6cd118538e24c434d9035acd7fb736e7e4f8d6485",
+      "size": 93972,
+      "archive_filename": "pool/main/libx/libxfont/libxfont2_2.0.6-1+deb13u1build0.24.04.2_amd64.deb"
+    },
+    {
+      "package": "twm",
+      "version": "1:1.0.10-1build2",
+      "path": "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-dedicated-xvnc-assets-246/twm_1%3a1.0.10-1build2_amd64.deb",
+      "sha256": "29517224de67d2dcd27be2e4cde9394e9aad5d3507491b053c2b3b4f895af9c2",
+      "size": 110280,
+      "archive_filename": "pool/universe/t/twm/twm_1.0.10-1build2_amd64.deb"
+    },
+    {
+      "package": "x11-xkb-utils",
+      "version": "7.7+8build2",
+      "path": "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-dedicated-xvnc-assets-246/x11-xkb-utils_7.7+8build2_amd64.deb",
+      "sha256": "69df4191e165f8b89d067f6234fcce89a4923d27d1e66dd92e6d63d6da93cdb0",
+      "size": 170314,
+      "archive_filename": "pool/main/x/x11-xkb-utils/x11-xkb-utils_7.7+8build2_amd64.deb"
+    }
+  ],
+  "prefix": "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-dedicated-xvnc-assets-246/root",
+  "binaries": [
+    {
+      "path": "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-dedicated-xvnc-assets-246/root/usr/bin/Xtigervnc",
+      "sha256": "42e3864d61df42097e7f8fe626234939313fc856420ebd3ff74dcf32e0cef219"
+    },
+    {
+      "path": "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-dedicated-xvnc-assets-246/root/usr/bin/twm",
+      "sha256": "72e241c7fca0e6d669561cee67ead7245119e5022144ea41a1f9769d34c2923d"
+    },
+    {
+      "path": "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-dedicated-xvnc-assets-246/root/usr/bin/xkbcomp",
+      "sha256": "0967e7e7b03b077327cea74567726b265bd304b4fdf59f87bf7fdfe1074e7591"
+    }
+  ],
+  "display": ":93",
+  "proposed_ports": {
+    "VNC": 5909,
+    "noVNC": 6089
+  },
+  "bind": "localhost only",
+  "actual_listeners_started": 0,
+  "actual_input_actions": 0,
+  "system_installs": 0,
+  "scope": "dedicated real Linux X11 server/WM via VNC; NOT WSLg RAIL pass",
+  "xkbcompiler_runtime_path_still_requires_validation": true
+}
