@@ -1,6 +1,6 @@
 # G4UniversalSim 状态（唯一入口页）
 
-**接手后先读**　[各阶段详细执行指南](docs/collab/decisions/20261102-stage-execution-guide.md)。近期按 F2 受控运行会话与 DeepSeek 的 [J3 新增桌面皮肤](docs/collab/decisions/20261102-j3-desktop-skins.md) 分线推进。
+**接手后先读**　[各阶段详细执行指南](docs/collab/decisions/20261102-stage-execution-guide.md)。近期按 F2 受控运行会话与 DeepSeek 的 [J3 现有界面视觉改造与新增皮肤](docs/collab/decisions/20261102-j3-desktop-skins.md) 分线推进。
 
 **D 盘接手入口**　[后续执行计划与 DeepSeek 开工指令](docs/collab/inbox/20261102-2045-astra-d-workspace-execution.md)。下一完整阶段为 F2，字体与主题的实窗补验可并行。
 
