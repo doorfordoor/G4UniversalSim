@@ -4,6 +4,7 @@ from PySide6.QtCore import QFileSystemWatcher, QProcess, QTimer
 from PySide6.QtWidgets import QApplication, QMainWindow
 
 from pathlib import Path
+from g4usim_gui.core.fonts import configure_numeric_display
 from g4usim_gui.core.i18n import current_language, ui_text
 from g4usim_gui.core.runner import G4USimRunner
 from g4usim_gui.history.run_history_store import load_state, save_state
@@ -33,6 +34,7 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMi
 
     def __init__(self, *, recovery_root=None, offer_recovery: bool = True) -> None:
         super().__init__()
+        configure_numeric_display(self)
         self.setWindowTitle("G4UniversalSim Runner")
         self.resize(1500, 950)
         self.setMinimumSize(760, 480)

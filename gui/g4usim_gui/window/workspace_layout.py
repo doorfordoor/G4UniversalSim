@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (
     QTabWidget, QVBoxLayout, QWidget,
 )
 
+from g4usim_gui.core.fonts import configure_numeric_display
 from g4usim_gui.core.i18n import ui_text
 
 STATE_KEY = "workspace/v1/layout"
@@ -144,6 +145,7 @@ class WorkspaceDock(QDockWidget):
 
     def __init__(self, title, host, owner):
         super().__init__(title, host)
+        configure_numeric_display(self)
         self._workspace_owner = weakref.ref(owner)
 
     @property

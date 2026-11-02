@@ -6,8 +6,10 @@ from pathlib import Path
 from typing import Literal
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QColor, QPalette
+from PySide6.QtGui import QColor, QFontDatabase, QPalette
 from PySide6.QtWidgets import QApplication
+
+from g4usim_gui.core.fonts import preferred_font_families
 
 
 ThemeMode = Literal["light", "dark", "system"]
@@ -141,11 +143,23 @@ def apply_theme(app: QApplication, mode: ThemeMode, palette: ThemePalette | None
     resolved = resolve_theme(app, mode)
     resolved_palette = "C" if resolved == "dark" else light_palette
     colors = PALETTES[resolved_palette]
-    font = app.font()   # Latin text in Segoe UI, Chinese in Microsoft YaHei UI (other systems: their defaults)
-    font.setFamilies(list(dict.fromkeys(["Segoe UI", "Microsoft YaHei UI", *font.families()])))
-    app.setFont(font)
-    app.setPalette(build_palette(colors))   # what the style draws itself: check boxes, arrows, popups
-    app.setStyleSheet(build_stylesheet(colors))
+    font = app.font()
+    font.setFamilies(preferred_font_families(QFontDatabase.families(), font.families()))
+    if font != app.font():
+        app.setFont(font)
+    native_palette = build_palette(colors)
+    if native_palette != app.palette():
+        app.setPalette(native_palette)   # native check boxes, arrows and popups
+    stylesheet = build_stylesheet(colors)
+    previous = app.styleSheet()
+    if stylesheet != previous:
+        # Qt 6's replacement of a live application sheet repeatedly repolishes
+        # the large nested editor tree. Removing the old sheet first avoids that
+        # slow replacement path. Keep both calls synchronous: no event processing
+        # or queued work may expose the unstyled intermediate state.
+        if previous:
+            app.setStyleSheet("")
+        app.setStyleSheet(stylesheet)
     app.setProperty("themeMode", mode)
     app.setProperty("resolvedTheme", resolved)
     app.setProperty("resolvedPalette", resolved_palette)
@@ -462,7 +476,6 @@ QPlainTextEdit:disabled, QTextEdit:disabled {{
 }}
 QPlainTextEdit, QTextEdit {{
     padding: 8px;
-    font-family: "Cascadia Mono", "Consolas";
     font-size: 12px;
 }}
 QPushButton, QToolButton[toolbarButton="true"] {{

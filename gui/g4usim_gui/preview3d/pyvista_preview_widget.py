@@ -33,6 +33,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from g4usim_gui.core.fonts import style_vtk_axes, vtk_font_file
 from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.core.theme import current_colors
 from g4usim_gui.preview3d.backend_mesh import BackendMesh
@@ -504,8 +505,9 @@ class PyVistaPreviewWidget(QWidget):
                 seen.add(item.name)
                 b = item.bounds
                 self._plotter.add_point_labels([((b[0] + b[1]) / 2, (b[2] + b[3]) / 2, (b[4] + b[5]) / 2)],
-                                               [item.name], point_size=0, font_size=11, pickable=False)
-        self._plotter.add_axes()
+                                               [item.name], point_size=0, font_size=11, pickable=False,
+                                               font_file=vtk_font_file())
+        style_vtk_axes(self._plotter.add_axes())
         self._track_actors = []          # cleared with the scene: draw the loaded tracks again
         if self.trajectories is not None:
             self._draw_tracks(render=False)
@@ -701,7 +703,7 @@ class PyVistaPreviewWidget(QWidget):
                 self._add_arrow(center, axis, height, colour, opacity, thin=True)
         if self._show_labels:
             self._plotter.add_point_labels([source.glyphs[0].center], [f"Source: {source.particle} {source.energy}"],
-                                           point_size=0, font_size=12, pickable=False)
+                                           point_size=0, font_size=12, pickable=False, font_file=vtk_font_file())
 
     def _add_arrow(self, start, direction, length: float, colour: str, opacity: float, thin: bool = False) -> None:
         arrow = self._pv.Arrow(start=start, direction=direction, tip_length=0.2, tip_radius=0.05 if thin else 0.07,

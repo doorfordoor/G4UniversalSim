@@ -7,12 +7,13 @@ from pathlib import Path
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from PySide6.QtCore import Qt, QSettings
+from PySide6.QtCore import Qt, QLocale, QSettings
 from PySide6.QtGui import QPalette
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QSpinBox
 
 from g4usim_gui.core.theme import apply_theme
 from gui_test_window import MainWindow
+from g4usim_gui.widgets.new_simulation_wizard import NewSimulationWizard
 
 
 def main() -> None:
@@ -22,7 +23,24 @@ def main() -> None:
     QSettings().clear()
 
     apply_theme(app, "light")
-    window = MainWindow()
+    original_locale = QLocale()
+    try:
+        localized = QLocale("ar_EG")
+        QLocale.setDefault(localized)
+        window = MainWindow()
+        assert window.project_page.threads.cleanText().isascii()
+        wizard = NewSimulationWizard(window)
+        assert wizard.run_page.threads.cleanText().isascii()
+        wizard.close()
+        dock = window.workspace_layout.docks["configuration"]
+        spin = dock.findChild(QSpinBox)
+        assert spin is not None
+        dock.setFloating(True)
+        assert spin.locale().zeroDigit() == "0"
+        dock.setFloating(False)
+        assert QLocale().name() == localized.name()
+    finally:
+        QLocale.setDefault(original_locale)
     window.resize(1200, 760)
     window.show()
     app.processEvents()

@@ -27,6 +27,7 @@ from PySide6.QtWidgets import (
     QWizardPage,
 )
 
+from g4usim_gui.core.fonts import configure_numeric_display
 from g4usim_gui.core import icons
 from g4usim_gui.core import wizard as wz
 from g4usim_gui.core.i18n import ui_format, ui_text
@@ -327,6 +328,7 @@ class RunPage(QWizardPage):
 class NewSimulationWizard(QWizard):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
+        configure_numeric_display(self)
         self.setWindowTitle(ui_text("New simulation"))
         self.spec = wz.default_spec(wz.SCENARIOS[0])
         self.scenario_page = ScenarioPage(self)

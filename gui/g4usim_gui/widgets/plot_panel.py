@@ -29,6 +29,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from g4usim_gui.core.fonts import preferred_font_families
 from g4usim_gui.core.evidence_job import EvidenceJob, verify_roots
 from g4usim_gui.output.provenance import evidence_operation, verification_active
 from g4usim_gui.core import icons
@@ -38,11 +39,9 @@ from g4usim_gui.output import plot_data
 from g4usim_gui.widgets.qt_data import combo_data
 
 AXES = ("0", "1", "2")
-# Chinese hints and labels in figures need a CJK font after DejaVu Sans (per-glyph fallback)
+# Same installed-family preference as Qt, including Latin digits and CJK labels.
 _installed = {font.name for font in font_manager.fontManager.ttflist}
-rcParams["font.family"] = ["DejaVu Sans", *[name for name in (
-    "Microsoft YaHei", "SimHei", "Noto Sans CJK SC", "Source Han Sans SC", "PingFang SC", "WenQuanYi Zen Hei")
-    if name in _installed]]
+rcParams["font.family"] = preferred_font_families(_installed, ("DejaVu Sans",))
 # series colours after the theme accent (comparisons, runs, particles)
 SERIES = ("#d08a3b", "#6f7fd1", "#c25b8f", "#8aa04a", "#4fa3c7", "#a07c5a")
 

@@ -454,17 +454,24 @@ class ShellMixin:
         self._palette_actions[palette].setChecked(True)
 
     def _set_theme(self, mode: ThemeMode, *, palette=None) -> None:
-        self._clear_diagnostic_highlights()
         app = QApplication.instance()
         if app is None:
             return
         apply_theme(app, mode, palette)
-        self._refresh_icons()
-        # matplotlib figures, icons and other custom-painted views keep their colours until redrawn
-        for page in (self.start_page, self.config_builder_page, self.output_page, self.scenario_page, self.effective_config_page, self.scan_page):
-            refresh_theme = getattr(page, "refresh_theme", None)
-            if refresh_theme is not None:
-                refresh_theme()
+        colors = current_colors()
+        # Mode and remembered light palette can change without changing visible
+        # colours (for example choosing K while dark). Keep those preferences,
+        # but do not redraw plots or restart their evidence reads unnecessarily.
+        # This cache belongs to the window: a newly constructed window still
+        # refreshes its custom-painted views even if QApplication is themed.
+        if getattr(self, "_painted_theme_colors", None) != colors:
+            self._clear_diagnostic_highlights()
+            self._refresh_icons()
+            for page in (self.start_page, self.config_builder_page, self.output_page, self.scenario_page, self.effective_config_page, self.scan_page):
+                refresh_theme = getattr(page, "refresh_theme", None)
+                if refresh_theme is not None:
+                    refresh_theme()
+            self._painted_theme_colors = colors
         QSettings().setValue("appearance/theme", mode)
         action = self._theme_actions.get(mode)
         if action is not None:
