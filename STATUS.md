@@ -1,5 +1,7 @@
 # G4UniversalSim 状态（唯一入口页）
 
+**D 盘接手入口**　[后续执行计划与 DeepSeek 开工指令](docs/collab/inbox/20261102-2045-astra-d-workspace-execution.md)。下一完整阶段为 F2，字体与主题的实窗补验可并行。
+
 2026-11-02 D 盘桌面修订已同步。字体、数字显示与主题切换修复见[测量与进度](docs/verification/gui-theme-response-20261102/README.md)。
 
 Linux原生通道补充（主审已签收）：main已实际操作独立真实X11/xcb桌面，一次固定HTTP计划passed，操作观察时曾停在awaiting_approval、0事件；随后在观察期间触及300秒预算，整任务保留failed／agent.task_timeout，不称整任务成功。原host exit0、slot_released=true、host与显示服务两组remaining_owned均空、HTTP已关闭；显示辅助子进程退出码[0,1,0]（twm非零保留），不能写全部子进程exit0；代表性原生签收结果为 **独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**。WSLg RAIL任务栏无法展开，第三次host退出且0请求，原失败保留，绝不称该通道成功。Ubuntu实际系统安装x11-xkb-utils，其它本次依赖保持隔离OUT前缀；具体包版本／SHA及安装收据见最终证据，不把早期准备收据system_installs=0外推到之后。
