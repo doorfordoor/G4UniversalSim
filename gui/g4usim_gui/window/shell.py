@@ -489,6 +489,9 @@ class ShellMixin:
             action.setChecked(True)
         self._on_page_changed(self.page_stack.currentIndex())
         self.workspace_layout.refresh_language()
+        agent_panel = getattr(self, 'config_agent_panel', None)
+        if agent_panel is not None:
+            agent_panel.retranslate_ui()
         self._set_run_chip(*self._run_chip)
         self.statusBar().clearMessage()   # a message shown before the switch is in the old language
         self.project_context.setText(

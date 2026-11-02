@@ -53,6 +53,13 @@ class Case:
 
 
 CASES = (
+    Case("agent_session", "gui/smoke_tests/smoke_agent_session.py", "static"),
+    Case("agent_provider", "gui/smoke_tests/smoke_agent_provider.py", "static"),
+    Case("gui_agent_actions", "gui/smoke_tests/smoke_agent_actions.py", "gui", ("qt",)),
+    Case("gui_agent_boundaries", "gui/smoke_tests/smoke_agent_boundaries.py", "gui", ("qt",)),
+    Case("gui_config_agent_panel", "gui/smoke_tests/smoke_config_agent_panel.py", "gui", ("qt",)),
+    Case("gui_config_agent", "gui/smoke_tests/smoke_config_agent.py", "gui", ("qt",)),
+    Case("gui_config_agent_backend", "gui/smoke_tests/smoke_config_agent_backend.py", "integration", ("exe", "qt"), timeout=600),
     Case("solid_registry", "scripts/test_solid_registry.py", "static", ("cxx",)),
     Case("solid_registry_backend", "scripts/test_solid_registry.py", "backend", ("cxx", "exe"), args=("--backend",)),
     Case("j2_source_physics", "scripts/test_j2_sources_physics.py", "backend", ("exe",)),

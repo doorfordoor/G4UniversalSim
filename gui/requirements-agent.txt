@@ -1,0 +1,3 @@
+# Network provider and Windows Credential Manager use Python's standard library.
+# Linux system storage is optional and deliberately restricted to SecretService.
+SecretStorage>=3.3,<4; sys_platform == "linux"

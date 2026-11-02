@@ -715,3 +715,16 @@ E7只完成现有15/7真实factory分派、能力元数据及GUI共源离线表�
 18c三档原生只沿原HEAD/EXE/限定scope映射，149GUI/C++与精确7文件差异byte-map是身份事实，不是新三档执行。2ec125实际I1/I2首屏打开关闭、Import原8文件包/保存、模板Finish/另存/重入NextBackEsc正常退出，main24观察/41JPEG，Ptolemy84原件纯文件核验、Harvey无新增必跑动作合同核对。Import4旧history为stale，当前仅import_history passed imported_count4；没有本轮validate/generate/run新record。取消事件运行后自动几何预览仍会构造后端，不能声称完全没启后端。缓存project/Undo/UIA focus非live F5，文件审非第二次像素审查；18c100的init no_run/run100/100/export未CLI replay及旧scope各自保留。
 
 197张标记local-only原图仅本地，公共objects/tree均排除、只path/size/SHA/范围；opaqueZIP未内容审查只metadata，不能凭SHA判安全。历史Markdown原字节归档为.md.raw及恢复映射，不把旧坏链接或排除图当可读公共入口；原report/log维持可重定位布局并拒绝旧绝对fallback，实际currentWindows6+CI12以原checker和matchingbaseline验证。现有docs/verification/** -text已保证raw，Git blob实测而非新增attrs；最终证据精确清单包含全部文件且不自指。F6内层viewport容不下joint的窄边界、QQ遮挡、物理跨屏/热插拔和H2/H7/Q2等科学基准均不随关闭扩张。dated历史和原独审身份不追改。
+
+
+## 2026-11-02 L1 配置 Agent 实施候选
+
+用户授权的本轮 L1 正在实施，分支 roadmap/L1-config-agent，开工基线4840e62e；F2在L1之后，L2代码Agent依赖L1/K2另行推进。完整约束见[开工契约](collab/inbox/20261102-l1-execution.md)和[L1使用与接口](L1配置Agent.md)。本条是准备正式验收的候选契约，不是阶段完成，不追改前述J2/F8/E7或更早历史。
+
+本轮只在生成模式（generated）按固定白名单修改既有体积、源、运行、物理、计分字段：体积material/size/position/rotation/sensitive（world仅material/size，size仅已有允许模式的box/tubs）；源仅mono/point/fixed的particle/energy/position/direction；运行beam_on/threads/seed；参考列表模式（reference）物理reference_list/default_cut；计分hits/event_edep/edep/dose/fluence。读取上下文来自UI捕获快照，模型不能扩大写范围；不新增目标，不自动编辑高级源分布、资源路径、任意代码或安装器。Dose/Fluence等原实验性与科学边界不提高。实际事务、校验、初始化、生成、运行、导出复用F5/K1及唯一runner；默认完成性evaluate只查询绑定run资格，不调用K1物理比较，后者须显式参考/判据。
+
+默认plan-only先给差异。用户在UI明确新授权后点击应用，`approve_with_authorization(authorization, auto_run=False, write_scope=None)`复核同base_fingerprint/revision和同plan，建立新TaskJournal与新task_id，保存新授权并记录reason事件`agent.reviewed_from:<旧task_id>`；旧任务取消留史、原授权/预算不改，不再请求模型。恢复实例的`_recovered`阻断此入口；恢复只按旧operation/run/record/action查询并显示历史/未观测，不重发、不接管别人的进程，须新prompt请求才建新task执行。权限或预算不足停在对应步骤，不自动扩授权。取消/超时/关闭只处理本任务绑定工作，不因其它所有者忙而误取消K1。
+
+持久密钥只用系统凭据服务，不能落任务/项目、日志或导出包；Linux可选SecretStorage缺失/服务不可用明确拒绝，不默降明文或session。云接入与本地OpenAI-compatible协议分开计证；本地仅实际HTTP协议夹具，不附权重、不宣称实际本地模型理解质量。journal的checksum/聊天/日志不是授权来源，保存的授权不能恢复执行权。
+
+主线程已收核心专项独审：最终忙状态P2在controller409d6a4a/适配9689acb7定点关闭；面板125%/150%独立组件各108入口、永久边界146入口各按原收据保留，不合并成正式矩阵或实窗。当前开发证据是旧2ec EXE上的固定HTTP双版各24入口，以及真实DeepSeek任务集02的一项4事件/export/Undo、另两项澄清；旧01整体UI线程守卫失败原件不拼绿。新候选重新构建、双版双平台完整矩阵/真实CI、人工时间成功率对照和原生窗口边界仍待；不造未来HEAD、计数或完成声明。

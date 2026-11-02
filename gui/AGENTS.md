@@ -1,5 +1,7 @@
 # G4UniversalSim GUI Agent 开发约束
 
+2026-11-02 L1配置Agent实施候选：只写既有体积/单能point固定方向源/运行/reference物理/计分的通用字段白名单，读取范围来自UI捕获上下文。默认仅规划，用户审阅差异后以当前新授权批准同plan，`approve_with_authorization`复核同快照并新建task，旧task取消留史、原授权不改、reason记reviewed_from，不重调模型；恢复实例不得借此提权，只查旧operation/run/record并只读显示，执行须新prompt新task。权限不足停步，事务/runner仍归F5/K1，取消/关闭不得误停其它所有者。密钥不落任务/项目/日志，系统存储缺失明确拒绝；本地仅兼容协议，不附权重或宣称其质量。核心专项独审已过但目前只有旧2ec EXE开发链与真实云模型任务集02，新候选重新构建/正式矩阵/CI/实窗待验，默认evaluate仅完成性，非物理比较。完整接口见[L1说明](../docs/L1配置Agent.md)与[候选历史](../docs/agent-history.md#2026-11-02-l1-配置-agent-实施候选)；下方J2历史字节保留。
+
 2026-11-02 J2/F8与E7本轮约定验收完成：测试冻结2ec5b14，后续仅docs/evidence；History真实Label/buddy/provider、焦点/事务/资源及15/7元数据约定见[最终历史条目](../docs/agent-history.md#2026-11-02-j2f8与e7本轮验收完成测试冻结2ec5b14)和[最终证据](../docs/verification/j2-f8-final-20261102/README.md)。18c三档映射与2ec125补验分开，文件审不冒视觉；旧dated候选原文保留，不扩大科学等级。
 
 2026-11-02 J2/F8第三修复候选：相关专项独审已完成，完整新候选验收待进行；History只用三个明确buddy及既有语言刷新链，真实QLayout才可递归count/itemAt；F6窄dock界限不修、不放宽可容纳joint判据。K1 policy final-v1专项独审已通过603入口，完整新候选验收仍待进行；原拼写安全检查不得被canonical匹配替代。详见 ../docs/agent-history.md 同名条目；2901f42旧raw不改，新修复三档原生补验仍待完成。

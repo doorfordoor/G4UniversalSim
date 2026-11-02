@@ -25,9 +25,10 @@ from g4usim_gui.window.diagnostics import DiagnosticsMixin
 from g4usim_gui.window.transactions import TransactionsMixin
 from g4usim_gui.window.recovery import RecoveryMixin
 from g4usim_gui.window.experiment import ExperimentMixin
+from g4usim_gui.window.config_agent import ConfigAgentMixin
 
 
-class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMixin, TransactionsMixin, RecoveryMixin, ExperimentMixin, QMainWindow):
+class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMixin, TransactionsMixin, RecoveryMixin, ExperimentMixin, ConfigAgentMixin, QMainWindow):
     """The main window: pages, runner and controllers; its behaviour is split by area in g4usim_gui/window/."""
 
     def __init__(self, *, recovery_root=None, offer_recovery: bool = True) -> None:
@@ -75,6 +76,7 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMi
         self._recovery_root = recovery_root
         self._offer_recovery = offer_recovery
         self._setup_experiment()
+        self._setup_config_agent()
         setup_recovery = getattr(self, '_setup_recovery', None)
         if setup_recovery is not None:
             setup_recovery()
@@ -160,7 +162,12 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMi
             event.ignore()
             return
         self._closing = True
+        self._close_config_agent()
         if self._defer_experiment_close():
+            event.ignore()
+            return
+        if self.agent_controller.busy:
+            QTimer.singleShot(50, self.close)
             event.ignore()
             return
         # Stop producers before waiting: completion signals must not launch queued jobs.

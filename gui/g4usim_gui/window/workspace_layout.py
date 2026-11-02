@@ -276,14 +276,9 @@ class WorkspaceLayout(QObject):
         log_dock = self._dock("logs", "Execution logs", host, logs, Qt.BottomDockWidgetArea)
         stack._navigation_docks[stack.indexOf(run)] = (log_dock,)
 
-        # An explicitly unavailable area, with no provider, controls or fake chat.
-        ai = QWidget(config)
-        ai_layout = QVBoxLayout(ai)
-        message = QLabel(ui_text("AI assistance is not connected. This reserved area does not run actions."))
-        message.setProperty("workspaceText", "AI assistance is not connected. This reserved area does not run actions.")
-        message.setWordWrap(True)
-        ai_layout.addWidget(message)
-        ai_layout.addStretch(1)
+        from g4usim_gui.widgets.config_agent_panel import ConfigAgentPanel
+        ai = ConfigAgentPanel(config)
+        window.config_agent_panel = ai
         self._dock("ai", "AI assistance (not connected)", host, ai, Qt.RightDockWidgetArea)
 
     def _forget_first_dock(self, dock):
