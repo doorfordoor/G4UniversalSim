@@ -69,7 +69,13 @@
 - 限制：这是 WSLg 的 X11 窗口渲染，不是完整桌面会话（没有窗口管理器装饰），不能替代
   Linux 真实桌面验收；中文界面下 matplotlib 图表仍有缺字形警告（图表字体，不是控件文本）。
 
-## 5. 复现与边界
+## 5. 状态不串改（主题切换）
+
+- 新用例 `gui/smoke_tests/smoke_theme_state.py`（`gui_theme_state`）：打开演示项目后记录运行名输入、输出文件树选中行、当前页面与工作区标签索引，然后依次切到纸墨、午夜蓝、B；断言这些状态逐项保持、外观偏好只写入 QSettings（`appearance/light_skin`、`appearance/dark_skin`）、`current_skin()` 与状态栏显示一致。
+- 证据：`state-preservation/`（5 个 GUI 用例，188 断言，含 `gui_theme_state`/`gui_theme_response`/`gui_j1_appearance`/`gui_main_window`/`gui_command_palette`）。
+- 未覆盖：运行中任务与 K1 输入资格在切皮肤时的表现、Undo/Redo 栈内容、非法草稿的恢复提示；这些仍属 J3 验收要求里的未完成项，不能把本用例当成全部“状态不串改”验收。
+
+## 6. 复现与边界
 
 - 对比度：`gui/.venv/Scripts/python.exe -B out/contrast_table.py`（本地脚本）。
 - 性能：`gui/.venv/Scripts/python.exe -B out/theme_perf.py`；父版在

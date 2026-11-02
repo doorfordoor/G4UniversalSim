@@ -9,6 +9,11 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ### Added
 
+- 主题切换状态保持用例 `gui_theme_state`：切皮肤后编辑器输入、输出文件选择、当前页面与工作区标签不变，外观偏好只写入本机 QSettings。
+
+
+### Added
+
 - GUI 窄窗口/高 DPI 紧凑布局：宽度小于 1400 逻辑像素时隐藏 AI 与 3D 可选 dock（可从View → Panels 重新打开）、收窄 setup 面板与配置分栏，材料编辑器按钮改两行网格；窗口最小宽度由约 1600 降到 760 逻辑像素。主题切换性能与 Linux WSLg X11 代表性渲染数据见 `docs/verification/j3-visual-checks-20261102/`。
 
 

@@ -300,3 +300,4 @@ F4依赖维护：安装统一走gui/requirements.txt，当前验证线PySide6>=6
 - 回归：`gui_help_menu`（34 断言）与 `gui_main_window`/`gui_command_palette`/`gui_theme_response`/`gui_j1_appearance`；
   证据 `docs/verification/j3-help-20261102/README.md`。
 
+主题切换不得改动编辑器草稿、输出文件选择、当前页面与工作区标签索引；外观偏好只能写入本机 QSettings（`appearance/theme`、`appearance/light_skin`、`appearance/dark_skin`），不得进入项目 JSON 或实验包。回归入口 `gui_theme_state` 与 `gui_theme_response`。运行中任务、K1 输入资格与 Undo/Redo 栈在切皮肤时的行为仍待补测。

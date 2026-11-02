@@ -411,6 +411,11 @@ H4–H8 if the user's applications favour some of them.
 
 ## Progress log
 
+### 2026-11-03 J3 状态不串改用例
+
+新增 `gui_theme_state`：切换纸墨/午夜蓝/B 后运行名输入、输出文件选中行、当前页面与工作区标签保持不变，外观偏好只进入 QSettings；与四个既有主题用例共 5 例 188 断言通过。证据`docs/verification/j3-visual-checks-20261102/state-preservation/`。运行中任务、K1 资格与Undo 栈仍未覆盖，J3 未关闭。
+
+
 ### 2026-11-03 J3 视觉校验（作者侧）
 
 15 皮肤 × 17 项对比度全部达标；125% 与 1180 逻辑宽 @150% 紧凑布局可用（可选 dock 自动收起、材料编辑器两行网格，最小宽度约 760）；主题切换中位 765.1 ms，父版 752.5 ms（约 1.02×，低于 1.20× 调查线）；WSLg X11/xcb 下纸墨/午夜蓝/中文界面渲染正常，3D 无 pyvista 时给出明确回退说明。证据与边界见 `docs/verification/j3-visual-checks-20261102/README.md`。J3 仍未关闭，Linux 真实桌面与独立复验待做。
