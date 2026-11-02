@@ -119,6 +119,10 @@ class WorkspacePageStack(QStackedWidget):
         for index, (_page, dock) in self._dock_pages.items():
             if index != self.currentIndex() and dock is not None and dock.isVisible():
                 dock.hide()
+        if self.currentIndex() != getattr(self, "_analysis_index", -1):
+            logs = getattr(layout, "docks", {}).get("logs") if (layout := getattr(self, "_workspace_layout", None)) else None
+            if logs is not None:
+                logs.setMaximumHeight(16777215)
         self._central_extent(selected is not None)
         if selected is not None and selected[1] is not None:
             selected[1].show()
@@ -130,20 +134,10 @@ class WorkspacePageStack(QStackedWidget):
             dock.show()
             dock.raise_()
         layout = getattr(self, "_workspace_layout", None)
-        if layout is not None and self.currentIndex() == getattr(self, "_analysis_index", -1):
+        if layout is not None and self.currentIndex() == getattr(layout, "_analysis_index", -1):
             layout.focus_analysis_view()
         if self.currentIndex() == self._preview_activation_index:
             self.previewActivationRequested.emit()
-
-    def focus_analysis_view(self):
-        """Show the results page across the full window with the log dock."""
-        for name in ("preview", "ai"):
-            dock = self.docks.get(name)
-            if dock is not None and dock.isVisible():
-                dock.hide()
-        logs = self.docks.get("logs")
-        if logs is not None:
-            logs.show()
 
     def restore_current_index(self, index):
         # A saved hidden active dock must remain hidden. Restoring navigation
@@ -197,6 +191,20 @@ class WorkspaceLayout(QObject):
             self.docks["preview"].hide()
             window.page_stack._first_navigation_docks[window.page_stack.indexOf(window.config_builder_page)] = (
                 self.docks["preview"],)
+
+    def focus_analysis_view(self):
+        """Show the results page across the full window with the log dock."""
+        for name in ("preview", "ai"):
+            dock = self.docks.get(name)
+            if dock is not None and dock.isVisible():
+                dock.hide()
+        logs = self.docks.get("logs")
+        if logs is not None:
+            logs.show()
+            logs.setMaximumHeight(300)
+        results = self.docks.get("results")
+        if results is not None and results.widget() is not None:
+            results.widget().setMinimumHeight(420)
 
     def _host(self, name: str, parent: QWidget) -> QMainWindow:
         host = QMainWindow(parent)
