@@ -6,6 +6,10 @@
 
 2026-11-02 D 盘桌面修订已同步。字体、数字显示与主题切换修复见[测量与进度](docs/verification/gui-theme-response-20261102/README.md)。
 
+## 2026-11-02 J3 第五阶段：导航时收起旧停靠页与结果页分析视图（作者交付，未验收）
+
+`WorkspacePageStack.reveal_current()` 现在在离开停靠页时隐藏该页 dock（配置编辑器不再在 Run Console、Results、Run History、Parameter Scans 继续占宽），导航到 Results 时 `WorkspaceLayout.focus_analysis_view()` 收起 3D 预览与 AI 面板、显示日志 dock。回归 7 个 GUI 用例、2022 断言；证据 `docs/verification/j3-analysis-docks-20261102/README.md`。Results 页停靠组合仍非最终版，J3 未关闭。
+
 ## 2026-11-02 J3 第四阶段：按当前页面适配工作区（作者交付，未验收）
 
 新增 `WorkspaceLayout.preset_for_page()`（页面 0–4 → `configuration`、5 → `running`、6–8 → `analysis`）与

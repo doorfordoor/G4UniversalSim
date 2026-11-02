@@ -873,3 +873,22 @@ sidebar section/nav 轨道、crumb、statusMeta、`QDialog#commandPalette`、`pa
 `docs/verification/j3-focus-20261102/`），门禁通过。
 
 **边界**：未做实窗点击录像与独立复验；未覆盖 125%/150%、Linux 桌面、浮动面板组合；J3 未关闭。
+
+## 2026-11-02 J3 第五阶段：导航时收起旧停靠页与结果页分析视图
+
+背景：第三、四阶段的实窗截图显示，配置编辑器停靠页一旦被展示就会在后续页面继续占宽约 620–700 px，
+Run Console 只剩约 330 px，Results 的 `page_stack` 宽度甚至为 0。根因在
+`gui/g4usim_gui/window/workspace_layout.py` 的 `WorkspacePageStack.reveal_current()`：它只 `show()` 当前
+dock 页与 navigation dock，从不隐藏之前显示过的 dock 页。
+
+修法：`reveal_current()` 开头遍历 `_dock_pages`，对 `index != currentIndex` 且可见的 dock 调 `hide()`；
+主窗口 __init__ 里把 layout 与 Results 页索引挂到 stack（`_workspace_layout`、`_analysis_index`），
+导航到 Results 时调用 `WorkspaceLayout.focus_analysis_view()` 收起 preview/ai、显示 logs dock。
+
+验证：7 个 GUI 用例（`gui_workspace_layout`、`gui_main_window`、`gui_command_palette`、`gui_3d_view`、
+`gui_config_editors`、`gui_k1_panel`、`gui_k1_history_scope`）通过，2022 断言；报告
+`20261102-232214-51bfb1b2`，归档 `docs/verification/j3-analysis-docks-20261102/`。
+边界：Results 页最终布局仍非理想形态（结果视图与日志上下分割），跨平台缩放/真实桌面/性能基线仍待做；
+截图脚本曾因抓图前调用 `apply_preset("configuration")` 造成“旧 dock 仍在”的误判，已删除该调用并改为
+`screen.grabWindow(window.winId())`。
+

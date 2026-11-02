@@ -270,3 +270,9 @@ F4依赖维护：安装统一走gui/requirements.txt，当前验证线PySide6>=6
 - “Fit workspace to current page”（`Ctrl+Shift+L`、`workspaceFocusPage`）与命令面板 Actions 条目都调用
   `focus_current_page()`；该动作只允许 `apply_preset()` + `reveal_current()`，不得改页面内容、项目状态、运行状态，
   也不得在页面切换时自动触发（会覆盖用户的手动预设/隐藏）。
+
+## 2026-11-02 J3 第五阶段：导航时 dock 可见性
+
+`WorkspacePageStack.reveal_current()` 必须在离开停靠页时隐藏该页 dock；Results 页导航需收起 preview/ai 并显示 logs
+（`WorkspaceLayout.focus_analysis_view()`）。截图取证不得在抓图前恢复配置预设。回归见
+`gui_workspace_layout` 等 7 例、2022 断言与 `docs/verification/j3-analysis-docks-20261102/`。

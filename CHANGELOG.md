@@ -7,6 +7,12 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ## Unreleased
 
+### J3 第五阶段：导航时收起旧停靠页、结果页切分析视图（2026-11-02，作者交付，未验收）
+
+- `WorkspacePageStack.reveal_current()` 在离开停靠页时隐藏该页 dock，修复配置编辑器在 Run Console / Results / Run History / Parameter Scans 继续占宽的问题。
+- 导航到 Results 时 `WorkspaceLayout.focus_analysis_view()` 收起 3D 预览与 AI 面板并显示日志 dock。
+- 回归：`gui_workspace_layout`、`gui_main_window`、`gui_command_palette`、`gui_3d_view`、`gui_config_editors`、`gui_k1_panel`、`gui_k1_history_scope` 共 7 例、2022 断言通过；证据 `docs/verification/j3-analysis-docks-20261102/README.md`。
+
 ### J3 第四阶段：按当前页面适配工作区（2026-11-02，作者交付，未验收）
 
 - View → Workspace layout 新增 “Fit workspace to current page”（`Ctrl+Shift+L`）：按当前页面在 configuration /

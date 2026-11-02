@@ -113,6 +113,12 @@ class WorkspacePageStack(QStackedWidget):
 
     def reveal_current(self):
         selected = self._dock_pages.get(self.currentIndex())
+        # Only the page that owns a dock may keep it open: otherwise a dock page
+        # revealed earlier (e.g. the configuration editor) keeps 700px of the
+        # window and squeezes Results/Run Console into an unreadable strip.
+        for index, (_page, dock) in self._dock_pages.items():
+            if index != self.currentIndex() and dock is not None and dock.isVisible():
+                dock.hide()
         self._central_extent(selected is not None)
         if selected is not None and selected[1] is not None:
             selected[1].show()
@@ -123,8 +129,21 @@ class WorkspacePageStack(QStackedWidget):
         for dock in self._first_navigation_docks.pop(self.currentIndex(), ()):
             dock.show()
             dock.raise_()
+        layout = getattr(self, "_workspace_layout", None)
+        if layout is not None and self.currentIndex() == getattr(self, "_analysis_index", -1):
+            layout.focus_analysis_view()
         if self.currentIndex() == self._preview_activation_index:
             self.previewActivationRequested.emit()
+
+    def focus_analysis_view(self):
+        """Show the results page across the full window with the log dock."""
+        for name in ("preview", "ai"):
+            dock = self.docks.get(name)
+            if dock is not None and dock.isVisible():
+                dock.hide()
+        logs = self.docks.get("logs")
+        if logs is not None:
+            logs.show()
 
     def restore_current_index(self, index):
         # A saved hidden active dock must remain hidden. Restoring navigation
@@ -168,6 +187,10 @@ class WorkspaceLayout(QObject):
         self.preset = "configuration"
         self.last_restore = "default"
         self._build()
+        # Navigating to Results should read as an analysis view: full width
+        # results with the logs dock, not the 3D preview split in half.
+        self._analysis_index = window.page_stack.indexOf(window.output_page)
+        window.page_stack._workspace_layout = self
         self.apply_preset("configuration")
         if window.page_stack.currentIndex() == 0:
             self.docks["configuration"].hide()
