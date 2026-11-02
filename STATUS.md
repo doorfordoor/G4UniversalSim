@@ -12,6 +12,16 @@ D1 五域真实云任务 Task01 的 plan/apply/fields/initialization/generate/ru
 
 此前 K1 display binder 窄修专项通过仍保留原范围；本次 v3 作者 Qt56 开发入口通过，旧54／25保持旧身份，不改记为 v3 后端或正式重跑。早期绝对休眠路径及设置次序的夹具失败保留原日志／源码，r4仅修夹具后56，不记为新产品失败。产品 v3 raw-path delta 独审已 PASS（限定接口／显示／F5 资格，不冒充 backend／formal），新候选身份／重新构建／全部 formal／真实 CI／原生观察及人工对照仍待。详细增量见[L1进度](docs/L1配置Agent.md)及[候选历史](docs/agent-history.md#2026-11-02-l1-路径显示-raw-修复候选)，本页不预写未来 HEAD、通过结论或阶段完成。
 
+### EE证据增量与下一布局候选（阶段未关闭）
+
+正式身份仍为 `ee6f40ded197a59c0b63726b92a09560831867ca`（EE）。本机四份原 Windows 报告终态为 static48/5031、GUI70/9795、11.3 backend63/82029、11.4 backend63/72536，合计 **244次执行／169391个实际入口**；四原 launch 均 runner/gate0、identity_errors=[]，对应 report 的 git_dirty=false。EE 两个 Windows integration 未执行，不以真实专项或 CI integration 补记本机六 profile 通过。EE 真实 CI 四 workflow 均终态成功，12份 profile 原报告 strict/matching baseline 通过，合计662次执行／227634个实际入口；Desktop／安装的独立结果不再算进该数。原证据根为 `out/verification/l1-ee6f40d/`，不迁移到下一候选身份。
+
+Task03 五域真实云链和应用恢复02分别已收 Ptolemy 限定文件独审 PASS：前者是一次真实模型规划、程序化审阅、真实 K1 run4/export/Undo 链，不是原生／人工时间或科学验证；后者仅固定 HTTP 夹具下“K1 terminal 已发布、Agent result 未落盘”的单一受控崩溃点，实际73→0，恢复只查询旧身份且不重发，历史结果陈旧、当前资格不恢复，不扩大为任意中断恢复。两者原失败／脚本及独审身份保留。
+
+native125 的人工操作臂／Agent臂单对描述性比较、原保存与导出文件链，以及另行授权的生产 closed-load 模型 IO 已分别有限通过；closed-load收据1beea485仅允许QtCore import、无QCoreApplication／QApplication实例，不冒第二次实窗或CLI回放；不是受试者成功率／提速结论，文件审不冒像素或第二次原生观察。原EE native150虽正常退出，仍发现52px下L1 AI全控件不可读的布局P2；该次原生失败按原身份保留，不改记原生总体通过。此为L1新缺陷，不套用旧F6按钮82>56的历史窄边界或改写其原结论。真实 NL 诊断修复02已由 main 单次运行，外层原13956／child63728均实际exit0、owned0，作者receipt为1request／8ops／4events／export／Undo passed；其实际链路纯文件独审已限定 PASS：一次真实回复共1295tokens，initial→capture恰5叶差异（4个energy同步表示及派生errors清空），其它raw保持；Undo完整JSON回S_invalid已核。expected/captured只差旧sourceEditor.errors清空，原生产语义指纹相同，不称全JSON相同。该审不代表native／科学／通用NL可靠性或生产load／CLI回放。原01为driver注入夹具失败、0modelcalls，v1/01原件保留，不被02成功替换。
+
+Harvey 的52px布局后续候选已仅在OUT冻结：产品SHA为 `05e4ec9077bbd0d8e08f8381a63b5ada86e3ad8566d436d6b04fae484a3038ae`，仅动态两列可读最小宽度提示及固定footer inset／reflow；测试SHA为 `6f06b0277c10b5ff27a21691a2b7c63f2a2f5d3124602b18a2f1af7cabd748e9`，保留原函数AST（main仅增新调用），新增真实MainWindow自然show的QAction／F6／Tab回归。候选注入后的125%／150%完整组件入口各1216、实际exit0；同一新回归在原产品52px负向实际exit1。workspace layout／core accessibility、Controller／F5／K1和翻译不改。上述作者专项与Ptolemy候选限定独审PASS分别计证；独审按当前focused-target及可容纳标签／控件joint合同关闭原52px P2，无其它确认P1/P2，不冒新candidate正式矩阵或新native通过。retained语言补验仅125%，英→中→英每轮9Tab的当前焦点完整可见、可容纳joint通过，非焦点右列仍可裁剪，不保证全footer同时同屏，新native仍待。main已精确apply已审panel／test两path，实际tracked两档各exit0／1233，另按原收据保留wrapper计数假设失败及更正，不与作者各1216混计；新提交身份、新构建、完整Windows六profile、真实CI和对应原生补验均待，不预填future HEAD或继承EE资格。当前不关闭 L1，F2／L2 顺序及既有白名单、raw／同指纹、授权／预算／只读恢复合同不变。 详见[同名候选历史](docs/agent-history.md#2026-11-02-l1-ee验收快照与原生布局后续候选)。
+
 ## 2026-11-02 J2/F8及E7本轮验收
 
 **本轮约定功能验收已完成。** main已接受J2、F8和支撑J2的E7既有15原语／7布尔工具注册与元数据范围。正式构建／测试冻结为 `2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8`；后续包含本页的提交仅为docs/evidence，不改原report／EXE身份，不因文档提交重建或重跑矩阵。交付以实际Git树、三份精确锁及main后置字节映射为准，不自填未来commit SHA。见[最终证据](docs/verification/j2-f8-final-20261102/README.md)、[功能支持矩阵](docs/功能支持矩阵.md)与[J2/F8说明](docs/J2编辑覆盖与F8验收.md)。

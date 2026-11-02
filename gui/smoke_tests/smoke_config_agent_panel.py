@@ -297,6 +297,132 @@ def test_source_boundary(panel):
         assert message in ZH_CN,message
 
 
+def test_workspace_agent_natural_navigation(app, output):
+    """Real Start/View/F6 integration; no submit, provider or backend action."""
+    from dataclasses import asdict
+    import tempfile
+    from PySide6.QtCore import QProcess, QSettings
+    from PySide6.QtWidgets import QStyle, QStyleOptionButton
+    from g4usim_gui.history import run_history_store
+    from gui_test_window import MainWindow
+
+    def settle():
+        for _ in range(5):
+            pump(app)
+
+    def full_in_scrolls(widget):
+        parent = widget.parentWidget()
+        while parent is not None:
+            if hasattr(parent, 'viewport') and hasattr(parent, 'widget'):
+                body = parent.widget()
+                if body is not None and body.isAncestorOf(widget):
+                    viewport = parent.viewport()
+                    mapped = QRect(widget.mapTo(viewport, QPoint()), widget.size())
+                    assert viewport.rect().contains(mapped), (widget.text(), parent.objectName(), mapped, viewport.rect())
+            parent = parent.parentWidget()
+
+    observations = []
+    old_history = run_history_store.STATE_PATH
+    with tempfile.TemporaryDirectory(prefix='l1-dock-natural-') as temporary:
+        QSettings.setDefaultFormat(QSettings.IniFormat)
+        QSettings.setPath(QSettings.IniFormat, QSettings.UserScope, temporary)
+        run_history_store.STATE_PATH = Path(temporary)/'history.json'
+        try:
+            for language in ('en', 'zh_CN'):
+                QSettings().clear(); QSettings().sync()
+                w = MainWindow()
+                w.config_builder_page.preview3d_auto_backend.setChecked(False)
+                w.config_builder_page._backend_timer.stop()
+                w._set_language(language, persist=False)
+                w.resize(760, 640)
+                w.show(); w.activateWindow(); QApplication.setActiveWindow(w); settle()
+                panel = w.config_agent_panel
+                dock = w.workspace_layout.docks['ai']
+                identities = {key: id(value) for key, value in w.workspace_layout.docks.items()}
+                before = deepcopy(asdict(w.project))
+                submit = QSignalSpy(panel.submitRequested)
+                actions = QSignalSpy(panel.actionRequested)
+                try:
+                    assert w.page_stack.currentIndex() == 0
+                    # Explicit show/setup via the production QAction. Native evidence
+                    # covers the mouse menu; offscreen test covers natural F6/Tab.
+                    assert not dock.isVisible()
+                    dock.toggleViewAction().trigger(); settle()
+                    assert dock.isVisible()
+                    focus_trace = []
+                    for _ in range(3):
+                        QTest.keyClick(w, Qt.Key_F6); settle()
+                        focus = app.focusWidget()
+                        focus_trace.append((type(focus).__name__, focus.accessibleName()))
+                    assert app.focusWidget() is panel.prompt_edit, focus_trace
+                    footer = [panel.submit_button, *panel.action_buttons.values()]
+                    # Font/style-derived readable width, not a hardcoded pixel floor.
+                    assert panel._columns >= 2, (language, panel.size(), panel.minimumSizeHint())
+                    for button in footer:
+                        option = QStyleOptionButton(); option.initFrom(button)
+                        option.text = button.text(); option.rect = button.rect()
+                        contents = button.style().subElementRect(QStyle.SE_PushButtonContents, option, button)
+                        assert contents.width() >= button.fontMetrics().horizontalAdvance(button.text()), (language, button.text(), contents)
+                        assert panel.rect().contains(QRect(button.mapTo(panel, QPoint()), button.size()))
+                        full_in_scrolls(button)
+                    for index, button in enumerate(footer):
+                        rectangle = QRect(button.mapTo(panel, QPoint()), button.size())
+                        for peer in footer[index+1:]:
+                            assert not rectangle.intersects(QRect(peer.mapTo(panel, QPoint()), peer.size()))
+                    for label, source in panel._labels:
+                        if label.buddy() is not None:
+                            assert label.text() == ui_text(source), (source, label.text())
+                            assert label.buddy().accessibleName() == label.text()
+                    # Display-only fixture enables footer traversal, grants no controller task.
+                    panel.prompt_edit.setPlainText('Review the current input; do not execute.')
+                    panel.set_state({'allowed_actions': list(ACTIONS)})
+                    settle()
+                    seen = set()
+                    labels_seen = set()
+                    for _ in range(100):
+                        focus = app.focusWidget()
+                        assert focus is not None
+                        seen.add(focus)
+                        for label, _source in panel._labels:
+                            if label.buddy() is not focus:
+                                continue
+                            labels_seen.add(label)
+                            parent = focus.parentWidget()
+                            while parent is not None:
+                                if hasattr(parent, 'viewport') and hasattr(parent, 'widget'):
+                                    body = parent.widget()
+                                    if body is not None and body.isAncestorOf(focus):
+                                        viewport = parent.viewport()
+                                        field_rect = QRect(focus.mapTo(viewport, QPoint()), focus.size())
+                                        label_rect = QRect(label.mapTo(viewport, QPoint()), label.size())
+                                        joint = field_rect.united(label_rect)
+                                        if joint.width() <= viewport.width() and joint.height() <= viewport.height():
+                                            assert viewport.rect().contains(joint), (language, label.text(), joint, viewport.rect())
+                                parent = parent.parentWidget()
+                        if focus in footer:
+                            full_in_scrolls(focus)
+                        if all(button in seen for button in footer):
+                            break
+                        QTest.keyClick(focus, Qt.Key_Tab); settle()
+                    assert all(button in seen for button in footer), [(b.text(), b in seen) for b in footer]
+                    assert len(labels_seen) >= 3, [label.text() for label in labels_seen]
+                    assert before == asdict(w.project)
+                    assert identities == {key: id(value) for key, value in w.workspace_layout.docks.items()}
+                    assert submit.count() == 0 and actions.count() == 0
+                    assert w.runner._process.state() == QProcess.NotRunning
+                    assert not w.agent_controller.busy and w.agent_controller.journal is None
+                    observations.append({'language': language, 'DPR': w.devicePixelRatioF(), 'panel': [panel.width(), panel.height()], 'focus_trace': focus_trace, 'footer_tab_count': sum(b in seen for b in footer), 'project_unchanged': True})
+                    if output:
+                        assert w.grab().save(str(output/f'workspace-agent-{language}.png'))
+                finally:
+                    w.close(); settle(); w.deleteLater()
+                    app.sendPostedEvents(None, QEvent.DeferredDelete); app.processEvents()
+        finally:
+            run_history_store.STATE_PATH = old_history
+    if output:
+        (output/'workspace-agent-observations.json').write_text(json.dumps(observations, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+
+
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--output',type=Path);args=parser.parse_args()
     if args.output:args.output.mkdir(parents=True,exist_ok=False)
@@ -318,6 +444,7 @@ def main():
         test_accessible_layout(panel,app,args.output)
     finally:
         panel.close();panel.deleteLater();app.sendPostedEvents(None,QEvent.DeferredDelete);app.processEvents()
+    test_workspace_agent_natural_navigation(app,args.output)
     print('L1 panel signals/authorization/ephemeral credential/evidence/i18n/layout PASS; no provider or backend execution')
 
 

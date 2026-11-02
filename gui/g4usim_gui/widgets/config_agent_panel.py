@@ -303,6 +303,10 @@ class ConfigAgentPanel(QWidget):
 
         # The action bar is outside the scroll area: long details cannot push it away.
         self._actions_layout = QGridLayout()
+        # Align the fixed footer with the scroll body's readable right edge.
+        # Existing minimal focus reveal then also reveals whole footer buttons.
+        self._footer_inset = self.content_scroll.verticalScrollBar().sizeHint().width()
+        self._actions_layout.setContentsMargins(0, 0, self._footer_inset, 0)
         root.addLayout(self._actions_layout)
         self.submit_button = QPushButton(self)
         self._name(self.submit_button, 'Submit goal')
@@ -466,7 +470,7 @@ class ConfigAgentPanel(QWidget):
             return
         buttons = [self.submit_button, *self.action_buttons.values()]
         hint = max(button.sizeHint().width() for button in buttons) + self._actions_layout.spacing()
-        columns = max(1, min(4, max(1, self.width()-16) // max(1, hint)))
+        columns = max(1, min(4, max(1, self.width()-16-self._footer_inset) // max(1, hint)))
         if columns != self._columns:
             while self._actions_layout.count():
                 self._actions_layout.takeAt(0)
@@ -485,7 +489,15 @@ class ConfigAgentPanel(QWidget):
 
     def minimumSizeHint(self) -> QSize:
         hint = super().minimumSizeHint()
-        return QSize(0, max(0, hint.height()))
+        if not hasattr(self, 'action_buttons'):
+            return QSize(0, max(0, hint.height()))
+        # QDockWidget must reserve a readable two-column action bar. A zero
+        # width lets QMainWindow squeeze this new dock to its title buttons.
+        buttons = [self.submit_button, *self.action_buttons.values()]
+        cell = max(button.sizeHint().width() for button in buttons) + self._actions_layout.spacing()
+        margins = self.layout().contentsMargins()
+        width = 2 * cell + margins.left() + margins.right() + self._footer_inset
+        return QSize(width, max(0, hint.height()))
 
     def hideEvent(self, event) -> None:
         self.credential_edit.clear()

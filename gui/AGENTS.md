@@ -1,5 +1,7 @@
 # G4UniversalSim GUI Agent 开发约束
 
+2026-11-02 L1 AI布局后续候选：52px导致AI全控件不可读是必须修复的新P2，不以旧F6窄边界豁免。OUT候选仅panel按当前文字／样式计算两列最小宽度及footer inset／reflow，不改workspace／core／F5／K1或翻译；125%／150%各1216组件入口与原产品负向分别保留，候选已收限定独审PASS并由main精确apply两path；按当前focused-target及可容纳joint合同核验，retained125非焦点右列可裁剪、不保证全footer同时同屏；新候选完整验收及新native仍待。见[候选历史](../docs/agent-history.md#2026-11-02-l1-ee验收快照与原生布局后续候选)。
+
 2026-11-02 L1 路径显示 raw 修复候选：`ProjectPage.show_generated_paths` 仅回显 config/macro/output 三条路径，实际 K1 display binder 不得为显示刷新其它控件原文、revision 或验证资格；正常业务载入和 legacy 全量投影仍走原 `set_project`。原 D1 五域任务失败、窄修及后续待验身份分别计证，见[候选历史](../docs/agent-history.md#2026-11-02-l1-路径显示-raw-修复候选)。
 
 2026-11-02 L1配置Agent实施候选：只写既有体积/单能point固定方向源/运行/reference物理/计分的通用字段白名单，读取范围来自UI捕获上下文。默认仅规划，用户审阅差异后以当前新授权批准同plan，`approve_with_authorization`复核同快照并新建task，旧task取消留史、原授权不改、reason记reviewed_from，不重调模型；恢复实例不得借此提权，只查旧operation/run/record并只读显示，执行须新prompt新task。权限不足停步，事务/runner仍归F5/K1，取消/关闭不得误停其它所有者。密钥不落任务/项目/日志，系统存储缺失明确拒绝；本地仅兼容协议，不附权重或宣称其质量。核心专项独审已过但目前只有旧2ec EXE开发链与真实云模型任务集02，新候选重新构建/正式矩阵/CI/实窗待验，默认evaluate仅完成性，非物理比较。完整接口见[L1说明](../docs/L1配置Agent.md)与[候选历史](../docs/agent-history.md#2026-11-02-l1-配置-agent-实施候选)；下方J2历史字节保留。
