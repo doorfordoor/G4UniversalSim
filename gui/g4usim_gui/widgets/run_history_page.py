@@ -71,7 +71,7 @@ class RunHistoryPage(QWidget):
         self.details = QPlainTextEdit()
         self.details.setReadOnly(True)
         self.details.setPlainText("Select a run to view details, logs, output and rerun options.")
-        self.table.setMinimumWidth(620)
+        self.table.setMinimumWidth(420)
 
         self.load_snapshot_button = QPushButton("Load Snapshot into Project")
         self.open_package_button = QPushButton("Open Package")

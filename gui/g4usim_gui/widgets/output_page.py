@@ -70,7 +70,7 @@ class OutputPage(QWidget):
 
         self.file_tree = QTreeWidget()
         self.file_tree.setHeaderLabels(["Name", "Type", "Size", "Path"])
-        self.file_tree.setMinimumWidth(300)
+        self.file_tree.setMinimumWidth(220)
         self.file_tree.itemSelectionChanged.connect(self._on_file_selected)
 
         # grouped: Overview, Plots, Tables (CSV/Dose/Fluence), Files (preview/summary/logs), Tools

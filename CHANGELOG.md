@@ -7,6 +7,11 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ## Unreleased
 
+### Added
+
+- GUI 窄窗口/高 DPI 紧凑布局：宽度小于 1400 逻辑像素时隐藏 AI 与 3D 可选 dock（可从View → Panels 重新打开）、收窄 setup 面板与配置分栏，材料编辑器按钮改两行网格；窗口最小宽度由约 1600 降到 760 逻辑像素。主题切换性能与 Linux WSLg X11 代表性渲染数据见 `docs/verification/j3-visual-checks-20261102/`。
+
+
 ### J3 第七阶段：帮助菜单、快捷键表与关于对话框（2026-11-02，作者交付，未验收）
 
 - 新增 Help 菜单：「Keyboard shortcuts」（F1，可滚动快捷键表）与「About G4UniversalSim」（版本/Qt/PySide6/根目录/后端路径）。

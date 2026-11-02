@@ -201,13 +201,23 @@ class WorkspaceLayout(QObject):
         preview = getattr(config, "preview3d_widget", None)
         if preview is not None and hasattr(preview, "set_compact"):
             preview.set_compact(compact)
+        self._compact = compact
         host = self.hosts.get("workspace")
         if host is None:
             return
-        docks = [self.docks.get("configuration"), self.docks.get("preview")]
-        if all(dock is not None and not dock.isHidden() for dock in docks):
-            sizes = [520, 340] if compact else [700, 440]
-            host.resizeDocks(docks, sizes, Qt.Orientation.Horizontal)
+        if compact:
+            # on small displays the editors own the window; the optional docks stay
+            # reachable from View -> Panels and the command palette
+            for name in ("ai", "preview"):
+                dock = self.docks.get(name)
+                if dock is not None and not dock.isHidden():
+                    dock.hide()
+        configuration = self.docks.get("configuration")
+        if configuration is not None and not configuration.isHidden():
+            host.resizeDocks([configuration], [520 if compact else 700], Qt.Orientation.Horizontal)
+        preview_dock = self.docks.get("preview")
+        if preview_dock is not None and not preview_dock.isHidden():
+            host.resizeDocks([preview_dock], [300 if compact else 440], Qt.Orientation.Horizontal)
 
     def focus_analysis_view(self):
         """Show the results page across the full window with the log dock."""

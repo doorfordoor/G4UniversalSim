@@ -134,7 +134,7 @@ class SetupPanel(QScrollArea):
         scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         scroll.setWidget(content)
         # wide enough for the widest row (path + Browse), so nothing is clipped without a scroll bar
-        scroll.setMinimumWidth(content.minimumSizeHint().width() + scroll.verticalScrollBar().sizeHint().width() + 4)
+        scroll.setMinimumWidth(min(content.minimumSizeHint().width() + scroll.verticalScrollBar().sizeHint().width() + 4, 280))
         self.setup_scroll = scroll
 
     def _run_group(self) -> QGroupBox:

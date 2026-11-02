@@ -89,14 +89,14 @@ class MaterialsEditor(QWidget):
             self.add_mass_button,
             self.add_volume_fraction_button,
             self.add_atom_button,
-        ], 4))
+        ], 2))
         layout.addLayout(toolbar_grid([
             self.load_materials_editor_button,
             self.duplicate_material_button,
             self.delete_material_button,
             self.validate_materials_button,
             self.revert_materials_button,
-        ], 5))
+        ], 3))
         layout.addWidget(self.materials_table, 2)
 
         detail = QGroupBox("Selected material")

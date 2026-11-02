@@ -76,7 +76,7 @@ class PlotPanel(QWidget):
         self._plot: plot_data.Plot | None = None
 
         self.dataset_combo = QComboBox()
-        self.dataset_combo.setMinimumWidth(320)
+        self.dataset_combo.setMinimumWidth(240)
         self.view_combo = QComboBox()
         self.log_x = QCheckBox("Log X")
         self.log_y = QCheckBox("Log Y")
