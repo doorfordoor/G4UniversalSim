@@ -1,5 +1,10 @@
 # G4UniversalSim Development Roadmap
 
+Linux原生通道补充（主审已签收）：main已实际操作独立真实X11/xcb桌面，一次固定HTTP计划passed，操作观察时曾停在awaiting_approval、0事件；随后在观察期间触及300秒预算，整任务保留failed／agent.task_timeout，不称整任务成功。原host exit0、slot_released=true、host与显示服务两组remaining_owned均空、HTTP已关闭；显示辅助子进程退出码[0,1,0]（twm非零保留），不能写全部子进程exit0；代表性原生签收结果为 **独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**。WSLg RAIL任务栏无法展开，第三次host退出且0请求，原失败保留，绝不称该通道成功。Ubuntu实际系统安装x11-xkb-utils，其它本次依赖保持隔离OUT前缀；具体包版本／SHA及安装收据见最终证据，不把早期准备收据system_installs=0外推到之后。
+
+2026-11-02 当前 L1 签收状态：**本轮约定范围验收完成**；Linux独立X11/xcb代表性原生：**独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**。本轮严格矩阵、安装重试与新 Windows 受限原生证据见[最终证据](verification/l1-final-20261102/README.md)。下方早期计划／带日期候选记录保留历史；不改变 F2→后续科研波次及 K2/L2 依赖，不把本轮配置白名单扩大为任意代码执行。
+
+
 2026-10-31 F5：**已完成**。冻结验收5c1eec5；Windows160/160、50898个v3入口，Linux11.3.2/11.4.3各160、M0两平台各79，原F4逐例与总量门禁通过。原生22份观察/28截图/真实退出0保持5d身份，经明确映射关联新冻结；不新增物理验证结论。[最终证据](verification/f5-final-20261031/README.md)。下方带日期的旧状态保留其历史范围。
 
 Agreed 2026-10-21. Order of work: **Phase A core functions → Phase B scenario packs → Phase C wizard and plotting → Phase D installer** (only once the framework is mostly stable).
@@ -298,7 +303,7 @@ J2内部提交顺序为：无源创建/文档身份 → 材料辅助及多体积
 | **J2 编辑覆盖与几何往返** | 原M3余项；空白创建与无已有配置文件输入、NIST元素来源辅助、命名多源及球面源、物理模块组合/替换、多敏感体编辑和高级实体/场/偏置；后端vis属性往返 | E6；实体能力归一相关部分依赖E7，其余不被无关实体重构阻塞；在L1前完成本轮明确范围 | 2026-11-02 **本轮约定范围完成**：空白/高级编辑/往返/资源闭包及接口回归，2ec完整矩阵/严格门禁/独审通过；E7仅既有15/7元数据范围。旧失败原件、实验性/物理界限不提高，见[最终证据](verification/j2-f8-final-20261102/README.md) |
 | **K1 可信实验工作流与配置导出** | 统一 inspect/validate/apply/generate/run/evaluate/export，四层验证、输入身份、可移植配置/资源/证据包 | 2C、E6、F1、F4、F5、I1 | **已完成阶段验收**：第七产品 `2914b39` 的 Windows182/182、57181 v3入口与官方CI548/548、133720入口按原身份保留；P1及永久回归P2经独审关闭，`5644e1e` 新单例Windows36/Linux33通过严格门禁。已正常快进集成并推送至 `codex`。[最终证据](verification/k1-final-20261031/README.md) |
 | **K2 独立 Geant4 工程导出** | 目标 3 的源码部分；可审阅 C++/CMake、配置/资源/许可、扩展点和构建说明；脱离工具可继续开发 | K1、I2；当前支持子集即可，不依赖所有 H 项 | 导出模板/manifest → 生成与构建 → 两平台干净环境构建/运行/二次修改；不能只附 INI 或依赖工具安装目录 |
-| **L1 配置 Agent 与模型接入** | 目标 4 首版及目标 5 基础；云 API-key/本地模型适配、结构化差异、授权范围内修改、校验、试跑、读证据、确认/导出 | K1、I1；J1承载，J2先交付本轮手工编辑范围，F8跨项验收；provider/API研究可先行 | **2026-11-02 完整启动、实施中**：接续4840e62e；provider/凭据与动作接口 → 有界任务状态 → 自然语言端到端/取消/恢复/歧义/失败反例。可写边界来自接口白名单，不来自 EffectiveConfig 读回子集。[实施契约](collab/inbox/20261102-l1-execution.md)。完整验收待完成 |
+| **L1 配置 Agent 与模型接入** | 目标4首版及目标5基础；既有字段白名单、模型接口、结构化差异、授权动作与历史证据 | K1、I1；J1/J2/F8本轮既有范围 | **2026-11-02 本轮约定范围验收完成**：冻结246e4f6；Windows六profile308/183347、CI十二报告662/228978，安装Windows一次授权重试后成功、原失败保留；新Windows125/150受限观察，WSLg：独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留。真实云／人工单对／恢复按EE原身份沿用，不宣称通用模型质量、提速或科学验证。[最终证据](verification/l1-final-20261102/README.md) |
 | **L2 代码 Agent 与持久工作流** | 目标 4 高级部分及目标 5 完整整合；隔离工程代码差异、编译、运行、日志诊断、有限修复、用户确认与导出 | L1、K2 | 隔离执行 → checkpoint/进程身份 → 有限重试与审阅 → 故障恢复和不重复执行验收。届时评估 LangGraph 薄编排层，不绑定领域模型 |
 
 价值判断和详细边界仍见 [五项目标提案](collab/inbox/20261029-1140-astra-product-roadmap.md)，前端依据见 [DeepSeek 建议及 Astra 纠偏](collab/outbox/20261029-1135-deepseek-workspace-design.md)。本次只是正式编号，不新增安装器、GUI 或 Agent 实现。

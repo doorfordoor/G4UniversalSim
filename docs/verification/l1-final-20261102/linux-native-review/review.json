@@ -1,0 +1,157 @@
+{
+  "schema": "l1_linux_xvnc_independent_public_file_review_v1",
+  "created_utc": "2026-11-02T12:22:08.508051+00:00",
+  "status": "PASS_LIMITED_PLAN_OPERATION_WITH_LATER_TASK_TIMEOUT",
+  "reviewer_scope": "Independent structured-file and raw-byte-hash audit only. No desktop, image decoding, UIA reading, Qt process or network request by reviewer.",
+  "head": "246e4f6f1b97cc5e0651ff01262c85cf2e9c28d3",
+  "tests_fingerprint": "e4a95aa36b5fc262c01516a28365c6ec00374f36907dfd1b95fc6f8da2eade86",
+  "GUI_files_verified": 157,
+  "initial_final_identity_equal": true,
+  "tracked_clean_at_both_launcher_pins": true,
+  "python_version": [
+    3,
+    11,
+    18
+  ],
+  "python_sha256": "b67446939960038c6e60cd9fe0ce7dae9979430b5d5b083bbcd391219557b826",
+  "Qt": "6.11.3",
+  "qpa": "xcb",
+  "DISPLAY": ":93",
+  "DPR": 1.0,
+  "host_sha256": "f01f62081da8f3cb38b8a36b1d43ccfdc670b84e3be7b50079d52e49a552d5ee",
+  "launcher_sha256": "38934d06e923a10d99455ad906e4d000a671cbe556f17e661080e2bda18793a7",
+  "config_sha256": "a3af9acf37d83350fd809239ee70badd5ea1be91b302fe442f1381181afd0bd3",
+  "review_sha256": "2e6a6bb7aa25dfba3575bb91a637866a3258d97881c33a0edfd4f36a30462f20",
+  "QtCore_sha256": "86983078c955379caa5f50ad2d36be7e658662c7996e0f3ecbbd78633f25e6b6",
+  "native_plugin_sha256": "a3b756cbbf6c5ada642648fe12b5e79d5285b76b0f12ab5f9231378df87a36e2",
+  "actual_channel": "Dedicated TigerVNC real X11 desktop with twm and loopback noVNC. Separate from WSLg RAIL; not offscreen.",
+  "launcher_status": "host_exited_normally_operator_evidence_pending",
+  "host_exit": 0,
+  "remaining_host_owned": [],
+  "slot_released": true,
+  "display_status": "closed",
+  "display_server_exits": [
+    0,
+    1,
+    0
+  ],
+  "remaining_display_owned": [],
+  "twm_nonzero_retained": true,
+  "listener_scope": "127.0.0.1/::1 only; 5909/6089 closed after owned display cleanup; no X11 TCP6093 listener recorded.",
+  "HTTP_worker_alive": false,
+  "HTTP_listener_closed": true,
+  "cleanup_errors": [],
+  "HTTP_requests": 1,
+  "request_attempts": 1,
+  "task_count": 1,
+  "plan_operation_status": "passed",
+  "task_terminal_state": "failed",
+  "task_failure_reason": "agent.task_timeout",
+  "task_states_raw": [
+    "planning",
+    "awaiting_approval",
+    "failed",
+    "failed"
+  ],
+  "task_state_transitions": [
+    "planning",
+    "awaiting_approval",
+    "failed"
+  ],
+  "duplicate_final_failed_signal_preserved": true,
+  "actual_execution_events": 0,
+  "K1_actions": [],
+  "forbidden_process_attempts": [],
+  "authorization_scope": {
+    "allowed_actions": [
+      "plan"
+    ],
+    "max_calls": 1,
+    "max_events": 4,
+    "timeout_seconds": 300
+  },
+  "actual_event_ceiling": 0,
+  "cloud_or_key_requests": 0,
+  "automatic_submit_apply_run_export": false,
+  "prompt_prefilled": false,
+  "backend_selected": false,
+  "snapshot_bytes_identical": true,
+  "snapshot_sha256": "260ef4e898c47bd24c55b5c5f98f5dad238bad072f606560d53eedb69b616489",
+  "passive_observation_rows": 2594,
+  "fixed_readonly_fontconfig_calls": 2,
+  "operator_visual_attribution": {
+    "status": "OBSERVED_LIMITED_PLAN_OPERATION_PASS_WITH_LATER_TASK_TIMEOUT",
+    "attribution": "Separate j1 operator observation; not independently repeated by file reviewer.",
+    "reported_scope": [
+      "Chinese main window",
+      "actual Agent panel and prompt focus",
+      "single plan submit and preview",
+      "File/Exit normal close"
+    ],
+    "source": "out/verification/l1-linux-x11-vnc-representative/246e4f6-xvnc-01/operator-receipt.json"
+  },
+  "raw_assets_local_only": true,
+  "public_images": 0,
+  "public_UIA_payloads": 0,
+  "original_assets_copied": 0,
+  "raw_asset_metadata_whitelist": [
+    "scope",
+    "path",
+    "size_bytes",
+    "sha256",
+    "mime"
+  ],
+  "public_projection_policy": "Explicit fields only; no prompt, goal, endpoint, credentials, journal plan/authorization payload, UIA text, raw log or image content.",
+  "historical_attempts": [
+    {
+      "path": "out/verification/l1-linux-native-representative/246e4f6-01",
+      "category": "readonly_font_enumeration_rejected_before_QApplication",
+      "host_exit": 1,
+      "remaining_owned": [],
+      "slot_released": true,
+      "native_plan_pass_claim": false
+    },
+    {
+      "path": "out/verification/l1-linux-native-representative/246e4f6-fontconfig-02",
+      "category": "missing_xcb_cursor_native_plugin_dependency",
+      "host_exit": -6,
+      "remaining_owned": [],
+      "slot_released": true,
+      "native_plan_pass_claim": false
+    },
+    {
+      "path": "out/verification/l1-linux-native-representative/246e4f6-fontconfig-deps-03",
+      "category": "WSLg_RAIL_unusable_changed_owned_QA_draft_then_discarded",
+      "host_exit": 0,
+      "remaining_owned": [],
+      "slot_released": true,
+      "native_plan_pass_claim": false
+    }
+  ],
+  "historical_display_run01": {
+    "server_exits": [
+      1
+    ],
+    "remaining_owned": [],
+    "reason_scope": "initial xkbcomp startup failure preserved"
+  },
+  "WSLg_RAIL_scope": [
+    "Original client drew in X11 but Windows RAIL/sky target was not reliably viewable or focusable.",
+    "Shared-memory EIO diagnostics narrow a transport issue; namespace differences and denied ptrace mean no proven unique root cause.",
+    "Earlier mirror coordinate input changed an owned QA draft; original state-changed evidence retained, then normally discarded/closed.",
+    "Earlier observer timer was connected but not started; missing samples are not reconstructed.",
+    "No WSL/Weston/msrdc restart, remount, GPU setting change or ptrace privilege escalation claimed."
+  ],
+  "limits": [
+    "One deterministic loopback protocol fixture, not real local/cloud model execution or NLP quality.",
+    "Fixture proposal did not match proton goal (e-/1GeV); plan transport/preview passed, semantic or physical correctness not claimed.",
+    "The plan operation passed, then the task timed out at300s; whole-task success is expressly not claimed.",
+    "Normal host/launcher exit is not visual verification. Operator observation is separately attributed.",
+    "No packaged GUI/VTK renderer, recruited-user timing, scientific validation or recovered WSLg RAIL acceptance."
+  ],
+  "confirmed_P0": [],
+  "confirmed_P1": [],
+  "confirmed_P2": [],
+  "asset_metadata": "native-assets-metadata.json",
+  "source_metadata": "source-metadata.json"
+}

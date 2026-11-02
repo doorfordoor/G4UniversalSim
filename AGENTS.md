@@ -1,8 +1,13 @@
 # G4UniversalSim Agent 开发约束
 
+Linux原生通道补充（主审已签收）：main已实际操作独立真实X11/xcb桌面，一次固定HTTP计划passed，操作观察时曾停在awaiting_approval、0事件；随后在观察期间触及300秒预算，整任务保留failed／agent.task_timeout，不称整任务成功。原host exit0、slot_released=true、host与显示服务两组remaining_owned均空、HTTP已关闭；显示辅助子进程退出码[0,1,0]（twm非零保留），不能写全部子进程exit0；代表性原生签收结果为 **独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**。WSLg RAIL任务栏无法展开，第三次host退出且0请求，原失败保留，绝不称该通道成功。Ubuntu实际系统安装x11-xkb-utils，其它本次依赖保持隔离OUT前缀；具体包版本／SHA及安装收据见最终证据，不把早期准备收据system_installs=0外推到之后。
+
 本文件是仓库级约束，适用于根目录及其子目录。更具体的目录约束可以由更深层的 AGENTS.md 补充；gui/AGENTS.md 适用于 GUI 目录。
 
 ## 0. 条目索引与历史全文
+
+- 2026-11-02 L1 本轮验收与交付：阶段签收 **本轮约定范围验收完成**；冻结246e4f6，Windows六profile308/183347、CI十二原报告662/228978，Windows安装显式attempt2且原失败保留。新Windows125/150仅受限原生，WSLg **独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**；EE真实云／人工单对／只读恢复按原身份映射，不扩NL质量／提速／科学等级。完整操作合同见[同名历史](docs/agent-history.md#2026-11-02-l1本轮验收与交付)与[最终证据](docs/verification/l1-final-20261102/README.md)。
+
 
 - 2026-11-02 L1 EE验收快照与原生布局后续候选：EE四本机／十二CI报告、真实云与受控恢复的限定证据分开；native150原失败保留、布局候选限定独审PASS，下一候选仍待，阶段未关闭，见[同名历史条目](docs/agent-history.md#2026-11-02-l1-ee验收快照与原生布局后续候选)。
 
