@@ -236,3 +236,14 @@ L2 依赖 K2 工程导出，再考虑隔离 C++/CMake 差异、构建/运行、�
 纯文件 journal 已按上述冻结身份完成专项与独审；common 动作/controller/UI、真实云任务与固定 HTTP 双版开发链已落接口/部分证据，恢复 old ID 只读查询和默认完成性 evaluate 如上。本轮不扩张自动字段、物理比较或实际本地权重质量结论。授权/预算、cancel/recover/Undo/export 的正式整合、固定任务/人工时间成功率对照、新候选双版双平台完整矩阵/CI/实窗仍需后续证据和对应独审，本文当前只冻结为实施候选说明，阶段完成稿等这些证据齐后另行形成；当前不写 L1 完成。候选契约与历史入口见 [L1 候选历史](agent-history.md#2026-11-02-l1-配置-agent-实施候选)。
 
 本次按用户授权同步两份新稿及六处既有文档的 L1 候选入口，保留旧历史和生成表；不修改 STATUS/ROADMAP，不执行产品测试或 Qt/后端。正式验收完成后由主负责人统一裁决阶段状态；当前仅冻结实施候选，不填阶段完成、不造正式计数、不绑定未来提交身份。
+
+
+## 2026-11-02 首候选 D1 与路径显示修复进度
+
+以上初稿和历史进度按原时点保留；本段只追加D1后的候选增量，不改变默认完成性评价、白名单、授权或只读恢复合同。D1 `d1bd57da5a7e61d07fdff6cadc2a1f5f3dadc359` 的四份Windows正式报告已终态：static48/5031、GUI70/9781、113backend63/82029、114backend63/72536，合计244次执行/169377入口，四原launch均runner/gate0、identity_errors=[]。两个integration未执行；新修复不能继承这四报告的D1运行身份。
+
+五域真实云Task01已走完七个passed步骤并完成4事件，随后完整capture发现唯一差异 `/state/drafts/project.threads.raw`：预期 `2`，实际 `〢`（U+3022）；flush导致新revision和K1 stale，整体receipt仍failed。中间字段/初始化/运行成功不能掩盖原始编辑原文及资格失效，也不能把尚未完成的确认/导出/Undo写成通过；原失败与原件保持。
+
+当前v3修复不止三路径显示：作者受控display probe发现旧transactions捕获会把未改显示值还原成typed原路径，丢失原路径草稿中的空白，产生两个raw diff且指纹不等。K1 binder现将原snapshot的path raw存为内部view tuple第三值，capture_workspace兼容旧2tuple，仅在路径仍等于生成显示值时还原原raw；非路径raw继续保留，不新增持久codec字段。最终为ProjectPage、window/experiment、window/transactions三产品＋两测试五文件；正常全量load和legacy原 `set_project` 调用不变，window/run.py仍为D1 base，不把legacy分支写成当前MainWindow自然缺陷。privacy/codec/locale/完整同指纹/revision与K1资格门禁不放宽。当前源freeze是 `out/collab/l1-project-path-display-repair/v3-final/freeze.json`，早期v1五文件及文档v2原件保留；本次只同步三份文档，不改产品或runner。
+
+此前实际K1显示绑定窄修专项通过保持旧范围；当前v3作者Qt56开发入口通过，旧Qt54/后端25不重标为v3。先前休眠绝对路径和设置顺序的夹具失败与源码日志保留，r4仅修夹具相对路径/顺序后56，不算新产品失败，也未放宽既有隐私规则。产品v3 raw-path delta独审已PASS（限定接口/显示/F5资格，不冒backend/formal），新候选提交身份、重新构建、完整矩阵、真实CI、原生和人工对照均待；本段不预写未来HEAD或阶段完成。详见[新增候选历史](agent-history.md#2026-11-02-l1-路径显示-raw-修复候选)。

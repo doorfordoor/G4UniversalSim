@@ -6,6 +6,12 @@
 
 按 Roadmap 下一工作项完整启动 L1。当前以 `4840e62e` 为接续基线，工作分支 `roadmap/L1-config-agent`。云端／本地兼容接口、系统凭据与会话凭据、受控配置差异、有界任务及恢复接口正在实现和独审；复用 K1 服务、F5 事务及既有运行器。完整矩阵、真实模型任务集、原生观察和最终交付仍待验收，当前不宣布 L1 完成。见[开工契约](docs/collab/inbox/20261102-l1-execution.md)与[L1 说明](docs/L1配置Agent.md)。F2 热会话和 L2 代码执行保持后续工作项。
 
+首候选 D1 `d1bd57da5a7e61d07fdff6cadc2a1f5f3dadc359` 的实际 Windows 终态为 static 48/5031、GUI 70/9781、11.3 backend 63/82029、11.4 backend 63/72536，合计 **244 次执行／169377 个实际入口**；四份原 launch 的 runner/gate 均为0、identity_errors=[]。两个 integration 未执行，不算完整六 profile；原报告保留 D1 身份，不迁移到后续修复候选。
+
+D1 五域真实云任务 Task01 的 plan/apply/fields/initialization/generate/run/evaluate 七步均 passed，run 完成4事件，但完整捕获只在 `/state/drafts/project.threads.raw` 出现 `2`→`〢`（U+3022）的重格式差异；后续 flush 推进 revision 并使 K1 记录陈旧，任务级收据仍为 **failed**，不把中间运行成功当完整任务通过，原件不改。当前修复 v3 除 `ProjectPage.show_generated_paths` 与实际 K1 display binder 外，还补足路径原文捕获：此前受控显示探针发现旧 transactions 把未改显示值还原为 typed 原路径，丢失原路径草稿空白，出现两处 raw diff、指纹不等；现 K1 binder 将原快照 path raw 保存为内部 view tuple 第三值，capture_workspace 兼容旧二元组，并仅对仍等于生成显示值的路径按原 raw 还原，非路径 raw 继续保留。最终为 ProjectPage／window/experiment／window/transactions 三产品＋两测试五文件；正常载入与 legacy 全量 `set_project`、window/run.py 的 D1 base 均不改，privacy／codec／locale／同指纹和资格门禁不放宽。
+
+此前 K1 display binder 窄修专项通过仍保留原范围；本次 v3 作者 Qt56 开发入口通过，旧54／25保持旧身份，不改记为 v3 后端或正式重跑。早期绝对休眠路径及设置次序的夹具失败保留原日志／源码，r4仅修夹具后56，不记为新产品失败。产品 v3 raw-path delta 独审已 PASS（限定接口／显示／F5 资格，不冒充 backend／formal），新候选身份／重新构建／全部 formal／真实 CI／原生观察及人工对照仍待。详细增量见[L1进度](docs/L1配置Agent.md)及[候选历史](docs/agent-history.md#2026-11-02-l1-路径显示-raw-修复候选)，本页不预写未来 HEAD、通过结论或阶段完成。
+
 ## 2026-11-02 J2/F8及E7本轮验收
 
 **本轮约定功能验收已完成。** main已接受J2、F8和支撑J2的E7既有15原语／7布尔工具注册与元数据范围。正式构建／测试冻结为 `2ec5b14fc823ad837dce3ea6f5d7c5ae3f66a3c8`；后续包含本页的提交仅为docs/evidence，不改原report／EXE身份，不因文档提交重建或重跑矩阵。交付以实际Git树、三份精确锁及main后置字节映射为准，不自填未来commit SHA。见[最终证据](docs/verification/j2-f8-final-20261102/README.md)、[功能支持矩阵](docs/功能支持矩阵.md)与[J2/F8说明](docs/J2编辑覆盖与F8验收.md)。

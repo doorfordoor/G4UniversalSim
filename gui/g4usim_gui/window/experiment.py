@@ -280,18 +280,20 @@ class ExperimentMixin:
             # still carries the command and execution/launch directory facts.
             self._project_experiment_command(record)
             return
-        original = self._edit_session.current().project
+        original_snapshot = self._edit_session.current()
+        original = original_snapshot.project
         for field, key in (('configPath', 'main_ini_path'), ('macroPath', 'run_macro_path'), ('outputDir', 'output_dir')):
             if key in package:
                 setattr(self.project, field, str(package[key]))
         self._generated_edit_binding = {
-            name: (getattr(original, name), getattr(self.project, name))
-            for name in ('configPath', 'macroPath', 'outputDir')
+            name: (getattr(original, name), getattr(self.project, name),
+                   original_snapshot.state['drafts'].get(f'project.{control}', getattr(original, name)))
+            for name, control in (('configPath', 'config_path'), ('macroPath', 'macro_path'), ('outputDir', 'output_dir'))
         }
         previous = self._history_restoring
         self._history_restoring = True
         try:
-            self.project_page.set_project(self.project)
+            self.project_page.show_generated_paths(self.project)
         finally:
             self._history_restoring = previous
         self._generated_package_dir = str(package.get('package_dir', ''))

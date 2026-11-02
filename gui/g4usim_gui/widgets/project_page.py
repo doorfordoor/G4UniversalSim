@@ -150,6 +150,18 @@ class ProjectPage(QWidget):
         self._update_mode_controls()
         self._update_status_summary()
 
+    def show_generated_paths(self, project: G4USimProject) -> None:
+        """Bind package display paths without reformatting editable drafts."""
+        previous = self._building
+        self._building = True
+        try:
+            self.config_path.setText(project.configPath)
+            self.macro_path.setText(project.macroPath)
+            self.output_dir.setText(project.outputDir)
+        finally:
+            self._building = previous
+        self._update_status_summary()
+
     def apply_to_project(self, project: G4USimProject) -> G4USimProject:
         project.projectName = self.project_name.text().strip() or "demo"
         project.runInputMode = str(self.run_input_mode.currentData() or "generated")

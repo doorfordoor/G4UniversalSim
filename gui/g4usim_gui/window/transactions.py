@@ -288,7 +288,8 @@ class TransactionsMixin:
         project.pathSettings.runs_root = project.runsRoot
         binding = getattr(self, '_generated_edit_binding', None)
         if project.runInputMode == 'generated' and binding is not None:
-            for name, (original, generated) in binding.items():
+            for name, view in binding.items():
+                original, generated = view[:2]
                 if getattr(project, name) == generated:
                     setattr(project, name, original)
         project.materialEditor = copy.deepcopy(page.material_document)
@@ -298,9 +299,12 @@ class TransactionsMixin:
         state['selections'].update(page.j2_run_editors.selection_state())
         if project.runInputMode == 'generated' and binding is not None:
             for name, control in (('configPath', 'config_path'), ('macroPath', 'macro_path'), ('outputDir', 'output_dir')):
-                original, generated = binding[name]
+                view = binding[name]
+                original, generated = view[:2]
                 if state['drafts'][f'project.{control}'] == generated:
-                    state['drafts'][f'project.{control}'] = original
+                    # New K1 display bindings retain the original raw spelling;
+                    # older/legacy two-value bindings keep their existing rule.
+                    state['drafts'][f'project.{control}'] = view[2] if len(view) == 3 else original
         for name in ('geometry_table', 'boolean_table'):
             table = getattr(page, name)
             state['tables'][name] = [[table.item(row, col).text() if table.item(row, col) else ''

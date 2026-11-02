@@ -60,7 +60,8 @@ class ModelFixture(BaseHTTPRequestHandler):
         changes = [dict(domain='volume', target='Target', field='material', value='G4_Si'),
                    dict(domain='source', target='source', field='particle', value='e-'),
                    dict(domain='source', target='source', field='energy', value='1 GeV'),
-                   dict(domain='run', target='', field='beam_on', value=4)]
+                   dict(domain='run', target='', field='beam_on', value=4),
+                   dict(domain='run', target='', field='threads', value=2)]
         plan = dict(schema=SCHEMA, base_fingerprint=context['base_fingerprint'], summary='Fixed protocol fixture',
                     clarifications=[], changes=changes)
         payload = json.dumps(dict(model='fixture-local', choices=[dict(index=0, finish_reason='stop',
@@ -114,7 +115,7 @@ def main():
             assert controller.provider is not None
             auth = dict(allowed_actions=['plan', 'apply', 'validate', 'initialize', 'generate', 'run', 'evaluate', 'export'],
                         max_calls=16, max_events=4, timeout_seconds=300)
-            window._start_agent_task(dict(prompt='把Target改为G4_Si，source改为1 GeV电子束e-，保留位置方向，跑4事件。只检查事件完成性。',
+            window._start_agent_task(dict(prompt='把Target改为G4_Si，source改为1 GeV电子束e-，保留位置方向，2线程跑4事件。只检查事件完成性。',
                                           authorization=auth, auto_apply=True, auto_run=True,
                                           evaluation_scope='input_run_completion'))
             wait(app, window, lambda: controller.journal is not None and
@@ -131,6 +132,7 @@ def main():
             assert Path(run['output_dir'], 'run_summary.txt').is_file()
             assert window._edit_session.current().project.sourceEditor.energy == '1 GeV'
             assert window._edit_session.current().project.sourceEditor.particle == 'e-'
+            assert window._edit_session.current().project.threads == 2
             assert next(r for r in window._edit_session.current().project.geometryEditor.volumes if r.name == 'Target').material == 'G4_Si'
             assert len(ModelFixture.requests) == 1
             collected, accepted = window.capture_workspace(), window._edit_session.current()

@@ -728,3 +728,14 @@ E7只完成现有15/7真实factory分派、能力元数据及GUI共源离线表�
 持久密钥只用系统凭据服务，不能落任务/项目、日志或导出包；Linux可选SecretStorage缺失/服务不可用明确拒绝，不默降明文或session。云接入与本地OpenAI-compatible协议分开计证；本地仅实际HTTP协议夹具，不附权重、不宣称实际本地模型理解质量。journal的checksum/聊天/日志不是授权来源，保存的授权不能恢复执行权。
 
 主线程已收核心专项独审：最终忙状态P2在controller409d6a4a/适配9689acb7定点关闭；面板125%/150%独立组件各108入口、永久边界146入口各按原收据保留，不合并成正式矩阵或实窗。当前开发证据是旧2ec EXE上的固定HTTP双版各24入口，以及真实DeepSeek任务集02的一项4事件/export/Undo、另两项澄清；旧01整体UI线程守卫失败原件不拼绿。新候选重新构建、双版双平台完整矩阵/真实CI、人工时间成功率对照和原生窗口边界仍待；不造未来HEAD、计数或完成声明。
+
+
+## 2026-11-02 L1 路径显示 raw 修复候选
+
+本条只追加首候选D1后的显示路径修复契约，前文历史与各旧身份不改。D1为 `d1bd57da5a7e61d07fdff6cadc2a1f5f3dadc359`：Windows static48/5031、GUI70/9781、113backend63/82029、114backend63/72536，四原launch/report均按各自原SHA保留，runner/gate0、identity_errors=[]，合计244次执行/169377入口。两integration未执行，不能写完整矩阵通过；这些是D1结果，不是后续未提交候选的结果。
+
+五域真实云Task01七步骤（plan/apply/validate/initialize/generate/run/evaluate）passed、run4完成，但完整F5 capture仅 `/state/drafts/project.threads.raw` 与接受快照不同：ASCII的 `2` 被路径显示回投重格式为 `〢`（U+3022），后续flush触发revision变化/K1 stale。任务总receipt仍failed；当时journal停在awaiting_confirmation，不将“failed-task.json”文件名误写成其state=failed，不把未完成的确认/export/Undo冒称通过。Task01原receipt、快照、diff、原始记录与正式D1四报告不改。
+
+当前最终v3保留 `ProjectPage.show_generated_paths(project)` 三路径显示及实际K1 display binder，并修补同类路径raw边界：作者受控显示探针发现旧transactions将未改显示路径还原为typed原值，丢掉原路径草稿空白，出现两处raw diff/指纹不等。K1 binder现把原snapshot path raw存为内部view tuple第三项；capture_workspace兼容旧2tuple，仅当捕获路径仍等于生成显示值时按原raw还原，非路径raw保持。最终是ProjectPage、window/experiment、window/transactions三产品＋两测试五文件，新只读源freeze为 `out/collab/l1-project-path-display-repair/v3-final/freeze.json`；原v1五文件freeze与文档v2均保留，不改写旧身份。正常load及legacy全量 `set_project` 保留，window/run.py仍为D1原base `3af4daefa4c0818fba9879acffe14e15ece2c8b908d2b26b0526e9fa7e873d56`；不以此描述当前MainWindow的legacy自然缺陷。privacy、codec、locale、完整同指纹和K1资格门禁不放宽，本次文档不改产品、runner或测试。
+
+此前实际K1显示绑定专项通过仅保留旧范围；当前v3作者Qt56通过，旧54及后端25仍属旧开发身份、不重标。r1/r2/r3的夹具路径/设置时序失败及源码日志保留，r4仅修相对路径与设置顺序后56；这些不是新产品失败，隐私拒绝规则未放宽。产品v3 raw-path delta独审已PASS（限定接口/显示/F5资格，不冒backend/formal），新candidate/重新构建/全部formal/真实CI/native及人工对照仍待，不提前填未来HEAD、PASS或阶段完成。使用与当前进度见[L1说明](L1配置Agent.md)。

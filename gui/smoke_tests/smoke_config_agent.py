@@ -13,7 +13,7 @@ os.environ.setdefault('QT_QPA_PLATFORM', 'offscreen')
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'gui'))
 
-from PySide6.QtCore import QCoreApplication, QSettings
+from PySide6.QtCore import QCoreApplication, QLocale, QSettings
 from PySide6.QtWidgets import QApplication, QMessageBox
 from unittest.mock import patch
 
@@ -23,6 +23,8 @@ from g4usim_gui.agent.actions import SCHEMA
 from g4usim_gui.agent.session import TaskJournal
 from g4usim_gui.core.edit_snapshot import snapshot_fingerprint
 from g4usim_gui.core.wizard import default_spec
+from g4usim_gui.core.project import G4USimProject
+from g4usim_gui.widgets.project_page import ProjectPage
 
 
 def wait(app, predicate, window, timeout=25):
@@ -43,8 +45,47 @@ def response(messages, changes=None, questions=None):
                        'clarifications': questions or [], 'changes': changes or []})
 
 
+def test_generated_paths_preserve_other_controls(app):
+    page = ProjectPage()
+    try:
+        page.threads.setLocale(QLocale('zh_HK'))
+        project = G4USimProject(threads=2)
+        page.set_project(project)
+        page.project_name.setText('  retained name  ')
+        page.executable.setText('  retained executable  ')
+        page.workspace_root.setText('  retained workspace  ')
+        page.runs_root.setText('  retained runs  ')
+        page.seed.setText('  0042  ')
+        page.run_name.setText('  retained run  ')
+        page.threads.lineEdit().setText('02')
+        controls = ('project_name', 'executable', 'workspace_root', 'runs_root', 'seed', 'run_name')
+        original = {name: getattr(page, name).text() for name in controls}
+        changed = []
+        page.projectChanged.connect(lambda: changed.append(True))
+        project.configPath, project.macroPath, project.outputDir = 'new/main.ini', 'new/run.mac', 'new/output'
+        page.show_generated_paths(project)
+        assert {name: getattr(page, name).text() for name in controls} == original
+        assert page.threads.value() == 2 and page.threads.lineEdit().text() == '02'
+        assert [page.config_path.text(), page.macro_path.text(), page.output_dir.text()] == [
+            project.configPath, project.macroPath, project.outputDir]
+        assert changed == []
+        page.threads.lineEdit().setText('INVALID')
+        page.show_generated_paths(project)
+        assert page.threads.lineEdit().text() == 'INVALID'
+        # Loading a business project is a different operation and still resets
+        # an old raw draft, even when its typed thread value is the same.
+        page.set_project(G4USimProject(projectName='new project', threads=2))
+        assert page.threads.lineEdit().text() != 'INVALID' and page.threads.value() == 2
+        assert page.project_name.text() == 'new project'
+    finally:
+        page.close()
+        page.deleteLater()
+        app.processEvents()
+
+
 def main():
     app = QApplication.instance() or QApplication([])
+    test_generated_paths_preserve_other_controls(app)
     QCoreApplication.setOrganizationName('G4USim-Agent-Smoke')
     QCoreApplication.setApplicationName('Components')
     with tempfile.TemporaryDirectory(prefix='agent-qt-') as directory, \
@@ -57,10 +98,21 @@ def main():
         try:
             window.config_builder_page.preview3d_auto_backend.setChecked(False)
             assert window.apply_simulation_wizard(default_spec('single_target'), run_after=False)
+            window.project_page.threads.setLocale(QLocale('zh_HK'))
+            window.project_page.threads.setValue(1)
+            window.config_builder_page.threads.setValue(1)
             window.project_page.executable.setText(sys.executable)
             window.project_page.workspace_root.setText(str(root))
             window.project_page.runs_root.setText(str(root / 'runs'))
             window.config_builder_page.beam_on.setValue(4)
+            # Dormant inputs are owned test files, outside private source paths.
+            parked_config, parked_macro = root / 'parked.ini', root / 'parked.mac'
+            parked_config.write_text('[simulation]\nthreads = 1\nseed = 42\n', encoding='utf-8')
+            parked_macro.write_text('/run/initialize\n', encoding='utf-8')
+            # Absolute unclassified dormant paths are correctly privacy-rejected;
+            # these relative drafts exercise preservation without relaxing that guard.
+            window.project_page.config_path.setText('  parked.ini  ')
+            window.project_page.macro_path.setText('  parked.mac  ')
             window.flush_pending_edit()
             controller = window.agent_controller
             before = snapshot_fingerprint(window.capture_workspace())
@@ -105,6 +157,23 @@ def main():
             assert window.config_builder_page.threads.value() == 2
             assert window.config_builder_page.seed.text() == '42'
             assert snapshot_fingerprint(window.capture_workspace()) == snapshot_fingerprint(window._edit_session.current())
+            revision = window._edit_session.revision
+            assert window._edit_session.current().state['drafts']['project.config_path'].startswith('  ')
+            assert window._edit_session.current().state['drafts']['project.macro_path'].endswith('  ')
+            assert window.project_page.threads.lineEdit().text() == '2'
+            window._bind_experiment_package(dict(action='generate', status='passed', stale=False, package={
+                'main_ini_path': str(root / 'display-only/main.ini'),
+                'run_macro_path': str(root / 'display-only/run.mac'),
+                'output_dir': str(root / 'display-only/output'),
+                'package_dir': str(root / 'display-only')}))
+            for _ in range(3):
+                app.processEvents()
+            assert window.project_page.threads.lineEdit().text() == '2'
+            assert snapshot_fingerprint(window.capture_workspace()) == snapshot_fingerprint(window._edit_session.current())
+            window.flush_pending_edit()
+            assert window._edit_session.revision == revision
+            apply_id = next(o['binding']['record_id'] for o in controller.journal.to_dict()['operations'] if o['action'] == 'apply')
+            assert not next(r for r in window.experiment.records() if r['record_id'] == apply_id)['stale']
             controller.cancel()
             window.undo_edit()
             assert snapshot_fingerprint(window.capture_workspace()) == before
