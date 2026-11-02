@@ -64,12 +64,20 @@ def main() -> int:
             entries = window._command_palette_entries()
             categories = [entry.category for entry in entries]
             assert categories.count('Page') == 9, categories.count('Page')
-            assert categories.count('Action') == 7, categories.count('Action')
+            assert categories.count('Action') == 8, categories.count('Action')
             assert categories.count('Appearance') == 15, categories.count('Appearance')
             labels = [entry.label for entry in entries]
             assert 'Results' in labels
             assert 'Paper & Ink' in labels
             assert all(callable(entry.callback) for entry in entries)
+            window.page_stack.setCurrentIndex(6)
+            window.workspace_layout.focus_current_page()
+            assert window.workspace_layout.preset == "analysis", window.workspace_layout.preset
+            window.page_stack.setCurrentIndex(5)
+            window.workspace_layout.focus_current_page()
+            assert window.workspace_layout.preset == "running", window.workspace_layout.preset
+            window.workspace_layout.apply_preset("configuration")
+            window.page_stack.setCurrentIndex(2)
 
             # --- filtering and keyboard --------------------------------------
             def selectable_labels(dialog):

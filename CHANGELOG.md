@@ -7,6 +7,13 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ## Unreleased
 
+### J3 第四阶段：按当前页面适配工作区（2026-11-02，作者交付，未验收）
+
+- View → Workspace layout 新增 “Fit workspace to current page”（`Ctrl+Shift+L`）：按当前页面在 configuration /
+  running / analysis 三个预设间切换，只改停靠面板，不改项目与运行状态；命令面板 Actions 增加同名条目（7→8）。
+- `gui_command_palette` 扩展为 42 断言，覆盖 Run Console→running、Results→analysis 的映射；7 个受影响 GUI 用例
+  全过（399 断言）。证据 `docs/verification/j3-focus-20261102/README.md`。
+
 ### J3 第三阶段：工作区面板与外壳细节（2026-11-02，作者交付，未验收）
 
 - 3D 视图面板的视点/投影控件拆成两行，图例 190→168、剖切滑块最小宽 80，窄 dock 不再把 “World / Show Labels /

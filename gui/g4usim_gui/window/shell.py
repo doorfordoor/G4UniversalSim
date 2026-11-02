@@ -656,6 +656,7 @@ class ShellMixin:
             ("Save Project As...", self.save_project_as),
             ("Environment setup...", self.show_environment_settings),
             ("Open environment installer...", self.show_environment_installer),
+            ("Fit workspace to current page", self.workspace_layout.focus_current_page),
         ):
             entries.append(PaletteEntry(ui_text(label), ui_text("Action"), "", callback))
         for skin_id in SKIN_IDS:

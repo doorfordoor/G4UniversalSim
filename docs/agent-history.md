@@ -852,3 +852,24 @@ sidebar section/nav 轨道、crumb、statusMeta、`QDialog#commandPalette`、`pa
 
 **边界**：未复测 23 项对比度表（调色板未改）、未做 125%/150% 与 Linux 真实桌面、未做独立审查；J3 仍未关闭。
 证据：`docs/verification/j3-panels-20261102/README.md`。
+
+
+### 2026-11-02 J3 第四阶段：按当前页面适配工作区
+
+**动机**：143 行 `workspace_layout.py` 的预设只有 View 菜单入口；实测从 Configuration 跳到 Run Console 时
+配置停靠面板仍占 700px，中心页只剩约 330px，按钮与 “Unobserved” 行被裁；结果页/历史页同样被压。属于“好上手”缺陷。
+
+**实现**：
+- `WorkspaceLayout.preset_for_page(index)`：0–4 → `configuration`，5 → `running`，6–8 → `analysis`。
+- `WorkspaceLayout.focus_current_page()`：`apply_preset(preset_for_page(current))` + `page_stack.reveal_current()`。
+- View → Workspace layout 增加 “Fit workspace to current page”（objectName `workspaceFocusPage`、`Ctrl+Shift+L`）。
+- `_command_palette_entries()` 增加同名 Action（Actions 7→8）；`i18n.ZH_CN` 增加“按当前页面适配工作区”。
+
+**为什么不自动**：`smoke_workspace_layout` 依赖“首次进入配置页自动显示 3D、手动隐藏后不再自动显示”的行为，
+按页面强制预设会覆盖用户自定义布局；因此做成显式命令，保留手动控制。
+
+**验证**：`gui_command_palette` 42 断言（含 Run Console→running、Results→analysis 的映射）；受影响 7 个 GUI 用例
+7/7、399 断言，报告 `out/verification/j3-focus/20261102-231056-4659a9b9/report.json`（副本
+`docs/verification/j3-focus-20261102/`），门禁通过。
+
+**边界**：未做实窗点击录像与独立复验；未覆盖 125%/150%、Linux 桌面、浮动面板组合；J3 未关闭。

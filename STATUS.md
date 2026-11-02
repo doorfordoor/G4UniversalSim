@@ -6,6 +6,18 @@
 
 2026-11-02 D 盘桌面修订已同步。字体、数字显示与主题切换修复见[测量与进度](docs/verification/gui-theme-response-20261102/README.md)。
 
+## 2026-11-02 J3 第四阶段：按当前页面适配工作区（作者交付，未验收）
+
+新增 `WorkspaceLayout.preset_for_page()`（页面 0–4 → `configuration`、5 → `running`、6–8 → `analysis`）与
+`focus_current_page()`；View → Workspace layout 增加 **Fit workspace to current page**（`Ctrl+Shift+L`、objectName
+`workspaceFocusPage`），命令面板 Actions 条目 7→8。该动作只切停靠面板并 `reveal_current()`，不改页面内容、
+项目状态或运行状态；手动选预设/隐藏面板不受影响，也不会被自动触发。
+
+验证：7 个 GUI 用例 **7/7 通过、399 断言**（`gui_command_palette` 42、`gui_workspace_layout` 149、
+`gui_main_window` 51、`gui_theme_response` 55、`gui_j1_appearance` 29、`gui_3d_view` 35、`gui_config_editors` 38），
+报告副本 `docs/verification/j3-focus-20261102/`，门禁通过；源码 `9e40e889d49a4425…`、测试 `2742617507aadf33…`。
+**未做**：实窗点击录像、独立审查、125%/150%、Linux 桌面——J3 仍未关闭。
+
 ## 2026-11-02 J3 第三阶段：工作区面板与外壳细节（作者交付，未验收）
 
 在[第二阶段](docs/verification/j3-shell-20261102/README.md)基础上只改布局与外壳细节，未动后端与调色板：

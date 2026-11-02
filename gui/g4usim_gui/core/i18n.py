@@ -763,6 +763,7 @@ ZH_CN: dict[str, str] = {
     "Action": "操作",
     "Appearance: {name}": "外观：{name}",
     "Command palette": "命令面板",
+    "Fit workspace to current page": "按当前页面适配工作区",
     "Search pages, actions and appearances (Ctrl+K)": "搜索页面、操作与外观（Ctrl+K）",
     "Search pages, actions and appearances\u2026": "搜索页面、操作与外观…",
     "No matching command": "没有匹配的命令",

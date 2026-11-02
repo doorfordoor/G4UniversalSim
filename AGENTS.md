@@ -6,7 +6,9 @@ Linux原生通道补充（主审已签收）：main已实际操作独立真实X1
 
 ## 0. 条目索引与历史全文
 
-- 2026-11-02 J3 第三阶段（作者交付，未验收）：3D 视图视点/投影控件用两行 `QGridLayout`（窄 dock 不再横向裁剪），图例 190→168、剖切滑块最小宽 80；3D 预览选项分行；配置 setup 面板最小宽 300、分栏 330/650；配置标签 padding 7/11；状态栏恢复提示单行 max 320；`QToolButton:focus` 用 `focus_ring`、侧栏 focus 用 `sidebar_hover`；`undo`/`redo` 图标由 `_refresh_icons` 统一着色、`transactions` 建完工具栏补刷一次。证据 `docs/verification/j3-panels-20261102/README.md`（gui 72/0/0、10227 断言）；J3 未关闭。
+- 2026-11-02 J3 第四阶段（作者交付，未验收）：`WorkspaceLayout.preset_for_page()` 按页面映射 configuration/running/analysis（0–4 / 5 / 6–8），`focus_current_page()` 只切停靠面板并 `reveal_current()`；View → Workspace layout 的 “Fit workspace to current page”（`Ctrl+Shift+L`、`workspaceFocusPage`）与命令面板 Actions 同名条目都走它；该动作不得自动触发、不得改页面内容/项目状态/运行状态，手动预设与隐藏面板必须继续生效。证据 `docs/verification/j3-focus-20261102/README.md`（7 个 GUI 用例、399 断言）；J3 未关闭。
+
+2026-11-02 J3 第三阶段（作者交付，未验收）：3D 视图视点/投影控件用两行 `QGridLayout`（窄 dock 不再横向裁剪），图例 190→168、剖切滑块最小宽 80；3D 预览选项分行；配置 setup 面板最小宽 300、分栏 330/650；配置标签 padding 7/11；状态栏恢复提示单行 max 320；`QToolButton:focus` 用 `focus_ring`、侧栏 focus 用 `sidebar_hover`；`undo`/`redo` 图标由 `_refresh_icons` 统一着色、`transactions` 建完工具栏补刷一次。证据 `docs/verification/j3-panels-20261102/README.md`（gui 72/0/0、10227 断言）；J3 未关闭。
 
 2026-11-02 J3 第二阶段（作者交付，未验收）：侧栏 `WORKFLOW`/`RUN & ANALYZE` 分组与选中轨道、页头面包屑、Ctrl+K 命令面板
   （`gui/g4usim_gui/widgets/command_palette.py`：Pages/Actions/Appearances 分组、标签严格匹配优先、Up/Down 跳过组标题、Enter 运行/Esc 关闭、

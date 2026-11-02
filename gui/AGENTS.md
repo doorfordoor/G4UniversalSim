@@ -261,3 +261,12 @@ F4依赖维护：安装统一走gui/requirements.txt，当前验证线PySide6>=6
   它会与外观状态标签一起被右缘裁掉。
 - 键盘焦点必须可见：`QToolButton:focus` 用 `focus_ring`，侧栏导航 focus 用 `sidebar_hover`；新增自绘控件时补同等焦点样式。
 - 撤消/重做的图标来自 `_refresh_icons`，`transactions.py` 建完工具栏会补刷一次；新增工具栏动作要遵循同样的着色路径。
+
+
+## 2026-11-02 J3 第四阶段：按页面适配工作区
+
+- `WorkspaceLayout.preset_for_page()` 是页面 → 预设的唯一映射（0–4 `configuration`、5 `running`、6–8 `analysis`）；
+  新增页面时要同步它、`smoke_command_palette` 的 Actions 计数与 `smoke_workspace_layout` 的预设断言。
+- “Fit workspace to current page”（`Ctrl+Shift+L`、`workspaceFocusPage`）与命令面板 Actions 条目都调用
+  `focus_current_page()`；该动作只允许 `apply_preset()` + `reveal_current()`，不得改页面内容、项目状态、运行状态，
+  也不得在页面切换时自动触发（会覆盖用户的手动预设/隐藏）。

@@ -288,6 +288,19 @@ class WorkspaceLayout(QObject):
         for index in tuple(pending):
             pending[index] = tuple(candidate for candidate in pending[index] if candidate is not dock)
 
+    def preset_for_page(self, index: int) -> str:
+        """Preset that gives the current page enough room (workflow / run / analysis)."""
+        if index == 5:
+            return "running"
+        if 6 <= index <= 8:
+            return "analysis"
+        return "configuration"
+
+    def focus_current_page(self) -> None:
+        """Switch to the layout the current page needs, without touching the page itself."""
+        self.apply_preset(self.preset_for_page(self.window.page_stack.currentIndex()))
+        self.window.page_stack.reveal_current()
+
     def add_menu(self, view_menu):
         self.menu = view_menu.addMenu(ui_text("Workspace layout"))
         self.menu.setProperty("workspaceTitle", "Workspace layout")
@@ -298,6 +311,11 @@ class WorkspaceLayout(QObject):
             action.setObjectName("workspacePreset_" + key)
             action.triggered.connect(lambda _checked=False, selected=key: self.apply_preset(selected))
             self.preset_actions[key] = action
+        focus_action = self.menu.addAction(ui_text("Fit workspace to current page"))
+        focus_action.setProperty("workspaceTitle", "Fit workspace to current page")
+        focus_action.setObjectName("workspaceFocusPage")
+        focus_action.setShortcut("Ctrl+Shift+L")
+        focus_action.triggered.connect(self.focus_current_page)
         self.menu.addSeparator()
         for label, callback in (("Save current layout", self.save),
                                 ("Restore saved layout", self.restore),
