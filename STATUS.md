@@ -1,5 +1,7 @@
 # G4UniversalSim 状态（唯一入口页）
 
+2026-11-02 D 盘桌面修订已同步。字体、数字显示与主题切换修复见[测量与进度](docs/verification/gui-theme-response-20261102/README.md)。
+
 更新：2026-11-02。本页只做导航与快照；**阶段状态以 [docs/ROADMAP.md](docs/ROADMAP.md) 为准，支持等级以 [docs/功能支持矩阵.md](docs/功能支持矩阵.md) 为准**，两者冲突时先改事实再改文档。
 
 ## 2026-11-02 L1 配置 Agent 实施中

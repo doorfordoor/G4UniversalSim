@@ -1,5 +1,7 @@
 # G4UniversalSim GUI Agent 开发约束
 
+主题切换须保留焦点、草稿和结果选择。浮动 Dock 和独立向导分别设置数值显示区域，历史草稿校验沿用进程原区域。Qt、图表和 VTK 字体偏好集中在 core/fonts.py。回归入口为 gui_theme_response 和 gui_main_window。
+
 2026-11-02 L1 AI布局后续候选：52px导致AI全控件不可读是必须修复的新P2，不以旧F6窄边界豁免。OUT候选仅panel按当前文字／样式计算两列最小宽度及footer inset／reflow，不改workspace／core／F5／K1或翻译；125%／150%各1216组件入口与原产品负向分别保留，候选已收限定独审PASS并由main精确apply两path；按当前focused-target及可容纳joint合同核验，retained125非焦点右列可裁剪、不保证全footer同时同屏；新候选完整验收及新native仍待。见[候选历史](../docs/agent-history.md#2026-11-02-l1-ee验收快照与原生布局后续候选)。
 
 2026-11-02 L1 路径显示 raw 修复候选：`ProjectPage.show_generated_paths` 仅回显 config/macro/output 三条路径，实际 K1 display binder 不得为显示刷新其它控件原文、revision 或验证资格；正常业务载入和 legacy 全量投影仍走原 `set_project`。原 D1 五域任务失败、窄修及后续待验身份分别计证，见[候选历史](../docs/agent-history.md#2026-11-02-l1-路径显示-raw-修复候选)。
