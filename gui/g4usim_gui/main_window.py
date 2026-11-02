@@ -92,6 +92,9 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMi
         super().resizeEvent(event)
         if hasattr(self, 'content_scroll'):
             self.start_page.adapt_to_width(self.content_scroll.viewport().width())
+        layout = getattr(self, "workspace_layout", None)
+        if layout is not None:
+            layout.adapt_to_width(event.size().width())
 
     def open_new_simulation_wizard(self) -> None:
         # Keep ContentMixin's sole spec/apply/transaction path. Repeated shortcuts

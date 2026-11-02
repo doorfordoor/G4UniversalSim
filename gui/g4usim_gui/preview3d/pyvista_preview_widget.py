@@ -238,6 +238,12 @@ class PyVistaPreviewWidget(QWidget):
         self.set_theme()
 
     # --- public API used by the Configuration page -----------------------------------
+    def set_compact(self, compact: bool) -> None:
+        """Narrow windows (high DPI, small screens) need a slimmer legend column."""
+        width = 140 if compact else 168
+        self.legend.setFixedWidth(width)
+        self.particle_legend.setFixedWidth(width)
+
     def set_theme(self) -> None:
         colors = current_colors()
         self._plotter.set_background(colors.surface_alt)

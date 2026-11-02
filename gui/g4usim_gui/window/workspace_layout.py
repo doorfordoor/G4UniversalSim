@@ -192,6 +192,23 @@ class WorkspaceLayout(QObject):
             window.page_stack._first_navigation_docks[window.page_stack.indexOf(window.config_builder_page)] = (
                 self.docks["preview"],)
 
+    def adapt_to_width(self, width: int) -> None:
+        """Keep both editors readable when the window is narrow (high DPI)."""
+        compact = int(width) < 1400
+        config = self.window.config_builder_page
+        config.setup_panel.setMinimumWidth(240 if compact else 300)
+        config.layout().itemAt(0).widget().setSizes([250, 620] if compact else [330, 650])
+        preview = getattr(config, "preview3d_widget", None)
+        if preview is not None and hasattr(preview, "set_compact"):
+            preview.set_compact(compact)
+        host = self.hosts.get("workspace")
+        if host is None:
+            return
+        docks = [self.docks.get("configuration"), self.docks.get("preview")]
+        if all(dock is not None and not dock.isHidden() for dock in docks):
+            sizes = [520, 340] if compact else [700, 440]
+            host.resizeDocks(docks, sizes, Qt.Orientation.Horizontal)
+
     def focus_analysis_view(self):
         """Show the results page across the full window with the log dock."""
         for name in ("preview", "ai"):

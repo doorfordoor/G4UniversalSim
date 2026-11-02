@@ -411,6 +411,11 @@ H4–H8 if the user's applications favour some of them.
 
 ## Progress log
 
+- 2026-11-02：J3 视觉校验（作者侧，未独立验收）。补 `docs/verification/j3-visual-checks-20261102/`：
+  15 皮肤 × 17 项 WCAG 对比度实测全部达标（最低 1.16:1 为侧栏选中指示）；125% 缩放配置页完整；
+  150% + 1280 逻辑宽屏幕发现工作区最小宽度（约 1600 逻辑像素）超出屏幕、右侧 3D 面板被裁的
+  已知缺陷（未修复）。窗口 < 1400 时启用 `WorkspaceLayout.adapt_to_width()` 与
+  `PyVistaPreviewWidget.set_compact()` 收窄面板。125%/150% 结论、Linux 实窗与切换性能基线仍待完成。
 - 2026-11-02：J3 第五阶段（作者交付，未验收）。`WorkspacePageStack.reveal_current()` 在离开停靠页时
   隐藏该页 dock，修复配置编辑器在 Run Console / Results / Run History / Parameter Scans 继续占据约 620–700 px
   的问题；导航到 Results 时 `WorkspaceLayout.focus_analysis_view()` 收起 3D 预览与 AI 面板并显示日志 dock。
