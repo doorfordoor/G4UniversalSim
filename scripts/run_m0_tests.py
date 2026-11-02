@@ -207,6 +207,7 @@ CASES = (
         "gui",
         ("qt",),
     ),
+    Case("gui_model_tree", "gui/smoke_tests/smoke_model_tree.py", "gui", ("qt",)),
     Case("gui_unsupported_features", "scripts/test_unsupported_features.py", "gui", ("qt",), args=("--layer", "gui")),
     Case("gui_geometry_safety", "scripts/test_geometry_safety_contract.py", "gui", ("qt",), args=("--layer", "gui")),
     Case("gui_geometry_diagnostics", "scripts/test_geometry_config_diagnostics.py", "gui", ("qt",), args=("--layer", "gui")),

@@ -6,6 +6,14 @@
 
 2026-11-02 D 盘桌面修订已同步。字体、数字显示与主题切换修复见[测量与进度](docs/verification/gui-theme-response-20261102/README.md)。
 
+## 2026-11-02 J3 第六阶段：3D 模型树与体积筛选（作者交付，未验收）
+
+3D 停靠面板新增「Model tree」：按编辑器几何文档展示 World → 体积父子链（simple_box / layered_device /
+hierarchical 均支持），可与 3D 视图双向联动、按名称过滤、双击隔离、右键选中/隔离/隐藏/全部显示；
+打开「3D Preview」标签会自动绘制当前几何。回归 7 个 GUI 用例、1965 断言；证据
+`docs/verification/j3-modeltree-20261102/README.md`。离屏 runner 下 widget 联动不在覆盖范围（纯函数 21 断言），
+Windows 平台作者侧直接运行覆盖 27 断言；Linux 实窗与 150% 缩放下的树可读性仍待验证，J3 未关闭。
+
 ## 2026-11-02 J3 第五阶段：导航时收起旧停靠页与结果页分析视图（作者交付，未验收）
 
 `WorkspacePageStack.reveal_current()` 现在在离开停靠页时隐藏该页 dock（配置编辑器不再在 Run Console、Results、Run History、Parameter Scans 继续占宽），导航到 Results 时 `WorkspaceLayout.focus_analysis_view()` 收起 3D 预览与 AI 面板、显示日志 dock。回归 7 个 GUI 用例、2022 断言；证据 `docs/verification/j3-analysis-docks-20261102/README.md`。Results 页停靠组合仍非最终版，J3 未关闭。

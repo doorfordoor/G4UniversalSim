@@ -7,6 +7,12 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ## Unreleased
 
+### J3 第六阶段：3D 模型树与体积筛选（2026-11-02，作者交付，未验收）
+
+- 新增 `gui/g4usim_gui/preview3d/model_tree.py`（纯数据模型树，覆盖 hierarchical/simple_box/layered_device，含成环与父缺失保护），3D 图例列新增可过滤的「Model tree」。
+- 树与 3D 视图双向联动；双击节点隔离、双击根全部显示；右键菜单支持选中/隔离/隐藏/全部显示。
+- 打开「3D Preview」标签自动绘制几何，无需先点 Refresh。
+- 回归：7 个 GUI 用例、1965 断言通过；证据 `docs/verification/j3-modeltree-20261102/README.md`。
 ### J3 第五阶段：导航时收起旧停靠页、结果页切分析视图（2026-11-02，作者交付，未验收）
 
 - `WorkspacePageStack.reveal_current()` 在离开停靠页时隐藏该页 dock，修复配置编辑器在 Run Console / Results / Run History / Parameter Scans 继续占宽的问题。

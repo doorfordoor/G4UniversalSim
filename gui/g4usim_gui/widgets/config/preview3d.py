@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (
 from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.preview3d.fallback_preview_widget import FallbackPreviewWidget
 from g4usim_gui.preview3d.pyvista_preview_widget import PyVistaPreviewWidget, pyvista_available
+from g4usim_gui.preview3d.model_tree import build_model_tree
 from g4usim_gui.preview3d.scene_builder import build_preview_scene
 from g4usim_gui.preview3d.source_builder import build_preview_source
 
@@ -106,6 +107,8 @@ class Preview3DMixin:
         self.geometry_table.itemSelectionChanged.connect(self._on_geometry_row_selected)
         self.preview3d_show_source.stateChanged.connect(self._update_preview_display_options)
         self.preview3d_show_labels.stateChanged.connect(self._update_preview_display_options)
+        if hasattr(self.preview3d_widget, "set_model_tree"):
+            self.preview3d_widget.set_model_tree(build_model_tree(self.geometry_document))
 
     def preview3d_tab_visible(self) -> bool:
         dock = getattr(self, "_workspace_preview_dock", None)
@@ -166,6 +169,8 @@ class Preview3DMixin:
             if hasattr(self.preview3d_widget, "set_show_labels"):
                 self.preview3d_widget.set_show_labels(self.preview3d_show_labels.isChecked())
             self.preview3d_widget.render_scene(self.preview_scene)
+            if hasattr(self.preview3d_widget, "set_model_tree"):
+                self.preview3d_widget.set_model_tree(build_model_tree(self.geometry_document))
             message_lines = self.preview_scene.summary_lines()
             self.preview3d_messages.setPlainText("\n".join(message_lines))
             status = "ERROR" if self.preview_scene.errors else "WARN" if self.preview_scene.warnings else "OK"
@@ -179,6 +184,13 @@ class Preview3DMixin:
         except Exception as exc:  # noqa: BLE001
             self.preview3d_status.setText(f"3D Preview: ERROR")
             self.preview3d_messages.setPlainText(f"Preview refresh failed:\n{exc}")
+
+    def _on_workspace_tab_changed(self, index: int) -> None:
+        """Opening the 3D tab draws the current geometry without an extra Refresh click."""
+        if getattr(self, "_preview3d_tab_index", -1) != index:
+            return
+        if hasattr(self.preview3d_widget, "render_scene"):
+            self.refresh_3d_preview()
 
     def set_backend_geometry_busy(self, busy: bool) -> None:
         self.preview3d_backend_button.setEnabled(not busy)

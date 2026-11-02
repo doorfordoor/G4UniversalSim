@@ -191,10 +191,12 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
         tabs.addTab(self._scrolled(self.geometry_editor), "Geometry")
         tabs.addTab(self._scrolled(self.boolean_tab), "Boolean Ops")
         tabs.addTab(self._scrolled(self.preview3d_panel), "3D Preview")
+        self._preview3d_tab_index = tabs.count() - 1   # the tab wraps the panel in a scroll area
         tabs.addTab(self._scrolled(self.run_config_editor), "Run Config")
         # messages, raw/generated files and the NIST list are reference views: one tab with sub-tabs
         tabs.addTab(self._scrolled(self.details_tabs), "Messages and files")
         layout.addWidget(tabs, 1)
+        tabs.currentChanged.connect(self._on_workspace_tab_changed)
         return panel
 
     def _table_tab(self, label: QLabel, table: QTableWidget) -> QWidget:

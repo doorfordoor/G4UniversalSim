@@ -276,3 +276,16 @@ F4依赖维护：安装统一走gui/requirements.txt，当前验证线PySide6>=6
 `WorkspacePageStack.reveal_current()` 必须在离开停靠页时隐藏该页 dock；Results 页导航需收起 preview/ai 并显示 logs
 （`WorkspaceLayout.focus_analysis_view()`）。截图取证不得在抓图前恢复配置预设。回归见
 `gui_workspace_layout` 等 7 例、2022 断言与 `docs/verification/j3-analysis-docks-20261102/`。
+
+## J3 第六阶段：3D 模型树与体积筛选（2026-11-02，作者交付未验收）
+
+- 模型树数据只能由 `gui/g4usim_gui/preview3d/model_tree.py` 的 `build_model_tree()` 从 `GeometryDocument` 生成；
+  控件层不得自行推断父子关系或重复实现几何解析。
+- 3D 选中与树选中必须双向同步（`select_volume` → `_sync_model_tree_selection`；树 → `volumeSelected`），
+  过滤时保留命中节点的父链；`set_model_tree(None)` 同时隐藏标题、过滤框和树。
+- 打开「3D Preview」标签自动绘制几何的入口是 `ConfigBuilderPage._on_workspace_tab_changed` +
+  `_preview3d_tab_index`；该索引必须用 `tabs.count() - 1` 取（标签页包了 scroll 区域，`indexOf` 返回 -1）。
+- 回归：`gui_model_tree`（离屏仅纯函数；widget 联动需 `QT_QPA_PLATFORM=windows` 直接跑）、`gui_3d_view`、
+  `gui_config_editors`、`gui_workspace_layout`、`gui_main_window`、`gui_command_palette`、`gui_k1_panel`；
+  证据 `docs/verification/j3-modeltree-20261102/README.md`。
+

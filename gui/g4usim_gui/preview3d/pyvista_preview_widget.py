@@ -25,10 +25,14 @@ from PySide6.QtWidgets import (
     QGridLayout,
     QHBoxLayout,
     QLabel,
+    QLineEdit,
     QListWidget,
+    QMenu,
     QListWidgetItem,
     QSlider,
     QStackedWidget,
+    QTreeWidget,
+    QTreeWidgetItem,
     QToolButton,
     QVBoxLayout,
     QWidget,
@@ -39,6 +43,7 @@ from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.core.theme import current_colors
 from g4usim_gui.preview3d.backend_mesh import BackendMesh
 from g4usim_gui.preview3d.geometry_primitives import add_vec3, scale_vec3, scene_extent
+from g4usim_gui.preview3d.model_tree import ModelNode
 from g4usim_gui.preview3d.scene_model import PreviewScene, PreviewSource
 from g4usim_gui.preview3d.units import perpendicular_basis
 from g4usim_gui.preview3d.trajectories import TrackFilter, TrajectorySet
@@ -142,6 +147,29 @@ class PyVistaPreviewWidget(QWidget):
         self.legend.setIconSize(QSize(14, 14))
         self.legend.setToolTip("Materials in the view; untick one to hide its volumes")
         legend_box = QVBoxLayout()
+
+        self.model_tree_filter = QLineEdit()
+        self.model_tree_filter.setPlaceholderText(ui_text("Filter volumes"))
+        self.model_tree_filter.setClearButtonEnabled(True)
+        self.model_tree_title = QLabel("Model tree")
+        self.model_tree_title.setProperty("uiRole", "sectionTitle")
+        self.model_tree = QTreeWidget()
+        self.model_tree.setHeaderHidden(True)
+        self.model_tree.setMinimumHeight(96)
+        self.model_tree.setMaximumHeight(220)
+        self.model_tree.setToolTip(
+            "Hierarchy of the geometry model; pick a volume to highlight it in the 3D view")
+        self.model_tree.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.model_tree.customContextMenuRequested.connect(self._show_model_tree_menu)
+        self.model_tree.itemSelectionChanged.connect(self._on_model_tree_selection)
+        self.model_tree.itemDoubleClicked.connect(self._on_model_tree_activated)
+        self.model_tree_filter.textChanged.connect(self._filter_model_tree)
+        self._tree_items: dict[str, QTreeWidgetItem] = {}
+        self._syncing_tree = False
+        legend_box.addWidget(self.model_tree_title)
+        legend_box.addWidget(self.model_tree_filter)
+        legend_box.addWidget(self.model_tree)
+
         legend_title = QLabel("Materials")
         legend_title.setProperty("uiRole", "sectionTitle")
         legend_box.addWidget(legend_title)
@@ -406,12 +434,130 @@ class PyVistaPreviewWidget(QWidget):
 
     def select_volume(self, name: str) -> None:
         """Select a volume by its editor name (from the geometry table); "" clears."""
-        if (name or None) == self.state.selected:
+        if (name or None) != self.state.selected:
+            self.state.select(name or None)
+            self._apply_styles()
+            self._show_info()
+            self._update_controls()
+        self._sync_model_tree_selection(name or "")
+
+    def set_model_tree(self, root: ModelNode | None) -> None:
+        """Show the geometry hierarchy; picking a row selects that volume."""
+        self._syncing_tree = True
+        try:
+            self.model_tree.clear()
+            self._tree_items.clear()
+            visible = root is not None and bool(root.children)
+            self.model_tree_title.setVisible(visible)
+            self.model_tree_filter.setVisible(visible)
+            self.model_tree.setVisible(visible)
+            if not visible:
+                self.model_tree_filter.clear()
+                return
+            self._add_tree_item(None, root)
+            self.model_tree.expandAll()
+        finally:
+            self._syncing_tree = False
+        self._sync_model_tree_selection(self.state.selected or "")
+
+    def _add_tree_item(self, parent: QTreeWidgetItem | None, node: ModelNode) -> None:
+        item = QTreeWidgetItem([node.label])
+        item.setData(0, Qt.UserRole, node.key)
+        details = []
+        if node.material:
+            details.append(ui_format("Material: {material}", material=node.material))
+        if node.sensitive:
+            details.append(ui_text("Sensitive detector"))
+        if details:
+            item.setToolTip(0, chr(10).join(details))
+        if parent is None:
+            self.model_tree.addTopLevelItem(item)
+        else:
+            parent.addChild(item)
+        if node.key:
+            self._tree_items[node.key] = item
+        for child in node.children:
+            self._add_tree_item(item, child)
+
+    def _filter_model_tree(self, needle: str) -> None:
+        """Show only volumes whose label matches *needle* (case-insensitive)."""
+        text = needle.strip().lower()
+
+        def visit(item: QTreeWidgetItem) -> bool:
+            visible = not text or text in item.text(0).lower()
+            for index in range(item.childCount()):
+                visible = visit(item.child(index)) or visible
+            item.setHidden(not visible)
+            if text and visible and item.childCount() and not item.isExpanded():
+                item.setExpanded(True)
+            return visible
+
+        for index in range(self.model_tree.topLevelItemCount()):
+            visit(self.model_tree.topLevelItem(index))
+
+    def _on_model_tree_activated(self, item: QTreeWidgetItem, _column: int = 0) -> None:
+        """Double-clicking a volume isolates it; double-clicking the root shows everything again."""
+        key = str(item.data(0, Qt.UserRole) or "")
+        if not key:
+            self.show_all()
             return
-        self.state.select(name or None)
-        self._apply_styles()
-        self._show_info()
-        self._update_controls()
+        self.select_volume(key)
+        self.volumeSelected.emit(key)
+        self.isolate_selected()
+
+    def _show_model_tree_menu(self, position) -> None:
+        """Right-click menu for the selected volume (isolate / hide / show all)."""
+        item = self.model_tree.itemAt(position)
+        if item is None:
+            return
+        key = str(item.data(0, Qt.UserRole) or "")
+        menu = QMenu(self)
+        select_action = menu.addAction(ui_text("Select in the 3D view"))
+        select_action.setEnabled(bool(key))
+        isolate = menu.addAction(ui_text("Isolate"))
+        hide = menu.addAction(ui_text("Hide"))
+        menu.addSeparator()
+        show_all = menu.addAction(ui_text("Show all"))
+        chosen = menu.exec(self.model_tree.viewport().mapToGlobal(position))
+        if chosen is None:
+            return
+        if chosen is select_action and key:
+            self.select_volume(key)
+            self.volumeSelected.emit(key)
+            return
+        if chosen is isolate:
+            if key:
+                self.select_volume(key)
+                self.volumeSelected.emit(key)
+            self.isolate_selected()
+            return
+        if chosen is hide:
+            if key:
+                self.select_volume(key)
+            self.hide_selected()
+            return
+        self.show_all()
+
+    def _on_model_tree_selection(self) -> None:
+        if self._syncing_tree:
+            return
+        items = self.model_tree.selectedItems()
+        if not items:
+            return
+        key = str(items[0].data(0, Qt.UserRole) or "")
+        self.select_volume(key)
+        self.volumeSelected.emit(key)
+
+    def _sync_model_tree_selection(self, key: str) -> None:
+        item = self._tree_items.get(key)
+        if item is None:
+            return
+        self._syncing_tree = True
+        try:
+            self.model_tree.setCurrentItem(item)
+            self.model_tree.scrollToItem(item)
+        finally:
+            self._syncing_tree = False
 
     def isolate_selected(self) -> None:
         self.state.isolate_selected()

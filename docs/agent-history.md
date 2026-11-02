@@ -892,3 +892,17 @@ dock 页与 navigation dock，从不隐藏之前显示过的 dock 页。
 截图脚本曾因抓图前调用 `apply_preset("configuration")` 造成“旧 dock 仍在”的误判，已删除该调用并改为
 `screen.grabWindow(window.winId())`。
 
+### 2026-11-02 J3 第六阶段：3D 模型树与体积筛选
+
+- 动机：用户要求增强界面可用性（“树状表示表现模型子母关系”），3D 面板此前只有平铺图例，无法看出体积父子关系。
+- 实现：`preview3d/model_tree.py` 纯函数构建模型树（`build_model_tree`/`flatten`），覆盖 hierarchical 体积链、
+  simple_box、layered_device；world 行合并为根；父缺失/父链成环有保护且成环节点不参与选中。
+  `PyVistaPreviewWidget` 图例列加入可过滤树、双向联动、双击隔离/双击根显示全部、右键选中/隔离/隐藏/全部显示。
+  打开 3D 标签经 `_on_workspace_tab_changed` 自动刷新几何。
+- 关键教训：`config_builder_page.py` 用 `_scrolled(panel)` 包装标签页，`tabs.indexOf(panel)` 恒为 -1，
+  必须用 `tabs.count() - 1` 记标签索引；`WORLD_NAMES` 不能把体积名 `world` 当哨兵（演示几何的 world 体积本身
+  就名为 `world`，其子体积 parent 也是 `world`，否则整棵子树会被当成根）。
+- 回归：7 个 GUI 用例、1965 断言通过（`docs/verification/j3-modeltree-20261102/report.json`）；
+  Windows 平台作者侧直接运行 `smoke_model_tree.py` 27 断言（含 widget 联动）；离屏 runner 下 widget 部分 SKIP。
+- 边界：未做 Linux 实窗、150% 缩放可读性、超大几何性能；不构成独立验收。
+
