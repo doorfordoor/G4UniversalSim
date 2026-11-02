@@ -45,6 +45,8 @@ BODIES = {
     "check": '<path d="M5 12.5 L10 17.5 L19 6.5" {s}/>',
     "open": '<path d="M3 7 V18.5 H18 L21 11 H7 L4.5 18" {s}/><path d="M3 7 H9 L11 9 H17 V11" {s}/>',
     "refresh": '<path d="M19.5 12 A7.5 7.5 0 1 1 17 6.4" {s}/><path d="M19.5 4.5 V9 H15" {s}/>',
+    "undo": '<path d="M9 7 L4 12 L9 17" {s}/><path d="M4 12 H14 A5 5 0 0 1 14 22 H10" {s}/>',
+    "redo": '<path d="M15 7 L20 12 L15 17" {s}/><path d="M20 12 H10 A5 5 0 0 0 10 22 H14" {s}/>',
     "export": '<path d="M12 4 V14.5 M7.5 10 L12 14.5 L16.5 10 M5 19.5 H19" {s}/>',
     "play": '<path d="M8 5.5 L18.5 12 L8 18.5 Z" fill="{c}" stroke="{c}" stroke-width="1.4" stroke-linejoin="round"/>',
     "flask": '<path d="M9.5 3.5 H14.5 M10.5 3.5 V9.5 L5 18.5 C4.4 19.6 5.1 20.5 6.3 20.5 H17.7 C18.9 20.5 19.6 19.6 19 18.5 L13.5 9.5 V3.5" {s}/>'

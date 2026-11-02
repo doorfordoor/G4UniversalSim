@@ -6,6 +6,21 @@
 
 2026-11-02 D 盘桌面修订已同步。字体、数字显示与主题切换修复见[测量与进度](docs/verification/gui-theme-response-20261102/README.md)。
 
+## 2026-11-02 J3 第三阶段：工作区面板与外壳细节（作者交付，未验收）
+
+在[第二阶段](docs/verification/j3-shell-20261102/README.md)基础上只改布局与外壳细节，未动后端与调色板：
+3D 视图面板视点/投影控件拆两行网格、材料/粒子图例 190→168、剖切滑块最小宽 110→80，右侧 dock 变窄时
+“World / Show Labels / Load Tracks…” 不再被窗口右缘裁掉；3D 预览选项分行；配置 setup 面板最小宽 260→300、
+分栏 330/650（“Browse” 可见）；配置标签 padding 7/11 让六个标签不压滚动按钮；状态栏恢复提示单行化（max 320）；
+`QToolButton:focus` 用 `focus_ring`、侧栏导航 focus 用 `sidebar_hover`；撤消/重做改用主题色 SVG 图标，
+工具栏创建后由 shell 补刷一次。
+
+验证：`--profile gui` **72 pass / 0 fail / 0 skip、10227 断言**，报告
+`out/verification/j3-panels-gui2/20261102-225535-090e83e1/report.json`（副本与 72 个日志见
+`docs/verification/j3-panels-20261102/`），门禁通过；源码指纹 `9e40e889d49a4425…`、测试内容指纹 `e8c6272783613a79…`。
+证据另含 B/纸墨/午夜蓝实窗截图与阶段 2 对照图。**未做**：对比度数值复测、125%/150%、Linux 真实桌面、
+独立审查——J3 仍未关闭。
+
 ## 2026-11-02 J3 第一阶段：设计系统与皮肤注册表（作者交付，未验收）
 
 J3 已由 DeepSeek 在 D 盘 `roadmap/gui-theme-response` 分支开工，本段只记录**第一步已落地的事实**，不签收 J3。

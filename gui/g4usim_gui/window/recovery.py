@@ -275,8 +275,10 @@ class RecoveryMixin:
         self._recovery = RecoveryController(
             self, restore=self._restore_recovery_payload, root=getattr(self, "_recovery_root", None))
         self.recovery_status = QLabel(self._recovery.status)
-        self.recovery_status.setWordWrap(True)
-        self.recovery_status.setMaximumWidth(480)
+        # One line with a tooltip: a wrapped two-line label used to clip at the right
+        # edge of the status bar next to the appearance indicator.
+        self.recovery_status.setWordWrap(False)
+        self.recovery_status.setMaximumWidth(320)
         self._recovery.statusChanged.connect(self.recovery_status.setText)
         self._recovery.statusChanged.connect(self.recovery_status.setToolTip)
         self.statusBar().addPermanentWidget(self.recovery_status)

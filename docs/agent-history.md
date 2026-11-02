@@ -826,3 +826,29 @@ sidebar section/nav 轨道、crumb、statusMeta、`QDialog#commandPalette`、`pa
 `docs/verification/j3-shell-20261102/`（含 B/C/纸墨/午夜蓝 page0/page2 与命令面板截图）。
 
 **边界**：本阶段只做外壳与交互自查；区域层级实窗改造、对比度实测表、125%/150% 与 Linux 桌面、性能基线与独立复验仍待做，不得据此宣布 J3 完成。
+
+
+### 2026-11-02 J3 第三阶段：工作区面板与外壳细节
+
+**动机**：第二次实窗截图里 3D 视图停靠面板的视点/投影按钮在窗口右缘被裁（“World / Show Labels / Load Tracks…” 不可点），
+配置 setup 面板的 “Browse” 也被裁，状态栏 “Recovery copy: …” 折行后被窗口右缘压住；这些是可用性缺陷，不是审美偏好。
+
+**改动**：
+- `preview3d/pyvista_preview_widget.py`：视点按钮 + `Orthographic`/`World` 从单行 `QHBoxLayout` 改成两行 `QGridLayout`；
+  `legend`/`particle_legend` 固定宽 190→168；`section_slider` 最小宽 110→80。
+- `widgets/config/preview3d.py`：`options` 由水平一行改为两行（自动后端/Show Source 一行，Show Labels 一行）。
+- `window/workspace_layout.py`：`setup_panel` 最小宽 260→300，`setSizes([300, 680])`→`[330, 650]`。
+- `window/recovery.py`：恢复状态 `setWordWrap(False)`、最大宽 480→320（完整文本在 tooltip）。
+- `core/theme.py`：`QTabBar::tab` padding 8/14→7/11、margin-right 4→3；新增 `QToolButton:focus` 焦点描边与
+  `QToolButton[navButton="true"]:focus` 背景。
+- `core/icons.py` 新增 `undo`/`redo`；`window/shell.py` 的 `_refresh_icons` 为历史工具栏动作着色；
+  `window/transactions.py` 在工具栏创建后主动调用一次 `_refresh_icons`（壳先于工具栏构建）。
+
+**验证**：`--profile gui` 72 pass / 0 fail / 0 skip、10,227 断言（`settrace_assert_lines_v3`、`sha256_raw_bytes_lf_v2`、
+源码 `9e40e889…`），报告 `out/verification/j3-panels-gui2/20261102-225535-090e83e1/report.json`；门禁通过。
+实窗截图用 `QT_QPA_PLATFORM=windows`（离屏无字体数据库），阶段 2 提交 `46241a3d` 的对照图一并归档。
+一次全量 GUI 复跑曾出现 `gui_k1_cli` 的 Windows 临时目录删除 `PermissionError`（`tempfile.cleanup`），
+单跑通过；第二次全量 72/72，因此记为环境性抖动而非代码回归。
+
+**边界**：未复测 23 项对比度表（调色板未改）、未做 125%/150% 与 Linux 真实桌面、未做独立审查；J3 仍未关闭。
+证据：`docs/verification/j3-panels-20261102/README.md`。

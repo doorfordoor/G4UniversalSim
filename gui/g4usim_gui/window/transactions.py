@@ -724,6 +724,10 @@ class TransactionsMixin:
         self.history_toolbar.addActions([self.undo_action, self.redo_action])
         self.history_toolbar.addAction(self.repair_editor_action)
         self.addToolBar(self.history_toolbar)
+        # Icons for these actions are provided by the shell's themed icon pass.
+        refresh = getattr(self, "_refresh_icons", None)
+        if refresh is not None:
+            refresh()
 
     def history_changed(self):
         if not hasattr(self, '_edit_session') or self._history_restoring:

@@ -7,6 +7,15 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ## Unreleased
 
+### J3 第三阶段：工作区面板与外壳细节（2026-11-02，作者交付，未验收）
+
+- 3D 视图面板的视点/投影控件拆成两行，图例 190→168、剖切滑块最小宽 80，窄 dock 不再把 “World / Show Labels /
+  Load Tracks…” 裁出窗口；3D 预览标签页选项分行。
+- 配置 setup 面板最小宽 260→300、分栏 330/650（路径行 “Browse” 可见）；配置标签 padding 7/11 让六个标签不需要滚动按钮压字。
+- 状态栏 “Recovery copy: …” 单行化（max 320，完整文本进 tooltip），不再折行后被右缘裁切。
+- 键盘焦点可见：`QToolButton:focus` 用 `focus_ring`，侧栏导航 focus 用 `sidebar_hover`；撤消/重做改用主题色 SVG 图标，
+  外观切换时随 `_refresh_icons` 重绘。证据 `docs/verification/j3-panels-20261102/README.md`。
+
 ### J3 第二阶段：外壳层级、命令面板与外观状态（2026-11-02，作者交付，未验收）
 
 - 侧栏改为 `WORKFLOW` 与 `RUN & ANALYZE` 两组导航，选中项带强调轨道；页头增加区域面包屑，项目 chip 固定单行并保留完整 tooltip。

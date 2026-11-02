@@ -249,3 +249,15 @@ F4依赖维护：安装统一走gui/requirements.txt，当前验证线PySide6>=6
 - 外观条目计数（15 个）必须与 `theme.SKINS` 同步，否则 `gui_command_palette` 会失败；选择外观时 `_set_skin()` 会切换到其明暗组。
 - 状态栏常驻控件用 `addPermanentWidget`；`statusMeta` 只显示外观名与描述，不放运行证据或后端能力。
 - 实窗截图用 `QT_QPA_PLATFORM=windows`；离屏无字体数据库，截图会全是方块。截图不是独立验收。
+
+
+## 2026-11-02 J3 第三阶段：工作区面板布局
+
+- 3D 视图的视点/投影控件必须是两行网格（`QGridLayout`），不要改回单行 `QHBoxLayout`：右侧 dock 在某些窗口宽度下
+  只有 ~420px，单行会把 “World / Orthographic” 裁出可视区。
+- 图例宽度、剖切滑块最小宽与配置 setup 面板宽度是为窄 dock 调过的（168/80/300），改大时先复跑
+  `gui_3d_view`、`gui_config_editors`、`gui_workspace_layout` 并在 1560×980 抓图确认不裁剪。
+- 状态栏的恢复状态标签是单行 + tooltip（`window/recovery.py`，最大宽 320）；不要再开 `setWordWrap(True)`，
+  它会与外观状态标签一起被右缘裁掉。
+- 键盘焦点必须可见：`QToolButton:focus` 用 `focus_ring`，侧栏导航 focus 用 `sidebar_hover`；新增自绘控件时补同等焦点样式。
+- 撤消/重做的图标来自 `_refresh_icons`，`transactions.py` 建完工具栏会补刷一次；新增工具栏动作要遵循同样的着色路径。

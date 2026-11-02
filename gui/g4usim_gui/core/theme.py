@@ -1415,8 +1415,17 @@ QTabBar::tab {
     color: $text_muted;
     border: 0;
     border-radius: 8px;
-    padding: 8px 14px;
-    margin-right: 4px;
+    /* Six configuration tabs must fit a docked editor; the old 14px padding
+       pushed the scroll buttons over the last tab label. */
+    padding: 7px 11px;
+    margin-right: 3px;
+}
+QToolButton:focus {
+    border: 1px solid $focus_ring;
+}
+QToolButton[navButton="true"]:focus {
+    background: $sidebar_hover;
+    color: $sidebar_text;
 }
 QTabBar::tab:hover { background: $canvas_alt; color: $text; }
 QTabBar::tab:selected { background: $accent_soft; color: $accent; font-weight: 700; }

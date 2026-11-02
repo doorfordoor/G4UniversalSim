@@ -5,6 +5,7 @@ from __future__ import annotations
 from PySide6.QtWidgets import (
     QCheckBox,
     QHBoxLayout,
+    QVBoxLayout,
     QLabel,
     QPlainTextEdit,
     QPushButton,
@@ -57,10 +58,21 @@ class Preview3DPanel(QWidget):
         toolbar.addWidget(self.preview3d_tracks_button)
         self.preview3d_reset_button.hide()   # the view's own Iso camera button does this now (G2)
         toolbar.addStretch(1)
-        options = QHBoxLayout()
-        options.addWidget(self.preview3d_auto_backend)
-        options.addWidget(self.preview3d_show_source)
-        options.addWidget(self.preview3d_show_labels)
+        # two compact option rows: a dock narrower than both rows together used to
+        # clip the last checkbox instead of wrapping it.
+        options = QVBoxLayout()
+        options.setSpacing(2)
+        option_row = QHBoxLayout()
+        option_row.setSpacing(10)
+        option_row.addWidget(self.preview3d_auto_backend)
+        option_row.addWidget(self.preview3d_show_source)
+        option_row.addStretch(1)
+        label_row = QHBoxLayout()
+        label_row.setSpacing(10)
+        label_row.addWidget(self.preview3d_show_labels)
+        label_row.addStretch(1)
+        options.addLayout(option_row)
+        options.addLayout(label_row)
         options.addStretch(1)
         layout.addLayout(toolbar)
         layout.addLayout(options)

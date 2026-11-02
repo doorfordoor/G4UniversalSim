@@ -281,6 +281,12 @@ class ShellMixin:
         self.theme_button.setIcon(icons.icon("theme", colors.text_muted, 20, active=colors.text))
         self.palette_button.setIcon(icons.icon("command", colors.text_muted, 20, active=colors.text))
         self.language_button.setIcon(icons.icon("language", colors.text_muted, 20, active=colors.text))
+        # The edit-history toolbar is created after the shell; once it exists its
+        # actions get themed icons on every appearance change.
+        for name, icon_name in (("undo_action", "undo"), ("redo_action", "redo")):
+            action = getattr(self, name, None)
+            if action is not None:
+                action.setIcon(icons.icon(icon_name, colors.text_muted, 16, active=colors.text))
 
     def _apply_visual_roles(self) -> None:
         self.config_builder_page.generate_run_button.setProperty("buttonRole", "primary")

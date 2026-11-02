@@ -22,6 +22,7 @@ from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
     QDoubleSpinBox,
+    QGridLayout,
     QHBoxLayout,
     QLabel,
     QListWidget,
@@ -89,16 +90,21 @@ class PyVistaPreviewWidget(QWidget):
 
         # view controls: cameras, projection, world, section, visibility
         self.camera_buttons: dict[str, QToolButton] = {}
-        controls = QHBoxLayout()
-        controls.setSpacing(4)
-        controls.addWidget(QLabel("View"))
-        for name, label in (("front", "Front"), ("side", "Side"), ("top", "Top"), ("iso", "Iso")):
+        # Two rows so a narrow dock wraps the projection toggles instead of clipping
+        # them: the camera row is the widest part of this panel.
+        controls = QGridLayout()
+        controls.setHorizontalSpacing(4)
+        controls.setVerticalSpacing(3)
+        controls.addWidget(QLabel("View"), 0, 0)
+        for column, (name, label) in enumerate(
+            (("front", "Front"), ("side", "Side"), ("top", "Top"), ("iso", "Iso")), start=1
+        ):
             button = QToolButton()
             button.setText(label)
             button.setProperty("toolbarButton", True)
             button.setToolTip(ui_format("Look at the geometry from the {view}", view=label.lower()))
             button.clicked.connect(lambda _checked=False, preset=name: self.set_camera(preset))
-            controls.addWidget(button)
+            controls.addWidget(button, 0, column)
             self.camera_buttons[name] = button
         self.ortho = QCheckBox("Orthographic")
         self.show_world = QCheckBox("World")
@@ -110,7 +116,7 @@ class PyVistaPreviewWidget(QWidget):
         self.section_slider.setRange(0, 1000)
         self.section_slider.setValue(500)
         self.section_slider.setEnabled(False)
-        self.section_slider.setMinimumWidth(110)
+        self.section_slider.setMinimumWidth(80)
         self.isolate_button = QToolButton()
         self.isolate_button.setText("Isolate")
         self.hide_button = QToolButton()
@@ -119,10 +125,9 @@ class PyVistaPreviewWidget(QWidget):
         self.show_all_button.setText("Show all")
         for button in (self.isolate_button, self.hide_button, self.show_all_button):
             button.setProperty("toolbarButton", True)
-        controls.addSpacing(6)
-        controls.addWidget(self.ortho)
-        controls.addWidget(self.show_world)
-        controls.addStretch(1)
+        controls.addWidget(self.ortho, 1, 0)
+        controls.addWidget(self.show_world, 1, 1)
+        controls.setColumnStretch(5, 1)
         tools = QHBoxLayout()     # second row: cut and visibility
         tools.setSpacing(4)
         tools.addWidget(self.section_axis)
@@ -133,7 +138,7 @@ class PyVistaPreviewWidget(QWidget):
         tools.addWidget(self.show_all_button)
 
         self.legend = QListWidget()
-        self.legend.setFixedWidth(190)
+        self.legend.setFixedWidth(168)
         self.legend.setIconSize(QSize(14, 14))
         self.legend.setToolTip("Materials in the view; untick one to hide its volumes")
         legend_box = QVBoxLayout()
@@ -150,7 +155,7 @@ class PyVistaPreviewWidget(QWidget):
         self.track_filter = TrackFilter()
         self._track_actors: list = []
         self.particle_legend = QListWidget()
-        self.particle_legend.setFixedWidth(190)
+        self.particle_legend.setFixedWidth(168)
         self.particle_legend.setIconSize(QSize(14, 14))
         self.particle_legend.setToolTip("Particles of the loaded tracks; untick one to hide its tracks")
         self.particle_title = QLabel("Particles")

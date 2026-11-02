@@ -214,9 +214,9 @@ class WorkspaceLayout(QObject):
         stack._dock_pages[stack.indexOf(config)] = (config, dock)
         # Setup already scrolls. Permit a narrow dock without clipping wide
         # path rows; users can resize the native separator or its scrollbar.
-        config.setup_panel.setMinimumWidth(260)
+        config.setup_panel.setMinimumWidth(300)
         config.setup_panel.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        config.layout().itemAt(0).widget().setSizes([300, 680])
+        config.layout().itemAt(0).widget().setSizes([330, 650])
         config.workspace_tabs.setMinimumHeight(220)
         # With logs simultaneously docked below the editor, outer scroll areas
         # may become short. Keep at least one complete editable table row; the
