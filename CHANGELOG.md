@@ -7,6 +7,11 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ## Unreleased
 
+### J3 第七阶段：帮助菜单、快捷键表与关于对话框（2026-11-02，作者交付，未验收）
+
+- 新增 Help 菜单：「Keyboard shortcuts」（F1，可滚动快捷键表）与「About G4UniversalSim」（版本/Qt/PySide6/根目录/后端路径）。
+- 侧栏导航按钮补 tooltip，与快捷键表和无障碍描述一致。
+- 新增 `gui_help_menu` 用例；5 个 GUI 用例、211 断言通过；证据 `docs/verification/j3-help-20261102/README.md`。
 ### J3 第六阶段：3D 模型树与体积筛选（2026-11-02，作者交付，未验收）
 
 - 新增 `gui/g4usim_gui/preview3d/model_tree.py`（纯数据模型树，覆盖 hierarchical/simple_box/layered_device，含成环与父缺失保护），3D 图例列新增可过滤的「Model tree」。

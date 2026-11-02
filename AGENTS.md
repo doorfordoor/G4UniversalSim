@@ -6,6 +6,7 @@ Linux原生通道补充（主审已签收）：main已实际操作独立真实X1
 
 ## 0. 条目索引与历史全文
 
+- 2026-11-02 J3 第七阶段（作者交付，未验收）：Help 菜单的快捷键表由 `ShellMixin.shortcut_rows()` 提供、对话框由 `build_shortcut_dialog()` 构建（测试/截图用非阻塞版本，`show_shortcuts()` 才 exec）；关于文本由 `about_text()` 生成（含 GUI/PySide6/Qt 版本、应用根目录、后端路径），不要在别处重复拼这些事实。新增菜单项必须进 `i18n.ZH_CN` 与 `_set_language` 覆盖路径；导航 tooltip 与快捷键表、无障碍描述保持同一文案。回归 `gui_help_menu` 及 `gui_main_window`/`gui_command_palette`/`gui_theme_response`/`gui_j1_appearance`；证据 `docs/verification/j3-help-20261102/README.md`（5 例、211 断言）；J3 未关闭。
 - 2026-11-02 J3 第六阶段（作者交付，未验收）：3D 模型树在 `gui/g4usim_gui/preview3d/model_tree.py`，从 `GeometryDocument` 构建，widget 侧只渲染与联动、不得自行推断父子关系；树节点与 3D 选中必须双向同步，过滤时保留命中节点的父链；打开 3D 标签自动 `refresh_3d_preview()` 的入口在 `_on_workspace_tab_changed`。回归 `gui_model_tree`（离屏只覆盖纯函数 21 断言，widget 联动需 Windows 平台直接跑 27 断言）及 `gui_3d_view`/`gui_config_editors`/`gui_workspace_layout`/`gui_main_window`/`gui_command_palette`/`gui_k1_panel`；证据 `docs/verification/j3-modeltree-20261102/README.md`（7 例、1965 断言）；J3 未关闭。
 - 2026-11-02 J3 第五阶段（作者交付，未验收）：`WorkspacePageStack.reveal_current()` 离开停靠页时必须隐藏该页 dock（否则配置编辑器会在 Run Console/Results/Run History/Parameter Scans 继续占宽）；导航到 Results 页时 `WorkspaceLayout.focus_analysis_view()` 收起 3D 预览与 AI 面板并显示日志 dock。回归入口 `gui_workspace_layout`/`gui_main_window`/`gui_command_palette`/`gui_3d_view`/`gui_config_editors`/`gui_k1_panel`/`gui_k1_history_scope`；证据 `docs/verification/j3-analysis-docks-20261102/README.md`（7 例、2022 断言）；J3 未关闭。
 

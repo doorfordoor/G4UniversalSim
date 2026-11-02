@@ -289,3 +289,14 @@ F4依赖维护：安装统一走gui/requirements.txt，当前验证线PySide6>=6
   `gui_config_editors`、`gui_workspace_layout`、`gui_main_window`、`gui_command_palette`、`gui_k1_panel`；
   证据 `docs/verification/j3-modeltree-20261102/README.md`。
 
+## J3 第七阶段：帮助菜单、快捷键表与关于对话框（2026-11-02，作者交付未验收）
+
+- 快捷键表数据只来自 `ShellMixin.shortcut_rows()`；新增/改名快捷键必须同步它、菜单 action 的 `setShortcut()`、导航 tooltip、
+  `_refresh_accessibility()` 的描述与 `i18n.ZH_CN`。
+- 关于对话框文本只来自 `about_text()`（GUI/PySide6/Qt 版本、`install_layout.application_root()`、`default_backend_executable()`）；
+  不要在其他页面重复拼环境事实。
+- 快捷键表对话框用 `build_shortcut_dialog()` 构建（测试与截图用非阻塞版本），只有 `show_shortcuts()` 才 `exec()`；
+  表单必须放在 `QScrollArea` 里，避免小屏/高缩放下行溢出到按钮下方。
+- 回归：`gui_help_menu`（34 断言）与 `gui_main_window`/`gui_command_palette`/`gui_theme_response`/`gui_j1_appearance`；
+  证据 `docs/verification/j3-help-20261102/README.md`。
+

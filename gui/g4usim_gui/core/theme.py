@@ -686,7 +686,7 @@ def _styled(template: str, c: ThemeColors, **values: str) -> str:
 
 
 def build_stylesheet(c: ThemeColors) -> str:
-    return _base_stylesheet(c) + _design_stylesheet(c) + _shell_stylesheet(c)
+    return _base_stylesheet(c) + _design_stylesheet(c) + _shell_stylesheet(c) + _help_stylesheet(c)
 
 
 def _base_stylesheet(c: ThemeColors) -> str:
@@ -1649,3 +1649,21 @@ QLabel#paletteHint {
         radius_m=f"{RADIUS['m']}px",
         radius_l=f"{RADIUS['l']}px",
     )
+
+def _help_stylesheet(c: ThemeColors) -> str:
+    """Shortcut sheet and About dialog (J3 usability pass)."""
+    return _styled("""
+/* --------------------------------------------------- help + shortcuts (J3) */
+QDialog#shortcutSheet {
+    background: $canvas;
+}
+QLabel[uiRole="shortcutKeys"] {
+    color: $text;
+    background: $surface_alt;
+    border: 1px solid $border_subtle;
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-weight: 600;
+}
+""", c)
+

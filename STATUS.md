@@ -6,6 +6,12 @@
 
 2026-11-02 D 盘桌面修订已同步。字体、数字显示与主题切换修复见[测量与进度](docs/verification/gui-theme-response-20261102/README.md)。
 
+## 2026-11-02 J3 第七阶段：帮助菜单、快捷键表与关于对话框（作者交付，未验收）
+
+Help 菜单新增 F1 快捷键表（页面导航、命令面板、按页面适配工作区、区域焦点、项目与环境快捷键）与关于对话框
+（GUI/PySide6/Qt 版本、应用根目录、后端可执行文件），侧栏导航按钮补 tooltip。新增 `gui_help_menu` 用例；5 个 GUI 用例、
+211 断言通过；证据 `docs/verification/j3-help-20261102/README.md`。Linux 实窗、150% 缩放与独立复验仍未做，J3 未关闭。
+
 ## 2026-11-02 J3 第六阶段：3D 模型树与体积筛选（作者交付，未验收）
 
 3D 停靠面板新增「Model tree」：按编辑器几何文档展示 World → 体积父子链（simple_box / layered_device /

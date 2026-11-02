@@ -11,7 +11,11 @@ from PySide6.QtWidgets import (
     QScrollArea,
     QSizePolicy,
     QHBoxLayout,
+    QDialog,
+    QDialogButtonBox,
+    QFormLayout,
     QLabel,
+    QMessageBox,
     QToolButton,
     QVBoxLayout,
     QWidget,
@@ -148,6 +152,7 @@ class ShellMixin:
             button.setProperty("navButton", True)
             button.setMinimumHeight(38)
             button.setAccessibleName(title)
+            button.setToolTip(ui_format("Open {page} (Ctrl+Alt+{number})", page=title, number=index + 1))
             sidebar_layout.addWidget(button)
             self._nav_group.addButton(button, index)
             self._nav_buttons.append(button)
@@ -434,6 +439,98 @@ class ShellMixin:
         self.import_bundle_action.setProperty('i18nSource_actionText', 'Import configuration bundle...')
         self.import_bundle_action.setShortcut('Ctrl+Alt+O')
         self.import_bundle_action.triggered.connect(lambda: self._experiment_action('import'))
+
+        help_menu = self.menuBar().addMenu(ui_text("Help"))
+        help_menu.setProperty('i18nSource_menuTitle', 'Help')
+        self.shortcuts_action = help_menu.addAction(ui_text("Keyboard shortcuts"))
+        self.shortcuts_action.setProperty('i18nSource_actionText', 'Keyboard shortcuts')
+        self.shortcuts_action.setShortcut('F1')
+        self.shortcuts_action.triggered.connect(self.show_shortcuts)
+        self.about_action = help_menu.addAction(ui_text("About G4UniversalSim"))
+        self.about_action.setProperty('i18nSource_actionText', 'About G4UniversalSim')
+        self.about_action.triggered.connect(self.show_about)
+
+    def shortcut_rows(self) -> list[tuple[str, str]]:
+        """(keys, description) pairs for the shortcut sheet, in a stable order."""
+        rows = [
+            ("F1", ui_text("This shortcut sheet")),
+            ("Ctrl+K", ui_text("Command palette")),
+            ("Ctrl+Shift+L", ui_text("Fit workspace to current page")),
+        ]
+        for index, (_page, title, _subtitle, _icon) in enumerate(self._page_specs):
+            rows.append((f"Ctrl+Alt+{index + 1}", ui_text(title)))
+        rows.extend([
+            ("F6 / Shift+F6", ui_text("Focus next or previous workspace region")),
+            ("Ctrl+Shift+N", ui_text("New blank simulation")),
+            ("Ctrl+N", ui_text("New Simulation...")),
+            ("Ctrl+O", ui_text("Open Project...")),
+            ("Ctrl+S", ui_text("Save Project")),
+            ("Ctrl+Shift+S", ui_text("Save Project As...")),
+            ("Ctrl+Alt+E", ui_text("Environment setup...")),
+            ("Ctrl+Alt+I", ui_text("Open environment installer...")),
+            ("Ctrl+Alt+O", ui_text("Import configuration bundle...")),
+        ])
+        return rows
+
+    def build_shortcut_dialog(self) -> QDialog:
+        """The shortcut sheet widget (separate from exec so tests and screenshots can use it)."""
+        dialog = QDialog(self)
+        dialog.setObjectName("shortcutSheet")
+        dialog.setWindowTitle(ui_text("Keyboard shortcuts"))
+        layout = QVBoxLayout(dialog)
+        heading = QLabel(ui_text("Keyboard shortcuts"))
+        heading.setObjectName("pageTitle")
+        subtitle = QLabel(ui_text("Page navigation, workspace focus, palette and project shortcuts."))
+        subtitle.setObjectName("pageSubtitle")
+        subtitle.setWordWrap(True)
+        layout.addWidget(heading)
+        layout.addWidget(subtitle)
+        form_host = QWidget()
+        form = QFormLayout(form_host)
+        form.setContentsMargins(0, 0, 8, 0)
+        for keys, description in self.shortcut_rows():
+            key_label = QLabel(keys)
+            key_label.setProperty("uiRole", "shortcutKeys")
+            value_label = QLabel(description)
+            value_label.setWordWrap(True)
+            form.addRow(key_label, value_label)
+        scroll = QScrollArea()
+        scroll.setObjectName("shortcutScroll")
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QFrame.Shape.NoFrame)
+        scroll.setWidget(form_host)
+        layout.addWidget(scroll, 1)
+        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
+        buttons.rejected.connect(dialog.reject)
+        buttons.accepted.connect(dialog.accept)
+        layout.addWidget(buttons)
+        dialog.resize(560, 600)
+        return dialog
+
+    def show_shortcuts(self) -> None:
+        self.build_shortcut_dialog().exec()
+
+    def about_text(self) -> str:
+        """Plain-text About body (kept separate from the dialog so tests can assert it)."""
+        from g4usim_gui.core.install_layout import application_root, default_backend_executable
+        from PySide6 import __version__ as pyside_version
+        from PySide6.QtCore import qVersion
+        return chr(10).join([
+            f"G4UniversalSim {__version__}",
+            ui_text("A Geant4 desktop simulator workspace built on Geant4, Qt and PySide6."),
+            "",
+            f"PySide6 {pyside_version}",
+            f"Qt {qVersion()}",
+            f"{ui_text('Application root')}: {application_root()}",
+            f"{ui_text('Backend executable')}: {default_backend_executable()}",
+        ])
+
+    def show_about(self) -> None:
+        box = QMessageBox(self)
+        box.setWindowTitle(ui_text("About G4UniversalSim"))
+        box.setText(self.about_text())
+        box.setStandardButtons(QMessageBox.StandardButton.Ok)
+        box.exec()
 
     def _setup_accessibility(self) -> None:
         from g4usim_gui.core.accessibility import AccessibilityController, name_control

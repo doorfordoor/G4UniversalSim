@@ -906,3 +906,15 @@ dock 页与 navigation dock，从不隐藏之前显示过的 dock 页。
   Windows 平台作者侧直接运行 `smoke_model_tree.py` 27 断言（含 widget 联动）；离屏 runner 下 widget 部分 SKIP。
 - 边界：未做 Linux 实窗、150% 缩放可读性、超大几何性能；不构成独立验收。
 
+### 2026-11-02 J3 第七阶段：帮助菜单、快捷键表与关于对话框
+
+- 动机：用户要求继续做可用性改进（“多做用户方面的换位思考”）；此前所有快捷键只散落在菜单与导航提示里，
+  新用户无法一次看到全貌，报告问题时也缺环境事实。
+- 实现：`ShellMixin.shortcut_rows()` 提供稳定顺序的 (键, 说明) 表；`build_shortcut_dialog()/show_shortcuts()` 渲染可滚动对话框
+  （`shortcutSheet`、`shortcutKeys` 标签），`about_text()/show_about()` 显示版本与环境路径；Help 菜单挂在 Navigate 之后，
+  F1 打开快捷键表；侧栏导航按钮 tooltip 统一为“打开 <页面>（Ctrl+Alt+N）”。
+- 关键教训：对话框里 `QVBoxLayout` + `QFormLayout` 直接堆 20 行会在小屏溢出到 Close 按钮下方，必须用 `QScrollArea` 包表单；
+  `resize()` 固定尺寸时 Qt 不会自动增高，滚动区同时解决 125%/150% 缩放。
+- 回归：5 个 GUI 用例、211 断言通过（`docs/verification/j3-help-20261102/report.json`）；截图纸墨/午夜蓝各一张（作者侧实窗）。
+- 边界：快捷键表是文档，不证明组合键在所有平台/输入法下可用；Linux 实窗与 150% 缩放未做。
+
