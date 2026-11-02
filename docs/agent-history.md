@@ -803,3 +803,26 @@ Linux原生通道补充（主审已签收）：main已实际操作独立真实X1
 主题 GUI 4/4（284 断言），归档报告可直接被 `check_report_evidence.py` 复核；完整 GUI profile 另存 `out/verification/j3-gui-v1`。
 **边界**：本阶段只做外观基础设施与作者自查，区域层级实窗改造、对比度实测表、125%/150% 与 Linux 桌面、性能基线与独立复验仍待做，
 不得据此宣布 J3 完成。
+
+### 2026-11-02 J3 第二阶段：外壳层级、命令面板与外观状态
+
+**实现**：`gui/g4usim_gui/widgets/command_palette.py` 新增 `PaletteEntry(label, category, detail, callback)` 与
+`CommandPalette(QDialog)`（objectName `commandPalette`，`search`/`list`/`hint`；`set_entries()` 后默认选中首个可选行）。
+`gui/g4usim_gui/window/shell.py` 的 `_build_workspace_shell()` 改为 `nav_groups = ((tr("WORKFLOW"), 0), (tr("RUN & ANALYZE"), 5))`，
+在组起点插入 `QLabel#sidebarSection`、组间 `addSpacing(12)`，记录 `_nav_section_labels`/`_nav_section_sources`；页头加 `page_crumb`
+（`uiRole=crumb`）与 `palette_button`（Ctrl+K），状态栏 `addPermanentWidget(self.appearance_status)`（objectName `statusMeta`）；
+`_command_palette_entries()` 返回 9 页 + 7 操作 + 15 外观，`_show_command_palette()` 执行选中回调；`_refresh_appearance_status()`
+显示 `Appearance: 皮肤名` 并带描述 tooltip，在 `_set_theme`/`_sync_appearance_actions` 后刷新。`_set_skin()` 选择皮肤时切到其明暗组，
+`_set_palette()` 保留 B/K 旧语义。`core/theme.py` 的 `build_stylesheet()` 变为 `_base + _design + _shell`，`_shell_stylesheet()` 提供
+sidebar section/nav 轨道、crumb、statusMeta、`QDialog#commandPalette`、`paletteCategory`、`paletteSearch`、`paletteList`（含
+`::item:disabled` 组标题）与 `paletteHint`；菜单栏/`QToolBar`/`QStatusBar` 改用 `$canvas_alt` 与 `$border_subtle`。
+命令面板过滤为“标签严格匹配优先，无命中才回退类别+说明”，`Up/Down` 通过 `_selectable_rows()` 跳过组标题。
+
+**陷阱**：`QMainWindow::separator` 设 `width`/`height` 会让浮动态 dock + offscreen 在 `apply_theme` 时 0xC0000005 崩溃；
+`QDockWidget > QWidget` 会命中标题容器。两者都已写入 `gui/AGENTS.md`。
+
+**回归**：新增 `gui/smoke_tests/smoke_command_palette.py`（40 断言）注册为 `gui_command_palette`；
+完整 GUI profile 72/72、10,227 断言通过（`out/verification/j3-shell-gui`），证据归档
+`docs/verification/j3-shell-20261102/`（含 B/C/纸墨/午夜蓝 page0/page2 与命令面板截图）。
+
+**边界**：本阶段只做外壳与交互自查；区域层级实窗改造、对比度实测表、125%/150% 与 Linux 桌面、性能基线与独立复验仍待做，不得据此宣布 J3 完成。

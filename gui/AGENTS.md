@@ -238,3 +238,14 @@ F4依赖维护：安装统一走gui/requirements.txt，当前验证线PySide6>=6
   纯 QSS 能覆盖的控件不要走重画。
 - 证据与截图：离屏（offscreen）在 Windows 下没有字体数据库，截图会全是方块；实窗截图用 `QT_QPA_PLATFORM=windows`。
   本阶段交付与边界见 `docs/verification/j3-theme-v1-20261102/README.md`，不要用截图替代独立复验。
+
+## 2026-11-02 J3 第二阶段：外壳、命令面板与状态栏
+
+- 侧栏分组来自 `ShellMixin._build_workspace_shell()` 的 `nav_groups`；新增导航页必须同时更新 `page_specs`、`smoke_main_window_ui.py`
+  的标题/索引断言、`_command_palette_entries()` 的 Page 分组计数与 `i18n.ZH_CN`。
+- 页头 `page_crumb` 由 `_on_page_changed()` 按区域设置（index < 5 为 `Workflow`，否则 `Run & analyze`）；新增区域要同步更新该映射与中英词条。
+- 命令面板条目必须通过 `_command_palette_entries()` 提供；过滤顺序是“标签严格匹配 → 类别/说明回退”，`Up/Down` 必须跳过组标题，
+  不要恢复成整串子串匹配（那会让 `pa` 命中所有 Page）。
+- 外观条目计数（15 个）必须与 `theme.SKINS` 同步，否则 `gui_command_palette` 会失败；选择外观时 `_set_skin()` 会切换到其明暗组。
+- 状态栏常驻控件用 `addPermanentWidget`；`statusMeta` 只显示外观名与描述，不放运行证据或后端能力。
+- 实窗截图用 `QT_QPA_PLATFORM=windows`；离屏无字体数据库，截图会全是方块。截图不是独立验收。

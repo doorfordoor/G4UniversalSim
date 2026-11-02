@@ -201,6 +201,12 @@ CASES = (
     Case("gui_scenario_backend", "gui/smoke_tests/smoke_scenario_backend.py", "integration", ("qt", "exe")),
     Case("live_progress", "scripts/test_live_progress.py", "backend", ("exe",)),
     Case("gui_main_window", "gui/smoke_tests/smoke_main_window_ui.py", "gui", ("qt",)),
+    Case(
+        "gui_command_palette",
+        "gui/smoke_tests/smoke_command_palette.py",
+        "gui",
+        ("qt",),
+    ),
     Case("gui_unsupported_features", "scripts/test_unsupported_features.py", "gui", ("qt",), args=("--layer", "gui")),
     Case("gui_geometry_safety", "scripts/test_geometry_safety_contract.py", "gui", ("qt",), args=("--layer", "gui")),
     Case("gui_geometry_diagnostics", "scripts/test_geometry_config_diagnostics.py", "gui", ("qt",), args=("--layer", "gui")),

@@ -19,6 +19,17 @@ J3 已由 DeepSeek 在 D 盘 `roadmap/gui-theme-response` 分支开工，本段�
 证据（含 B/K/C 改动前后同工程截图与归档报告）见[第一阶段证据](docs/verification/j3-theme-v1-20261102/README.md)。
 **未完成**：区域层级实窗改造、对比度实测表、125%/150% 与 Linux 桌面检查、切换性能基线、独立复验；J3 关闭前不能引用本段作为验收。
 
+## 2026-11-02 J3 第二阶段：外壳层级、命令面板与外观状态（作者交付，未验收）
+
+在[第一阶段](docs/verification/j3-theme-v1-20261102/README.md)基础上，本段记录第二阶段的落地事实，仍不签收 J3：
+侧栏改为 `WORKFLOW`/`RUN & ANALYZE` 两组并给选中项加强调轨道；页头改为“面包屑 + 页标题 + 说明 + 项目/运行 chip + 外观/语言按钮”；
+新增 **Ctrl+K 命令面板**（`gui/g4usim_gui/widgets/command_palette.py`，按 Pages/Actions/Appearances 分组，标签严格匹配优先、
+Up/Down 跳过组标题、Enter 运行、Esc 关闭，选择外观激活所属明暗组）；状态栏常驻 `Appearance: <皮肤名>`（tooltip 带描述）；
+菜单栏、编辑历史工具条与状态栏统一为皮肤浅表面与细分隔线。
+新增 Qt 用例 `gui_command_palette`（40 断言），完整 GUI profile **72/72、10227 断言**通过，
+证据（含 B/C/纸墨/午夜蓝 三页截图与命令面板截图）见[第二阶段证据](docs/verification/j3-shell-20261102/README.md)。
+**未完成**：区域层级实窗改造、对比度实测表、125%/150% 与 Linux 桌面检查、切换性能基线、独立复验；J3 关闭前不能引用本段作为验收。
+
 Linux原生通道补充（主审已签收）：main已实际操作独立真实X11/xcb桌面，一次固定HTTP计划passed，操作观察时曾停在awaiting_approval、0事件；随后在观察期间触及300秒预算，整任务保留failed／agent.task_timeout，不称整任务成功。原host exit0、slot_released=true、host与显示服务两组remaining_owned均空、HTTP已关闭；显示辅助子进程退出码[0,1,0]（twm非零保留），不能写全部子进程exit0；代表性原生签收结果为 **独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**。WSLg RAIL任务栏无法展开，第三次host退出且0请求，原失败保留，绝不称该通道成功。Ubuntu实际系统安装x11-xkb-utils，其它本次依赖保持隔离OUT前缀；具体包版本／SHA及安装收据见最终证据，不把早期准备收据system_installs=0外推到之后。
 
 ## 2026-11-02 L1 本轮验收与最终证据

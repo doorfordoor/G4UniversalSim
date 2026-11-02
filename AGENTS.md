@@ -6,6 +6,11 @@ Linux原生通道补充（主审已签收）：main已实际操作独立真实X1
 
 ## 0. 条目索引与历史全文
 
+- 2026-11-02 J3 第二阶段（作者交付，未验收）：侧栏 `WORKFLOW`/`RUN & ANALYZE` 分组与选中轨道、页头面包屑、Ctrl+K 命令面板
+  （`gui/g4usim_gui/widgets/command_palette.py`：Pages/Actions/Appearances 分组、标签严格匹配优先、Up/Down 跳过组标题、Enter 运行/Esc 关闭、
+  选外观会切到所属明暗组）、状态栏 `Appearance: <皮肤名>`、菜单栏/编辑历史工具条/状态栏统一用皮肤浅表面；新增用例 `gui_command_palette`，
+  完整 GUI profile 72/72、10227 断言通过。新增外观条目必须同时进 `_command_palette_entries()` 与 `gui_command_palette` 的分组计数，
+  否则命令面板与测试不一致。证据 `docs/verification/j3-shell-20261102/README.md`；区域层级实窗改造/对比度实测/性能/独立复验仍未做。
 - 2026-11-02 J3 第一阶段（作者交付，未验收）：外观改为 28 颜色角色 + 15 套皮肤注册表（历史 B/K/C + 纸墨/砂岩/苔原/石墨/霜蓝/高对比/午夜蓝/电路夜班/板岩/余烬/极光/夜视对比），注册表构建时把 muted/border/selection/focus 归一化到正文 4.5:1、边界与焦点 3:1；样式表 = 历史基座 + 新视觉层（`$token` 单遍替换），`View → Appearance` 按明暗分组、分别记忆 `appearance/light_skin`/`dark_skin`（旧 `light_palette` 仅 B/K 镜像），`_set_skin` 会切到该皮肤自己的明暗组；新增 static `theme_registry`（113 断言点）与 `check` 图标。**QSS 陷阱：`QMainWindow::separator` 不得设 `width/height`（1px 会在浮动态 dock + offscreen 下使 Qt 崩溃）；`QDockWidget > QWidget` 会命中内部标题容器，不要写。** 证据见 [第一阶段证据](docs/verification/j3-theme-v1-20261102/README.md)。
 
 - 2026-11-02 L1 本轮验收与交付：阶段签收 **本轮约定范围验收完成**；冻结246e4f6，Windows六profile308/183347、CI十二原报告662/228978，Windows安装显式attempt2且原失败保留。新Windows125/150仅受限原生，WSLg **独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**；EE真实云／人工单对／只读恢复按原身份映射，不扩NL质量／提速／科学等级。完整操作合同见[同名历史](docs/agent-history.md#2026-11-02-l1本轮验收与交付)与[最终证据](docs/verification/l1-final-20261102/README.md)。

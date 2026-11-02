@@ -7,6 +7,15 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ## Unreleased
 
+### J3 第二阶段：外壳层级、命令面板与外观状态（2026-11-02，作者交付，未验收）
+
+- 侧栏改为 `WORKFLOW` 与 `RUN & ANALYZE` 两组导航，选中项带强调轨道；页头增加区域面包屑，项目 chip 固定单行并保留完整 tooltip。
+- 新增 **Ctrl+K 命令面板**（`gui/g4usim_gui/widgets/command_palette.py`）：页面/操作/外观按组展示，标签严格匹配优先、
+  类别与说明仅作回退，Up/Down 跳过组标题，Enter 运行、Esc 关闭；选择外观会激活其所属明暗组。
+- 状态栏常驻 `Appearance: <皮肤名>`（tooltip 带描述），菜单栏、编辑历史工具条与状态栏统一使用皮肤浅表面与细分隔线。
+- 新增 Qt 用例 `gui_command_palette`（40 条断言），完整 GUI profile 72/72、
+  10227 条断言通过；第二阶段证据见 `docs/verification/j3-shell-20261102/README.md`。
+
 ### J3 第一阶段：设计系统与皮肤注册表（2026-11-02，作者交付，未验收）
 
 - 外观从 3 套色板扩展为 **15 套皮肤**（历史 B/K/C + 纸墨、砂岩、苔原、石墨、霜蓝、高对比、午夜蓝、电路夜班、板岩、余烬、极光、夜视对比），

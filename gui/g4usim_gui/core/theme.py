@@ -686,7 +686,7 @@ def _styled(template: str, c: ThemeColors, **values: str) -> str:
 
 
 def build_stylesheet(c: ThemeColors) -> str:
-    return _base_stylesheet(c) + _design_stylesheet(c)
+    return _base_stylesheet(c) + _design_stylesheet(c) + _shell_stylesheet(c)
 
 
 def _base_stylesheet(c: ThemeColors) -> str:
@@ -1441,7 +1441,7 @@ QTableWidget::item:selected, QTreeWidget::item:selected, QListWidget::item:selec
 }
 
 /* ---------------------------------------------------------------- menus and status */
-QMenuBar { background: $surface; border-bottom: 1px solid $border_subtle; }
+QMenuBar { background: $canvas_alt; border-bottom: 1px solid $border_subtle; }
 QMenuBar::item { padding: 6px 12px; border-radius: 6px; }
 QMenuBar::item:selected { background: $surface_hover; color: $text; }
 QMenu {
@@ -1456,7 +1456,7 @@ QMenu::item:selected { background: $selection; color: $text; }
 QMenu::separator { height: 1px; background: $border_subtle; margin: 6px 8px; }
 QMenu::indicator { width: 15px; height: 15px; }
 QMenu::indicator:checked { image: url("$check_menu"); }
-QStatusBar { background: $surface; color: $text_muted; border-top: 1px solid $border_subtle; }
+QStatusBar { background: $canvas_alt; color: $text_muted; border-top: 1px solid $border_subtle; }
 QStatusBar::item { border: 0; }
 
 /* ---------------------------------------------------------------- docks and chrome */
@@ -1482,7 +1482,11 @@ QDockWidget::close-button, QDockWidget::float-button {
 QDockWidget::close-button:hover, QDockWidget::float-button:hover { background: $surface_hover; }
 QMainWindow::separator { background: $border_subtle; }
 QMainWindow::separator:hover { background: $accent; }
-QToolBar { background: transparent; border: 0; spacing: 6px; padding: 2px; }
+QToolBar { background: $canvas_alt; border: 0; border-bottom: 1px solid $border_subtle; spacing: 4px; padding: 3px 8px; }
+QToolBar QToolButton { padding: 4px 9px; border-radius: 6px; color: $text; }
+QToolBar QToolButton:hover { background: $surface_hover; }
+QToolBar QToolButton:checked { background: $selection; color: $on_accent; }
+QToolBar::separator { background: $border_subtle; width: 1px; margin: 4px 6px; }
 QToolBar::separator { background: $border_subtle; width: 1px; margin: 6px 4px; }
 QTabBar::scroller { width: 30px; }
 QTabBar QToolButton { background: transparent; border: 0; border-radius: 6px; padding: 2px 3px; }
@@ -1542,3 +1546,97 @@ QToolTip {
     padding: 7px 9px;
 }
 """, c)
+
+
+def _shell_stylesheet(c: ThemeColors) -> str:
+    """Shell chrome added by J3 stage 2: grouped navigation, breadcrumb, palette, status bar."""
+    return _styled("""
+/* ------------------------------------------------------- shell chrome (J3) */
+#sidebar QLabel#sidebarSection {
+    color: $sidebar_muted;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.9px;
+    padding: 6px 8px 2px 8px;
+}
+#sidebar QToolButton[navButton="true"] {
+    padding: 0 10px;
+    border: 1px solid transparent;
+}
+#sidebar QToolButton[navButton="true"]:checked {
+    background: $sidebar_selected;
+    border-color: $sidebar_hover;
+    border-left: 3px solid $sidebar_accent;
+    padding-left: 7px;
+    color: $sidebar_text;
+}
+QLabel[uiRole="crumb"] {
+    color: $text_muted;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+}
+QLabel#statusMeta {
+    color: $text_muted;
+    font-size: 11px;
+    padding: 0 8px;
+}
+QStatusBar {
+    background: $surface;
+    border-top: 1px solid $border_subtle;
+}
+QStatusBar::item { border: none; }
+/* ------------------------------------------------------ command palette (J3) */
+QDialog#commandPalette {
+    background: $surface;
+    border: 1px solid $border_strong;
+    border-radius: $radius_l;
+}
+QLabel#paletteCategory {
+    color: $text_muted;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    padding: 0 2px;
+}
+QLineEdit#paletteSearch {
+    background: $input;
+    border: 1px solid $border;
+    border-radius: $radius_m;
+    min-height: 36px;
+    padding: 0 12px;
+    font-size: 14px;
+    selection-background-color: $selection;
+}
+QLineEdit#paletteSearch:hover { border-color: $input_hover; }
+QLineEdit#paletteSearch:focus { border: 1px solid $accent; }
+QListWidget#paletteList {
+    background: transparent;
+    border: none;
+    outline: 0;
+}
+QListWidget#paletteList::item {
+    border-radius: $radius_s;
+    padding: 7px 10px;
+    margin: 1px 3px;
+    color: $text;
+}
+QListWidget#paletteList::item:disabled {
+    background: transparent;
+    padding: 8px 4px 2px 4px;
+    margin: 0;
+}
+QListWidget#paletteList::item:selected {
+    background: $accent_soft;
+    color: $text;
+}
+QLabel#paletteHint {
+    color: $text_muted;
+    font-size: 11px;
+    padding: 2px 4px;
+}
+""", c,
+        radius_s=f"{RADIUS['s']}px",
+        radius_m=f"{RADIUS['m']}px",
+        radius_l=f"{RADIUS['l']}px",
+    )

@@ -21,10 +21,11 @@ from g4usim_gui import __version__
 from g4usim_gui.core import icons
 from g4usim_gui.core.i18n import LanguageCode, apply_language, current_language, ui_format, ui_text
 from g4usim_gui.core.theme import (
-    DEFAULT_DARK_SKIN, DEFAULT_LIGHT_SKIN, LEGACY_LIGHT_KEYS, ThemeMode,
-    apply_appearance, current_colors, persist_appearance, skin as skin_for,
+    DEFAULT_DARK_SKIN, DEFAULT_LIGHT_SKIN, LEGACY_LIGHT_KEYS, SKIN_IDS, ThemeMode,
+    apply_appearance, current_colors, current_skin, persist_appearance, skin as skin_for,
     skins_for_mode, stored_appearance,
 )
+from g4usim_gui.widgets.command_palette import CommandPalette, PaletteEntry
 from g4usim_gui.window.workspace_layout import WorkspacePageStack
 
 
@@ -63,9 +64,9 @@ class ShellMixin:
         sidebar_layout.addLayout(brand_row)
         sidebar_layout.addSpacing(22)
 
-        section_label = QLabel(self.tr("WORKFLOW"))
-        section_label.setObjectName("sidebarSection")
-        sidebar_layout.addWidget(section_label)
+        nav_groups = ((self.tr("WORKFLOW"), 0), (self.tr("RUN & ANALYZE"), 5))
+        self._nav_section_labels: list[QLabel] = []
+        self._nav_section_sources: list[str] = []
 
         page_specs = [
             (
@@ -127,7 +128,17 @@ class ShellMixin:
         self._nav_group = QButtonGroup(self)
         self._nav_group.setExclusive(True)
         self._nav_buttons: list[QToolButton] = []
+        section_starts = {start: label for label, start in nav_groups}
+        section_sources = {start: source for source, start in nav_groups}
         for index, (_page, title, _subtitle, _icon) in enumerate(page_specs):
+            if index in section_starts:
+                if index:
+                    sidebar_layout.addSpacing(12)
+                section = QLabel(section_starts[index])
+                section.setObjectName("sidebarSection")
+                sidebar_layout.addWidget(section)
+                self._nav_section_labels.append(section)
+                self._nav_section_sources.append(section_sources[index])
             button = QToolButton()
             button.setText(title)
             button.setIconSize(QSize(18, 18))
@@ -170,20 +181,33 @@ class ShellMixin:
         self.page_subtitle.setObjectName("pageSubtitle")
         self.page_subtitle.setWordWrap(True)
         self.page_subtitle.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Preferred)
+        self.page_crumb = QLabel(self.tr("Workflow"))
+        self.page_crumb.setProperty("uiRole", "crumb")
+        heading_layout.addWidget(self.page_crumb)
         heading_layout.addWidget(self.page_title)
         heading_layout.addWidget(self.page_subtitle)
         header_layout.addLayout(heading_layout, 1)
 
         self.project_context = QLabel(self.tr("Project: demo"))
         self.project_context.setProperty("uiRole", "contextChip")
-        self.project_context.setMaximumWidth(210)
-        self.project_context.setWordWrap(True)
+        self.project_context.setMaximumWidth(240)
+        self.project_context.setWordWrap(False)
         self.project_context.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         self.run_context = QLabel(self.tr("Idle"))
         self.run_context.setProperty("uiRole", "statusChip")
         header_layout.addWidget(self.project_context, 0, Qt.AlignVCenter)
         header_layout.addWidget(self.run_context, 0, Qt.AlignVCenter)
         header_layout.addSpacing(6)
+
+        self.palette_button = QToolButton()
+        self.palette_button.setText(self.tr("Command palette"))
+        self.palette_button.setIconSize(QSize(20, 20))
+        self.palette_button.setToolButtonStyle(Qt.ToolButtonIconOnly)
+        self.palette_button.setProperty("iconButton", True)
+        self.palette_button.setToolTip(self.tr("Search pages, actions and appearances (Ctrl+K)"))
+        self.palette_button.setAccessibleName(self.tr("Command palette"))
+        self.palette_button.clicked.connect(self._show_command_palette)
+        header_layout.addWidget(self.palette_button)
 
         # icon-only: the tooltip and accessible name carry the text
         self.theme_button = QToolButton()
@@ -232,6 +256,10 @@ class ShellMixin:
         self.shell_scroll.setWidgetResizable(True)
         self.shell_scroll.setWidget(shell)
         self.setCentralWidget(self.shell_scroll)
+        self.appearance_status = QLabel()
+        self.appearance_status.setObjectName("statusMeta")
+        self.statusBar().addPermanentWidget(self.appearance_status)
+        self._refresh_appearance_status()
         self.sidebar = sidebar
         self.page_header = page_header
 
@@ -251,6 +279,7 @@ class ShellMixin:
             button.setIcon(icons.icon(name, colors.sidebar_muted, 18, active=colors.sidebar_text,
                                       background=colors.sidebar))
         self.theme_button.setIcon(icons.icon("theme", colors.text_muted, 20, active=colors.text))
+        self.palette_button.setIcon(icons.icon("command", colors.text_muted, 20, active=colors.text))
         self.language_button.setIcon(icons.icon("language", colors.text_muted, 20, active=colors.text))
 
     def _apply_visual_roles(self) -> None:
@@ -267,6 +296,7 @@ class ShellMixin:
         _page, title, subtitle, _icon = self._page_specs[index]
         self.page_title.setText(ui_text(title))
         self.page_subtitle.setText(ui_text(subtitle))
+        self.page_crumb.setText(ui_text("Workflow" if index < 5 else "Run & analyze"))
         self._nav_buttons[index].setChecked(True)
 
     def _create_menu(self) -> None:
@@ -372,6 +402,11 @@ class ShellMixin:
             action.triggered.connect(lambda _checked=False, i=index: self.focus_page(i))
             menu.addAction(action)
             self.page_navigation_actions.append(action)
+        menu.addSeparator()
+        palette_action = menu.addAction(ui_text("Command palette"))
+        palette_action.setProperty('i18nSource_actionText', 'Command palette')
+        palette_action.setShortcut('Ctrl+K')
+        palette_action.triggered.connect(self._show_command_palette)
         menu.addSeparator()
         self.focus_next_action = menu.addAction(ui_text("Focus next workspace region"))
         self.focus_next_action.setProperty('i18nSource_actionText', 'Focus next workspace region')
@@ -491,6 +526,7 @@ class ShellMixin:
         dark_id = str(app.property("darkSkinId") or DEFAULT_DARK_SKIN) if app is not None else DEFAULT_DARK_SKIN
         for skin_id, action in self._skin_actions.items():
             action.setChecked(skin_id in (light_id, dark_id))
+        self._refresh_appearance_status()
 
     def _set_theme(self, mode: ThemeMode, *, palette=None,
                    light_skin: str | None = None, dark_skin: str | None = None) -> None:
@@ -527,6 +563,7 @@ class ShellMixin:
         persist_appearance(settings, light, dark)
         settings.setValue("appearance/theme", mode)
         self._sync_appearance_actions()
+        self._refresh_appearance_status()
 
     def _set_language(self, language: LanguageCode, *, persist: bool = True) -> None:
         self._clear_diagnostic_highlights()
@@ -545,6 +582,10 @@ class ShellMixin:
         action = self._language_actions.get(language)
         if action is not None:
             action.setChecked(True)
+        for label, source in zip(self._nav_section_labels, self._nav_section_sources):
+            label.setText(ui_text(source))
+        self.palette_button.setToolTip(ui_text("Search pages, actions and appearances (Ctrl+K)"))
+        self._refresh_appearance_status()
         self._on_page_changed(self.page_stack.currentIndex())
         self.workspace_layout.refresh_language()
         agent_panel = getattr(self, 'config_agent_panel', None)
@@ -581,3 +622,56 @@ class ShellMixin:
         self.run_context.setProperty("statusRole", role)
         self.run_context.style().unpolish(self.run_context)
         self.run_context.style().polish(self.run_context)
+
+
+    # ------------------------------------------------------------------ J3 --
+    def _show_command_palette(self) -> None:
+        """Ctrl+K launcher: pages, common actions and every appearance."""
+        dialog = CommandPalette(self)
+        dialog.set_entries(self._command_palette_entries())
+        if dialog.exec():
+            chosen = dialog.chosen
+            if chosen is not None:
+                chosen()
+
+    def _command_palette_entries(self) -> list[PaletteEntry]:
+        """Everything the launcher can run, in display order."""
+        entries: list[PaletteEntry] = []
+        for index, (_page, title, subtitle, _icon) in enumerate(self._page_specs):
+            entries.append(
+                PaletteEntry(ui_text(title), ui_text("Page"), ui_text(subtitle),
+                             lambda i=index: self.focus_page(i))
+            )
+        for label, callback in (
+            ("New blank simulation", self.new_blank_project),
+            ("New Simulation...", self.open_new_simulation_wizard),
+            ("Open Project...", self.open_project),
+            ("Save Project", self.save_project),
+            ("Save Project As...", self.save_project_as),
+            ("Environment setup...", self.show_environment_settings),
+            ("Open environment installer...", self.show_environment_installer),
+        ):
+            entries.append(PaletteEntry(ui_text(label), ui_text("Action"), "", callback))
+        for skin_id in SKIN_IDS:
+            candidate = skin_for(skin_id)
+            if candidate is None:
+                continue
+            entries.append(
+                PaletteEntry(ui_text(candidate.name), ui_text("Appearance"),
+                             ui_text(candidate.description),
+                             lambda sid=skin_id: self._set_skin(sid))
+            )
+        return entries
+
+    def _refresh_appearance_status(self) -> None:
+        """Bottom-right reminder of the active appearance (also the tooltip with its reason)."""
+        label = getattr(self, "appearance_status", None)
+        app = QApplication.instance()
+        if label is None or app is None:
+            return
+        active = current_skin(app)
+        if active is None:
+            label.setText("")
+            return
+        label.setText(ui_format("Appearance: {name}", name=ui_text(active.name)))
+        label.setToolTip(ui_text(active.description))

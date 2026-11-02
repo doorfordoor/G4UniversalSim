@@ -20,6 +20,11 @@ BODIES = {
              '<ellipse cx="12" cy="12" rx="9.5" ry="3.8" transform="rotate(60 12 12)" {s}/>'
              '<ellipse cx="12" cy="12" rx="9.5" ry="3.8" transform="rotate(120 12 12)" {s}/>'
              '<circle cx="12" cy="12" r="1.9" fill="{c}"/>'),
+    "search": ('<circle cx="10.5" cy="10.5" r="5.6" {s}/>'
+               '<path d="M14.7 14.7 L20 20" {s}/>'),
+    "command": ('<rect x="8.5" y="8.5" width="7" height="7" rx="1.2" {s}/>'
+                '<path d="M10.5 5.5 V8.5 M13.5 5.5 V8.5 M10.5 15.5 V18.5 M13.5 15.5 V18.5" {s}/>'
+                '<path d="M5.5 10.5 H8.5 M5.5 13.5 H8.5 M15.5 10.5 H18.5 M15.5 13.5 H18.5" {s}/>'),
     "start": '<path d="M3.5 11 L12 4 L20.5 11 M5.5 9.5 V20 H18.5 V9.5 M10 20 V14.5 H14 V20" {s}/>',
     "project": '<path d="M3 7 V18.5 H21 V9 H11.5 L9.5 6.5 H3.8 Z" {s}/>',
     "configuration": ('<path d="M4 6.5 H20 M4 12 H20 M4 17.5 H20" {s}/>'
