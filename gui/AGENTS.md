@@ -219,3 +219,22 @@ external batch/csh 的随机恢复须经过后端守卫，仅支持当前 MixMax
 前述 Manager 子集描述保留为历史验收边界；当前集合候选支持阶段/run/thread、对象摘要与两快照差异，继续使用 v1、4 MiB 单文件限制及累计集合限制，损坏加载保留旧数据并标陈旧。requested/resolved 缺失与 null 分开，configuration_generation/revision 不混用，manager_accepted 不译为内核已应用，跨进程 revision 不推断先后。DeepSeek 实际设计参与见 `../docs/collab/outbox/20261029-deepseek-full2c-design.md`。专项增加 `smoke_effective_config_collection.py`；真实后端驱动窗口与整阶段验收仍待主任务确认，不提升为完整 2C 已完成。
 
 F4依赖维护：安装统一走gui/requirements.txt，当前验证线PySide6>=6.11.1,<6.12；不得独立混装shiboken/Essentials/Addons。升级须保留CPython3.11绑定生命周期回归、原失败集成用例自然退出及Windows/Linux矩阵。完整原因与历史反例见docs/agent-history.md的F4依赖条目；这不是物理能力变更。
+
+
+## 2026-11-02 J3 实施：皮肤注册表与设计系统（第一阶段）
+
+- 皮肤与颜色必须从 `gui/g4usim_gui/core/theme.py` 的 `SKINS`/`ThemeColors` 读取：页面、图表、3D 预览不得写死颜色；
+  新控件若需要主题色，用 `current_colors()` 的角色，不要复制十六进制。
+- 样式表分两层：`_base_stylesheet` 是历史契约（对象名、`uiRole`、`buttonRole`、`statusRole` 等选择器逐字保留，测试依赖它们），
+  `_design_stylesheet` 是新视觉层并用 `$token` 替换；改视觉优先动设计层，不改基座选择器。
+- **`QMainWindow::separator` 不得设置 `width`/`height`**：设成 1px 会让 `gui_workspace_layout` 在浮动态 dock + offscreen
+  下于 `apply_theme` 设置样式表时以 0xC0000005 崩溃（已实测定位）。只改 `background`/`:hover`。
+- 不要写 `QDockWidget > QWidget` 选择器：`QDockWidget` 的标题容器也是其直接子 `QWidget`，会破坏标题栏渲染。
+- 新增皮肤：在 `theme.py` 的 `_RAW_SKINS` 里加 `Skin(...)`，给出 `mode`/`description`/6 色 `series`；注册表会自动做可访问性归一化，
+  `scripts/test_theme_registry.py` 会校验 15 皮肤形状与 23 项对比度，`i18n.ZH_CN` 里补皮肤名与描述中文。
+- 外观持久化：`appearance/theme`（mode）、`appearance/light_skin`、`appearance/dark_skin`；`appearance/light_palette`
+  只作为 B/K 的历史镜像写入，不能再作为唯一真相。`_set_palette` 保留旧语义；`_set_skin` 选中皮肤时切到它所属的明暗组。
+- 页面若在主题变化后需要重画（图表、3D、自绘控件），必须实现 `refresh_theme()` 并在 `_set_theme` 的六页列表里登记；
+  纯 QSS 能覆盖的控件不要走重画。
+- 证据与截图：离屏（offscreen）在 Windows 下没有字体数据库，截图会全是方块；实窗截图用 `QT_QPA_PLATFORM=windows`。
+  本阶段交付与边界见 `docs/verification/j3-theme-v1-20261102/README.md`，不要用截图替代独立复验。

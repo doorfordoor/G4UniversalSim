@@ -768,3 +768,38 @@ EE→246 的全树精确映射仅 panel、其 smoke 与八文档变化；157 GUI
 
 
 Linux原生通道补充（主审已签收）：main已实际操作独立真实X11/xcb桌面，一次固定HTTP计划passed，操作观察时曾停在awaiting_approval、0事件；随后在观察期间触及300秒预算，整任务保留failed／agent.task_timeout，不称整任务成功。原host exit0、slot_released=true、host与显示服务两组remaining_owned均空、HTTP已关闭；显示辅助子进程退出码[0,1,0]（twm非零保留），不能写全部子进程exit0；代表性原生签收结果为 **独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**。WSLg RAIL任务栏无法展开，第三次host退出且0请求，原失败保留，绝不称该通道成功。Ubuntu实际系统安装x11-xkb-utils，其它本次依赖保持隔离OUT前缀；具体包版本／SHA及安装收据见最终证据，不把早期准备收据system_installs=0外推到之后。
+
+
+### 2026-11-02 J3 第一阶段：设计系统、皮肤注册表与可访问性下限
+
+**动机**：J3 任务书要求先改善既有 B/K/C 的区域可辨性，再新增可选皮肤。第一步先把“颜色/间距/圆角/字体/状态”从散落的 QSS
+常量收成数据，让后续外壳与页面改造有统一来源，而不是继续在 661 行样式表里追加规则。
+
+**实现**：
+- `gui/g4usim_gui/core/theme.py`：`ThemeColors` 由 20 个角色扩到 28 个（新增 `canvas_alt`/`surface_hover`/`border_subtle`/
+  `focus_ring`/`info`/`grid`/`shadow`/`sidebar_accent`）；15 套皮肤（legacy B/K/C + 12 套新色板，浅 8 深 7），每套带
+  `description` 与 6 色 `series`；`SPACE`/`RADIUS`/`CONTROL_HEIGHT`/`ICON_SIZE`/`MOTION_MS` 标尺；`mix`/`relative_luminance`/
+  `contrast_ratio`/`on_color`/`on_accent`；`stored_appearance`/`persist_appearance`/`apply_appearance`/`apply_theme`（`palette`
+  保留历史语义）；`build_stylesheet = _base_stylesheet + _design_stylesheet`，后者以 `$token` 单遍替换。
+- 注册表构建时 `_accessible()` 用 `_until_all`/`_bg_until` 把 `text_muted`、`border_strong`、`accent_soft`、`selection`、
+  `sidebar_selected`、`focus_ring` 混合到下限：正文与交互文字 4.5:1、控件边界与焦点 3:1、选中行 1.15:1；`on_color` 取最大对比。
+- `gui/g4usim_gui/window/shell.py`：`View → Appearance` 菜单按明暗分组列出全部皮肤，`_set_skin` 激活该皮肤所属明暗组，
+  `_set_palette` 保留旧语义；`_sync_appearance_actions` 勾选模式与两组记忆皮肤；侧栏 244px（220 会截断 “Effective Configuration”）。
+- `app.py` 启动按 `stored_appearance` 恢复；`icons.py` 新增 `check` 指示器；`i18n.ZH_CN` 增加 34 条皮肤/菜单文案。
+- 新增 static 用例 `scripts/test_theme_registry.py`（113 断言点）：15 皮肤形状、23 项对比度、colour maths、持久化迁移、
+  `apply_theme` 契约、样式表无残留 token；注册后用例 215（static 49/gui 71/backend 63/integration 32）。
+
+**反例与教训**：
+- 第一次对比度审计 13/15 皮肤不达标：`_until_all` 的 `mix` 方向用反（`step/40` 被当成第一参数份额 → 起步 97.5% 朝向目标），
+  把 C 的 `border_strong` 推到近白；改成 `mix(fg, toward, 1.0 - step/40)` 后 15/15 通过。
+- **Qt 崩溃**：`QMainWindow::separator { width: 1px; height: 1px; }` 会让 `smoke_workspace_layout` 在浮动态 dock + offscreen 下
+  于 `apply_theme → app.setStyleSheet` 处 0xC0000005；只保留 `background`/`:hover` 即恢复（149 断言通过）。
+- `QDockWidget > QWidget` 选择器会命中标题容器（标题也是直接子 QWidget），导致标题栏渲染异常，不得使用。
+- Windows offscreen 平台没有字体数据库，窗口抓图全是方块；实窗对照必须 `QT_QPA_PLATFORM=windows`。
+- 本机 Git Bash 的 `mingw64/bin` 会抢在 MSYS2 UCRT64 之前提供旧 `libstdc++`，7 个 C++ 编译类 static 用例因此以
+  0xC0000139 失败；跑静态前 `PATH=/d/msys64/ucrt64/bin:$PATH`（与主题改动无关，已写入证据 README）。
+
+**证据**：`docs/verification/j3-theme-v1-20261102/`——B/K/C 改动前后同工程截图 12 张、static 49/49（5,615 断言）、
+主题 GUI 4/4（284 断言），归档报告可直接被 `check_report_evidence.py` 复核；完整 GUI profile 另存 `out/verification/j3-gui-v1`。
+**边界**：本阶段只做外观基础设施与作者自查，区域层级实窗改造、对比度实测表、125%/150% 与 Linux 桌面、性能基线与独立复验仍待做，
+不得据此宣布 J3 完成。

@@ -20,7 +20,11 @@ from PySide6.QtWidgets import (
 from g4usim_gui import __version__
 from g4usim_gui.core import icons
 from g4usim_gui.core.i18n import LanguageCode, apply_language, current_language, ui_format, ui_text
-from g4usim_gui.core.theme import ThemeMode, apply_theme, current_colors
+from g4usim_gui.core.theme import (
+    DEFAULT_DARK_SKIN, DEFAULT_LIGHT_SKIN, LEGACY_LIGHT_KEYS, ThemeMode,
+    apply_appearance, current_colors, persist_appearance, skin as skin_for,
+    skins_for_mode, stored_appearance,
+)
 from g4usim_gui.window.workspace_layout import WorkspacePageStack
 
 
@@ -36,7 +40,7 @@ class ShellMixin:
 
         sidebar = QWidget()
         sidebar.setObjectName("sidebar")
-        sidebar.setFixedWidth(220)
+        sidebar.setFixedWidth(244)
         sidebar_layout = QVBoxLayout(sidebar)
         sidebar_layout.setContentsMargins(14, 18, 14, 14)
         sidebar_layout.setSpacing(4)
@@ -316,23 +320,31 @@ class ShellMixin:
         self.theme_button.setMenu(theme_menu)
 
         theme_menu.addSeparator()
-        palette_menu = theme_menu.addMenu(self.tr("Light palette"))
-        self._palette_action_group = QActionGroup(self)
-        self._palette_action_group.setExclusive(True)
-        self._palette_actions = {}
-        selected_palette = str(QSettings().value("appearance/light_palette", "B"))
-        if selected_palette not in ("B", "K"):
-            selected_palette = "B"
-        for palette, label in (("B", "B · Lattice"), ("K", "K · Software")):
-            action = palette_menu.addAction(self.tr(label))
-            action.setCheckable(True)
-            action.setChecked(palette == selected_palette)
-            action.triggered.connect(lambda _checked=False, selected=palette: self._set_palette(selected))
-            self._palette_action_group.addAction(action)
-            self._palette_actions[palette] = action
-        dark_palette = theme_menu.addAction(self.tr("Dark palette: C · Night reading"))
-        dark_palette.setEnabled(False)
-        self._set_theme(current_mode, palette=selected_palette)
+        appearance_menu = theme_menu.addMenu(self.tr("Appearance"))
+        self._appearance_menu = appearance_menu
+        follow_hint = appearance_menu.addAction(
+            self.tr("Follow system uses the light or dark appearance selected below.")
+        )
+        follow_hint.setEnabled(False)
+        appearance_menu.addSeparator()
+        # One registered skin list drives the menus, the remembered preference and the
+        # stylesheet; adding a skin never requires touching the window code.
+        self._skin_actions: dict[str, QAction] = {}
+        for skin_mode, label in (("light", self.tr("Light appearance")),
+                                 ("dark", self.tr("Dark appearance"))):
+            submenu = appearance_menu.addMenu(label)
+            for candidate in skins_for_mode(skin_mode):
+                action = submenu.addAction(self.tr(candidate.name))
+                action.setCheckable(True)
+                action.setToolTip(self.tr(candidate.description))
+                action.triggered.connect(
+                    lambda _checked=False, skin_id=candidate.id: self._set_skin(skin_id)
+                )
+                self._skin_actions[candidate.id] = action
+        # The historical palette attributes stay B/K so older window tests and callers
+        # keep observing the same objects; the new menu simply lists every skin.
+        self._palette_actions = {"B": self._skin_actions["B"], "K": self._skin_actions["K"]}
+        self._set_theme(current_mode)
 
         language_menu = view_menu.addMenu(self.tr("Language"))
         self._language_action_group = QActionGroup(self)
@@ -446,24 +458,64 @@ class ShellMixin:
             dialog.install_button.click()
 
     def _set_palette(self, palette: str) -> None:
-        if palette not in ("B", "K"):
+        """Historical entry point: choose a light skin without changing the mode."""
+        if palette not in LEGACY_LIGHT_KEYS:
             raise ValueError("unknown light palette")
         app = QApplication.instance()
-        self._set_theme(str(app.property("themeMode") or "light"), palette=palette)
-        QSettings().setValue("appearance/light_palette", palette)
-        self._palette_actions[palette].setChecked(True)
+        self._set_theme(str(app.property("themeMode") or "light"), light_skin=palette)
 
-    def _set_theme(self, mode: ThemeMode, *, palette=None) -> None:
+    def _set_skin(self, skin_id: str) -> None:
+        """Activate one skin and remember it for its own appearance mode.
+
+        Choosing a skin in the Appearance menu is an explicit request to see it: a
+        dark pick switches to the dark appearance (and back), while the other group
+        keeps its own remembered choice. "Follow system" stays available as a mode.
+        """
+        candidate = skin_for(skin_id)
+        if candidate is None:
+            raise ValueError("unknown appearance")
         app = QApplication.instance()
         if app is None:
             return
-        apply_theme(app, mode, palette)
+        if candidate.mode == "light":
+            self._set_theme("light", light_skin=candidate.id)
+        else:
+            self._set_theme("dark", dark_skin=candidate.id)
+
+    def _sync_appearance_actions(self) -> None:
+        app = QApplication.instance()
+        mode = str(app.property("themeMode") or "light") if app is not None else "light"
+        for key, action in self._theme_actions.items():
+            action.setChecked(key == mode)
+        light_id = str(app.property("lightSkinId") or DEFAULT_LIGHT_SKIN) if app is not None else DEFAULT_LIGHT_SKIN
+        dark_id = str(app.property("darkSkinId") or DEFAULT_DARK_SKIN) if app is not None else DEFAULT_DARK_SKIN
+        for skin_id, action in self._skin_actions.items():
+            action.setChecked(skin_id in (light_id, dark_id))
+
+    def _set_theme(self, mode: ThemeMode, *, palette=None,
+                   light_skin: str | None = None, dark_skin: str | None = None) -> None:
+        app = QApplication.instance()
+        if app is None:
+            return
+        if palette is not None:  # historical keyword: a registered skin id
+            selected = skin_for(palette)
+            if selected is None:
+                raise ValueError("Unknown theme palette")
+            if selected.mode == "light":
+                light_skin = selected.id
+            else:
+                dark_skin = selected.id
+        settings = QSettings()
+        _stored_mode, stored_light, stored_dark = stored_appearance(settings)
+        light = light_skin or stored_light
+        dark = dark_skin or stored_dark
+        apply_appearance(app, mode, light, dark)
         colors = current_colors()
-        # Mode and remembered light palette can change without changing visible
-        # colours (for example choosing K while dark). Keep those preferences,
-        # but do not redraw plots or restart their evidence reads unnecessarily.
-        # This cache belongs to the window: a newly constructed window still
-        # refreshes its custom-painted views even if QApplication is themed.
+        # Mode and remembered skins can change without changing visible colours (for
+        # example choosing K while dark). Keep those preferences, but do not redraw
+        # plots or restart their evidence reads unnecessarily. This cache belongs to
+        # the window: a newly constructed window still refreshes its custom-painted
+        # views even if QApplication is already themed.
         if getattr(self, "_painted_theme_colors", None) != colors:
             self._clear_diagnostic_highlights()
             self._refresh_icons()
@@ -472,10 +524,9 @@ class ShellMixin:
                 if refresh_theme is not None:
                     refresh_theme()
             self._painted_theme_colors = colors
-        QSettings().setValue("appearance/theme", mode)
-        action = self._theme_actions.get(mode)
-        if action is not None:
-            action.setChecked(True)
+        persist_appearance(settings, light, dark)
+        settings.setValue("appearance/theme", mode)
+        self._sync_appearance_actions()
 
     def _set_language(self, language: LanguageCode, *, persist: bool = True) -> None:
         self._clear_diagnostic_highlights()

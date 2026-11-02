@@ -6,6 +6,19 @@
 
 2026-11-02 D 盘桌面修订已同步。字体、数字显示与主题切换修复见[测量与进度](docs/verification/gui-theme-response-20261102/README.md)。
 
+## 2026-11-02 J3 第一阶段：设计系统与皮肤注册表（作者交付，未验收）
+
+J3 已由 DeepSeek 在 D 盘 `roadmap/gui-theme-response` 分支开工，本段只记录**第一步已落地的事实**，不签收 J3。
+外观基础设施：`gui/g4usim_gui/core/theme.py` 重写为 28 个颜色角色 + **15 套皮肤**（历史 B/K/C + 纸墨、砂岩、苔原、石墨、霜蓝、
+高对比、午夜蓝、电路夜班、板岩、余烬、极光、夜视对比），皮肤带浅/深分组、图表序列与可翻译名称；注册表构建时把
+`text_muted`/`border_strong`/`accent_soft`/`selection`/`sidebar_selected`/`focus_ring` 归一化到正文 4.5:1、边界与焦点 3:1 的下限；
+样式表拆成“历史基座 + 新视觉层”（旧选择器逐字保留）；`View → Appearance` 按明暗分组列出全部皮肤并分别记住两组选择，
+`appearance/light_skin`、`appearance/dark_skin` 为新增键，旧 `appearance/light_palette` 继续作为 B/K 镜像写入；`app.py` 启动恢复记忆。
+新增 static 用例 `theme_registry`（113 断言点，含 15/15 皮肤 × 23 项对比度、迁移与 `apply_theme` 契约），用例总数 215。
+实测：static profile **49/49、5,615 断言**；主题相关 GUI 用例 **4/4、284 断言**；完整 GUI profile **71/71、10,187 断言**（`gui-profile/` 一并归档）。本阶段未改后端，backend/integration 未重跑。
+证据（含 B/K/C 改动前后同工程截图与归档报告）见[第一阶段证据](docs/verification/j3-theme-v1-20261102/README.md)。
+**未完成**：区域层级实窗改造、对比度实测表、125%/150% 与 Linux 桌面检查、切换性能基线、独立复验；J3 关闭前不能引用本段作为验收。
+
 Linux原生通道补充（主审已签收）：main已实际操作独立真实X11/xcb桌面，一次固定HTTP计划passed，操作观察时曾停在awaiting_approval、0事件；随后在观察期间触及300秒预算，整任务保留failed／agent.task_timeout，不称整任务成功。原host exit0、slot_released=true、host与显示服务两组remaining_owned均空、HTTP已关闭；显示辅助子进程退出码[0,1,0]（twm非零保留），不能写全部子进程exit0；代表性原生签收结果为 **独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**。WSLg RAIL任务栏无法展开，第三次host退出且0请求，原失败保留，绝不称该通道成功。Ubuntu实际系统安装x11-xkb-utils，其它本次依赖保持隔离OUT前缀；具体包版本／SHA及安装收据见最终证据，不把早期准备收据system_installs=0外推到之后。
 
 ## 2026-11-02 L1 本轮验收与最终证据

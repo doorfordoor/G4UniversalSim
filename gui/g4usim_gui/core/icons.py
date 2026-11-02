@@ -37,6 +37,7 @@ BODIES = {
     "theme": '<circle cx="12" cy="12" r="8" {s}/><path d="M12 4 A8 8 0 0 1 12 20 Z" fill="{c}"/>',
     "language": '<circle cx="12" cy="12" r="8.5" {s}/><ellipse cx="12" cy="12" rx="3.8" ry="8.5" {s}/><path d="M3.5 12 H20.5" {s}/>',
     "plus": '<path d="M12 5 V19 M5 12 H19" {s}/>',
+    "check": '<path d="M5 12.5 L10 17.5 L19 6.5" {s}/>',
     "open": '<path d="M3 7 V18.5 H18 L21 11 H7 L4.5 18" {s}/><path d="M3 7 H9 L11 9 H17 V11" {s}/>',
     "refresh": '<path d="M19.5 12 A7.5 7.5 0 1 1 17 6.4" {s}/><path d="M19.5 4.5 V9 H15" {s}/>',
     "export": '<path d="M12 4 V14.5 M7.5 10 L12 14.5 L16.5 10 M5 19.5 H19" {s}/>',

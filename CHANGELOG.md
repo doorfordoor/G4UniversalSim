@@ -7,6 +7,19 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ## Unreleased
 
+### J3 第一阶段：设计系统与皮肤注册表（2026-11-02，作者交付，未验收）
+
+- 外观从 3 套色板扩展为 **15 套皮肤**（历史 B/K/C + 纸墨、砂岩、苔原、石墨、霜蓝、高对比、午夜蓝、电路夜班、板岩、余烬、极光、夜视对比），
+  每套带图表序列、浅/深分组、可翻译名称与描述；`View → Appearance` 菜单按明暗分组列出全部皮肤并记住两组各自的选择，
+  旧 `appearance/light_palette` 写入保留为 B/K 镜像迁移，切换皮肤会激活它所属的明暗组。
+- 颜色角色从 20 个扩展到 28 个（新增 `canvas_alt`/`surface_hover`/`border_subtle`/`focus_ring`/`info`/`grid`/`shadow`/`sidebar_accent`），
+  并加入间距、圆角、控件高度、图标尺寸与动效标尺；样式表拆成"历史基座 + 新视觉层"，旧选择器逐字保留。
+- 皮肤注册表构建时自动归一化 `text_muted`/`border_strong`/`accent_soft`/`selection`/`sidebar_selected`/`focus_ring`，
+  满足正文 4.5:1、边界与焦点 3:1 的可读性下限；`on_color` 改为取最大对比文字色，亮色强调按钮不再出现低对比文字。
+- 新增 static 用例 `theme_registry`（15/15 皮肤 23 项对比度、持久化迁移、`apply_theme` 契约、样式表 token 完整性），
+  用例总数 215；static 49/49、主题相关 GUI 4/4、完整 GUI profile 71/71 通过。本阶段证据见
+  `docs/verification/j3-theme-v1-20261102/README.md`。
+
 - F5（2026-10-31，已完成）：主项目配置统一撤销/重做，保存完整材料、几何及原始输入草稿；项目 JSON 升为版本 7，兼容已知旧版。独立自动恢复副本支持未命名项目、异常退出恢复与活跃窗口锁定；恢复不覆盖原件、不恢复旧运行成功标志。完整验收状态见 `docs/ROADMAP.md`。
 
 ### F4 结构化诊断与定位（2026-10-30 已完成，未发布）
