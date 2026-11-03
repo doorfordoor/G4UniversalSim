@@ -39,4 +39,3 @@ finally:
  report['closed']=_close_self_test_window(w,app,timeout=45);QThreadPool.globalInstance().waitForDone(45000);app.processEvents()
  (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
  assert report['closed']
-

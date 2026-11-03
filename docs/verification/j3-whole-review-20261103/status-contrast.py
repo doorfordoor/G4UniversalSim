@@ -16,4 +16,3 @@ for sid in SKIN_IDS:
 (out/'report.json').write_text(json.dumps(rows,indent=2),encoding='utf-8')
 print(json.dumps([x for x in rows if not x['passed']],indent=2))
 sys.exit(0 if all(x['passed'] for x in rows) else 2)
-
