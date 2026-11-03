@@ -310,3 +310,9 @@ F4依赖维护：安装统一走gui/requirements.txt，当前验证线PySide6>=6
 - 紧凑布局（<1400 逻辑像素）隐藏 AI 面板与 3D 预览，这两个是可选 dock；不要隐藏配置编辑器或 Results 页的停靠页。
 - 紧凑区间内的 resize 不得覆盖用户显式打开的可选 dock。三个入口都算显式选择并写入 `_optional_overrides`：dock 自己的 `toggleViewAction`、配置页的 “Show 3D view” 按钮（`_show_preview_from_button`）、恢复已保存布局（`restore()` 按恢复后的可见性记录）。被页面导航自动显露的 AI/3D 没有覆盖，仍按紧凑规则收起；离开区间只恢复被自动收起（`_auto_hidden`）且用户未覆盖的面板。`apply_preset()`/`reset()` 清空覆盖，`restore()` 不询问用户、按保存内容直接记录。永久回归 `gui/smoke_tests/smoke_compact_panels.py`（独立复验的 1200→1205、配置页按钮、保存/恢复两个方向）。
 - 视觉证据在 `docs/verification/j3-visual-checks-20261102/screens-v2/`，语义色表在同目录 `semantic-colours.md`。
+
+- 状态标签（`uiRole=statusChip`）的文字不能直接用语义色画在它自己的 veil 上：成功/失败/运行中分别使用
+  `status_combinations()` 派生的 `$success_text`/`$danger_text`/`$running_text`。`veil_text()` 会把语义色向可读锚点
+  混合到 ≥4.6:1，并保留成功/失败/运行的色相含义；独立 J3 整体验收用真实 QLabel 量到 B/K/苔原的成功文字只有
+  4.35/4.35/4.31:1。新增语义色、改 veil 混色比例或新增状态标签时，必须同时更新 `status_combinations()`、
+  `scripts/test_theme_registry.py` 的最终组合断言与 `gui/smoke_tests/smoke_theme_response_shell.py` 的真实控件取色。

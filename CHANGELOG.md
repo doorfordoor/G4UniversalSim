@@ -17,6 +17,7 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 - 主题切换状态保持用例 `gui_theme_state`：切皮肤后编辑器输入、输出文件选择、当前页面与工作区标签不变，外观偏好只写入本机 QSettings。
 - 修复紧凑区间内调整窗口尺寸会覆盖用户刚打开的可选 dock（独立复验 1200→1205 反例）：用户显式打开的 AI/3D 在整个紧凑区间内保留（`toggleViewAction` 记为覆盖），未被显式打开的面板仍按紧凑规则收起；离开区间只恢复被自动收起且用户未覆盖的面板。新增永久回归 `gui_compact_panels`。第二次独立复验又发现两条入口丢失用户选择：配置页“显示 3D 视图”按钮（现在记为显式覆盖）与恢复已保存布局（`restore()` 按恢复后的可见性记录覆盖），两条都补了永久回归；同时把 `gui_theme_state_backend` 的外观切换固定为 5 次，使断言入口计数稳定可比较（旧的 33 会随定时器抖动成 32）。
+- **J3 整体验收 P2**：状态标签把语义色直接画在各自的 veil 上，B/K/苔原的成功文字实测只有 4.35/4.35/4.31:1。新增 `theme.veil_text()`/`status_combinations()`，成功/失败/运行中改用 `$success_text`/`$danger_text`/`$running_text`（≥4.6:1，保留色相）；`test_theme_registry` 增补最终混色组合断言，`smoke_theme_response_shell` 对 15 皮肤渲染真实 QLabel 并采样背景像素。
 
 
 ### Added

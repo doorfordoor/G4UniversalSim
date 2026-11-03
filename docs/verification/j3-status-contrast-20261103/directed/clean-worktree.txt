@@ -1,0 +1,23 @@
+# 冻结候选核对（P2 status chip 对比度修复）
+
+- 候选提交：`c082ecccfee3e54155a5eed82bd1748057e8356a`（`fix(gui): keep status chip text readable on its tinted veil`）
+- 工作树：`C:/Users/123/AppData/Local/Temp/g4frozen/G4UniversalSim`（`git worktree add` 于该提交，单独的干净检出）
+- `git rev-parse HEAD`：c082ecccfee3e54155a5eed82bd1748057e8356a
+- `git status --porcelain`：无输出（0 条）
+- 该检出启用 `core.longpaths=true`，否则仓库内 `docs/verification/j2-f8-final-20261102/tree` 的超长路径在 Windows 上无法物化并会被误报为删除
+
+## 复制前 pip 依赖与环境
+- Python：3.11.9；解释器路径：`D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe`（干净检出内没有 venv，共用主工作区 venv）
+- 后端可执行文件：`D:/Geant4/G4UniversalSim/build_vs2026/Release/G4UniversalSim.exe`（C++ 源码未变，同一 source_fingerprint）
+- `gui_runs/`（gitignore，约 780 KB 的 demo 输出）被复制进干净检出，因为 `gui_theme_state` 需要默认项目里有输出文件；否则该用例断言 `rows > 0` 失败
+
+## 三 profile 命令（在干净检出内执行）
+```
+export PATH="/d/msys64/ucrt64/bin:$PATH"
+VENV="D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe"
+EXE="D:/Geant4/G4UniversalSim/build_vs2026/Release/G4UniversalSim.exe"
+MERGE="D:/Geant4/G4UniversalSim/build_vs2026/Release/mergeHistograms.exe"
+"$VENV" -B scripts/run_m0_tests.py --profile static --require-tracked-sources --fail-on-skip --report-root out/verification/j3p2f-static --executable "$EXE" --merge-executable "$MERGE"
+QT_QPA_PLATFORM=offscreen "$VENV" -B scripts/run_m0_tests.py --profile gui --require-tracked-sources --fail-on-skip --report-root out/verification/j3p2f-gui3 --executable "$EXE" --merge-executable "$MERGE"
+"$VENV" -B scripts/run_m0_tests.py --profile integration --require-tracked-sources --fail-on-skip --report-root out/verification/j3p2f-int --executable "$EXE" --merge-executable "$MERGE"
+```

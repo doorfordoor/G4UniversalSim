@@ -14,6 +14,15 @@
 - 新增证据：`docs/verification/j3-visual-checks-20261102/screens-v2/`、`semantic-colours.md`；候选冻结与三 profile 基线见 `docs/verification/j3-close-20261103/README.md`。
 - 剩余（关闭前必须解决或由主审接受）：非法草稿/诊断/结果/Agent 状态图，B/K/C 前后问题清单与独立四件事复验，Windows 125%/150% 真实操作记录，Linux 真实桌面，自动化重启用例。
 
+## 2026-11-03 J3 整体验收 P2：状态标签文字对比度（未关闭）
+
+- 整体验收退回并新增 P2：状态标签把语义色直接画在各自 veil 上；真实 Qt 控件量到 B/K/苔原成功文字 4.3453/4.3453/4.3097:1，低于正文 4.5:1。
+- 产品修复 `c082eccc`（`fix(gui): keep status chip text readable on its tinted veil`）：新增 `theme.veil_text()`/`theme.status_combinations()`，成功/失败/运行中标签改用 `$success_text`/`$danger_text`/`$running_text`（向可读锚点混合、保留色相、≥4.6:1），基础层与设计层 QSS 同步；静态语义色不变。
+- 测试：`test_theme_registry` 增补最终混色组合断言（合计 650）；`smoke_theme_response_shell` 对 15 皮肤渲染真实 `statusChip` 并采样背景像素（235 断言）。
+- 干净候选冻结（worktree 于 `c082eccc`，`git_dirty=false`）：static 49/49、5 687 断言；GUI 76/76、10 535 断言；integration 33/33、6 830 断言；三份均过 `check_report_evidence.py`；审查者探针对 15 皮肤复跑退出 0、`[]`（最低 4.605 苔原）。证据 `verification/j3-status-contrast-20261103/`。
+- 本次未重跑 backend profile：改动仅 GUI Python（主题/样式表/测试），无 C++/计分/物理变更。
+- J3 仍保持未关闭：独立复验与完整状态矩阵、宽表滚动、125%/150% 实窗操作、Linux 实际桌面等门禁未完成。
+
 ## 2026-11-03 J3 视觉校验与紧凑布局（作者侧）
 
 - 紧凑布局（< 1400 逻辑像素）隐藏 AI/3D 可选 dock、收窄 setup 面板与配置分栏、材料按钮两行网格，窗口最小宽度由约 1600 降到 760 逻辑像素；150% + 1280×800 屏幕可完整操作编辑器。
