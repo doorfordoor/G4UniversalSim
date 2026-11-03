@@ -627,7 +627,17 @@ class ShellMixin:
             action.setChecked(key == mode)
         light_id = str(app.property("lightSkinId") or DEFAULT_LIGHT_SKIN) if app is not None else DEFAULT_LIGHT_SKIN
         dark_id = str(app.property("darkSkinId") or DEFAULT_DARK_SKIN) if app is not None else DEFAULT_DARK_SKIN
+        resolved = str(app.property("resolvedSkin") or "") if app is not None else ""
+        next_mode = "dark" if mode == "light" else "light"
         for skin_id, action in self._skin_actions.items():
+            candidate = skin_for(skin_id)
+            label = ui_text(candidate.name) if candidate is not None else skin_id
+            if skin_id == resolved:
+                label = ui_format("{label} (in use)", label=label)
+            elif skin_id == (dark_id if mode == "light" else light_id):
+                label = ui_format("{label} (next in {mode})",
+                                  label=label, mode=ui_text(next_mode))
+            action.setText(label)
             action.setChecked(skin_id in (light_id, dark_id))
         self._refresh_appearance_status()
 

@@ -72,6 +72,12 @@ def main() -> int:
     assert settings.value("appearance/dark_skin", "") == "midnight", settings.value("appearance/dark_skin")
     assert theme.current_skin().id == "B"
     assert window.appearance_status.text().startswith("Appearance:"), window.appearance_status.text()
+    window._set_skin("midnight")
+    app.processEvents()
+    dark_label = window._skin_actions["midnight"].text()
+    next_label = window._skin_actions["B"].text()
+    assert "当前使用" in dark_label or "in use" in dark_label, dark_label
+    assert "切到" in next_label or "next in" in next_label, next_label
 
     window.close()
     for _ in range(4):
