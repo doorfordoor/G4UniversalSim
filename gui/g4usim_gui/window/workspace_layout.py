@@ -202,9 +202,10 @@ class WorkspaceLayout(QObject):
         if compact:
             # on small displays the assistant steps aside; the editor and the 3D
             # preview keep their contract and stay reachable from View -> Panels
-            ai = self.docks.get("ai")
-            if ai is not None and not ai.isHidden():
-                ai.hide()
+            for name in ("ai", "preview"):
+                dock = self.docks.get(name)
+                if dock is not None and not dock.isHidden():
+                    dock.hide()
         configuration = self.docks.get("configuration")
         if configuration is not None and not configuration.isHidden():
             host.resizeDocks([configuration], [520 if compact else 700], Qt.Orientation.Horizontal)
