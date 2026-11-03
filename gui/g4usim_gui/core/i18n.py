@@ -731,7 +731,6 @@ ZH_CN: dict[str, str] = {
     "Focus next or previous workspace region": "聚焦下一个或上一个工作区区域",
     "A Geant4 desktop simulator workspace built on Geant4, Qt and PySide6.": "基于 Geant4、Qt 与 PySide6 的桌面模拟工作台。",
     "Application root": "应用根目录",
-    "Backend executable": "后端可执行文件",
     "Open {page} (Ctrl+Alt+{number})": "打开{page}（Ctrl+Alt+{number}）",
     "Filter volumes": "筛选体积",
     "Select in the 3D view": "在 3D 视图中选中",

@@ -199,6 +199,7 @@ CASES = (
     Case("gui_live_progress", "gui/smoke_tests/smoke_live_progress.py", "gui", ("qt",)),
     Case("gui_live_progress_backend", "gui/smoke_tests/smoke_live_progress_backend.py", "integration", ("qt", "exe")),
     Case("gui_scenario_backend", "gui/smoke_tests/smoke_scenario_backend.py", "integration", ("qt", "exe")),
+    Case("gui_theme_state_backend", "gui/smoke_tests/smoke_theme_state_backend.py", "integration", ("qt", "exe")),
     Case("live_progress", "scripts/test_live_progress.py", "backend", ("exe",)),
     Case("gui_main_window", "gui/smoke_tests/smoke_main_window_ui.py", "gui", ("qt",)),
     Case(

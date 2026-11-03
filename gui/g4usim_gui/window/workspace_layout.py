@@ -113,12 +113,6 @@ class WorkspacePageStack(QStackedWidget):
 
     def reveal_current(self):
         selected = self._dock_pages.get(self.currentIndex())
-        # Only the page that owns a dock may keep it open: otherwise a dock page
-        # revealed earlier (e.g. the configuration editor) keeps 700px of the
-        # window and squeezes Results/Run Console into an unreadable strip.
-        for index, (_page, dock) in self._dock_pages.items():
-            if index != self.currentIndex() and dock is not None and dock.isVisible():
-                dock.hide()
         if self.currentIndex() != getattr(self, "_analysis_index", -1):
             logs = getattr(layout, "docks", {}).get("logs") if (layout := getattr(self, "_workspace_layout", None)) else None
             if logs is not None:
@@ -197,7 +191,7 @@ class WorkspaceLayout(QObject):
         compact = int(width) < 1400
         config = self.window.config_builder_page
         config.setup_panel.setMinimumWidth(240 if compact else 300)
-        config.layout().itemAt(0).widget().setSizes([250, 620] if compact else [330, 650])
+        config.layout().itemAt(0).widget().setSizes([250, 480] if compact else [330, 650])
         preview = getattr(config, "preview3d_widget", None)
         if preview is not None and hasattr(preview, "set_compact"):
             preview.set_compact(compact)
@@ -206,12 +200,11 @@ class WorkspaceLayout(QObject):
         if host is None:
             return
         if compact:
-            # on small displays the editors own the window; the optional docks stay
-            # reachable from View -> Panels and the command palette
-            for name in ("ai", "preview"):
-                dock = self.docks.get(name)
-                if dock is not None and not dock.isHidden():
-                    dock.hide()
+            # on small displays the assistant steps aside; the editor and the 3D
+            # preview keep their contract and stay reachable from View -> Panels
+            ai = self.docks.get("ai")
+            if ai is not None and not ai.isHidden():
+                ai.hide()
         configuration = self.docks.get("configuration")
         if configuration is not None and not configuration.isHidden():
             host.resizeDocks([configuration], [520 if compact else 700], Qt.Orientation.Horizontal)
@@ -221,7 +214,7 @@ class WorkspaceLayout(QObject):
 
     def focus_analysis_view(self):
         """Show the results page across the full window with the log dock."""
-        for name in ("preview", "ai"):
+        for name in ("configuration", "preview", "ai"):
             dock = self.docks.get(name)
             if dock is not None and dock.isVisible():
                 dock.hide()

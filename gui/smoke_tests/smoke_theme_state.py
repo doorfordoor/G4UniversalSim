@@ -70,7 +70,7 @@ def main() -> int:
     settings.sync()
     assert settings.value("appearance/light_skin", "") == "B", settings.value("appearance/light_skin")
     assert settings.value("appearance/dark_skin", "") == "midnight", settings.value("appearance/dark_skin")
-    assert theme.current_skin(window).id == "B"
+    assert theme.current_skin().id == "B"
     assert window.appearance_status.text().startswith("Appearance:"), window.appearance_status.text()
 
     window.close()
