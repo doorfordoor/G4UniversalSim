@@ -40,7 +40,7 @@ from PySide6.QtWidgets import (
 
 from g4usim_gui.core.fonts import style_vtk_axes, vtk_font_file
 from g4usim_gui.core.i18n import ui_format, ui_text
-from g4usim_gui.core.theme import current_colors
+from g4usim_gui.core.theme import current_colors, veil_text
 from g4usim_gui.preview3d.backend_mesh import BackendMesh
 from g4usim_gui.preview3d.geometry_primitives import add_vec3, scale_vec3, scene_extent
 from g4usim_gui.preview3d.model_tree import ModelNode
@@ -52,6 +52,20 @@ from g4usim_gui.preview3d.appearance_controls import AppearanceControls
 
 CLICK_TOLERANCE_PX = 4
 SECTION_LABELS = (("No section", ""), ("Section x", "x"), ("Section y", "y"), ("Section z", "z"))
+# Small text drawn straight onto the render canvas keeps the Qt body-text floor.
+AXIS_CAPTION_MINIMUM_CONTRAST = 4.6
+
+
+def axis_caption_colour(colors=None) -> str:
+    """The readable colour for the XYZ captions over the preview canvas.
+
+    VTK paints the axis captions directly on the 3D canvas, so they need the same
+    body-text floor as Qt labels rather than a fixed black/white. ``veil_text``
+    keeps the skin's muted hue but moves it towards a readable anchor; this is the
+    same accessible-foreground rule the status chips use on their tinted veils.
+    """
+    colors = colors or current_colors()
+    return veil_text(colors.text_muted, colors.surface_alt, minimum=AXIS_CAPTION_MINIMUM_CONTRAST)
 
 
 class PyVistaPreviewWidget(QWidget):
@@ -66,6 +80,7 @@ class PyVistaPreviewWidget(QWidget):
         self._pv = pv
         self._vtk = vtk
         self._plotter = QtInteractor(self)
+        self._axes_actor = None      # created lazily with the first scene; themed with it
         self._show_source = True
         self._show_labels = False
         self.state = ViewState()
@@ -277,6 +292,23 @@ class PyVistaPreviewWidget(QWidget):
         self._plotter.set_background(colors.surface_alt)
         self._apply_styles()
         self._fill_legend()
+        self._apply_axes_style()
+
+    def _add_axes(self):
+        """Create the axes marker for a new scene and paint it with the current theme."""
+        self._axes_actor = self._plotter.add_axes()
+        self._apply_axes_style()
+        return self._axes_actor
+
+    def _apply_axes_style(self) -> None:
+        """Keep the existing XYZ captions readable after the canvas colour changed.
+
+        ``Plotter.clear()`` does not remove the orientation marker, so this also runs
+        after a clear: the marker must follow the skin while it is still visible.
+        """
+        if self._axes_actor is None:
+            return
+        style_vtk_axes(self._axes_actor, caption_colour=axis_caption_colour())
 
     def refresh_language(self) -> None:
         self.appearance.refresh_language()
@@ -289,12 +321,18 @@ class PyVistaPreviewWidget(QWidget):
         self._fill_legend()
 
     def clear(self) -> None:
+        # ``pyvista.Plotter.clear()`` empties the actors but keeps the axes
+        # orientation marker enabled on the renderer (verified against the real
+        # objects in ``smoke_vtk_axes_theme``).  Keep the reference so a theme
+        # switch recolours the still-visible captions instead of leaving the old
+        # colours until the next scene rebuild.
         self._plotter.clear()
         self._meshes, self._actors, self._items, self._actor_keys = {}, {}, {}, {}
         self._track_actors = []
         self.status.clear()
         self.state.set_items([])
         self.appearance.refresh_targets()
+        self._apply_axes_style()
 
     # --- particle tracks (roadmap G6) ---------------------------------------------------
     def show_trajectories(self, trajectories: TrajectorySet) -> None:
@@ -664,7 +702,7 @@ class PyVistaPreviewWidget(QWidget):
                 self._plotter.add_point_labels([((b[0] + b[1]) / 2, (b[2] + b[3]) / 2, (b[4] + b[5]) / 2)],
                                                [item.name], point_size=0, font_size=11, pickable=False,
                                                font_file=vtk_font_file())
-        style_vtk_axes(self._plotter.add_axes())
+        self._add_axes()
         self._track_actors = []          # cleared with the scene: draw the loaded tracks again
         if self.trajectories is not None:
             self._draw_tracks(render=False)

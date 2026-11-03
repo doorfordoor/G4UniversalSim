@@ -41,17 +41,35 @@ def vtk_font_file() -> str | None:
     return None
 
 
-def style_vtk_axes(axes) -> None:
-    """Apply the same file to the three VTK caption actors, not Qt widgets."""
+def style_vtk_axes(axes, *, caption_colour: str | None = None) -> None:
+    """Apply the presentation font to the three VTK caption actors, not Qt widgets.
+
+    ``caption_colour`` is the theme's readable foreground for the preview canvas.
+    VTK keeps the text colour on each caption actor, so a caller that changes the
+    canvas background must call this again on the same actor; ``None`` keeps the
+    colour already configured on the actor (the historical font-only behaviour).
+    """
     font_file = vtk_font_file()
+    if caption_colour is None and not font_file:
+        return
+    caption_rgb = None
+    if caption_colour is not None:
+        from PySide6.QtGui import QColor  # local: the VTK path is optional
+
+        caption_rgb = QColor(caption_colour).getRgbF()[:3]
+    font_family = None
     if font_file:
         from vtkmodules.vtkCommonCore import VTK_FONT_FILE
 
-        for caption in (axes.GetXAxisCaptionActor2D(), axes.GetYAxisCaptionActor2D(),
-                        axes.GetZAxisCaptionActor2D()):
-            prop = caption.GetCaptionTextProperty()
-            prop.SetFontFamily(VTK_FONT_FILE)
+        font_family = VTK_FONT_FILE
+    for caption in (axes.GetXAxisCaptionActor2D(), axes.GetYAxisCaptionActor2D(),
+                    axes.GetZAxisCaptionActor2D()):
+        prop = caption.GetCaptionTextProperty()
+        if font_family is not None:
+            prop.SetFontFamily(font_family)
             prop.SetFontFile(font_file)
+        if caption_rgb is not None:
+            prop.SetColor(*caption_rgb)
 
 
 def configure_numeric_display(root) -> None:

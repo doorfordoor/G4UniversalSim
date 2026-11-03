@@ -202,6 +202,215 @@ def preview_activation_cases(app):
         settings.sync()
 
 
+ANALYSIS_RESULTS_MIN_HEIGHT = 420
+ANALYSIS_LOGS_MAX_HEIGHT = 300
+MAX_DOCK_HEIGHT = 16777215
+
+
+def _isolated_child_settings(directory):
+    directory = str(directory)
+    QSettings.setDefaultFormat(QSettings.IniFormat)
+    QSettings.setPath(QSettings.IniFormat, QSettings.UserScope, directory)
+    QSettings.setPath(QSettings.IniFormat, QSettings.SystemScope, directory)
+
+
+def _dock_facts(window):
+    layout = window.workspace_layout
+    results = layout.docks["results"]
+    logs = layout.docks["logs"]
+    return {
+        "page": window.page_stack.currentIndex(),
+        "window": [window.width(), window.height()],
+        "host": [layout.hosts["workspace"].width(), layout.hosts["workspace"].height()],
+        "results": {
+            "visible": not results.isHidden(),
+            "floating": results.isFloating(),
+            "height": results.height(),
+            "widget_min_height": results.widget().minimumHeight() if results.widget() is not None else None,
+        },
+        "logs": {
+            "visible": not logs.isHidden(),
+            "floating": logs.isFloating(),
+            "height": logs.height(),
+            "maximum_height": logs.maximumHeight(),
+        },
+        "docks": {
+            name: {"visible": not dock.isHidden(), "floating": dock.isFloating(),
+                   "height": dock.height(), "width": dock.width()}
+            for name, dock in layout.docks.items()
+        },
+        "settings_file": QSettings().fileName(),
+    }
+
+
+def layout_restore_child(phase, mode, settings_dir, out_path, width, height):
+    """One isolated process of the save/restore regression."""
+    _isolated_child_settings(settings_dir)
+    state_root = Path(settings_dir).parent
+    os.environ["G4USIM_RECOVERY_DIR"] = str(state_root / "recovery")
+    from g4usim_gui.history import run_history_store
+    run_history_store.STATE_PATH = state_root / "app-state.json"
+
+    app = QApplication.instance() or QApplication([])
+    app.setOrganizationName("G4UniversalSimSmoke")
+    app.setApplicationName("WorkspaceLayoutCrossProcess")
+    app.setStyle("Fusion")
+    apply_theme(app, "light")
+    window = MainWindow()
+    layout = window.workspace_layout
+    results = layout.docks["results"]
+    logs = layout.docks["logs"]
+    try:
+        window.resize(width, height)
+        window.show()
+        settle(app)
+        if phase == "a":
+            if mode == "non-analysis-custom-logs":
+                window.page_stack.setCurrentIndex(2)
+                settle(app)
+                logs.show()
+                settle(app)
+            else:
+                if mode == "compact-results":
+                    window.resize(1200, 800)
+                    settle(app)
+                window.page_stack.setCurrentIndex(6)
+                settle(app)
+                if mode == "results-hidden":
+                    results.hide()
+                    settle(app)
+                elif mode == "logs-hidden":
+                    logs.hide()
+                    settle(app)
+                elif mode == "floating-results":
+                    results.setFloating(True)
+                    settle(app)
+            assert layout.save(), "the fixture must save the layout before closing"
+        else:
+            settle(app)
+        facts = _dock_facts(window)
+        facts.update({"phase": phase, "mode": mode})
+        Path(out_path).write_text(json.dumps(facts, indent=2, sort_keys=True), encoding="utf-8")
+        assert window.close(), "the product close path must accept the close"
+        settle(app)
+        assert window.isHidden(), "the window must be hidden after a normal close"
+    finally:
+        if window.isVisible():
+            window.close()
+        settle(app)
+    app.quit()
+    return 0
+
+
+def layout_restore_cross_process_case(app):
+    """Real two-process save/restore: process A saves, process B restores."""
+    script = str(Path(__file__).resolve())
+    modes = (
+        ("results-visible", 800, 800),
+        ("results-hidden", 800, 800),
+        ("logs-hidden", 800, 800),
+        ("non-analysis-custom-logs", 800, 800),
+        ("floating-results", 800, 800),
+        ("compact-results", 1200, 800),
+    )
+    with tempfile.TemporaryDirectory(prefix="g4usim-layout-cross-") as directory:
+        root = Path(directory)
+        env = dict(os.environ)
+        env.pop("G4USIM_RECOVERY_DIR", None)
+        env["QT_QPA_PLATFORM"] = "offscreen"
+        for mode, width, height in modes:
+            # Every scenario owns a fresh layout store: a previous mode's saved
+            # Results split must not leak into this scenario's baseline.
+            settings = root / "settings" / mode
+            settings.mkdir(parents=True)
+            facts = {}
+            for phase in ("a", "b"):
+                target = root / f"{mode}-{phase}.json"
+                run = subprocess.run(
+                    [sys.executable, "-X", "faulthandler", script, "--layout-restore-child",
+                     phase, mode, str(settings), str(target), str(width), str(height)],
+                    capture_output=True, text=True, encoding="utf-8", errors="replace",
+                    timeout=120, env=env)
+                assert run.returncode == 0, (mode, phase, run.returncode,
+                                             run.stdout[-4000:], run.stderr[-4000:])
+                assert target.exists(), (mode, phase, target)
+                facts[phase] = json.loads(target.read_text(encoding="utf-8"))
+            a, b = facts["a"], facts["b"]
+            expected_page = 2 if mode == "non-analysis-custom-logs" else 6
+            assert a["page"] == expected_page, (mode, a["page"])
+            if expected_page == 6:
+                assert a["results"]["widget_min_height"] == ANALYSIS_RESULTS_MIN_HEIGHT, mode
+                assert a["logs"]["maximum_height"] == ANALYSIS_LOGS_MAX_HEIGHT, mode
+            else:
+                assert a["logs"]["maximum_height"] > ANALYSIS_LOGS_MAX_HEIGHT, mode
+            assert b["page"] == expected_page, (mode, b["page"])
+            if mode == "results-visible":
+                assert b["results"]["visible"] and b["results"]["height"] >= ANALYSIS_RESULTS_MIN_HEIGHT, b
+                assert b["results"]["widget_min_height"] == ANALYSIS_RESULTS_MIN_HEIGHT, b
+                assert b["logs"]["maximum_height"] == ANALYSIS_LOGS_MAX_HEIGHT, b
+                assert b["results"]["height"] == a["results"]["height"], (mode, a["results"], b["results"])
+                assert b["logs"]["height"] == a["logs"]["height"], (mode, a["logs"], b["logs"])
+            elif mode == "results-hidden":
+                assert not b["results"]["visible"], "a saved hidden results dock must stay hidden"
+                assert b["results"]["widget_min_height"] == ANALYSIS_RESULTS_MIN_HEIGHT, b
+                assert b["logs"]["maximum_height"] == ANALYSIS_LOGS_MAX_HEIGHT, b
+            elif mode == "logs-hidden":
+                assert not b["logs"]["visible"], "a saved hidden log dock must stay hidden"
+                assert b["logs"]["maximum_height"] == ANALYSIS_LOGS_MAX_HEIGHT, b
+                assert b["results"]["visible"] and b["results"]["height"] >= ANALYSIS_RESULTS_MIN_HEIGHT, b
+            elif mode == "non-analysis-custom-logs":
+                assert b["logs"]["visible"], b
+                assert b["logs"]["maximum_height"] > ANALYSIS_LOGS_MAX_HEIGHT, b
+                assert b["results"]["visible"] is False, b
+            elif mode == "floating-results":
+                assert b["results"]["visible"] and b["results"]["floating"], b
+                assert b["results"]["widget_min_height"] == ANALYSIS_RESULTS_MIN_HEIGHT, b
+            elif mode == "compact-results":
+                assert b["window"][0] == 1200, b["window"]
+                assert b["results"]["height"] >= ANALYSIS_RESULTS_MIN_HEIGHT, b
+                assert b["results"]["widget_min_height"] == ANALYSIS_RESULTS_MIN_HEIGHT, b
+                assert b["logs"]["maximum_height"] == ANALYSIS_LOGS_MAX_HEIGHT, b
+                assert b["docks"]["preview"]["visible"] is False, b
+                assert b["docks"]["ai"]["visible"] is False, b
+            print(f"layout_restore_cross_process: {mode}: ok "
+                  f"results={b['results']['height']} logs={b['logs']['height']}")
+
+
+def layout_restore_page_roundtrip_case(app):
+    """Navigation away from Results and back must replay the page constraints."""
+    settings = QSettings()
+    settings.clear()
+    window = MainWindow()
+    try:
+        window.resize(800, 800)
+        window.show()
+        settle(app)
+        layout = window.workspace_layout
+        results = layout.docks["results"]
+        logs = layout.docks["logs"]
+        window.page_stack.setCurrentIndex(6)
+        settle(app)
+        first_height = results.height()
+        assert first_height >= ANALYSIS_RESULTS_MIN_HEIGHT, (first_height,)
+        assert results.widget().minimumHeight() == ANALYSIS_RESULTS_MIN_HEIGHT
+        assert logs.maximumHeight() == ANALYSIS_LOGS_MAX_HEIGHT
+        window.page_stack.setCurrentIndex(2)
+        settle(app)
+        assert logs.maximumHeight() == MAX_DOCK_HEIGHT
+        window.page_stack.setCurrentIndex(6)
+        settle(app)
+        assert results.height() >= ANALYSIS_RESULTS_MIN_HEIGHT
+        assert results.widget().minimumHeight() == ANALYSIS_RESULTS_MIN_HEIGHT
+        assert logs.maximumHeight() == ANALYSIS_LOGS_MAX_HEIGHT
+        assert abs(results.height() - first_height) <= 2, (first_height, results.height())
+    finally:
+        from g4usim_gui.app import _close_self_test_window
+        if window.isVisible() or not window.isHidden():
+            _close_self_test_window(window, app)
+        settings.clear()
+    print("layout_restore_page_roundtrip: ok")
+
+
 def main():
     child_env = dict(os.environ)
     child_env.pop('G4USIM_RECOVERY_DIR', None)
@@ -226,6 +435,8 @@ def main():
     settings.clear()
     apply_theme(app, "light")
     preview_activation_cases(app)
+    layout_restore_page_roundtrip_case(app)
+    layout_restore_cross_process_case(app)
     settings = QSettings()
     settings.clear()
     settings.sync()
@@ -447,6 +658,11 @@ def main():
 
 
 if __name__ == "__main__":
+    if '--layout-restore-child' in sys.argv:
+        index = sys.argv.index('--layout-restore-child')
+        phase, mode, settings_dir, out_path, width, height = sys.argv[index + 1: index + 7]
+        raise SystemExit(layout_restore_child(phase, mode, Path(settings_dir),
+                                              Path(out_path), int(width), int(height)))
     if '--default-start-lifecycle' in sys.argv:
         default_start_lifecycle()
     else:

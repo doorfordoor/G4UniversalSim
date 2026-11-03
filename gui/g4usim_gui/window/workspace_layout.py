@@ -22,6 +22,9 @@ from g4usim_gui.core.i18n import ui_text
 STATE_KEY = "workspace/v1/layout"
 STATE_VERSION = 1
 MAX_STATE_BYTES = 1024 * 1024
+MAX_DOCK_HEIGHT = 16777215
+ANALYSIS_LOGS_MAX_HEIGHT = 300
+ANALYSIS_RESULTS_MIN_HEIGHT = 420
 PRESETS = {
     "configuration": "Configuration editing",
     "running": "Run observation",
@@ -113,10 +116,9 @@ class WorkspacePageStack(QStackedWidget):
 
     def reveal_current(self):
         selected = self._dock_pages.get(self.currentIndex())
-        if self.currentIndex() != getattr(self, "_analysis_index", -1):
-            logs = getattr(layout, "docks", {}).get("logs") if (layout := getattr(self, "_workspace_layout", None)) else None
-            if logs is not None:
-                logs.setMaximumHeight(16777215)
+        layout = getattr(self, "_workspace_layout", None)
+        if layout is not None:
+            layout.apply_page_constraints()
         self._central_extent(selected is not None)
         if selected is not None and selected[1] is not None:
             selected[1].show()
@@ -127,7 +129,6 @@ class WorkspacePageStack(QStackedWidget):
         for dock in self._first_navigation_docks.pop(self.currentIndex(), ()):
             dock.show()
             dock.raise_()
-        layout = getattr(self, "_workspace_layout", None)
         if layout is not None and self.currentIndex() == getattr(layout, "_analysis_index", -1):
             layout.focus_analysis_view()
         if self.currentIndex() == self._preview_activation_index:
@@ -139,6 +140,9 @@ class WorkspacePageStack(QStackedWidget):
         super().setCurrentIndex(index)
         self.updateGeometry()
         self._central_extent(index in self._dock_pages)
+        layout = getattr(self, "_workspace_layout", None)
+        if layout is not None:
+            layout.apply_page_constraints()
 
     def _central_extent(self, dock_page):
         # Keep the stack itself visible so normal hidden stack-page diagnostics
@@ -259,6 +263,26 @@ class WorkspaceLayout(QObject):
             dock.raise_()
         self.window.config_builder_page.preview3d_user_activated()
 
+    def apply_page_constraints(self):
+        """Reapply the active page's dock size constraints without touching visibility.
+
+        The Results page needs the log dock capped and the results dock tall
+        enough to show its tables.  These two numbers are session state: they are
+        not part of ``save()``, and Qt's restored dock bytes do not carry them.
+        Every path that changes the active page (normal navigation and the
+        startup restore) therefore has to replay them, otherwise a restored
+        Results page collapses to the zero-height minimum of its dock widget.
+        """
+        logs = self.docks.get("logs")
+        results = self.docks.get("results")
+        if self.window.page_stack.currentIndex() == self._analysis_index:
+            if logs is not None:
+                logs.setMaximumHeight(ANALYSIS_LOGS_MAX_HEIGHT)
+            if results is not None and results.widget() is not None:
+                results.widget().setMinimumHeight(ANALYSIS_RESULTS_MIN_HEIGHT)
+        elif logs is not None:
+            logs.setMaximumHeight(MAX_DOCK_HEIGHT)
+
     def focus_analysis_view(self):
         """Show the results page across the full window with the log dock."""
         for name in ("configuration", "preview", "ai"):
@@ -268,10 +292,7 @@ class WorkspaceLayout(QObject):
         logs = self.docks.get("logs")
         if logs is not None:
             logs.show()
-            logs.setMaximumHeight(300)
-        results = self.docks.get("results")
-        if results is not None and results.widget() is not None:
-            results.widget().setMinimumHeight(420)
+        self.apply_page_constraints()
 
     def _host(self, name: str, parent: QWidget) -> QMainWindow:
         host = QMainWindow(parent)

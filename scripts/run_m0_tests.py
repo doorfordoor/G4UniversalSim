@@ -275,6 +275,11 @@ CASES = (
     Case("gui_backend_agreement", "scripts/test_gui_backend_agreement.py", "integration", ("exe", "qt")),
     Case("gui_backend_geometry_auto", "gui/smoke_tests/smoke_backend_geometry_auto.py", "integration", ("exe", "qt")),
     Case("gui_3d_view", "gui/smoke_tests/smoke_3d_view.py", "gui", ("qt",)),
+    # Real VTK objects (no window): the axis captions must follow the skin and
+    # stay readable after a scene rebuild. Native widget lifetime is a separate,
+    # explicit --native run and is intentionally not part of the offscreen runner.
+    Case("gui_vtk_axes_theme", "gui/smoke_tests/smoke_vtk_axes_theme.py", "gui",
+         ("qt", "vtk3d")),
     Case("gui_config_editors", "gui/smoke_tests/smoke_config_editors.py", "gui", ("qt",)),
     Case("gui_trajectory_view", "gui/smoke_tests/smoke_trajectory_view.py", "integration", ("exe", "qt")),
     Case("gui_sketch_accuracy", "scripts/test_sketch_accuracy.py", "integration", ("exe", "qt")),
@@ -416,7 +421,7 @@ def main() -> int:
     parser.add_argument("--require-tracked-sources", action="store_true",
                         help="Fail when runtime or test source files are absent from Git's index.")
     parser.add_argument("--fail-on-skip", action="store_true",
-                        help="Treat a missing prerequisite (Qt/uproot/executable) as a failure "
+                        help="Treat a missing prerequisite (Qt/uproot/PyVista/executable) as a failure "
                              "instead of the distinct skip exit status. CI must pass this flag so a "
                              "green build cannot hide an unexercised layer.")
     parser.add_argument("--no-assert-probe", action="store_true",
@@ -436,6 +441,14 @@ def main() -> int:
         "cxx": "" if cxx_available else "C++17 compiler unavailable (set CXX or initialize the compiler PATH)",
         "qt": "" if importlib.util.find_spec("PySide6") else "PySide6 is unavailable",
         "uproot": "" if importlib.util.find_spec("uproot") else "uproot is unavailable (pip install uproot)",
+        # The 3D preview dependencies are optional for the GUI, but a test that
+        # proves real VTK behaviour must declare them: the runner records a skip
+        # (distinct exit status; --fail-on-skip turns it into a failure) instead
+        # of letting the case print SKIP and report success.
+        "vtk3d": "" if (importlib.util.find_spec("pyvista") and
+                        (importlib.util.find_spec("vtkmodules") or
+                         importlib.util.find_spec("vtk")))
+                 else "PyVista/VTK is unavailable (pip install -r gui/requirements-3d.txt)",
         "exe": executable_freshness(args.executable.resolve()),
         "merge": merge_executable_freshness(args.merge_executable.resolve()),
     }
@@ -551,7 +564,11 @@ def main() -> int:
         "merge_executable": str(args.merge_executable.resolve()),
         "merge_source_fingerprint": hashlib.sha256((ROOT / "tools/mergeHistograms.cc").read_bytes()).hexdigest(),
         "merge_provenance": requirements["merge"] or "source_sha256_matches_executable",
-        "optional_pyvista_coverage": "not_proven_by_this_runner",
+        "optional_pyvista_coverage": (
+            "object_mode_case_registered: gui_vtk_axes_theme; registration alone does not "
+            "prove execution: the case row records the actual assertions or the dependency "
+            "failure that stopped it; native widget lifetime stays outside this runner"
+        ),
         "untracked_source_files": missing_tracked_sources,
         "tracked_source_gate": "fail" if missing_tracked_sources else "pass",
         "assert_probe": "disabled" if args.no_assert_probe else ASSERT_PROBE_ID,

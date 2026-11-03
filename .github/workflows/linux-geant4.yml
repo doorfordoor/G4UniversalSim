@@ -63,8 +63,11 @@ jobs:
           "$G4_PREFIX/bin/geant4-config" --version
           # The integration suite imports the desktop application, so the full GUI
           # requirements are needed; uproot is what reads ROOT from the backend.
+          # The optional 3D extra is installed as well: gui_vtk_axes_theme runs its
+          # real VTK objects with --fail-on-skip, so a missing dependency must fail
+          # rather than leave the case as an unverified skip.
           ./bin/micromamba run -p "$G4_PREFIX" -- python -m pip install --quiet\
-            -r gui/requirements.txt
+            -r gui/requirements.txt -r gui/requirements-3d.txt
 
       # A missing dataset must fail the job instead of surfacing as a Geant4 abort
       # in the middle of an unrelated test.
