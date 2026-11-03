@@ -1610,7 +1610,7 @@ QLabel#paletteCategory {
 }
 QLineEdit#paletteSearch {
     background: $input;
-    border: 1px solid $border;
+    border: 1px solid $border_strong;
     border-radius: $radius_m;
     min-height: 36px;
     padding: 0 12px;
