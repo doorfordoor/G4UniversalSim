@@ -61,6 +61,8 @@ def main() -> int:
         switched = []
         failures = []
 
+        ROTATIONS = 5
+
         def rotate() -> None:
             index = len(switched) % len(APPEARANCES)
             mode, light, dark = APPEARANCES[index]
@@ -72,6 +74,11 @@ def main() -> int:
                 failures.append((index, before, len(messages), after.id, expected))
             switched.append((mode, light, dark))
             assert runner.is_running() or exits, "the run stopped while switching appearance"
+            if len(switched) >= ROTATIONS:
+                # A fixed number of switches keeps the executed-assert count
+                # comparable between evidence runs (a timer-driven count used
+                # to differ by one between otherwise identical runs).
+                timer.stop()
 
         timer = QTimer()
         timer.setInterval(100)
@@ -90,7 +97,7 @@ def main() -> int:
         assert exits, "the run did not finish"
         assert runner.last_result is not None
         assert runner.last_result.state == "success", runner.last_result
-        assert len(switched) >= 3, switched
+        assert len(switched) == ROTATIONS, switched
         assert len(messages) >= 2, messages
         phases = [message["phase"] for message in messages]
         assert "end" in phases, phases

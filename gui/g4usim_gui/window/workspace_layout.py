@@ -250,6 +250,15 @@ class WorkspaceLayout(QObject):
         if checked:
             self._auto_hidden.discard(name)
 
+    def _show_preview_from_button(self) -> None:
+        """The configuration page button is an explicit choice for the 3D dock."""
+        self._record_optional_override("preview", True)
+        dock = self.docks.get("preview")
+        if dock is not None:
+            dock.show()
+            dock.raise_()
+        self.window.config_builder_page.preview3d_user_activated()
+
     def focus_analysis_view(self):
         """Show the results page across the full window with the log dock."""
         for name in ("configuration", "preview", "ai"):
@@ -339,8 +348,7 @@ class WorkspaceLayout(QObject):
         preview_dock.visibilityChanged.connect(
             lambda visible: None if visible else self._forget_first_dock(preview_dock))
         preview_dock.visibilityChanged.connect(config.preview3d_visibility_changed)
-        show_preview.clicked.connect(lambda: (preview_dock.show(), preview_dock.raise_(),
-                                               config.preview3d_user_activated()))
+        show_preview.clicked.connect(self._show_preview_from_button)
         preview_dock.toggleViewAction().triggered.connect(
             lambda checked: config.preview3d_user_activated() if checked else None)
 
@@ -531,6 +539,13 @@ class WorkspaceLayout(QObject):
                 if not host.restoreState(states[name], STATE_VERSION):
                     raise ValueError("invalid Qt dock state")
             self.preset = payload["preset"]
+            # A restored layout is an explicit statement about both optional
+            # docks: whatever it shows or hides is the user's choice for the
+            # whole compact band, not something the next resize may undo.
+            for _name in ("ai", "preview"):
+                _dock = self.docks.get(_name)
+                if _dock is not None:
+                    self._optional_overrides[_name] = not _dock.isHidden()
             self.window.page_stack._first_navigation_docks.clear()
             if payload.get("initial_configuration_preview", False):
                 self.window.page_stack._first_navigation_docks[

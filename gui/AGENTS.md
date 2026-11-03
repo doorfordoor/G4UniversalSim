@@ -308,5 +308,5 @@ F4依赖维护：安装统一走gui/requirements.txt，当前验证线PySide6>=6
 - `theme.current_skin()` 读 `QApplication` 属性；把窗口传进去会静默回退默认皮肤，测试里曾因此恒真通过。
 - `QLineEdit#paletteSearch` 的边框必须用 `border_strong`（3:1），不能用 `border`。
 - 紧凑布局（<1400 逻辑像素）隐藏 AI 面板与 3D 预览，这两个是可选 dock；不要隐藏配置编辑器或 Results 页的停靠页。
-- 紧凑区间内的 resize 不得覆盖用户显式打开的可选 dock：用户通过 dock 的 `toggleViewAction` 做出的选择记为覆盖（`_optional_overrides`），在紧凑区间内保留并在区间内 resize 时跳过收起；未被用户显式打开的 AI/3D（例如页面导航显露的预览）仍按紧凑规则收起。离开区间只恢复被自动收起（`_auto_hidden`）且用户未覆盖的面板。`apply_preset()`/`restore()` 清空覆盖。永久回归 `gui/smoke_tests/smoke_compact_panels.py`（独立复验的 1200→1205 反例）。
+- 紧凑区间内的 resize 不得覆盖用户显式打开的可选 dock。三个入口都算显式选择并写入 `_optional_overrides`：dock 自己的 `toggleViewAction`、配置页的 “Show 3D view” 按钮（`_show_preview_from_button`）、恢复已保存布局（`restore()` 按恢复后的可见性记录）。被页面导航自动显露的 AI/3D 没有覆盖，仍按紧凑规则收起；离开区间只恢复被自动收起（`_auto_hidden`）且用户未覆盖的面板。`apply_preset()`/`reset()` 清空覆盖，`restore()` 不询问用户、按保存内容直接记录。永久回归 `gui/smoke_tests/smoke_compact_panels.py`（独立复验的 1200→1205、配置页按钮、保存/恢复两个方向）。
 - 视觉证据在 `docs/verification/j3-visual-checks-20261102/screens-v2/`，语义色表在同目录 `semantic-colours.md`。

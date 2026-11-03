@@ -925,3 +925,9 @@ dock 页与 navigation dock，从不隐藏之前显示过的 dock 页。
 ### 2026-11-03 紧凑区间 dock 保留修复（作者侧）
 
 独立复验在 `6b03317a` 判定退回：`gui_test_window` 的 offscreen resize 从 1200 到 1205（同一紧凑区间）会隐藏用户刚打开的 AI dock。根因是每次 `resizeEvent` 都调用 `WorkspaceLayout.adapt_to_width()`，compact 分支无条件隐藏 `ai`/`preview`。修复为覆盖状态机：紧凑区间内仍收起未显式打开的可选 dock（页面导航显露的 3D 预览也收起），但用户 `toggleViewAction` 的选择写入 `_optional_overrides` 并在区间内 resize 时跳过收起；被自动收起的记录 `_auto_hidden`，离开区间恢复；`apply_preset()`/`restore()` 清空覆盖。新增 `gui/smoke_tests/smoke_compact_panels.py`（25 断言，永久回归，覆盖 1200→1205、1399/1400 阈值、用户关闭与自动恢复）并注册为 `gui_compact_panels`。J3 仍保持未关闭。
+
+### 2026-11-03 J3 第二次复验：配置页按钮与恢复布局（作者侧）
+
+第二次独立复验（`docs/collab/reviews/20261103-j3-independent-ce9b6283.md`，基线 `ce9b6283`）确认 1200→1205 的菜单入口已修复，但同一份报告里 `gui_theme_state_backend` 的断言入口计数在 33/32 之间变化，且又找到两条会丢失用户选择的入口：配置页 “Show 3D view” 按钮（`_show_preview_from_button`）直接 `setVisible(True)`，没有记覆盖；恢复已保存布局（`restore()`）按预设重建可见性后，仍会在窗口宽度不变时被后续 resize 覆盖。
+
+修复：配置页按钮走 `_record_optional_override("preview", True)`；`restore()` 在加载布局后按恢复出的可见性记录覆盖（`_record_optional_override` 不触发逐条 signal），`reset()` 与 `apply_preset()` 继续清空覆盖。`smoke_compact_panels.py` 从 25 断言扩到 54 断言（配置页按钮 1130→1340 保持可见、保存/恢复两个方向、用户关闭后保持关闭）；`gui_theme_state_backend.py` 把运行中外观切换固定为 5 次（不再依赖定时器次数），入口稳定为 15。受影响直接跑：`gui_compact_panels` 54、`gui_f4_layout` 265、`gui_workspace_layout` 149、`gui_main_window` 51、`gui_theme_state` 13，全部通过。文档同步 `gui/AGENTS.md`（三条显式入口）、`CHANGELOG.md`、`STATUS.md`、`docs/verification/j3-visual-checks-20261102/README.md`。J3 仍保持未关闭。
