@@ -1,0 +1,14 @@
+L1 Qt/K1/F5 components passed; provider text controlled, no backend run
+G4USIM_ASSERTS=56
+QFontDatabase: Cannot find font directory D:/Geant4/G4UniversalSim/gui/.venv/Lib/site-packages/PySide6/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+D:\Geant4\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:104: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "scorer_statistics*.csv")):
+D:\Geant4\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:113: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "scoring_mesh*.csv")):
+D:\Geant4\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:119: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "g4usim*.root")):
+D:\Geant4\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:140: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  runs = sorted({_run_of(p.stem) for p in output_files(output, f"{stem}_t*.csv")})
+D:\Geant4\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:89: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  return sorted(p for p in output_files(output, f"{stem}_t*.csv") if pattern.fullmatch(p.name))
