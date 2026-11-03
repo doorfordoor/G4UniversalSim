@@ -16,6 +16,7 @@ Short, user-facing record of notable changes. Detailed support status lives in
 - 视觉证据矩阵 `screens-v2/`（8 皮肤×3 场景 + 命令面板 + 快捷键表 + 150% 采样）与 `semantic-colours.md`。
 
 - 主题切换状态保持用例 `gui_theme_state`：切皮肤后编辑器输入、输出文件选择、当前页面与工作区标签不变，外观偏好只写入本机 QSettings。
+- 修复紧凑区间内调整窗口尺寸会覆盖用户刚打开的可选 dock（独立复验 1200→1205 反例）：用户显式打开的 AI/3D 在整个紧凑区间内保留（`toggleViewAction` 记为覆盖），未被显式打开的面板仍按紧凑规则收起；离开区间只恢复被自动收起且用户未覆盖的面板。新增永久回归 `gui_compact_panels`。
 
 
 ### Added

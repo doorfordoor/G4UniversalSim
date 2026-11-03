@@ -921,3 +921,7 @@ dock 页与 navigation dock，从不隐藏之前显示过的 dock 页。
 ### 2026-11-03 J3 独立审查响应（未关闭）
 
 独立复验（`docs/collab/reviews/20261103-j3-closure-review.md`，基线 `03d1c636`）不同意关闭 J3，列出 H1（候选未冻结）、H2（视觉交付缺失）、M1（菜单未标当前/下次）、M2（README 过度声明）、M3（停靠页契约回归）、M4（150% Results 横向滚动）与若干 L 级缺口。本轮响应：提交 `5fb07ba1` 修正状态用例（`theme.current_skin(window)` 恒真、真实运行中切换用例）、`313618ec` 紧凑布局只隐藏 AI 与 3D 预览、`262ce380` 命令面板边框对比度、`a1a64ead` 外观菜单“当前使用/下次使用”；新增 `screens-v2/`（8 皮肤×start/configuration/results + 命令面板 + 快捷键表 + 150% 采样）与 `semantic-colours.md`；三 profile 在 `a1a64ead` 上重跑并冻结到 `docs/verification/j3-close-20261103/`。仍缺：非法草稿/诊断/结果/Agent 状态图、B/K/C 前后问题清单与独立四件事复验、Windows 125/150 真实操作记录、Linux 真实桌面、自动化重启用例——因此 J3 保持未关闭，不写“已完成”。
+
+### 2026-11-03 紧凑区间 dock 保留修复（作者侧）
+
+独立复验在 `6b03317a` 判定退回：`gui_test_window` 的 offscreen resize 从 1200 到 1205（同一紧凑区间）会隐藏用户刚打开的 AI dock。根因是每次 `resizeEvent` 都调用 `WorkspaceLayout.adapt_to_width()`，compact 分支无条件隐藏 `ai`/`preview`。修复为覆盖状态机：紧凑区间内仍收起未显式打开的可选 dock（页面导航显露的 3D 预览也收起），但用户 `toggleViewAction` 的选择写入 `_optional_overrides` 并在区间内 resize 时跳过收起；被自动收起的记录 `_auto_hidden`，离开区间恢复；`apply_preset()`/`restore()` 清空覆盖。新增 `gui/smoke_tests/smoke_compact_panels.py`（25 断言，永久回归，覆盖 1200→1205、1399/1400 阈值、用户关闭与自动恢复）并注册为 `gui_compact_panels`。J3 仍保持未关闭。

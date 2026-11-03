@@ -301,3 +301,12 @@ F4依赖维护：安装统一走gui/requirements.txt，当前验证线PySide6>=6
   证据 `docs/verification/j3-help-20261102/README.md`。
 
 主题切换不得改动编辑器草稿、输出文件选择、当前页面与工作区标签索引；外观偏好只能写入本机 QSettings（`appearance/theme`、`appearance/light_skin`、`appearance/dark_skin`），不得进入项目 JSON 或实验包。回归入口 `gui_theme_state` 与 `gui_theme_response`。运行中任务、K1 输入资格与 Undo/Redo 栈在切皮肤时的行为仍待补测。
+
+## 2026-11-03 J3 审查响应
+
+- 外观菜单由 `_sync_appearance_actions()` 统一刷新：当前皮肤带“当前使用”，另一明暗组记忆项带“下次使用”；不要只改勾选状态。
+- `theme.current_skin()` 读 `QApplication` 属性；把窗口传进去会静默回退默认皮肤，测试里曾因此恒真通过。
+- `QLineEdit#paletteSearch` 的边框必须用 `border_strong`（3:1），不能用 `border`。
+- 紧凑布局（<1400 逻辑像素）隐藏 AI 面板与 3D 预览，这两个是可选 dock；不要隐藏配置编辑器或 Results 页的停靠页。
+- 紧凑区间内的 resize 不得覆盖用户显式打开的可选 dock：用户通过 dock 的 `toggleViewAction` 做出的选择记为覆盖（`_optional_overrides`），在紧凑区间内保留并在区间内 resize 时跳过收起；未被用户显式打开的 AI/3D（例如页面导航显露的预览）仍按紧凑规则收起。离开区间只恢复被自动收起（`_auto_hidden`）且用户未覆盖的面板。`apply_preset()`/`restore()` 清空覆盖。永久回归 `gui/smoke_tests/smoke_compact_panels.py`（独立复验的 1200→1205 反例）。
+- 视觉证据在 `docs/verification/j3-visual-checks-20261102/screens-v2/`，语义色表在同目录 `semantic-colours.md`。

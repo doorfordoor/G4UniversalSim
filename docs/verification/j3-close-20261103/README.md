@@ -31,3 +31,7 @@ gui/.venv/Scripts/python.exe -B scripts/check_report_evidence.py --report-root d
 - 这三份报告只覆盖本机 Windows 13.2 与 PySide6 6.11.1；不证明 Windows 125%/150% 真实操作记录、不证明 Linux 真实桌面。
 - 运行中切换外观的用例依赖真实 Geant4 可执行文件（40000 事件、单线程，约 3.3 秒）。
 - 断言数是已执行断言的下界，不是覆盖率。
+
+## 后续（不改变本目录冻结身份）
+
+本目录冻结的是候选 `a1a64ead` 的 static/gui/integration 三份报告。2026-11-03 的独立复验在容器 `6b03317a` 上复现了紧凑区间 resize 覆盖用户面板选择的问题，修复与永久回归（`gui_compact_panels`，25 断言）见 `docs/verification/j3-visual-checks-20261102/README.md` 第 8 节；再次送审时应以新的候选提交与其三 profile 报告为准，本目录不重写。

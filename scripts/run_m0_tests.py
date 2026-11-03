@@ -76,6 +76,7 @@ CASES = (
     Case("gui_theme_response", "gui/smoke_tests/smoke_theme_response_shell.py", "gui", ("qt",)),
     Case("theme_registry", "scripts/test_theme_registry.py", "static"),
     Case("gui_workspace_layout", "gui/smoke_tests/smoke_workspace_layout.py", "gui", ("qt",)),
+    Case("gui_compact_panels", "gui/smoke_tests/smoke_compact_panels.py", "gui", ("qt",)),
     Case("backend_launch", "scripts/test_backend_launch.py", "static"),
     Case("gui_backend_launch", "gui/smoke_tests/smoke_backend_launch.py", "gui", ("qt",)),
     Case("backend_working_directory", "scripts/test_backend_working_directory.py", "integration", ("qt", "exe")),

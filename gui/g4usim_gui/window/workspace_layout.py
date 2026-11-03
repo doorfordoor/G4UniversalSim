@@ -179,6 +179,16 @@ class WorkspaceLayout(QObject):
         # results with the logs dock, not the 3D preview split in half.
         self._analysis_index = window.page_stack.indexOf(window.output_page)
         window.page_stack._workspace_layout = self
+        # A resize inside the compact band must not override a panel the user
+        # just opened: only the band transition may touch these docks.
+        self._compact = None
+        self._auto_hidden: set[str] = set()
+        self._optional_overrides: dict[str, bool] = {}
+        for _name in ("ai", "preview"):
+            _dock = self.docks.get(_name)
+            if _dock is not None:
+                _dock.toggleViewAction().triggered.connect(
+                    lambda checked=False, name=_name: self._record_optional_override(name, checked))
         self.apply_preset("configuration")
         if window.page_stack.currentIndex() == 0:
             self.docks["configuration"].hide()
@@ -187,31 +197,58 @@ class WorkspaceLayout(QObject):
                 self.docks["preview"],)
 
     def adapt_to_width(self, width: int) -> None:
-        """Keep both editors readable when the window is narrow (high DPI)."""
+        """Keep both editors readable when the window is narrow (high DPI).
+
+        In the compact band the optional AI and 3D docks are closed unless
+        the user opened one on purpose: a user choice (toggle action) is
+        remembered for the whole band and survives every width step, while
+        docks shown by a page transition are still collapsed.  Leaving the
+        band re-shows the docks this method hid, unless the user changed
+        their mind in the meantime.
+        """
         compact = int(width) < 1400
+        entering = compact and self._compact is not True
+        leaving = not compact and self._compact is True
+        self._compact = compact
         config = self.window.config_builder_page
         config.setup_panel.setMinimumWidth(240 if compact else 300)
         config.layout().itemAt(0).widget().setSizes([250, 480] if compact else [330, 650])
         preview = getattr(config, "preview3d_widget", None)
         if preview is not None and hasattr(preview, "set_compact"):
             preview.set_compact(compact)
-        self._compact = compact
         host = self.hosts.get("workspace")
         if host is None:
             return
         if compact:
-            # on small displays the assistant steps aside; the editor and the 3D
-            # preview keep their contract and stay reachable from View -> Panels
+            # on small displays the assistant steps aside; the editor and the
+            # 3D preview stay reachable from View -> Panels.  A dock the user
+            # opened on purpose keeps its own choice for the whole band.
             for name in ("ai", "preview"):
                 dock = self.docks.get(name)
-                if dock is not None and not dock.isHidden():
+                if dock is None or self._optional_overrides.get(name) is True:
+                    continue
+                if not dock.isHidden():
                     dock.hide()
+                    self._auto_hidden.add(name)
+        elif leaving:
+            for name in tuple(self._auto_hidden):
+                dock = self.docks.get(name)
+                if (dock is not None and self._optional_overrides.get(name) is not True
+                        and dock.isHidden()):
+                    dock.show()
+                self._auto_hidden.discard(name)
         configuration = self.docks.get("configuration")
         if configuration is not None and not configuration.isHidden():
             host.resizeDocks([configuration], [520 if compact else 700], Qt.Orientation.Horizontal)
         preview_dock = self.docks.get("preview")
         if preview_dock is not None and not preview_dock.isHidden():
             host.resizeDocks([preview_dock], [300 if compact else 440], Qt.Orientation.Horizontal)
+
+    def _record_optional_override(self, name: str, checked: bool) -> None:
+        """Remember a panel choice the user made through its toggle action."""
+        self._optional_overrides[name] = bool(checked)
+        if checked:
+            self._auto_hidden.discard(name)
 
     def focus_analysis_view(self):
         """Show the results page across the full window with the log dock."""
@@ -396,6 +433,10 @@ class WorkspaceLayout(QObject):
     def apply_preset(self, preset: str):
         if preset not in PRESETS:
             raise ValueError("unknown workspace preset")
+        # A preset sets the panel visibility on purpose, so earlier manual
+        # overrides no longer describe what the user sees.
+        self._optional_overrides.clear()
+        self._auto_hidden.clear()
         self.preset = preset
         host = self.hosts["workspace"]
         areas = {
@@ -457,6 +498,8 @@ class WorkspaceLayout(QObject):
         self.window.move(target.topLeft())
 
     def restore(self):
+        self._optional_overrides.clear()
+        self._auto_hidden.clear()
         raw = self.settings.value(STATE_KEY)
         if raw is None:
             self.last_restore = "default"
