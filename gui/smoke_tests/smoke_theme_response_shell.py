@@ -13,11 +13,13 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT / 'gui'), str(ROOT / 'gui/smoke_tests')]
 os.environ.setdefault('QT_QPA_PLATFORM', 'offscreen')
 from PySide6.QtCore import QPoint, QSettings, QThreadPool
-from PySide6.QtGui import QColor, QFontDatabase, QFontMetrics
+from PySide6.QtGui import QColor, QFontDatabase, QFontMetrics, QPalette
 from PySide6.QtTest import QSignalSpy
-from PySide6.QtWidgets import QApplication, QDialog, QWidget
+from PySide6.QtWidgets import QApplication, QDialog, QLabel, QWidget
 from g4usim_gui.app import _close_self_test_window
-from g4usim_gui.core.theme import apply_theme, current_colors
+from g4usim_gui.core.theme import (SKIN_IDS, apply_appearance, apply_theme,
+                                  contrast_ratio, current_colors, skin,
+                                  status_combinations)
 from g4usim_gui.history import run_history_store
 from g4usim_gui.main_window import MainWindow
 from smoke_plots import fixture
@@ -147,6 +149,68 @@ def main():
                                'dialog': dialog_color.name(), 'font_families': font_families})
             popup.close()
             canvas.hide()
+            # Status chips are the only place a semantic colour becomes small text on
+            # a tinted background. The independent J3 review measured the final widget
+            # pixels and found B/K/botanical success text below 4.5:1, so this pass
+            # checks every skin's polished text colour against the rendered background.
+            chip_rows = []
+            for skin_id in SKIN_IDS:
+                item = skin(skin_id)
+                apply_appearance(app, item.mode,
+                                 skin_id if item.mode == 'light' else 'B',
+                                 skin_id if item.mode == 'dark' else 'C')
+                app.processEvents()
+                combinations = status_combinations(current_colors())
+                # The shell only paints running/success/failed (see window/run.py);
+                # the neutral chip is the no-statusRole default.
+                product = {role: combinations[role]
+                           for role in ('running', 'success', 'failed')}
+                for role, (expected_fg, expected_bg) in product.items():
+                    chip = QLabel('Completed / 本轮已完成')
+                    chip.setProperty('uiRole', 'statusChip')
+                    chip.setProperty('statusRole', role)
+                    chip.resize(300, 40)
+                    chip.show()
+                    app.processEvents()
+                    frame = chip.grab().toImage()
+                    background = frame.pixelColor(5, 20).name()
+                    foreground = chip.palette().color(QPalette.WindowText).name()
+                    assert background == expected_bg.lower(), (
+                        skin_id, role, background, expected_bg)
+                    assert foreground == expected_fg.lower(), (
+                        skin_id, role, foreground, expected_fg)
+                    ratio = contrast_ratio(foreground, background)
+                    assert ratio >= 4.5, (skin_id, role, ratio)
+                    chip_rows.append({'skin': skin_id, 'role': role,
+                                      'foreground': foreground,
+                                      'background': background,
+                                      'contrast': round(ratio, 4)})
+                    chip.close()
+                    chip.deleteLater()
+                    app.processEvents()
+                neutral = QLabel('Idle')
+                neutral.setProperty('uiRole', 'statusChip')
+                neutral.resize(300, 40)
+                neutral.show()
+                app.processEvents()
+                frame = neutral.grab().toImage()
+                background = frame.pixelColor(5, 20).name()
+                foreground = neutral.palette().color(QPalette.WindowText).name()
+                colors = current_colors()
+                assert background == colors.canvas_alt.lower(), (skin_id, background)
+                assert foreground == colors.text_muted.lower(), (skin_id, foreground)
+                assert contrast_ratio(foreground, background) >= 4.5, (skin_id, 'neutral')
+                chip_rows.append({'skin': skin_id, 'role': 'neutral',
+                                  'foreground': foreground,
+                                  'background': background,
+                                  'contrast': round(contrast_ratio(foreground, background), 4)})
+                neutral.close()
+                neutral.deleteLater()
+                app.processEvents()
+            (evidence / 'status-chips.json').write_text(
+                json.dumps(chip_rows, indent=2), encoding='utf-8')
+            window._set_theme('light', palette='B')
+            app.processEvents()
             menu = window.theme_button.menu()
             menu.popup(window.theme_button.mapToGlobal(QPoint(0, window.theme_button.height())))
             app.processEvents()

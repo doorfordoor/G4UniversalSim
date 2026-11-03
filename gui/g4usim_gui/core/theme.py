@@ -340,6 +340,40 @@ def on_color(value: str) -> str:
     return "#ffffff" if relative_luminance(value) < 0.179 else "#0b1214"
 
 
+def veil_text(foreground: str, background: str, *, minimum: float = 4.6) -> str:
+    """A semantic colour that reaches ``minimum`` contrast on its own tinted background.
+
+    Status chips paint e.g. success text on a success/surface veil. On light skins the
+    raw success colour is only ~4.3:1 there, so the text is blended toward the readable
+    anchor (near-black or near-white) until it passes. The hue family stays the same.
+    """
+    if contrast_ratio(foreground, background) >= minimum:
+        return foreground
+    target = on_color(background)
+    best, best_ratio = foreground, contrast_ratio(foreground, background)
+    for step in range(1, 41):
+        candidate = mix(foreground, target, 1.0 - step / 40)
+        ratio = contrast_ratio(candidate, background)
+        if ratio > best_ratio:
+            best, best_ratio = candidate, ratio
+        if ratio >= minimum:
+            return candidate
+    return best
+
+
+def status_combinations(colors: ThemeColors) -> dict[str, tuple[str, str]]:
+    """Text/background pairs the status chips actually paint, after veil mixing."""
+    success_veil = mix(colors.success, colors.surface, 0.13)
+    danger_veil = mix(colors.danger, colors.surface, 0.12)
+    warning_veil = mix(colors.warning, colors.surface, 0.14)
+    return {
+        "success": (veil_text(colors.success, success_veil), success_veil),
+        "failed": (veil_text(colors.danger, danger_veil), danger_veil),
+        "warning": (veil_text(colors.warning, warning_veil), warning_veil),
+        "running": (veil_text(colors.accent, colors.accent_soft), colors.accent_soft),
+    }
+
+
 def on_accent(c: ThemeColors) -> str:
     """Text colour on an accent-filled control: white on a dark accent, near-black on a light one."""
     return on_color(c.accent)
@@ -658,15 +692,20 @@ _TOKEN = re.compile(r"\$([a-z_]+)")
 def _styled(template: str, c: ThemeColors, **values: str) -> str:
     """Substitute ``$role`` tokens; missing tokens raise instead of leaking into QSS."""
     table: dict[str, str] = {name: value for name, value in vars(c).items()}
+    status = status_combinations(c)
     table.update({
         "on_accent": on_accent(c),
         "on_color": on_color(c.accent),
         "on_danger": on_color(c.danger),
         "on_success": on_color(c.success),
         "accent_veil": mix(c.accent, c.canvas, 0.10),
-        "danger_veil": mix(c.danger, c.surface, 0.12),
-        "success_veil": mix(c.success, c.surface, 0.13),
-        "warning_veil": mix(c.warning, c.surface, 0.14),
+        "danger_veil": status["failed"][1],
+        "danger_text": status["failed"][0],
+        "running_text": status["running"][0],
+        "success_veil": status["success"][1],
+        "success_text": status["success"][0],
+        "warning_veil": status["warning"][1],
+        "warning_text": status["warning"][0],
         "input_hover": mix(c.border_strong, c.accent, 0.55),
         "down": _svg_url("chevron_down", c.text_muted),
         "up": _svg_url("chevron_up", c.text_muted),
@@ -690,6 +729,7 @@ def build_stylesheet(c: ThemeColors) -> str:
 
 
 def _base_stylesheet(c: ThemeColors) -> str:
+    status = status_combinations(c)
     down, up = _svg_url("chevron_down", c.text_muted), _svg_url("chevron_up", c.text_muted)
     return f"""
 QWidget {{
@@ -784,20 +824,20 @@ QLabel[uiRole="statusChip"] {{
 }}
 QLabel[uiRole="statusChip"][statusRole="running"] {{
     background: {c.accent_soft};
-    color: {c.accent};
+    color: {status['running'][0]};
     border-color: {c.accent};
 }}
 QLabel[uiRole="statusChip"][statusRole="success"] {{
-    color: {c.success};
+    color: {status['success'][0]};
     border-color: {c.success};
 }}
 QLabel[uiRole="statusChip"][statusRole="failed"] {{
-    color: {c.danger};
+    color: {status['failed'][0]};
     border-color: {c.danger};
 }}
 QLabel[uiRole="contextChip"][statusRole="running"] {{
     background: {c.accent_soft};
-    color: {c.accent};
+    color: {status['running'][0]};
     border-color: {c.accent};
     font-weight: 600;
 }}
@@ -1216,17 +1256,17 @@ QLabel[uiRole="contextChip"], QLabel[uiRole="statusChip"] {
 QLabel[uiRole="statusChip"][statusRole="running"],
 QLabel[uiRole="contextChip"][statusRole="running"] {
     background: $accent_soft;
-    color: $accent;
+    color: $running_text;
     border-color: $accent;
 }
 QLabel[uiRole="statusChip"][statusRole="success"] {
     background: $success_veil;
-    color: $success;
+    color: $success_text;
     border-color: $success;
 }
 QLabel[uiRole="statusChip"][statusRole="failed"] {
     background: $danger_veil;
-    color: $danger;
+    color: $danger_text;
     border-color: $danger;
 }
 

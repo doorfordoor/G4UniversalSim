@@ -93,6 +93,11 @@ def test_contrast_floor() -> None:
             first, second = getter(candidate.colors)
             ratio = theme.contrast_ratio(first, second)
             assert ratio >= target, f"{candidate.id}: {label} {ratio:.2f} < {target}"
+        # The chips paint semantic text on a tinted veil, not on the bare surface.
+        # B/K/botanical used to be 4.35/4.35/4.31 here while passing the surface checks.
+        for role, (first, second) in theme.status_combinations(candidate.colors).items():
+            ratio = theme.contrast_ratio(first, second)
+            assert ratio >= 4.5, f"{candidate.id}: status {role} {ratio:.2f} < 4.5"
 
 
 def test_colour_maths() -> None:
@@ -113,6 +118,11 @@ def test_colour_maths() -> None:
         assert chosen >= max(white, black) - 0.01, sample
     assert theme.on_accent(dark) == "#0b1214"
     assert theme.on_accent(light) == "#ffffff"
+    # veil_text keeps an already readable colour and lightens/darkens only when needed.
+    assert theme.veil_text("#000000", "#ffffff") == "#000000"
+    fixed = theme.veil_text("#2b7b55", "#e3eee9")
+    assert fixed != "#2b7b55"
+    assert theme.contrast_ratio(fixed, "#e3eee9") >= 4.6
 
 
 def test_persistence_migration() -> None:
