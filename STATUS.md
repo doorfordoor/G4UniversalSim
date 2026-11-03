@@ -393,3 +393,7 @@ R03–R32现已完成修复与回归，旧[反例证据](docs/verification/r03-r
 4. `docs/功能支持矩阵.md` 你关心的模块行；
 5. `git log --oneline -15` 与 `git status`；
 6. 需要动后端时跑 `python -B scripts/run_m0_tests.py --profile backend --require-tracked-sources`（需要本机 Geant4 与已构建 exe）。
+
+## 2026-11-03 J3 整体验收：退回修复
+
+产品 d4400b26 仍未关闭。独立实窗与性能补验发现 B/K/苔原成功标签实际混色文字对比度不足（4.345/4.345/4.310 < 4.5）；完整状态矩阵及部分DPI/跨平台门禁仍未完成。本轮未改产品代码。[整体结论与修复提案](docs/verification/j3-whole-review-20261103/README.md)。

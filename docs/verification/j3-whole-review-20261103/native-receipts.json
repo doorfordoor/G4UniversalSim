@@ -1,0 +1,108 @@
+{
+  "head": "f4d622590cbcde4443b81a62c6a70b1553cc51b6",
+  "product_candidate": "d4400b26",
+  "windows_scale_note": "125% OS; 150% = OS125% x QT_SCALE_FACTOR1.2; actual Qt DPR checked",
+  "native_hosts": [
+    {
+      "name": "125",
+      "identity": {
+        "Qt": "6.11.1",
+        "DPR": 1.25,
+        "pid": 61624,
+        "qpa": "windows",
+        "window": 13900956
+      },
+      "exit": {
+        "exit": 0,
+        "visible": false
+      }
+    },
+    {
+      "name": "150",
+      "identity": {
+        "Qt": "6.11.1",
+        "DPR": 1.5,
+        "pid": 23960,
+        "qpa": "windows",
+        "window": 5835632
+      },
+      "exit": {
+        "exit": 0,
+        "visible": false
+      }
+    },
+    {
+      "name": "linux",
+      "identity": {
+        "Qt": "6.11.3",
+        "DPR": 1.0,
+        "pid": 647,
+        "qpa": "xcb",
+        "window": 4194311
+      },
+      "exit": {
+        "exit": 0,
+        "visible": false
+      }
+    }
+  ],
+  "linux_display": {
+    "commands": [
+      [
+        "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-dedicated-xvnc-assets-246/root/usr/bin/Xtigervnc",
+        ":94",
+        "-geometry",
+        "1440x1000",
+        "-depth",
+        "24",
+        "-localhost",
+        "-rfbport",
+        "5910",
+        "-SecurityTypes",
+        "None",
+        "-nolisten",
+        "tcp",
+        "-ac",
+        "-noreset",
+        "-xkbdir",
+        "/usr/share/X11/xkb"
+      ],
+      [
+        "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-dedicated-xvnc-assets-246/root/usr/bin/twm",
+        "-display",
+        ":94",
+        "-f",
+        "/mnt/d/Geant4/G4UniversalSim/out/verification/j3-whole-native-20261103/linux-display/twmrc"
+      ],
+      [
+        "/home/u123/venvs/g4-f4-qt-6.11.3-20261030/bin/python",
+        "-B",
+        "-m",
+        "websockify",
+        "--web",
+        "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/share/novnc",
+        "127.0.0.1:6090",
+        "127.0.0.1:5910"
+      ]
+    ],
+    "children": [
+      475,
+      516,
+      522
+    ],
+    "status": "closed",
+    "exit_codes": [
+      0,
+      1,
+      0
+    ],
+    "remaining_owned": []
+  },
+  "source_hashes": {
+    "gui/g4usim_gui/core/theme.py": "3c206c4c653150ab33d1cca9ed0af3a46d62b954f0498e8ec4a59f73be2fd308",
+    "gui/g4usim_gui/window/shell.py": "d67e6072383298fad261c49b4af58f397f615452bf463a149fd895bdcda90aba",
+    "scripts/test_theme_registry.py": "1555827205e898dc2708926da2a578d8c0de4b336c30a3149947e4fadc0f661d"
+  },
+  "screenshots": "Observed through live image outputs; local save of Linux frame denied by Chrome MCP path allowlist, no file claimed",
+  "images_published": false
+}
