@@ -20,7 +20,7 @@
 - 主题切换性能：中位 765.1 ms（父版 752.5 ms，约 1.02×），最差 891.1 ms（父版 860.2 ms），低于 1.20× 调查线。
 - Linux：WSLg X11/xcb 原生渲染（纸墨/午夜蓝/中文）通过代表性观察；3D 缺 pyvista 时明确回退；未做 Linux 真实桌面验收。
 - 主题切换状态保持：`gui_theme_state` 与四个既有主题用例共 5 例 188 断言通过，切皮肤不改编辑器输入/输出选择/页面与标签索引，偏好只写 QSettings。
-- 独立复验（`docs/collab/reviews/20261103-j3-independent-retest-6b03317a.md`，基线 6b03317a）判定退回：紧凑区间内把宽度 1200→1205 会隐藏用户刚用菜单打开的 AI 面板，3D 预览同分支。修复：用户显式打开的 AI/3D 在整个紧凑区间保留（`toggleViewAction` 记为覆盖），未被显式打开的面板仍按紧凑规则收起，离开区间恢复被自动收起项；新增 `gui_compact_panels`（25 断言）永久回归。J3 仍未关闭，等待再次复验。
+- 独立复验（`docs/collab/reviews/20261103-j3-independent-retest-6b03317a.md`，基线 6b03317a）判定退回：紧凑区间内把宽度 1200→1205 会隐藏用户刚用菜单打开的 AI 面板，3D 预览同分支。修复：用户显式打开的 AI/3D 在整个紧凑区间保留（`toggleViewAction` 记为覆盖），未被显式打开的面板仍按紧凑规则收起，离开区间恢复被自动收起项；新增 `gui_compact_panels`（25 断言）永久回归。三 profile 修复后证据 `docs/verification/j3-compact-panels-20261103/`（static 49/49、gui 76/76、integration 33/33；断言 5615/10322/6843；HEAD `ce9b6283`）。J3 仍未关闭，等待再次复验。
 - 相关 10 个 GUI 用例通过（328 + 117 断言），证据在 `docs/verification/j3-visual-checks-20261102/`；J3 仍未关闭（Linux 真实桌面、独立复验待做）。
 
 ## 2026-11-02 J3 第七阶段：帮助菜单、快捷键表与关于对话框（作者交付，未验收）

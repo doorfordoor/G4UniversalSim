@@ -107,6 +107,6 @@
 
 修复（`gui/g4usim_gui/window/workspace_layout.py`）：用户通过 dock 的 `toggleViewAction` 做出的显式选择记为覆盖（`_optional_overrides`），在紧凑区间内跳过收起并记录到 `_auto_hidden` 之外；未被用户显式打开的面板（例如页面导航显露的 3D 预览）仍按紧凑规则收起；离开区间只恢复被自动收起且用户没有覆盖的面板。`apply_preset()`/`restore()` 清空覆盖状态。
 
-永久回归：`gui/smoke_tests/smoke_compact_panels.py`（25 断言，已注册为 GUI 用例 `gui_compact_panels`）覆盖 1200→1205、区间内多次宽高微调、跨越 1399/1400 阈值、用户关闭后进入/离开区间、以及离开区间恢复自动收起项。
+永久回归：`gui/smoke_tests/smoke_compact_panels.py`（25 断言，已注册为 GUI 用例 `gui_compact_panels`）覆盖 1200→1205、区间内多次宽高微调、跨越 1399/1400 阈值、用户关闭后进入/离开区间、以及离开区间恢复自动收起项。修复后的三 profile 冻结证据在 `docs/verification/j3-compact-panels-20261103/`（static 49/49、gui 76/76、integration 33/33；断言 5615/10322/6843；HEAD `ce9b6283`），归档副本已过 `check_report_evidence.py`；独立复现脚本输出见该目录 README。
 
 复验时请同时走菜单（View → Panels）与真实窗口缩放；J3 仍保持未关闭，Windows 125%/150% 实窗操作与 Linux 真实桌面等仍在缺失清单中。
