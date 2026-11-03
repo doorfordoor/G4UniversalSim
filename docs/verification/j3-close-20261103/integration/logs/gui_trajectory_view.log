@@ -1,0 +1,27 @@
+loader and filters: events merged in order, particles, colours, filters, bad files refused, glass
+setting: written only when on, validated, kept in projects (older projects: off)
+widget: line sets per particle, legend, events, all events, primaries only, clear
+backend: Generate and Run wrote and showed tracks of 3 events (3 tracks)
+smoke_trajectory_view: OK
+G4USIM_ASSERTS=35
+D:\Geant4\G4UniversalSim\gui\g4usim_gui\preview3d\trajectories.py:123: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in output_files(output_dir, "trajectories_t*.json"):
+D:\Geant4\G4UniversalSim\gui\g4usim_gui\preview3d\trajectories.py:114: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in output_files(output_dir, "trajectories_t*.json"):
+D:\Geant4\G4UniversalSim\gui\g4usim_gui\preview3d\trajectories.py:123: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in output_files(output_dir, "trajectories_t*.json"):
+D:\Geant4\G4UniversalSim\gui\g4usim_gui\preview3d\trajectories.py:114: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in output_files(output_dir, "trajectories_t*.json"):
+QWindowsWindow::setGeometry: Unable to set geometry 1125x820+880+390 (frame: 1143x867+871+352) on QWidgetWindow/"PyVistaPreviewWidgetClassWindow" on "\\.\DISPLAY17". Resulting geometry: 1125x840+880+390 (frame: 1143x887+871+352) margins: 9, 38, 9, 9 minimum size: 678x656 MINMAXINFO(maxSize=POINT(x=0, y=0), maxpos=POINT(x=0, y=0), maxtrack=POINT(x=0, y=0), mintrack=POINT(x=866, y=867)))
+QWindowsWindow::setGeometry: Unable to set geometry 1125x848+880+390 (frame: 1143x895+871+352) on QWidgetWindow/"PyVistaPreviewWidgetClassWindow" on "\\.\DISPLAY17". Resulting geometry: 1125x868+880+390 (frame: 1143x915+871+352) margins: 9, 38, 9, 9 minimum size: 678x678 MINMAXINFO(maxSize=POINT(x=0, y=0), maxpos=POINT(x=0, y=0), maxtrack=POINT(x=0, y=0), mintrack=POINT(x=866, y=895)))
+QWindowsWindow::setGeometry: Unable to set geometry 1125x928+880+390 (frame: 1143x975+871+352) on QWidgetWindow/"PyVistaPreviewWidgetClassWindow" on "\\.\DISPLAY17". Resulting geometry: 1125x948+880+390 (frame: 1143x995+871+352) margins: 9, 38, 9, 9 minimum size: 678x742 MINMAXINFO(maxSize=POINT(x=0, y=0), maxpos=POINT(x=0, y=0), maxtrack=POINT(x=0, y=0), mintrack=POINT(x=866, y=975)))
+D:\Geant4\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:104: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "scorer_statistics*.csv")):
+D:\Geant4\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:113: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "scoring_mesh*.csv")):
+D:\Geant4\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:119: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "g4usim*.root")):
+D:\Geant4\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:140: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  runs = sorted({_run_of(p.stem) for p in output_files(output, f"{stem}_t*.csv")})
+D:\Geant4\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:89: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  return sorted(p for p in output_files(output, f"{stem}_t*.csv") if pattern.fullmatch(p.name))

@@ -9,6 +9,12 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ### Added
 
+### J3 审查响应（2026-11-03，作者侧，未关闭）
+- 外观菜单为每个皮肤标出“当前使用”与“下次使用”（明暗两组各自记忆）。
+- 新增运行中切换外观的集成用例 `gui_theme_state_backend`（真实后端 40000 事件、单线程）。
+- 窄窗口紧凑布局只隐藏 AI 面板与 3D 预览，保留配置编辑器与既有停靠页契约。
+- 视觉证据矩阵 `screens-v2/`（8 皮肤×3 场景 + 命令面板 + 快捷键表 + 150% 采样）与 `semantic-colours.md`。
+
 - 主题切换状态保持用例 `gui_theme_state`：切皮肤后编辑器输入、输出文件选择、当前页面与工作区标签不变，外观偏好只写入本机 QSettings。
 
 
@@ -150,6 +156,11 @@ Short, user-facing record of notable changes. Detailed support status lives in
 - `scripts/check_report_evidence.py` 的 `--allow-incomplete` 现在接受没有退出码的 skip 记录（未运行没有退出状态，runner 写的是 reason）；`--profile all --fail-on-skip` 在缺后端时会先产生 skip 报告，门禁不再因缺字段报错。
 
 ### Fixed
+
+- i18n 中重复的 `Backend executable` 键覆盖了旧译文；删除重复项。
+- 命令面板搜索框边框改用 `border_strong`，达到 3:1 焦点边界。
+- `reveal_current()` 恢复“导航不隐藏停靠页”的原契约；Results 页由 `focus_analysis_view()` 收起三组面板。
+- `gui_theme_state` 的 `theme.current_skin(window)` 断言恒真；改为 `theme.current_skin()` 并新增真实外观绑定断言。
 
 - R-01：csh 拒绝配置后的 `setMainConfig` 时立即停止后续输入，摘要明确 `app` 失败并非零退出，避免继续运行旧配置却报告成功；完整配置更换仍需新进程。
 - R-02：`run_metadata.json` 打开、写入、关闭失败后，锁存首因并尽力纠正可写文本摘要为失败；失败 JSON 不列入成功产物。保留已完成 run 和有效输出，不承诺文本/JSON 跨文件原子提交。

@@ -918,3 +918,6 @@ dock 页与 navigation dock，从不隐藏之前显示过的 dock 页。
 - 回归：5 个 GUI 用例、211 断言通过（`docs/verification/j3-help-20261102/report.json`）；截图纸墨/午夜蓝各一张（作者侧实窗）。
 - 边界：快捷键表是文档，不证明组合键在所有平台/输入法下可用；Linux 实窗与 150% 缩放未做。
 
+### 2026-11-03 J3 独立审查响应（未关闭）
+
+独立复验（`docs/collab/reviews/20261103-j3-closure-review.md`，基线 `03d1c636`）不同意关闭 J3，列出 H1（候选未冻结）、H2（视觉交付缺失）、M1（菜单未标当前/下次）、M2（README 过度声明）、M3（停靠页契约回归）、M4（150% Results 横向滚动）与若干 L 级缺口。本轮响应：提交 `5fb07ba1` 修正状态用例（`theme.current_skin(window)` 恒真、真实运行中切换用例）、`313618ec` 紧凑布局只隐藏 AI 与 3D 预览、`262ce380` 命令面板边框对比度、`a1a64ead` 外观菜单“当前使用/下次使用”；新增 `screens-v2/`（8 皮肤×start/configuration/results + 命令面板 + 快捷键表 + 150% 采样）与 `semantic-colours.md`；三 profile 在 `a1a64ead` 上重跑并冻结到 `docs/verification/j3-close-20261103/`。仍缺：非法草稿/诊断/结果/Agent 状态图、B/K/C 前后问题清单与独立四件事复验、Windows 125/150 真实操作记录、Linux 真实桌面、自动化重启用例——因此 J3 保持未关闭，不写“已完成”。

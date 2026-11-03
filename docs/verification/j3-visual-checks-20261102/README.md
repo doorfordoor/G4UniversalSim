@@ -87,3 +87,16 @@
   out/linux_shot.py'`。
 - **不证明什么**：全部为作者侧自测，没有独立验收；J3 仍未关闭（Linux 真实桌面与独立复验
   未完成）；性能数字只代表本机；截图来自作者运行，不是用户操作记录。
+
+## 7. 独立审查与修正（2026-11-03）
+
+独立复验 `docs/collab/reviews/20261103-j3-closure-review.md` **不同意关闭 J3**，记为“实现基本完成、验收证据未完成”。本节更正前文不再成立的陈述，并记录回应。
+
+- **紧凑布局**：宽度 <1400 逻辑像素时隐藏的是 AI 面板与 3D 预览两个**可选** dock；配置编辑器保留。3D 预览可从 View → Panels 或“按当前页面适配工作区”重新打开。前文“三个面板完整”不成立。
+- **dock 重开入口**：菜单是 View → Panels，不是命令面板；命令面板只含页面/动作/外观，没有 dock 开关。
+- **窗口最小宽**：约 760 是 J3 之前既有 `setMinimumSize` 值，不是本阶段成果；150% + 1280 逻辑宽下 Results 页内容最小宽约 1529 > 视口 1006，只能横向滚动——这是**剩余限制**，未修复。
+- **主题切换性能**：作者与审查的同机测量皮肤集合不同（作者 6 皮肤 765.1/752.5 ms，审查复跑 881.7/875.2 ms），倍率结论 1.0–1.02× 可复现；绝对中位数不可复现；未测重复选择同一皮肤的开销。
+- **重启恢复**：用两进程探针手动复现，没有自动化用例。
+- **代码修正**：去掉 i18n 重复 key；`reveal_current()` 恢复“导航不隐藏停靠页”的原契约（Results 页改由 `focus_analysis_view()` 收起 configuration/preview/ai）；外观菜单显示“当前使用/下次使用”；`QLineEdit#paletteSearch` 边框改用 `border_strong`（≥3:1）。
+- **新增证据**：`screens-v2/`（B/K/C + paper/circuit/contrast_light/midnight/contrast_dark 的 start/configuration/results + 命令面板 + 快捷键表；原生 125% 交叉图；150% 下 B/paper/midnight 整页）、`semantic-colours.md`（15 皮肤语义色表）。
+- **仍缺（因此 J3 保持未关闭）**：非法草稿/阻断诊断/结果/Agent 等待批准的状态图与窄面板稿；B/K/C 前后问题清单与未参与设计者的四件事复验；Windows 125%/150% 真实操作记录；Linux 真实桌面（本机只有 WSLg X11/xcb）；自动化重启用例。
