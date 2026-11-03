@@ -3,9 +3,11 @@ from __future__ import annotations
 
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 from PySide6.QtCore import QSettings
+from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -35,9 +37,20 @@ def main() -> int:
     for _ in range(4):
         app.processEvents()
 
+    # The Results tree must not depend on the gitignored gui_runs/ output of a
+    # developer checkout; a tracked gallery package keeps the check reproducible.
+    gallery = ROOT / "examples" / "gallery" / "shielding_slab" / "output"
+    assert gallery.is_dir(), gallery
     output_page = window.output_page
+    output_page.set_output_dir(str(gallery))
+    # set_output_dir refreshes through the evidence job. Bounded wait keeps slow
+    # filesystems (for example a WSL 9p mount) deterministic without polling forever.
+    deadline = time.monotonic() + 20.0
+    while not output_page.file_tree.topLevelItemCount() and time.monotonic() < deadline:
+        app.processEvents()
+        QTest.qWait(20)
     rows = output_page.file_tree.topLevelItemCount()
-    assert rows > 0, rows
+    assert rows > 0, (rows, gallery)
 
     window.page_stack.setCurrentIndex(2)
     window._on_page_changed(2)
@@ -82,6 +95,8 @@ def main() -> int:
     window.close()
     for _ in range(4):
         app.processEvents()
+    window.deleteLater()
+    app.processEvents()
 
     return 0
 

@@ -68,6 +68,18 @@ jobs:
       # failure at install time instead of hiding the case behind a skip.
       - name: Install GUI dependency
         run: python -m pip install -r gui/requirements.txt -r gui/requirements-3d.txt
+      # The Windows runner has no OpenGL driver for Qt/WGL, so smoke_3d_view's
+      # real render-window branch fails there. This one-shot runner only gets a
+      # system-wide Mesa 24.3.0 deployment; developer hosts are never touched.
+      # pyvista:false keeps the real (non-offscreen) render window path, and
+      # qt:false skips the action's unrelated Linux Qt packages.
+      - name: Install Windows OpenGL runtime for the native 3D case
+        if: runner.os == 'Windows'
+        uses: pyvista/setup-headless-display-action@9c1c7435d9635423c90d2c37489588c81673274a
+        with:
+          pyvista: false
+          qt: false
+          mesa3d-release: '24.3.0'
       # --fail-on-skip: a missing Qt/uproot/backend must fail the job instead of
       # producing the distinct skip exit status that a green build used to hide.
       - name: Verify tracked source inventory and static tests

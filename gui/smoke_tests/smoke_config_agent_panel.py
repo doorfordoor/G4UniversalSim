@@ -355,6 +355,11 @@ def test_workspace_agent_natural_navigation(app, output):
                         focus = app.focusWidget()
                         focus_trace.append((type(focus).__name__, focus.accessibleName()))
                     assert app.focusWidget() is panel.prompt_edit, focus_trace
+                    # Display-only fixture enables footer traversal, grants no controller task.
+                    # It must run before the footer checks so every button is focusable.
+                    panel.prompt_edit.setPlainText('Review the current input; do not execute.')
+                    panel.set_state({'allowed_actions': list(ACTIONS)})
+                    settle()
                     footer = [panel.submit_button, *panel.action_buttons.values()]
                     # Font/style-derived readable width, not a hardcoded pixel floor.
                     assert panel._columns >= 2, (language, panel.size(), panel.minimumSizeHint())
@@ -364,7 +369,15 @@ def test_workspace_agent_natural_navigation(app, output):
                         contents = button.style().subElementRect(QStyle.SE_PushButtonContents, option, button)
                         assert contents.width() >= button.fontMetrics().horizontalAdvance(button.text()), (language, button.text(), contents)
                         assert panel.rect().contains(QRect(button.mapTo(panel, QPoint()), button.size()))
+                        # Reach the button the way a user does: focus it and let the
+                        # production FocusIn reveal run; the rect check stays exact.
+                        panel.prompt_edit.setFocus()
+                        app.processEvents()
+                        button.setFocus()
+                        settle()
                         full_in_scrolls(button)
+                        panel.prompt_edit.setFocus()
+                        settle()
                     for index, button in enumerate(footer):
                         rectangle = QRect(button.mapTo(panel, QPoint()), button.size())
                         for peer in footer[index+1:]:
@@ -373,10 +386,6 @@ def test_workspace_agent_natural_navigation(app, output):
                         if label.buddy() is not None:
                             assert label.text() == ui_text(source), (source, label.text())
                             assert label.buddy().accessibleName() == label.text()
-                    # Display-only fixture enables footer traversal, grants no controller task.
-                    panel.prompt_edit.setPlainText('Review the current input; do not execute.')
-                    panel.set_state({'allowed_actions': list(ACTIONS)})
-                    settle()
                     seen = set()
                     labels_seen = set()
                     for _ in range(100):
