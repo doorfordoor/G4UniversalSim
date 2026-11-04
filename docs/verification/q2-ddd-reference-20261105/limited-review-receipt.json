@@ -1,0 +1,59 @@
+{
+  "schema": "q2_ddd_r1_limited_acceptance",
+  "overall_status": "limited",
+  "accepted": "corrected restricted report; full path and stepwise folding NOT verified",
+  "comparison_counts": {
+    "total": 263,
+    "pass": 257,
+    "fail": 0,
+    "limited": 6
+  },
+  "available_data_math": {
+    "pass": 51,
+    "status": "limited",
+    "limitations": [
+      {
+        "case": "ref_ddd_10",
+        "item": "full-step-fold-reconstruction",
+        "reason": "actual mean pre/post kinetic energy is absent from public CSV"
+      },
+      {
+        "case": "ref_ddd_100",
+        "item": "full-path-reconstruction",
+        "gap_mm": 0.0006272387224726117,
+        "reason": "ordinary hits may omit zero-deposition scored steps"
+      },
+      {
+        "case": "ref_ddd_100",
+        "item": "full-step-fold-reconstruction",
+        "reason": "actual mean pre/post kinetic energy is absent from public CSV"
+      }
+    ]
+  },
+  "physical_references": {
+    "ref_ddd_10": {
+      "reference": 0.009666310206360261,
+      "ddd_MeV_g": 133.691937374,
+      "ddd_per_fluence_MeV_cm2_g": 0.009625819490927999,
+      "absolute_delta": -4.049071543226271e-05,
+      "relative_delta": -0.004188849164557178,
+      "sigma": 4.548226878772154e-05,
+      "allowed": 0.00023310990842676725,
+      "status": "pass"
+    },
+    "ref_ddd_100": {
+      "reference": 0.0029929239738930983,
+      "ddd_MeV_g": 41.5611752708,
+      "ddd_per_fluence_MeV_cm2_g": 0.0029924046194976,
+      "absolute_delta": -5.19354395498231e-07,
+      "relative_delta": -0.0001735274266999411,
+      "sigma": 1.4040181148458543e-05,
+      "allowed": 7.20497831843066e-05,
+      "status": "pass"
+    }
+  },
+  "original_data_unchanged": true,
+  "backend_rerun_during_repair": false,
+  "old_failure_archive": "docs/verification/q2-ddd-review-20261105/first-counterexample",
+  "scope": "Windows/11.3.2, two fixed EM-only proton slab cases; NIEL physical data evaluation remains separate"
+}
