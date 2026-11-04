@@ -29,6 +29,7 @@ class SessionMixin:
         self.session_panel.closeSessionRequested.connect(self.close_session)
         self.session_panel.submitRoundRequested.connect(self.submit_session_round)
         self.session_panel.cancelRoundRequested.connect(self.cancel_session_round)
+        self.session_panel.replayRequested.connect(self.replay_last_session)
         self.session_client.stateChanged.connect(self._session_view_changed)
         self.session_client.roundStarted.connect(self._session_round_started)
         self.session_client.roundFinished.connect(self._session_round_finished)
@@ -96,6 +97,53 @@ class SessionMixin:
         self.session_panel.set_message(ui_text(
             "Closing the session; the backend process must exit before the owner is released."))
         client.shutdown()
+
+    def replay_last_session(self) -> None:
+        """Replay the last cleanly closed session in a new output directory."""
+        client = getattr(self, "session_client", None)
+        if client is None or client.is_active():
+            return
+        allowed, message = self._session_owner()
+        if not allowed:
+            self.session_panel.set_message(message, "failed")
+            return
+        view = client.snapshot()
+        replay = view.get("replay") if isinstance(view.get("replay"), dict) else {}
+        if not replay.get("replayable"):
+            self.session_panel.set_message(ui_text("This session cannot be replayed."), "failed")
+            return
+        manifest_path = Path(str(replay.get("manifest_path") or ""))
+        if not manifest_path.is_file():
+            self.session_panel.set_message(ui_text("The replay manifest is missing."), "failed")
+            return
+        session = dict(view.get("session") or {})
+        config_path = Path(str(session.get("config") or self.project.configPath or ""))
+        if not config_path.is_file():
+            self.session_panel.set_message(
+                ui_text("The recorded session configuration is missing."), "failed")
+            return
+        stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        package_dir = config_path.parent
+        output = package_dir / f"replay-output-{stamp}"
+        records = package_dir / f"replay-records-{stamp}"
+        records.mkdir(parents=True, exist_ok=True)
+        command = [
+            self.project.executable,
+            "--config", str(config_path),
+            "--session-server",
+            "--output", str(output),
+            "--session-record-dir", str(records),
+            "--session-replay", str(manifest_path.parent),
+        ]
+        self.session_panel.set_expanded(True)
+        self.session_panel.clear_log()
+        self.session_panel.set_rounds([])
+        self.session_panel.set_session_active(True)
+        self.session_panel.append_log(ui_text("Starting the replay process."))
+        self.session_panel.append_log("command: " + " ".join(command))
+        client.start_replay(self.project, command)
+        self._session_started = True
+        self._set_session_owner_controls(True)
 
     def submit_session_round(self) -> None:
         client = getattr(self, "session_client", None)
@@ -187,6 +235,7 @@ class SessionMixin:
             "initializing": ("Session starting", "running"),
             "ready": ("Session ready", "success"),
             "running": ("Session running", "running"),
+            "replaying": ("Session replaying", "running"),
             "stopping": ("Session closing", "warning"),
             "closed": ("Session closed", ""),
             "failed": ("Session failed", "failed"),

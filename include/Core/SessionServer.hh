@@ -35,8 +35,12 @@ void OnRunEnd(int runId, int plannedEvents, int completedEvents, long long abort
 class SessionServer {
 public:
     // `recordRoot` must be absolute and outside the configured output root; the
-    // caller validates that before constructing the server.
-    SessionServer(SimulationManager& simulation, std::string recordRoot);
+    // caller validates that before constructing the server.  When `replaySource`
+    // is non-empty the server validates that session directory (snapshot and
+    // manifest), restores the captured random engine state and repeats the
+    // recorded accepted operations instead of serving a fresh session.
+    SessionServer(SimulationManager& simulation, std::string recordRoot,
+                  std::string replaySource = std::string());
     ~SessionServer();
 
     SessionServer(const SessionServer&) = delete;
@@ -56,4 +60,5 @@ private:
     Impl* impl_ = nullptr;
     SimulationManager& simulation_;
     std::string recordRoot_;
+    std::string replaySource_;
 };

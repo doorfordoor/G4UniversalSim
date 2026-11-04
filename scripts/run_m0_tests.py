@@ -256,6 +256,7 @@ CASES = (
     Case("interactive_commands", "scripts/test_interactive_commands.py", "backend", ("exe",)),
     Case("session_protocol", "scripts/test_session_protocol.py", "backend", ("exe",), timeout=900),
     Case("session_cancel_mt", "scripts/test_session_cancel_mt.py", "backend", ("exe",), timeout=900),
+    Case("session_replay", "scripts/test_session_replay.py", "backend", ("exe",), timeout=2400),
     Case("unsupported_features", "scripts/test_unsupported_features.py", "backend", ("exe",), args=("--layer", "backend")),
     Case("unconsumed_config", "scripts/test_unconsumed_config.py", "backend", ("exe",)),
     Case("material_schema", "scripts/test_material_config_schema.py", "backend", ("exe",)),

@@ -46,6 +46,7 @@ _STATUS_ROLES = {
     "initializing": "running",
     "ready": "success",
     "running": "running",
+    "replaying": "running",
     "stopping": "warning",
     "closed": "muted",
     "failed": "failed",
@@ -76,6 +77,7 @@ class SessionPanel(QWidget):
     closeSessionRequested = Signal()
     submitRoundRequested = Signal()
     cancelRoundRequested = Signal()
+    replayRequested = Signal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -124,6 +126,12 @@ class SessionPanel(QWidget):
         self.close_button.setProperty("buttonRole", "danger")
         self.close_button.clicked.connect(self.closeSessionRequested)
         header.addWidget(self.close_button)
+
+        self.replay_button = QPushButton(self)
+        self.replay_button.setObjectName("sessionReplayButton")
+        self.replay_button.setEnabled(False)
+        self.replay_button.clicked.connect(self.replayRequested)
+        header.addWidget(self.replay_button)
 
         self.toggle_button.setToolTip(ui_text("Collapse session"))
         header.addWidget(self.toggle_button)
@@ -305,6 +313,7 @@ class SessionPanel(QWidget):
             "receipt; accepted parameters are not the same as kernel application."))
         self.start_button.setText(ui_text("Start session"))
         self.close_button.setText(ui_text("End session"))
+        self.replay_button.setText(ui_text("Replay completed session"))
         self.cancel_button.setText(ui_text("Cancel round"))
         self.submit_button.setText(ui_text("Submit round"))
         self.clear_log_button.setText(ui_text("Clear log"))
@@ -408,15 +417,33 @@ class SessionPanel(QWidget):
 
         editable, reason = _editable(view)
         ready = alive and phase == "ready"
-        self.energy_edit.setEnabled(ready and not run)
-        self.events_spin.setEnabled(ready and not run)
-        self.particle_combo.setEnabled(ready and not run)
-        self.position_edit.setEnabled(ready and not run)
-        self.direction_edit.setEnabled(ready and not run)
-        self.submit_button.setEnabled(bool(ready and editable))
+        # The completed-round dictionary is history, not a running flag: after a
+        # round finishes the client keeps the facts while phase returns to ready,
+        # and the user must be able to prepare the next round (A/B/A).  Only a
+        # genuinely running/pending phase or an ineligible source disables edits.
+        editable_now = bool(ready and editable)
+        self.energy_edit.setEnabled(editable_now)
+        self.events_spin.setEnabled(editable_now)
+        self.particle_combo.setEnabled(editable_now)
+        self.position_edit.setEnabled(editable_now)
+        self.direction_edit.setEnabled(editable_now)
+        self.submit_button.setEnabled(editable_now)
         self.cancel_button.setEnabled(phase == "running")
         self.close_button.setEnabled(alive)
         self.start_button.setEnabled(not alive)
+        replay = view.get("replay") if isinstance(view.get("replay"), dict) else {}
+        replay_ready = (not alive) and phase == "closed" and bool(replay.get("replayable"))
+        self.replay_button.setEnabled(replay_ready)
+        if replay_ready:
+            self.replay_button.setToolTip(ui_text(
+                "Replay the recorded rounds in a new backend process and a new output directory."))
+        elif replay and phase == "closed" and not replay.get("replayable"):
+            self.replay_button.setToolTip(ui_text(
+                "This session cannot be replayed: {reason}").format(
+                    reason=ui_text(str(replay.get("reason") or "unknown"))))
+        else:
+            self.replay_button.setToolTip(ui_text(
+                "Available after a session closes cleanly with completed rounds."))
         if not editable and alive and phase == "ready":
             self.whitelist_hint.setText(ui_text(reason))
         elif alive and phase == "ready":
@@ -430,6 +457,8 @@ class SessionPanel(QWidget):
 
     def set_session_active(self, active: bool) -> None:
         self.start_button.setEnabled(not active)
+        if active:
+            self.replay_button.setEnabled(False)
         if not active:
             self.cancel_button.setEnabled(False)
             self.submit_button.setEnabled(False)
@@ -444,6 +473,7 @@ class SessionPanel(QWidget):
             "initializing": "Initializing kernel",
             "ready": "Ready for the next round",
             "running": "Round running",
+            "replaying": "Replaying",
             "stopping": "Closing",
             "closed": "Closed",
             "failed": "Failed",

@@ -9,6 +9,7 @@ running.  No mock replaces the backend.
 
 from __future__ import annotations
 
+import os
 import sys
 import tempfile
 import time
@@ -25,7 +26,6 @@ from PySide6.QtWidgets import QApplication
 
 import gui_test_window  # noqa: E402
 from g4usim_gui.core import i18n, theme  # noqa: E402
-from g4usim_gui.core.install_layout import default_backend_executable  # noqa: E402
 
 
 def pump(app: QApplication, seconds: float) -> None:
@@ -47,8 +47,9 @@ def wait_until(app: QApplication, predicate, timeout: float, label: str):
 
 
 def main() -> int:
-    executable = Path(str(default_backend_executable()))
-    assert executable.exists(), f"backend executable missing: {executable}"
+    executable_text = os.environ.get("G4USIM_EXE", "")
+    assert executable_text and Path(executable_text).is_file(), "G4USIM_EXE required; no fallback"
+    executable = Path(executable_text)
 
     QSettings.setDefaultFormat(QSettings.IniFormat)
     QSettings.setPath(QSettings.IniFormat, QSettings.UserScope,
@@ -60,6 +61,10 @@ def main() -> int:
 
     window = gui_test_window.MainWindow()
     window._smoke_recovery_directory._finalizer.detach()
+    # Drive the real UI entry the user uses; never fall back to backend discovery.
+    window.project_page.executable.setText(str(executable))
+    window.flush_pending_edit()
+    assert Path(str(window.project.executable)) == executable, window.project.executable
 
     import atexit
 
@@ -88,6 +93,7 @@ def main() -> int:
     view = client.snapshot()
     assert view["session"]["session_id"], view
     command = list(view["session"].get("command") or [])
+    assert command and Path(str(command[0])) == executable, command
     assert "--session-server" in command and "--session-record-dir" in command, command
     output_root = Path(str(view["session"]["output_root"]))
     record_root = Path(str(view["session"]["record_root"]))
@@ -97,7 +103,19 @@ def main() -> int:
 
     expected = [("100 MeV", 100.0), ("200 MeV", 200.0), ("100 MeV", 100.0)]
     for index, (energy_text, energy_mev) in enumerate(expected):
-        panel.set_draft_defaults(particle="proton", energy_text=energy_text, events=5)
+        if index == 0:
+            panel.set_draft_defaults(particle="proton", energy_text=energy_text, events=5)
+        else:
+            # Drive the real user controls: after a finished round the phase is
+            # ready and the inputs must be editable (regression: A/B/A).
+            assert panel.energy_edit.isEnabled(), f"energy disabled after round {index - 1}"
+            assert panel.events_spin.isEnabled(), f"events disabled after round {index - 1}"
+            assert panel.particle_combo.isEnabled(), f"particle disabled after round {index - 1}"
+            assert panel.position_edit.isEnabled(), f"position disabled after round {index - 1}"
+            assert panel.direction_edit.isEnabled(), f"direction disabled after round {index - 1}"
+            panel.energy_edit.setText(energy_text)
+            panel.events_spin.setValue(5)
+            pump(app, 0.1)
         window.submit_session_round()
         wait_until(app, lambda: len(rounds) > index, 180.0, f"round {index} finished")
         record = rounds[index]
@@ -141,7 +159,13 @@ def main() -> int:
     assert cancelled["completed_events"] < cancelled["planned_events"], cancelled
     assert cancelled["receipt_ok"] is True, cancelled
     wait_until(app, lambda: client.snapshot().get("phase") == "ready", 60.0, "ready after cancel")
-    panel.set_draft_defaults(particle="proton", energy_text="30 MeV", events=3)
+    # A cancelled round keeps its facts as history, but the next round must be
+    # editable again once the phase is ready.
+    assert panel.energy_edit.isEnabled() and panel.events_spin.isEnabled(), "inputs stay disabled after cancel"
+    assert panel.submit_button.isEnabled()
+    panel.energy_edit.setText("30 MeV")
+    panel.events_spin.setValue(3)
+    pump(app, 0.1)
     window.submit_session_round()
     wait_until(app, lambda: len(rounds) == 6, 120.0, "round after cancel")
     assert rounds[5]["status"] == "completed" and rounds[5]["completed_events"] == 3, rounds[5]
@@ -159,6 +183,59 @@ def main() -> int:
     for record in rounds:
         assert "receipt_path" in record and record["receipt_path"], record
         assert Path(record["receipt_path"]).exists(), record["receipt_path"]
+
+    # -- a cleanly closed session is replayable from the panel entry; the replay
+    #    runs in a new backend process and writes into a new output directory.
+    replay_window = gui_test_window.MainWindow()
+    replay_window._smoke_recovery_directory._finalizer.detach()
+    replay_window.project_page.executable.setText(str(executable))
+    replay_window.flush_pending_edit()
+    replay_window.resize(1440, 900)
+    replay_window.show()
+    pump(app, 0.3)
+    replay_panel = replay_window.session_panel
+    replay_client = replay_window.session_client
+    replay_rounds: list[dict] = []
+    replay_client.roundFinished.connect(lambda record: replay_rounds.append(dict(record)))
+
+    def _emergency_stop_replay() -> None:
+        try:
+            if replay_window.session_owns_process():
+                replay_window.session_client.kill()
+        except Exception:  # noqa: BLE001 - best effort during interpreter teardown
+            pass
+
+    atexit.register(_emergency_stop_replay)
+    replay_window.start_session()
+    wait_until(app, lambda: replay_client.snapshot().get("phase") == "ready", 120.0,
+               "replay source session ready")
+    first_output = str(replay_client.snapshot()["session"]["output_root"])
+    for expected, energy in ((1, "100 MeV"), (2, "200 MeV")):
+        replay_panel.set_draft_defaults(particle="proton", energy_text=energy, events=5)
+        replay_window.submit_session_round()
+        wait_until(app, lambda e=expected: len(replay_rounds) == e, 180.0,
+                   f"replay source round {energy}")
+        wait_until(app, lambda: replay_client.snapshot().get("phase") == "ready", 60.0,
+                   f"replay source ready after {energy}")
+    assert len(replay_rounds) == 2, replay_rounds
+    replay_window.close_session()
+    wait_until(app, lambda: not replay_client.is_active(), 60.0, "source session closed")
+    wait_until(app, lambda: replay_client.snapshot().get("phase") == "closed", 30.0,
+               "source session phase closed")
+    assert replay_panel.replay_button.isEnabled(), "the replay button must be enabled"
+    replay_panel.replay_button.click()
+    wait_until(app, lambda: len(replay_rounds) == 4, 300.0, "replayed rounds")
+    replayed = replay_rounds[2:]
+    assert all(record["status"] == "completed" for record in replayed), replayed
+    assert [record["completed_events"] for record in replayed] == [5, 5], replayed
+    assert all(record["receipt_ok"] for record in replayed), replayed
+    command = list(replay_client.snapshot()["session"].get("command") or [])
+    assert "--session-replay" in command, command
+    replay_output = str(replay_client.snapshot()["session"]["output_root"])
+    assert replay_output and replay_output != first_output, (first_output, replay_output)
+    wait_until(app, lambda: not replay_client.is_active(), 60.0, "replay session closed")
+    replay_window.close()
+    wait_until(app, lambda: not replay_window.runner.is_running(), 30.0, "replay process ended")
     print(f"session backend smoke passed: {len(rounds)} rounds, {len(rejections)} rejections")
     return 0
 

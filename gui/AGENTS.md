@@ -317,4 +317,12 @@ F4依赖维护：安装统一走gui/requirements.txt，当前验证线PySide6>=6
   4.35/4.35/4.31:1。新增语义色、改 veil 混色比例或新增状态标签时，必须同时更新 `status_combinations()`、
   `scripts/test_theme_registry.py` 的最终组合断言与 `gui/smoke_tests/smoke_theme_response_shell.py` 的真实控件取色。
 
-- F2 GUI 连续运行会话（2026-11-04，作者交付待复验）：`core/session_model.py` 只管协议常量、资格、能量解析与收据校验；`core/session_client.py` 绑定既有 `G4USimRunner`（禁止第二个 QProcess 所有者），通过 `runner.start_session()` 与 `sessionData` 信号驱动，不阻塞 Qt 主线程；`widgets/session_panel.py` 是 Run Console 内的四区面板，`window/session.py` 负责生成包、记录根（output 外）、所有者互斥与信号接线。所有新文案走 `core/i18n.py`；收据必须按路径/大小/SHA 校验，`receipt_integrity=unavailable` 显示“运行完成但记录不可用”；普通 Run 不得与会话并占进程。回归 `gui/smoke_tests/smoke_session_panel.py` 与 `gui/smoke_tests/smoke_session_backend.py`（真实后端三轮），注册在 `scripts/run_m0_tests.py`。`
+- F2 GUI 连续运行会话与 RNG 重放（2026-11-04，作者交付待复验）：`core/session_model.py` 只放协议常量、
+  资格、能量解析与收据校验；`core/session_client.py` 绑定既有 `G4USimRunner`（禁止第二个 QProcess
+  所有者），经 `runner.start_session()`/`sessionData` 驱动，不阻塞 Qt 主线程；`widgets/session_panel.py`
+  是 Run Console 的四区面板；`window/session.py` 负责生成包、记录根（output 外）、所有者互斥、重放启动。
+  文案走 `core/i18n.py`；收据必须按路径/大小/SHA 校验，`receipt_integrity=unavailable` 显示“运行完成但
+  记录不可用”。会话正常关闭且清单可重放时按钮才启用，重放在新后端进程/新输出目录执行，不得伪造
+  逐位一致，也不得宣称旧 csh/batch 可重放。回归 `gui/smoke_tests/smoke_session_panel.py`、
+  `gui/smoke_tests/smoke_session_backend.py`（真实 2 轮源会话 + 按钮重放 2 轮）与
+  `scripts/test_session_replay.py`（1/2 worker 正例与拒绝矩阵），注册在 `scripts/run_m0_tests.py`。

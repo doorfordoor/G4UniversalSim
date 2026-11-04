@@ -302,13 +302,31 @@ def panel_checks(app: QApplication, directory: Path) -> None:
 
     panel.set_view(base_view())
     assert panel.submit_button.isEnabled() is True
+    assert panel.energy_edit.isEnabled() is True
+    assert panel.events_spin.isEnabled() is True
+    assert panel.particle_combo.isEnabled() is True
+    assert panel.position_edit.isEnabled() is True
+    assert panel.direction_edit.isEnabled() is True
     assert panel.whitelist_hint.text() != ""
+
+    # A completed round stays visible as history; phase is ready and the next
+    # round must be editable through the real controls (regression: A/B/A).
+    panel.set_view(base_view(run={"run_id": 0, "run_request_id": "a" * 32,
+                                  "planned_events": 5, "completed_events": 5,
+                                  "status": "completed", "cancel_requested": False}))
+    assert panel.status_chip.text() == "Ready for the next round", panel.status_chip.text()
+    assert panel.energy_edit.isEnabled() is True
+    assert panel.events_spin.isEnabled() is True
+    assert panel.submit_button.isEnabled() is True
 
     panel.set_view(base_view(
         source={**base_view()["source"], "source_count": 2},
         phase="ready",
     ))
     assert panel.submit_button.isEnabled() is False
+    assert panel.energy_edit.isEnabled() is False
+    assert panel.events_spin.isEnabled() is False
+    assert panel.particle_combo.isEnabled() is False
     hint = panel.whitelist_hint.text()
     assert hint == "multiple_sources" or "multiple_sources" in hint or "多个" in hint, hint
 
@@ -316,6 +334,33 @@ def panel_checks(app: QApplication, directory: Path) -> None:
                                               "planned_events": 10, "completed_events": 4})
     panel.set_view(running)
     assert panel.cancel_button.isEnabled() is True
+    assert panel.energy_edit.isEnabled() is False
+    assert panel.events_spin.isEnabled() is False
+    assert panel.submit_button.isEnabled() is False
+
+    # Replay is only offered for a cleanly closed session with a replayable
+    # manifest; a refused record keeps its reason visible on the button.
+    panel.set_view(base_view(
+        phase="closed",
+        session={**base_view()["session"], "alive": False},
+        replay={"manifest_path": "C:/tmp/replay-manifest.json", "replayable": True,
+                "reason": "", "steps": []},
+    ))
+    assert panel.replay_button.isEnabled() is True
+    replayed: list[bool] = []
+    panel.replayRequested.connect(lambda: replayed.append(True))
+    panel.replay_button.click()
+    assert replayed == [True]
+    panel.set_view(base_view(
+        phase="closed",
+        session={**base_view()["session"], "alive": False},
+        replay={"manifest_path": "", "replayable": False,
+                "reason": "the session did not finish every run", "steps": []},
+    ))
+    assert panel.replay_button.isEnabled() is False
+    tooltip = panel.replay_button.toolTip()
+    assert "cannot be replayed" in tooltip.lower() or "无法重放" in tooltip, tooltip
+    panel.set_view(base_view())
 
     panel.set_rounds([])
     panel.add_round(round_record(0, receipt_ok=True))

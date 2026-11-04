@@ -64,6 +64,7 @@ inline void WriteBackendCapabilities(std::ostream& out)
 "cancel":"experimental","source_editing":["particle","energy","position","direction","plane_beam"],
 "json_parser":{"name":"nlohmann-json","version":"3.11.3",
 "sha256":"9bea4c8066ef4a1c206b2be5a36302f8926f7fdc6087af5d20b417d0cf103ea6","license":"MIT"},
+"replay":{"supported":true,"launch_flag":"--session-replay <session-dir>","snapshot_schema":"g4usim_session_replay_v1","manifest_schema":"g4usim_session_replay_manifest_v1","captures":"clhep_engine_state_build_data_inputs_threads","scope":"same_process_identity_only","unsupported":"arbitrary_rng_commands_at_runtime; cancelled_or_incomplete_sessions; different_build_or_data"},
 "notes":"requested and resolved values are reported separately; a rejected request never edits the source"}
 }
 )json";

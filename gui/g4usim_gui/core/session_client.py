@@ -11,6 +11,7 @@ from __future__ import annotations
 import codecs
 import json
 import os
+from pathlib import Path
 from typing import Any, Callable
 
 from PySide6.QtCore import QObject, QTimer, Signal
@@ -56,6 +57,7 @@ class SessionClient(QObject):
         super().__init__(parent)
         self._runner = runner
         self._started = False
+        self._replay_mode = False
         runner.sessionData.connect(self._on_session_data)
         runner.processStarted.connect(self._on_process_started)
         runner.finished.connect(self._on_runner_finished)
@@ -115,9 +117,17 @@ class SessionClient(QObject):
 
     # -------------------------------------------------------------- lifecycle
     def start(self, project, command: list[str]) -> None:
+        self._start_session(project, command, replay=False)
+
+    def start_replay(self, project, command: list[str]) -> None:
+        """Replay a recorded, completed session in a new backend process."""
+        self._start_session(project, command, replay=True)
+
+    def _start_session(self, project, command: list[str], *, replay: bool) -> None:
         if self._runner.is_running():
             self.failure.emit("A run or session is already active.")
             return
+        self._replay_mode = replay
         self._seq = 0
         self._revision = 0
         self._closing_expected = False
@@ -426,6 +436,21 @@ class SessionClient(QObject):
         })
         self._view["session"] = session
         self._apply_state(state)
+        replay_info = frame.get("replay") if isinstance(frame.get("replay"), dict) else None
+        if self._replay_mode:
+            if not replay_info or not replay_info.get("replayable"):
+                self._view["phase"] = "failed"
+                self._set_message("The backend refused to replay this session.")
+                self.failure.emit("The backend refused to replay this session.")
+                self._emit()
+                self._closing_expected = True
+                self._runner.kill()
+                return
+            self._view["replay"] = dict(replay_info)
+            self._view["phase"] = "replaying"
+            self._set_message("Replaying the recorded rounds from the captured random engine state.")
+            self._emit()
+            return
         self._set_message("Session ready. The generated configuration was loaded; initializing the kernel.")
         self._view["phase"] = "initializing"
         self._emit()
@@ -579,6 +604,30 @@ class SessionClient(QObject):
         self.frameLogged.emit("→ hello")
         self._emit()
 
+    def can_replay(self) -> bool:
+        replay = self._view.get("replay") if isinstance(self._view.get("replay"), dict) else {}
+        return (bool(replay.get("replayable")) and self._view.get("phase") == "closed"
+                and not self.is_active())
+
+    def _load_replay_manifest(self) -> None:
+        session = dict(self._view.get("session") or {})
+        root = str(session.get("session_root") or "")
+        if not root:
+            return
+        path = Path(root) / "replay-manifest.json"
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return
+        if not isinstance(data, dict):
+            return
+        self._view["replay"] = {
+            "manifest_path": str(path),
+            "replayable": bool(data.get("replayable")),
+            "reason": str(data.get("reason") or ""),
+            "steps": [dict(step) for step in data.get("steps") or [] if isinstance(step, dict)],
+        }
+
     def _on_runner_finished(self, exit_code: int) -> None:
         if not self._started:
             return
@@ -598,6 +647,8 @@ class SessionClient(QObject):
         session = dict(self._view.get("session") or {})
         session["alive"] = False
         self._view["session"] = session
+        if expected and exit_code == 0 and not self._replay_mode:
+            self._load_replay_manifest()
         payload = {"exit_code": exit_code, "expected": expected,
                    "session": dict(session)}
         self._emit()

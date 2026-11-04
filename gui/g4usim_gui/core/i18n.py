@@ -1942,6 +1942,22 @@ ZH_CN.update({
 })
 
 
+ZH_CN.update({
+    'Replay completed session': '重放已完成会话',
+    'Replay the recorded rounds in a new backend process and a new output directory.': '在新的后端进程与新的输出目录中重放已记录的轮次。',
+    'Available after a session closes cleanly with completed rounds.': '会话正常关闭且轮次完成后可用。',
+    'This session cannot be replayed: {reason}': '该会话无法重放：{reason}',
+    'This session cannot be replayed.': '该会话无法重放。',
+    'The replay manifest is missing.': '重放清单缺失。',
+    'The recorded session configuration is missing.': '已记录的会话配置缺失。',
+    'Replaying the recorded rounds from the captured random engine state.': '正在从已捕获的随机引擎状态重放已记录的轮次。',
+    'The backend refused to replay this session.': '后端拒绝重放该会话。',
+    'Starting the replay process.': '正在启动重放进程。',
+    'Session replaying': '会话重放中',
+    'Replaying': '重放中',
+})
+
+
 def default_language() -> LanguageCode:
     return "zh_CN" if QLocale.system().language() == QLocale.Chinese else "en"
 

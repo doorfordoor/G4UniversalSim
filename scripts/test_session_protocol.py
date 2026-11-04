@@ -32,7 +32,7 @@ class Session:
     """Line-oriented client: every JSON frame is matched by predicate."""
 
     def __init__(self, executable: Path, output_dir: Path, record_dir: Path,
-                 threads: int = 1) -> None:
+                 threads: int = 1, extra_args: list[str] | None = None) -> None:
         self.executable = executable
         self.output_dir = output_dir
         self.record_dir = record_dir
@@ -47,6 +47,7 @@ class Session:
                 "--output", str(output_dir),
                 "--session-record-dir", str(record_dir),
                 "--threads", str(threads),
+                *(extra_args or []),
             ],
             cwd=ROOT,
             stdin=subprocess.PIPE,

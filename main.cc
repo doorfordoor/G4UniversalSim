@@ -247,6 +247,7 @@ struct CommandLineOptions {
   std::string dumpEffectiveConfig;
   bool sessionServer = false;
   std::string sessionRecordDir;
+  std::string sessionReplayDir;
 };
 
 void PrintUsage(const char* program) {
@@ -271,6 +272,7 @@ void PrintUsage(const char* program) {
       << "  --ui-session csh   Required with --ui for the audited command-line session.\n"
       << "  --session-server   Serve the versioned JSON-lines controlled session on stdin/stdout.\n"
       << "  --session-record-dir <dir>  Absolute record directory outside --output for session receipts.\n"
+      << "  --session-replay <session-dir>  Replay a completed session's captured random state in a new session.\n"
       << "  --threads, -t <N>    Set requested number of worker threads when "
          "MT "
          "is available.\n"
@@ -363,6 +365,9 @@ CommandLineOptions ParseCommandLine(int argc, char** argv) {
     } else if (arg == "--session-server") {
       if (options.sessionServer) throw std::runtime_error("Duplicate --session-server");
       options.sessionServer = true;
+    } else if (arg == "--session-replay") {
+      if (!options.sessionReplayDir.empty()) throw std::runtime_error("Duplicate --session-replay");
+      options.sessionReplayDir = RequireNonEmptyValue(i, argc, argv, arg);
     } else if (arg == "--session-record-dir") {
       if (!options.sessionRecordDir.empty()) throw std::runtime_error("Duplicate --session-record-dir");
       options.sessionRecordDir = RequireNonEmptyValue(i, argc, argv, arg);
@@ -412,6 +417,8 @@ CommandLineOptions ParseCommandLine(int argc, char** argv) {
     if (options.sessionRecordDir.empty())
       throw std::runtime_error("--session-server requires --session-record-dir <outside-output-dir>");
   }
+  if (!options.sessionReplayDir.empty() && !options.sessionServer)
+    throw std::runtime_error("--session-replay requires --session-server");
   if (!options.uiSession.empty() && !options.interactive) {
     throw std::runtime_error("--ui-session requires --ui");
   }
@@ -841,7 +848,7 @@ int main(int argc, char** argv) {
       if (PathIsInsideDirectory(outputRoot, recordRoot))
         throw std::runtime_error("--session-record-dir must be outside --output: " +
                                  outputRoot.u8string());
-      SessionServer session(sim, recordRoot.u8string());
+      SessionServer session(sim, recordRoot.u8string(), options.sessionReplayDir);
       const int sessionCode = session.Run();
       const auto& sessionRuns = sim.GetOutputManager()->GetRunSummary().GetRuns();
       const std::string sessionStatus = sessionCode == 0

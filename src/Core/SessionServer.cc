@@ -9,6 +9,7 @@
 #include "Config/InputProvenance.hh"
 #include "Core/SessionJson.hh"
 #include "Core/SimulationManager.hh"
+#include "Geometry/GeometryManager.hh"
 #include "Output/OutputManager.hh"
 #include "Source/SourceManager.hh"
 #include "Utils/UnitParser.hh"
@@ -16,6 +17,9 @@
 #include "BuildInfo.hh"
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
+#include "G4Version.hh"
+#include "CLHEP/Random/Random.h"
+#include "Core/Geant4DataLocator.hh"
 
 #include <algorithm>
 #include <array>
@@ -179,6 +183,84 @@ std::string PadRun(int runId)
     return out.str();
 }
 
+// ---------------------------------------------------------------- replay files
+// Replay snapshots live next to the session record. They are written with an
+// explicit schema and are validated again when a replay starts; a snapshot that
+// cannot be written aborts the session instead of silently losing the state.
+
+std::string ReplayNormalizePath(const std::string& text)
+{
+    std::error_code error;
+    const std::filesystem::path path(text);
+    const std::filesystem::path absolute = std::filesystem::absolute(path, error);
+    if (error) return path.lexically_normal().generic_string();
+    const std::filesystem::path canonical = std::filesystem::weakly_canonical(absolute, error);
+    return (error ? absolute.lexically_normal() : canonical).generic_string();
+}
+
+bool ReplayReadText(const std::filesystem::path& path, std::string& out)
+{
+    std::ifstream input(path, std::ios::binary);
+    if (!input) return false;
+    std::ostringstream buffer;
+    buffer << input.rdbuf();
+    if (input.bad()) return false;
+    out = buffer.str();
+    return true;
+}
+
+bool ReplayWriteText(const std::filesystem::path& path, const std::string& text)
+{
+    std::ofstream output(path, std::ios::binary | std::ios::trunc);
+    if (!output) return false;
+    output.write(text.data(), static_cast<std::streamsize>(text.size()));
+    output.flush();
+    return output.good();
+}
+
+bool HashFilesParallel(const std::vector<std::string>& files,
+                       std::vector<input_provenance::FileDigest>& digests,
+                       std::string& errorText)
+{
+    errorText.clear();
+    digests.assign(files.size(), input_provenance::FileDigest{});
+    if (files.empty()) return true;
+    unsigned workers = std::thread::hardware_concurrency();
+    if (workers == 0) workers = 4;
+    workers = std::min<unsigned>(workers, 12u);
+    workers = std::min<unsigned>(workers, static_cast<unsigned>(files.size()));
+    std::atomic<std::size_t> next{0};
+    std::atomic<bool> failed{false};
+    std::mutex errorMutex;
+    std::string firstError;
+    auto run = [&]() {
+        for (;;) {
+            if (failed.load()) return;
+            const std::size_t index = next.fetch_add(1);
+            if (index >= files.size()) return;
+            try {
+                digests[index] = input_provenance::HashFile(files[index]);
+            } catch (const std::exception& exception) {
+                std::lock_guard<std::mutex> lock(errorMutex);
+                if (!failed.exchange(true)) {
+                    firstError = "could not hash " + files[index] + ": " + exception.what();
+                }
+                return;
+            }
+        }
+    };
+    std::vector<std::thread> threads;
+    threads.reserve(workers);
+    for (unsigned index = 0; index < workers; ++index) threads.emplace_back(run);
+    for (auto& thread : threads) thread.join();
+    if (failed.load()) {
+        errorText = firstError;
+        return false;
+    }
+    return true;
+}
+
+
 }  // namespace
 
 namespace SessionControl {
@@ -215,6 +297,25 @@ struct SessionServer::Impl {
     std::string sessionRoot;
     std::string outputRoot;
     std::string sessionId = NewSessionId();
+
+    // ------------------------------------------------------------- replay (F2)
+    std::string replaySource;
+    bool replayMode = false;
+    bool replayPrepared = false;
+    bool replayExecuted = false;
+    bool helloSeen = false;
+    bool replaySnapshotReady = false;
+    bool replayPlanValid = true;
+    std::string replayInvalidReason;
+    SessionJson::Json replaySnapshot;
+    SessionJson::Json replayManifest;
+    SessionJson::Json replayPreRunProvenance;
+    bool replayDataIdentityReady = false;
+    SessionJson::Json replayInfo;
+    std::vector<SessionJson::Json> replaySteps;
+    int replayCurrentRunStep = -1;
+    long long replayRequestCounter = 0;
+
     OutputManager* output = nullptr;
     SourceManager* source = nullptr;
 
@@ -270,9 +371,10 @@ struct SessionServer::Impl {
     bool recordFailed = false;
     std::string recordError;
 
-    Impl(SimulationManager& manager, std::string root)
-        : simulation(manager), recordRoot(std::move(root))
+    Impl(SimulationManager& manager, std::string root, std::string replay)
+        : simulation(manager), recordRoot(std::move(root)), replaySource(std::move(replay))
     {
+        replayMode = !replaySource.empty();
         output = manager.GetOutputManager();
         source = manager.GetSourceManager();
         outputRoot = std::filesystem::path(manager.GetContext().GetOutputDir()).lexically_normal().string();
@@ -986,6 +1088,18 @@ struct SessionServer::Impl {
         } else if (outputFailed) {
             receiptStatus = "failed";
         }
+        if (!replayMode && replayCurrentRunStep >= 0 &&
+            replayCurrentRunStep < static_cast<int>(replaySteps.size())) {
+            SessionJson::Json& step = replaySteps[static_cast<std::size_t>(replayCurrentRunStep)];
+            step["status"] = receiptStatus;
+            step["completed_events"] = completedEvents;
+            step["run_id"] = runId;
+            if (receiptStatus != "completed") {
+                replayPlanValid = false;
+                replayInvalidReason = "the source session has a " + receiptStatus + " run";
+            }
+            replayCurrentRunStep = -1;
+        }
 
         if (manager) {
             for (const auto& evidence : manager->CollectRunArtifacts(runId)) {
@@ -1396,6 +1510,7 @@ struct SessionServer::Impl {
                 kernelInitialized = true;
                 ++stateRevision;
             }
+            replayPreRunProvenance = ProvenanceIdentity();
             SessionJson::Json payload;
             payload["kernel_state"] = "idle";
             payload["evidence_level"] = "kernel_initialized";
@@ -1447,6 +1562,12 @@ struct SessionServer::Impl {
             for (auto it = payload.begin(); it != payload.end(); ++it) response[it.key()] = it.value();
             remember(response);
             Send(response);
+            if (!replayMode) {
+                SessionJson::Json step;
+                step["op"] = "set_source";
+                step["params"] = params;
+                replaySteps.push_back(std::move(step));
+            }
             return true;
         }
 
@@ -1469,6 +1590,15 @@ struct SessionServer::Impl {
                 cancelPending = false;
                 cancelRequested = false;
             }
+            if (!replayMode) {
+                SessionJson::Json step;
+                step["op"] = "run";
+                step["params"]["events"] = events;
+                step["run_request_id"] = requestId;
+                step["status"] = "pending";
+                replaySteps.push_back(std::move(step));
+                replayCurrentRunStep = static_cast<int>(replaySteps.size()) - 1;
+            }
             SessionJson::Json payload;
             payload["run_request_id"] = requestId;
             payload["planned_events"] = events;
@@ -1486,6 +1616,7 @@ struct SessionServer::Impl {
             remember(response);
             Send(response);
 
+            if (!replayMode) EnsureReplayDataIdentity();
             G4RunManager* runManager = G4RunManager::GetRunManager();
             if (runManager == nullptr) {
                 SendError("run_manager_unavailable", "G4RunManager is not available");
@@ -1557,6 +1688,10 @@ struct SessionServer::Impl {
                     cancelPending = true;
                 }
             }
+            if (!replayMode) {
+                replayPlanValid = false;
+                replayInvalidReason = "the source session cancelled a run";
+            }
             SessionJson::Json payload;
             payload["run_request_id"] = pending;
             payload["run_id"] = runId >= 0 ? SessionJson::Json(runId) : SessionJson::Json();
@@ -1597,6 +1732,7 @@ struct SessionServer::Impl {
         {
             std::lock_guard<std::mutex> guard(stateMutex);
             phase = Phase::Idle;
+            helloSeen = true;
         }
         SessionJson::Json welcome;
         welcome["kind"] = "welcome";
@@ -1611,8 +1747,650 @@ struct SessionServer::Impl {
         welcome["limits"]["max_frame_bytes"] = kMaxFrameBytes;
         welcome["limits"]["max_events_per_run"] = kMaxSessionEvents;
         welcome["state"] = StateJson();
+        if (replayMode) welcome["replay"] = replayInfo;
         Send(welcome);
         return true;
+    }
+
+
+    // ---------------------------------------------------------------- replay
+    // Capture/validate/repeat the complete controlled-session state. The engine
+    // state is captured from CLHEP before any client request and restored before
+    // `/run/initialize`; the read-back bytes must match the snapshot exactly.
+
+    bool BuildDataIdentity(SessionJson::Json& data, std::string& errorText)
+    {
+        errorText.clear();
+        struct DatasetFiles {
+            std::string env;
+            std::string folder;
+            std::string resolved;
+            bool required = false;
+            bool available = false;
+            std::vector<std::pair<std::string, std::string>> files;
+        };
+        std::vector<DatasetFiles> datasets;
+        std::vector<std::string> allFiles;
+        for (const auto& status : Geant4DataLocator::CheckDatasets()) {
+            DatasetFiles item;
+            item.env = status.env;
+            item.folder = status.folder;
+            item.required = status.required;
+            item.resolved = status.path;
+            if (status.path.empty()) {
+                if (status.required) {
+                    errorText = "a required Geant4 dataset is missing: " + status.env;
+                    return false;
+                }
+                datasets.push_back(std::move(item));
+                continue;
+            }
+            std::error_code error;
+            const std::filesystem::path root(status.path);
+            if (!std::filesystem::is_directory(root, error) || error) {
+                errorText = "Geant4 dataset directory is missing or unreadable: " + status.path;
+                return false;
+            }
+            item.available = true;
+            std::filesystem::recursive_directory_iterator iterator(root, error);
+            if (error) {
+                errorText = "could not enumerate Geant4 dataset " + status.path + ": " +
+                            error.message();
+                return false;
+            }
+            const std::filesystem::recursive_directory_iterator end;
+            while (iterator != end) {
+                const std::filesystem::path path = iterator->path();
+                std::error_code statusError;
+                const std::filesystem::file_status entryStatus =
+                    iterator->symlink_status(statusError);
+                if (statusError) {
+                    errorText = "could not stat Geant4 dataset entry " + path.generic_string() +
+                                ": " + statusError.message();
+                    return false;
+                }
+                if (std::filesystem::is_symlink(entryStatus)) {
+                    errorText = "Geant4 dataset contains an unsupported symbolic link: " +
+                                path.generic_string();
+                    return false;
+                }
+                if (std::filesystem::is_regular_file(entryStatus)) {
+                    std::error_code relativeError;
+                    const std::filesystem::path relative =
+                        std::filesystem::relative(path, root, relativeError);
+                    if (relativeError) {
+                        errorText = "could not resolve Geant4 dataset entry " +
+                                    path.generic_string();
+                        return false;
+                    }
+                    item.files.emplace_back(relative.generic_string(), path.string());
+                }
+                iterator.increment(error);
+                if (error) {
+                    errorText = "Geant4 dataset enumeration failed under " + status.path +
+                                ": " + error.message();
+                    return false;
+                }
+            }
+            std::sort(item.files.begin(), item.files.end());
+            for (const auto& file : item.files) allFiles.push_back(file.second);
+            datasets.push_back(std::move(item));
+        }
+        std::vector<input_provenance::FileDigest> digests;
+        std::string hashError;
+        if (!HashFilesParallel(allFiles, digests, hashError)) {
+            errorText = hashError;
+            return false;
+        }
+        SessionJson::Json entries = SessionJson::Json::array();
+        std::string digest;
+        std::size_t fileIndex = 0;
+        for (const auto& item : datasets) {
+            SessionJson::Json entry;
+            entry["env"] = item.env;
+            entry["folder"] = item.folder;
+            entry["required"] = item.required;
+            entry["available"] = item.available;
+            entry["path"] = item.resolved.empty() ? SessionJson::Json()
+                                                  : SessionJson::Json(item.resolved);
+            if (!item.available) {
+                entry["manifest_sha256"] = SessionJson::Json();
+                entry["file_count"] = 0;
+            } else {
+                std::string joined;
+                for (const auto& file : item.files) {
+                    std::error_code sizeError;
+                    const auto size = std::filesystem::file_size(file.second, sizeError);
+                    const input_provenance::FileDigest& digestEntry = digests[fileIndex];
+                    if (sizeError || digestEntry.sha256.empty() ||
+                        digestEntry.size_bytes != static_cast<std::uint64_t>(size)) {
+                        errorText = "could not read the complete Geant4 dataset file " +
+                                    file.second;
+                        return false;
+                    }
+                    joined += file.first + "|" + std::to_string(size) + "|" +
+                              digestEntry.sha256 + "\n";
+                    ++fileIndex;
+                }
+                entry["manifest_sha256"] = input_provenance::Sha256(joined);
+                entry["file_count"] = static_cast<long long>(item.files.size());
+            }
+            entries.push_back(entry);
+            digest += item.env;
+            digest.push_back('\x1f');
+            digest += item.folder;
+            digest.push_back('\x1f');
+            digest += entry.value("manifest_sha256", std::string());
+            digest.push_back('\n');
+        }
+        data["datasets"] = entries;
+        data["digest"] = input_provenance::Sha256(digest);
+        return true;
+    }
+
+    SessionJson::Json ProvenanceIdentity()
+    {
+        std::vector<std::string> lines;
+        SessionJson::Json observations = SessionJson::Json::array();
+        for (const auto& item : input_provenance::Snapshot()) {
+            // The F1 ledger writes "recorded" for bytes actually read; keep it
+            // aligned with src/Config/InputProvenance.cc RecordRead instead of
+            // filtering the whole ledger away.
+            if (item.status != "recorded" && item.status != "observed") continue;
+            const std::string path = ReplayNormalizePath(item.path);
+            SessionJson::Json entry;
+            entry["path"] = path;
+            entry["kind"] = item.kind;
+            entry["role"] = item.role;
+            entry["capture_method"] = item.capture_method;
+            if (item.sha256) entry["sha256"] = *item.sha256;
+            if (item.size_bytes) entry["size_bytes"] = *item.size_bytes;
+            observations.push_back(entry);
+            lines.push_back(path + "|" + item.kind + "|" + item.role + "|" +
+                             (item.sha256 ? *item.sha256 : std::string()) + "|" +
+                             (item.size_bytes ? std::to_string(*item.size_bytes) : std::string()) +
+                             "\n");
+        }
+        std::sort(lines.begin(), lines.end());
+        std::string joined;
+        joined.reserve(lines.size() * 64);
+        for (const std::string& line : lines) joined += line;
+        SessionJson::Json provenance;
+        provenance["count"] = static_cast<long long>(lines.size());
+        provenance["digest"] = input_provenance::Sha256(joined);
+        provenance["observations"] = observations;
+        return provenance;
+    }
+
+    SessionJson::Json InputIdentity(const std::string& path)
+    {
+        std::error_code error;
+        if (path.empty()) return SessionJson::Json();
+        SessionJson::Json entry;
+        entry["path"] = ReplayNormalizePath(path);
+        if (!std::filesystem::is_regular_file(path, error) || error) {
+            entry["missing"] = true;
+            return entry;
+        }
+        const input_provenance::FileDigest digest = input_provenance::HashFile(path);
+        entry["sha256"] = digest.sha256;
+        entry["size_bytes"] = digest.size_bytes;
+        return entry;
+    }
+
+    static std::string CompareInputIdentities(const SessionJson::Json& expected,
+                                              const SessionJson::Json& current)
+    {
+        if (!expected.is_object() || !current.is_object()) {
+            return "the replay snapshot does not describe the session inputs";
+        }
+        for (auto it = expected.begin(); it != expected.end(); ++it) {
+            const std::string slot = it.key();
+            if (!current.contains(slot) || !current[slot].is_object()) {
+                return "the replay process does not configure input slot '" + slot + "'";
+            }
+            const SessionJson::Json& want = it.value();
+            const SessionJson::Json& have = current[slot];
+            if (want.value("missing", false) != have.value("missing", false)) {
+                return "input slot '" + slot + "' presence differs from the source session";
+            }
+            if (want.value("missing", false)) continue;
+            if (want.value("path", std::string()) != have.value("path", std::string())) {
+                return "input slot '" + slot + "' points at a different file than the source session";
+            }
+            if (want.value("sha256", std::string()) != have.value("sha256", std::string()) ||
+                want.value("size_bytes", 0) != have.value("size_bytes", 0)) {
+                return "input slot '" + slot + "' has different bytes than the source session";
+            }
+        }
+        return {};
+    }
+
+    SessionJson::Json CurrentInputIdentity()
+    {
+        const auto& context = simulation.GetContext();
+        SessionJson::Json inputs;
+        inputs["main_config"] = InputIdentity(context.GetMainConfig());
+        inputs["materials_config"] = InputIdentity(simulation.GetMaterialsConfigFile());
+        const GeometryManager* geometry = simulation.GetGeometryManager();
+        inputs["geometry_config"] =
+            InputIdentity(geometry != nullptr ? geometry->GetGeometryConfigFile() : std::string());
+        return inputs;
+    }
+
+    void RecordReplayMeta(const std::string& event, const SessionJson::Json& extra = SessionJson::Json())
+    {
+        SessionJson::Json line;
+        line["schema"] = "g4usim-session-log-v1";
+        line["at"] = NowIso8601();
+        line["direction"] = "meta";
+        line["event"] = event;
+        line["session_id"] = sessionId;
+        if (extra.is_object()) {
+            for (auto it = extra.begin(); it != extra.end(); ++it) line[it.key()] = it.value();
+        }
+        RecordLine(line);
+    }
+
+    bool CaptureReplaySnapshot()
+    {
+        const std::filesystem::path sessionDir(sessionRoot);
+        SessionJson::Json snapshot;
+        snapshot["schema"] = "g4usim_session_replay_v1";
+        snapshot["version"] = 1;
+        snapshot["session_id"] = sessionId;
+        snapshot["created_at"] = NowIso8601();
+        SessionJson::Json backend;
+        backend["source_fingerprint"] = G4USIM_SOURCE_FINGERPRINT;
+        backend["build_git_commit"] = G4USIM_GIT_COMMIT;
+        backend["compiler_id"] = G4USIM_COMPILER_ID;
+        backend["geant4_version"] = std::string(G4Version);
+        snapshot["backend"] = backend;
+        const auto& context = simulation.GetContext();
+        snapshot["threads"] = context.GetNumThreads();
+        snapshot["seed"]["has_seed"] = context.HasSeed();
+        if (context.HasSeed()) snapshot["seed"]["value"] = context.GetSeed();
+        snapshot["inputs"] = CurrentInputIdentity();
+        snapshot["output_root"] = outputRoot;
+        snapshot["provenance"] = ProvenanceIdentity();
+        if (snapshot["provenance"].value("count", 0) <= 0) {
+            replayPlanValid = false;
+            replayInvalidReason = "the session did not record the input bytes it consumed";
+            MarkRecordFailure(replayInvalidReason);
+            return false;
+        }
+
+        const std::filesystem::path rngPath = sessionDir / "rng-start.conf";
+        CLHEP::HepRandom::saveEngineStatus(rngPath.string().c_str());
+        std::string rngText;
+        std::error_code removeError;
+        if (!ReplayReadText(rngPath, rngText) || rngText.empty()) {
+            replayPlanValid = false;
+            replayInvalidReason = "could not capture the CLHEP random engine state";
+            MarkRecordFailure(replayInvalidReason);
+            return false;
+        }
+        std::filesystem::remove(rngPath, removeError);
+        snapshot["rng"]["status_text"] = rngText;
+        snapshot["rng"]["sha256"] = input_provenance::Sha256(rngText);
+
+        if (!ReplayWriteText(sessionDir / "replay-snapshot.json", snapshot.dump() + "\n")) {
+            replayPlanValid = false;
+            replayInvalidReason = "could not write replay-snapshot.json";
+            MarkRecordFailure(replayInvalidReason);
+            return false;
+        }
+        replaySnapshot = std::move(snapshot);
+        replaySnapshotReady = true;
+        RecordReplayMeta("replay_snapshot_written");
+        return true;
+    }
+
+    bool ReplayRefuse(const std::string& reason)
+    {
+        replayInvalidReason = reason;
+        replayPrepared = false;
+        MarkRecordFailure(reason);
+        return false;
+    }
+
+    bool PrepareReplay()
+    {
+        std::error_code error;
+        const std::filesystem::path source(replaySource);
+        if (!std::filesystem::is_directory(source, error) || error) {
+            return ReplayRefuse("replay source is not a directory: " + replaySource);
+        }
+        std::string snapshotText;
+        std::string manifestText;
+        if (!ReplayReadText(source / "replay-snapshot.json", snapshotText)) {
+            return ReplayRefuse("replay-snapshot.json is missing or unreadable");
+        }
+        if (!ReplayReadText(source / "replay-manifest.json", manifestText)) {
+            return ReplayRefuse("replay-manifest.json is missing or unreadable");
+        }
+        SessionJson::Json snapshot;
+        SessionJson::Json manifest;
+        std::string parseError;
+        if (!SessionJson::ParseStrict(snapshotText, snapshot, parseError)) {
+            return ReplayRefuse("replay-snapshot.json is invalid: " + parseError);
+        }
+        if (!SessionJson::ParseStrict(manifestText, manifest, parseError)) {
+            return ReplayRefuse("replay-manifest.json is invalid: " + parseError);
+        }
+        if (snapshot.value("schema", "") != "g4usim_session_replay_v1" ||
+            snapshot.value("version", 0) != 1) {
+            return ReplayRefuse("unsupported replay snapshot schema");
+        }
+        if (manifest.value("schema", "") != "g4usim_session_replay_manifest_v1" ||
+            manifest.value("version", 0) != 1) {
+            return ReplayRefuse("unsupported replay manifest schema");
+        }
+        if (!manifest.value("replayable", false)) {
+            return ReplayRefuse("the source session is not replayable: " +
+                                manifest.value("reason", std::string("unknown reason")));
+        }
+        if (manifest.value("snapshot_sha256", std::string()) !=
+            input_provenance::Sha256(snapshotText)) {
+            return ReplayRefuse("replay snapshot bytes do not match the manifest digest");
+        }
+        const SessionJson::Json& backend = snapshot["backend"];
+        if (backend.value("source_fingerprint", std::string()) != G4USIM_SOURCE_FINGERPRINT) {
+            return ReplayRefuse("build source fingerprint does not match the replay snapshot");
+        }
+        if (backend.value("geant4_version", std::string()) != std::string(G4Version)) {
+            return ReplayRefuse("Geant4 version does not match the replay snapshot");
+        }
+        const auto& context = simulation.GetContext();
+        if (snapshot.value("threads", 0) != context.GetNumThreads()) {
+            return ReplayRefuse("thread count does not match the replay snapshot");
+        }
+        const std::string sourceOutput = ReplayNormalizePath(snapshot.value("output_root", ""));
+        if (!sourceOutput.empty() && sourceOutput == ReplayNormalizePath(outputRoot)) {
+            return ReplayRefuse(
+                "replay needs a new output root; it must differ from the source session output");
+        }
+        const SessionJson::Json currentProvenance = ProvenanceIdentity();
+        if (currentProvenance.value("count", 0) <= 0) {
+            return ReplayRefuse("the replay process did not record the inputs it consumed");
+        }
+        if (currentProvenance.value("digest", std::string()) !=
+            snapshot["provenance"].value("digest", std::string())) {
+            return ReplayRefuse(
+                "the replay process is consuming different input bytes than the source session");
+        }
+        const std::string inputDifference =
+            CompareInputIdentities(snapshot["inputs"], CurrentInputIdentity());
+        if (!inputDifference.empty()) {
+            return ReplayRefuse(inputDifference);
+        }
+        const std::string rngText = snapshot["rng"].value("status_text", std::string());
+        if (rngText.empty() ||
+            input_provenance::Sha256(rngText) != snapshot["rng"].value("sha256", std::string())) {
+            return ReplayRefuse("replay snapshot random state is invalid");
+        }
+        const std::filesystem::path restorePath = std::filesystem::path(sessionRoot) / "rng-restore.conf";
+        const std::filesystem::path verifyPath = std::filesystem::path(sessionRoot) / "rng-restore-verify.conf";
+        if (!ReplayWriteText(restorePath, rngText)) {
+            return ReplayRefuse("could not stage the random engine state");
+        }
+        CLHEP::HepRandom::restoreEngineStatus(restorePath.string().c_str());
+        CLHEP::HepRandom::saveEngineStatus(verifyPath.string().c_str());
+        std::string verifyText;
+        const bool readBack = ReplayReadText(verifyPath, verifyText);
+        std::error_code cleanupError;
+        std::filesystem::remove(restorePath, cleanupError);
+        std::filesystem::remove(verifyPath, cleanupError);
+        if (!readBack || verifyText != rngText) {
+            return ReplayRefuse(
+                "the restored CLHEP random engine state does not read back identically");
+        }
+        replaySnapshot = std::move(snapshot);
+        replayManifest = std::move(manifest);
+        replaySteps = replayManifest.value("steps", SessionJson::Json::array());
+        replayInfo["schema"] = "g4usim_session_replay_v1";
+        replayInfo["source_session_dir"] = ReplayNormalizePath(replaySource);
+        replayInfo["session_id"] = replaySnapshot.value("session_id", std::string());
+        replayInfo["steps"] = replaySteps;
+        replayInfo["replayable"] = true;
+        replaySnapshotReady = true;
+        replayPrepared = true;
+        RecordReplayMeta("replay_prepared",
+                         SessionJson::Json{{"source_session", replayInfo["session_id"]}});
+        return true;
+    }
+
+    bool ReplaySendOp(const std::string& op, const SessionJson::Json& params,
+                      const std::string& requestId, long long idSeed)
+    {
+        SessionJson::Json frame;
+        ++replayRequestCounter;
+        std::ostringstream idText;
+        idText << std::hex << std::setw(16) << std::setfill('0')
+               << (idSeed + replayRequestCounter);
+        frame["seq"] = lastClientSeq + 1;
+        frame["id"] = idText.str();
+        frame["request_id"] = requestId;
+        frame["op"] = op;
+        frame["state_revision"] = stateRevision;
+        frame["params"] = params;
+        Command command;
+        command.kind = Command::Kind::Request;
+        command.frame = std::move(frame);
+        return ProcessRequest(command);
+    }
+
+    int AbortReplayStartup(int code)
+    {
+        RecordReplayMeta("replay_refused", SessionJson::Json{{"reason", replayInvalidReason}});
+        {
+            std::lock_guard<std::mutex> guard(recordMutex);
+            if (record.is_open()) {
+                record.flush();
+                record.close();
+            }
+        }
+        stopReader.store(true, std::memory_order_release);
+        if (reader.joinable()) reader.join();
+        g_activeServer.store(nullptr, std::memory_order_release);
+        std::fprintf(stderr, "session replay refused: %s\n", replayInvalidReason.c_str());
+        std::fflush(stderr);
+        return code;
+    }
+
+    void EnsureReplayDataIdentity()
+    {
+        if (replayDataIdentityReady || !replayPlanValid) return;
+        SessionJson::Json identity;
+        std::string errorText;
+        if (!BuildDataIdentity(identity, errorText)) {
+            replayPlanValid = false;
+            replayInvalidReason = errorText;
+            MarkRecordFailure(errorText);
+            return;
+        }
+        identity["schema"] = "g4usim_session_replay_data_identity_v1";
+        identity["captured_at"] = NowIso8601();
+        const std::filesystem::path path =
+            std::filesystem::path(sessionRoot) / "replay-data-identity.json";
+        if (!ReplayWriteText(path, identity.dump() + "\n")) {
+            replayPlanValid = false;
+            replayInvalidReason = "could not write replay-data-identity.json";
+            MarkRecordFailure(replayInvalidReason);
+            return;
+        }
+        replayDataIdentityReady = true;
+        RecordReplayMeta("replay_data_identity_captured");
+    }
+
+    int ExecuteReplay()
+    {
+        RecordReplayMeta("replay_started",
+                         SessionJson::Json{{"source_session", replayInfo["session_id"]}});
+        std::string failure;
+        std::ostringstream idText;
+        idText << std::hex << std::setw(16) << std::setfill('0') << 0x100000;
+        if (!ReplaySendOp("initialize", SessionJson::Json::object(), idText.str(), 0x100000)) {
+            failure = "replay initialize failed";
+        }
+        if (failure.empty()) {
+            SessionJson::Json currentData;
+            std::string dataError;
+            if (!BuildDataIdentity(currentData, dataError)) {
+                failure = "could not verify the Geant4 physics data identity: " + dataError;
+            } else if (currentData.value("digest", std::string()) !=
+                       replayManifest["data_identity"].value("digest", std::string())) {
+                failure = "the replay process is using different Geant4 physics data than the source session";
+            } else if (replayManifest["provenance_pre_run"].value("count", 0) > 0) {
+                const SessionJson::Json currentProvenance = ProvenanceIdentity();
+                if (currentProvenance.value("digest", std::string()) !=
+                    replayManifest["provenance_pre_run"].value("digest", std::string())) {
+                    failure = "the replay process consumed different input bytes than the source session";
+                }
+            }
+        }
+        std::size_t executed = 0;
+        if (failure.empty()) {
+            for (const auto& step : replaySteps) {
+                const std::string op = step.value("op", std::string());
+                const SessionJson::Json params = step.value("params", SessionJson::Json::object());
+                if (op == "set_source") {
+                    if (!ReplaySendOp("set_source", params, ReplayIdFor(step, 0x200000), 0x200000)) {
+                        failure = "replay set_source failed";
+                        break;
+                    }
+                } else if (op == "run") {
+                    if (!ReplaySendOp("run", params, ReplayIdFor(step, 0x300000), 0x300000)) {
+                        failure = "replay run failed";
+                        break;
+                    }
+                    const std::string status = step.value("status", std::string());
+                    if (status != "completed") {
+                        failure = "the source run was not completed";
+                        break;
+                    }
+                    ++executed;
+                } else {
+                    failure = "unsupported replay step: " + op;
+                    break;
+                }
+                if (exitCode.load(std::memory_order_relaxed) != 0) {
+                    failure = "the replay ended with a failed run";
+                    break;
+                }
+            }
+        }
+        if (failure.empty() && replayManifest["provenance_final"].value("count", 0) > 0) {
+            const SessionJson::Json finalProvenance = ProvenanceIdentity();
+            if (finalProvenance.value("digest", std::string()) !=
+                replayManifest["provenance_final"].value("digest", std::string())) {
+                failure = "the replay process consumed different input bytes while running";
+            }
+        }
+        SessionJson::Json closing;
+        closing["kind"] = "event";
+        closing["event"] = "closing";
+        closing["reason"] = failure.empty() ? "replay_finished" : "replay_failed";
+        closing["exit_code"] = failure.empty() ? 0 : 4;
+        closing["session_id"] = sessionId;
+        closing["at"] = NowIso8601();
+        closing["state_revision"] = stateRevision;
+        closing["steps_total"] = replaySteps.size();
+        closing["steps_executed"] = executed;
+        if (!failure.empty()) closing["message"] = failure;
+        Send(closing);
+        RecordReplayMeta(failure.empty() ? "replay_finished" : "replay_failed",
+                         SessionJson::Json{{"reason", failure}});
+        if (!failure.empty()) {
+            std::fprintf(stderr, "session replay failed: %s\n", failure.c_str());
+            std::fflush(stderr);
+            exitCode.store(4, std::memory_order_relaxed);
+            return 4;
+        }
+        exitCode.store(0, std::memory_order_relaxed);
+        return 0;
+    }
+
+    std::string ReplayIdFor(const SessionJson::Json& step, long long fallbackSeed)
+    {
+        const std::string recorded = step.value("run_request_id", std::string());
+        if (recorded.size() >= 1 && recorded.size() <= 64 &&
+            std::all_of(recorded.begin(), recorded.end(), [](unsigned char c) {
+                return std::isxdigit(c) != 0;
+            })) {
+            return recorded;
+        }
+        ++replayRequestCounter;
+        std::ostringstream out;
+        out << std::hex << std::setw(16) << std::setfill('0') << (fallbackSeed + replayRequestCounter);
+        return out.str();
+    }
+
+    void WriteReplayManifest()
+    {
+        if (!replaySnapshotReady) return;
+        SessionJson::Json manifest;
+        manifest["schema"] = "g4usim_session_replay_manifest_v1";
+        manifest["version"] = 1;
+        manifest["session_id"] = sessionId;
+        manifest["snapshot_file"] = "replay-snapshot.json";
+        std::string snapshotText;
+        const std::filesystem::path snapshotPath =
+            std::filesystem::path(sessionRoot) / "replay-snapshot.json";
+        if (ReplayReadText(snapshotPath, snapshotText)) {
+            manifest["snapshot_sha256"] = input_provenance::Sha256(snapshotText);
+        }
+        manifest["created_at"] = NowIso8601();
+        const int finalExit = exitCode.load(std::memory_order_relaxed);
+        manifest["exit_code"] = finalExit;
+        manifest["threads"] = simulation.GetContext().GetNumThreads();
+        manifest["source_fingerprint"] = G4USIM_SOURCE_FINGERPRINT;
+        manifest["output_root"] = outputRoot;
+        bool replayable = finalExit == 0 && replayPlanValid && !RecordFailedSnapshot() &&
+                          !replaySteps.empty() && !manifest["snapshot_sha256"].is_null();
+        for (const auto& step : replaySteps) {
+            if (step.value("op", std::string()) == "run" &&
+                step.value("status", std::string()) != "completed") {
+                replayable = false;
+            }
+        }
+        std::string dataIdentityText;
+        const std::filesystem::path dataIdentityPath =
+            std::filesystem::path(sessionRoot) / "replay-data-identity.json";
+        if (ReplayReadText(dataIdentityPath, dataIdentityText)) {
+            SessionJson::Json dataIdentity;
+            std::string parseError;
+            if (SessionJson::ParseStrict(dataIdentityText, dataIdentity, parseError)) {
+                manifest["data_identity"] = dataIdentity;
+            } else {
+                replayable = false;
+                if (replayInvalidReason.empty()) replayInvalidReason = parseError;
+            }
+        } else {
+            replayable = false;
+            if (replayInvalidReason.empty()) {
+                replayInvalidReason = "the session did not capture its physics data identity";
+            }
+        }
+        manifest["provenance_pre_run"] = replayPreRunProvenance;
+        manifest["provenance_final"] = ProvenanceIdentity();
+        manifest["replayable"] = replayable;
+        manifest["reason"] = replayable ? std::string()
+                                        : (replayInvalidReason.empty()
+                                               ? std::string("the session did not finish every run")
+                                               : replayInvalidReason);
+        manifest["steps"] = replaySteps;
+        const std::filesystem::path path =
+            std::filesystem::path(sessionRoot) / "replay-manifest.json";
+        if (!ReplayWriteText(path, manifest.dump() + "\n")) {
+            std::fprintf(stderr, "could not write replay-manifest.json: %s\n",
+                         path.generic_string().c_str());
+            std::fflush(stderr);
+            exitCode.store(4, std::memory_order_relaxed);
+        } else {
+            RecordReplayMeta("replay_manifest_written",
+                             SessionJson::Json{{"replayable", replayable}});
+        }
     }
 
     int Run()
@@ -1673,6 +2451,14 @@ struct SessionServer::Impl {
             return exitCode.load(std::memory_order_relaxed);
         }
         reader = std::thread([this] { ReaderLoop(); });
+
+        if (replayMode) {
+            if (!PrepareReplay()) return AbortReplayStartup(4);
+        } else if (!CaptureReplaySnapshot()) {
+            return AbortReplayStartup(exitCode.load(std::memory_order_relaxed) != 0
+                                          ? exitCode.load(std::memory_order_relaxed)
+                                          : 4);
+        }
 
         bool serving = true;
         bool eofExit = false;
@@ -1751,6 +2537,13 @@ struct SessionServer::Impl {
                     break;
                 }
             }
+            if (replayMode && !replayExecuted && helloSeen && serving &&
+                phase == Phase::Idle) {
+                replayExecuted = true;
+                const int replayCode = ExecuteReplay();
+                if (replayCode != 0) exitCode.store(replayCode, std::memory_order_relaxed);
+                serving = false;
+            }
         }
 
         {
@@ -1799,14 +2592,16 @@ struct SessionServer::Impl {
                 exitCode.store(4, std::memory_order_relaxed);
             }
         }
+        if (!replayMode) WriteReplayManifest();
         return exitCode.load(std::memory_order_relaxed);
     }
 };
 
-SessionServer::SessionServer(SimulationManager& simulation, std::string recordRoot)
-    : simulation_(simulation), recordRoot_(std::move(recordRoot))
+SessionServer::SessionServer(SimulationManager& simulation, std::string recordRoot,
+                             std::string replaySource)
+    : simulation_(simulation), recordRoot_(std::move(recordRoot)), replaySource_(std::move(replaySource))
 {
-    impl_ = new Impl(simulation_, recordRoot_);
+    impl_ = new Impl(simulation_, recordRoot_, replaySource_);
     impl_->owner = this;
 }
 
