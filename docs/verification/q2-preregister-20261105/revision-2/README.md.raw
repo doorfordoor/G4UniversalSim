@@ -1,0 +1,101 @@
+# Q2-1 量定义、独立参考与实验预注册（v2，退回修订后）
+
+状态：**待独立审阅**（`author_revised_waiting_independent_review`）。本包是**规格**，
+不含模拟结果；Q2-1 不运行 Geant4、不改产品/测试/正式基准/CI。审阅冻结参考值后，
+才可按 `registry.json` 执行 Q2-2/3/4/5。
+
+- 回执：[docs/collab/outbox/20261105-q2-reference-proposal.md](../../docs/collab/outbox/20261105-q2-reference-proposal.md)
+- 机器可读预注册：[registry.json](registry.json)（schema `g4usim_q2_1_prereg_v1`，
+  18 个 case、14 个冻结条目、10 条限制、12 个包内文件哈希、工作区身份）
+- 参考值表：[references/values-q2-1.csv](references/values-q2-1.csv)（冻结/算术/受限逐行标注）
+- NIEL 审计：[references/ddd-table-audit.md](references/ddd-table-audit.md)
+
+## 1. 本包回答什么
+
+1. 四个量（Dose / Fluence / LET / DDD）的**定义、消费者、单位、归一化、权重、质量/体积口径**
+   与**现有验证覆盖**（`quantities.md`）。
+2. 哪些量有**真正的独立外部参考**、哪些只是同源自洽（`references/existing-evidence.md`）。
+3. 可直接执行的**有限病例**：参考病例 REF-*、实现对照 IMP-*、统计 UNC-*、偏置 BIAS-*
+   （`cases/*.md`）。
+4. **预注册**：每个 case 的输入、参考值/单位/来源、插值/能量方法、种子/样本/容差/停止条件、
+   能发现/不能发现什么（`registry.json` + `references/values-q2-1.csv`）。
+5. 缺口与限制（`registry.json` 的 `limitations`，10 条）：不允许用其它量通过来遮盖。
+
+## 2. 包内文件与哈希（sha256，2026-11-05 生成）
+
+| 文件 | 字节 | sha256 |
+| --- | --- | --- |
+| `quantities.md` | 10,598 | `0c1e67d23b5f5c2d48681e5d7e9b172285f559cf42b925b7b176effa41523343` |
+| `cases/reference-cases.md` | 10,302 | `6a45ebe5fd2b003cfc74b1e434e30aef039c02e2bb32f30ea3b0e5c227afe01c` |
+| `cases/implementation-cases.md` | 66,393 | `ff2fe95ef9be1f6ee1a6a7585ac93ee161ae34f614a7cb73c2a0e877cb91f92b` |
+| `cases/uncertainty-cases.md` | 7,685 | `d963fdb23cbb977d949ce36399fcfc02d1f5fa261737f13e1b8b725ae0e12ff7` |
+| `cases/biasing-cases.md` | 8,272 | `d54812df351793914a50ddf5bb85035d50025a2138823714f02be0f646ba7979` |
+| `references/external-sources.md` | 44,626 | `68b666d1f11a1d77013c5a3ec306ea296d13a4bfbc442fcde08629ccd53809d6` |
+| `references/existing-evidence.md` | 45,071 | `5b1f2f9a2d17d3e455a20d3f7124b8d7055cdd13f01ba639bc300f61fda84a27` |
+| `references/values-q2-1.csv` | 6,780 | `3c342660e6381a96fe2ac63f3798ad40ff6e1b2ca6d1277858419dc3ddf99ca1` |
+| `references/ddd-table-audit.md` | 5,134 | `f76b914b2604c595e75c63fb993b2aa1c040a36c4336577501e42c497e152389` |
+| `raw/scorer-facts.md` | 65,822 | `deb2d7dc27d9cdeb56abf946363c0ffba920df72d0ccefaaf428e0c193cee2ae` |
+| `raw/benchmarks-and-contracts.md` | 46,148 | `6a13421d1a5cfce2bee5e8abfbaed040421efc577049d20438a691c877fc78d2` |
+| `README.md` | 本文件 | 由 `registry.json` 的 files 段记录最终哈希 |
+
+`registry.json` 由 `out/make_q2_registry.py`（生成）+ `out/patch_q2_registry.py`（修订）生成；
+两脚本均以 `python -B` 运行、只写本包内文件。
+
+## 3. 冻结/受限状态一览
+
+| 项 | 状态 | 说明 |
+| --- | --- | --- |
+| REF-DOSE-01（4 个 E_mid 参考值） | 冻结参考 | NIST PSTAR Si，E_mid 由 pre-fixed CSDA 反演；独立复算与库内参考.csv 一致 |
+| REF-FLU-01/02 | 冻结解析值 | 12×12 mm 源、N=20000；Φ=138.888… mm⁻²、L=1388.888… mm；hits 重算容差 1e-9 |
+| REF-LET-01 | 冻结参考 | PSTAR Si + 20 µm 水、E_mid pre-fixed；let_t 8.1075/1.3599 keV/µm |
+| REF-DDD-01 | 冻结（带限制） | 只验证折积；NIEL 表本身无独立第二来源 |
+| REF-DDD-02 | **仅算术审计，非物理判定** | 取消 0.1% ASTM 门槛；换算/插值/评价差异分解见审计文件 |
+| UNC-TOT/SPARSE/ZERO-DEN | 冻结解析 | 沿用 Q1 `uncorrected_event_moments_v1` 与状态定义 |
+| UNC-RATIO-01 | 冻结解析 | 用 `let_volume_summary` 已输出的全部矩独立重算 delta 误差；**不需要新增产品列** |
+| BIAS-01/02 | 冻结设计 | 16 对独立批次、两组不重叠种子、交替顺序；FOM 无收益是允许结论 |
+| BIAS-03 | 冻结设计 | MT 8 对，两臂 threads=4 |
+
+## 4. 本次修订（Q2-1 退回意见 m14726 的四项）
+
+1. **UNC-RATIO-01**：撤回“交叉项不可重算、必须加 CSV 字段”的旧判断。`LETScorer.cc:150-153`
+   已输出 `sum_sq_wl/sum_sq_wSl/sum_sq_wS2l/sum_wl_x_wSl/sum_wSl_x_wS2l/n_events`；
+   两个 delta 比值误差可用公共 CSV 独立重算（公式在 `cases/uncertainty-cases.md` 与
+   registry 的 `reference.formula_let_t/let_d`）。零贡献事件仍进 N。
+2. **REF-DDD-02**：取消未核实的“1 MeV 插值必须与 95 MeV·mb 在 0.1% 内一致”判据。
+   `references/ddd-table-audit.md` 分开列出：95 MeV·mb 单位换算（算术已核验）、离散表
+   插值算法（log-log 2.158335e-3 vs 线性 2.193371e-3）、评价/版本/归一化差异；缺 1.000 MeV
+   节点与约 6% 差异**不定为程序或数据缺陷**，不补点。
+3. **预注册补全**：每个可执行 case 的输入、期待状态、参考值/单位/来源、原始数据 SHA、
+   插值规则、种子/样本/容差/停止条件均写入 `registry.json` 与 `values-q2-1.csv`；
+   E_mid 明确是**预先固定参考**（CSDA 反演），不是条件化观测；无法冻结项单列限制（L1–L10），
+   不串成所有病例的前置。
+4. **BIAS-01/02**：16 个独立批次/组、各 200000 事件；analog `20261201..20261216`、biased
+   `20261217..20261232` 不重叠；交替执行顺序与计时范围写明；bootstrap 仅辅助、不替代独立
+   批次数；无收益/更差是允许结论，不得为了 CI 下界>1 换种子或调参。
+
+## 5. 审阅要点
+
+- `registry.json` 的 `cases[*]` 应覆盖：`inputs`、`reference`、`tolerance`、
+  `falsifies`、`cannot_detect`、`stop_conditions`；无法冻结项看 `limitations`。
+- 参考值表 `references/values-q2-1.csv` 逐行有 `freeze_status`：
+  `frozen_reference` / `frozen_analytic` / `frozen_reference_with_limitation` /
+  `arithmetic_only_not_physical` / `limited_unverified_input` / `informational_not_used`。
+- 检查 `REF-DDD-02` 不再有物理容差；检查 `UNC-RATIO-01` 不再要求新增产品列；
+  检查 `BIAS-01/02` 的种子表、批次数与决策规则先于运行固定。
+- 外部源（`references/external-sources.md`）逐条有 URL/版本/访问日期与仓库副本 SHA-256；
+  ASTM 全文不可得已列为限制。
+
+## 6. 复现与执行边界
+
+```bash
+python -B out/make_q2_registry.py      # 重新生成基础 registry
+python -B out/patch_q2_registry.py     # 应用本轮修订、冻结/限制/身份
+python - <<'PY'                        # 结构自检
+import json; d=json.load(open('out/collab/q2-reference-proposal/registry.json',encoding='utf-8'))
+assert d['schema']=='g4usim_q2_1_prereg_v1' and len(d['cases'])==18 and d['limitations']
+PY
+```
+
+本轮**未运行**任何 Geant4 模拟；未修改 `src/`、`include/`、`scripts/`、CI、正式基准或
+支持矩阵；`out/collab/q2-reference-proposal/**` 为唯一新增输出。冻结后由监督端决定
+Q2-2/3/4/5 的执行顺序。

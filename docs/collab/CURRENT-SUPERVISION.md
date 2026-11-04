@@ -15,20 +15,20 @@ D盘roadmap/Q2-scientific-baselines，基线1280b44dda2a0e6bf8ccc67388b6ec77b6e4
 | 清单项 | 状态 | 责任与证据 |
 | --- | --- | --- |
 | Q2-1定义/参考/预注册 | 进行中 | DeepSeek原会话round70运行，首交outbox/20261105-q2-reference-proposal.md |
-| Q2-2确定性单位/实现 | 未开始 | 等预注册审查冻结 |
+| Q2-2确定性单位/实现 | 进行中 | 四例独立冻结v1，实际实现与自测已派 |
 | Q2-3独立参考/适用域 | 未开始 | 按冻结病例及来源 |
 | Q2-4统计不确定度 | 未开始 | 固定种子、样本和判据后实验 |
 | Q2-5 XS偏置/analog | 未开始 | 实际worker权重与独立批次 |
 | Q2-6整阶段验收交班 | 未开始 | 支持平台/版本回归及科学范围签收 |
 
 ## 本轮结果
-安装run41866438025最终success，Windows/Linux原artifact SHA/CRC及9/10阶段日志摘要、退出0均独立通过，runtime/SDK flow-report均verified。磁盘清理释放11838394368字节。Q2首稿turn56完成，初审发现LET已有交叉矩却要求新增输出、未核实参考的0.1%门槛、参考冻结缺口及2批次FOM区间依据不足，已给具体修订。
+原turn57修订完成，LET矩/DDD门槛/批次方向通过。发现REF-FLU单位和宽束命中期望混淆，Q2-1外部参考尚未全冻结。主审独立冻结四个确定性/算术病例，实际启动Q2-2，避免继续等待所有外部参考。冻结依据decisions/20261105-q2-implementation-freeze-v1.md。
 
 ## 运行中任务
-DeepSeek原task/session，round71请求q2-preregister-existing-moments-r1-55652422已接单，已处理游标37986。仅修原预注册提案，停止后独审。主审进程59478、46460均已结束0，当前无后台下载或安装监控。
+DeepSeek原task/session，round72请求q2-implementation-v1-frozen-20261105已接单。执行范围out/collab/q2-implementation-v1，回执outbox/20261105-q2-implementation-v1.md。冻结后端SHA f8a8119d，C++ e7de615d。当前无主审后台命令。
 
 ## 下一轮目标
-核对修订提案，分别冻结可执行实现/参考病例及明确限制，按固定清单启动实际核验。没有新后台任务时不重复安装下载/旧矩阵。
+作者交付后独立运行比较器/四例/篡改反例，失败给具体定位。Q2-3前统一宽束单位和随机命中统计口径，以及剩余外部参考/精度/样本判据。
 
 ## 待用户决定/限制
 | 项 | 决定 | 影响/动作 |

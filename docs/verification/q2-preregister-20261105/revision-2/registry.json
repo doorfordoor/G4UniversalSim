@@ -1,0 +1,892 @@
+{
+  "schema": "g4usim_q2_1_prereg_v1",
+  "created": "2026-11-05",
+  "identity": {
+    "branch": "roadmap/Q2-scientific-baselines",
+    "head": "fd93e799e5415b932d20196396bf084b44391787",
+    "worktree": "supervisor modifications to docs/ROADMAP.md and docs/collab/CURRENT-SUPERVISION.md pre-exist and are untouched; out/ is gitignored",
+    "product_baseline": {
+      "f2_commit": "864bc036d6d7752475e52db4efd2b950cabfcc3d",
+      "windows_exe_sha256": "f8a8119da5d68814a14920056d85a7f30e4f8380d393ea1d439cc8ca2726820f",
+      "cpp_fingerprint": "e7de615d4e342114104f970688a7ea5f9789f7b70240b2562a388a50a45704e7"
+    }
+  },
+  "files": {
+    "README.md": {
+      "sha256": "1288eac9878950a4db29da9bd3d167b7d098fdf6277ee6cc740007a22ff71ea4",
+      "bytes": 7305
+    },
+    "quantities.md": {
+      "sha256": "0c1e67d23b5f5c2d48681e5d7e9b172285f559cf42b925b7b176effa41523343",
+      "bytes": 10598
+    },
+    "cases/reference-cases.md": {
+      "sha256": "6a45ebe5fd2b003cfc74b1e434e30aef039c02e2bb32f30ea3b0e5c227afe01c",
+      "bytes": 10302
+    },
+    "cases/implementation-cases.md": {
+      "sha256": "ff2fe95ef9be1f6ee1a6a7585ac93ee161ae34f614a7cb73c2a0e877cb91f92b",
+      "bytes": 66393
+    },
+    "cases/uncertainty-cases.md": {
+      "sha256": "d963fdb23cbb977d949ce36399fcfc02d1f5fa261737f13e1b8b725ae0e12ff7",
+      "bytes": 7685
+    },
+    "cases/biasing-cases.md": {
+      "sha256": "d54812df351793914a50ddf5bb85035d50025a2138823714f02be0f646ba7979",
+      "bytes": 8272
+    },
+    "references/external-sources.md": {
+      "sha256": "68b666d1f11a1d77013c5a3ec306ea296d13a4bfbc442fcde08629ccd53809d6",
+      "bytes": 44626
+    },
+    "references/existing-evidence.md": {
+      "sha256": "5b1f2f9a2d17d3e455a20d3f7124b8d7055cdd13f01ba639bc300f61fda84a27",
+      "bytes": 45071
+    },
+    "references/values-q2-1.csv": {
+      "sha256": "3c342660e6381a96fe2ac63f3798ad40ff6e1b2ca6d1277858419dc3ddf99ca1",
+      "bytes": 6780
+    },
+    "references/ddd-table-audit.md": {
+      "sha256": "f76b914b2604c595e75c63fb993b2aa1c040a36c4336577501e42c497e152389",
+      "bytes": 5134
+    },
+    "raw/scorer-facts.md": {
+      "sha256": "deb2d7dc27d9cdeb56abf946363c0ffba920df72d0ccefaaf428e0c193cee2ae",
+      "bytes": 65822
+    },
+    "raw/benchmarks-and-contracts.md": {
+      "sha256": "6a13421d1a5cfce2bee5e8abfbaed040421efc577049d20438a691c877fc78d2",
+      "bytes": 46148
+    }
+  },
+  "scope": {
+    "phase": "Q2-1 design-only",
+    "simulations_run": false,
+    "product_code_changed": false,
+    "tests_changed": false,
+    "ci_changed": false
+  },
+  "tolerance_formula": "|sim-ref| <= tol*|ref| + 3*sigma for physics cases; arithmetic identities use per-case tolerance",
+  "cases": [
+    {
+      "id": "REF-DOSE-01",
+      "group": "B-independent",
+      "title": "硅薄层 TID/注量相对 PSTAR 电子阻止本领",
+      "status": "proposed-design-only",
+      "inputs": {
+        "config": "device_dose layout: proton 10/50/100/200 MeV with device_dose CASES buildup/slab",
+        "geometry": "Block 40x40x(2b+t) mm G4_Si; Slab 10x10xt mm G4_Si sensitive",
+        "source": "plane square halfx=6 mm center=(0,0,-1) mm direction=(0,0,1)",
+        "physics": "em=option4, default_cut=10 um",
+        "scoring": "dose=true, hits=true",
+        "threads": 1,
+        "seeds": [
+          20261106,
+          20261107,
+          20261108,
+          20261109
+        ],
+        "events": 20000
+      },
+      "reference": {
+        "kind": "external",
+        "source": "NIST PSTAR Si electronic stopping power (repo copy PSTAR_Si.txt sha256 71cfaaf1...)",
+        "formula": "D/Phi = S_el(E_mid)*1.602176634e-10 Gy*g/MeV; Phi=N/1.44 cm^2",
+        "unit": "Gy cm2",
+        "todo_freeze": "record NIST URL/version/access date and extracted values"
+      },
+      "tolerance": {
+        "formula": "|sim-ref| <= tol*|ref| + 3*sigma (sigma=scorer rel_error*value)",
+        "tol": 0.02
+      },
+      "independent_recheck": {
+        "kind": "implementation arithmetic",
+        "path": "hits_t*.csv sum edep by volume; mass from independent geometry rho*V",
+        "tolerance": "1e-9 relative"
+      },
+      "falsifies": [
+        "mass applied twice",
+        "volume used as mass",
+        "daughter mass not subtracted"
+      ],
+      "cannot_detect": [
+        "PSTAR vs Geant4 electronic stopping-power systematic difference"
+      ],
+      "stop_conditions": [
+        "N<2 or zero_total => not pass",
+        "retain raw output on failure"
+      ]
+    },
+    {
+      "id": "REF-FLU-01",
+      "group": "B-independent",
+      "title": "真空宽束注量解析值",
+      "status": "proposed-design-only",
+      "inputs": {
+        "config": "custom minimal",
+        "geometry": "world 3 m G4_Galactic; Slab 10x10x0.1 mm G4_Galactic sensitive",
+        "source": "proton 100 MeV plane square halfx=6 mm center=(0,0,-2) mm direction=(0,0,1)",
+        "physics": "em=option4, default_cut=0.7 mm",
+        "scoring": "fluence=true, hits=true",
+        "threads": 1,
+        "seeds": [
+          20261110
+        ],
+        "events": 1000
+      },
+      "reference": {
+        "kind": "analytic",
+        "source": "config geometry",
+        "formula": "Phi/N = 1/A = 1 cm^-2 = 100 mm^-2",
+        "unit": "mm^-2"
+      },
+      "tolerance": {
+        "formula": "|sim-ref| <= 1e-6 relative (geometric)",
+        "tol": 1e-06
+      },
+      "independent_recheck": {
+        "kind": "hits arithmetic",
+        "path": "sum weight*stepLength_mm by volume / V",
+        "tolerance": "1e-9"
+      },
+      "falsifies": [
+        "volume factor doubled/missing",
+        "cm^2 vs mm^2 confusion",
+        "source area used as sensitive area"
+      ],
+      "cannot_detect": [
+        "boundary step double counting (covered by REF-FLU-02)"
+      ],
+      "stop_conditions": [
+        "hits/summary inconsistency => fail"
+      ]
+    },
+    {
+      "id": "REF-LET-01",
+      "group": "B-independent",
+      "title": "硅薄层 LET_t/LET_d 相对 PSTAR 电子阻止本领",
+      "status": "proposed-design-only",
+      "inputs": {
+        "config": "custom minimal",
+        "geometry": "world G4_Galactic; Slab 10x10x20 um G4_Si sensitive (daughter-free)",
+        "source": "proton 100 MeV and 10 MeV plane square halfx=6 mm center=(0,0,-2) mm dir=(0,0,1)",
+        "physics": "em=option4, default_cut=1 um",
+        "scoring": "let=true, [scoring.let] particles=proton, hits=true",
+        "threads": 1,
+        "seeds": [
+          20261111,
+          20261112
+        ],
+        "events": 2000
+      },
+      "reference": {
+        "kind": "external",
+        "source": "NIST PSTAR Si stopping power (repo copy)",
+        "formula": "LET[keV/um] = S_el[MeV cm^2/g]*rho[g/cm^3]*0.1 at E_mid",
+        "unit": "keV/um"
+      },
+      "tolerance": {
+        "formula": "|LET_t-ref| <= 0.015*ref + 3*sigma; LET_d>=LET_t; |LET_d-LET_t|/LET_t <= 0.05",
+        "tol": 0.015
+      },
+      "independent_recheck": {
+        "kind": "summary arithmetic",
+        "path": "let_volume_summary sum_wSl/sum_wl and sum_wS2l/sum_wSl",
+        "tolerance": "1e-12"
+      },
+      "falsifies": [
+        "LETstep uses wrong material",
+        "LETstep uses wrong energy",
+        "particle filter failure"
+      ],
+      "cannot_detect": [
+        "G4EmCalculator vs PSTAR systematic difference (~1%)"
+      ],
+      "stop_conditions": [
+        "LET_d<LET_t => fail",
+        "insufficient_events => not pass"
+      ]
+    },
+    {
+      "id": "REF-DDD-01",
+      "group": "B-independent",
+      "title": "硅薄层 DDD 相对 NIEL 表（折积实现）",
+      "status": "proposed-design-only",
+      "inputs": {
+        "config": "device_dose proton 10/100 MeV",
+        "geometry": "Block 40x40x(2b+t) mm G4_Si; Slab 10x10xt mm sensitive",
+        "source": "plane square halfx=6 mm center=(0,0,-1) mm dir=(0,0,1)",
+        "physics": "em=option4, default_cut=10 um",
+        "scoring": "displacement=true; [scoring.displacement] proton=si_proton.csv; hits=true",
+        "threads": 1,
+        "seeds": [
+          20261113,
+          20261114
+        ],
+        "events": 20000
+      },
+      "reference": {
+        "kind": "table",
+        "source": "scenarios/semiconductor/niel/si_proton.csv (SR-NIEL-7 ver 11.1, 2026-10-22; sha256 6c21e35a...)",
+        "formula": "DDD/Phi = NIEL(E_mid); E_mid via PSTAR CSDA",
+        "unit": "MeV cm2/g",
+        "note": "implementation fold only; table data itself not validated here"
+      },
+      "tolerance": {
+        "formula": "|sim-ref| <= 0.01*ref + 3*sigma",
+        "tol": 0.01
+      },
+      "independent_recheck": {
+        "kind": "length fold arithmetic",
+        "path": "hits sum(weight*stepLength)/V via independent geometry",
+        "tolerance": "1e-9",
+        "limitation": "hits v3 lacks per-step NIEL; full per-step fold not independently reproducible"
+      },
+      "falsifies": [
+        "length/volume/weight factor errors"
+      ],
+      "cannot_detect": [
+        "NIEL table data errors (see REF-DDD-02)"
+      ],
+      "stop_conditions": [
+        "record out_of_range fraction",
+        "table domain exceeded => limited"
+      ]
+    },
+    {
+      "id": "REF-DDD-02",
+      "group": "B-table-audit",
+      "title": "NIEL 表 1.000 MeV 算术审计：si_neutron.csv 插值 vs ASTM 95 MeV*mb",
+      "status": "arithmetic_only_not_physical",
+      "inputs": {
+        "runs": "none (read-only table audit)"
+      },
+      "reference": {
+        "kind": "arithmetic_audit",
+        "values_file": "references/values-q2-1.csv",
+        "audit": "references/ddd-table-audit.md",
+        "source": "SR-NIEL-7 ver.11.1 si_neutron.csv (sha256 a2ad28a9...) 与 ASTM E722-19 95 MeV*mb 公开摘要；ASTM 全文付费、95 输入未核验",
+        "verify_units": "95 MeV*mb -> 9.5e-26 MeV cm2/atom; Si atom mass 4.6637e-23 g; -> 2.037006e-3 MeV cm2/g (算术已核验)",
+        "verify_interpolation": "节点 0.98=2.4078e-3、1.05=1.6573e-3；1.000 MeV log-log=2.158335e-3、线性=2.193371e-3；相对 ASTM 2.037006e-3 为 +5.957%/+7.677%",
+        "difference_sources": [
+          "定义不同：ASTM 95 MeV*mb 是 1 MeV 硬度参数/归一化量，SR-NIEL ASTM 模式是连续损伤函数在其网格上的值",
+          "评价与版本：SR-NIEL 表由 ASTM damage function 数据生成，网格/截断/插值约定由该服务定义，不同版本差异",
+          "网格与插值：缺 1.000 MeV 节点，log-log vs 线性差约 1.6pp",
+          "输入未核验：95 MeV*mb 数值仅见于公开摘要/二手摘录，未核对 ASTM 付费全文"
+        ]
+      },
+      "tolerance": {
+        "formula": "no physical gate; arithmetic-only audit (a 0.1% ASTM-consistency gate is NOT supported by the unverified input)",
+        "tol": null
+      },
+      "falsifies": [
+        "单位换算算术错误 (mb/barn/cm2/atom mass)",
+        "插值实现错误"
+      ],
+      "cannot_detect": [
+        "NIEL 表物理正确性",
+        "ASTM Table A1.1 全文内容",
+        "Ed/模型差异"
+      ],
+      "stop_conditions": [
+        "若要求物理 pass/fail 门槛：需 ASTM 全文与 Ed/模型依据匹配，另立预注册；本任务不补点、不改表"
+      ],
+      "freeze_status": "arithmetic_only_not_physical",
+      "limitations": [
+        "L1-ASTM-INPUT",
+        "L2-NIEL-INDEPENDENT"
+      ]
+    },
+    {
+      "id": "UNC-TOT-01",
+      "group": "C-uncertainty",
+      "title": "总量 R^2/entries/N 精确复核",
+      "status": "proposed-design-only",
+      "inputs": {
+        "config": "REF-DOSE-01 10 MeV layout",
+        "threads": 1,
+        "seeds": [
+          20261120
+        ],
+        "events": 20,
+        "scoring": "dose=true, event_edep=true, hits=false"
+      },
+      "tolerance": {
+        "formula": "exact arithmetic identity",
+        "tol": 1e-12
+      },
+      "independent_recheck": {
+        "kind": "event_edep arithmetic",
+        "path": "S,S2,entries,N from event_edep rows; R^2=S2/S^2-1/N"
+      },
+      "falsifies": [
+        "entries used as N",
+        "S2 scaling error"
+      ],
+      "cannot_detect": [
+        "physical bias"
+      ]
+    },
+    {
+      "id": "UNC-TOT-02",
+      "group": "C-uncertainty",
+      "title": "N<2 与 zero_total 状态",
+      "status": "proposed-design-only",
+      "inputs": {
+        "configs": [
+          "REF-DOSE-01 events=1 seed=20261121",
+          "tiny slab all-miss events=100 seed=20261122"
+        ]
+      },
+      "tolerance": {
+        "formula": "status string and counts exactly match",
+        "tol": 0.0
+      },
+      "falsifies": [
+        "insufficient_events shown as zero error",
+        "zero_total treated as physical zero"
+      ],
+      "cannot_detect": [
+        "coverage"
+      ]
+    },
+    {
+      "id": "UNC-RATIO-01",
+      "group": "C-uncertainty",
+      "title": "从 let_volume_summary 公共 CSV 独立重算 let_t/let_d 的 delta 比值误差",
+      "status": "frozen_analytic",
+      "inputs": {
+        "config": "REF-LET-01 100 MeV（复用其输出目录）",
+        "threads": 1,
+        "seeds": [
+          20261123
+        ],
+        "events": 2000,
+        "scoring": "let=true, particles=proton",
+        "columns": [
+          "sum_wl_mm",
+          "sum_wSl_MeV",
+          "sum_wS2l_MeV2_per_mm",
+          "sum_sq_wl_mm2",
+          "sum_sq_wSl_MeV2",
+          "sum_sq_wS2l_MeV4_per_mm2",
+          "sum_wl_x_wSl_MeV_mm",
+          "sum_wSl_x_wS2l_MeV3_per_mm",
+          "n_events"
+        ]
+      },
+      "reference": {
+        "kind": "analytic_identity",
+        "source": "src/Scoring/LETScorer.cc:150-153 已输出全部矩；HistoryStatistics::RatioRelativeError；Q1 uncorrected_delta_ratio_v1",
+        "formula_let_t": "A=sum_wSl, B=sum_wl, SA2=sum_sq_wSl, SB2=sum_sq_wl, Sab=sum_wl_x_wSl；R_t^2 = SA2/A^2 + SB2/B^2 - 2*Sab/(A*B)",
+        "formula_let_d": "A=sum_wS2l, B=sum_wSl, SA2=sum_sq_wS2l, SB2=sum_sq_wSl, Sab=sum_wSl_x_wS2l；R_d^2 = SA2/A^2 + SB2/B^2 - 2*Sab/(A*B)",
+        "public_csv": "let_volume_summary*.csv + scorer_statistics*.csv（同一 run）"
+      },
+      "tolerance": {
+        "formula": "recomputed rel_error vs scorer_statistics ratio row: max(1e-12, 1e-9*rel_error)",
+        "tol": 1e-09
+      },
+      "falsifies": [
+        "交叉项符号/顺序错误",
+        "平方/求和列错位",
+        "单位不一致（mm vs m、MeV vs keV）"
+      ],
+      "cannot_detect": [
+        "估计量偏差/覆盖率",
+        "统计误差与系统误差的区分"
+      ],
+      "stop_conditions": [
+        "缺列或超差 -> 失败保留原件；不得为此新增产品 CSV 列",
+        "零贡献事件仍进入 N；entries 只计非零贡献"
+      ],
+      "freeze_status": "frozen_analytic",
+      "limitations": [
+        "L4-STAT-COVERAGE"
+      ]
+    },
+    {
+      "id": "UNC-SPARSE-01",
+      "group": "C-uncertainty",
+      "title": "4 线程 5 事件稀疏合并",
+      "status": "proposed-design-only",
+      "inputs": {
+        "config": "REF-DOSE-01 10 MeV",
+        "threads": 4,
+        "seeds": [
+          20261124
+        ],
+        "events": 5,
+        "scoring": "dose=true, hits=true"
+      },
+      "tolerance": {
+        "formula": "merged sum/sum_sq/entries == per-thread reconstruction",
+        "tol": 1e-12
+      },
+      "falsifies": [
+        "averaging rel_error across workers",
+        "N=threads or entries misuse"
+      ],
+      "cannot_detect": [
+        "coverage"
+      ]
+    },
+    {
+      "id": "UNC-ZERO-DEN-01",
+      "group": "C-uncertainty",
+      "title": "零分母/N<2 比值边界",
+      "status": "proposed-design-only",
+      "inputs": {
+        "configs": [
+          "REF-LET-01 with gamma source",
+          "REF-LET-01 events=1"
+        ]
+      },
+      "tolerance": {
+        "formula": "status/NaN policy exact; expected row presence TODO(verify at run)"
+      },
+      "falsifies": [
+        "undefined_ratio bypass"
+      ]
+    },
+    {
+      "id": "BIAS-01",
+      "group": "D-biasing",
+      "title": "14 MeV 中子 5 cm Al 屏蔽后剂量：analog vs XS 偏置（16 对独立批次）",
+      "status": "frozen_design",
+      "inputs": {
+        "geometry": "10x10x(front+50 mm Al+back+0.1 mm Si) mm",
+        "source": "neutron 14 MeV plane square halfx=5 mm",
+        "physics": "由现有偏置测试使用的参考物理列表（执行前写入 registry）",
+        "scoring": "dose=true",
+        "threads": 1,
+        "events": 200000,
+        "seeds": {
+          "analog": "20261201..20261216",
+          "biased": "20261217..20261232",
+          "pairing": "第 i 对：analog=20261200+i, biased=20261216+i；两组不重叠"
+        },
+        "execution_order": "偶数对先 analog 后 biased；奇数对先 biased 后 analog；同一机器/构建/会话",
+        "timing": "记录每批 started_at/finished_at (UTC) 与 run_metadata wall time；频率策略/负载记入限制",
+        "biasing": "process-level XS biasing，逐字配置以现有 test_biasing_worker_runtime.py 为准"
+      },
+      "tolerance": {
+        "formula": "逐对 |mu_b-mu_a| <= 3*sqrt(sb^2+sa^2)+0.005*|mu_a|；汇总 16 对差值均值 95% CI 含 0",
+        "tol": 0.005
+      },
+      "checks": [
+        "weight receipts: worker binding, non-unit weight fraction, weighted vs unweighted relation",
+        "批次完整性与原件保留"
+      ],
+      "falsifies": [
+        "weight loss",
+        "biased process coverage skew",
+        "事件选择偏差"
+      ],
+      "cannot_detect": [
+        "截面数据本身的正确性"
+      ],
+      "stop_conditions": [
+        "任一对超出判据 -> 如实报告 unbiased=false，保留原件；不得换种子/调参",
+        "不完整/异常批次按预注册规则处理，失败批次不得用新批次替换"
+      ],
+      "freeze_status": "frozen_design"
+    },
+    {
+      "id": "BIAS-02",
+      "group": "D-biasing",
+      "title": "FOM 收益：XS 偏置 vs analog（16 对批次；无收益本身是允许结论）",
+      "status": "frozen_design",
+      "inputs": {
+        "reuse": "BIAS-01 的 16 对 32 个批次",
+        "events": 200000,
+        "threads": 1
+      },
+      "analysis": {
+        "metric": "FOM=1/(R^2*T)",
+        "primary": "16 个配对 FOM 比值对数均值的 95% t 区间",
+        "secondary": "10000 次配对 bootstrap（固定 seed=20261140），仅作描述性复核，不替代独立批次数",
+        "decision": "区间下界>1.0 -> has_variance_benefit=true；下界<=1.0 或跨 1 -> 如实报告 no demonstrated benefit / inconclusive",
+        "no_retuning": "不得为让 CI 下界>1 而换种子、调参、改事件数或延长计时；改进只能另立新阶段/新批次并在运行前预注册",
+        "timing": "wall time 取自 run_metadata.json；批次交替执行，记录频率策略与同时段负载限制"
+      },
+      "falsifies": [
+        "未给 CI/用种子挖掘宣称 FOM 收益"
+      ],
+      "cannot_detect": [
+        "偏置无偏性（BIAS-01 覆盖）"
+      ],
+      "stop_conditions": [
+        "完成批次<16 -> 报告 inconclusive 并保留失败原件，不得补跑凑数"
+      ],
+      "freeze_status": "frozen_design"
+    },
+    {
+      "id": "BIAS-03",
+      "group": "D-biasing",
+      "title": "权重线性传递（实现层算术）",
+      "status": "proposed-design-only-or-not-executable",
+      "inputs": {
+        "mechanism": "phase-space replay with weight column=2 if supported; else mark not_executable"
+      },
+      "tolerance": {
+        "formula": "weighted_fluence == 2*raw_fluence (1e-12); let ratio invariant (1e-12)"
+      },
+      "falsifies": [
+        "weight double application/omission"
+      ],
+      "cannot_detect": [
+        "variance effects"
+      ]
+    },
+    {
+      "id": "REF-FLU-02",
+      "group": "B-independent",
+      "title": "真空注量的 hits 逐行复核（解析）",
+      "status": "proposed-design-only",
+      "inputs": {
+        "config": "same as REF-FLU-01",
+        "geometry": "world 3 m G4_Galactic; Slab 10x10x0.1 mm G4_Galactic sensitive",
+        "source": "proton 100 MeV plane square halfx=6 mm center=(0,0,-2) mm direction=(0,0,1)",
+        "scoring": "fluence=true, hits=true",
+        "threads": 1,
+        "seeds": [
+          20261110
+        ],
+        "events": 1000
+      },
+      "reference": {
+        "kind": "analytic",
+        "source": "sum stepLength_mm from hits for Slab / 10 mm^3",
+        "unit": "mm^-2",
+        "formula": "Phi_hits = sum(L)/V_geom; must equal REF-FLU-01 within 1e-9"
+      },
+      "tolerance": {
+        "formula": "|Phi_hits-Phi_summary|/Phi_summary <= 1e-9"
+      },
+      "falsifies": [
+        "hits length omitted for zero-deposit steps",
+        "volume other than 10 mm^3",
+        "surface-crossing double count"
+      ],
+      "cannot_detect": [
+        "neutral particles that never reach the slab",
+        "definition of surface crossing outside this geometry"
+      ],
+      "stop_conditions": [
+        "no hits rows for Slab => not pass; report as data gap"
+      ]
+    },
+    {
+      "id": "IMP-DOSE-01",
+      "group": "A-implementation",
+      "title": "质量因子与 D=sum(E)/m（解析算术）",
+      "status": "proposed-design-only",
+      "inputs": {
+        "geometry": "Block 10x10x2 mm G4_Si (V=200 mm^3, m=4.66e-4 kg)",
+        "source": "proton 10 MeV, 10x10 mm plane, N=20000",
+        "scoring": "dose=true, hits=true",
+        "threads": 1,
+        "seeds": [
+          20261120
+        ],
+        "events": 20000
+      },
+      "reference": {
+        "kind": "arithmetic",
+        "source": "m_geom=rho*V with rho=2.33e-3 g/mm^3",
+        "formula": "D = sum(E)*1.602176634e-13/m; expected D=6.87629e-5 Gy (per primary 3.43815e-9)",
+        "unit": "Gy"
+      },
+      "tolerance": {
+        "formula": "same summary row 1e-12; cross-CSV sum 1e-9; hard cap 1e-6"
+      },
+      "falsifies": [
+        "mass applied twice",
+        "volume used as mass",
+        "missing J->MeV conversion"
+      ],
+      "cannot_detect": [
+        "edep transport physics",
+        "density input error (m_geom uses same rho)"
+      ],
+      "weight_check": "section 5: phase-space replay weight=1 vs 2; weighted=2*raw, raw unchanged",
+      "stop_conditions": [
+        "mass mismatch >1e-12 => fail",
+        "raw/weighted contract broken => fail"
+      ]
+    },
+    {
+      "id": "IMP-FLU-01",
+      "group": "A-implementation",
+      "title": "体积因子与 Phi=sum(L)/V（解析算术）",
+      "status": "proposed-design-only",
+      "inputs": {
+        "geometry": "Slab 10x10x0.1 mm G4_Galactic (V=10 mm^3)",
+        "source": "proton 100 MeV, 12x12 mm plane (p=100/144), N=20000",
+        "scoring": "fluence=true, hits=true",
+        "threads": 1,
+        "seeds": [
+          20261121
+        ],
+        "events": 20000
+      },
+      "reference": {
+        "kind": "arithmetic",
+        "source": "V_geom and sum(stepLength)/V",
+        "formula": "L=1388.889 mm, Phi=138.889 mm^-2, sigma=0.469% => 2% = 4.26 sigma",
+        "unit": "mm^-2"
+      },
+      "tolerance": {
+        "formula": "same summary row 1e-12; cross-CSV sum 1e-9; hard cap 1e-6"
+      },
+      "falsifies": [
+        "volume applied twice",
+        "volume used as mass",
+        "raw/weighted swap"
+      ],
+      "cannot_detect": [
+        "neutral particles",
+        "zero-deposit hits omission",
+        "surface-crossing semantics"
+      ],
+      "weight_check": "section 5: weighted=2*raw, raw identical",
+      "stop_conditions": [
+        "volume mismatch >1e-12 => fail"
+      ]
+    },
+    {
+      "id": "IMP-LET-01",
+      "group": "A-implementation",
+      "title": "LET 比值分子/分母与权重标度（解析算术）",
+      "status": "proposed-design-only",
+      "inputs": {
+        "geometry": "Slab 10x10x0.02 mm G4_Si",
+        "source": "proton 100/10 MeV, N=2000",
+        "scoring": "let=true, hits=true",
+        "threads": 1,
+        "seeds": [
+          20261122,
+          20261123
+        ],
+        "events": 2000
+      },
+      "reference": {
+        "kind": "arithmetic",
+        "source": "let_volume_summary sums and hits proton rows",
+        "formula": "let_t=sum_wSl/sum_wl; let_d=sum_wS2l/sum_wSl; let_d>=let_t; sum_wl==hits proton length; delta rel_error recomputable",
+        "unit": "keV/um"
+      },
+      "tolerance": {
+        "formula": "same summary row 1e-12; cross-CSV sum 1e-9; hard cap 1e-6"
+      },
+      "falsifies": [
+        "numerator/denominator swap",
+        "step-set mismatch",
+        "wrong moment scaling"
+      ],
+      "cannot_detect": [
+        "mass/volume (absent in formula)",
+        "absolute S; deferred to REF-LET-01"
+      ],
+      "weight_check": "section 5: three linear sums x2, five squared/cross sums x4, ratios invariant",
+      "stop_conditions": [
+        "let_d < let_t => fail",
+        "sum_wl != hits length within 1e-9 => data gap flagged"
+      ]
+    },
+    {
+      "id": "IMP-DDD-01",
+      "group": "A-implementation",
+      "title": "DDD 体积因子、100 换算与常量 NIEL 折积",
+      "status": "proposed-design-only",
+      "inputs": {
+        "geometry": "Slab 10x10x0.1 mm G4_Si (V=10 mm^3)",
+        "source": "proton 100 MeV, 12x12 mm plane, N=20000",
+        "niel_table": "constant 0.003 MeV cm^2/g over [1e-12, 1e6] MeV (no out_of_range)",
+        "scoring": "displacement=true, hits=true",
+        "threads": 1,
+        "seeds": [
+          20261124
+        ],
+        "events": 20000
+      },
+      "reference": {
+        "kind": "arithmetic",
+        "source": "DDD=100*L*NIEL/V with constant NIEL",
+        "formula": "expected 41.6667 MeV/g (per primary 2.08333e-3); real si_proton sanity only within 2%",
+        "unit": "MeV/g"
+      },
+      "tolerance": {
+        "formula": "constant-table arithmetic 1e-12; real-table sanity 2%"
+      },
+      "falsifies": [
+        "volume applied twice",
+        "missing x100"
+      ],
+      "cannot_detect": [
+        "NIEL table data itself",
+        "per-step E_mean semantics (no raw/weighted split)"
+      ],
+      "weight_check": "section 5: track_length and DDD x2; requires two runs (no raw/weighted split)",
+      "stop_conditions": [
+        "out_of_range length > 0 => fail",
+        "constant-table DDD deviates >1e-12 => fail"
+      ]
+    }
+  ],
+  "worktree": {
+    "repository_root": "D:\\Geant4\\G4UniversalSim",
+    "pwd": "D:\\Geant4\\G4UniversalSim",
+    "branch": "roadmap/Q2-scientific-baselines",
+    "head": "fd93e799e5415b932d20196396bf084b44391787",
+    "dirty_note": "supervisor-maintained docs/ROADMAP.md and CURRENT-SUPERVISION.md may be modified in the worktree; product code is clean for this task"
+  },
+  "freeze": {
+    "REF-DOSE-01": {
+      "status": "frozen_reference",
+      "values": "references/values-q2-1.csv REF-DOSE-01 E_mid rows",
+      "note": "E_mid 由 make_reference.py 预先固定；nominal S_el 行为追溯用，不作 pass 判据"
+    },
+    "REF-FLU-01": {
+      "status": "frozen_analytic",
+      "values": "L=1388.8888888888889 mm, Phi=138.88888888888889 mm^-2"
+    },
+    "REF-FLU-02": {
+      "status": "frozen_analytic",
+      "values": "同 REF-FLU-01，hits 重算容差 1e-9"
+    },
+    "REF-LET-01": {
+      "status": "frozen_reference",
+      "values": "8.1075 keV/um (10 MeV), 1.3599 keV/um (100 MeV)；E_mid 9.91864/99.98639 MeV 由预注册 CSDA 反演固定",
+      "note": "E_mid 为预先固定参考，不是本轮模拟的条件化观测"
+    },
+    "REF-DDD-01": {
+      "status": "frozen_reference_with_limitation",
+      "values": "0.00966633/0.00299292 MeV cm2/g at E_mid 9.5043/99.113 MeV",
+      "note": "仅折积验证；NIEL 表本身无独立第二来源"
+    },
+    "REF-DDD-02": {
+      "status": "arithmetic_only_not_physical",
+      "values": "log-log 2.158335e-3 / linear 2.193371e-3 / ASTM 算术 2.037006e-3；无 0.1% 物理门槛",
+      "audit": "references/ddd-table-audit.md"
+    },
+    "UNC-TOT-01": {
+      "status": "frozen_analytic",
+      "values": "R^2=0.05 for (1,2,3,4)"
+    },
+    "UNC-RATIO-01": {
+      "status": "frozen_analytic",
+      "values": "按 let summary 全部矩重算；容差 max(1e-12,1e-9*rel)"
+    },
+    "UNC-SPARSE-01": {
+      "status": "frozen_analytic",
+      "values": "R^2=0.0396825"
+    },
+    "UNC-ZERO-DEN-01": {
+      "status": "frozen_analytic",
+      "values": "undefined_ratio / zero_total；0 为兼容哨兵"
+    },
+    "BIAS-01": {
+      "status": "frozen_design",
+      "values": "16 对；200000 事件/批；种子表不重叠；交替顺序"
+    },
+    "BIAS-02": {
+      "status": "frozen_design",
+      "values": "主判据=16 对 FOM 比值 95% t 区间；无收益允许；bootstrap 仅辅助"
+    },
+    "BIAS-03": {
+      "status": "frozen_design",
+      "values": "MT 8 对（两臂 threads=4）"
+    },
+    "IMP-CROSS-01": {
+      "status": "report_only",
+      "values": "既有证据清单，非独立参考"
+    }
+  },
+  "limitations": [
+    {
+      "id": "L1-ASTM-INPUT",
+      "statement": "ASTM E722-19 95 MeV*mb 数值仅来自公开摘要/二手摘录，未核验付费全文；REF-DDD-02 仅算术审计",
+      "blocks": "REF-DDD-02 物理判定",
+      "follow_up": "获得 ASTM 全文与 Ed 定义后另立预注册"
+    },
+    {
+      "id": "L2-NIEL-INDEPENDENT",
+      "statement": "仓库无独立第二来源核验 SR-NIEL 硅表本身；REF-DDD-01 只验证实现折积",
+      "blocks": "NIEL 表物理正确性；不阻塞其它量",
+      "follow_up": "独立评价比对另立任务"
+    },
+    {
+      "id": "L3-HITS-FIELDS",
+      "statement": "hits v3 不含 LETstep/逐 step NIEL；零沉积分支 hits 行写出情况未完全确认",
+      "blocks": "LET 绝对 S 与 DDD 逐 step 复核；LET 比值误差不受阻",
+      "follow_up": "需要时由监督端决定新增可选列"
+    },
+    {
+      "id": "L4-STAT-COVERAGE",
+      "statement": "估计量未做有限样本校正，无覆盖率研究",
+      "blocks": "覆盖率声明",
+      "follow_up": "覆盖率研究另立预注册"
+    },
+    {
+      "id": "L5-BIAS-UNBIASEDNESS",
+      "statement": "旧偏置用例未验证 analog-vs-biased 无偏性；FOM 收益未知",
+      "blocks": "偏置无偏性/收益声明（BIAS-01/02 设计待执行）",
+      "follow_up": "按本 registry 执行 16 对批次后报告实际结论"
+    },
+    {
+      "id": "L6-BENCH-ARCHIVE",
+      "statement": "run_benchmarks.py --quick 不写报告文件；σ 口径仅选包含统计误差的案例",
+      "blocks": "基准报告持久化/完整 σ 断言",
+      "follow_up": "另立小任务"
+    },
+    {
+      "id": "L7-DOC-DRIFT",
+      "statement": "docs/输出数据契约.md:77-78 仍写 Dose/Fluence v1 表头，实现为 v2",
+      "blocks": "文档一致性",
+      "follow_up": "E4/F2 文档维护端修正"
+    },
+    {
+      "id": "L8-PHYSICS-LIST-DRIFT",
+      "statement": "device_dose/make_scenario.py 使用 QGSP_BIC_HP，物理工厂列表未含该名；README 写 QGSP_BERT_HP",
+      "blocks": "基准物理配置可复现性（历史值保留）",
+      "follow_up": "基准维护人核对更正，另开任务"
+    },
+    {
+      "id": "L9-DOSE-CONTEXT",
+      "statement": "DoseContext 用 GetMass(true,false,preStepMaterial)；复杂嵌套几何与 daughter 扣减无独立验证",
+      "blocks": "复杂几何质量定义验证",
+      "follow_up": "复杂几何另立任务（本任务只用简单平板）"
+    },
+    {
+      "id": "L10-BIAS-MT",
+      "statement": "XS 偏置的 MT worker 绑定/权重未在 BIAS-01 以外验证",
+      "blocks": "MT 偏置推广声明",
+      "follow_up": "BIAS-03 覆盖 threads=4；更多 worker 数为新任务"
+    }
+  ],
+  "execution_rules": [
+    "Q2-1 不运行 Geant4、不改产品/测试/正式基准/CI；本 registry 只是规格。",
+    "参考值先冻结后运行；不得根据结果调整容差、换种子、补跑凑数或选点。",
+    "失败原件保留；取消/损坏/未完成批次按预注册规则处理，不得用新批次替换。",
+    "零贡献事件仍计入 N；entries 只计非零贡献。",
+    "统计误差只描述抽样波动，不是系统/物理不确定度。",
+    "SR-NIEL 与 ASTM 1 MeV 差异是数据产品/定义差异，不作 pass/fail 门槛。"
+  ],
+  "next": "独立审阅冻结参考值；冻结后才可按 registry 执行 Q2-2/3/4/5；本轮不运行。",
+  "status": "author_revised_waiting_independent_review",
+  "revision": {
+    "review": "docs/collab/reviews/20261104-e4-map-review.md 之后的 Q2-1 退回意见（m14726）",
+    "scope": "仅改提案/registry/支撑文件，未运行，未改产品",
+    "changed": [
+      "UNC-RATIO-01：删除“必须新增 CSV 列”判断，改为用 let summary 全部矩独立重算（formula 见 reference）",
+      "REF-DDD-02：取消 0.1% 物理门槛，改为算术审计 + 单位/插值/评价差异分解（references/ddd-table-audit.md）",
+      "REF-DDD-02：difference_sources 明确模型/Ed/标准版本/归一化差异，缺节点与约 6% 差异不定为缺陷",
+      "BIAS-01/02：16 对独立批次、两组不重叠种子、交替顺序、主判据先定、无收益允许、不得种子挖掘",
+      "registry 增 freeze/limitations/execution_rules/worktree 身份与 values-q2-1.csv、ddd-table-audit.md 哈希"
+    ],
+    "not_changed": "inputs 的物理配置、其它案件内容、产品代码、测试、正式基准、CI"
+  }
+}

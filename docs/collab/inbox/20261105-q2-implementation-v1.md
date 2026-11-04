@@ -1,0 +1,5 @@
+执行Q2-2实现层四病例。严格按docs/collab/decisions/20261105-q2-implementation-freeze-v1.md，这份独立冻结优先于原registry冲突项。相关审查docs/collab/reviews/20261105-q2-reference-review-r2.md。
+产物写out/collab/q2-implementation-v1/**和docs/collab/outbox/20261105-q2-implementation-v1.md。可实现病例生成、独立比较器和错值反例，可运行已就绪Windows环境自测。使用冻结后端out/collab/q2-backend-864bc036/G4UniversalSim.exe，SHA及来源在旁边identity.json；Geant4 bin/data沿既有D盘环境，不能替换后端或改产品源。C盘保持独立复验。
+先实现四例、检查输入、运行原始输出，再独立复算并保存机器可读结果及日志、环境、真实完成事件。比较器必须从独立原始量/几何重算，并对产物拷贝中质量/体积/单位因子及缺列/缺事件证据的篡改给失败反例。只能修自身输入/比较器错误，物理结果或核心代码问题留具体最小反例反馈。冻结输入/容差变更须先有具体提案，不能事后调到通过。
+注意实际12位有效数字精度，明确实现算术验证等级。geantino零沉积时没有hits是已知契约，Fluence与合成常数NIEL例使用独立几何路径期望。若当前入口拒绝geantino/合成表，记录真实拒绝并给替代提案，停止对应例，继续其它独立病例。其它未冻结外部参考/统计/偏置不要运行。四例和反例完成即停工交独审，不扩工具、不提交Git。
+你是本轮执行负责人，请有信心把这个高级科研项目做完整、清晰、美观、快速、易用。unlimited Token，不限子智能体数量，充分发挥设计和工程能力，充分实现与验证。实际平台限制以系统为准，不为消耗而重复工作。完成约定范围，范围外想法记入建议。
