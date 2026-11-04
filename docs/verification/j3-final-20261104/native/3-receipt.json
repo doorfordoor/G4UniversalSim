@@ -1,0 +1,55 @@
+{
+  "schema": "g4usim_j3_linux_candidate_r4_run",
+  "test_mode": false,
+  "gui_process_started": true,
+  "native_window_started": null,
+  "native_window_evidence": "not_observed",
+  "display_probe": "/mnt/d/Geant4/G4UniversalSim/out/collab/j3-linux-candidate-r2/runs/20261104-080425-841322392/display-probe-1.json",
+  "run_dir": "/mnt/d/Geant4/G4UniversalSim/out/collab/j3-linux-candidate-r2/runs/20261104-080425-841322392",
+  "started_utc": "2026-11-04T00:04:25Z",
+  "finished_local": "2026-11-04T08:16:13+0800",
+  "display": "94",
+  "rfb_port": "5910",
+  "web_port": "6090",
+  "outcome": "gui_exited_normally",
+  "launcher_exit": 0,
+  "stop_requested": false,
+  "gui_alive_at_stop": false,
+  "owned_pids": [
+    694,
+    704,
+    706,
+    708
+  ],
+  "processes": [
+    {
+      "name": "xtigervnc",
+      "pid": 694,
+      "exit_code": 0,
+      "termination_reason": "terminated_after_gui_exit",
+      "alive_after_cleanup": false
+    },
+    {
+      "name": "twm",
+      "pid": 704,
+      "exit_code": 1,
+      "termination_reason": "terminated_after_gui_exit",
+      "alive_after_cleanup": false
+    },
+    {
+      "name": "websockify",
+      "pid": 706,
+      "exit_code": 0,
+      "termination_reason": "terminated_after_gui_exit",
+      "alive_after_cleanup": false
+    },
+    {
+      "name": "production-gui",
+      "pid": 708,
+      "exit_code": 0,
+      "termination_reason": "exited_normally",
+      "alive_after_cleanup": false
+    }
+  ],
+  "remaining_owned": []
+}

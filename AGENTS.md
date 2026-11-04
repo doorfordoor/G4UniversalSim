@@ -5,6 +5,10 @@ Linux原生通道补充（主审已签收）：main已实际操作独立真实X1
 本文件是仓库级约束，适用于根目录及其子目录。更具体的目录约束可以由更深层的 AGENTS.md 补充；gui/AGENTS.md 适用于 GUI 目录。
 
 ## 0. 条目索引与历史全文
+
+- 2026-11-04 J3：本轮约定范围已验收并关闭，冻结92134da0；Windows125/150与独立X11代表性、云12报告696/247580及严格门禁完成。历史图身份/非逐页八态、WSLg与约一秒切换限制保留，不外推物理/云Agent验证；后续F2。详见docs/agent-history.md同日J3条目及docs/verification/j3-final-20261104/README.md。
+
+
 - 2026-11-03 J3 独立审查响应：独立复验不同意关闭（`docs/collab/reviews/20261103-j3-closure-review.md`）；外观断言必须用 `theme.current_skin()`（无参读应用属性，传窗口会恒回退 B）；`reveal_current()` 不得隐藏既有停靠页，Results 页整宽由 `focus_analysis_view()` 负责；紧凑布局（<1400 逻辑像素）隐藏 AI 与 3D 预览两个可选 dock，外部面板入口是 View → Panels 而非命令面板；`paletteSearch` 边框用 `border_strong`；候选冻结与三 profile 基线在 `docs/verification/j3-close-20261103/`；J3 仍为未关闭。
 
 - 2026-11-02 J3 第七阶段（作者交付，未验收）：Help 菜单的快捷键表由 `ShellMixin.shortcut_rows()` 提供、对话框由 `build_shortcut_dialog()` 构建（测试/截图用非阻塞版本，`show_shortcuts()` 才 exec）；关于文本由 `about_text()` 生成（含 GUI/PySide6/Qt 版本、应用根目录、后端路径），不要在别处重复拼这些事实。新增菜单项必须进 `i18n.ZH_CN` 与 `_set_language` 覆盖路径；导航 tooltip 与快捷键表、无障碍描述保持同一文案。回归 `gui_help_menu` 及 `gui_main_window`/`gui_command_palette`/`gui_theme_response`/`gui_j1_appearance`；证据 `docs/verification/j3-help-20261102/README.md`（5 例、211 断言）；J3 未关闭。

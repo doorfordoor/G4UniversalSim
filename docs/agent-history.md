@@ -935,3 +935,12 @@ dock 页与 navigation dock，从不隐藏之前显示过的 dock 页。
 ### 2026-11-03 J3 整体验收 P2：状态标签文字对比度（作者侧）
 
 整体验收退回并新增 P2：`core/theme.py` 的 `_styled()` 把 success 与 surface 混成 veil 作背景，设计层又用原始 `$success` 作小字号文字；真实 QLabel 量到 B/K 苔原成功文字 4.3453/4.3453/4.3097:1，低于正文 4.5。修复不提高静态语义色，而是新增 `veil_text(fg, bg, minimum=4.6)`（向可读锚点混合、保留色相）与 `status_combinations(colors)`（success/failed/warning/running 的最终文字/背景对）；成功、失败、运行中标签分别改用 `$success_text`/`$danger_text`/`$running_text`，基础层与设计层同步。`scripts/test_theme_registry.py` 增加每个皮肤最终混色组合 ≥4.5 的断言（含统计组合）与 `veil_text` 断言；`gui/smoke_tests/smoke_theme_response_shell.py` 对 15 皮肤渲染真实 `statusChip` QLabel，读取 polish 后文字色并采样渲染背景像素，断言两者等于 `status_combinations()` 且对比度 ≥4.5，同时覆盖中性 chip。审查者探针 `docs/verification/j3-whole-review-20261103/status-contrast.py` 复跑退出 0。整体验收的其他未完成门禁（状态矩阵、宽表滚动、Linux 3D 等）不在本条闭合。
+
+
+### 2026-11-04 J3 本轮范围验收与阶段关闭
+
+冻结92134da062e8e3a203a39ff59fcd2b87bd0ffef1。4eebbe9e实现恢复Results布局不被导航重排、统一字体与VTK轴文字；92134仅最小测试夹具与Windows云OpenGL环境补丁，产品字节不变。真实云Windows原生35条不以对象210替代，Linux离屏18另记真实X11。主审本机49/77/33正式矩阵、改变两例2/1241和云12份原报告696/247580均经严格门禁，云报告的未跟踪环境目录/压缩包dirty事实保留。Windows首轮取消时限失败原job仅重试一次成功，旧失败不改。
+
+恢复布局时只重施页面约束，不show/hide/raise；显式导航仍能按页适配，用户打开的可选dock覆盖继续保留。主题仅视图状态，不进入项目/F5/K1资格；草稿、Undo/Redo、结果/显示覆盖与真实任务身份不串改。N1只改变轴文字字体/配色，保留源箭头、轨迹、材料/透明度和选择含义。
+
+Windows真实系统125/150、双层宽表滚动及反向、向导/浮动/快捷键、运行中200万事件完成、生产两次重启和正常退出；Linux独立X11三新皮肤、中文/N1/选择/4历史轨迹/旋转/恢复/正常退出。twm辅助exit1保留，无自有残留；WSLg RAIL限制不写成功。主审签收本轮范围并关闭J3，同时接受历史after图缺精确提交、旧状态前图及部分逐页八态归档不完备等非阻断证据限制，不称全人工矩阵。约一秒切换未越既定回归线，进一步提速后续安排，不新增前置工具。没有物理基准/真实云Agent批准结论。详见docs/verification/j3-final-20261104/README.md及独审逐动作记录。后续F2先三轮隔离实测和协议提案，既定用户协议选择前不改生产入口。

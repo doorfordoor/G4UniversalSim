@@ -1,0 +1,107 @@
+{
+  "schema": "g4usim_j3_native_fixture_r2",
+  "mode": "manual",
+  "generated_at": "2026-11-04T00:32:08.143441+00:00",
+  "duration_seconds": 4920.125,
+  "exit_code": 0,
+  "reason": "normal-exit",
+  "lifecycle": {
+    "fresh_requested": true,
+    "reused": false,
+    "state_existed_before": true,
+    "appearance_source": "cli",
+    "cli_requested": {
+      "skin": "circuit",
+      "language": "zh_CN"
+    },
+    "saved_before": {
+      "mode": "light",
+      "light_skin": "B",
+      "dark_skin": "C",
+      "language": "en",
+      "page": ""
+    },
+    "last_page": "results",
+    "page_source": "cli",
+    "session_marker": {
+      "schema": "g4usim_j3_native_fixture_r2",
+      "created_at": "2026-11-04T00:32:07.460616+00:00",
+      "last_seen_at": "2026-11-04T00:32:07.460616+00:00",
+      "sessions": 1,
+      "fresh_at_start": true,
+      "host_sha256": "239a1a4c06b9c0009e7aee3df80597ecc4f4f8b4c833cf6fad09fe52666bb229",
+      "last_page": "results",
+      "appearance": {
+        "skin": "contrast_light",
+        "language": "zh_CN"
+      }
+    }
+  },
+  "identity": {
+    "git_head": "92134da062e8e3a203a39ff59fcd2b87bd0ffef1",
+    "git_head_error": "",
+    "git_status_tracked": [],
+    "git_status_tracked_command": "git status --porcelain -uno -- gui scripts .github",
+    "git_status_tracked_scope": [
+      "gui",
+      "scripts",
+      ".github"
+    ],
+    "git_status_tracked_error": "",
+    "git_untracked_omitted": true,
+    "host_sha256": "239a1a4c06b9c0009e7aee3df80597ecc4f4f8b4c833cf6fad09fe52666bb229",
+    "python": "3.11.9",
+    "pyside6": "6.11.1",
+    "qt_platform": "windows",
+    "skin": "contrast_light",
+    "language": "zh_CN",
+    "page": "results",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "window_title": "G4UniversalSim Runner — demo *"
+  },
+  "fixture": {
+    "root": "D:\\Geant4\\G4UniversalSim\\out\\collab\\j3-native-fixture-r1",
+    "state_dir": "D:\\Geant4\\G4UniversalSim\\out\\collab\\j3-native-fixture-r1\\state",
+    "settings_dir": "D:\\Geant4\\G4UniversalSim\\out\\collab\\j3-native-fixture-r1\\state\\settings",
+    "recovery_dir": "D:\\Geant4\\G4UniversalSim\\out\\collab\\j3-native-fixture-r1\\state\\recovery",
+    "runs_root": "D:\\Geant4\\G4UniversalSim\\out\\collab\\j3-native-fixture-r1\\state\\runs",
+    "gallery_output": "D:\\Geant4\\G4UniversalSim\\examples\\gallery\\shielding_slab\\output",
+    "gallery_csv_sha256": "d2be0096661940d629fabb32dc0e3b40aefcb043d93faedc951b0de6868771e9",
+    "gallery_lines": 27,
+    "gallery_columns": 17,
+    "manual_checklist": "D:\\Geant4\\G4UniversalSim\\out\\collab\\j3-native-fixture-r1\\manual-checklist.md"
+  },
+  "fixture_initiated": {
+    "cloud_agent_requests": false,
+    "simulation_runs": false,
+    "note": "only facts initiated by this fixture host are reported here"
+  },
+  "whole_session_observation": {
+    "cloud_agent_requests": "not_observed",
+    "simulation_runs": "not_observed",
+    "note": "the production main window keeps its normal run/agent entry points; this host does not observe reviewer-initiated actions"
+  },
+  "agent_component_fixture": {
+    "scope": "standalone_config_agent_panel",
+    "task_id": "synthetic-j3-fixture-r2",
+    "status": "awaiting_approval",
+    "clearly_synthetic": true,
+    "local_button_events": [],
+    "local_only": true,
+    "production_panel_rewired": false,
+    "note": "component display/authorization observation only; a local click is not a real task approval, cancellation, cloud request or simulation run"
+  },
+  "deadline": {
+    "kind": "none",
+    "configured_seconds": 0,
+    "breached": false,
+    "note": "in-process timer is best-effort only; an external bounded launcher is recommended"
+  },
+  "checks": [],
+  "notes": [
+    "Synthetic component data is for display and authorization-control observation only.",
+    "The production main window keeps its normal agent connection and run entry points.",
+    "This receipt does not record a visual PASS; manual review owns that decision.",
+    "No enforced in-process watchdog exists; use an external bounded launcher."
+  ]
+}

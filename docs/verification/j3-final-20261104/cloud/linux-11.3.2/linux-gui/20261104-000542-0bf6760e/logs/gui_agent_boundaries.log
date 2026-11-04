@@ -1,0 +1,11 @@
+PASS test_cancel_write_failure_drains
+PASS test_result_write_failure_releases_only_old_owner
+PASS test_approve_dispatch_once
+PASS test_confirm_dispatch_once
+PASS test_recovery_binding_and_history
+PASS test_old_queue_cannot_enter_recovery
+PASS test_cancel_keeps_late_facts_without_advancing
+PASS test_cancel_escalation_preserves_owner
+PASS test_cancel_escalation_real_child
+Agent boundaries: QCore/controlled ownership/real journal and F5; no backend validation claim
+G4USIM_ASSERTS=173

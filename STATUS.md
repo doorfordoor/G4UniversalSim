@@ -1,5 +1,16 @@
 # G4UniversalSim 状态（唯一入口页）
 
+## 2026-11-04 J3 本轮范围验收完成（保留证据限制）
+
+- 主审签收候选 `92134da0`，J3关闭。B/K/C共用区域层级与三套新增皮肤、代表性Windows125%/150%、Linux独立X11、N1轴文字、宽表双层滚动、状态保持、正常重启/退出完成工程验收；历史图身份、逐页八态未穷举、WSLg等限制分别保留，不称全覆盖。
+- 主审干净 `4eebbe9e` static49/5672、GUI77/10822、integration33/6830；92134仅测试/CI最小修复，产品字节不变，原两例独审2/1241通过。
+- 最终真实云Linux双Geant4与M0双OS：12原报告、696次用例、247580条断言；下载摘要及逐报告严格门禁复核全部通过。Windows原生3D35条实际执行。首轮失败与一次原job重试保留，未降低断言或跳过。
+- 主题切换约一秒仍存在，未触发同机1.20倍回归调查线；进一步提速和普通文案/浮动默认大小列后续，不重开J3。Windows系统缩放已恢复125%，本轮原生进程正常收尾。未做物理基准验证。
+- [最终验收与限制](docs/verification/j3-final-20261104/README.md) · [独审逐动作记录](docs/collab/reviews/20261104-j3-closeout-independent.md)。下一项F2受控多轮运行会话，先做三轮隔离实验和协议提案，既定协议选择前不改生产入口。
+
+下方J3“未关闭”条目均为当时历史，不覆盖本节最终状态。
+
+
 **接手后先读**　[各阶段详细执行指南](docs/collab/decisions/20261102-stage-execution-guide.md)。近期按 F2 受控运行会话与 DeepSeek 的 [J3 现有界面视觉改造与新增皮肤](docs/collab/decisions/20261102-j3-desktop-skins.md) 分线推进。
 
 **D 盘接手入口**　[后续执行计划与 DeepSeek 开工指令](docs/collab/inbox/20261102-2045-astra-d-workspace-execution.md)。下一完整阶段为 F2，字体与主题的实窗补验可并行。
