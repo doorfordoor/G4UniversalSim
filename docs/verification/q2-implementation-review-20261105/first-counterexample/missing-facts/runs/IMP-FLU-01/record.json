@@ -1,0 +1,53 @@
+{
+  "case": "IMP-FLU-01",
+  "main_ini": {
+    "path": "D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\inputs\\main_imp_fluence.ini",
+    "sha256": "80d36b8b334ab4cb636e99b2adc3c6caed985e9c644687fa10e11ca059ed1aea"
+  },
+  "macro": {
+    "path": "D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\runs\\IMP-FLU-01\\run.mac",
+    "sha256": "004bc3ccddb304b930f120b5e9d79f504f75c1d8b361896438a1842bcf4e8b29",
+    "beam_on": 20000
+  },
+  "command": [
+    "D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-backend-864bc036\\G4UniversalSim.exe",
+    "--config",
+    "D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\inputs\\main_imp_fluence.ini",
+    "--macro",
+    "D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\runs\\IMP-FLU-01\\run.mac",
+    "--output",
+    "D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\runs\\IMP-FLU-01\\output",
+    "--threads",
+    "1",
+    "--seed",
+    "20261121"
+  ],
+  "environment": {
+    "GEANT4_DATA_DIR": "D:\\ProgramFiles\\Geant4\\share\\Geant4\\data",
+    "PATH_prefix": "D:\\ProgramFiles\\Geant4\\bin",
+    "platform": "nt",
+    "python": "venv (not used by backend)",
+    "cwd": "D:\\Geant4\\G4UniversalSim"
+  },
+  "started_at": "2026-11-04T18:49:11Z",
+  "finished_at": "2026-11-04T18:49:13Z",
+  "duration_s": 1.856,
+  "exit_code": 0,
+  "backend_log": "D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\runs\\IMP-FLU-01\\backend.log",
+  "run_summary_present": true,
+  "run_summary_sha256": "080a745d4582302c22ddd2ea795b179d0e5d560ef57888c07d64d6a2ea4ed3df",
+  "run_summary_excerpt": "Run Summary\n===========\n\n[Values]\nactual_completed_event_count = 20000\nactual_macro_file = D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\runs\\IMP-FLU-01\\run.mac\nactual_output_dir = D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\runs\\IMP-FLU-01\\output\nactual_threads = 1\nbiasing_attached_operator_count = 0\nbiasing_attachment_scope = master_geometry\nbiasing_effect_observed = unknown\nbiasing_enabled = false\nbiasing_expected_worker_evidence_count = 0\nbiasing_legacy_xs_rule_count = 0\nbiasing_matched_process_rule_count = 0\nbiasing_operators_attached = false\nbiasing_process_match_status = not_applicable\nbiasing_worker_coverage_complete = false\nbiasing_worker_evidence_count = 0\nbiasing_worker_validation_status = not_observed\nbiasing_xs_rule_count = 0\nbuild_git_commit = 864bc036d6d7752475e52db4efd2b950cabfcc3d\nbuild_git_source_state = clean\ncheck_overlaps = false\nconfig_duplicate_count = 0\nconfig_warning_count = 0\nconfigured_seed = 20261121\ndry_run = false\neffective_biasing_enabled = false\neffective_check_overlaps = false\neffective_check_overlaps_origin_file = D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\inputs\\main_imp_fluence.ini\neffective_check_overlaps_origin_key = check_overlaps\neffective_check_overlaps_origin_kind = main_ini\neffective_check_overlaps_origin_line = 7\neffective_check_overlaps_origin_section = run\neffective_config_geant4_applied = unknown\neffective_config_macro_execution_status = completed\neffective_config_snapshot_scope = manager_state_subset\neffective_config_snapshot_stage = finalization\neffective_config_snapshot_version = 1\neffective_config_source_coverage = startup_geometry_source_and_physics_reference\neffective_configured_seed = 20261121\neffective_geometry_config = D:/Geant4/G4UniversalSim/out/collab/q2-implementation-v1/inputs/geometry_fluence.ini\neffective_geometry_config_origin_file = D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\inputs\\main_imp_fluence.ini\neffective_geometry_config_origin_key = config\neffective_geometry_config_origin_kind = main_ini\neffective_geometry_config_origin_line = 19\neffective_geometry_config_origin_section = geometry\neffective_geometry_default_world_material = G4_Galactic\neffective_geometry_default_world_material_origin_file = D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\inputs\\main_imp_fluence.ini\neffective_geometry_default_world_material_origin_key = default_world_material\neffective_geometry_default_world_material_origin_kind = main_ini\neffective_geometry_default_world_material_origin_line = 20\neffective_geometry_default_world_material_origin_section = geometry\neffective_geometry_template = hierarchical\neffective_geometry_template_origin_file = D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\inputs\\main_imp_fluence.ini\neffective_geometry_template_origin_key = template\neffective_geometry_template_origin_kind = main_ini\neffective_geometry_template_origin_line = 18\neffective_geometry_template_origin_section = geometry\neffective_macro_file = D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\runs\\IMP-FLU-01\\run.mac\neffective_macro_file_origin_file = not_applicable\neffective_macro_file_origin_key = not_applicable\neffective_macro_file_origin_kind = cli\neffective_macro_file_origin_line = 0\neffective_macro_file_origin_section = not_applicable\neffective_materials_file = D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\inputs\\materials.ini\neffective_materials_loaded_file_0 = D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\inputs\\materials.ini\neffective_materials_loaded_file_count = 1\neffective_materials_source_status = single_file\neffective_output_dir = D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\runs\\IMP-FLU-01\\output\neffective_output_dir_origin_file = not_applicable\neffective_output_dir_origin_key = not_applicable\neffective_output_dir_origin_kind = cli\neffective_output_dir_origin_line = 0\neffective_output_dir_origin_section = not_applicable\neffective_physics_reference = FTFP_BERT_EMZ\neffect",
+  "outputs": [
+    "effective_config_configure.json",
+    "effective_config_final_r0_t-1.json",
+    "effective_config_final_r0_t0.json",
+    "effective_config_finalization.json",
+    "effective_config_run_0_t-1.json",
+    "effective_config_run_0_t0.json",
+    "fluence_volume_summary_t0.csv",
+    "run_metadata.json",
+    "run_summary.txt",
+    "scorer_statistics.csv"
+  ],
+  "console_tail": "und excitation low energy                  100 keV\nPre-compound excitation high energy                 30 MeV\nAngular generator for pre-compound model            1\nUse NeverGoBack option for pre-compound model       0\nUse SoftCutOff option for pre-compound model        0\nUse CEM transitions for pre-compound model          1\nUse GNASH transitions for pre-compound model        0\nUse HETC submodel for pre-compound model            0\n=======================================================================\n======       Nuclear De-excitation Module Parameters           ========\n=======================================================================\nType of de-excitation inverse x-section             3\nType of de-excitation factory                       Evaporation+GEM\nNumber of de-excitation channels                    68\nMin excitation energy                               10 eV \nMin energy per nucleon for multifragmentation       200 GeV\nLimit excitation energy for Fermi BreakUp           20 MeV\nLevel density (1/MeV)                               0.075\nUse simple level density model                      1\nUse discrete excitation energy of the residual      0\nTime limit for long lived isomeres                  1 ns \nIsomer production flag                              1\nInternal e- conversion flag                         1\nStore e- internal conversion data                   1\nCorrelated gamma emission flag                      0\nMax 2J for sampling of angular correlations         10\n=======================================================================\n[G4USimProgress] {\"schema\":\"g4usim_progress_v1\",\"run_id\":0,\"sequence\":1,\"phase\":\"begin\",\"planned_events\":20000,\"completed_events\":0,\"elapsed_s\":0,\"rate_eps\":null,\"eta_s\":null}\n[G4USimProgress] {\"schema\":\"g4usim_progress_v1\",\"run_id\":0,\"sequence\":2,\"phase\":\"end\",\"planned_events\":20000,\"completed_events\":20000,\"elapsed_s\":0.5020146,\"rate_eps\":39839.47877,\"eta_s\":0}\n     Cr_sctns:  Glauber-Gribov Nucl-nucl: 0 eV  ---> 25.6 PeV\n"
+}

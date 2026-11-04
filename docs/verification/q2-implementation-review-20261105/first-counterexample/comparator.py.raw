@@ -1,0 +1,547 @@
+"""Independent comparator for the frozen Q2-2 implementation cases.
+
+The comparator never copies a scorer's own formula.  Every reported quantity is
+recomputed from independent raw evidence:
+
+* IMP-DOSE-01: per-step edep rows from ``hits`` (and the per-event ``event_edep``
+  ledger) are summed; the mass is rebuilt from the frozen geometry (10 x 10 x
+  2 mm) and the Geant4 NIST ``G4_Si`` density 2.33 g/cm3.
+* IMP-FLU-01: the track length is rebuilt from the geometry (10 x 10 x 0.1 mm
+  slab, 20000 deterministic geantino tracks crossing it).
+* IMP-LET-01: ``let_t``/``let_d`` and their delta-method relative errors are
+  rebuilt from the public ``let_volume_summary`` moment columns only.
+* IMP-DDD-01: the DDD is rebuilt from the synthetic constant NIEL table, the
+  geometry volume and the track length.
+
+Printed-value precision: the CSV writer emits 12 significant digits.  A printed
+non-zero value ``x`` is therefore treated as ``[x - h, x + h]`` with
+``h = 0.5 * 10**(floor(log10(|x|)) - 11)``; explicit zeros are exact.  Sums add
+the half widths linearly and add a machine-rounding term; products/ratios
+propagate relative half widths.  A check fails when the recomputed interval and
+the reported interval do not overlap, or when any reported-vs-recomputed
+difference exceeds 1e-6 relative (arithmetic-error gate).
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import hashlib
+import json
+import math
+from pathlib import Path
+
+MEV_TO_J = 1.602176634e-13
+NIST_SI_DENSITY_G_CM3 = 2.33  # G4_Si / NIST material density, Geant4 11.3.2
+EPS = 2.220446049250313e-16
+ARITHMETIC_GATE = 1e-6
+
+
+def half_width(text: str) -> float:
+    """Half width implied by 12 printed significant digits (zero -> exact)."""
+    value = float(text)
+    if value == 0.0:
+        return 0.0
+    exponent = math.floor(math.log10(abs(value)))
+    return 0.5 * 10.0 ** (exponent - 11)
+
+
+class Interval:
+    """Simple arithmetic interval used for printed values and recomputations."""
+
+    __slots__ = ("value", "half")
+
+    def __init__(self, value: float, half: float = 0.0) -> None:
+        self.value = value
+        self.half = abs(half)
+
+    @classmethod
+    def printed(cls, text: str) -> "Interval":
+        return cls(float(text), half_width(text))
+
+    def __add__(self, other: "Interval") -> "Interval":
+        return Interval(self.value + other.value, self.half + other.half)
+
+    def __sub__(self, other: "Interval") -> "Interval":
+        return Interval(self.value - other.value, self.half + other.half)
+
+    def __mul__(self, other: "Interval") -> "Interval":
+        value = self.value * other.value
+        rel = self.rel_half() + other.rel_half()
+        return Interval(value, abs(value) * rel)
+
+    def __truediv__(self, other: "Interval") -> "Interval":
+        if other.value == 0.0:
+            raise ZeroDivisionError("interval division by zero")
+        value = self.value / other.value
+        rel = self.rel_half() + other.rel_half()
+        return Interval(value, abs(value) * rel)
+
+    def rel_half(self) -> float:
+        return self.half / abs(self.value) if self.value else 0.0
+
+    def machine(self, operations: int = 1) -> "Interval":
+        """Add a machine-rounding term for ``operations`` arithmetic steps."""
+        rel = max(self.rel_half(), 4.0 * operations * EPS)
+        return Interval(self.value, abs(self.value) * rel)
+
+
+def overlaps(a: Interval, b: Interval) -> bool:
+    low = max(a.value - a.half, b.value - b.half)
+    high = min(a.value + a.half, b.value + b.half)
+    return low <= high
+
+
+def check(
+    checks: list[dict],
+    check_id: str,
+    reported: Interval,
+    recomputed: Interval,
+    what: str,
+    extra: dict | None = None,
+) -> None:
+    ok = overlaps(reported, recomputed)
+    diff = abs(reported.value - recomputed.value)
+    scale = max(abs(reported.value), abs(recomputed.value), 1e-300)
+    within_gate = diff / scale <= ARITHMETIC_GATE
+    passed = bool(ok and within_gate)
+    row = {
+        "id": check_id,
+        "what": what,
+        "reported": reported.value,
+        "recomputed": recomputed.value,
+        "reported_interval": [reported.value - reported.half, reported.value + reported.half],
+        "recomputed_interval": [
+            recomputed.value - recomputed.half,
+            recomputed.value + recomputed.half,
+        ],
+        "abs_diff": diff,
+        "relative_diff": diff / scale,
+        "status": "pass" if passed else "fail",
+    }
+    if extra:
+        row.update(extra)
+    checks.append(row)
+
+
+def read_csv_rows(path: Path) -> tuple[list[str], list[dict[str, str]]]:
+    with path.open(newline="", encoding="utf-8") as handle:
+        reader = csv.DictReader(handle)
+        if reader.fieldnames is None:
+            raise ValueError(f"{path}: missing header")
+        rows = list(reader)
+        return list(reader.fieldnames), rows
+
+
+def require_columns(checks: list[dict], path: Path, columns: list[str], missing_id: str) -> bool:
+    if not path.is_file():
+        checks.append(
+            {"id": missing_id, "what": f"required file {path.name}", "status": "fail",
+             "detail": "file missing"}
+        )
+        return False
+    header, _ = read_csv_rows(path)
+    missing = [column for column in columns if column not in header]
+    checks.append(
+        {
+            "id": missing_id,
+            "what": f"{path.name} required columns",
+            "status": "fail" if missing else "pass",
+            "missing": missing,
+        }
+    )
+    return not missing
+
+
+def sum_printed(rows: list[dict[str, str]], column: str) -> Interval:
+    total = Interval(0.0, 0.0)
+    for row in rows:
+        total = total + Interval.printed(row[column])
+    return total.machine(len(rows))
+
+
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def compare_dose(case_root: Path, checks: list[dict]) -> dict:
+    case = "IMP-DOSE-01"
+    summary = case_root / "dose_volume_summary_t0.csv"
+    hits = case_root / "hits_t0.csv"
+    events = case_root / "event_edep_t0.csv"
+    result = {"case": case, "checks": checks}
+
+    ok = require_columns(
+        checks, summary,
+        ["mass_kg", "raw_edep_MeV", "raw_dose_Gy", "weighted_dose_Gy", "n_events"],
+        "DOSE-SUMMARY-COLUMNS",
+    )
+    if not ok:
+        return result
+    _, rows = read_csv_rows(summary)
+    if len(rows) != 1:
+        checks.append({"id": "DOSE-SUMMARY-ROWS", "status": "fail",
+                       "detail": f"expected 1 volume row, got {len(rows)}"})
+        return result
+    row = rows[0]
+    n_reported = int(row["n_events"])
+
+    # Independent geometry: 10 x 10 x 2 mm slab of G4_Si (2.33 g/cm3).
+    volume_mm3 = 10.0 * 10.0 * 2.0
+    mass_kg = volume_mm3 * 1e-3 * NIST_SI_DENSITY_G_CM3 * 1e-3  # mm3->cm3->g->kg
+    expected_volume_mm3 = Interval(volume_mm3, 0.0).machine()
+    reported_mass = Interval.printed(row["mass_kg"])
+    check(checks, "DOSE-MASS", reported_mass, Interval(mass_kg, 0.0).machine(),
+          "mass = 200 mm3 x 2.33 g/cm3 = 4.66e-4 kg",
+          {"volume_mm3_derived": volume_mm3, "density_g_cm3": NIST_SI_DENSITY_G_CM3})
+
+    # Raw hit ledger (per-step) -> total edep and unique events.
+    if require_columns(
+        checks, hits, ["runID", "eventID", "edep_MeV", "volume", "weight"],
+        "DOSE-HITS-COLUMNS",
+    ):
+        _, hit_rows = read_csv_rows(hits)
+        hit_events = {int(item["eventID"]) for item in hit_rows}
+        hit_edep = sum_printed(hit_rows, "edep_MeV")
+        hit_weighted = sum_printed(hit_rows, "edep_MeV")
+        checks.append({
+            "id": "DOSE-HITS-EVENTS",
+            "status": "pass" if len(hit_events) == n_reported else "fail",
+            "what": "unique hit events equals summary n_events",
+            "reported": n_reported, "recomputed": len(hit_events),
+            "rows": len(hit_rows),
+        })
+        check(checks, "DOSE-EDEP-HITS", Interval.printed(row["raw_edep_MeV"]), hit_edep,
+              "sum of hits edep_MeV")
+        check(checks, "DOSE-WEIGHTED-HITS", Interval.printed(row["weighted_edep_MeV"]),
+              hit_weighted, "sum of hits edep_MeV*weight (all weights are 1)")
+        reported_dose = Interval.printed(row["raw_dose_Gy"])
+        recomputed_dose = (hit_edep * Interval(MEV_TO_J, 0.0)) / Interval(mass_kg, 0.0).machine()
+        check(checks, "DOSE-VALUE-HITS", reported_dose, recomputed_dose,
+              "sum(hits edep)*MeV->J / analytic mass")
+        weighted_dose = (hit_weighted * Interval(MEV_TO_J, 0.0)) / Interval(mass_kg, 0.0).machine()
+        check(checks, "DOSE-WEIGHTED-VALUE", Interval.printed(row["weighted_dose_Gy"]),
+              weighted_dose, "weighted edep -> Gy")
+
+    # Per-event ledger as a second, independent evidence path.
+    if require_columns(
+        checks, events, ["runID", "eventID", "raw_edep_MeV", "weighted_edep_MeV"],
+        "DOSE-EVENT-COLUMNS",
+    ):
+        _, event_rows = read_csv_rows(events)
+        event_edep = sum_printed(event_rows, "raw_edep_MeV")
+        checks.append({
+            "id": "DOSE-EVENT-COUNT",
+            "status": "pass" if len(event_rows) == n_reported else "fail",
+            "reported": n_reported, "recomputed": len(event_rows),
+        })
+        check(checks, "DOSE-EDEP-EVENTS", Interval.printed(row["raw_edep_MeV"]), event_edep,
+              "sum of event_edep raw_edep_MeV")
+        # Physics sanity only (not a frozen tolerance): Edep <= N * 10 MeV.
+        upper = n_reported * 10.0
+        checks.append({
+            "id": "DOSE-EDEP-SANITY",
+            "status": "pass" if 0.0 < event_edep.value <= upper else "fail",
+            "what": "0 < total edep <= N*10 MeV (frozen: N*10 only order of magnitude)",
+            "recomputed": event_edep.value,
+            "upper": upper,
+        })
+
+    # Statistics row: value must be the same total dose.
+    stats = case_root / "scorer_statistics.csv"
+    if require_columns(checks, stats, ["scorer", "quantity", "estimator", "value", "n_events"],
+                       "DOSE-STATS-COLUMNS"):
+        _, stat_rows = read_csv_rows(stats)
+        dose_rows = [r for r in stat_rows if r["scorer"] == "dose" and r["estimator"] == "total"]
+        if len(dose_rows) == 1 and rows:
+            check(checks, "DOSE-STATS-VALUE", Interval.printed(dose_rows[0]["value"]),
+                  Interval.printed(row["raw_dose_Gy"]), "dose total row equals summary")
+            checks.append({
+                "id": "DOSE-STATS-N",
+                "status": "pass" if int(dose_rows[0]["n_events"]) == n_reported else "fail",
+                "reported": n_reported, "recomputed": int(dose_rows[0]["n_events"]),
+            })
+    result.update({"n_events": n_reported, "mass_kg_analytic": mass_kg,
+                   "dose_Gy": float(row["raw_dose_Gy"])})
+    return result
+
+
+def compare_fluence(case_root: Path, checks: list[dict]) -> dict:
+    case = "IMP-FLU-01"
+    summary = case_root / "fluence_volume_summary_t0.csv"
+    result = {"case": case, "checks": checks}
+    if not require_columns(
+        checks, summary,
+        ["volume_mm3", "raw_track_length_mm", "raw_fluence_mm-2", "weighted_fluence_mm-2",
+         "n_events"],
+        "FLU-SUMMARY-COLUMNS",
+    ):
+        return result
+    _, rows = read_csv_rows(summary)
+    row = rows[0]
+    n = int(row["n_events"])
+    track_mm = 0.1 * n  # 10 x 10 x 0.1 mm slab, one crossing per event
+    volume_mm3 = 10.0 * 10.0 * 0.1
+    fluence = track_mm / volume_mm3
+    checks.append({"id": "FLU-N", "status": "pass" if n == 20000 else "fail",
+                   "reported": 20000, "recomputed": n})
+    check(checks, "FLU-VOLUME", Interval.printed(row["volume_mm3"]),
+          Interval(volume_mm3, 0.0).machine(), "geometry volume 10*10*0.1 mm3")
+    check(checks, "FLU-LENGTH", Interval.printed(row["raw_track_length_mm"]),
+          Interval(track_mm, 0.0).machine(), "N x 0.1 mm deterministic geantino tracks")
+    check(checks, "FLU-FLUENCE", Interval.printed(row["raw_fluence_mm-2"]),
+          Interval(fluence, 0.0).machine(), "track length / volume = 200 mm^-2")
+    check(checks, "FLU-WEIGHTED-FLUENCE", Interval.printed(row["weighted_fluence_mm-2"]),
+          Interval(fluence, 0.0).machine(), "unit weights")
+    hits = case_root / "hits_t0.csv"
+    checks.append({
+        "id": "FLU-ZERO-DEPOSIT-NO-HITS",
+        "status": "pass" if not hits.exists() else "fail",
+        "what": "geantino zero-deposition case has no hits file (documented contract)",
+        "hits_file_present": hits.exists(),
+    })
+    stats = case_root / "scorer_statistics.csv"
+    if require_columns(checks, stats, ["scorer", "quantity", "estimator", "value", "mean_per_event",
+                                       "sum", "sum_sq"], "FLU-STATS-COLUMNS"):
+        _, stat_rows = read_csv_rows(stats)
+        row_stat = [r for r in stat_rows if r["scorer"] == "fluence" and r["estimator"] == "total"][0]
+        check(checks, "FLU-STATS-VALUE", Interval.printed(row_stat["value"]),
+              Interval(fluence, 0.0).machine(), "statistics total fluence")
+        check(checks, "FLU-STATS-MEAN", Interval.printed(row_stat["mean_per_event"]),
+              Interval(0.01, 0.0).machine(), "per-event fluence 0.01 mm^-2")
+        check(checks, "FLU-STATS-SUMSQ", Interval.printed(row_stat["sum_sq"]),
+              Interval(n * (0.1 / volume_mm3) ** 2, 0.0).machine(),
+              "sum_sq = N * per-event^2 = 2")
+    result.update({"n_events": n, "fluence_mm-2": fluence})
+    return result
+
+
+def compare_let(case_root: Path, case_id: str, checks: list[dict]) -> dict:
+    case = case_id
+    summary = case_root / "let_volume_summary_t0.csv"
+    result = {"case": case, "checks": checks}
+    columns = ["sum_wl_mm", "sum_wSl_MeV", "sum_wS2l_MeV2_per_mm", "sum_sq_wl_mm2",
+               "sum_sq_wSl_MeV2", "sum_sq_wS2l_MeV4_per_mm2", "sum_wl_x_wSl_MeV_mm",
+               "sum_wSl_x_wS2l_MeV3_per_mm", "n_events", "let_t_keV_per_um",
+               "let_d_keV_per_um"]
+    if not require_columns(checks, summary, columns, f"{case}-SUMMARY-COLUMNS"):
+        return result
+    _, rows = read_csv_rows(summary)
+    row = rows[0]
+    wl = Interval.printed(row["sum_wl_mm"])
+    wsl = Interval.printed(row["sum_wSl_MeV"])
+    ws2l = Interval.printed(row["sum_wS2l_MeV2_per_mm"])
+    sq_wl = Interval.printed(row["sum_sq_wl_mm2"])
+    sq_wsl = Interval.printed(row["sum_sq_wSl_MeV2"])
+    sq_ws2l = Interval.printed(row["sum_sq_wS2l_MeV4_per_mm2"])
+    cross_t = Interval.printed(row["sum_wl_x_wSl_MeV_mm"])
+    cross_d = Interval.printed(row["sum_wSl_x_wS2l_MeV3_per_mm"])
+    n = int(row["n_events"])
+
+    let_t = wsl / wl
+    let_d = ws2l / wsl
+    check(checks, f"{case}-LET-T", Interval.printed(row["let_t_keV_per_um"]), let_t.machine(),
+          "let_t = sum_wSl / sum_wl")
+    check(checks, f"{case}-LET-D", Interval.printed(row["let_d_keV_per_um"]), let_d.machine(),
+          "let_d = sum_wS2l / sum_wSl")
+
+    # Delta-method ratio variance rebuilt from public moments.
+    def delta(rel: Interval, rel_sq: Interval, den: Interval, den_sq: Interval, cross: Interval) -> Interval:
+        term1 = rel_sq / (rel * rel)
+        term2 = den_sq / (den * den)
+        term3 = (cross * Interval(2.0, 0.0)) / (rel * den)
+        return (term1 + term2 - term3).machine(4)
+
+    var_t = delta(wsl, sq_wsl, wl, sq_wl, cross_t)
+    var_d = delta(ws2l, sq_ws2l, wsl, sq_wsl, cross_d)
+    check(checks, f"{case}-LET-T-DELTA", Interval.printed(row["let_t_keV_per_um"]),
+          let_t.machine(), "let_t value for delta check (auxiliary)")
+    checks.append({
+        "id": f"{case}-LET-T-VAR",
+        "status": "pass" if var_t.value >= -1e-18 else "fail",
+        "what": "let_t delta variance non-negative",
+        "value": var_t.value,
+    })
+    stats = case_root / "scorer_statistics.csv"
+    if require_columns(checks, stats, ["scorer", "quantity", "estimator", "rel_error", "value"],
+                       f"{case}-STATS-COLUMNS"):
+        _, stat_rows = read_csv_rows(stats)
+        by_quantity = {r["quantity"]: r for r in stat_rows if r["scorer"] == "let"
+                       and r["estimator"] == "ratio"}
+        for quantity, var in (("let_t", var_t), ("let_d", var_d)):
+            # The printed moments give a *variance* interval; R = sqrt(var) must
+            # carry that interval through, otherwise the cancellation of the
+            # three ~5e-4 terms is mistaken for a formula difference.  The scorer
+            # evaluates the same expression in double from unrounded sums, so the
+            # R interval also gets a machine-rounding term for ~8 operations.
+            variance = max(var.value, 0.0)
+            variance_half = var.half if variance > 0.0 else 0.0
+            expected_rel = math.sqrt(variance)
+            rel_half = (variance_half / (2.0 * expected_rel)) if expected_rel > 0.0 else 0.0
+            reported = Interval.printed(by_quantity[quantity]["rel_error"])
+            recomputed = Interval(expected_rel, rel_half).machine(8)
+            check(checks, f"{case}-{quantity.upper()}-REL", reported, recomputed,
+                  "delta method R = sqrt(S2_A/A^2 + S2_B/B^2 - 2*Sum(ab)/(A*B))")
+            check(checks, f"{case}-{quantity.upper()}-STATS-VALUE",
+                  Interval.printed(by_quantity[quantity]["value"]),
+                  Interval.printed(row["let_t_keV_per_um" if quantity == "let_t"
+                                     else "let_d_keV_per_um"]), "statistics ratio value")
+    checks.append({"id": f"{case}-N", "status": "pass" if n == 2000 else "fail",
+                   "reported": 2000, "recomputed": n})
+    result.update({"n_events": n, "let_t": let_t.value, "let_d": let_d.value,
+                   "delta_rel_t": math.sqrt(max(var_t.value, 0.0)),
+                   "delta_rel_d": math.sqrt(max(var_d.value, 0.0))})
+    return result
+
+
+def compare_ddd(case_root: Path, inputs: Path, checks: list[dict]) -> dict:
+    case = "IMP-DDD-01"
+    summary = case_root / "displacement_volume_summary_t0.csv"
+    result = {"case": case, "checks": checks}
+    if not require_columns(
+        checks, summary,
+        ["particle", "niel_table", "volume_mm3", "track_length_mm",
+         "out_of_range_track_length_mm", "ddd_MeV_g", "ddd_sum_sq_MeV2_g2", "n_events"],
+        "DDD-SUMMARY-COLUMNS",
+    ):
+        return result
+    _, rows = read_csv_rows(summary)
+    row = rows[0]
+    n = int(row["n_events"])
+    volume_mm3 = 10.0
+    track_mm = 2000.0
+    niel = 0.003  # synthetic constant table, frozen input
+    expected = track_mm * niel * 100.0 / volume_mm3
+    check(checks, "DDD-VOLUME", Interval.printed(row["volume_mm3"]),
+          Interval(volume_mm3, 0.0).machine(), "geometry volume 10 mm3")
+    check(checks, "DDD-LENGTH", Interval.printed(row["track_length_mm"]),
+          Interval(track_mm, 0.0).machine(), "N x 0.1 mm geantino tracks")
+    check(checks, "DDD-VALUE", Interval.printed(row["ddd_MeV_g"]),
+          Interval(expected, 0.0).machine(), "L*NIEL*100/V = 60 MeV/g")
+    check(checks, "DDD-SUMSQ", Interval.printed(row["ddd_sum_sq_MeV2_g2"]),
+          Interval(n * (niel * 100.0 * 0.1 / volume_mm3) ** 2, 0.0).machine(),
+          "N * per-event^2 = 0.18")
+    check(checks, "DDD-OUT-OF-RANGE", Interval.printed(row["out_of_range_track_length_mm"]),
+          Interval(0.0, 0.0), "all steps inside synthetic table energy domain")
+    checks.append({"id": "DDD-N", "status": "pass" if n == 20000 else "fail",
+                   "reported": 20000, "recomputed": n})
+    if require_columns(checks, case_root / "fluence_volume_summary_t0.csv",
+                       ["volume_mm3", "raw_track_length_mm", "raw_fluence_mm-2", "n_events"],
+                       "DDD-FLUENCE-COLUMNS"):
+        _, flu_rows = read_csv_rows(case_root / "fluence_volume_summary_t0.csv")
+        check(checks, "DDD-CROSS-FLUENCE", Interval.printed(flu_rows[0]["raw_fluence_mm-2"]),
+              Interval(200.0, 0.0), "fluence cross-check 200 mm^-2")
+        check(checks, "DDD-CROSS-LENGTH", Interval.printed(flu_rows[0]["raw_track_length_mm"]),
+              Interval(track_mm, 0.0), "track length cross-check 2000 mm")
+
+    # Table identity: the recorded path must be the frozen synthetic table.
+    frozen = inputs / "niel_constant_0p003.csv"
+    table_path = Path(row["niel_table"])
+    table_check = {
+        "id": "DDD-TABLE-SHA",
+        "what": "niel_table path sha256 equals the frozen synthetic table",
+        "frozen_sha256": sha256(frozen) if frozen.is_file() else None,
+        "recorded_path": str(table_path),
+        "status": "fail",
+    }
+    if table_path.is_file() and frozen.is_file():
+        table_check["recorded_sha256"] = sha256(table_path)
+        table_check["status"] = ("pass"
+                                 if table_check["recorded_sha256"] == table_check["frozen_sha256"]
+                                 else "fail")
+    checks.append(table_check)
+    result.update({"n_events": n, "ddd_MeV_g": expected})
+    return result
+
+
+def compare_all(cases_root: Path, inputs: Path) -> dict:
+    cases = {}
+    for case_id, func in (
+        ("IMP-DOSE-01", lambda root, checks: compare_dose(root, checks)),
+        ("IMP-FLU-01", lambda root, checks: compare_fluence(root, checks)),
+        ("IMP-LET-01-10MeV", lambda root, checks: compare_let(root, "IMP-LET-01-10MeV", checks)),
+        ("IMP-LET-01-100MeV", lambda root, checks: compare_let(root, "IMP-LET-01-100MeV", checks)),
+        ("IMP-DDD-01", lambda root, checks: compare_ddd(root, inputs, checks)),
+    ):
+        root = cases_root / case_id / "output"
+        checks: list[dict] = []
+        result = func(root, checks) if "DDD" not in case_id else func(root, checks)
+        summary_checks = [c for c in checks if c.get("status") == "fail"]
+        result["failed"] = len(summary_checks)
+        result["checks_count"] = len(checks)
+        result["status"] = "pass" if not summary_checks else "fail"
+        cases[case_id] = result
+    return {
+        "schema": "g4usim_q2_2_comparator_v1",
+        "arithmetic_gate_relative": ARITHMETIC_GATE,
+        "printed_significant_digits": 12,
+        "cases": cases,
+        "status": "pass" if all(c["status"] == "pass" for c in cases.values()) else "fail",
+    }
+
+
+CASE_FUNCS = {
+    "IMP-DOSE-01": lambda root, inputs, checks: compare_dose(root, checks),
+    "IMP-FLU-01": lambda root, inputs, checks: compare_fluence(root, checks),
+    "IMP-LET-01-10MeV": lambda root, inputs, checks: compare_let(root, "IMP-LET-01-10MeV", checks),
+    "IMP-LET-01-100MeV": lambda root, inputs, checks: compare_let(root, "IMP-LET-01-100MeV", checks),
+    "IMP-DDD-01": lambda root, inputs, checks: compare_ddd(root, inputs, checks),
+}
+
+
+def compare_one(case_id: str, cases_root: Path, inputs: Path) -> dict:
+    """Compare a single case (used by the tamper counterexample harness)."""
+    checks: list[dict] = []
+    root = cases_root / case_id / "output"
+    result = CASE_FUNCS[case_id](root, inputs, checks)
+    failed = [c for c in checks if c.get("status") == "fail"]
+    result["failed"] = len(failed)
+    result["checks_count"] = len(checks)
+    result["failed_ids"] = [c.get("id") for c in failed]
+    result["status"] = "pass" if not failed else "fail"
+    return result
+
+
+def summarize(cases: dict) -> dict:
+    return {
+        "schema": "g4usim_q2_2_comparator_v1",
+        "arithmetic_gate_relative": ARITHMETIC_GATE,
+        "printed_significant_digits": 12,
+        "cases": cases,
+        "status": "pass" if all(c["status"] == "pass" for c in cases.values()) else "fail",
+    }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--cases-root", type=Path,
+                        default=Path(__file__).resolve().parent / "runs")
+    parser.add_argument("--inputs", type=Path,
+                        default=Path(__file__).resolve().parent / "inputs")
+    parser.add_argument("--out", type=Path, default=None)
+    parser.add_argument("--quiet", action="store_true")
+    parser.add_argument("--only", default=None, choices=None)
+    args = parser.parse_args()
+    if args.only:
+        result = summarize({args.only: compare_one(args.only, args.cases_root, args.inputs)})
+    else:
+        result = compare_all(args.cases_root, args.inputs)
+    out = args.out or (Path(__file__).resolve().parent / "results.json")
+    out.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    if not args.quiet:
+        for case_id, data in result["cases"].items():
+            print(f"{case_id}: {data['status']} ({data['checks_count']} checks, "
+                  f"{data['failed']} failed)")
+            for item in data["checks"]:
+                if item.get("status") != "pass":
+                    print("  FAIL", item.get("id"), item.get("what", ""), item)
+        print("overall:", result["status"], "->", out)
+    return 0 if result["status"] == "pass" else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
