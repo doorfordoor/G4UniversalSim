@@ -1,0 +1,49 @@
+{
+  "schema": "q2_dose_initial_input_rejection_observed_v1",
+  "classification": "out-of-contract generated input, not a physical comparison",
+  "observed_error": "G4UniversalSim fatal error: SourceManager plane square uses halfx only.",
+  "repair_scope": "remove unsupported halfy from generated square-source input; frozen source geometry/physics/N/seeds unchanged",
+  "evidence_kind": "bridge tool result preview receipts; full original logs not asserted preserved",
+  "events": [
+    {
+      "sessionSeq": 39871,
+      "turn": 62,
+      "step": 44,
+      "at": 1793824387064,
+      "failed": false,
+      "outputPreview": "<path>/d/Geant4/G4UniversalSim/out/collab/q2-reference-dose-v1/run_cases.py</path> <type>file</type> <content> Created file </content>"
+    },
+    {
+      "sessionSeq": 39879,
+      "turn": 62,
+      "step": 45,
+      "at": 1793824396908,
+      "failed": false,
+      "outputPreview": "ref_dose_10: exit=1 0.11s completed=-1 ref_dose_100: exit=1 0.19s completed=-1 ref_dose_200: exit=1 0.11s completed=-1 ref_dose_50: exit=1 0.10s completed=-1 Traceback (most recent call last): File \"D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-reference-dose-v1\\run_cases.py\", line 228, in <module> raise SystemExit(main()) ^^^^^^ File \"D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-reference-dose-v1\\run_cases.py\", line 217, in main evaluation = compare.evaluate(results, freeze, identity) ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ File \"D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-reference-dose-v1\\compare.py\", line 557, in evaluate input_ok = verify_inputs(case, freeze, freeze_case, case_checks) ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ File \"D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-reference-dose-v1\\compare.py\", line 168, in verify_inputs main = parse_simple_ini(ROOT / case[\"main_ini\"]) ~~~~^^^^^^^^^^^^ KeyError: 'main_ini' EXIT=0"
+    },
+    {
+      "sessionSeq": 39887,
+      "turn": 62,
+      "step": 46,
+      "at": 1793824408085,
+      "failed": false,
+      "outputPreview": "G4UniversalSim fatal error: SourceManager plane square uses halfx only. ---"
+    },
+    {
+      "sessionSeq": 39895,
+      "turn": 62,
+      "step": 47,
+      "at": 1793824417359,
+      "failed": false,
+      "outputPreview": "84:shape = box 90:shape = box 97:shape = box 146:shape = {source['shape']} 147:halfx = {float(source['halfx_mm']):g} mm 148:halfy = {float(source['halfx_mm']):g} mm"
+    },
+    {
+      "sessionSeq": 39903,
+      "turn": 62,
+      "step": 48,
+      "at": 1793824426091,
+      "failed": false,
+      "outputPreview": "patched } }, \"schema\": \"g4usim_q2_ref_dose_identity_v1\", \"workspace\": \"D:/Geant4/G4UniversalSim\" } SETUP_EXIT=0 \"data_file\": \"scenarios/benchmarks/shielding_range/nist/PSTAR_Si.txt\", \"data_matches_freeze\": true, \"data_sha256\": \"71cfaaf13545201276c24195d96a4fafd2341bf5fbd26ed52133cce0b42f2422\", \"freeze_file\": \"docs/collab/decisions/20261105-q2-dose-reference-freeze-v1.json\", \"method\": \"bisect/log-log E->CSDA range, subtract rho*(b+t/2)/10 g/cm2, invert range to E_mid, interpolate electronic stopping at E_mid; D/Phi=stopping*1.602176634e-10\", \"schema\": \"g4usim_q2_ref_dose_recompute_v1\", \"table_energy_range_MeV\": [ 0.001, 10000.0 ], \"table_rows\": 132 } REF_EXIT=0"
+    }
+  ]
+}

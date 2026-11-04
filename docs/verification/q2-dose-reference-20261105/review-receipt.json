@@ -1,0 +1,60 @@
+{
+  "schema": "q2_dose_independent_review_v1",
+  "backend_sha256": "f8a8119da5d68814a14920056d85a7f30e4f8380d393ea1d439cc8ca2726820f",
+  "driver_checks": 494,
+  "independent_math_checks": 54,
+  "tamper_cases": 7,
+  "baseline_unchanged": true,
+  "cases": [
+    {
+      "case": "ref_dose_10",
+      "N": 20000,
+      "nonzero_events": 13834,
+      "mass_kg": 4.66e-06,
+      "dose_Gy": 7.968771957924604e-05,
+      "event_rel_error": 0.004804949647930647,
+      "reference": 5.759422098860401e-09,
+      "observed_per_fluence": 5.737515809705715e-09,
+      "sigma": 2.7568474569841993e-11,
+      "threshold": 1.97893865686734e-10
+    },
+    {
+      "case": "ref_dose_50",
+      "N": 20000,
+      "nonzero_events": 13894,
+      "mass_kg": 2.33e-05,
+      "dose_Gy": 2.2133696390329726e-05,
+      "event_rel_error": 0.004943458529932132,
+      "reference": 1.5985558573556106e-09,
+      "observed_per_fluence": 1.5936261401037404e-09,
+      "sigma": 7.878024735818656e-12,
+      "threshold": 5.5605191354568176e-11
+    },
+    {
+      "case": "ref_dose_100",
+      "N": 20000,
+      "nonzero_events": 13884,
+      "mass_kg": 2.33e-05,
+      "dose_Gy": 1.301000818258103e-05,
+      "event_rel_error": 0.005366961951875409,
+      "reference": 9.411426408813784e-10,
+      "observed_per_fluence": 9.36720589145834e-10,
+      "sigma": 5.0273437614840086e-12,
+      "threshold": 3.3904884102079596e-11
+    },
+    {
+      "case": "ref_dose_200",
+      "N": 20000,
+      "nonzero_events": 13854,
+      "mass_kg": 4.66e-05,
+      "dose_Gy": 8.038026226065177e-06,
+      "event_rel_error": 0.005582192673649867,
+      "reference": 5.836517985516918e-10,
+      "observed_per_fluence": 5.787378882766927e-10,
+      "sigma": 3.230626399901749e-12,
+      "threshold": 2.1364915170739085e-11
+    }
+  ],
+  "scope": "Windows, Geant4 11.3.2, EM-only Si collision-equilibrium slab at fixed four energies/seeds; no physical CI coverage claim",
+  "initial_rejection": "original rejected backend logs overwritten by executor; bridge previews and driver-notes preserve bounded historical evidence, not raw-log identity"
+}

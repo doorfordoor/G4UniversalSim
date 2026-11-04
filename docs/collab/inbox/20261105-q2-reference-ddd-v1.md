@@ -2,7 +2,7 @@
 
 按docs/collab/decisions/20261105-q2-ddd-reference-freeze-v1.md和同名JSON实施两例，仅写out/collab/q2-reference-ddd-v1/**与docs/collab/outbox/20261105-q2-reference-ddd-v1.md。表审计另行派工，本任务只做两例运行及限定验证。不改产品、正式测试/基准、冻结合同、表数据、其它候选、阶段状态或Git。
 
-冻结后端864bc036；仅电磁option4，10um cut，各20000事件、单线程，固定两种子。几何/源来自Dose冻结并由SHA锁定；质子SR-NIEL表按冻结SHA使用。运行前从表字节独立重算参考，比较DDD/Phi=DDD×1.44/N与固定两参考值，门槛为原1%加3σ。记录该比较检验表折积，不验证表本身；不混用完整强子物理或直接ndep代替NIEL积分。
+冻结后端864bc036；仅电磁option4，10um cut，各20000事件、单线程，固定两种子。几何/源来自Dose冻结并由SHA锁定，方形源只写halfx，不添加halfy；质子SR-NIEL表按冻结SHA使用。运行前从表字节独立重算参考，比较DDD/Phi=DDD×1.44/N与固定两参考值，门槛为原1%加3σ。记录该比较检验表折积，不验证表本身；不混用完整强子物理或直接ndep代替NIEL积分。
 
 完整核对实际成功摘要/metadata、N、产物SHA、输入和后端身份；独立按hits质子加权步长与敏感体积核对长度归一化，并检查out_of_range_track_length_mm=0、事件矩和有效有限统计。公开CSV缺步平均动能，不伪造完整逐步折积的证据；用既有Q2-2常数表证据说明边界，不新增产品字段。比较失败与后端exit分开保存。
 

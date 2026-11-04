@@ -2,7 +2,7 @@
 
 目标：实施docs/collab/decisions/20261105-q2-fluence-reference-freeze-v1.md及同名JSON，完成一个真实固定病例。只写out/collab/q2-reference-fluence-v1/**和docs/collab/outbox/20261105-q2-reference-fluence-v1.md。不改产品、正式基准/测试、冻结合同、其它候选、ROADMAP/STATUS，不提交Git。
 
-后端864bc036固定SHA、仅电磁option4、单线程20000事件、seed20261110。12×12mm均匀平面束，100MeV质子，法向覆盖10×10×0.1mm Galactic敏感片，源在z=-2mm，片在原点。世界3m Galactic，cut0.7mm。保存本轮质子hits及Fluence输出，不增加其它模拟功能。
+后端864bc036固定SHA、仅电磁option4、单线程20000事件、seed20261110。12×12mm均匀平面束，100MeV质子，法向覆盖10×10×0.1mm Galactic敏感片，源在z=-2mm，片在原点。世界3m Galactic，cut0.7mm。方形源只写halfx，不添加halfy。保存本轮质子hits及Fluence输出，不增加其它模拟功能。
 
 运行前独立重算解析值：p=100/144、体积10mm³、总注量期望20000/144mm^-2。命中K是随机量，不能要求K=Np；实际Phi=ΣwL/10mm³。按冻结的1e-6相对容差加3倍本轮有效标准误差比较外部解析期望；另以hits按事件合并的穿越长度独立核对积分，不能把每步都当成完整厚度，也不能用hits行数当总事件数。核对零贡献事件进入实际N，单位权重下rel_error与sqrt(1/K−1/N)及打印精度一致。1cm^-2=0.01mm^-2。
 
