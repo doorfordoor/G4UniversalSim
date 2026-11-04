@@ -22,7 +22,7 @@ D盘roadmap/Q2-scientific-baselines；应用产品冻结864bc036d6d7752475e52db4
 | Q2-6整阶段验收交班 | 未开始 | 支持平台/版本回归、严格证据/云结果和科学范围签收 |
 
 ## 本轮结果
-NIEL表审计经C盘独立复演：27 pass / 0 fail / 3 limited；60位Decimal另完成17项复算，5个负对照均命中真实fail。两表和冻结合同SHA未变，未运行Geant4。结构/算术通过，95假设输入及ASTM/SR-NIEL表/模型物理评价仍limited，主审按此范围签收。原件和CRC/逐文件SHA见docs/verification/q2-niel-table-audit-20261105，独审docs/collab/reviews/20261105-q2-niel-table-audit-review-v1.md。DDD原错误证明已撤回，修正受限报告和首次反例继续保留；未改产品/参考/容差。
+NIEL表审计经C盘独立复演：27 pass / 0 fail / 3 limited；60位Decimal另完成17项复算，5个负对照均命中真实fail。两表和冻结合同SHA未变，未运行Geant4。结构/算术通过，95假设输入及ASTM/SR-NIEL表/模型物理评价仍limited，主审按此范围签收。原件和CRC/逐文件SHA见docs/verification/q2-niel-table-audit-20261105，独审docs/collab/reviews/20261105-q2-niel-table-audit-review-v1.md。DDD原错误证明已撤回，修正受限报告和首次反例继续保留；未改产品/参考/容差。Q2-4首草案预审另发现显示尾零导致误差界过宽、LET_d平方矩分母及事件N/MT判据错误，原草案和反例已保存并派最小R1修订；尚未冻结或运行统计实验。
 
 ## 运行中任务
 原task g4-j3-desktop-20261103、session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4。round82/turn67预注册草案已完成；round83精度R1已进入turn68、Flash/Max，round84同一R1的公式/语义补充已接单排队。审查docs/collab/reviews/20261105-q2-uncertainty-preregister-r1.md；最小范围仅现有方案/纯数学核验，未授权后端运行或产品修改。原失败草案快照及精度反例见docs/verification/q2-uncertainty-preregister-20261105。请求/游标见out/collab/desktop-bridge/context.json，无主审后台命令。
