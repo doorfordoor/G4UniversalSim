@@ -8,7 +8,7 @@ F2受控多轮运行会话；固定清单docs/collab/decisions/20261104-f2-close
 
 | 项 | 状态 |
 | --- | --- |
-| 三轮真实进程实验/白名单/拒绝反例 | 进行中：首任务准备派发 |
+| 三轮真实进程实验/白名单/拒绝反例 | 进行中：round34已接收，turn40实际读取源码、命令门禁及轨迹计分入口 |
 | csh/版本协议提案与选择 | 未开始：等待具体实验材料，之后按既定决策点处理 |
 | 后端会话/重放 | 未开始 |
 | GUI下一轮面板 | 未开始 |
@@ -26,11 +26,13 @@ F2受控多轮运行会话；固定清单docs/collab/decisions/20261104-f2-close
 
 ## 执行通道与运行中任务
 
-DeepSeek原session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4；task g4-j3-desktop-20261103复用绑定，实际deepseek-account-vision/deepseek-flash/max。绑定/请求/游标在out/collab/desktop-bridge/context.json。turn39已完成J3文档纠正并idle；下一任务F2-PROTOCOL-EVIDENCE-20261104尚待实际派发收据，不重发J3任务。
+DeepSeek原session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4；task g4-j3-desktop-20261103复用绑定，实际deepseek-account-vision/deepseek-flash/max。F2请求f2-protocol-evidence-8631af58-20261104已实际派发，round34 accepted=true、replayed=false；turn40正在执行，最新独立读取到26758。绑定/请求/游标在out/collab/desktop-bridge/context.json，原始接收及状态在同目录f2-protocol-evidence-receipt.json、f2-current-status.json。当前不是F2验收通过，不重发同一任务。
+
+J3文档/证据提交8631af58c68d5189aed5d9ec29f72c6f47c44f16已推送roadmap/gui-theme-response，并经C盘q1-final正常快进集成及推送codex；两远端分支实际均为该SHA。D盘当前分支roadmap/F2-controlled-session从该节点继续，主审只更新协作记录，不修改作者实验文件。现有定时任务g4universalsim已保存为F2、ACTIVE、原频率保留；读回提示词与20261104-f2-automation-prompt.md字节一致且无替换字符。集成收据见reviews/20261104-j3-integration-receipt.md。
 
 ## 下一步
 
-完成J3文档/证据提交与codex正常快进集成，更新并读回现有定时任务，然后在D盘F2阶段分支向原会话实际派首任务。作者交三轮证据后主审独立重现，提出协议推荐。不要先造新的SDK代理、LangGraph或通用宿主。
+跟进F2已运行的三轮隔离实验、白名单/拒绝反例与协议提案；只读取新增回执，作者交付后主审独立重现，提出具体协议推荐。执行范围仅out/collab/f2-session-baseline-20261104及约定outbox，不改生产入口。不要先造新的SDK代理、LangGraph或通用宿主；J3已经关闭，不重复其正式测试。
 
 ## 待用户决定及保留限制
 
