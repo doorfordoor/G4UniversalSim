@@ -1,0 +1,223 @@
+{
+  "schema": "g4usim_f2_replay_physical_comparison_probe_v1",
+  "backend_exit_code": 0,
+  "driver_initial_raw_assertion": "failed: 3/24 CSV have time-derived differences; preserved original replay-report.json and driver.log",
+  "unchanged_raw_files": 21,
+  "files_checked": 24,
+  "comparison": "exact cell strings; no numeric tolerance, sorting, or physical-column removal",
+  "exception": "Only scorer_statistics*.csv fom_per_s and run_wall_time_s: observed timing/performance fields explicitly excluded per existing F2 nondeterministic-metadata policy",
+  "all_physical_cells_exact": true,
+  "initial_state_evidence": "same executable, data root, config seed1904, fresh process, 1 worker and same commands; full engine-state snapshot not captured, not final F2 replay acceptance",
+  "files": [
+    {
+      "file": "edep_particle_summary_t0.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 1,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "edep_particle_summary_t0_r1.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 2,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "edep_particle_summary_t0_r2.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 1,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "edep_volume_summary_t0.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 1,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "edep_volume_summary_t0_r1.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 1,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "edep_volume_summary_t0_r2.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 1,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "event_edep_t0.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 10,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "event_edep_t0_r1.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 10,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "event_edep_t0_r2.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 10,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "hist_edep_raw_t0.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 200,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "hist_edep_raw_t0_r1.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 200,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "hist_edep_raw_t0_r2.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 200,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "hist_edep_weighted_t0.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 200,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "hist_edep_weighted_t0_r1.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 200,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "hist_edep_weighted_t0_r2.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 200,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "hits_t0.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 30,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "hits_t0_r1.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 37,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "hits_t0_r2.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 30,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "phase_space_t0.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 10,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "phase_space_t0_r1.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 10,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "phase_space_t0_r2.csv",
+      "raw_bytes_equal": true,
+      "observed_different_columns": [],
+      "excluded_nonphysical_columns": [],
+      "row_count": 10,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "scorer_statistics.csv",
+      "raw_bytes_equal": false,
+      "observed_different_columns": [
+        "fom_per_s",
+        "run_wall_time_s"
+      ],
+      "excluded_nonphysical_columns": [
+        "fom_per_s",
+        "run_wall_time_s"
+      ],
+      "row_count": 6,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "scorer_statistics_r1.csv",
+      "raw_bytes_equal": false,
+      "observed_different_columns": [
+        "fom_per_s",
+        "run_wall_time_s"
+      ],
+      "excluded_nonphysical_columns": [
+        "fom_per_s",
+        "run_wall_time_s"
+      ],
+      "row_count": 8,
+      "all_remaining_cells_exact": true
+    },
+    {
+      "file": "scorer_statistics_r2.csv",
+      "raw_bytes_equal": false,
+      "observed_different_columns": [
+        "fom_per_s",
+        "run_wall_time_s"
+      ],
+      "excluded_nonphysical_columns": [
+        "fom_per_s",
+        "run_wall_time_s"
+      ],
+      "row_count": 6,
+      "all_remaining_cells_exact": true
+    }
+  ]
+}
