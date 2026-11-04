@@ -1,0 +1,672 @@
+{
+ "identity": {
+  "read_dir": "D:/Geant4/G4UniversalSim",
+  "git_toplevel": "D:/Geant4/G4UniversalSim",
+  "git_head": "19f1a19ecdd519a282767b699d8720dcadd1ec6d",
+  "git_head_short": "19f1a19e",
+  "git_branch": "roadmap/E4-docs",
+  "git_status_tracked": "M docs/ROADMAP.md\n M docs/collab/CURRENT-SUPERVISION.md",
+  "verified_at": "2026-11-04T21:38:29+08:00",
+  "facts_csv_sha256": "dc513df3f87a2956d54436baa501a889b6f4c9c0685e5ccf9775a933c9715c0c"
+ },
+ "rows": 46,
+ "checks": [
+  {
+   "id": "A1",
+   "file": "docs/功能支持矩阵.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 185,
+     "anchor": "部分支持（作者交付，待独立复验）",
+     "verified": true,
+     "actual": "| GUI 连续运行会话（路线图 F2 GUI 下一轮面板） | 部分支持（作者交付，待独立复验） | Run Console 顶部新增会话区，复用一个后端 `--session-server` 进程完成 A/B/A 多轮；只允许后端 `CanAcceptSessionEdit` 的简单单源字段（particle/energy/position/direction）与事件数，几何/材料/物理/线程/输出根显示“需新建会话”。状态由回执驱动，逐轮记录 run/request 身份、事件数、状态与收据校验（路径/大小/SHA-256，`receipt_integrity=unavailable` 时只显示运行完成但记录不可用）；取消在事件边界软中止，关窗/结束有界释放所有者。复用唯一 `G4USimRunner` 与 F6 进度、历史/结果服务，不复制 K1 执行器；普通单次运行、扫描与外部宏保持原入口。回归 `gui/smoke_tests/smoke_session_panel.py`、`gui/smoke_tests/smoke_session_backend.py`（真实后端三轮/非法/busy/取消/关窗）与既有 run_result/history session_server 模式。未验证：断线重连、重放、MT 物理取消跨平台。证据：自测（待主审独立复验）。 |"
+    }
+   ]
+  },
+  {
+   "id": "A2",
+   "file": "docs/功能支持矩阵.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 186,
+     "anchor": "F2 完整随机初态重放（RNG 重放）",
+     "verified": true,
+     "actual": "| F2 完整随机初态重放（RNG 重放） | 部分支持（作者交付，待独立复验） | 会话正常关闭后保存 CLHEP 随机引擎原始状态、后端/Geant4/数据/输入/线程身份与已接受轮次计划；另一个 `--session-server --session-replay <会话目录>` 进程在新输出目录恢复同一初态并重放。启动时校验 schema、快照 sha256、source fingerprint、Geant4 版本、线程、输入哈希、数据内容摘要与不同输出根；恢复引擎状态后再保存比对；初始化后比较实际消费输入 provenance 与数据摘要，不一致即拒绝且不运行物理。对照按 run/event（event_edep）与 run/event/track（hits）多重集逐字符串比较，仅排除墙钟/路径/性能元数据；线程分片是否逐位一致单独报告。取消/失败/未完成会话与旧 csh/batch 不可重放。GUI 在会话关闭后提供“重放已完成会话”入口。回归 `scripts/test_session_replay.py`（1/2 worker 正例与拒绝矩阵）与既有 `scripts/test_session_protocol.py`、`scripts/test_session_cancel_mt.py`。未验证：Linux 实机、跨平台/跨线程逐位一致、旧入口重放。证据：自测（待主审独立复验）。 |"
+    }
+   ]
+  },
+  {
+   "id": "A3",
+   "file": "docs/功能支持矩阵.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 1,
+     "anchor": "2026-11-04 F2：**约定范围验收完成**",
+     "verified": true,
+     "actual": "2026-11-04 F2：**约定范围验收完成**，版本化会话B保留csh/批处理；Idle有限源字段、逐run输入/实际应用收据、受控取消与限定环境重放已验。Win125/150及Linux独立X11原生、云12报告708/255163严格通过。[最终证据](verification/f2-final-20261104/README.md)。完整换配置需新进程，不承诺跨平台/线程数逐位一致，不等于物理验证。"
+    }
+   ]
+  },
+  {
+   "id": "A4",
+   "file": "docs/功能支持矩阵.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 194,
+     "anchor": "2026-11-02 J3 第一阶段（作者交付，未验收）",
+     "verified": true,
+     "actual": "| GUI 主题和配置持久化 | 部分支持（2026-10-22 界面刷新） | `core/theme.py` 集中提供浅色/深色/系统主题（样式表与同色 Qt palette，系统主题优先读 `styleHints().colorScheme()`）与 QSettings；`core/icons.py` 线条图标随主题重绘；matplotlib 图（结果图表、扫描图）随主题与语言重绘并带中文字体回退。`smoke_main_window_ui.py`、`smoke_start_page.py` 与前后对比截图已检查；J1已补代表性125%/150%DPI、B/K/C与系统主题实窗；完整对比度与可访问性仍未验收。 证据：自测。 2026-11-02 J3 第一阶段（作者交付，未验收）：`theme.py` 改为 28 颜色角色 + 15 套皮肤注册表（B/K/C + 12 新色板），注册表构建时归一化 muted/border/selection/focus 到正文 4.5:1、边界与焦点 3:1；`View → Appearance` 按明暗分组并分别记忆 `appearance/light_skin`/`dark_skin`；static 49/49（5,615 断言）与主题相关 GUI 4/4（284 断言）通过，实窗对比、对比度实测与独立复验未做。证据：`docs/verification/j3-theme-v1-20261102/README.md`（作者交付）。 |"
+    }
+   ]
+  },
+  {
+   "id": "A5",
+   "file": "docs/功能支持矩阵.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 10,
+     "anchor": "# G4UniversalSim 功能支持矩阵",
+     "verified": true,
+     "actual": "# G4UniversalSim 功能支持矩阵"
+    }
+   ]
+  },
+  {
+   "id": "A6",
+   "file": "STATUS.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 3,
+     "anchor": "## 2026-11-04 F2 验收完成，转E4",
+     "verified": true,
+     "actual": "## 2026-11-04 F2 验收完成，转E4"
+    }
+   ]
+  },
+  {
+   "id": "A7",
+   "file": "STATUS.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 10,
+     "anchor": "## 2026-11-04 J3 本轮范围验收完成（保留证据限制）",
+     "verified": true,
+     "actual": "## 2026-11-04 J3 本轮范围验收完成（保留证据限制）"
+    }
+   ]
+  },
+  {
+   "id": "A8",
+   "file": "STATUS.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 27,
+     "anchor": "## 2026-11-03 J3 独立审查响应（未关闭）",
+     "verified": true,
+     "actual": "## 2026-11-03 J3 独立审查响应（未关闭）"
+    }
+   ]
+  },
+  {
+   "id": "A9",
+   "file": "STATUS.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 124,
+     "anchor": "## 2026-11-02 L1 本轮验收与最终证据",
+     "verified": true,
+     "actual": "## 2026-11-02 L1 本轮验收与最终证据"
+    }
+   ]
+  },
+  {
+   "id": "A10",
+   "file": "STATUS.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 240,
+     "anchor": "## 一句话定位",
+     "verified": true,
+     "actual": "## 一句话定位"
+    }
+   ]
+  },
+  {
+   "id": "A11",
+   "file": "STATUS.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 337,
+     "anchor": "## 阶段状态（摘要，详表见 ROADMAP）",
+     "verified": true,
+     "actual": "## 阶段状态（摘要，详表见 ROADMAP）"
+    }
+   ]
+  },
+  {
+   "id": "A12",
+   "file": "STATUS.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 352,
+     "anchor": "## 正在做 / 下一步",
+     "verified": true,
+     "actual": "## 正在做 / 下一步"
+    }
+   ]
+  },
+  {
+   "id": "A13",
+   "file": "STATUS.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 424,
+     "anchor": "## 2026-11-03 J3 整体验收：退回修复",
+     "verified": true,
+     "actual": "## 2026-11-03 J3 整体验收：退回修复"
+    }
+   ]
+  },
+  {
+   "id": "A14",
+   "file": "STATUS.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 378,
+     "anchor": "## 已知缺口（不要把以下当作已完成）",
+     "verified": true,
+     "actual": "## 已知缺口（不要把以下当作已完成）"
+    }
+   ]
+  },
+  {
+   "id": "A15",
+   "file": "AGENTS.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 9,
+     "anchor": "2026-11-04 F2已验收",
+     "verified": true,
+     "actual": "- 2026-11-04 F2已验收：冻结864bc036，协议B保留csh/批处理；重放结构预检与内核初始化后/BeamOn前只读语义预检分开，禁止预检修改SourceManager。closing的steps_total计全部操作、steps_executed计完成run；正常终态需核对实际退出和收据。详见docs/agent-history.md同日F2条目及docs/verification/f2-final-20261104/README.md。"
+    },
+    {
+     "line": 12,
+     "anchor": "2026-11-04 J3：本轮约定范围已验收",
+     "verified": true,
+     "actual": "- 2026-11-04 J3：本轮约定范围已验收并关闭，冻结92134da0；Windows125/150与独立X11代表性、云12报告696/247580及严格门禁完成。历史图身份/非逐页八态、WSLg与约一秒切换限制保留，不外推物理/云Agent验证；后续F2。详见docs/agent-history.md同日J3条目及docs/verification/j3-final-20261104/README.md。"
+    }
+   ]
+  },
+  {
+   "id": "A16",
+   "file": "AGENTS.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 15,
+     "anchor": "2026-11-03 J3 独立审查响应",
+     "verified": true,
+     "actual": "- 2026-11-03 J3 独立审查响应：独立复验不同意关闭（`docs/collab/reviews/20261103-j3-closure-review.md`）；外观断言必须用 `theme.current_skin()`（无参读应用属性，传窗口会恒回退 B）；`reveal_current()` 不得隐藏既有停靠页，Results 页整宽由 `focus_analysis_view()` 负责；紧凑布局（<1400 逻辑像素）隐藏 AI 与 3D 预览两个可选 dock，外部面板入口是 View → Panels 而非命令面板；`paletteSearch` 边框用 `border_strong`；候选冻结与三 profile 基线在 `docs/verification/j3-close-20261103/`；J3 仍为未关闭。"
+    }
+   ]
+  },
+  {
+   "id": "A17",
+   "file": "gui/AGENTS.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 320,
+     "anchor": "F2 GUI 连续运行会话与 RNG 重放（2026-11-04，作者交付待复验）",
+     "verified": true,
+     "actual": "- F2 GUI 连续运行会话与 RNG 重放（2026-11-04，作者交付待复验）：`core/session_model.py` 只放协议常量、"
+    }
+   ]
+  },
+  {
+   "id": "A18",
+   "file": "gui/AGENTS.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 224,
+     "anchor": "## 2026-11-02 J3 实施：皮肤注册表与设计系统（第一阶段）",
+     "verified": true,
+     "actual": "## 2026-11-02 J3 实施：皮肤注册表与设计系统（第一阶段）"
+    }
+   ]
+  },
+  {
+   "id": "A19",
+   "file": "docs/会话协议.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 5,
+     "anchor": "GUI 面板已按 §7 接入本协议（作者交付，",
+     "verified": true,
+     "actual": "契约，协议名固定为 `g4usim-session-v1`。GUI 面板已按 §7 接入本协议（作者交付，"
+    }
+   ]
+  },
+  {
+   "id": "A20",
+   "file": "docs/ROADMAP.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 37,
+     "anchor": "E4 pending",
+     "verified": true,
+     "actual": "| E Fixes and foundations | In progress: E1, E2, E3 (Linux incl. Geant4 11.3.2/11.4.3 matrix, done 2026-10-28), E5 done; E4 pending | see log |"
+    },
+    {
+     "line": 268,
+     "anchor": "部分完成，继续收尾",
+     "verified": true,
+     "actual": "| **E4** | 当前规范瘦身、历史状态校准、中文快速入门、文档单一事实入口 | 历史条目迁移已有成果；补规则逐项映射，清除 stale 状态，链接与必要 smoke 通过。阶段关闭交 `docs(E4)` | 部分完成，继续收尾 |"
+    }
+   ]
+  },
+  {
+   "id": "A21",
+   "file": "docs/ROADMAP.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 38,
+     "anchor": "F1/F2/F4/F5/F6/F8 done",
+     "verified": true,
+     "actual": "| F System optimisation (backend + GUI) | In progress: F1/F2/F4/F5/F6/F8 done; F3/F7 pending | see log |"
+    },
+    {
+     "line": 270,
+     "anchor": "已完成（2026-11-04）：864bc036",
+     "verified": true,
+     "actual": "| **F2** | GUI 受控 run session、Idle 白名单、逐 run 输入/来源/重放协议 | 完整换配置用新进程；三轮调整的真实状态与限定环境重放；不承诺跨平台/线程数逐位一致。可在 L1 后交付 | 已完成（2026-11-04）：864bc036，云708/255163、Win125/150与Linux X11真实运行及重放通过。[最终验收](verification/f2-final-20261104/README.md) |"
+    }
+   ]
+  },
+  {
+   "id": "A22",
+   "file": "docs/collab/CURRENT-SUPERVISION.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 11,
+     "anchor": "产品仍为864bc036",
+     "verified": true,
+     "actual": "产品仍为864bc036d6d7752475e52db4efd2b950cabfcc3d；F2文档/证据87552e569c6b6b199815d385453bab4cb23268ad，已推送并快进集成codex，远端读回一致。D盘当前roadmap/E4-docs；C盘j3-final独立构建保留，q1-final为codex集成区，effective-config保留。ROADMAP另一路H8未提交规划继续保护，不整体暂存。E4尚无产品修改。"
+    },
+    {
+     "line": 16,
+     "anchor": "E4-1事实与规范映射",
+     "verified": true,
+     "actual": "| E4-1事实与规范映射 | 进行中 | 原映射已交付，定位修订已派，等待独立复核 |"
+    }
+   ]
+  },
+  {
+   "id": "A23",
+   "file": "README.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 57,
+     "anchor": "Visual Studio 17 2022",
+     "verified": true,
+     "actual": "cmake -S . -B build_vs -G \"Visual Studio 17 2022\" -A x64"
+    },
+    {
+     "line": 58,
+     "anchor": "cmake --build build_vs",
+     "verified": true,
+     "actual": "cmake --build build_vs --config Release"
+    }
+   ]
+  },
+  {
+   "id": "A24",
+   "file": "README.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 64,
+     "anchor": "cmake --preset vs2022-x64",
+     "verified": true,
+     "actual": "cmake --preset vs2022-x64"
+    },
+    {
+     "line": 65,
+     "anchor": "cmake --build --preset vs2022-release",
+     "verified": true,
+     "actual": "cmake --build --preset vs2022-release"
+    }
+   ]
+  },
+  {
+   "id": "A25",
+   "file": "README.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 73,
+     "anchor": "build_vs\\Release\\G4UniversalSim.exe --config",
+     "verified": true,
+     "actual": ".\\build_vs\\Release\\G4UniversalSim.exe --config config/main.ini --macro macros/run_simple.mac"
+    },
+    {
+     "line": 79,
+     "anchor": "--macro macros/run_simple.mac",
+     "verified": true,
+     "actual": ".\\build_vs\\Release\\G4UniversalSim.exe --macro macros/run_simple.mac"
+    }
+   ]
+  },
+  {
+   "id": "A26",
+   "file": "README.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 7,
+     "anchor": "## MVP Status",
+     "verified": true,
+     "actual": "## MVP Status"
+    }
+   ]
+  },
+  {
+   "id": "A27",
+   "file": "README.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 22,
+     "anchor": "GUI cannot generate a GDML run package",
+     "verified": true,
+     "actual": "- `template = gdml` imports a GDML file through `G4GDMLParser` (`[gdml]/file`, `validate`, `sensitive_volumes`, `bias_volumes`; export with `/AIHL/geometry/exportGDML`) when Geant4 is built with GDML support; without it the configuration is rejected before any geometry object is built. The import does not preserve world/replica/parameterised physical-volume names or per-copy materials, and the GUI cannot generate a GDML run package (external runs can use one)."
+    },
+    {
+     "line": 23,
+     "anchor": "STL import is available",
+     "verified": true,
+     "actual": "- STL import is available as the experimental `shape = tessellated`; the reader requires a closed, consistently oriented manifold (see [docs/中文几何配置说明.md](docs/中文几何配置说明.md))."
+    },
+    {
+     "line": 28,
+     "anchor": "Multi-thread CSV output uses per-worker",
+     "verified": true,
+     "actual": "- Multi-thread CSV output uses per-worker `OutputManager` / `ScoringManager` instances and writes `_tN` files; per-thread CSV files still need an explicit merge (`scripts/merge_outputs.py` or `mergeHistograms`). With `[output]/format = root` (or `both`) G4AnalysisManager merges histograms and ntuples into one ROOT file per run, so ROOT output needs no manual merge."
+    }
+   ]
+  },
+  {
+   "id": "A28",
+   "file": "README.md",
+   "status": "absence-ok",
+   "pattern": "## Linux (Build|构建)"
+  },
+  {
+   "id": "A29",
+   "file": "README.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 3,
+     "anchor": "中文完整使用手册",
+     "verified": true,
+     "actual": "中文完整使用手册：[docs/中文使用手册.md](docs/中文使用手册.md)"
+    }
+   ]
+  },
+  {
+   "id": "A30a",
+   "file": "README.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 45,
+     "anchor": "## Requirements",
+     "verified": true,
+     "actual": "## Requirements"
+    }
+   ]
+  },
+  {
+   "id": "A30b",
+   "file": "README.md",
+   "status": "absence-ok",
+   "pattern": "packaging/README-package\\.md"
+  },
+  {
+   "id": "A31",
+   "file": "gui/docs/中文快速使用说明.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 17,
+     "anchor": "## 1. 安装和启动",
+     "verified": true,
+     "actual": "## 1. 安装和启动"
+    }
+   ]
+  },
+  {
+   "id": "A32",
+   "file": "gui/docs/中文快速使用说明.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 92,
+     "anchor": "## 2. GUI 的基本工作流",
+     "verified": true,
+     "actual": "## 2. GUI 的基本工作流"
+    }
+   ]
+  },
+  {
+   "id": "A33",
+   "file": "gui/docs/中文快速使用说明.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 141,
+     "anchor": "GUI 面板本轮作者交付、待独立复验",
+     "verified": true,
+     "actual": "Run Console 顶部还有“连续运行会话”区（F2 后端能力已验，GUI 面板本轮作者交付、待独立复验）。一次 Start"
+    }
+   ]
+  },
+  {
+   "id": "A34",
+   "file": "gui/docs/中文快速使用说明.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 393,
+     "anchor": "不提供直方图绘图",
+     "verified": true,
+     "actual": "- 不提供直方图绘图。"
+    },
+    {
+     "line": 394,
+     "anchor": "不提供参数扫描 UI",
+     "verified": true,
+     "actual": "- 不提供参数扫描 UI。"
+    },
+    {
+     "line": 399,
+     "anchor": "暂未打包成独立桌面程序",
+     "verified": true,
+     "actual": "- 暂未打包成独立桌面程序。"
+    }
+   ]
+  },
+  {
+   "id": "A35",
+   "file": "gui/docs/中文快速使用说明.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 43,
+     "anchor": "B · 晶格、K · 软件；深色使用 C · 夜读",
+     "verified": true,
+     "actual": "- 浅色、深色和跟随系统主题可以独立于语言切换并持久化。工作区提供“浅色配色”：B · 晶格、K · 软件；深色使用 C · 夜读。明暗策略和浅色偏好分别保存，切换深色或跟随系统不会丢掉原来的 B/K 选择。"
+    }
+   ]
+  },
+  {
+   "id": "A36",
+   "file": "gui/docs/中文快速使用说明.md",
+   "status": "absence-ok",
+   "pattern": "check-geant4-data"
+  },
+  {
+   "id": "A37",
+   "file": "gui/docs/中文快速使用说明.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 109,
+     "anchor": "--run-name <name>",
+     "verified": true,
+     "actual": "G4UniversalSim.exe --config <configPath> --macro <macroPath> --output <outputDir> --threads <N> --seed <N> --run-name <name>"
+    }
+   ]
+  },
+  {
+   "id": "A38",
+   "file": "gui/docs/中文快速使用说明.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 432,
+     "anchor": "退出码为 0 不等于模拟成功",
+     "verified": true,
+     "actual": "运行页会同时显示进程退出码和模拟结果。退出码为 0 不等于模拟成功：只有本次新生成的 `run_summary.txt` 证实后端和 macro 完成、至少执行一个 run、每轮计划事件全部完成且逐轮合计与摘要总数一致时才显示“模拟成功”。仅配置检查（dry-run）、交互会话结束但未运行、正常退出但无 run 会单独标记；停止、强制结束、摘要缺失或旧摘要不会被历史页误判为成功。历史页对旧版状态文件缺少摘要新鲜度证据的条目保守显示“结果未证实”。"
+    }
+   ]
+  },
+  {
+   "id": "A39",
+   "file": "gui/docs/中文快速使用说明.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 58,
+     "anchor": "### 1.3 安装和选择运行环境（I2）",
+     "verified": true,
+     "actual": "### 1.3 安装和选择运行环境（I2）"
+    }
+   ]
+  },
+  {
+   "id": "A40",
+   "file": "docs/功能支持矩阵.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 69,
+     "anchor": "## 1. 支持等级定义",
+     "verified": true,
+     "actual": "## 1. 支持等级定义"
+    }
+   ]
+  },
+  {
+   "id": "A41",
+   "file": "docs/功能支持矩阵.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 228,
+     "anchor": "<!-- BEGIN GENERATED: config schema -->",
+     "verified": true,
+     "actual": "<!-- BEGIN GENERATED: config schema -->"
+    }
+   ]
+  },
+  {
+   "id": "A42a",
+   "file": "gui/docs/中文快速使用说明.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 15,
+     "anchor": "本文件说明 `gui/` 下的 PySide6 外部运行器",
+     "verified": true,
+     "actual": "整理日期：2026-08-06。本文件说明 `gui/` 下的 PySide6 外部运行器。它不会把 Geant4 嵌入 Qt 窗口，也不是 Geant4 OpenGL/Qt 可视化界面；它通过 `QProcess` 调用已有的 `G4UniversalSim.exe`，负责生成运行包、启动进程、收集日志、预览输出和管理运行历史。"
+    },
+    {
+     "line": 92,
+     "anchor": "## 2. GUI 的基本工作流",
+     "verified": true,
+     "actual": "## 2. GUI 的基本工作流"
+    }
+   ]
+  },
+  {
+   "id": "A42b",
+   "file": "docs/功能支持矩阵.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 195,
+     "anchor": "文件安装、环境就绪、模拟完成和物理验证",
+     "verified": true,
+     "actual": "| I2 环境辅助安装 | 已实现（I2 约定范围，2026-11-01 验收） | “环境 → 安装运行环境…”与 CLI 复用计划、受校验获取/发布、取消/恢复、核验/卸载及 SDK 编译探测。GUI 需清单提供匹配产物；无清单不能安装，不承诺已有公共下载目录或自动配置任意编译器。发布后重新执行 I1 检测，保留原候选且不自动选择。Windows/Linux runtime 各实际完成5事件；SDK consumer与完整应用源码构建、冻结Python的ROOT读写和双平台实际CI通过。Windows11.4官方SDK后端GDML不可用，独立Xerces测试不改变该事实。文件安装、环境就绪、模拟完成和物理验证分别计证；详见[说明](环境辅助安装.md)及[最终证据](verification/i2-j1-final-20261101/README.md)。 |"
+    }
+   ]
+  },
+  {
+   "id": "A43a",
+   "file": "STATUS.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 337,
+     "anchor": "## 阶段状态（摘要，详表见 ROADMAP）",
+     "verified": true,
+     "actual": "## 阶段状态（摘要，详表见 ROADMAP）"
+    }
+   ]
+  },
+  {
+   "id": "A43b",
+   "file": "AGENTS.md",
+   "status": "ok",
+   "anchors": [
+    {
+     "line": 9,
+     "anchor": "2026-11-04 F2已验收",
+     "verified": true,
+     "actual": "- 2026-11-04 F2已验收：冻结864bc036，协议B保留csh/批处理；重放结构预检与内核初始化后/BeamOn前只读语义预检分开，禁止预检修改SourceManager。closing的steps_total计全部操作、steps_executed计完成run；正常终态需核对实际退出和收据。详见docs/agent-history.md同日F2条目及docs/verification/f2-final-20261104/README.md。"
+    },
+    {
+     "line": 12,
+     "anchor": "2026-11-04 J3：本轮约定范围已验收",
+     "verified": true,
+     "actual": "- 2026-11-04 J3：本轮约定范围已验收并关闭，冻结92134da0；Windows125/150与独立X11代表性、云12报告696/247580及严格门禁完成。历史图身份/非逐页八态、WSLg与约一秒切换限制保留，不外推物理/云Agent验证；后续F2。详见docs/agent-history.md同日J3条目及docs/verification/j3-final-20261104/README.md。"
+    }
+   ]
+  }
+ ],
+ "failures": [],
+ "result": "pass"
+}

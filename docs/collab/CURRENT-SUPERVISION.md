@@ -13,19 +13,19 @@ docs/collab/decisions/20261104-e4-closeout.md
 ## 清单状态表
 | 清单项 | 状态 | 证据/责任与动作 |
 | --- | --- | --- |
-| E4-1事实与规范映射 | 进行中 | DeepSeek原会话turn50/round63已运行，回执outbox/20261104-e4-facts-map.md；完成后独立核对事实与迁移规则 |
-| E4-2当前入口及中文两平台说明 | 未开始 | 待映射独审后按精确范围派工 |
+| E4-1事实与规范映射 | 通过 | 46行定位与基线独审通过，见reviews/20261104-e4-map-review.md |
+| E4-2当前入口及中文两平台说明 | 进行中 | 限定文档实施已派 |
 | E4-3独立复演和必要检查 | 未开始 | 只按修后入门分别复演Windows/Linux；链接及必要smoke |
 | E4-4冻结验收集成交班 | 未开始 | docs(E4)、状态/原定时提示读回、实际启动Q2首项 |
 
 ## 本轮结果
-F2最终报告docs/verification/f2-final-20261104/README.md及独审已归档，1356份证据SHA核对，12云报告708/255163严格通过，4工作流success。Windows两档及Linux独立X11实际运行/重放/退出完毕，无主审原生进程残留，Windows恢复125%。现有定时g4universalsim通过应用工具切E4，ACTIVE及60分钟频率保持，读回与decisions/20261104-e4-automation-prompt.md完全一致；非新建任务。E4固定清单/首任务已实际派发，不止写计划。
+修订turn51完成，D盘19f1a19e与46个独立定位核对通过，E4-1签收。
 
 ## 运行中任务
-DeepSeek task g4-j3-desktop-20261103，session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4，Flash/max实际observedConfig已核验。request e4-facts-map-87552e56-20261104，round63 accepted=true/replayed=false；turn50运行中。已处理游标35934，真实状态与接单见out/collab/desktop-bridge/e4-started-task.json、e4-first-events.json；绑定context.json。没有其它主审运行命令，不重派该项。
+原桌面任务g4-j3-desktop-20261103，E4-2请求e4-docs-implement-19f1a19e-r1已接单round65，已处理游标36326。回执目标outbox/20261104-e4-docs.md。
 
 ## 下一轮目标
-跟进原turn50新增交付，完成E4-1事实表独审；给出有依据的最小修订后进入E4-2。映射完成不等于E4验收，不能以当前环境早已就绪冒称干净安装复演。
+核对文档差异及历史规则迁移，再按修后中文入门独立复演两个平台。
 
 ## 待用户决定/限制
 | 项 | 处理状态 | 影响/继续条件 |
