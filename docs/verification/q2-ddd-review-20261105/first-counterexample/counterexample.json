@@ -1,0 +1,45 @@
+{
+  "schema": "q2_ddd_independent_counterexample_v1",
+  "author_comparison": "pass / 261 checks",
+  "review_status": "not accepted as complete folding validation",
+  "observed_length": [
+    {
+      "case": "ref_ddd_10",
+      "hits_proton_path_mm": 276.6539924083902,
+      "scorer_proton_path_mm": 276.653992408,
+      "missing_visible_path_mm": -3.901732270605862e-10,
+      "relative_gap": -1.4103292841159214e-12,
+      "exact_length_match_1e_minus9": true,
+      "completed_events": 20000
+    },
+    {
+      "case": "ref_ddd_100",
+      "hits_proton_path_mm": 1388.6248739812775,
+      "scorer_proton_path_mm": 1388.62550122,
+      "missing_visible_path_mm": 0.0006272387224726117,
+      "relative_gap": 4.5169753970493896e-07,
+      "exact_length_match_1e_minus9": false,
+      "completed_events": 20000
+    }
+  ],
+  "synthetic_energy_counterexample": {
+    "kind": "energy-balance example, not a measured step from this run",
+    "pre_MeV": 100.0,
+    "post_MeV": 99.899,
+    "local_edep_MeV": 0.001,
+    "secondary_kinetic_MeV": 0.1,
+    "true_mean_MeV": 99.9495,
+    "claimed_interval": [
+      99.999,
+      100.0
+    ],
+    "claim_holds": false
+  },
+  "source_evidence": {
+    "hits_filter": "src/Hits/SensitiveDetector.cc:92-116",
+    "pre_energy_in_hits": "src/Hits/ParticleHit.cc:172",
+    "actual_mean": "include/Scoring/DoseContext.hh:33",
+    "invalid_bracket": "out/collab/q2-reference-ddd-v1/compare.py:632-654"
+  },
+  "interpretation": "the gap is consistent with the existing zero-deposit-step filtering branch; individual missing steps are not observed, no backend result defect established; full fold is unobservable from current CSV"
+}

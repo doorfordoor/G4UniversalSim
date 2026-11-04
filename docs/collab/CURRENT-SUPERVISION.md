@@ -16,24 +16,25 @@ D盘roadmap/Q2-scientific-baselines；应用产品冻结864bc036d6d7752475e52db4
 | --- | --- | --- |
 | Q2-1定义/参考/预注册 | 进行中 | 四量参考及NIEL表审计均有独立冻结；统计/偏置专项方案仍待签收 |
 | Q2-2确定性单位/实现 | 通过 | Windows四类五运行、201检查及27反例；跨平台正式范围归Q2-6 |
-| Q2-3独立参考/适用域 | 进行中 | LET仅电磁v2、Dose四能点及Fluence解析例均已独审通过；DDD两例执行中，表审计待执行 |
+| Q2-3独立参考/适用域 | 进行中 | LET仅电磁v2、Dose四能点及Fluence已签收；DDD原完整折积结论独审退回，验证器修正中，表审计待执行 |
 | Q2-4统计不确定度 | 未开始 | 当前矩复算可引用，专项覆盖/边界/MT实验待预注册 |
 | Q2-5 XS偏置/analog | 未开始 | 实际worker权重与独立批次方案待签收 |
 | Q2-6整阶段验收交班 | 未开始 | 支持平台/版本回归、严格证据/云结果和科学范围签收 |
 
 ## 本轮结果
-Fluence在C盘独立新目录真实复演：后端exit0、20000事件、实际K=13851，注量138.51mm^-2，解析期望138.8888889mm^-2，标准误差0.6525711mm^-2，满足原1e-6参考项加3σ。122项比较、29项独立原始路径/事件矩/单位/伯努利误差复算、7反例通过；反例前后所有原件SHA一致。两ZIP逐项CRC/SHA核验，证据docs/verification/q2-fluence-reference-20261105，签收docs/collab/reviews/20261105-q2-fluence-reference-review-v1.md。限定近真空孔径模型，不声称物质输运或置信覆盖。没有修改产品。
+DDD两例在C盘新目录真实复演，各20000事件、后端exit0，原261项比较和两物理参考项通过。独审拒绝其完整折积证明：compare.py把Edep当作动能损失构造[pre−Edep,pre]区间，不包含显式次级携能；合成能量账本反例已保存。100MeV hits可见质子路径少0.0006272387224726117mm，与既有零沉积步计分但不入普通hits的语义一致；独审原完整路径假设也纠正，失败保留，不称精确对账通过。证据docs/verification/q2-ddd-review-20261105/first-counterexample，最小修复与来源定义见docs/collab/reviews/20261105-q2-ddd-reference-review-r1.md。未确定后端结果缺陷；冻结输入/参考/容差未改。
 
 ## 运行中任务
-原task g4-j3-desktop-20261103、session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4。round79请求q2-reference-ddd-v1-preregistered-20261105已接单，实际Flash/Max并运行。合同docs/collab/decisions/20261105-q2-ddd-reference-freeze-v1.json及同名MD；两个质子表折积例、单线程各20000事件、seed20261113/20261114，输出out/collab/q2-reference-ddd-v1，回执docs/collab/outbox/20261105-q2-reference-ddd-v1.md。游标/回执在out/collab/desktop-bridge/context.json。Fluence turn63已结束，无主审后台命令。
+原task g4-j3-desktop-20261103、session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4。round80请求q2-ddd-observability-review-r1-20261105已接单，Flash/Max。只修当前DDD候选compare.py/tamper.py/报告与原outbox，不动任何原始输入/输出/冻结或产品；不再运行Geant4。目标为撤回错误证明、真实分开pass/fail/limited、修正参考脚本默认CLI说明，七副本反例仍需真实fail且原件SHA不变。原turn64已结束，无主审后台命令。游标/回执见out/collab/desktop-bridge/context.json。
 
 ## 下一轮目标
-独审DDD两例完成事实/表SHA/参考归一化、hits质子加权长度及有效体积、公开事件矩和误差，保留无法从CSV恢复步平均动能的证据边界，不新增字段作前置。通过后派docs/collab/inbox/20261105-q2-niel-table-audit-v1.md只读审计；其后推进Q2-4/5专项预注册。Q2整阶段未关闭，保留当前定时阶段，不重跑已签收Fluence/Dose/LET。
+限定复核R1，直接复用C盘原始两运行；原精确对账失败不重贴pass。正确记录观测限制后继续已冻结NIEL表只读审计，再推进Q2-4/5预注册。保持Q2未关闭及当前定时阶段，不扩展产品字段/采集工具或更改样本和门槛。
 
 ## 待用户决定/限制
 | 项 | 决定 | 影响/动作 |
 | --- | --- | --- |
 | LET完整强子混合谱 | 主审已签收适用域限制，v1仍失败 | EM-only两能点已验证；完整强子LET_d未获外部验证，不能据v2外推；统计相关仍归Q2-4 |
+| DDD逐步观测 | 主审确认限制，完成结论待修正 | 普通hits不是计分步全集，且缺步平均动能；不得宣称完整逐步折积验证通过；后端结果缺陷未证实 |
 | NIEL表物理评价 | 尚未独立验证 | 95假设输入与版本/模型数值未获权威全文对齐；先完成表级算术审计，不称数据物理验证通过 |
 | WSL挂载运行根Errno22 | 主审已签收 | Linux自身文件系统复演成功，原入门恢复路径保留 |
 | F2参数unknown/run0摘要横线 | 主审已签收后续 | 逐轮数据与回执完整 |
