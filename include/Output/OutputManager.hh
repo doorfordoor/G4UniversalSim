@@ -119,6 +119,9 @@ public:
     // Missing/failed reads remain unavailable entries and latch artifact_integrity.
     // HashFile never adds an input observation. Metadata alone excludes itself.
     std::vector<ArtifactEvidence> CollectArtifactEvidence(bool includeMetadataSelf = false, bool excludeSummary = false);
+    // Per-run subset of the same registry, hashed after that run's files closed.
+    // Does not modify the process-wide F1 registry or the summary.
+    std::vector<ArtifactEvidence> CollectRunArtifacts(int runId, bool includeMetadataSelf = false);
     std::vector<std::string> GetGeneratedFiles() const;
     void RecordOutputFailure(const std::string& stage, const std::string& message,
                              int attemptedRunId = -1);
@@ -141,6 +144,8 @@ private:
         bool hasFailure = false;
         OutputFailure firstFailure;
     };
+
+    void FinalizeArtifactEvidence(std::vector<ArtifactEvidence>& evidence);
 
     static std::vector<std::string> HitHeader();
     static std::vector<std::string> EventEdepHeader();

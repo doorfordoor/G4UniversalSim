@@ -1154,6 +1154,54 @@ double SourceManager::GetMonoEnergy() const
     return Current().monoEnergy;
 }
 
+bool SourceManager::CanAcceptSessionEdit(std::string& reason) const
+{
+    if (GetSourceCount() != 1) {
+        reason = "multiple_sources";
+        return false;
+    }
+    if (UsesPhaseSpace()) {
+        reason = "phase_space_source";
+        return false;
+    }
+    if (HasPendingDeferredConfiguration()) {
+        reason = "deferred_source";
+        return false;
+    }
+    const SourceSpec& spec = Current();
+    if (spec.advanced) {
+        reason = "advanced_source";
+        return false;
+    }
+    if (spec.ion) {
+        reason = "ion_source";
+        return false;
+    }
+    reason.clear();
+    return true;
+}
+
+SourceManager::SessionSourceSnapshot SourceManager::GetSessionSourceSnapshot() const
+{
+    SessionSourceSnapshot snapshot;
+    snapshot.sourceCount = GetSourceCount();
+    snapshot.phaseSpace = UsesPhaseSpace();
+    snapshot.preset = GetPresetName();
+    const SourceSpec& spec = Current();
+    snapshot.advanced = spec.advanced;
+    snapshot.ion = spec.ion;
+    snapshot.particle = spec.particleName;
+    snapshot.energyType = spec.energyType;
+    snapshot.monoEnergy = spec.monoEnergy;
+    snapshot.positionType = spec.positionType;
+    snapshot.positionShape = spec.positionShape;
+    snapshot.positionParams = spec.positionParams;
+    snapshot.isotropic = spec.isotropic;
+    snapshot.hasDirection = spec.hasDirection;
+    snapshot.direction = spec.direction;
+    return snapshot;
+}
+
 void SourceManager::SetPosition(const std::string& type, const std::string& shape, const std::vector<double>& params)
 {
     for (double value : params) {

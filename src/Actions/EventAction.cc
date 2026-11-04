@@ -1,5 +1,6 @@
 #include "Actions/EventAction.hh"
 #include "Actions/RunProgress.hh"
+#include "Core/SessionServer.hh"
 
 #include "Actions/WorkerRunContext.hh"
 #include "G4Event.hh"
@@ -50,7 +51,14 @@ void EventAction::EndOfEventAction(const G4Event* event)
     }
     if (auto* manager = G4RunManager::GetRunManager()) {
         if (const auto* run = manager->GetCurrentRun()) {
-            RunProgress::EventCompleted(run->GetRunID(), event->IsAborted());
+            const int runID = run->GetRunID();
+            RunProgress::EventCompleted(runID, event->IsAborted());
+            // Event boundary only: a session cancel request set by the protocol
+            // reader aborts this thread-local run manager (soft abort) after the
+            // current event has been fully accounted for.
+            if (SessionControl::CancelRequested(runID)) {
+                manager->AbortRun(true);
+            }
         }
     }
     if (verboseLevel_ > 1) {

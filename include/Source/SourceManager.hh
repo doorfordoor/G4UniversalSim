@@ -133,6 +133,30 @@ public:
 
     std::size_t GetSourceCount() const;
     const std::vector<SourceSpec>& GetSources() const;
+
+    // Controlled-session readback of the current single source. Only the
+    // legacy single-source configuration is editable through the session.
+    struct SessionSourceSnapshot {
+        std::size_t sourceCount = 0;
+        bool phaseSpace = false;
+        bool advanced = false;
+        bool ion = false;
+        std::string preset;
+        std::string particle;
+        std::string energyType;
+        double monoEnergy = 0.0;
+        std::string positionType;
+        std::string positionShape;
+        std::vector<double> positionParams;
+        bool isotropic = false;
+        bool hasDirection = false;
+        std::vector<double> direction;
+    };
+    // Returns false and fills `reason` for configurations the session protocol
+    // must reject before touching any state (multi-source, phase space, ion,
+    // advanced or deferred configurations).
+    bool CanAcceptSessionEdit(std::string& reason) const;
+    SessionSourceSnapshot GetSessionSourceSnapshot() const;
     std::vector<effective_config::Field> ExportEffectiveConfigFields() const;
     effective_config::Value ExportEffectiveConfigEvidence() const;
     void ConfirmEffectiveConfigMutation(const std::string& command, const effective_config::Origin& origin);

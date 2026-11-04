@@ -3,6 +3,7 @@
 
 #include "Actions/WorkerRunContext.hh"
 #include "Biasing/BiasingManager.hh"
+#include "Core/SessionServer.hh"
 #include "G4Exception.hh"
 #include "G4Run.hh"
 #include "G4RunManager.hh"
@@ -54,6 +55,7 @@ void RunAction::BeginOfRunAction(const G4Run* run)
 
     if (role_ != Role::Worker) {
         RunProgress::Begin(run->GetRunID(), run->GetNumberOfEventToBeProcessed());
+        SessionControl::OnRunBegin(run->GetRunID(), run->GetNumberOfEventToBeProcessed());
     }
 
     if (role_ != Role::Worker && biasingManager_ && biasingManager_->IsEnabled()) {
@@ -256,6 +258,11 @@ void RunAction::EndOfRunAction(const G4Run* run)
         if (effectiveEnd_) effectiveEnd_(runID, role_ == Role::Master ? nullptr : scoringManager, outputManager);
     });
     if (role_ != Role::Worker) {
+        // Publish the real run end state while the telemetry run id is still active.
+        SessionControl::OnRunEnd(runID, run->GetNumberOfEventToBeProcessed(),
+                                 run->GetNumberOfEvent(), RunProgress::AbortedEvents(runID),
+                                 outputManager && outputManager->HasOutputFailure(),
+                                 outputManager);
         RunProgress::End(runID, run->GetNumberOfEventToBeProcessed(), run->GetNumberOfEvent(),
                          outputManager && outputManager->HasOutputFailure());
     }

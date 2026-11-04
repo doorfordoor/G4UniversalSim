@@ -19,6 +19,7 @@ struct State {
     std::atomic<long long> completed{0};
     std::atomic<long long> nextEmissionNs{0};
     std::atomic<bool> eventAborted{false};
+    std::atomic<long long> aborted{0};
     int planned = 0;
     Clock::time_point started;
     // Process-wide emission counter; never reset across runs. Consumers use it
@@ -79,6 +80,7 @@ void RunProgress::Begin(int runId, int plannedEvents) noexcept
         state.runId.store(-1);
         state.completed.store(0);
         state.eventAborted.store(false);
+        state.aborted.store(0);
         state.planned = plannedEvents;
         state.started = Clock::now();
         state.nextEmissionNs.store(Nanoseconds(state.started) + intervalNs);
@@ -97,7 +99,10 @@ void RunProgress::EventCompleted(int runId, bool eventAborted) noexcept
         // This is an EndOfEventAction count, not a count of valid physics
         // histories. Aborted events are included here, as in G4Run accounting.
         state.completed.fetch_add(1, std::memory_order_relaxed);
-        if (eventAborted) state.eventAborted.store(true);
+        if (eventAborted) {
+            state.eventAborted.store(true);
+            state.aborted.fetch_add(1, std::memory_order_relaxed);
+        }
         const auto now = Clock::now();
         if (Nanoseconds(now) < state.nextEmissionNs.load(std::memory_order_relaxed)) return;
         std::unique_lock<std::mutex> lock(state.mutex, std::try_to_lock);
@@ -106,6 +111,17 @@ void RunProgress::EventCompleted(int runId, bool eventAborted) noexcept
         state.nextEmissionNs.store(Nanoseconds(now) + intervalNs, std::memory_order_relaxed);
         Emit(state, runId, "running", state.completed.load(std::memory_order_relaxed), now);
     } catch (...) {
+    }
+}
+
+long long RunProgress::AbortedEvents(int runId) noexcept
+{
+    try {
+        auto& state = Shared();
+        if (state.runId.load() != runId) return 0;
+        return state.aborted.load(std::memory_order_relaxed);
+    } catch (...) {
+        return 0;
     }
 }
 

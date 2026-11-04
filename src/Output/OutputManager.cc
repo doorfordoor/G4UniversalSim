@@ -692,6 +692,34 @@ std::vector<OutputManager::ArtifactEvidence> OutputManager::CollectArtifactEvide
         ArtifactEvidence self; self.path = metadata; self.execution_id = GetExecutionId();
         evidence.push_back(std::move(self));
     }
+    FinalizeArtifactEvidence(evidence);
+    return evidence;
+}
+
+std::vector<OutputManager::ArtifactEvidence> OutputManager::CollectRunArtifacts(int runId, bool includeMetadataSelf)
+{
+    std::vector<ArtifactEvidence> evidence;
+    {
+        std::lock_guard<std::mutex> guard(generatedFiles_->mutex);
+        for (const auto& file : generatedFiles_->files) {
+            if (file.scope == ArtifactScope::Process) continue;
+            if (!file.run_id.has_value() || *file.run_id != runId) continue;
+            evidence.push_back(file);
+        }
+    }
+    const auto metadata = FileUtils::AbsolutePath(MakeOutputPath("run_metadata.json"));
+    if (includeMetadataSelf && std::none_of(evidence.begin(), evidence.end(),
+            [&](const ArtifactEvidence& file) { return file.path == metadata; })) {
+        ArtifactEvidence self; self.path = metadata; self.execution_id = GetExecutionId();
+        evidence.push_back(std::move(self));
+    }
+    FinalizeArtifactEvidence(evidence);
+    return evidence;
+}
+
+void OutputManager::FinalizeArtifactEvidence(std::vector<ArtifactEvidence>& evidence)
+{
+    const auto metadata = FileUtils::AbsolutePath(MakeOutputPath("run_metadata.json"));
     for (auto& file : evidence) {
         file.sha256.reset(); file.size_bytes.reset(); file.reason.clear();
         if (file.path == metadata) {
@@ -718,7 +746,6 @@ std::vector<OutputManager::ArtifactEvidence> OutputManager::CollectArtifactEvide
     std::sort(evidence.begin(), evidence.end(), [](const ArtifactEvidence& a, const ArtifactEvidence& b) {
         return a.path < b.path;
     });
-    return evidence;
 }
 
 void OutputManager::RecordOutputFailure(const std::string& stage, const std::string& message,

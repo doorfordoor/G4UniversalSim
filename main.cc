@@ -4,6 +4,7 @@
 #include "Core/RandomCommandGuard.hh"
 #include "Core/BackendCapabilities.hh"
 #include "Core/Geant4DataLocator.hh"
+#include "Core/SessionServer.hh"
 #include "Core/SimulationManager.hh"
 #include "Config/ConfigManager.hh"
 #include "Geometry/GeometryManager.hh"
@@ -243,6 +244,8 @@ struct CommandLineOptions {
   bool inspectMacro = false;
   bool inspectRun = false;
   std::string dumpEffectiveConfig;
+  bool sessionServer = false;
+  std::string sessionRecordDir;
 };
 
 void PrintUsage(const char* program) {
@@ -265,6 +268,8 @@ void PrintUsage(const char* program) {
       << "  --run-name <name>    Override run name in SimulationManager.\n"
       << "  --ui                 Start an interactive Geant4 UI session.\n"
       << "  --ui-session csh   Required with --ui for the audited command-line session.\n"
+      << "  --session-server   Serve the versioned JSON-lines controlled session on stdin/stdout.\n"
+      << "  --session-record-dir <dir>  Absolute record directory outside --output for session receipts.\n"
       << "  --threads, -t <N>    Set requested number of worker threads when "
          "MT "
          "is available.\n"
@@ -354,6 +359,12 @@ CommandLineOptions ParseCommandLine(int argc, char** argv) {
       options.dumpEffectiveConfig = RequireNonEmptyValue(i, argc, argv, arg);
       if (options.dumpEffectiveConfig != "-" && options.dumpEffectiveConfig.front() == '-')
         throw std::runtime_error("--dump-effective-config requires <path|->");
+    } else if (arg == "--session-server") {
+      if (options.sessionServer) throw std::runtime_error("Duplicate --session-server");
+      options.sessionServer = true;
+    } else if (arg == "--session-record-dir") {
+      if (!options.sessionRecordDir.empty()) throw std::runtime_error("Duplicate --session-record-dir");
+      options.sessionRecordDir = RequireNonEmptyValue(i, argc, argv, arg);
     } else if (arg == "--working-directory") {
       if (!options.workingDirectory.empty()) throw std::runtime_error("Duplicate --working-directory");
       options.workingDirectory = RequireNonEmptyValue(i, argc, argv, arg);
@@ -391,6 +402,14 @@ CommandLineOptions ParseCommandLine(int argc, char** argv) {
       }
       options.macroFile = arg;
     }
+  }
+  if (options.sessionServer) {
+    if (options.interactive || !options.macroFile.empty() || options.dryRun)
+      throw std::runtime_error("--session-server cannot be combined with --ui, --macro or --dry-run");
+    if (options.configFile.empty())
+      throw std::runtime_error("--session-server requires --config <main.ini>");
+    if (options.sessionRecordDir.empty())
+      throw std::runtime_error("--session-server requires --session-record-dir <outside-output-dir>");
   }
   if (!options.uiSession.empty() && !options.interactive) {
     throw std::runtime_error("--ui-session requires --ui");
@@ -695,7 +714,7 @@ int main(int argc, char** argv) {
     sim.Configure();
     sim.BeginRuntimeTracking();
     const SimulationContext& context = sim.GetContext();
-    if (!context.IsDryRun() && !context.IsInteractive() && !context.HasMacroFile()) {
+    if (!context.IsDryRun() && !context.IsInteractive() && !context.HasMacroFile() && !options.sessionServer) {
       PrintUsage(argv[0]);
       return EXIT_SUCCESS;
     }
@@ -772,6 +791,39 @@ int main(int argc, char** argv) {
       }
     }
     ScoringMeshConfig::RecordEffectiveConfigDispatch();
+
+    if (options.sessionServer) {
+      const auto outputRoot = std::filesystem::path(sim.GetContext().GetOutputDir()).lexically_normal();
+      const auto recordRoot = std::filesystem::path(options.sessionRecordDir).lexically_normal();
+      if (recordRoot.empty() || !recordRoot.is_absolute())
+        throw std::runtime_error("--session-record-dir must be an absolute path");
+      bool insideOutput = false;
+      {
+        auto recordPart = recordRoot.begin();
+        auto outputPart = outputRoot.begin();
+        bool prefix = true;
+        while (recordPart != recordRoot.end() && outputPart != outputRoot.end()) {
+          if (recordPart->string() != outputPart->string()) { prefix = false; break; }
+          ++recordPart; ++outputPart;
+        }
+        insideOutput = prefix && outputPart == outputRoot.end();
+      }
+      if (insideOutput)
+        throw std::runtime_error("--session-record-dir must be outside --output: " +
+                                 outputRoot.u8string());
+      SessionServer session(sim, recordRoot.u8string());
+      const int sessionCode = session.Run();
+      const auto& sessionRuns = sim.GetOutputManager()->GetRunSummary().GetRuns();
+      const std::string sessionStatus = sessionCode == 0
+          ? (sessionRuns.empty() ? "interactive_no_run" : "completed")
+          : "failed";
+      finalizationStarted = true;
+      if (!sim.FinalizeRunSummary(sessionStatus, sessionCode, "session_server")) {
+        std::cerr << "G4UniversalSim output finalization failed; see run_summary.txt\n";
+        return EXIT_FAILURE;
+      }
+      return sessionCode;
+    }
 
     std::unique_ptr<G4VisManager> visManager;
     if (sim.GetContext().IsInteractive() && !sim.GetContext().IsDryRun()) {

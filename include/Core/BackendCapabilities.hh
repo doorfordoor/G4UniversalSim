@@ -57,7 +57,14 @@ inline void WriteBackendCapabilities(std::ostream& out)
 "outputs":{"schema_version":3,"run_summary_schema_version":1,"worker_suffix":"_tN","subsequent_run_suffix":"_rR","csv_units_in_header":true,"automatic_merge":false,"formats":["csv","root","both","auto"],"default_format":"csv","auto_rule":"ROOT when scoring is enabled and hits or event_edep is enabled; CSV otherwise","provenance_schema":"g4usim_provenance_v1",
 "root":{"schema_version":4,"file":"g4usim.root","subsequent_run_file":"g4usim_rR.root","thread_merge":true,"histograms":["edep_raw","edep_weighted"],"ntuples":["hits","events","edep_volume","edep_particle","dose","fluence","mesh","let"]},"scoring_meshes":{"commands":"/score/","shapes":["box","cylinder"],"thread_merge":true,"uncertainty":"sum_sq per event, rel_error"},"run_metadata":"run_metadata.json","scorer_statistics":"scorer_statistics.csv","phase_space":"phase_space_tN.csv","trajectories":"trajectories_tN.json (g4usim_trajectories_v1, [output] trajectories = N events)","geometry_mesh":"g4usim_geometry_mesh_v1"},
 "validation_scope":"configuration and runtime smoke; not physical benchmark",
-"geometry_schema_version":null
+"geometry_schema_version":null,
+"session":{"protocol":"g4usim-session-v1","transport":"json-lines-stdio",
+"launch_flag":"--session-server","record_directory_flag":"--session-record-dir",
+"handshake":"hello required before set/run","kernel_state":"idle after /run/initialize",
+"cancel":"experimental","source_editing":["particle","energy","position","direction","plane_beam"],
+"json_parser":{"name":"nlohmann-json","version":"3.11.3",
+"sha256":"9bea4c8066ef4a1c206b2be5a36302f8926f7fdc6087af5d20b417d0cf103ea6","license":"MIT"},
+"notes":"requested and resolved values are reported separately; a rejected request never edits the source"}
 }
 )json";
 }
