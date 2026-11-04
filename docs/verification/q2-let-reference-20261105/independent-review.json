@@ -1,0 +1,39 @@
+{
+  "schema": "q2_let_independent_review_v1",
+  "comparison_status": "fail",
+  "controller_exit_code": 1,
+  "checks_total": 101,
+  "checks_failed": 1,
+  "failures": [
+    {
+      "id": "REF-LET-D-REL",
+      "status": "fail",
+      "detail": "2.106460e-01 <= 0.05"
+    }
+  ],
+  "cases": {
+    "ref_let_10": {
+      "backend_exit_code": 0,
+      "completed_events": 2000,
+      "seed": 20261111,
+      "let_t": 8.100654292197236,
+      "let_d": 8.100767994568448,
+      "weighted_step_cv_squared": 1.403619597994954e-05,
+      "csv_sha256": "12558817755d2b7ecb787521557d56921ee9f2cfbaba860de7d7e26513325779",
+      "run_summary_sha256": "89b94cbdf3d61f93f3101401e5bf76b2c9364025c234a6b7f849f79891d63207",
+      "run_metadata_sha256": "ca8693afb99088c34e6e794d80ce16c896bc70a4a30c288c8854f9eb72b7aabe"
+    },
+    "ref_let_100": {
+      "backend_exit_code": 0,
+      "completed_events": 2000,
+      "seed": 20261112,
+      "let_t": 1.3763494951577784,
+      "let_d": 1.666271943238166,
+      "weighted_step_cv_squared": 0.2106459508289007,
+      "csv_sha256": "a2120b02d3eb4a1a756adcc9599c8627cbe2c22665ae91d6d61a58bb343ef632",
+      "run_summary_sha256": "0f2a2683bb047f4b77fa5964be50f93b12735586835fe67cc7977946369110c3",
+      "run_metadata_sha256": "4c803c2834311c7f2edd9f2121b0323093c8cc25e5912a6dd362ec1f09364086"
+    }
+  },
+  "scope": "No retagging of v1. No product defect established by the auxiliary criterion."
+}

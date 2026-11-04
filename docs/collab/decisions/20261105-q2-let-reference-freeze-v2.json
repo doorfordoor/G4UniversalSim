@@ -1,0 +1,57 @@
+{
+  "schema": "q2_reference_let_freeze_v2",
+  "case": "REF-LET-01-EM",
+  "backend_build": "864bc036d6d7752475e52db4efd2b950cabfcc3d",
+  "data_file": "scenarios\\benchmarks\\shielding_range\\nist\\PSTAR_Si.txt",
+  "data_sha256": "71cfaaf13545201276c24195d96a4fafd2341bf5fbd26ed52133cce0b42f2422",
+  "material": "G4_Si",
+  "density_g_cm3": 2.33,
+  "dimensions_mm": [
+    10,
+    10,
+    0.02
+  ],
+  "physics_reference": null,
+  "default_cut": "1 um",
+  "particle": "proton",
+  "source_position_mm": [
+    0,
+    0,
+    -3
+  ],
+  "direction": [
+    0,
+    0,
+    1
+  ],
+  "threads": 1,
+  "events_per_case": 2000,
+  "seeds": [
+    20261211,
+    20261212
+  ],
+  "references": [
+    {
+      "energy": 10.0,
+      "mid": 9.918640484915057,
+      "let": 8.10751145090545
+    },
+    {
+      "energy": 100.0,
+      "mid": 99.98639444889122,
+      "let": 1.3599232692852166
+    }
+  ],
+  "reference_method": "log-log interpolate CSDA range at E0, subtract rho*t/2 in g/cm2, inverse log-log interpolate energy, interpolate electronic stopping at mid and multiply rho*0.1",
+  "acceptance": {
+    "let_t_abs_error": "<=0.015*reference+3*sigma",
+    "sigma": "current valid uncorrected_delta_ratio_v1 relative_error * abs(let_t)",
+    "let_d_minus_let_t": "nonnegative within printed-value precision",
+    "relative_let_d_minus_t": "<=0.05",
+    "required_status": "completed run at frozen N; valid uncertainty estimator and finite values",
+    "failure_action": "retain every output and failed criterion; no parameter, tolerance, cut, N, seed or reference adjustment after observing v2 results"
+  },
+  "scope": "EM-only option4, proton 10/100 MeV, Si20um, this backend and NIST table; excludes hadronic-mixture LET_d validation. New prospective run, not a reclassification of v1.",
+  "physics_em": "option4",
+  "prior_failed_case": "REF-LET-01/v1: FTFP_BERT_EMZ; fail REF-LET-D-REL; remains failed"
+}
