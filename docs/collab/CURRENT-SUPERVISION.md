@@ -28,7 +28,7 @@ NIEL表审计经C盘独立复演：27 pass / 0 fail / 3 limited；60位Decimal�
 原task g4-j3-desktop-20261103、session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4。round82请求q2-uncertainty-preregister-v1-20261105已接单，Flash/Max，按docs/collab/inbox/20261105-q2-uncertainty-preregister-v1.md只写方案/输入草案及纯数学核验；输出out/collab/q2-uncertainty-proposal-v1，回执docs/collab/outbox/20261105-q2-uncertainty-preregister-v1.md。原turn66已完成，无主审后台命令。请求/游标见out/collab/desktop-bridge/context.json。
 
 ## 下一轮目标
-独审Q2-4病例行存在性、公开矩/精度/真实共享C++组件边界，以及64批有限覆盖判据，冻结后派实施，不先试跑改阈值。数学设计输入docs/collab/decisions/20261105-q2-uncertainty-coverage-design-v1.json不等于实验授权；依据既有预审修正，不扩工具。随后完成Q2-5偏置方案及固定清单后续；Q2仍未关闭，定时阶段不变。
+独审Q2-4病例行存在性、公开矩/精度/真实共享C++组件边界，以及64批有限覆盖判据，冻结后派实施，不先试跑改阈值。数学设计输入docs/collab/decisions/20261105-q2-uncertainty-coverage-design-v1.json不等于实验授权；依据既有预审修正，不扩工具。有限二项阈值经C盘60位Decimal及整数覆盖集合独立核验，证据docs/verification/q2-uncertainty-preregister-20261105；这不是模拟验收。随后依据docs/collab/reviews/20261105-q2-biasing-preregister-review.md完成Q2-5偏置方案及固定清单后续；Q2仍未关闭，定时阶段不变。
 
 ## 待用户决定/限制
 | 项 | 决定 | 影响/动作 |
