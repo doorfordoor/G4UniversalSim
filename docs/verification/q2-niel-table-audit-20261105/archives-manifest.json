@@ -1,0 +1,148 @@
+{
+  "schema": "q2_niel_archive_manifest_v1",
+  "archives": [
+    {
+      "file": "author-v1.zip",
+      "bytes": 30456,
+      "sha256": "07c1dbd893987f0b501fe07c204c5e6600632e09fd850ac3bbd27de7f36cf432",
+      "crc_verified": true,
+      "all_member_hashes_verified": true,
+      "members": [
+        {
+          "path": "contract/20261105-q2-niel-table-audit-freeze-v1.json",
+          "bytes": 1811,
+          "sha256": "92cfff501fcdff2fc0ea40010f02b23f3eabf45cb3b16c1d9a027c08a7702bb4"
+        },
+        {
+          "path": "delivery/original-outbox.md",
+          "bytes": 8180,
+          "sha256": "16d1ebbaa44b72d528b6f9263609b5b5324d3d0b1348164a26326d4777e05eb1"
+        },
+        {
+          "path": "evidence/README.md",
+          "bytes": 10492,
+          "sha256": "8b15e2845a1ae1513ce8c651387d1149bc75a17e1f799f86d645ad13f27921bc"
+        },
+        {
+          "path": "evidence/audit.py",
+          "bytes": 23704,
+          "sha256": "c0f894c4a71dc3085dcee66581b021aa35cbaa4a41e8bb1a1a43fb6d930e9d88"
+        },
+        {
+          "path": "evidence/identity.json",
+          "bytes": 3387,
+          "sha256": "5fb85c0c3d051c3885131a6f37c76380239ec39ada4b1de23e4a65c76d9d3a95"
+        },
+        {
+          "path": "evidence/results.json",
+          "bytes": 10817,
+          "sha256": "e6197f9fcd8bcf497b945fed3b141de106ae47c2e42db57a529be6b31f20863b"
+        },
+        {
+          "path": "evidence/tamper-results.json",
+          "bytes": 3028,
+          "sha256": "ddb88fc2045edc443594776ec46cd5af2a3fa094b4cdad76d1bea7efc87a72ad"
+        },
+        {
+          "path": "evidence/tamper.py",
+          "bytes": 6978,
+          "sha256": "a3c9ebbdab0f4b42436ba1daea16cafd6ea426d9378668a862a36f7a67b8f54e"
+        },
+        {
+          "path": "tables/si_neutron.csv",
+          "bytes": 12088,
+          "sha256": "a2ad28a9fcce3500fca363946e09e19125d084f1b596eff76662b272c242034f"
+        },
+        {
+          "path": "tables/si_proton.csv",
+          "bytes": 2617,
+          "sha256": "6c21e35aab18495d4bb2597a76be60c7c35ef0df963224e0108c77c2e4c208d5"
+        }
+      ]
+    },
+    {
+      "file": "independent-v1.zip",
+      "bytes": 29981,
+      "sha256": "d3a9f522765730970ac5448b829a612396fc8bf4f187b719c8b7b0371cdf7608",
+      "crc_verified": true,
+      "all_member_hashes_verified": true,
+      "members": [
+        {
+          "path": "contract/20261105-q2-niel-table-audit-freeze-v1.json",
+          "bytes": 1811,
+          "sha256": "92cfff501fcdff2fc0ea40010f02b23f3eabf45cb3b16c1d9a027c08a7702bb4"
+        },
+        {
+          "path": "delivery/original-outbox.md",
+          "bytes": 8180,
+          "sha256": "16d1ebbaa44b72d528b6f9263609b5b5324d3d0b1348164a26326d4777e05eb1"
+        },
+        {
+          "path": "evidence/audit.py",
+          "bytes": 23704,
+          "sha256": "c0f894c4a71dc3085dcee66581b021aa35cbaa4a41e8bb1a1a43fb6d930e9d88"
+        },
+        {
+          "path": "evidence/identity.json",
+          "bytes": 3387,
+          "sha256": "5fb85c0c3d051c3885131a6f37c76380239ec39ada4b1de23e4a65c76d9d3a95"
+        },
+        {
+          "path": "evidence/independent-audit.py.log",
+          "bytes": 489,
+          "sha256": "210d2aea13174a6385338e4e442fc49cfc28ff044c487573cd36bd4dfd486dfa"
+        },
+        {
+          "path": "evidence/independent-host-receipt.json",
+          "bytes": 1841,
+          "sha256": "18486e9d05f2fca8c7d64b40cd0baec136f871aaabc85582b7d58d56d8a2399b"
+        },
+        {
+          "path": "evidence/independent-independent_math.py.log",
+          "bytes": 70,
+          "sha256": "0b6ceb35d03d3587898ccf5d716eef6a5e33db3bc85c6f86cb3f5f387de9b878"
+        },
+        {
+          "path": "evidence/independent-math-results.json",
+          "bytes": 2482,
+          "sha256": "40e0a2f186678404426e5217842dae913a7d17ec459762f64448a869db47d204"
+        },
+        {
+          "path": "evidence/independent-tamper.py.log",
+          "bytes": 616,
+          "sha256": "1429a9b162046170b7501672cb8e4c414b92c0c8f20822ebe64e52d657e353ec"
+        },
+        {
+          "path": "evidence/independent_math.py",
+          "bytes": 3606,
+          "sha256": "2bb5a943368233d1d1abc0d4721cc1c7b1d134f3f67e079a130815280e4752c6"
+        },
+        {
+          "path": "evidence/results.json",
+          "bytes": 10875,
+          "sha256": "eeb50d14f330847bbbe29163a423b1fe0a6d76eecd86ee07edc18dfa48c3da69"
+        },
+        {
+          "path": "evidence/tamper-results.json",
+          "bytes": 3028,
+          "sha256": "ddb88fc2045edc443594776ec46cd5af2a3fa094b4cdad76d1bea7efc87a72ad"
+        },
+        {
+          "path": "evidence/tamper.py",
+          "bytes": 6978,
+          "sha256": "a3c9ebbdab0f4b42436ba1daea16cafd6ea426d9378668a862a36f7a67b8f54e"
+        },
+        {
+          "path": "tables/si_neutron.csv",
+          "bytes": 12088,
+          "sha256": "a2ad28a9fcce3500fca363946e09e19125d084f1b596eff76662b272c242034f"
+        },
+        {
+          "path": "tables/si_proton.csv",
+          "bytes": 2617,
+          "sha256": "6c21e35aab18495d4bb2597a76be60c7c35ef0df963224e0108c77c2e4c208d5"
+        }
+      ]
+    }
+  ]
+}
