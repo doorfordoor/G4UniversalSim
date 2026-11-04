@@ -58,6 +58,7 @@ class SessionClient(QObject):
         self._runner = runner
         self._started = False
         self._replay_mode = False
+        self._replay_failure_detail = ""
         runner.sessionData.connect(self._on_session_data)
         runner.processStarted.connect(self._on_process_started)
         runner.finished.connect(self._on_runner_finished)
@@ -120,6 +121,7 @@ class SessionClient(QObject):
         self._start_session(project, command, replay=False)
 
     def start_replay(self, project, command: list[str]) -> None:
+        self._replay_failure_detail = ""
         """Replay a recorded, completed session in a new backend process."""
         self._start_session(project, command, replay=True)
 
@@ -538,7 +540,19 @@ class SessionClient(QObject):
             return
         if event == "closing":
             self._view["phase"] = "stopping"
-            self._set_message(str(frame.get("reason") or "Session is closing."))
+            self._view["closing"] = dict(frame)
+            reason = str(frame.get("reason") or "")
+            if self._replay_mode:
+                problem = replay_terminal_problem(
+                    frame, list(self._view.get("rounds") or []))
+                if problem:
+                    self._replay_failure_detail = problem
+                    self._set_message(problem)
+                else:
+                    self._closing_expected = True
+                    self._set_message("Replay finished; every recorded round completed.")
+            else:
+                self._set_message(reason or "Session is closing.")
             self._emit()
             return
         self.logReceived.emit(f"session event: {_frame_summary(frame)}")
@@ -636,12 +650,18 @@ class SessionClient(QObject):
             self._finish_request(request_id)
         self._flush_buffers()
         expected = self._closing_expected
+        if self._replay_mode and expected and exit_code != 0:
+            expected = False
+            self._replay_failure_detail = (
+                f"Replay process exited with code {exit_code} after reporting completion.")
         self._started = False
         self._view["phase"] = "closed" if expected else "failed"
         if expected and exit_code == 0:
             self._set_message("Session closed.")
         elif expected:
             self._set_message(f"Session process exited with code {exit_code}.")
+        elif self._replay_failure_detail:
+            self._set_message(self._replay_failure_detail)
         else:
             self._set_message(f"Session process ended unexpectedly with code {exit_code}.")
         session = dict(self._view.get("session") or {})
@@ -654,8 +674,11 @@ class SessionClient(QObject):
         self._emit()
         self.closed.emit(payload)
         if not expected:
-            detail = self._last_stderr or "no stderr output"
-            self.failure.emit(f"Session ended unexpectedly (exit code {exit_code}): {detail}")
+            detail = (self._replay_failure_detail or self._last_stderr
+                      or "no stderr output")
+            self.failure.emit(
+                self._replay_failure_detail
+                or f"Session ended unexpectedly (exit code {exit_code}): {detail}")
 
     def _on_runner_error(self, message: str) -> None:
         if not self._started:
@@ -680,6 +703,51 @@ class SessionClient(QObject):
     def _on_shutdown_rejected(self, _response: dict[str, Any], message: str) -> None:
         self._set_message(f"Shutdown was rejected: {message}")
         self.failure.emit(f"Shutdown was rejected: {message}")
+
+
+def replay_terminal_problem(closing: dict[str, Any], rounds: list[dict[str, Any]]) -> str:
+    """Return a human-readable reason a replay terminal is not a success.
+
+    The replay is only complete when the backend says it finished, executed
+    every recorded step, and every replayed round completed with a receipt that
+    the session model could verify.  An empty string means the terminal is a
+    genuine success; exit code 0 by itself is never enough.
+    """
+    frame = dict(closing or {})
+    reason = str(frame.get("reason") or "")
+    message = str(frame.get("message") or "")
+    if reason != "replay_finished":
+        return (f"Replay did not finish ({reason or 'no closing reason'}): {message}").strip()
+    exit_code = frame.get("exit_code")
+    if isinstance(exit_code, int) and exit_code != 0:
+        return f"Replay reported exit code {exit_code}: {message}".strip()
+    steps_total = frame.get("steps_total")
+    steps_executed = frame.get("steps_executed")
+    if not isinstance(steps_total, int) or steps_total <= 0:
+        return "Replay reported no planned steps."
+    if not isinstance(steps_executed, int) or steps_executed <= 0:
+        return "Replay reported no executed run."
+    # The protocol counts steps_total as every set_source/run operation but
+    # steps_executed as completed runs only, so they are not expected to match.
+    if steps_total < steps_executed:
+        return (f"Replay executed {steps_executed} runs but planned only "
+                f"{steps_total} operations.")
+    records = [dict(record) for record in rounds or [] if isinstance(record, dict)]
+    if not records:
+        return "Replay finished without reporting any finished round."
+    if len(records) != steps_executed:
+        return (f"Replay reported {steps_executed} executed runs but "
+                f"{len(records)} finished rounds.")
+    for record in records:
+        status = str(record.get("status") or "")
+        run_id = record.get("run_id")
+        if status != "completed":
+            return f"Replay round {run_id} ended as {status or 'unknown'}."
+        if not record.get("receipt_ok"):
+            detail = str(record.get("receipt_reason") or "")
+            return (f"Replay round {run_id} receipt could not be verified"
+                    + (f" ({detail})." if detail else "."))
+    return ""
 
 
 def _hex_id() -> str:

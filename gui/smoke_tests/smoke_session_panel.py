@@ -343,7 +343,9 @@ def panel_checks(app: QApplication, directory: Path) -> None:
     panel.set_view(base_view(
         phase="closed",
         session={**base_view()["session"], "alive": False},
-        replay={"manifest_path": "C:/tmp/replay-manifest.json", "replayable": True,
+        replay={"manifest_path": str(Path(tempfile.gettempdir()) /
+                                     "g4usim-replay-manifest.json"),
+                "replayable": True,
                 "reason": "", "steps": []},
     ))
     assert panel.replay_button.isEnabled() is True
@@ -374,6 +376,31 @@ def panel_checks(app: QApplication, directory: Path) -> None:
 
     panel.set_message("Info Next round is ready.", "info")
     assert panel.feedback_view.toPlainText() != ""
+
+    # Replay terminals are judged by closing facts, never by exit code alone.
+    from g4usim_gui.core.session_client import replay_terminal_problem
+    good_round = [round_record(0, receipt_ok=True), round_record(1, receipt_ok=True)]
+    good_closing = {"reason": "replay_finished", "exit_code": 0,
+                    "steps_total": 6, "steps_executed": 2}
+    assert replay_terminal_problem(good_closing, good_round) == ""
+    assert replay_terminal_problem({}, good_round) != ""
+    assert replay_terminal_problem(
+        {"reason": "replay_failed", "exit_code": 4, "message": "replay step 4 failed"},
+        good_round) != ""
+    assert replay_terminal_problem(
+        {**good_closing, "steps_executed": 3}, good_round) != ""
+    assert replay_terminal_problem(
+        {**good_closing, "steps_total": 1}, good_round) != ""
+    assert replay_terminal_problem(
+        {**good_closing, "steps_executed": 0}, good_round) != ""
+    assert replay_terminal_problem(
+        good_closing, [round_record(0, receipt_ok=True),
+                       round_record(1, receipt_ok=False, reason="receipt_unavailable")]) != ""
+    cancelled_round = dict(good_round[1])
+    cancelled_round["status"] = "cancelled"
+    assert replay_terminal_problem(good_closing, [good_round[0], cancelled_round]) != ""
+    assert replay_terminal_problem(
+        {**good_closing, "exit_code": 4}, good_round) != ""
 
     panel.set_draft_defaults(particle="e-", energy_text="50 MeV", events=7)
     draft = panel.draft()

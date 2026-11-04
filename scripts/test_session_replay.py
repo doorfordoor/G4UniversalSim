@@ -122,7 +122,17 @@ def replay_session(executable: Path, temp: Path, name: str, source_dir: Path, *,
     started_at = time.monotonic()
     replay = start_replay(executable, temp, name, source_dir, threads=threads,
                           output=output, extra_args=extra_args)
-    welcome = replay.wait(lambda item: item.get("kind") == "welcome", timeout=600)
+    welcome = None
+    deadline = time.time() + 600.0
+    while time.time() < deadline:
+        for frame in replay.frames:
+            if frame.get("kind") == "welcome":
+                welcome = frame
+                break
+        if welcome is not None or replay.closed:
+            break
+        time.sleep(0.05)
+    assert welcome is not None, replay.raw_lines[-16:]
     print(f"[timing] {name}: replay welcome (identity validation) "
           f"{time.monotonic() - started_at:.1f}s", flush=True)
     out = output if output is not None else temp / f"{name}-out"
@@ -141,6 +151,48 @@ def replay_session(executable: Path, temp: Path, name: str, source_dir: Path, *,
     code = replay.close(timeout=300)
     return {"session": replay, "welcome": welcome, "closing": closing,
             "exit_code": code, "output": out, "records": records}
+
+
+def run_first_no_edit_case(executable: Path, temp: Path) -> None:
+    """First run reuses the configured source; only the second run edits energy.
+
+    A pre-check that applied a later edit while validating the plan would leak
+    that edit into the first run, so the replayed table would no longer match.
+    """
+    output = temp / "no-edit-out"
+    records = temp / "no-edit-records"
+    session = Session(executable, output, records, threads=1)
+    OPEN_SESSIONS.append(session)
+    welcome = open_session(session)
+    session_dir = Path(welcome["state"]["session_root"])
+    first = run_round(session, 5)
+    assert first["status"] == "completed", first
+    set_energy(session, "200 MeV")
+    second = run_round(session, 5)
+    assert second["status"] == "completed", second
+    finish_session(session)
+    manifest = json.loads((session_dir / "replay-manifest.json").read_text(encoding="utf-8"))
+    assert manifest["replayable"] is True, manifest
+    assert [step["op"] for step in manifest["steps"]] == ["run", "set_source", "run"], manifest["steps"]
+
+    original = collect_table(output, "event_edep_t*.csv")
+    first_rows = [rows for key, rows in original.items() if key[0] == "0"]
+    second_rows = [rows for key, rows in original.items() if key[0] == "1"]
+    assert first_rows and second_rows, (first_rows, second_rows)
+    assert sorted(first_rows) != sorted(second_rows), (
+        "the configured 10 MeV source and the 200 MeV edit produced identical rows")
+
+    replay = replay_session(executable, temp, "no-edit-replay", session_dir, threads=1)
+    assert replay["exit_code"] == 0, replay["session"].raw_lines[-16:]
+    closing = replay["closing"]
+    assert closing is not None and closing["reason"] == "replay_finished", closing
+    assert closing["steps_executed"] == 2, closing
+    replayed = collect_table(Path(str(replay["output"])), "event_edep_t*.csv")
+    compare_tables(original, replayed, "no-edit event table")
+    original_hits = collect_table(output, "hits_t*.csv", ("runID", "eventID", "trackID"))
+    replayed_hits = collect_table(Path(str(replay["output"])), "hits_t*.csv",
+                                  ("runID", "eventID", "trackID"))
+    compare_tables(original_hits, replayed_hits, "no-edit hits table")
 
 
 def collect_table(output: Path, pattern: str,
@@ -220,6 +272,10 @@ def closing_failure_case(executable: Path, temp: Path, name: str,
     run_frames = [item for item in replay["session"].frames
                   if item.get("kind") == "event" and item.get("event") == "run_started"]
     assert not run_frames, run_frames
+    assert closing.get("steps_executed") == 0, closing
+    assert closing.get("reason") != "replay_finished", closing
+    stdout_text = "\n".join(replay["session"].raw_lines)
+    assert '"reason":"replay_finished"' not in stdout_text, stdout_text[-1500:]
     output_dir = Path(str(replay["output"]))
     produced = (sorted(path for path in output_dir.rglob("*") if path.is_file())
                 if output_dir.exists() else [])
@@ -290,6 +346,30 @@ def corrupt_session(source_dir: Path, temp: Path, name: str, mutate) -> Path:
     elif mutate == "unsupported_step":
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         manifest["steps"].append({"op": "cancel", "params": {}})
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    elif mutate == "invalid_last_source_value":
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        source_steps = [step for step in manifest["steps"] if step["op"] == "set_source"]
+        source_steps[-1]["params"]["value"] = "banana MeV"
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    elif mutate == "invalid_last_energy_domain":
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        source_steps = [step for step in manifest["steps"]
+                        if step["op"] == "set_source" and
+                        step["params"].get("field") == "energy"]
+        source_steps[-1]["params"]["value"] = "-1 MeV"
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    elif mutate == "invalid_last_plane_radius":
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        source_steps = [step for step in manifest["steps"] if step["op"] == "set_source"]
+        source_steps[-1]["params"] = {
+            "field": "plane_beam", "radius": "0 mm",
+            "center": "0 0 0 mm", "direction": "-z"}
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    elif mutate == "invalid_particle_name":
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        source_steps = [step for step in manifest["steps"] if step["op"] == "set_source"]
+        source_steps[0]["params"] = {"field": "particle", "value": "banana"}
         manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
     elif mutate == "missing_snapshot":
         snapshot_path.unlink()
@@ -376,6 +456,9 @@ def main() -> int:
                        collect_table(Path(str(replay_mt["output"])), "hits_t*.csv", ("runID", "eventID", "trackID")),
                        "multi hits table")
 
+        # ---- a first run without an edit must not inherit a later edit
+        run_first_no_edit_case(executable, temp)
+
         # ---- refusals must happen before any run and leave no output behind
         single_dir = Path(str(source["session_dir"]))
         refusal_case(executable, temp, "bad-json",
@@ -410,6 +493,25 @@ def main() -> int:
                          source_dir=corrupt_session(single_dir, temp, f"mut-{mutation}",
                                                     mutation),
                          expected_text=expected, before_welcome=True)
+        # A rejected source value must stop the replay before any BeamOn even
+        # when it appears in the last step of the plan; the rejection is a
+        # replay_failed terminal, never replay_finished/success.
+        closing_failure_case(executable, temp, "invalid-last-energy",
+                             corrupt_session(single_dir, temp, "mut-last-energy",
+                                             "invalid_last_source_value"),
+                             expected_text="invalid_value")
+        closing_failure_case(executable, temp, "invalid-energy-domain",
+                             corrupt_session(single_dir, temp, "mut-energy-domain",
+                                             "invalid_last_energy_domain"),
+                             expected_text="energy must be finite and greater than zero")
+        closing_failure_case(executable, temp, "invalid-plane-radius",
+                             corrupt_session(single_dir, temp, "mut-plane-radius",
+                                             "invalid_last_plane_radius"),
+                             expected_text="plane_beam radius must be finite and greater than zero")
+        closing_failure_case(executable, temp, "invalid-particle",
+                             corrupt_session(single_dir, temp, "mut-particle",
+                                             "invalid_particle_name"),
+                             expected_text="not in the Geant4 particle table")
         refusal_case(executable, temp, "not-replayable",
                      source_dir=corrupt_session(single_dir, temp, "mut-incomplete",
                                                 "not_replayable"),

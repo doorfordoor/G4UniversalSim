@@ -197,6 +197,8 @@ def main() -> int:
     replay_client = replay_window.session_client
     replay_rounds: list[dict] = []
     replay_client.roundFinished.connect(lambda record: replay_rounds.append(dict(record)))
+    replay_failures: list[str] = []
+    replay_client.failure.connect(lambda message: replay_failures.append(str(message)))
 
     def _emergency_stop_replay() -> None:
         try:
@@ -234,6 +236,18 @@ def main() -> int:
     replay_output = str(replay_client.snapshot()["session"]["output_root"])
     assert replay_output and replay_output != first_output, (first_output, replay_output)
     wait_until(app, lambda: not replay_client.is_active(), 60.0, "replay session closed")
+    wait_until(app, lambda: replay_client.snapshot().get("phase") == "closed", 60.0,
+               "replay terminal accepted")
+    replay_snapshot = replay_client.snapshot()
+    assert replay_snapshot.get("phase") == "closed", replay_snapshot
+    assert replay_snapshot["session"].get("alive") is False, replay_snapshot
+    assert not replay_failures, replay_failures
+    replay_closing = dict(replay_snapshot.get("closing") or {})
+    assert replay_closing.get("reason") == "replay_finished", replay_closing
+    executed_runs = int(replay_closing.get("steps_executed") or 0)
+    total_operations = int(replay_closing.get("steps_total") or 0)
+    assert executed_runs == len(replayed), (executed_runs, replayed)
+    assert total_operations >= executed_runs > 0, replay_closing
     replay_window.close()
     wait_until(app, lambda: not replay_window.runner.is_running(), 30.0, "replay process ended")
     print(f"session backend smoke passed: {len(rounds)} rounds, {len(rejections)} rejections")

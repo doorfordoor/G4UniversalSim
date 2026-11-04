@@ -16,6 +16,7 @@
 
 #include "BuildInfo.hh"
 #include "G4RunManager.hh"
+#include "G4ParticleTable.hh"
 #include "G4UImanager.hh"
 #include "G4Version.hh"
 #include "CLHEP/Random/Random.h"
@@ -318,6 +319,11 @@ struct SessionServer::Impl {
     std::string lastRunStatus;
     long long lastRunCompletedEvents = -1;
     int lastRunId = -1;
+    // The replay executor must judge an operation by the response the
+    // backend actually sent, never by the request loop's liveness bool.
+    std::string lastResponseStatus;
+    std::string lastResponseReason;
+    std::string lastResponseMessage;
 
     OutputManager* output = nullptr;
     SourceManager* source = nullptr;
@@ -504,6 +510,11 @@ struct SessionServer::Impl {
     // ---------------------------------------------------------------- writer
     void Send(const SessionJson::Json& frame)
     {
+        if (frame.value("kind", std::string()) == "response") {
+            lastResponseStatus = frame.value("status", std::string());
+            lastResponseReason = frame.value("reason", std::string());
+            lastResponseMessage = frame.value("message", std::string());
+        }
         std::string text = SessionJson::Dump(frame);
         if (text.size() > kMaxFrameBytes) text = "{\"kind\":\"error\",\"code\":\"frame_too_large\"}";
         text.push_back('\n');
@@ -1237,8 +1248,10 @@ struct SessionServer::Impl {
     }
 
     // ---------------------------------------------------------------- ops
+    // apply=false parses and validates every field without touching the SourceManager;
+    // replay uses it to validate the whole plan before the first BeamOn.
     bool ApplySourceEdit(const SessionJson::Json& params, std::string& reason, std::string& message,
-                         SessionJson::Json& resolved)
+                         SessionJson::Json& resolved, bool apply = true)
     {
         if (!source) {
             reason = "source_unavailable";
@@ -1258,7 +1271,16 @@ struct SessionServer::Impl {
         if (field == "particle") {
             const std::string value = params.value("value", "");
             if (!value.empty() && value.size() <= SessionJson::kMaxStringBytes) {
-                source->SetParticle(value);
+                if (apply) {
+                    source->SetParticle(value);
+                } else {
+                    G4ParticleTable* table = G4ParticleTable::GetParticleTable();
+                    if (table == nullptr || table->FindParticle(value) == nullptr) {
+                        reason = "invalid_value";
+                        message = "particle '" + value + "' is not in the Geant4 particle table";
+                        return false;
+                    }
+                }
             } else {
                 reason = "invalid_value"; message = "particle requires a non-empty name"; return false;
             }
@@ -1269,7 +1291,13 @@ struct SessionServer::Impl {
             }
             try {
                 const double energy = UnitParser::ParseEnergy(it->get<std::string>());
-                source->SetMonoEnergy(energy);
+                // Keep the setter's numeric domain even in read-only validation.
+                if (!std::isfinite(energy) || energy <= 0.0) {
+                    reason = "invalid_value";
+                    message = "energy must be finite and greater than zero";
+                    return false;
+                }
+                if (apply) source->SetMonoEnergy(energy);
             } catch (const std::exception& error) {
                 reason = "invalid_value"; message = error.what(); return false;
             }
@@ -1282,7 +1310,7 @@ struct SessionServer::Impl {
             if (!ParseLengthVector(it->get<std::string>(), position)) {
                 reason = "invalid_value"; message = "position requires \"x y z unit\""; return false;
             }
-            source->SetPointPosition(position[0], position[1], position[2]);
+            if (apply) source->SetPointPosition(position[0], position[1], position[2]);
         } else if (field == "direction") {
             const auto it = params.find("value");
             if (it == params.end() || !it->is_string()) {
@@ -1292,7 +1320,7 @@ struct SessionServer::Impl {
             if (!ParseDirectionTriple(it->get<std::string>(), direction)) {
                 reason = "invalid_value"; message = "direction requires three finite non-zero components"; return false;
             }
-            source->SetDirection(direction[0], direction[1], direction[2]);
+            if (apply) source->SetDirection(direction[0], direction[1], direction[2]);
         } else if (field == "plane_beam") {
             const std::string radiusText = params.value("radius", "");
             const std::string centerText = params.value("center", "0 0 0 mm");
@@ -1307,7 +1335,12 @@ struct SessionServer::Impl {
             }
             try {
                 const double radius = UnitParser::ParseLength(radiusText);
-                source->SetPlaneBeamAt(radius, center[0], center[1], center[2], directionText);
+                if (!std::isfinite(radius) || radius <= 0.0) {
+                    reason = "invalid_value";
+                    message = "plane_beam radius must be finite and greater than zero";
+                    return false;
+                }
+                if (apply) source->SetPlaneBeamAt(radius, center[0], center[1], center[2], directionText);
             } catch (const std::exception& error) {
                 reason = "invalid_value"; message = error.what(); return false;
             }
@@ -2095,9 +2128,7 @@ struct SessionServer::Impl {
             }
             if (op == "set_source") {
                 const auto fieldIt = paramsIt->find("field");
-                const auto valueIt = paramsIt->find("value");
-                if (fieldIt == paramsIt->end() || !fieldIt->is_string() ||
-                    valueIt == paramsIt->end() || !valueIt->is_string()) {
+                if (fieldIt == paramsIt->end() || !fieldIt->is_string()) {
                     error = prefix + " has an invalid set_source request";
                     return false;
                 }
@@ -2105,6 +2136,14 @@ struct SessionServer::Impl {
                 if (field != "particle" && field != "energy" && field != "position" &&
                     field != "direction" && field != "plane_beam") {
                     error = prefix + " edits an unsupported source field";
+                    return false;
+                }
+                // plane_beam carries a radius instead of a scalar value string;
+                // numeric domains are checked by the read-only semantic pass.
+                const char* valueKey = field == "plane_beam" ? "radius" : "value";
+                const auto valueIt = paramsIt->find(valueKey);
+                if (valueIt == paramsIt->end() || !valueIt->is_string()) {
+                    error = prefix + " has an invalid source value";
                     return false;
                 }
                 const std::string value = valueIt->get<std::string>();
@@ -2289,7 +2328,8 @@ struct SessionServer::Impl {
     }
 
     bool ReplaySendOp(const std::string& op, const SessionJson::Json& params,
-                      const std::string& requestId, long long idSeed)
+                      const std::string& requestId, long long idSeed,
+                      const std::string& expectedStatus, std::string& failure)
     {
         SessionJson::Json frame;
         ++replayRequestCounter;
@@ -2305,7 +2345,21 @@ struct SessionServer::Impl {
         Command command;
         command.kind = Command::Kind::Request;
         command.frame = std::move(frame);
-        return ProcessRequest(command);
+        lastResponseStatus.clear();
+        lastResponseReason.clear();
+        lastResponseMessage.clear();
+        if (!ProcessRequest(command)) {
+            failure = "replay " + op + " stopped the session instead of being answered";
+            return false;
+        }
+        if (lastResponseStatus != expectedStatus) {
+            failure = "replay " + op + " was not accepted (" +
+                      (lastResponseStatus.empty() ? "no response" : lastResponseStatus) + ")";
+            if (!lastResponseReason.empty()) failure += " [" + lastResponseReason + "]";
+            if (!lastResponseMessage.empty()) failure += ": " + lastResponseMessage;
+            return false;
+        }
+        return true;
     }
 
     int AbortReplayStartup(int code)
@@ -2358,8 +2412,9 @@ struct SessionServer::Impl {
         std::string failure;
         std::ostringstream idText;
         idText << std::hex << std::setw(16) << std::setfill('0') << 0x100000;
-        if (!ReplaySendOp("initialize", SessionJson::Json::object(), idText.str(), 0x100000)) {
-            failure = "replay initialize failed";
+        if (!ReplaySendOp("initialize", SessionJson::Json::object(), idText.str(), 0x100000,
+                          "applied", failure)) {
+            if (failure.empty()) failure = "replay initialize failed";
         }
         if (failure.empty()) {
             SessionJson::Json currentData;
@@ -2374,6 +2429,26 @@ struct SessionServer::Impl {
                 if (currentProvenance.value("digest", std::string()) !=
                     replayManifest["provenance_pre_run"].value("digest", std::string())) {
                     failure = "the replay process consumed different input bytes than the source session";
+                }
+            }
+        }
+        // Validate every accepted source edit before any BeamOn: an invalid
+        // value in a later step must not run the earlier rounds first.  This
+        // pre-check is read-only (apply=false): it must not leak a later edit
+        // into an earlier run that legitimately reuses the configured source.
+        if (failure.empty()) {
+            for (std::size_t index = 0; index < replaySteps.size(); ++index) {
+                const SessionJson::Json& step = replaySteps[index];
+                if (step.value("op", std::string()) != "set_source") continue;
+                const SessionJson::Json params =
+                    step.value("params", SessionJson::Json::object());
+                std::string reason;
+                std::string message;
+                SessionJson::Json resolved = SessionJson::Json::object();
+                if (!ApplySourceEdit(params, reason, message, resolved, false)) {
+                    failure = "replay step " + std::to_string(index) +
+                              " set_source is invalid (" + reason + "): " + message;
+                    break;
                 }
             }
         }
@@ -2392,8 +2467,10 @@ struct SessionServer::Impl {
                 const std::string op = step.value("op", std::string());
                 const SessionJson::Json params = step.value("params", SessionJson::Json::object());
                 if (op == "set_source") {
-                    if (!ReplaySendOp("set_source", params, ReplayIdFor(step, 0x200000), 0x200000)) {
-                        failure = "replay set_source failed";
+                    if (!ReplaySendOp("set_source", params, ReplayIdFor(step, 0x200000),
+                                      0x200000, "accepted", failure)) {
+                        failure = "replay step " + std::to_string(index) +
+                                  " set_source failed: " + failure;
                         break;
                     }
                 } else if (op == "run") {
@@ -2403,8 +2480,10 @@ struct SessionServer::Impl {
                                   " is not a completed source run";
                         break;
                     }
-                    if (!ReplaySendOp("run", params, ReplayIdFor(step, 0x300000), 0x300000)) {
-                        failure = "replay run failed";
+                    if (!ReplaySendOp("run", params, ReplayIdFor(step, 0x300000),
+                                      0x300000, "accepted", failure)) {
+                        failure = "replay step " + std::to_string(index) +
+                                  " run failed: " + failure;
                         break;
                     }
                     if (lastRunStatus != "completed") {
