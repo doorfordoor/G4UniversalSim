@@ -1,0 +1,89 @@
+{
+  "schema": "g4usim_installation_flow_v1",
+  "status": "verified",
+  "profile": "runtime",
+  "commands": [
+    {
+      "stage": "data-discovery",
+      "argv": [
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/environments/runtime/bin/G4UniversalSim",
+        "--check-geant4-data"
+      ],
+      "cwd": "/home/runner/work/_temp/g4usim-delivery/acceptance/runtime-evidence",
+      "exit_code": 0,
+      "log": "/home/runner/work/_temp/g4usim-delivery/acceptance/runtime-evidence/data-discovery.log"
+    },
+    {
+      "stage": "simulation",
+      "argv": [
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/environments/runtime/bin/G4UniversalSim",
+        "--working-directory",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/runtime-evidence",
+        "--config",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/runtime-evidence/main.ini",
+        "--macro",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/runtime-evidence/run.mac",
+        "--output",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/runtime-evidence/result"
+      ],
+      "cwd": "/home/runner/work/_temp/g4usim-delivery/acceptance/runtime-evidence",
+      "exit_code": 0,
+      "log": "/home/runner/work/_temp/g4usim-delivery/acceptance/runtime-evidence/simulation.log"
+    },
+    {
+      "stage": "root-csv",
+      "argv": [
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/environments/runtime/python/G4USimPython",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/environments/runtime/scripts/compare_root_csv.py",
+        "--dir",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/runtime-evidence/result"
+      ],
+      "cwd": "/home/runner/work/_temp/g4usim-delivery/acceptance/runtime-evidence",
+      "exit_code": 0,
+      "log": "/home/runner/work/_temp/g4usim-delivery/acceptance/runtime-evidence/root-csv.log"
+    },
+    {
+      "stage": "root-roundtrip",
+      "argv": [
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/environments/runtime/python/G4USimPython",
+        "-c",
+        "import numpy as n,uproot; p='/home/runner/work/_temp/g4usim-delivery/acceptance/runtime-evidence/helper-roundtrip.root'; f=uproot.recreate(p); f['probe']={'x':n.array([1.,2.,3.])}; f.close(); r=uproot.open(p); assert list(r['probe']['x'].array(library='np'))==[1.,2.,3.]; r.close()"
+      ],
+      "cwd": "/home/runner/work/_temp/g4usim-delivery/acceptance/runtime-evidence",
+      "exit_code": 0,
+      "log": "/home/runner/work/_temp/g4usim-delivery/acceptance/runtime-evidence/root-roundtrip.log"
+    },
+    {
+      "stage": "frozen-gui",
+      "argv": [
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/environments/runtime/gui/G4UniversalSimGUI",
+        "--self-test",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/runtime-evidence/gui-self-test.json"
+      ],
+      "cwd": "/home/runner/work/_temp/g4usim-delivery/acceptance/runtime-evidence",
+      "exit_code": 0,
+      "log": "/home/runner/work/_temp/g4usim-delivery/acceptance/runtime-evidence/frozen-gui.log"
+    }
+  ],
+  "scope": "Actual installation/files/runtime on the caller's host; fresh-OS/CI identity is supplied separately",
+  "restart_recovery_inspection": {
+    "resumable": true,
+    "transaction_id": "2b0545ef47de413fb7c541357e952354",
+    "argv": [
+      "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+      "/home/runner/work/_temp/g4usim-delivery/acceptance/source/packaging/install_plan.py",
+      "--output",
+      "/home/runner/work/_temp/g4usim-delivery/acceptance/runtime-evidence/restarted-inspection.json",
+      "inspect",
+      "--prefix",
+      "/home/runner/work/_temp/g4usim-delivery/acceptance/environments/runtime",
+      "--allowed-root",
+      "/home/runner/work/_temp/g4usim-delivery/acceptance/environments"
+    ],
+    "exit_code": 0
+  },
+  "transaction_id": "2b0545ef47de413fb7c541357e952354",
+  "geant4_version": "11.4.3",
+  "completed_events": 5,
+  "verified_files": 47754
+}

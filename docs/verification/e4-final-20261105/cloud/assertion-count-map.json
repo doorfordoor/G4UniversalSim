@@ -1,0 +1,42 @@
+{
+  "tests_fingerprints_equal": true,
+  "case_count_changes": [
+    {
+      "report": [
+        "linux-evidence-11.3.2",
+        "backend"
+      ],
+      "case": "session_protocol",
+      "F2": 649,
+      "E4": 638
+    },
+    {
+      "report": [
+        "linux-evidence-11.3.2",
+        "backend"
+      ],
+      "case": "session_cancel_mt",
+      "F2": 134,
+      "E4": 137
+    },
+    {
+      "report": [
+        "linux-evidence-11.4.3",
+        "backend"
+      ],
+      "case": "session_protocol",
+      "F2": 644,
+      "E4": 641
+    },
+    {
+      "report": [
+        "linux-evidence-11.4.3",
+        "backend"
+      ],
+      "case": "session_cancel_mt",
+      "F2": 136,
+      "E4": 138
+    }
+  ],
+  "inspection": "All changes are in session_protocol/session_cancel_mt. Their wait() loops assert remaining > 0 on each wake, so executed counts depend on scheduling. Both profiles keep the same test fingerprint and cases; strict per-case gates passed."
+}

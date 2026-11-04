@@ -1,0 +1,341 @@
+{
+  "schema": "g4usim_ci_delivery_v1",
+  "status": "verified",
+  "stages": [
+    {
+      "stage": "build-data",
+      "argv": [
+        "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/source/packaging/build_data_artifact.py",
+        "--platform",
+        "linux",
+        "--version",
+        "1.0.0",
+        "--discovery",
+        "/home/runner/work/_temp/g4usim-delivery/discovery.json",
+        "--output-archive",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/source/out/geant4-data.zip",
+        "--output-catalog",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/source/out/data.catalog.json",
+        "--source-page",
+        "Actual selected local SDK/data discovery receipt /home/runner/work/_temp/g4usim-delivery/discovery.json"
+      ],
+      "log": "/home/runner/work/_temp/g4usim-delivery/acceptance/logs/build-data.log",
+      "exit_code": 0,
+      "pid": 4316,
+      "log_finalized": true,
+      "elapsed_seconds": 53.600564899000005,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_hash_observed_time_ns": 1793809636603679406
+    },
+    {
+      "stage": "plan-canonical-data",
+      "argv": [
+        "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/source/packaging/install_plan.py",
+        "--output",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/data-plan.json",
+        "plan",
+        "--catalog",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/source/out/data.catalog.json",
+        "--profile",
+        "runtime",
+        "--platform",
+        "linux",
+        "--architecture",
+        "x86_64",
+        "--version",
+        "1.0.0",
+        "--prefix",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/environments/data-fixture",
+        "--allowed-root",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/environments"
+      ],
+      "log": "/home/runner/work/_temp/g4usim-delivery/acceptance/logs/plan-canonical-data.log",
+      "exit_code": 0,
+      "pid": 4358,
+      "log_finalized": true,
+      "elapsed_seconds": 1.51824209199998,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_hash_observed_time_ns": 1793809638214895212
+    },
+    {
+      "stage": "install-canonical-data",
+      "argv": [
+        "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/source/packaging/install_plan.py",
+        "--output",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/data-install.json",
+        "execute",
+        "--plan",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/data-plan.json"
+      ],
+      "log": "/home/runner/work/_temp/g4usim-delivery/acceptance/logs/install-canonical-data.log",
+      "exit_code": 0,
+      "pid": 4359,
+      "log_finalized": true,
+      "elapsed_seconds": 36.458756956,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_hash_observed_time_ns": 1793809674675646925
+    },
+    {
+      "stage": "build-runtime",
+      "argv": [
+        "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/source/packaging/build_linux_package.py",
+        "--build-dir",
+        "/home/runner/work/_temp/g4usim-delivery/backend",
+        "--data-dir",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/environments/data-fixture/data",
+        "--patchelf",
+        "/usr/bin/patchelf",
+        "--freeze-work-root",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/source/out/linux-freeze-work"
+      ],
+      "log": "/home/runner/work/_temp/g4usim-delivery/acceptance/logs/build-runtime.log",
+      "exit_code": 0,
+      "pid": 4367,
+      "log_finalized": true,
+      "elapsed_seconds": 130.51181152199996,
+      "log_sha256": "c4f2f211510867601a1382c3676ccb2f814e42ea7a44fa7102872ebbc9e0d390",
+      "log_hash_observed_time_ns": 1793809805189594918
+    },
+    {
+      "stage": "uninstall-canonical-data",
+      "argv": [
+        "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/source/packaging/install_plan.py",
+        "--output",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/data-uninstall.json",
+        "uninstall",
+        "--prefix",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/environments/data-fixture"
+      ],
+      "log": "/home/runner/work/_temp/g4usim-delivery/acceptance/logs/uninstall-canonical-data.log",
+      "exit_code": 0,
+      "pid": 14016,
+      "log_finalized": true,
+      "elapsed_seconds": 21.420691616,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_hash_observed_time_ns": 1793809826933644764
+    },
+    {
+      "stage": "build-sdk",
+      "argv": [
+        "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/source/packaging/build_sdk_package.py",
+        "--geant4-prefix",
+        "/home/runner/work/_temp/g4usim-delivery/bootstrap/geant4",
+        "--platform",
+        "linux",
+        "--output-name",
+        "G4UniversalSim-1.0.0-linux-x86_64-development-6074d677",
+        "--version",
+        "1.0.0",
+        "--remove-staging"
+      ],
+      "log": "/home/runner/work/_temp/g4usim-delivery/acceptance/logs/build-sdk.log",
+      "exit_code": 0,
+      "pid": 14017,
+      "log_finalized": true,
+      "elapsed_seconds": 36.51289197599999,
+      "log_sha256": "0ff649a4b9b74df2ed3b86cda11eb48544d838f8990d21557e9b5e92c233a211",
+      "log_hash_observed_time_ns": 1793809863603838034
+    },
+    {
+      "stage": "dependency-licenses",
+      "argv": [
+        "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/source/packaging/build_license_artifact.py",
+        "--prefix",
+        "/home/runner/work/_temp/g4usim-delivery/bootstrap/geant4",
+        "--platform",
+        "linux",
+        "--output-name",
+        "dependency-notices"
+      ],
+      "log": "/home/runner/work/_temp/g4usim-delivery/acceptance/logs/dependency-licenses.log",
+      "exit_code": 0,
+      "pid": 14024,
+      "log_finalized": true,
+      "elapsed_seconds": 0.314570883999977,
+      "log_sha256": "963aca79166119c47a21611f70b83316d2078cc9cdc4cab6ad3e2b1771d43da4",
+      "log_hash_observed_time_ns": 1793809864076131548
+    },
+    {
+      "stage": "assemble-offline-release",
+      "argv": [
+        "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/source/packaging/assemble_distribution.py",
+        "--runtime-catalog",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/source/out/G4UniversalSim-1.0.0-linux-x86_64-runtime.catalog.json",
+        "--sdk-catalog",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/source/out/G4UniversalSim-1.0.0-linux-x86_64-development-6074d677-sdk.catalog.json",
+        "--data-catalog",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/source/out/data.catalog.json",
+        "--package-root",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/source/out/package/G4UniversalSim-1.0.0-linux-x86_64",
+        "--output",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/release/G4UniversalSim-1.0.0-linux-x86_64-g4-11.4.3",
+        "--notices-catalog",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/source/out/dependency-notices.catalog.json"
+      ],
+      "log": "/home/runner/work/_temp/g4usim-delivery/acceptance/logs/assemble-offline-release.log",
+      "exit_code": 0,
+      "pid": 14025,
+      "log_finalized": true,
+      "elapsed_seconds": 17.012412060000088,
+      "log_sha256": "b53a110944b38de3abc18b76e5788cb746374b2bebac1257b871ce66d1b47ce9",
+      "log_hash_observed_time_ns": 1793809881385092650
+    },
+    {
+      "stage": "verify-runtime",
+      "argv": [
+        "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/source/packaging/verify_installation_flow.py",
+        "--catalog",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/release/G4UniversalSim-1.0.0-linux-x86_64-g4-11.4.3/install/catalog.json",
+        "--profile",
+        "runtime",
+        "--version",
+        "1.0.0",
+        "--prefix",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/environments/runtime",
+        "--allowed-root",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/environments",
+        "--evidence-root",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/runtime-evidence"
+      ],
+      "log": "/home/runner/work/_temp/g4usim-delivery/acceptance/logs/verify-runtime.log",
+      "exit_code": 0,
+      "pid": 14027,
+      "log_finalized": true,
+      "elapsed_seconds": 108.13506074200006,
+      "log_sha256": "151d7ade6748bcd6f8b7367a10388e57d1d63bbf05bb13db6266c335d4769bc7",
+      "log_hash_observed_time_ns": 1793809994386041210
+    },
+    {
+      "stage": "verify-sdk",
+      "argv": [
+        "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/source/packaging/verify_installation_flow.py",
+        "--catalog",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/release/G4UniversalSim-1.0.0-linux-x86_64-g4-11.4.3/install/catalog.json",
+        "--profile",
+        "sdk",
+        "--version",
+        "1.0.0",
+        "--prefix",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/environments/sdk",
+        "--allowed-root",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/environments",
+        "--evidence-root",
+        "/home/runner/work/_temp/g4usim-delivery/acceptance/sdk-evidence",
+        "--cmake",
+        "/usr/local/bin/cmake",
+        "--compiler",
+        "/usr/bin/x86_64-linux-gnu-g++-13",
+        "--application-build"
+      ],
+      "log": "/home/runner/work/_temp/g4usim-delivery/acceptance/logs/verify-sdk.log",
+      "exit_code": 0,
+      "pid": 14075,
+      "log_finalized": true,
+      "elapsed_seconds": 285.203994974,
+      "log_sha256": "96507b89a7d85e520432784d8438a013cfeba0fa64454e7daa2235e4576ee73e",
+      "log_hash_observed_time_ns": 1793810279595436909
+    }
+  ],
+  "platform": "linux",
+  "geant4_version": "11.4.3",
+  "origin_checkout": "/home/runner/work/G4UniversalSim/G4UniversalSim",
+  "work_root": "/home/runner/work/_temp/g4usim-delivery/acceptance",
+  "host_boundary": "Caller-supplied local or CI host; a clean process environment alone is not a fresh OS claim",
+  "initial_free_bytes": 94260412416,
+  "space_checks": [
+    {
+      "stage": "source-and-data",
+      "required_additional_bytes": 6810606082,
+      "available_bytes": 94260457472,
+      "basis": {
+        "actual_discovered_data_bytes": 2180723542,
+        "frozen_runtime_bytes": null,
+        "scope": "Provisional lower bound; full measured archive/payload peak checked later"
+      }
+    },
+    {
+      "stage": "outer-release",
+      "required_additional_bytes": 4934892126,
+      "available_bytes": 88342704128,
+      "basis": {
+        "actual_archives": 2743006068,
+        "actual_launcher_payload": 1923450602
+      }
+    },
+    {
+      "stage": "runtime-sdk-installation",
+      "required_additional_bytes": 9061261969,
+      "available_bytes": 89484836864,
+      "basis": {
+        "actual_all_archives": 2743006068,
+        "actual_full_sdk_payload": 5512949533,
+        "sdk_compile_budget": 536870912,
+        "scope": "Serial runtime then SDK, each independently uninstalled"
+      }
+    }
+  ],
+  "owned_cleanup": [
+    {
+      "path": "/home/runner/work/_temp/g4usim-delivery/acceptance/source/out/geant4-data.zip",
+      "sha256": "52660ae09b6cb6340598aca04cc0a83a56ecb1dc8de87f9b4d82872982724e9c",
+      "status": "removed_owned_intermediate"
+    },
+    {
+      "path": "/home/runner/work/_temp/g4usim-delivery/acceptance/source/out/G4UniversalSim-1.0.0-linux-x86_64-runtime.zip",
+      "sha256": "61956a3c5b69facc6f65cf88998f9edc84d76cd80c5dfcfcdf7b6ffa659a2020",
+      "status": "removed_owned_intermediate"
+    },
+    {
+      "path": "/home/runner/work/_temp/g4usim-delivery/acceptance/source/out/G4UniversalSim-1.0.0-linux-x86_64-development-6074d677-sdk.zip",
+      "sha256": "8184bb5aaf5ff8cc3194ba6aeabe4865fd02fab7aac63d6d9908255eaea72ceb",
+      "status": "removed_owned_intermediate"
+    },
+    {
+      "path": "/home/runner/work/_temp/g4usim-delivery/acceptance/source/out/dependency-notices.zip",
+      "sha256": "f5ef9940666e21ea966bdcc9e359d73f2337010bbc52f711cff2858ea1f3f979",
+      "status": "removed_owned_intermediate"
+    },
+    {
+      "path": "/home/runner/work/_temp/g4usim-delivery/acceptance/source/out/package",
+      "status": "removed_owned_intermediate"
+    },
+    {
+      "path": "/home/runner/work/_temp/g4usim-delivery/acceptance/source/out/linux-freeze-work",
+      "status": "removed_owned_intermediate"
+    }
+  ],
+  "host_tools": {
+    "cmake": {
+      "requested": "/usr/local/bin/cmake",
+      "resolved": "/usr/local/bin/cmake",
+      "sha256": "c4b3b237dc7a013590db9e90f70fca2dfdedde09521e920d3339569ea364230a",
+      "scope": "Selected executable file identity; execution checked by SDK probes"
+    },
+    "compiler": {
+      "requested": "/usr/bin/c++",
+      "resolved": "/usr/bin/x86_64-linux-gnu-g++-13",
+      "sha256": "1353e9bdd29a7295c7226bf6c63abccce056d8cac31f112e5cdbecc3f28c2769",
+      "scope": "Selected executable file identity; execution checked by SDK probes"
+    }
+  },
+  "snapshot_file_count": 934,
+  "source_snapshot_sha256": "27eade0788b1114bfcd6824dab51a3236b14e73a539dae9eae9435cfc6d7f3a5",
+  "workflow_sha256": "aa74b9ba329545be934f40a9185259eeec0fdc3c199bf71f306cbfe201f29c5e",
+  "origin_git_commit": "92b285d6d78ed3b887a7ee98ce8b5e4a6c0a0e61",
+  "application_version": "1.0.0",
+  "archived_evidence_count": 23,
+  "release_directory": "/home/runner/work/_temp/g4usim-delivery/acceptance/release/G4UniversalSim-1.0.0-linux-x86_64-g4-11.4.3",
+  "offline_archive": null,
+  "offline_archive_sha256": null,
+  "catalog": "/home/runner/work/_temp/g4usim-delivery/acceptance/release/G4UniversalSim-1.0.0-linux-x86_64-g4-11.4.3/install/catalog.json"
+}

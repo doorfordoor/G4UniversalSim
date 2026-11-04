@@ -1,5 +1,9 @@
 # G4UniversalSim 状态（唯一入口页）
 
+## 2026-11-05 E4验收完成，转Q2
+
+46行事实映射、现行规范和中文两平台入门已独立验收，实际100事件、配置包导出/重新载入及文档云12报告708/255154通过。[最终证据](docs/verification/e4-final-20261105/README.md)。当前阶段Q2，先冻结量定义、独立参考与实验判据。Windows附带安装作业继续跟踪。
+
 > 本页只维护**当前快照与入口**。阶段完成度以 [ROADMAP](docs/ROADMAP.md) 为准，任务级状态以 [CURRENT-SUPERVISION](docs/collab/CURRENT-SUPERVISION.md) 为准。带日期的旧条目保留原日期、原失败与当时结论，作为历史快照阅读，不再代表当前状态；全文见 [docs/agent-history.md](docs/agent-history.md) 与 [docs/archive/](docs/archive/README.md)。
 
 ## 2026-11-04 F2 验收完成，转E4
@@ -20,9 +24,9 @@
 下方J3“未关闭”条目均为当时历史，不覆盖本节最终状态。
 
 
-**接手后先读**　[各阶段详细执行指南](docs/collab/decisions/20261102-stage-execution-guide.md)。当前按E4规范与中文入门收尾推进；已完成阶段以ROADMAP及最终证据为准。
+**接手后先读**　[各阶段详细执行指南](docs/collab/decisions/20261102-stage-execution-guide.md)。当前按Q2科研基准与适用范围推进；已完成阶段以ROADMAP及最终证据为准。
 
-**D 盘接手入口**　[后续执行计划与 DeepSeek 开工指令](docs/collab/inbox/20261102-2045-astra-d-workspace-execution.md)。当前完整阶段为E4；F2与J3本轮范围均已关闭。
+**D 盘接手入口**　[后续执行计划与 DeepSeek 开工指令](docs/collab/inbox/20261102-2045-astra-d-workspace-execution.md)。当前完整阶段为Q2；E4、F2与J3本轮范围均已关闭。
 
 2026-11-02 D 盘桌面修订已同步。字体、数字显示与主题切换修复见[测量与进度](docs/verification/gui-theme-response-20261102/README.md)。
 

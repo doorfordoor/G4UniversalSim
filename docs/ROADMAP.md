@@ -1,5 +1,7 @@
 # G4UniversalSim Development Roadmap
 
+2026-11-05：E4文档收尾验收完成。Q1已完成部分迁移，本轮补齐后续阶段入口、规范与中文入门。附带安装CI按原身份跟踪，下一阶段Q2。[最终验收](verification/e4-final-20261105/README.md)
+
 2026-11-04：**F2受控多轮运行会话验收完成并关闭**。协议B版本化接口保留csh/批处理；冻结864bc036，云12报告708/255163严格门禁通过，Windows125/150和Linux独立X11真实三轮/取消/重放/退出完成。限定环境重放不代替物理基准。见[最终证据](verification/f2-final-20261104/README.md)。下一完整阶段E4。
 
 2026-11-04：**J3本轮约定范围验收完成，保留证据限制后关闭**。候选92134da0；主审本机正式矩阵与真实Windows125/150、Linux独立X11补验，云12报告696/247580及严格门禁复核通过。约一秒切换及历史图/WSLg限制保留。见[最终证据](verification/j3-final-20261104/README.md)。下一完整阶段F2，先做既定三轮实验与协议提案。
@@ -34,7 +36,7 @@ This file is the single source of truth for progress. Every work session updates
 | B Scenario packs + benchmarks | Done (B1 benchmarks, B2 shielding/coating, B3 semiconductor, B4 detector response) | see log |
 | C Wizard + built-in plotting | Done (C1 built-in plots, C2 wizard, C3 parameter scans) | see log |
 | D Installer | Done (portable ZIP + Inno Setup installer; uses an existing Geant4 data folder) | see log |
-| E Fixes and foundations | In progress: E1, E2, E3 (Linux incl. Geant4 11.3.2/11.4.3 matrix, done 2026-10-28), E5 done; E4 pending | see log |
+| E Fixes and foundations | In progress: E1, E2, E3 (Linux incl. Geant4 11.3.2/11.4.3 matrix, done 2026-10-28), E5 and E4 done | see log |
 | F System optimisation (backend + GUI) | In progress: F1/F2/F4/F5/F6/F8 done; F3/F7 pending | see log |
 | G 3D view redesign | Done (G1-G6) | see log |
 | H Geant4 capability increments | In progress: H1 done | see log |
@@ -265,7 +267,7 @@ is marked experimental in the support matrix until benchmarked.
 
 | 代号 | 整项交付内容 | 验收/归属与提交重点 | 当前状态 |
 | --- | --- | --- | --- |
-| **E4** | 当前规范瘦身、历史状态校准、中文快速入门、文档单一事实入口 | 历史条目迁移已有成果；补规则逐项映射，清除 stale 状态，链接与必要 smoke 通过。阶段关闭交 `docs(E4)` | 部分完成，继续收尾 |
+| **E4** | 当前规范瘦身、历史状态校准、中文快速入门、文档单一事实入口 | 历史条目迁移已有成果；补规则逐项映射，清除 stale 状态，链接与必要 smoke 通过。阶段关闭交 `docs(E4)` | 已完成（2026-11-05）：46行映射、两平台Qt操作复演、文档云708/255154与严格门禁通过。[最终验收](verification/e4-final-20261105/README.md) |
 | **F1** | 输出身份、commit/config/项目实际读取资源 hash，未观测输入明确标记；版本化输出与测量后决定缓存/format=auto | 来源/格式节点分开提交；默认CSV不变。依赖 2C/E6，支持 K1/Q2 | 已完成：产品f176d0e；Windows143/143及E6基线、Linux双版本各143、M0双OS各64通过，14次实窗观察/正常关闭与独立复核通过。[最终证据及集成](verification/f1-visible-20261030/README.md)。[自动归档](verification/f1-automated-20261030/README.md)保留两轮失败及当时pending；72次测量完成、缓冲候选撤回。[契约](collab/inbox/20261030-1410-astra-f1-scope.md) |
 | **F2** | GUI 受控 run session、Idle 白名单、逐 run 输入/来源/重放协议 | 完整换配置用新进程；三轮调整的真实状态与限定环境重放；不承诺跨平台/线程数逐位一致。可在 L1 后交付 | 已完成（2026-11-04）：864bc036，云708/255163、Win125/150与Linux X11真实运行及重放通过。[最终验收](verification/f2-final-20261104/README.md) |
 | **F3** | hits-heavy/mesh-heavy 的耗时、内存、输出基线及瓶颈优化；tasking 单列实验 | 测量→单一瓶颈变更→前后对照；统计/种子/输出契约不改变。性能优化不能成为接受结果差异的理由 | 待开始 |

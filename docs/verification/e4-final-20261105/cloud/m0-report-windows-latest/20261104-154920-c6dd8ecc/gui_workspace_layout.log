@@ -1,0 +1,11 @@
+default_start_lifecycle: ok; default-root entry; env_override=False; hidden docks, zh_CN, real history pending, refused-close retention, deferred deletion
+default_start_lifecycle: ok; default-root entry; env_override=True; hidden docks, zh_CN, real history pending, refused-close retention, deferred deletion
+layout_restore_page_roundtrip: ok
+layout_restore_cross_process: results-visible: ok results=445 logs=205
+layout_restore_cross_process: results-hidden: ok results=105 logs=300
+layout_restore_cross_process: logs-hidden: ok results=556 logs=205
+layout_restore_cross_process: non-analysis-custom-logs: ok results=105 logs=205
+layout_restore_cross_process: floating-results: ok results=445 logs=300
+layout_restore_cross_process: compact-results: ok results=445 logs=205
+smoke_workspace_layout: ok
+G4USIM_ASSERTS=226
