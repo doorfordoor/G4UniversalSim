@@ -1,0 +1,25 @@
+{
+  "schema": "q2_fluence_independent_review_v1",
+  "backend_sha256": "f8a8119da5d68814a14920056d85a7f30e4f8380d393ea1d439cc8ca2726820f",
+  "comparison_checks": 122,
+  "independent_math_checks": 29,
+  "tamper_cases": 7,
+  "baseline_unchanged": true,
+  "observed": {
+    "schema": "q2_fluence_independent_hit_math_v1",
+    "status": "pass",
+    "scope": "one fixed Galactic aperture case; no confidence-coverage claim",
+    "N": 20000,
+    "K": 13851,
+    "expected_K": 13888.888888888889,
+    "volume_mm3": 10.0,
+    "total_path_mm": 1385.1000000000001,
+    "fluence_mm_minus2": 138.51000000000002,
+    "expected_fluence_mm_minus2": 138.88888888888889,
+    "observed_sigma": 0.6525710650955954,
+    "theoretical_sigma": 0.6514466333088097,
+    "relative_error": 0.004711364270417987,
+    "threshold": 1.957852084175675
+  },
+  "scope": "one fixed Windows/11.3.2 Galactic aperture case; no scattering or confidence-coverage claim"
+}
