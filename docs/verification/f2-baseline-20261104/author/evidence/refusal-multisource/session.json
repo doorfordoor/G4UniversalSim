@@ -1,0 +1,34 @@
+{
+  "argv": [
+    "D:\\Geant4\\G4UniversalSim\\build_vs2026\\Release\\G4UniversalSim.exe",
+    "--ui",
+    "--ui-session",
+    "csh",
+    "--config",
+    "main_multisource.ini",
+    "--output",
+    "D:\\Geant4\\G4UniversalSim\\out\\collab\\f2-session-baseline-20261104\\evidence\\refusal-multisource\\output"
+  ],
+  "captured_at": "2026-11-04T09:09:12+0800",
+  "case": "refusal-multisource",
+  "commands": [
+    "/run/initialize",
+    "/AIHL/source/energy 200 MeV",
+    "/control/echo F2_REFUSAL_SENTINEL_DID_NOT_RUN",
+    "/run/beamOn 4",
+    "exit"
+  ],
+  "config": "main_multisource.ini",
+  "cwd": "D:\\Geant4\\G4UniversalSim\\out\\collab\\f2-session-baseline-20261104\\config",
+  "duration_s": 1.344,
+  "exit_code": 3221226505,
+  "output_files": [],
+  "rounds": [],
+  "schema": "g4usim_f2_session_baseline_case_v1",
+  "sentinel": "F2_REFUSAL_SENTINEL_DID_NOT_RUN",
+  "sentinel_in_stdout": false,
+  "summary": {},
+  "summary_all": {},
+  "timed_out": false,
+  "why": "Single-source command against two named sources: rejected, later commands must not run."
+}

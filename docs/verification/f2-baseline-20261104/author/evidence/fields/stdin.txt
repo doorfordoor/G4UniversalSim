@@ -1,0 +1,13 @@
+/run/initialize
+/AIHL/source/particle e-
+/AIHL/source/print
+/run/beamOn 10
+/AIHL/source/energy 50 MeV
+/run/beamOn 10
+/AIHL/source/point 5 0 -50 mm
+/run/beamOn 10
+/AIHL/source/direction 0.1 0 0.995
+/run/beamOn 10
+/AIHL/source/planeBeam radius=5 mm z=-50 mm direction=+z
+/run/beamOn 10
+exit

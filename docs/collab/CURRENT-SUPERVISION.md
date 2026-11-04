@@ -12,14 +12,14 @@ docs/collab/decisions/20261104-f2-closeout.md；沿用已冻结六项，不新�
 
 ## 候选身份
 
-当前产品基线92134da062e8e3a203a39ff59fcd2b87bd0ffef1；D盘roadmap/F2-controlled-session当前提交9c268fb08d4b82b536ae024dc6a7883a8d709b5f，后续本轮仅协作记录。J3已在8631af58正常快进集成并推送codex。F2尚无产品候选，作者首轮仅隔离实验/提案，不改生产入口。C盘j3-final独立审查区保留。
+当前产品基线92134da062e8e3a203a39ff59fcd2b87bd0ffef1；D盘roadmap/F2-controlled-session基线提交5ee240fc5912e7e515ee07be7abbb14bcfa00940，本轮仅新增设计与独审记录。J3已在8631af58正常快进集成并推送codex。F2尚无产品候选，作者首轮仅隔离实验/提案，不改生产入口。C盘j3-final独立审查区保留。
 
 ## 清单状态表
 
 | 清单项 | 状态 | 证据/下一动作 |
 | --- | --- | --- |
-| 三轮隔离实验与白名单 | 进行中 | round34实际执行；已查源码与单/多源配置探测，真实三轮和拒绝证据仍待交付 |
-| 协议与证据设计 | 未开始 | 首轮交具体比较提案后独审，再按既定协议决策点选择 |
+| 三轮隔离实验与白名单 | 通过 | 主审8个定向真实进程案例通过；仅普通单源单能的已测字段进入首版，未证/高级模式排除。报告reviews/20261104-f2-baseline-independent.md |
+| 协议与证据设计 | 进行中 | round35细化线程/帧边界/安全错误/去重/重放及文件清单；具体材料独审后按既定决策点选择 |
 | 后端会话与重放 | 未开始 | 协议选择后实施 |
 | GUI下一轮面板 | 未开始 | 随后端契约实施，DeepSeek负责设计 |
 | 独审与原正式矩阵 | 未开始 | 交付后主审独立复现并按实际影响验证 |
@@ -27,15 +27,15 @@ docs/collab/decisions/20261104-f2-closeout.md；沿用已冻结六项，不新�
 
 ## 本轮结果
 
-依用户新稿优化并实际更新g4universalsim定时提示词；保留ACTIVE/每60分钟/原对话及原分工。实际保存内容与docs/collab/decisions/20261104-f2-automation-prompt.md、20261104-supervision-automation-v2.md完全一致，无Unicode替换字符。一个主目标不等于每轮做完即停；两轮受阻按有效尝试计，不把异步等待算失败，不自动跳过阻断项；限制分别注明待决定或主审已签收。未派重复任务，未改变产品或验收门槛。
+DeepSeek首轮turn40完成，主审在C盘独立6例全部通过，并补做延迟离子直接覆盖/动态拒绝2例，合计8例满足限定断言；源命令致命退出3221226505、状态拒绝退出1均保留，不称全部模拟成功。已确认100/200/100三轮实际消费、原生GPS 2 MeV与Manager 100 MeV缓存分离。作者与主审原件复制D盘docs/verification/f2-baseline-20261104，405文件/16733190字节逐SHA核对。限定修正顶点/边界、几何公式及原始流/索引措辞，无产品改动。继续实际派发清单第二项，不以派工或本基线代替完整F2验收。
 
 ## 运行中任务
 
-DeepSeek原session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4；task g4-j3-desktop-20261103；request f2-protocol-evidence-8631af58-20261104，round34 accepted=true/replayed=false。实际配置deepseek-account-vision/deepseek-flash/max；独立查询running，turn40。已处理游标26886，最新回执/绑定见out/collab/desktop-bridge/context.json、f2-current-status.json。首轮产物范围out/collab/f2-session-baseline-20261104及docs/collab/outbox/20261104-f2-session-baseline.md；最终作者回执尚未出现。
+原session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4，task g4-j3-desktop-20261103；当前request f2-protocol-contract-5ee240fc-20261104，round35 accepted=true/replayed=false，实际Flash/max。原round34/turn40 completed且已独审；round35正在执行，已处理游标27236，绑定及收据见out/collab/desktop-bridge/context.json。作者只写docs/collab/outbox/20261104-f2-protocol-contract.md，指导inbox/20261104-f2-protocol-contract-review.md。主审独立会话94258已退出0，两个补充案例驱动亦退出0，无在跑主审实验。
 
 ## 下一轮目标
 
-先跟进原任务新增交付，不重发。三轮真实同进程A/B/A、拒令后不继续运行的反例、有限白名单及协议比较交付后，主审读原始输入/输出/事件/退出与产物，独立重现并提出推荐。既定协议选择前可继续隔离实验和设计，不改生产入口；不新增SDK/LangGraph/通用验收工具，不重测J3。
+接收并审查round35具体协议合同，核对Geant4线程所有者、日志混流、Fatal不可恢复、requested/配置/GPS/逐run消费层级和旧后端退路。形成文件范围及验收明确的推荐后按docs/开发接续计划.md§6/§9交协议选择；待决前继续不冲突的设计/隔离验证，不改生产入口、不造新编排平台、不重测J3。
 
 ## 待用户决定/限制
 
