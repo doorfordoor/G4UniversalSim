@@ -1,0 +1,89 @@
+{
+  "schema": "g4usim_installation_flow_v1",
+  "status": "verified",
+  "profile": "runtime",
+  "commands": [
+    {
+      "stage": "data-discovery",
+      "argv": [
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\environments\\runtime\\bin\\G4UniversalSim.exe",
+        "--check-geant4-data"
+      ],
+      "cwd": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\runtime-evidence",
+      "exit_code": 0,
+      "log": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\runtime-evidence\\data-discovery.log"
+    },
+    {
+      "stage": "simulation",
+      "argv": [
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\environments\\runtime\\bin\\G4UniversalSim.exe",
+        "--working-directory",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\runtime-evidence",
+        "--config",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\runtime-evidence\\main.ini",
+        "--macro",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\runtime-evidence\\run.mac",
+        "--output",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\runtime-evidence\\result"
+      ],
+      "cwd": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\runtime-evidence",
+      "exit_code": 0,
+      "log": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\runtime-evidence\\simulation.log"
+    },
+    {
+      "stage": "root-csv",
+      "argv": [
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\environments\\runtime\\python\\G4USimPython.exe",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\environments\\runtime\\scripts\\compare_root_csv.py",
+        "--dir",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\runtime-evidence\\result"
+      ],
+      "cwd": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\runtime-evidence",
+      "exit_code": 0,
+      "log": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\runtime-evidence\\root-csv.log"
+    },
+    {
+      "stage": "root-roundtrip",
+      "argv": [
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\environments\\runtime\\python\\G4USimPython.exe",
+        "-c",
+        "import numpy as n,uproot; p='D:\\\\a\\\\_temp\\\\g4usim-delivery\\\\acceptance\\\\runtime-evidence\\\\helper-roundtrip.root'; f=uproot.recreate(p); f['probe']={'x':n.array([1.,2.,3.])}; f.close(); r=uproot.open(p); assert list(r['probe']['x'].array(library='np'))==[1.,2.,3.]; r.close()"
+      ],
+      "cwd": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\runtime-evidence",
+      "exit_code": 0,
+      "log": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\runtime-evidence\\root-roundtrip.log"
+    },
+    {
+      "stage": "frozen-gui",
+      "argv": [
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\environments\\runtime\\gui\\G4UniversalSimGUI.exe",
+        "--self-test",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\runtime-evidence\\gui-self-test.json"
+      ],
+      "cwd": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\runtime-evidence",
+      "exit_code": 0,
+      "log": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\runtime-evidence\\frozen-gui.log"
+    }
+  ],
+  "scope": "Actual installation/files/runtime on the caller's host; fresh-OS/CI identity is supplied separately",
+  "restart_recovery_inspection": {
+    "resumable": true,
+    "transaction_id": "89f642996cb8447bab8f09f902ff0843",
+    "argv": [
+      "C:\\hostedtoolcache\\windows\\Python\\3.11.9\\x64\\python.exe",
+      "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\packaging\\install_plan.py",
+      "--output",
+      "D:\\a\\_temp\\g4usim-delivery\\acceptance\\runtime-evidence\\restarted-inspection.json",
+      "inspect",
+      "--prefix",
+      "D:\\a\\_temp\\g4usim-delivery\\acceptance\\environments\\runtime",
+      "--allowed-root",
+      "D:\\a\\_temp\\g4usim-delivery\\acceptance\\environments"
+    ],
+    "exit_code": 0
+  },
+  "transaction_id": "89f642996cb8447bab8f09f902ff0843",
+  "geant4_version": "11.4.3",
+  "completed_events": 5,
+  "verified_files": 48260
+}

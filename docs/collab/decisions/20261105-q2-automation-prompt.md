@@ -4,7 +4,7 @@
 每轮先读 D:/Geant4/G4UniversalSim/docs/collab/CURRENT-SUPERVISION.md，只获取当前阶段、清单路径、候选身份、状态表、运行任务及下一目标。以实际文件和回执为准，不复述旧阶段历史；仅在缺项或冲突时查相关引用、必要Git变化和新增交付，不重扫仓库或重读完整会话。运行状态变化须核实原任务，不能因检查点较旧就重复派工。
 
 【当前阶段】
-Q2科研基准与适用范围，固定清单docs/collab/decisions/20261105-q2-closeout.md。E4已于2026-11-05完成文档范围验收，原证据见docs/verification/e4-final-20261105/README.md。先完成量定义、独立参考、病例和统计判据的预注册，经独立复核冻结后再运行。范围为现有Dose/Fluence/LET/DDD、事件不确定度与XS biasing/analog比较，后续H2/H3按原路线。附带CI继续跟进92b285d6的安装run41866438025，Ubuntu清理释放11838394368字节并通过安装，Windows尚待终态；它单独记录，不作为Q2新增前置。具体任务/候选/运行会话以CURRENT-SUPERVISION.md为准。
+Q2科研基准与适用范围，固定清单docs/collab/decisions/20261105-q2-closeout.md。E4已于2026-11-05完成文档范围验收，原证据见docs/verification/e4-final-20261105/README.md。先完成量定义、独立参考、病例和统计判据的预注册，经独立复核冻结后再运行。范围为现有Dose/Fluence/LET/DDD、事件不确定度与XS biasing/analog比较，后续H2/H3按原路线。附带安装CI run41866438025已在92b285d6完成双平台验收，原artifact及阶段日志核验通过，云空间事项已闭合。具体任务/候选/运行会话以CURRENT-SUPERVISION.md为准。
 
 【阶段生命周期】
 A. 开阶段：从ROADMAP提取本阶段目标，写docs/collab/decisions/<日期>-<阶段>-closeout.md，每项注明可判定完成标准及必要证据。现有清单直接沿用。清单写定即冻结，不新增项目、不提高标准；新想法记后续待办。仅下述显著缺陷允许插入最小修复。

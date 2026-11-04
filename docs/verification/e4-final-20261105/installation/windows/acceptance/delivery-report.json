@@ -1,0 +1,312 @@
+{
+  "schema": "g4usim_ci_delivery_v1",
+  "status": "verified",
+  "stages": [
+    {
+      "stage": "build-data",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.11.9\\x64\\python.exe",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\packaging\\build_data_artifact.py",
+        "--platform",
+        "windows",
+        "--version",
+        "1.0.0",
+        "--discovery",
+        "D:\\a\\_temp\\g4usim-delivery\\discovery.json",
+        "--output-archive",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\out\\geant4-data.zip",
+        "--output-catalog",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\out\\data.catalog.json",
+        "--source-page",
+        "Actual selected local SDK/data discovery receipt D:\\a\\_temp\\g4usim-delivery\\discovery.json"
+      ],
+      "log": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\logs\\build-data.log",
+      "exit_code": 0,
+      "pid": 1732,
+      "log_finalized": true,
+      "elapsed_seconds": 101.81200000000001,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_hash_observed_time_ns": 1793809948365949300
+    },
+    {
+      "stage": "plan-canonical-data",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.11.9\\x64\\python.exe",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\packaging\\install_plan.py",
+        "--output",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\data-plan.json",
+        "plan",
+        "--catalog",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\out\\data.catalog.json",
+        "--profile",
+        "runtime",
+        "--platform",
+        "windows",
+        "--architecture",
+        "x86_64",
+        "--version",
+        "1.0.0",
+        "--prefix",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\environments\\data-fixture",
+        "--allowed-root",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\environments"
+      ],
+      "log": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\logs\\plan-canonical-data.log",
+      "exit_code": 0,
+      "pid": 7080,
+      "log_finalized": true,
+      "elapsed_seconds": 2.25,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_hash_observed_time_ns": 1793809950795314000
+    },
+    {
+      "stage": "install-canonical-data",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.11.9\\x64\\python.exe",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\packaging\\install_plan.py",
+        "--output",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\data-install.json",
+        "execute",
+        "--plan",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\data-plan.json"
+      ],
+      "log": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\logs\\install-canonical-data.log",
+      "exit_code": 0,
+      "pid": 6900,
+      "log_finalized": true,
+      "elapsed_seconds": 139.938,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_hash_observed_time_ns": 1793810090731136100
+    },
+    {
+      "stage": "build-runtime",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.11.9\\x64\\python.exe",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\packaging\\build_package.py",
+        "--build-dir",
+        "D:\\a\\_temp\\g4usim-delivery\\backend",
+        "--data-dir",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\environments\\data-fixture\\data",
+        "--no-installer"
+      ],
+      "log": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\logs\\build-runtime.log",
+      "exit_code": 0,
+      "pid": 8112,
+      "log_finalized": true,
+      "elapsed_seconds": 255.21800000000007,
+      "log_sha256": "98c8c9554dc267178481ee478e7ae2b01b45eba12222a51ff983e61ceae485be",
+      "log_hash_observed_time_ns": 1793810345959369800
+    },
+    {
+      "stage": "uninstall-canonical-data",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.11.9\\x64\\python.exe",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\packaging\\install_plan.py",
+        "--output",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\data-uninstall.json",
+        "uninstall",
+        "--prefix",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\environments\\data-fixture"
+      ],
+      "log": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\logs\\uninstall-canonical-data.log",
+      "exit_code": 0,
+      "pid": 4612,
+      "log_finalized": true,
+      "elapsed_seconds": 107.32799999999997,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_hash_observed_time_ns": 1793810454207392400
+    },
+    {
+      "stage": "build-sdk",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.11.9\\x64\\python.exe",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\packaging\\build_sdk_package.py",
+        "--geant4-prefix",
+        "D:\\a\\_temp\\g4usim-delivery\\bootstrap\\sdk\\geant4-11.4.3-win64",
+        "--platform",
+        "windows",
+        "--output-name",
+        "G4UniversalSim-1.0.0-win64-development-bf9a0e43",
+        "--version",
+        "1.0.0",
+        "--remove-staging"
+      ],
+      "log": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\logs\\build-sdk.log",
+      "exit_code": 0,
+      "pid": 1584,
+      "log_finalized": true,
+      "elapsed_seconds": 12.843000000000075,
+      "log_sha256": "9bc50555830838990f4ec691a9fccaf64b9c16bcf9d5e8c013678612326bef76",
+      "log_hash_observed_time_ns": 1793810467913826700
+    },
+    {
+      "stage": "assemble-offline-release",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.11.9\\x64\\python.exe",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\packaging\\assemble_distribution.py",
+        "--runtime-catalog",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\out\\G4UniversalSim-1.0.0-win64-runtime.catalog.json",
+        "--sdk-catalog",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\out\\G4UniversalSim-1.0.0-win64-development-bf9a0e43-sdk.catalog.json",
+        "--data-catalog",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\out\\data.catalog.json",
+        "--package-root",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\out\\package\\G4UniversalSim-1.0.0-win64",
+        "--output",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\release\\G4UniversalSim-1.0.0-win64-g4-11.4.3"
+      ],
+      "log": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\logs\\assemble-offline-release.log",
+      "exit_code": 0,
+      "pid": 956,
+      "log_finalized": true,
+      "elapsed_seconds": 11.062000000000126,
+      "log_sha256": "edd6ad72aa8b9dc5076ced3dc038a54211520db2a8b687166302519a22c590c6",
+      "log_hash_observed_time_ns": 1793810480029795400
+    },
+    {
+      "stage": "verify-runtime",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.11.9\\x64\\python.exe",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\packaging\\verify_installation_flow.py",
+        "--catalog",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\release\\G4UniversalSim-1.0.0-win64-g4-11.4.3\\install\\catalog.json",
+        "--profile",
+        "runtime",
+        "--version",
+        "1.0.0",
+        "--prefix",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\environments\\runtime",
+        "--allowed-root",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\environments",
+        "--evidence-root",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\runtime-evidence"
+      ],
+      "log": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\logs\\verify-runtime.log",
+      "exit_code": 0,
+      "pid": 5496,
+      "log_finalized": true,
+      "elapsed_seconds": 389.45399999999995,
+      "log_sha256": "8a672e707547db154d00ffb3e5199ba84b9f322e319293e9cd0ca399eb11cc92",
+      "log_hash_observed_time_ns": 1793810874865093800
+    },
+    {
+      "stage": "verify-sdk",
+      "argv": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.11.9\\x64\\python.exe",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\packaging\\verify_installation_flow.py",
+        "--catalog",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\release\\G4UniversalSim-1.0.0-win64-g4-11.4.3\\install\\catalog.json",
+        "--profile",
+        "sdk",
+        "--version",
+        "1.0.0",
+        "--prefix",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\environments\\sdk",
+        "--allowed-root",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\environments",
+        "--evidence-root",
+        "D:\\a\\_temp\\g4usim-delivery\\acceptance\\sdk-evidence",
+        "--cmake",
+        "C:\\Program Files\\CMake\\bin\\cmake.exe",
+        "--application-build"
+      ],
+      "log": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\logs\\verify-sdk.log",
+      "exit_code": 0,
+      "pid": 1220,
+      "log_finalized": true,
+      "elapsed_seconds": 845.8129999999999,
+      "log_sha256": "5ba9e258097ac78849e385c472387130b758a2c61f5efa7a84f3e8253eb75b6a",
+      "log_hash_observed_time_ns": 1793811720706545700
+    }
+  ],
+  "platform": "windows",
+  "geant4_version": "11.4.3",
+  "origin_checkout": "D:\\a\\G4UniversalSim\\G4UniversalSim",
+  "work_root": "D:\\a\\_temp\\g4usim-delivery\\acceptance",
+  "host_boundary": "Caller-supplied local or CI host; a clean process environment alone is not a fresh OS claim",
+  "initial_free_bytes": 151445512192,
+  "space_checks": [
+    {
+      "stage": "source-and-data",
+      "required_additional_bytes": 6810606082,
+      "available_bytes": 151445508096,
+      "basis": {
+        "actual_discovered_data_bytes": 2180723542,
+        "frozen_runtime_bytes": null,
+        "scope": "Provisional lower bound; full measured archive/payload peak checked later"
+      }
+    },
+    {
+      "stage": "outer-release",
+      "required_additional_bytes": 2904164105,
+      "available_bytes": 147741327360,
+      "basis": {
+        "actual_archives": 1950692296,
+        "actual_launcher_payload": 685036353
+      }
+    },
+    {
+      "stage": "runtime-sdk-installation",
+      "required_additional_bytes": 5899419080,
+      "available_bytes": 148658343936,
+      "basis": {
+        "actual_all_archives": 1950692296,
+        "actual_full_sdk_payload": 3143420416,
+        "sdk_compile_budget": 536870912,
+        "scope": "Serial runtime then SDK, each independently uninstalled"
+      }
+    }
+  ],
+  "owned_cleanup": [
+    {
+      "path": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\out\\G4UniversalSim-1.0.0-win64-development-bf9a0e43-sdk.zip",
+      "sha256": "7d6c86d4cb17b4fb332cf1a2f65692595f2df55c381177e28d75a1777aa4cb62",
+      "status": "removed_owned_intermediate"
+    },
+    {
+      "path": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\out\\G4UniversalSim-1.0.0-win64-runtime.zip",
+      "sha256": "528e2beaccc1132831d4ef03c6d3040b6fe8ea14336889a5ffe0b26d50520c87",
+      "status": "removed_owned_intermediate"
+    },
+    {
+      "path": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\out\\G4UniversalSim-1.0.0-win64.zip",
+      "sha256": "504e6fbcf0579514277a19f5774424f32be42875889db4ae8516dfb057d91c1c",
+      "status": "removed_owned_intermediate"
+    },
+    {
+      "path": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\out\\geant4-data.zip",
+      "sha256": "6b53daaf92daf6fc97c2464e6498d7fac4d4be0308a4cfe2d5179bfac0722891",
+      "status": "removed_owned_intermediate"
+    },
+    {
+      "path": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\out\\package",
+      "status": "removed_owned_intermediate"
+    },
+    {
+      "path": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\out\\package-build",
+      "status": "removed_owned_intermediate"
+    },
+    {
+      "path": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\out\\package-python-build",
+      "status": "removed_owned_intermediate"
+    }
+  ],
+  "host_tools": {
+    "cmake": {
+      "requested": "C:\\Program Files\\CMake\\bin\\cmake.exe",
+      "resolved": "C:\\Program Files\\CMake\\bin\\cmake.exe",
+      "sha256": "84935c0b7cb09c140de0d3b042d4e93e5fac4e6371e75bf28eae3d841f79dfb3",
+      "scope": "Selected executable file identity; execution checked by SDK probes"
+    }
+  },
+  "snapshot_file_count": 934,
+  "source_snapshot_sha256": "e555837adca5a52a8a4626db9d6757a84a20484a2958883ddfeab5d70299b9f7",
+  "workflow_sha256": "83a43d5e938d526a95a32f43c8e8049fd8c3393391c04fb83c656665119e8ac0",
+  "origin_git_commit": "92b285d6d78ed3b887a7ee98ce8b5e4a6c0a0e61",
+  "application_version": "1.0.0",
+  "archived_evidence_count": 25,
+  "release_directory": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\release\\G4UniversalSim-1.0.0-win64-g4-11.4.3",
+  "offline_archive": null,
+  "offline_archive_sha256": null,
+  "catalog": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\release\\G4UniversalSim-1.0.0-win64-g4-11.4.3\\install\\catalog.json"
+}

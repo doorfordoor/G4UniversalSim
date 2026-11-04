@@ -1,0 +1,26 @@
+{
+  "schema": "g4usim_installation_flow_v1",
+  "status": "verified",
+  "profile": "sdk",
+  "commands": [],
+  "scope": "Actual installation/files/runtime on the caller's host; fresh-OS/CI identity is supplied separately",
+  "restart_recovery_inspection": {
+    "resumable": true,
+    "transaction_id": "b1d1bca59a934539af04596975e558e8",
+    "argv": [
+      "C:\\hostedtoolcache\\windows\\Python\\3.11.9\\x64\\python.exe",
+      "D:\\a\\_temp\\g4usim-delivery\\acceptance\\source\\packaging\\install_plan.py",
+      "--output",
+      "D:\\a\\_temp\\g4usim-delivery\\acceptance\\sdk-evidence\\restarted-inspection.json",
+      "inspect",
+      "--prefix",
+      "D:\\a\\_temp\\g4usim-delivery\\acceptance\\environments\\sdk",
+      "--allowed-root",
+      "D:\\a\\_temp\\g4usim-delivery\\acceptance\\environments"
+    ],
+    "exit_code": 0
+  },
+  "transaction_id": "b1d1bca59a934539af04596975e558e8",
+  "geant4_version": "11.4.3",
+  "verified_files": 53085
+}
