@@ -212,6 +212,7 @@ struct SessionServer::Impl {
     SessionServer* owner = nullptr;
     SimulationManager& simulation;
     std::string recordRoot;
+    std::string sessionRoot;
     std::string outputRoot;
     std::string sessionId = NewSessionId();
     OutputManager* output = nullptr;
@@ -235,7 +236,7 @@ struct SessionServer::Impl {
     bool cancelPending = false;
     bool cancelRequested = false;
     bool eofShutdown = false;
-    int exitCode = 0;
+    std::atomic<int> exitCode{0};
     bool fatal = false;
 
     struct Command {
@@ -259,6 +260,8 @@ struct SessionServer::Impl {
     std::set<std::string> seenFrameIds;
 
     std::ofstream record;
+    std::mutex recordMutex;
+    std::mutex dedupMutex;
     bool recordFailed = false;
     std::string recordError;
 
@@ -271,8 +274,11 @@ struct SessionServer::Impl {
     }
 
     // ---------------------------------------------------------------- record
+    // The reader thread and the main thread both append to the session log.
+    // All record writes and their failure latching are serialized here.
     void RecordLine(const SessionJson::Json& line)
     {
+        std::lock_guard<std::mutex> guard(recordMutex);
         if (!record.is_open() || recordFailed) return;
         record << line.dump() << '\n';
         record.flush();
@@ -281,6 +287,94 @@ struct SessionServer::Impl {
             recordError = "session record write failed";
             exitCode = 4;
         }
+    }
+
+    void MarkRecordFailure(const std::string& message)
+    {
+        std::lock_guard<std::mutex> guard(recordMutex);
+        if (!recordFailed) {
+            recordFailed = true;
+            recordError = message;
+            exitCode.store(4, std::memory_order_relaxed);
+        }
+    }
+
+    bool RecordFailedSnapshot()
+    {
+        std::lock_guard<std::mutex> guard(recordMutex);
+        return recordFailed;
+    }
+
+    void ConsumeNextSeq(long long seq, const std::string& frameId)
+    {
+        std::lock_guard<std::mutex> guard(stateMutex);
+        if (seq == lastClientSeq + 1 && seenFrameIds.count(frameId) == 0) {
+            lastClientSeq = seq;
+            seenFrameIds.insert(frameId);
+        }
+    }
+
+    // ---------------------------------------------------------------- dedup cache
+    struct CachedLookup {
+        bool found = false;
+        std::string bodySha;
+        SessionJson::Json response;
+    };
+
+    CachedLookup LookupCached(const std::string& requestId)
+    {
+        std::lock_guard<std::mutex> guard(dedupMutex);
+        CachedLookup result;
+        const auto cached = dedup.find(requestId);
+        if (cached == dedup.end()) return result;
+        result.found = true;
+        result.bodySha = cached->second.bodySha;
+        result.response = cached->second.response;
+        return result;
+    }
+
+    std::optional<SessionJson::Json> CachedForSeq(const std::string& requestId, long long seq)
+    {
+        std::lock_guard<std::mutex> guard(dedupMutex);
+        const auto cached = dedup.find(requestId);
+        if (cached == dedup.end() || cached->second.seq != seq) return std::nullopt;
+        return cached->second.response;
+    }
+
+    bool ExpiredRequest(const std::string& requestId)
+    {
+        std::lock_guard<std::mutex> guard(dedupMutex);
+        return expired.count(requestId) != 0;
+    }
+
+    void RememberResponse(const std::string& requestId, long long seq,
+                          const std::string& bodySha, SessionJson::Json response)
+    {
+        std::lock_guard<std::mutex> guard(dedupMutex);
+        Cached entry;
+        entry.seq = seq;
+        entry.bodySha = bodySha;
+        entry.response = std::move(response);
+        dedup[requestId] = std::move(entry);
+        dedupOrder.push_back(requestId);
+        while (dedupOrder.size() > kDedupCapacity) {
+            const std::string evicted = dedupOrder.front();
+            dedupOrder.pop_front();
+            dedup.erase(evicted);
+            expired.insert(evicted);
+            expiredOrder.push_back(evicted);
+            while (expiredOrder.size() > kExpiredCapacity) {
+                expired.erase(expiredOrder.front());
+                expiredOrder.pop_front();
+            }
+        }
+    }
+
+    void NoteDedupSeq(const std::string& requestId, long long seq)
+    {
+        std::lock_guard<std::mutex> guard(dedupMutex);
+        const auto cached = dedup.find(requestId);
+        if (cached != dedup.end()) cached->second.seq = seq;
     }
 
     void RecordFrame(const char* direction, const std::string& text)
@@ -440,7 +534,7 @@ struct SessionServer::Impl {
                     command.error = std::string("invalid_frame: ") + failure.what();
                 }
                 if (command.kind == Command::Kind::Request &&
-                    (TryReaderCancel(command) || TryReaderBusy(command) || TryReaderPing(command))) {
+                    TryReaderControl(command)) {
                     if (line.size() > kMaxFrameBytes) return;
                     continue;
                 }
@@ -486,124 +580,208 @@ struct SessionServer::Impl {
         return IsHexId(frameId) && IsHexId(requestId);
     }
 
-    bool TryReaderPing(const Command& command)
+    SessionJson::Json ReaderResponse(const SessionJson::Json& frame, const std::string& op,
+                                     const std::string& status, long long revision, bool duplicate)
     {
-        long long seq = 0;
-        std::string frameId, requestId, op;
-        if (!ValidateReaderFrame(command.frame, seq, frameId, requestId, op) || op != "ping") {
-            return false;
-        }
-        SessionJson::Json ack;
+        SessionJson::Json response;
+        response["kind"] = "response";
+        response["seq"] = frame.value("seq", 0LL);
+        response["id"] = frame.value("id", "");
+        response["request_id"] = frame.value("request_id", "");
+        response["op"] = op;
+        response["status"] = status;
+        response["state_revision"] = revision;
+        response["duplicate"] = duplicate;
+        response["at"] = NowIso8601();
+        return response;
+    }
+
+    bool ReaderReject(const SessionJson::Json& frame, const std::string& op,
+                      const std::string& reason, const std::string& message)
+    {
+        long long revision = 0;
         {
             std::lock_guard<std::mutex> guard(stateMutex);
-            if (seq != lastClientSeq + 1) return false;
-            lastClientSeq = seq;
-            seenFrameIds.insert(frameId);
-            ack["kind"] = "response";
-            ack["seq"] = seq;
-            ack["id"] = frameId;
-            ack["request_id"] = requestId;
-            ack["op"] = "ping";
-            ack["status"] = "ok";
-            ack["state_revision"] = stateRevision;
-            ack["duplicate"] = false;
-            ack["phase"] = phase == Phase::Running ? "running" : "idle";
-            ack["at"] = NowIso8601();
+            revision = stateRevision;
         }
-        RecordFrame("c2s", command.raw);
-        Send(ack);
+        SessionJson::Json response = ReaderResponse(frame, op, "rejected", revision, false);
+        response["reason"] = reason;
+        response["message"] = message;
+        Send(response);
         return true;
     }
 
-    bool TryReaderBusy(const Command& command)
-    {
-        long long seq = 0;
-        std::string frameId, requestId, op;
-        if (!ValidateReaderFrame(command.frame, seq, frameId, requestId, op)) return false;
-        if (op != "run" && op != "set_source" && op != "initialize" && op != "shutdown") {
-            return false;
-        }
-        SessionJson::Json ack;
-        {
-            std::lock_guard<std::mutex> guard(stateMutex);
-            if (phase != Phase::Running) return false;
-            if (seq != lastClientSeq + 1) return false;
-            lastClientSeq = seq;
-            seenFrameIds.insert(frameId);
-            ack["kind"] = "response";
-            ack["seq"] = seq;
-            ack["id"] = frameId;
-            ack["request_id"] = requestId;
-            ack["op"] = op;
-            ack["status"] = "rejected";
-            ack["reason"] = "busy";
-            ack["message"] = "a run is active; send cancel before another control request";
-            ack["state_revision"] = stateRevision;
-            ack["duplicate"] = false;
-            ack["at"] = NowIso8601();
-        }
-        RecordFrame("c2s", command.raw);
-        Send(ack);
-        return true;
-    }
-
-    // ---------------------------------------------------------------- fast cancel
-    // A cancel request must take effect while the run is still executing. The
-    // main thread is inside BeamOn at that point, so the reader thread records
-    // the cancel intent and acknowledges it without touching Geant4. Ordering
-    // and id bookkeeping run under the same state mutex as the main loop.
-    bool TryReaderCancel(const Command& command)
+    // Control frames that arrive while BeamOn owns the main thread. They share
+    // the identity, sequencing, revision, idempotency and target rules with the
+    // main request path; only the effect (cancel intent / ping / prompt busy) is
+    // reader-local. The reader never calls Geant4.
+    bool TryReaderControl(const Command& command)
     {
         const SessionJson::Json& frame = command.frame;
         if (!frame.is_object()) return false;
-        if (frame.value("op", "") != "cancel") return false;
-        if (!frame.contains("seq") || !frame["seq"].is_number_integer() ||
-            !frame.contains("id") || !frame["id"].is_string() ||
-            !frame.contains("request_id") || !frame["request_id"].is_string()) {
+        long long seq = 0;
+        std::string frameId, requestId, op;
+        if (!ValidateReaderFrame(frame, seq, frameId, requestId, op)) return false;
+        if (op != "ping" && op != "cancel" && op != "run" && op != "set_source" &&
+            op != "initialize" && op != "shutdown") {
             return false;
         }
-        const long long seq = frame["seq"].get<long long>();
-        const std::string frameId = frame["id"].get<std::string>();
-        const std::string requestId = frame["request_id"].get<std::string>();
-        if (!IsHexId(frameId) || !IsHexId(requestId)) return false;
-        SessionJson::Json ack;
+
+        const SessionJson::Json params = frame.contains("params") && frame["params"].is_object()
+                                             ? frame["params"]
+                                             : SessionJson::Json::object();
+        // The idempotency fingerprint covers the stable request body (op plus
+        // params); seq/id are transport identity and may change on a replayed
+        // frame, so they are excluded by contract.
+        SessionJson::Json bodyFingerprint = SessionJson::Json::object();
+        bodyFingerprint["op"] = op;
+        bodyFingerprint["params"] = params;
+        const std::string bodySha = input_provenance::Sha256(SessionJson::Dump(bodyFingerprint));
+
+        CachedLookup cached = LookupCached(requestId);
+        if (cached.found && cached.bodySha != bodySha) {
+            ConsumeNextSeq(seq, frameId);
+            return ReaderReject(frame, op, "idempotency_conflict",
+                                "request_id was already used with a different body");
+        }
+        if (!cached.found && ExpiredRequest(requestId)) {
+            ConsumeNextSeq(seq, frameId);
+            return ReaderReject(frame, op, "expired", "request_id left the idempotency window");
+        }
+
+        long long revision = 0;
+        Phase currentPhase = Phase::Stopped;
+        bool exactlyNext = false;
+        bool duplicateFrame = false;
+        bool replyDuplicate = false;
+        bool cancelAccepted = false;
+        bool cancelRejected = false;
+        std::string cancelReason;
+        std::string cancelMessage;
+        int acceptedRunId = -1;
+        std::string acceptedRunRequest;
+        SessionJson::Json ack = SessionJson::Json::object();
+        SessionJson::Json busyReply = SessionJson::Json::object();
         {
             std::lock_guard<std::mutex> guard(stateMutex);
-            if (phase != Phase::Running) return false;
-            if (seq != lastClientSeq + 1) return false;
-            const SessionJson::Json params = frame.contains("params") && frame["params"].is_object()
-                                                 ? frame["params"]
-                                                 : SessionJson::Json::object();
-            if (params.contains("run_request_id") && params["run_request_id"].is_string() &&
-                params["run_request_id"].get<std::string>() != pendingRunRequest) {
-                return false;
-            }
-            lastClientSeq = seq;
-            seenFrameIds.insert(frameId);
-            const int runId = currentRunId;
-            if (!cancelRequested && !cancelPending) {
-                if (runId >= 0) {
-                    cancelRequested = true;
-                    g_cancelRunId.store(runId, std::memory_order_release);
-                } else {
-                    cancelPending = true;
+            revision = stateRevision;
+            currentPhase = phase;
+            exactlyNext = seq == lastClientSeq + 1;
+            duplicateFrame = seenFrameIds.count(frameId) != 0;
+            if (cached.found && exactlyNext) {
+                lastClientSeq = seq;
+                seenFrameIds.insert(frameId);
+                replyDuplicate = true;
+                ack = cached.response;
+            } else if (exactlyNext && !duplicateFrame && (op == "ping" || op == "cancel")) {
+                if (op == "ping" && currentPhase == Phase::Running) {
+                    lastClientSeq = seq;
+                    seenFrameIds.insert(frameId);
+                    ack = ReaderResponse(frame, op, "ok", revision, false);
+                    ack["phase"] = "running";
+                } else if (op == "cancel" && currentPhase == Phase::Running) {
+                    // The reader fast path must apply the same revision identity rule
+                    // as the main request path: a cancel without a matching
+                    // state_revision is rejected before any cancel intent is set.
+                    const auto revisionIt = frame.find("state_revision");
+                    if (revisionIt == frame.end() || !revisionIt->is_number_integer()) {
+                        lastClientSeq = seq;
+                        seenFrameIds.insert(frameId);
+                        cancelRejected = true;
+                        cancelReason = "invalid_request";
+                        cancelMessage = "cancel requests require an integer state_revision";
+                    } else if (revisionIt->get<long long>() != revision) {
+                        lastClientSeq = seq;
+                        seenFrameIds.insert(frameId);
+                        cancelRejected = true;
+                        cancelReason = "stale_revision";
+                        cancelMessage = "state_revision does not match the server state";
+                    } else if (params.contains("run_request_id") && !params["run_request_id"].is_string()) {
+                        lastClientSeq = seq;
+                        seenFrameIds.insert(frameId);
+                        cancelRejected = true;
+                        cancelReason = "invalid_request";
+                        cancelMessage = "params.run_request_id must be a string";
+                    } else if (params.contains("run_id") && !params["run_id"].is_number_integer()) {
+                        lastClientSeq = seq;
+                        seenFrameIds.insert(frameId);
+                        cancelRejected = true;
+                        cancelReason = "invalid_request";
+                        cancelMessage = "params.run_id must be an integer";
+                    } else if (params.contains("run_request_id") &&
+                               params["run_request_id"].get<std::string>() != pendingRunRequest) {
+                        lastClientSeq = seq;
+                        seenFrameIds.insert(frameId);
+                        cancelRejected = true;
+                        cancelReason = "unknown_run";
+                        cancelMessage = "run_request_id does not match the active run";
+                    } else if (params.contains("run_id") &&
+                               params["run_id"].get<long long>() != currentRunId) {
+                        lastClientSeq = seq;
+                        seenFrameIds.insert(frameId);
+                        cancelRejected = true;
+                        cancelReason = "unknown_run";
+                        cancelMessage = "run_id does not match the active run";
+                    } else {
+                        lastClientSeq = seq;
+                        seenFrameIds.insert(frameId);
+                        acceptedRunId = currentRunId;
+                        acceptedRunRequest = pendingRunRequest;
+                        if (!cancelRequested && !cancelPending) {
+                            if (acceptedRunId >= 0) {
+                                cancelRequested = true;
+                                g_cancelRunId.store(acceptedRunId, std::memory_order_release);
+                            } else {
+                                cancelPending = true;
+                            }
+                        }
+                        cancelAccepted = true;
+                        ack = ReaderResponse(frame, op, "accepted", revision, false);
+                        ack["run_request_id"] = acceptedRunRequest;
+                        if (acceptedRunId >= 0) ack["run_id"] = acceptedRunId;
+                        ack["cancel_mode"] = "soft_abort_at_event_boundary";
+                    }
                 }
+            } else if (exactlyNext && !duplicateFrame && currentPhase == Phase::Running) {
+                lastClientSeq = seq;
+                seenFrameIds.insert(frameId);
+                busyReply = ReaderResponse(frame, op, "rejected", revision, false);
+                busyReply["reason"] = "busy";
+                busyReply["message"] = "a run is active; send cancel before another control request";
             }
-            ack["kind"] = "response";
-            ack["seq"] = seq;
-            ack["id"] = frameId;
-            ack["request_id"] = requestId;
-            ack["op"] = "cancel";
-            ack["status"] = "accepted";
-            ack["state_revision"] = stateRevision;
-            ack["duplicate"] = false;
-            ack["run_request_id"] = pendingRunRequest;
-            ack["run_id"] = runId >= 0 ? SessionJson::Json(runId) : SessionJson::Json();
-            ack["cancel_mode"] = "soft_abort_at_event_boundary";
-            ack["at"] = NowIso8601();
         }
+
+        if (replyDuplicate) {
+            ack["duplicate"] = true;
+            NoteDedupSeq(requestId, seq);
+            RecordFrame("c2s", command.raw);
+            Send(ack);
+            return true;
+        }
+        if (cancelRejected) {
+            return ReaderReject(frame, op, cancelReason, cancelMessage);
+        }
+        if (!exactlyNext || duplicateFrame) return false;
+        if (op == "ping") {
+            if (ack.is_null() || ack.empty()) return false;
+            RecordFrame("c2s", command.raw);
+            Send(ack);
+            return true;
+        }
+        if (op == "cancel") {
+            if (!cancelAccepted) return false;
+            RememberResponse(requestId, seq, bodySha, ack);
+            RecordFrame("c2s", command.raw);
+            Send(ack);
+            return true;
+        }
+        if (currentPhase != Phase::Running) return false;
+
+        // Non-control frame while a run owns the main thread: prompt busy answer.
+        if (busyReply.is_null() || busyReply.empty()) return false;
+        RememberResponse(requestId, seq, bodySha, busyReply);
         RecordFrame("c2s", command.raw);
-        Send(ack);
+        Send(busyReply);
         return true;
     }
 
@@ -643,6 +821,7 @@ struct SessionServer::Impl {
         }
         state["output_root"] = outputRoot;
         state["record_root"] = recordRoot;
+        state["session_root"] = sessionRoot;
         return state;
     }
 
@@ -766,24 +945,23 @@ struct SessionServer::Impl {
         bool wroteReceipt = true;
         {
             const std::filesystem::path path =
-                std::filesystem::path(recordRoot) / ("run-" + PadRun(runId) + ".json");
+                std::filesystem::path(sessionRoot) / ("run-" + PadRun(runId) + ".json");
             std::ofstream file(path, std::ios::binary | std::ios::trunc);
-            if (file) {
+            bool ok = file.is_open();
+            if (ok) {
                 const std::string text = receipt.dump();
                 file.write(text.data(), static_cast<std::streamsize>(text.size()));
                 file.put('\n');
                 file.flush();
-                wroteReceipt = file.good();
-            } else {
-                wroteReceipt = false;
+                ok = file.good();
             }
+            if (file.is_open()) file.close();
+            if (ok && file.fail()) ok = false;
+            wroteReceipt = ok;
             if (wroteReceipt) {
                 receiptPath = path.generic_string();
             } else {
-                std::lock_guard<std::mutex> guard(stateMutex);
-                recordFailed = true;
-                recordError = "could not write per-run receipt " + path.generic_string();
-                exitCode = 4;
+                MarkRecordFailure("could not write per-run receipt " + path.generic_string());
             }
         }
 
@@ -813,6 +991,49 @@ struct SessionServer::Impl {
             g_cancelRunId.store(-1, std::memory_order_release);
             ++stateRevision;
             event["state_revision"] = stateRevision;
+        }
+        // The terminal event must always be attributable and bounded. A large
+        // artifact list is replaced by a receipt reference instead of letting the
+        // writer substitute a bare frame_too_large error (repair item E).
+        if (SessionJson::Dump(event).size() > kMaxFrameBytes) {
+            SessionJson::Json compact;
+            compact["kind"] = "event";
+            compact["event"] = "run_finished";
+            compact["run_request_id"] = runRequest;
+            compact["run_id"] = runId;
+            compact["planned_events"] = plannedEvents;
+            compact["completed_events"] = completedEvents;
+            compact["aborted_events"] = abortedEvents;
+            compact["status"] = receiptStatus;
+            compact["cancel_requested"] = cancelled;
+            compact["artifacts_truncated"] = true;
+            compact["artifact_count"] = artifacts.size();
+            compact["state_revision"] = event.value("state_revision", 0LL);
+            compact["at"] = NowIso8601();
+            if (wroteReceipt) {
+                SessionJson::Json reference;
+                reference["path"] = receiptPath;
+                reference["schema"] = "g4usim_session_run_receipt_v1";
+                const input_provenance::FileDigest digest = input_provenance::HashFile(receiptPath);
+                reference["sha256"] = digest.sha256.empty() ? SessionJson::Json()
+                                                            : SessionJson::Json(digest.sha256);
+                reference["size_bytes"] = digest.size_bytes;
+                compact["receipt_ref"] = std::move(reference);
+            }
+            if (SessionJson::Dump(compact).size() > kMaxFrameBytes) {
+                SessionJson::Json minimal;
+                minimal["kind"] = "event";
+                minimal["event"] = "run_finished";
+                minimal["run_id"] = runId;
+                minimal["status"] = receiptStatus;
+                minimal["error"] = "run_finished_frame_exceeded";
+                minimal["artifact_count"] = artifacts.size();
+                MarkRecordFailure("run_finished terminal event exceeded the protocol frame limit");
+                Send(minimal);
+                return;
+            }
+            Send(compact);
+            return;
         }
         Send(event);
     }
@@ -949,48 +1170,67 @@ struct SessionServer::Impl {
             exitCode = 3;
             return false;
         }
-        if (seq <= lastClientSeq) {
-            const auto cached = dedup.find(requestId);
-            if (cached != dedup.end() && cached->second.seq == seq) {
-                SessionJson::Json response = cached->second.response;
-                response["duplicate"] = true;
-                Send(response);
-                return true;
+        SessionJson::Json duplicateResponse;
+        bool duplicateSeen = false;
+        std::string orderingError;
+        std::string orderingMessage;
+        {
+            std::lock_guard<std::mutex> guard(stateMutex);
+            if (seq <= lastClientSeq) {
+                std::lock_guard<std::mutex> cacheGuard(dedupMutex);
+                const auto cached = dedup.find(requestId);
+                if (cached != dedup.end() && cached->second.seq == seq) {
+                    duplicateResponse = cached->second.response;
+                    duplicateSeen = true;
+                } else {
+                    orderingError = "out_of_order";
+                    orderingMessage = "seq must strictly increase";
+                }
+            } else if (seenFrameIds.count(frameId) != 0) {
+                orderingError = "duplicate_frame_id";
+                orderingMessage = "frame id was already used in this session";
+            } else if (seq != lastClientSeq + 1) {
+                orderingError = "out_of_order";
+                orderingMessage = "seq must increase by exactly one";
+            } else {
+                lastClientSeq = seq;
+                seenFrameIds.insert(frameId);
             }
-            SendError("out_of_order", "seq must strictly increase");
+        }
+        if (duplicateSeen) {
+            duplicateResponse["duplicate"] = true;
+            Send(duplicateResponse);
+            return true;
+        }
+        if (!orderingError.empty()) {
+            SendError(orderingError, orderingMessage);
             exitCode = 3;
             return false;
         }
-        if (seenFrameIds.count(frameId) != 0) {
-            SendError("duplicate_frame_id", "frame id was already used in this session");
-            exitCode = 3;
-            return false;
-        }
-        if (seq != lastClientSeq + 1) {
-            SendError("out_of_order", "seq must increase by exactly one");
-            exitCode = 3;
-            return false;
-        }
-        lastClientSeq = seq;
-        seenFrameIds.insert(frameId);
 
         const SessionJson::Json params = frame.contains("params") && frame["params"].is_object()
                                              ? frame["params"]
                                              : SessionJson::Json::object();
-        const std::string bodySha = input_provenance::Sha256(SessionJson::Dump(params));
+        // The idempotency fingerprint covers the stable request body (op plus
+        // params); seq/id are transport identity and may change on a replayed
+        // frame, so they are excluded by contract.
+        SessionJson::Json bodyFingerprint = SessionJson::Json::object();
+        bodyFingerprint["op"] = op;
+        bodyFingerprint["params"] = params;
+        const std::string bodySha = input_provenance::Sha256(SessionJson::Dump(bodyFingerprint));
 
-        const auto cached = dedup.find(requestId);
-        if (cached != dedup.end()) {
-            if (cached->second.bodySha != bodySha) {
+        const CachedLookup cached = LookupCached(requestId);
+        if (cached.found) {
+            if (cached.bodySha != bodySha) {
                 return Reject(frame, op, "idempotency_conflict",
                               "request_id was already used with a different body");
             }
-            SessionJson::Json response = cached->second.response;
+            SessionJson::Json response = cached.response;
             response["duplicate"] = true;
             Send(response);
             return true;
         }
-        if (expired.count(requestId) != 0) {
+        if (ExpiredRequest(requestId)) {
             return Reject(frame, op, "expired", "request_id left the idempotency window");
         }
 
@@ -1008,23 +1248,7 @@ struct SessionServer::Impl {
         }
 
         auto remember = [&](SessionJson::Json response) {
-            Cached entry;
-            entry.seq = seq;
-            entry.bodySha = bodySha;
-            entry.response = std::move(response);
-            dedup.emplace(requestId, entry);
-            dedupOrder.push_back(requestId);
-            while (dedupOrder.size() > kDedupCapacity) {
-                const std::string evicted = dedupOrder.front();
-                dedupOrder.pop_front();
-                dedup.erase(evicted);
-                expired.insert(evicted);
-                expiredOrder.push_back(evicted);
-                while (expiredOrder.size() > kExpiredCapacity) {
-                    expired.erase(expiredOrder.front());
-                    expiredOrder.pop_front();
-                }
-            }
+            RememberResponse(requestId, seq, bodySha, std::move(response));
         };
 
         if (op == "get_state") {
@@ -1070,7 +1294,7 @@ struct SessionServer::Impl {
             closing["kind"] = "event";
             closing["event"] = "closing";
             closing["reason"] = "shutdown_requested";
-            closing["exit_code"] = exitCode;
+            closing["exit_code"] = exitCode.load(std::memory_order_relaxed);
             closing["session_id"] = sessionId;
             closing["at"] = NowIso8601();
             closing["state_revision"] = stateRevision;
@@ -1307,15 +1531,59 @@ struct SessionServer::Impl {
     int Run()
     {
         g_activeServer.store(owner, std::memory_order_release);
-        const std::filesystem::path root(recordRoot);
+        // Every session gets its own directory: an existing session log must
+        // never be truncated or overwritten by a later session (repair item D).
         std::error_code error;
-        std::filesystem::create_directories(root, error);
-        const std::filesystem::path logPath = root / "session.jsonl";
+        std::filesystem::path sessionDir;
+        const std::filesystem::path baseRoot(recordRoot);
+        const bool baseExisted = std::filesystem::exists(baseRoot);
+        std::filesystem::create_directories(baseRoot, error);
+        if (error) {
+            MarkRecordFailure("could not create session record root " + baseRoot.generic_string());
+            exitCode.store(4, std::memory_order_relaxed);
+            return exitCode.load(std::memory_order_relaxed);
+        }
+        bool directoryReady = false;
+        for (int attempt = 1; attempt <= 99 && !directoryReady; ++attempt) {
+            const std::string name =
+                attempt == 1 ? ("session-" + sessionId)
+                             : ("session-" + sessionId + "-" + std::to_string(attempt));
+            const std::filesystem::path candidate = baseRoot / name;
+            std::error_code candidateError;
+            if (std::filesystem::create_directory(candidate, candidateError)) {
+                sessionDir = candidate;
+                directoryReady = true;
+            } else if (candidateError) {
+                MarkRecordFailure("could not create session record directory " +
+                                  candidate.generic_string() + ": " + candidateError.message());
+                exitCode.store(4, std::memory_order_relaxed);
+                return exitCode.load(std::memory_order_relaxed);
+            }
+        }
+        if (!directoryReady) {
+            MarkRecordFailure("could not allocate a unique session record directory under " +
+                              baseRoot.generic_string());
+            exitCode.store(4, std::memory_order_relaxed);
+            return exitCode.load(std::memory_order_relaxed);
+        }
+        sessionRoot = sessionDir.generic_string();
+        const std::filesystem::path logPath = sessionDir / "session.jsonl";
         record.open(logPath, std::ios::binary | std::ios::trunc);
         if (!record.good()) {
-            recordFailed = true;
-            recordError = "could not create " + logPath.generic_string();
-            exitCode = 4;
+            MarkRecordFailure("could not create " + logPath.generic_string());
+            exitCode.store(4, std::memory_order_relaxed);
+            // A failed startup must not leave a half-created record tree behind,
+            // but directories that already existed before this session stay intact.
+            std::error_code cleanupError;
+            std::filesystem::remove_all(sessionDir, cleanupError);
+            if (!baseExisted) {
+                const bool empty = std::filesystem::is_empty(baseRoot, cleanupError);
+                if (!cleanupError && empty) {
+                    std::error_code removeError;
+                    std::filesystem::remove(baseRoot, removeError);
+                }
+            }
+            return exitCode.load(std::memory_order_relaxed);
         }
         reader = std::thread([this] { ReaderLoop(); });
 
@@ -1401,22 +1669,32 @@ struct SessionServer::Impl {
 #endif
         }
         {
-            std::lock_guard<std::mutex> guard(writerMutex);
+            std::lock_guard<std::mutex> guard(recordMutex);
             if (record.is_open()) {
                 SessionJson::Json closing;
                 closing["schema"] = "g4usim-session-log-v1";
                 closing["at"] = NowIso8601();
                 closing["direction"] = "meta";
                 closing["event"] = eofExit ? "eof_close" : "session_end";
-                closing["exit_code"] = exitCode;
+                closing["exit_code"] = exitCode.load(std::memory_order_relaxed);
                 closing["session_id"] = sessionId;
                 record << closing.dump() << '\n';
                 record.flush();
+                const bool closingOk = record.good();
                 record.close();
+                if (!closingOk || record.fail()) {
+                    recordFailed = true;
+                    recordError = "could not close the session record cleanly";
+                    if (exitCode.load(std::memory_order_relaxed) == 0) {
+                        exitCode.store(4, std::memory_order_relaxed);
+                    }
+                }
+            }
+            if (recordFailed && exitCode.load(std::memory_order_relaxed) == 0) {
+                exitCode.store(4, std::memory_order_relaxed);
             }
         }
-        if (recordFailed && exitCode == 0) exitCode = 4;
-        return exitCode;
+        return exitCode.load(std::memory_order_relaxed);
     }
 };
 

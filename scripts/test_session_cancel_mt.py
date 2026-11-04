@@ -27,7 +27,7 @@ class Client:
     def __init__(self, executable: Path, output: Path, records: Path) -> None:
         environment = os.environ.copy()
         environment.pop("G4USIM_TEST_OUTPUT_FAULT", None)
-        records.mkdir(parents=True, exist_ok=True)
+        records.parent.mkdir(parents=True, exist_ok=True)
         self.process = subprocess.Popen(
             [str(executable), "--config", str(ROOT / "config" / "main.ini"),
              "--session-server", "--output", str(output),
@@ -133,6 +133,9 @@ def main() -> int:
         state = client.request("get_state")
         assert state["status"] == "ok", state
         assert state["state"]["phase"] == "idle", state
+        assert Path(state["state"]["record_root"]) == records
+        session_dir = Path(state["state"]["session_root"])
+        assert session_dir.parent == records and session_dir.name.startswith("session-")
         initialized = client.request("initialize", revision=welcome["state"]["state_revision"])
         assert initialized["status"] == "applied", initialized
         revision = initialized["state_revision"]
@@ -161,7 +164,35 @@ def main() -> int:
                               revision)
         assert busy["status"] == "rejected" and busy["reason"] == "busy", busy
 
-        cancel = client.request("cancel", {"run_request_id": run_request_id})
+        # Reader control frames share the revision identity rule with the
+        # main path: a cancel from a stale revision, a missing/wrong-typed
+        # revision, a wrong target type or a wrong run target must all be
+        # rejected without touching the cancel intent while the run continues.
+        stale = client.request("cancel", {"run_request_id": run_request_id},
+                               max(0, revision - 1))
+        assert stale["status"] == "rejected", stale
+        assert stale["reason"] == "stale_revision", stale
+        missing_revision = client.frame("cancel", {"run_request_id": run_request_id})
+        client.send(missing_revision)
+        missing_response = client.wait(
+            lambda item: item.get("kind") == "response" and
+            item.get("id") == missing_revision["id"], timeout=30.0)
+        assert missing_response["status"] == "rejected", missing_response
+        assert missing_response["reason"] == "invalid_request", missing_response
+        wrong_type = client.request("cancel", {"run_request_id": 123}, revision)
+        assert wrong_type["status"] == "rejected", wrong_type
+        assert wrong_type["reason"] == "invalid_request", wrong_type
+        wrong_target = client.request("cancel", {"run_request_id": "not-this-run"}, revision)
+        assert wrong_target["status"] == "rejected", wrong_target
+        assert wrong_target["reason"] == "unknown_run", wrong_target
+        wrong_id_type = client.request("cancel", {"run_id": "zero"}, revision)
+        assert wrong_id_type["status"] == "rejected", wrong_id_type
+        assert wrong_id_type["reason"] == "invalid_request", wrong_id_type
+        still_running = client.request("ping")
+        assert still_running["status"] == "ok", still_running
+        assert still_running["phase"] == "running", still_running
+
+        cancel = client.request("cancel", {"run_request_id": run_request_id}, revision)
         assert cancel["status"] == "accepted", cancel
         assert cancel["run_request_id"] == run_request_id, cancel
         assert cancel["cancel_mode"] == "soft_abort_at_event_boundary", cancel
@@ -211,8 +242,9 @@ def main() -> int:
         assert closing["exit_code"] == 0, closing
         code = client.close()
         assert code == 0, (code, client.raw[-20:])
-        assert (records / "run-0000.json").is_file(), list(records.iterdir())
-        assert (records / "run-0001.json").is_file(), list(records.iterdir())
+        assert (session_dir / "run-0000.json").is_file(), list(session_dir.iterdir())
+        assert (session_dir / "run-0001.json").is_file(), list(session_dir.iterdir())
+        assert (session_dir / "session.jsonl").is_file(), list(session_dir.iterdir())
         summary = (output / "run_summary.txt").read_text(encoding="utf-8")
         assert "status = completed" in summary, summary[-2000:]
     return 0

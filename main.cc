@@ -38,6 +38,7 @@
 #include <memory>
 #include <optional>
 #include <stdexcept>
+#include <system_error>
 #include <string>
 #include <sstream>
 #include <initializer_list>
@@ -421,6 +422,37 @@ CommandLineOptions ParseCommandLine(int argc, char** argv) {
   return options;
 }
 
+
+std::filesystem::path NormalizedAbsolutePath(const std::filesystem::path& path) {
+  std::error_code absoluteError;
+  const auto absolute = std::filesystem::absolute(path, absoluteError);
+  const auto base = absoluteError ? path : absolute;
+  std::error_code canonicalError;
+  const auto canonical = std::filesystem::weakly_canonical(base, canonicalError);
+  if (!canonicalError) return canonical;
+  return base.lexically_normal();
+}
+
+std::string FolderKeyOf(std::filesystem::path path) {
+  std::string text = path.lexically_normal().generic_u8string();
+  while (text.size() > 1 && text.back() == '/') text.pop_back();
+#ifdef _WIN32
+  for (char& ch : text) {
+    ch = static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
+  }
+#endif
+  return text;
+}
+
+bool PathIsInsideDirectory(const std::filesystem::path& root,
+                           const std::filesystem::path& candidate) {
+  const std::string rootKey = FolderKeyOf(root);
+  const std::string candidateKey = FolderKeyOf(candidate);
+  if (rootKey.empty()) return false;
+  if (candidateKey == rootKey) return true;
+  return candidateKey.rfind(rootKey + "/", 0) == 0;
+}
+
 std::string JsonEscape(const std::string& value) {
   std::string escaped;
   for (unsigned char ch : value) {
@@ -714,6 +746,14 @@ int main(int argc, char** argv) {
     sim.Configure();
     sim.BeginRuntimeTracking();
     const SimulationContext& context = sim.GetContext();
+
+    if (options.sessionServer && context.HasMacroFile()) {
+      throw std::runtime_error(
+          "--session-server does not support a preconfigured macro from the main INI "
+          "([run] macro or equivalent): " + context.GetMacroFile() +
+          "; remove the macro, or run this configuration as a batch/--ui session. "
+          "The session protocol never executes a preset macro silently.");
+    }
     if (!context.IsDryRun() && !context.IsInteractive() && !context.HasMacroFile() && !options.sessionServer) {
       PrintUsage(argv[0]);
       return EXIT_SUCCESS;
@@ -793,22 +833,12 @@ int main(int argc, char** argv) {
     ScoringMeshConfig::RecordEffectiveConfigDispatch();
 
     if (options.sessionServer) {
-      const auto outputRoot = std::filesystem::path(sim.GetContext().GetOutputDir()).lexically_normal();
-      const auto recordRoot = std::filesystem::path(options.sessionRecordDir).lexically_normal();
-      if (recordRoot.empty() || !recordRoot.is_absolute())
-        throw std::runtime_error("--session-record-dir must be an absolute path");
-      bool insideOutput = false;
-      {
-        auto recordPart = recordRoot.begin();
-        auto outputPart = outputRoot.begin();
-        bool prefix = true;
-        while (recordPart != recordRoot.end() && outputPart != outputRoot.end()) {
-          if (recordPart->string() != outputPart->string()) { prefix = false; break; }
-          ++recordPart; ++outputPart;
-        }
-        insideOutput = prefix && outputPart == outputRoot.end();
-      }
-      if (insideOutput)
+      if (options.sessionRecordDir.empty())
+        throw std::runtime_error("--session-record-dir must not be empty");
+      const std::filesystem::path requestedRecordRoot(options.sessionRecordDir);
+      const auto outputRoot = NormalizedAbsolutePath(sim.GetContext().GetOutputDir());
+      const auto recordRoot = NormalizedAbsolutePath(requestedRecordRoot);
+      if (PathIsInsideDirectory(outputRoot, recordRoot))
         throw std::runtime_error("--session-record-dir must be outside --output: " +
                                  outputRoot.u8string());
       SessionServer session(sim, recordRoot.u8string());

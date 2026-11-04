@@ -38,7 +38,7 @@ class Session:
         self.record_dir = record_dir
         environment = os.environ.copy()
         environment.pop("G4USIM_TEST_OUTPUT_FAULT", None)
-        record_dir.mkdir(parents=True, exist_ok=True)
+        record_dir.parent.mkdir(parents=True, exist_ok=True)
         self.process = subprocess.Popen(
             [
                 str(executable),
@@ -153,7 +153,6 @@ class Session:
 def eof_case(executable: Path, temp: Path) -> None:
     output = temp / "eof-out"
     records = temp / "eof-records"
-    records.mkdir(parents=True, exist_ok=True)
     environment = os.environ.copy()
     environment.pop("G4USIM_TEST_OUTPUT_FAULT", None)
     process = subprocess.Popen(
@@ -183,7 +182,10 @@ def eof_case(executable: Path, temp: Path) -> None:
                 return frame
         raise AssertionError(f"frame not observed; tail={frames[-8:]}")
 
-    read_until(lambda item: item.get("kind") == "welcome")
+    welcome = read_until(lambda item: item.get("kind") == "welcome")
+    session_dir = Path(welcome["state"]["session_root"])
+    assert Path(welcome["state"]["record_root"]) == records
+    assert session_dir.parent == records and session_dir.name.startswith("session-")
     process.stdin.close()
     code = process.wait(timeout=180)
     assert code == 0, (code, frames[-8:])
@@ -195,7 +197,7 @@ def eof_case(executable: Path, temp: Path) -> None:
             continue
         if isinstance(frame, dict):
             frames.append(frame)
-    log = (records / "session.jsonl").read_text(encoding="utf-8").splitlines()
+    log = (session_dir / "session.jsonl").read_text(encoding="utf-8").splitlines()
     meta = [json.loads(line) for line in log if '"direction":"meta"' in line]
     assert any(entry.get("event") == "eof_close" for entry in meta), meta[-3:]
     assert any(entry.get("exit_code") == 0 for entry in meta), meta[-3:]
@@ -205,7 +207,6 @@ def write_refusal_case(executable: Path, temp: Path, name: str,
                        lines: list[str], expected_code: str) -> None:
     output = temp / f"refusal-{name}-out"
     records = temp / f"refusal-{name}-records"
-    records.mkdir(parents=True, exist_ok=True)
     environment = os.environ.copy()
     environment.pop("G4USIM_TEST_OUTPUT_FAULT", None)
     completed = subprocess.run(
@@ -245,7 +246,6 @@ def write_cli_refusal(executable: Path, temp: Path, name: str, extra: list[str],
                       expected: str) -> None:
     output = temp / f"cli-{name}-out"
     records = temp / f"cli-{name}-records"
-    records.mkdir(parents=True, exist_ok=True)
     base = [str(executable), "--config", str(ROOT / "config" / "main.ini"),
             "--session-server", "--output", str(output)]
     if name == "missing_records":
@@ -296,6 +296,10 @@ def main() -> int:
         assert state["phase"] == "idle" and state["kernel_state"] == "pre_init", state
         assert Path(state["output_root"]) == output, state["output_root"]
         assert Path(state["record_root"]) == records, state["record_root"]
+        session_dir = Path(state["session_root"])
+        assert session_dir.parent == records, state["session_root"]
+        assert session_dir.name.startswith("session-"), state["session_root"]
+        assert (session_dir / "session.jsonl").is_file(), session_dir
         assert state["source"]["particle"] == "proton", state["source"]
         assert state["state_revision"] == 0, state
 
@@ -344,6 +348,23 @@ def main() -> int:
         assert conflict_response["reason"] == "idempotency_conflict", conflict_response
         unknown = session.request("unknown_op", revision=session.state()["state_revision"])
         assert unknown["status"] == "rejected" and unknown["reason"] == "unknown_op", unknown
+        # The idempotency key covers the op as well as params: reusing a
+        # request_id with a different op is a conflict, not a duplicate.
+        third = session.request("get_state")
+        session.seq += 1
+        op_conflict_frame = {
+            "kind": "request",
+            "seq": session.seq,
+            "id": hexadecimal(session.counter),
+            "request_id": third["request_id"],
+            "op": "ping",
+            "params": {"reuse": True},
+        }
+        session.send(op_conflict_frame)
+        op_conflict_response = session.wait(
+            lambda item: item.get("kind") == "response" and
+            item.get("id") == op_conflict_frame["id"])
+        assert op_conflict_response["reason"] == "idempotency_conflict", op_conflict_response
 
         # -------------------------------------------------------- initialize
         state = session.state()
@@ -408,7 +429,7 @@ def main() -> int:
         assert closing["exit_code"] == 0, closing
         code = session.close(expect_exit=0)
         assert code == 0, code
-        record_file = records / "session.jsonl"
+        record_file = session_dir / "session.jsonl"
         assert record_file.is_file(), list(records.iterdir())
         recorded_texts = []
         for line in record_file.read_text(encoding="utf-8").splitlines():
@@ -445,9 +466,154 @@ def main() -> int:
         write_cli_refusal(executable, temp, "records_inside_output", [],
                           "must be outside --output")
         eof_case(executable, temp)
+        ini_macro_refusal(executable, temp)
+        record_boundary_cases(executable, temp)
+        two_sessions_keep_history(executable, temp)
+        mt16_terminal_case(executable, temp)
 
     return 0
+# ---------------------------------------------------------------- repair scenarios
 
+
+def absolute_config(temp: Path, *, macro: Path | None = None) -> Path:
+    """A copy of the reference config with every input path made absolute."""
+    text = (ROOT / "config" / "main.ini").read_text(encoding="utf-8")
+    text = text.replace("file = config/materials/material.ini",
+                        f"file = {(ROOT / 'config' / 'materials' / 'material.ini')}")
+    text = text.replace("config = config/geometry/simple_box.ini",
+                        f"config = {(ROOT / 'config' / 'geometry' / 'simple_box.ini')}")
+    if macro is not None:
+        assert "\n[run]\n" in text
+        text = text.replace("\n[run]\n", f"\n[run]\nmacro = {macro}\n", 1)
+    target = temp / ("config-macro.ini" if macro is not None else "config-absolute.ini")
+    target.write_text(text, encoding="utf-8")
+    return target
+
+
+def open_session(session: "Session") -> dict[str, object]:
+    session.send({"kind": "hello", "protocol": PROTOCOL})
+    welcome = session.wait(lambda item: item.get("kind") == "welcome")
+    state = session.state()
+    response = session.request("initialize", revision=state["state_revision"])
+    assert response["status"] == "applied", response
+    return welcome
+
+
+def run_round(session: "Session", events: int, timeout: float = 600.0) -> dict[str, object]:
+    state = session.state()
+    session.request("run", {"events": events}, state["state_revision"], wait=False)
+    session.wait_event("run_started", timeout=timeout)
+    return session.wait_event("run_finished", timeout=timeout)
+
+
+def finish_session(session: "Session") -> None:
+    state = session.state()
+    response = session.request("shutdown", revision=state["state_revision"])
+    assert response["status"] == "accepted", response
+    session.wait_event("closing")
+    assert session.close(expect_exit=0) == 0
+
+
+def ini_macro_refusal(executable: Path, temp: Path) -> None:
+    """A preconfigured INI macro must be refused instead of silently ignored."""
+    macro = temp / "selected.mac"
+    macro.write_text("/run/beamOn 1\n", encoding="utf-8")
+    config = absolute_config(temp, macro=macro)
+    output = temp / "macro-out"
+    records = temp / "macro-records"
+    completed = subprocess.run(
+        [str(executable), "--config", str(config), "--session-server",
+         "--output", str(output), "--session-record-dir", str(records)],
+        cwd=ROOT, input="", capture_output=True, text=True, encoding="utf-8",
+        errors="replace", timeout=300, check=False)
+    log = completed.stdout + completed.stderr
+    assert completed.returncode != 0, (completed.returncode, log[-2000:])
+    assert "does not support a preconfigured macro" in log, log[-2000:]
+    assert "run_started" not in log, log[-2000:]
+
+
+def record_boundary_cases(executable: Path, temp: Path) -> None:
+    """Record roots resolve like the output root and must stay outside it."""
+    root = temp / "boundary"
+    root.mkdir(parents=True, exist_ok=True)
+    config = absolute_config(temp)
+    rejected = subprocess.run(
+        [str(executable), "--config", str(config), "--session-server",
+         "--output", "out", "--session-record-dir", "out/records"],
+        cwd=root, input="", capture_output=True, text=True, encoding="utf-8",
+        errors="replace", timeout=300, check=False)
+    log = rejected.stdout + rejected.stderr
+    assert rejected.returncode != 0, (rejected.returncode, log[-2000:])
+    assert "must be outside --output" in log, log[-2000:]
+
+    accepted = subprocess.run(
+        [str(executable), "--config", str(config), "--session-server",
+         "--output", "out2", "--session-record-dir", "records2"],
+        cwd=root,
+        input=json.dumps({"kind": "hello", "protocol": PROTOCOL}) + "\n",
+        capture_output=True, text=True, encoding="utf-8", errors="replace",
+        timeout=300, check=False)
+    assert accepted.returncode == 0, (accepted.returncode, (accepted.stdout + accepted.stderr)[-2000:])
+    created = root / "records2"
+    assert created.is_dir(), list(root.iterdir())
+    assert list(created.glob("session-*/session.jsonl")), list(created.rglob("*"))
+
+    if os.name == "nt":
+        alias = temp / "alias"
+        alias.mkdir(parents=True, exist_ok=True)
+        rejected_alias = subprocess.run(
+            [str(executable), "--config", str(config), "--session-server",
+             "--output", str(alias / "CaseOut"),
+             "--session-record-dir", str(alias / "caseout" / "records")],
+            cwd=ROOT, input="", capture_output=True, text=True, encoding="utf-8",
+            errors="replace", timeout=300, check=False)
+        alias_log = rejected_alias.stdout + rejected_alias.stderr
+        assert rejected_alias.returncode != 0, (rejected_alias.returncode, alias_log[-2000:])
+        assert "must be outside --output" in alias_log, alias_log[-2000:]
+
+
+def two_sessions_keep_history(executable: Path, temp: Path) -> None:
+    """A second session on the same record root must never truncate the first."""
+    base = temp / "shared-records"
+    first = Session(executable, temp / "shared-out-1", base)
+    open_session(first)
+    first_finished = run_round(first, 4)
+    assert first_finished["status"] == "completed", first_finished
+    state = first.state()
+    first_dir = Path(state["session_root"])
+    first_log = first_dir / "session.jsonl"
+    finish_session(first)
+    # The session_end meta line is written during shutdown; only that close is
+    # allowed to add bytes. A later session must leave the file untouched.
+    before = first_log.read_bytes()
+
+    second = Session(executable, temp / "shared-out-2", base)
+    open_session(second)
+    second_finished = run_round(second, 3)
+    assert second_finished["status"] == "completed", second_finished
+    second_dir = Path(second.state()["session_root"])
+    assert second_dir != first_dir, (second_dir, first_dir)
+    finish_session(second)
+    assert first_log.read_bytes() == before, "the first session log changed after the second session"
+    assert list(second_dir.glob("run-*.json")), list(second_dir.iterdir())
+
+
+def mt16_terminal_case(executable: Path, temp: Path) -> None:
+    """A supported 16-worker run must end with exactly one attributable terminal frame."""
+    session = Session(executable, temp / "mt16-out", temp / "mt16-records", threads=16)
+    open_session(session)
+    finished = run_round(session, 32, timeout=900)
+    assert finished["run_id"] == 0, finished
+    assert finished["status"] == "completed", finished
+    assert finished["completed_events"] == 32, finished
+    assert "run_request_id" in finished and "state_revision" in finished, finished
+    if finished.get("artifacts_truncated"):
+        reference = finished.get("receipt_ref")
+        assert isinstance(reference, dict) and reference.get("path"), finished
+        assert Path(reference["path"]).is_file(), reference
+    else:
+        assert isinstance(finished.get("artifacts"), list), finished
+    finish_session(session)
 
 if __name__ == "__main__":
     raise SystemExit(main())
