@@ -67,6 +67,23 @@ def main() -> int:
         assert state() == "failed"
         write(macro="failed")
         assert state() == "failed"
+
+        # The controlled session reports macro_execution_status=session_server.
+        write(macro="session_server")
+        assert state() == "success"
+        write(macro="session_server", runs=2, planned=4, completed=4,
+              run_records=((2, 2), (2, 2)))
+        assert state() == "success"
+        write(macro="session_server", runs=0, planned=0, completed=0, executed="false")
+        assert state() == "no_run"  # A closed session without a run is not success.
+        write(macro="session_server", status="aborted")
+        assert state() == "failed"
+        write(macro="session_server", completed=2)
+        assert state() == "incomplete"
+        write(macro="session_server", write_status="failed")
+        assert state() == "incomplete"
+        write(macro="session_server_unknown")
+        assert state() == "incomplete"  # Unknown modes are never success.
         write(exit_code=1)
         assert state() == "incomplete"
         write(write_status="failed")

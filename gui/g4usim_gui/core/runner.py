@@ -26,6 +26,10 @@ class G4USimRunner(QObject):
     finished = Signal(int)
     errorOccurred = Signal(str)
     logTagDetected = Signal(str, str, str)
+    # Raw bytes of a controlled session. The session client owns the protocol;
+    # the runner stays the single owner of the backend process.
+    sessionData = Signal(bytes, bool)
+    processStarted = Signal()
 
     def __init__(self, parent: QObject | None = None) -> None:
         super().__init__(parent)
@@ -54,6 +58,7 @@ class G4USimRunner(QObject):
         self._process.readyReadStandardOutput.connect(self._read_stdout)
         self._process.readyReadStandardError.connect(self._read_stderr)
         self._process.finished.connect(self._on_finished)
+        self._process.started.connect(self.processStarted)
         self._process.errorOccurred.connect(self._on_error)
         self._process.stateChanged.connect(self._on_state_changed)
 
@@ -86,6 +91,24 @@ class G4USimRunner(QObject):
         return self._process.state() != QProcess.NotRunning
 
     def start(self, project: G4USimProject, command: list[str] | None = None) -> None:
+        self._start(project, command, session=False)
+
+    def start_session(self, project: G4USimProject, command: list[str] | None = None) -> None:
+        """Start the same owned process for a controlled session.
+
+        The session client speaks the JSON-lines protocol through ``sessionData``
+        and never creates another process owner.
+        """
+        self._start(project, command, session=True)
+
+    def write_session_data(self, payload: bytes) -> int:
+        """Write one protocol frame to the owned session process."""
+        if not self._session_mode or not self.is_running():
+            return -1
+        return int(self._process.write(payload))
+
+    def _start(self, project: G4USimProject, command: list[str] | None,
+               *, session: bool) -> None:
         if self.is_running():
             self.errorOccurred.emit("A run is already active.")
             return
@@ -123,6 +146,7 @@ class G4USimRunner(QObject):
         self._stdout_decoder.reset()
         self._stderr_decoder.reset()
         self._progress_frozen = False
+        self._session_mode = bool(session)
         self._log_tails = {"stdout": "", "stderr": ""}
         self.progressStateChanged.emit("starting")
         self._requested_state = ""
@@ -173,15 +197,37 @@ class G4USimRunner(QObject):
             self._stderr_file.flush()
 
     def _read_stdout(self) -> None:
-        data = self._stdout_decoder.decode(bytes(self._process.readAllStandardOutput()))
-        for message in self._progress.feed(data):
+        data = bytes(self._process.readAllStandardOutput())
+        if self._session_mode:
+            if data:
+                self._write_session_log(data, is_stdout=True)
+                self.sessionData.emit(data, True)
+            return
+        text = self._stdout_decoder.decode(data)
+        for message in self._progress.feed(text):
             if not self._progress_frozen:
                 self.progressReceived.emit(message)
-        self._write_and_emit(data, is_stdout=True)
+        self._write_and_emit(text, is_stdout=True)
 
     def _read_stderr(self) -> None:
-        data = self._stderr_decoder.decode(bytes(self._process.readAllStandardError()))
-        self._write_and_emit(data, is_stdout=False)
+        data = bytes(self._process.readAllStandardError())
+        if self._session_mode:
+            if data:
+                self._write_session_log(data, is_stdout=False)
+                self.sessionData.emit(data, False)
+            return
+        text = self._stderr_decoder.decode(data)
+        self._write_and_emit(text, is_stdout=False)
+
+    def _write_session_log(self, data: bytes, *, is_stdout: bool) -> None:
+        handle = self._stdout_file if is_stdout else self._stderr_file
+        if handle is None:
+            return
+        try:
+            handle.write(data.decode("utf-8", errors="replace"))
+            handle.flush()
+        except OSError:
+            pass
 
     def _write_and_emit(self, text: str, *, is_stdout: bool) -> None:
         if is_stdout:
@@ -229,6 +275,9 @@ class G4USimRunner(QObject):
     def _on_finished(self, exit_code: int, exit_status: QProcess.ExitStatus) -> None:
         self._read_stdout()
         self._read_stderr()
+        if self._session_mode:
+            self._finish_session(exit_code, exit_status)
+            return
         stderr_tail = self._stderr_decoder.decode(b"", final=True)
         if stderr_tail:
             self._write_and_emit(stderr_tail, is_stdout=False)
@@ -277,6 +326,30 @@ class G4USimRunner(QObject):
         if self._stderr_file:
             self._stderr_file.close()
             self._stderr_file = None
+        self.finished.emit(exit_code)
+
+    def _finish_session(self, exit_code: int, exit_status: QProcess.ExitStatus) -> None:
+        """Close the owned process without applying single-run result semantics."""
+        self.last_result = RunResult(
+            "closed" if exit_code == 0 else "failed",
+            "session process exited" if exit_code == 0 else f"session process exit code {exit_code}",
+        )
+        self._progress_frozen = True
+        self.progressStateChanged.emit("idle")
+        self._status_data["state"] = "session_closed" if exit_code == 0 else "session_failed"
+        self._status_data["exitCode"] = exit_code
+        self._status_data["exitStatus"] = "normal" if exit_status == QProcess.NormalExit else "crashed"
+        self._status_data["sessionMode"] = True
+        self._status_data["finishedAt"] = _now_iso()
+        self._write_run_status()
+        self.save_logs()
+        if self._stdout_file:
+            self._stdout_file.close()
+            self._stdout_file = None
+        if self._stderr_file:
+            self._stderr_file.close()
+            self._stderr_file = None
+        self._session_mode = False
         self.finished.emit(exit_code)
 
     def _on_error(self, error: QProcess.ProcessError) -> None:

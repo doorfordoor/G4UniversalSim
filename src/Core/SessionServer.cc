@@ -238,6 +238,11 @@ struct SessionServer::Impl {
     bool eofShutdown = false;
     std::atomic<int> exitCode{0};
     bool fatal = false;
+    // Protocol failures latched by the reader thread. They must survive EOF and
+    // ordinary cancellation so the final exit code cannot look like a clean end.
+    bool protocolFailed = false;
+    std::string protocolError;
+    bool protocolErrorSent = false;
 
     struct Command {
         enum class Kind { Hello, Request, Eof, Fatal } kind = Kind::Request;
@@ -482,6 +487,25 @@ struct SessionServer::Impl {
             bool eof = false;
             ReadChunk(buffer, eof);
             if (eof) {
+                if (!buffer.empty()) {
+                    // A short fragment without a terminating newline is still a
+                    // protocol violation: do not let EOF silently discard it.
+                    std::string leftover = buffer;
+                    buffer.clear();
+                    const std::string error = "invalid_json: incomplete frame at end of input";
+                    LatchReaderProtocolFailure(error, leftover);
+                    {
+                        std::lock_guard<std::mutex> guard(stateMutex);
+                        Command command;
+                        command.kind = Command::Kind::Fatal;
+                        command.error = error;
+                        command.raw = leftover;
+                        queue.push_back(std::move(command));
+                        wake.notify_all();
+                    }
+                    eofSeen.store(true);
+                    return;
+                }
                 {
                     std::lock_guard<std::mutex> guard(stateMutex);
                     if (phase == Phase::Running) {
@@ -533,6 +557,9 @@ struct SessionServer::Impl {
                     command.kind = Command::Kind::Fatal;
                     command.error = std::string("invalid_frame: ") + failure.what();
                 }
+                if (command.kind == Command::Kind::Fatal) {
+                    LatchReaderProtocolFailure(command.error, line);
+                }
                 if (command.kind == Command::Kind::Request &&
                     TryReaderControl(command)) {
                     if (line.size() > kMaxFrameBytes) return;
@@ -547,12 +574,15 @@ struct SessionServer::Impl {
                 if (line.size() > kMaxFrameBytes) return;
             }
             if (buffer.size() > kMaxFrameBytes) {
-                std::lock_guard<std::mutex> guard(stateMutex);
-                Command command;
-                command.kind = Command::Kind::Fatal;
-                command.error = "frame_too_large";
-                queue.push_back(std::move(command));
-                wake.notify_all();
+                LatchReaderProtocolFailure("frame_too_large", buffer);
+                {
+                    std::lock_guard<std::mutex> guard(stateMutex);
+                    Command command;
+                    command.kind = Command::Kind::Fatal;
+                    command.error = "frame_too_large";
+                    queue.push_back(std::move(command));
+                    wake.notify_all();
+                }
                 return;
             }
         }
@@ -615,6 +645,54 @@ struct SessionServer::Impl {
     // the identity, sequencing, revision, idempotency and target rules with the
     // main request path; only the effect (cancel intent / ping / prompt busy) is
     // reader-local. The reader never calls Geant4.
+    // Reader-thread latch for a protocol failure. The reader never calls Geant4:
+    // it records the raw input, latches the error and reuses the existing atomic
+    // cancel intent so a running BeamOn stops at its next bounded event boundary.
+    void LatchReaderProtocolFailure(const std::string& error, const std::string& raw)
+    {
+        {
+            std::lock_guard<std::mutex> guard(stateMutex);
+            if (!protocolFailed || protocolError.empty()) {
+                protocolFailed = true;
+                protocolError = error;
+            }
+            if (phase == Phase::Running) {
+                if (currentRunId >= 0) {
+                    cancelRequested = true;
+                    g_cancelRunId.store(currentRunId, std::memory_order_release);
+                } else {
+                    cancelPending = true;
+                }
+            }
+        }
+        if (!raw.empty()) {
+            std::string text = raw;
+            if (text.size() > kMaxFrameBytes) {
+                text.resize(kMaxFrameBytes);
+                text += "...(input truncated in the record)";
+            }
+            RecordFrame("c2s", text);
+        }
+    }
+
+    bool ReadProtocolFailure(std::string& error)
+    {
+        std::lock_guard<std::mutex> guard(stateMutex);
+        if (!protocolFailed) return false;
+        error = protocolError;
+        return true;
+    }
+
+    void ReportProtocolFailure(const std::string& error)
+    {
+        {
+            std::lock_guard<std::mutex> guard(stateMutex);
+            if (protocolErrorSent) return;
+            protocolErrorSent = true;
+        }
+        SendError("protocol_error", error);
+    }
+
     bool TryReaderControl(const Command& command)
     {
         const SessionJson::Json& frame = command.frame;
@@ -1439,6 +1517,15 @@ struct SessionServer::Impl {
                     exitCode = 2;
                 }
             }
+            {
+                std::string protocolErrorText;
+                if (ReadProtocolFailure(protocolErrorText)) {
+                    ReportProtocolFailure(protocolErrorText);
+                    std::lock_guard<std::mutex> guard(stateMutex);
+                    exitCode = 3;
+                    return false;
+                }
+            }
             if (eofShutdown) return false;
             return exitCode == 0;
         }
@@ -1608,7 +1695,8 @@ struct SessionServer::Impl {
                 }
                 continue;
             }
-            if (!command.raw.empty()) RecordFrame("c2s", command.raw);
+            if (!command.raw.empty() && command.kind != Command::Kind::Fatal)
+                RecordFrame("c2s", command.raw);
             switch (command.kind) {
                 case Command::Kind::Hello:
                     serving = ProcessHello(command);
@@ -1616,12 +1704,29 @@ struct SessionServer::Impl {
                 case Command::Kind::Request:
                     serving = ProcessRequest(command);
                     break;
-                case Command::Kind::Fatal:
-                    SendError("protocol_error", command.error);
+                case Command::Kind::Fatal: {
+                    std::string error = command.error;
+                    {
+                        std::lock_guard<std::mutex> guard(stateMutex);
+                        if (!protocolFailed) {
+                            protocolFailed = true;
+                            protocolError = error;
+                        }
+                        error = protocolError;
+                    }
+                    ReportProtocolFailure(error);
                     exitCode = 3;
                     serving = false;
                     break;
+                }
                 case Command::Kind::Eof: {
+                    std::string protocolErrorText;
+                    if (ReadProtocolFailure(protocolErrorText)) {
+                        ReportProtocolFailure(protocolErrorText);
+                        exitCode = 3;
+                        serving = false;
+                        break;
+                    }
                     bool running = false;
                     {
                         std::lock_guard<std::mutex> guard(stateMutex);

@@ -19,7 +19,8 @@ from g4usim_gui.models.scoring_model import ScoringSettings
 from g4usim_gui.writers.package_writer import create_run_package
 
 
-def _make_package(root: Path, name: str, status: dict | None = None, summary: bool = False) -> Path:
+def _make_package(root: Path, name: str, status: dict | None = None, summary: bool = False,
+                  macro: str = "completed") -> Path:
     package = root / name
     (package / "config").mkdir(parents=True)
     (package / "macros").mkdir()
@@ -33,7 +34,7 @@ def _make_package(root: Path, name: str, status: dict | None = None, summary: bo
         summary_path = package / "output" / "run_summary.txt"
         summary_path.write_text(
             "status = completed\nprogram_exit_code = 0\nsummary_write_status = completed\n"
-            "macro_execution_status = completed\nrun_count = 1\nplanned_event_count = 3\n"
+            f"macro_execution_status = {macro}\nrun_count = 1\nplanned_event_count = 3\n"
             "actual_completed_event_count = 3\nsimulation_executed = true\n"
             "[Runs]\nrun_0_id = 0\nrun_0_planned_events = 3\nrun_0_completed_events = 3\n",
             encoding="utf-8",
@@ -52,6 +53,10 @@ def main() -> int:
         success = _make_package(root, "20260621_010101_success", {"state": "success", "exitCode": 0}, True)
         _make_package(root, "20260621_010102_failed", {"state": "finished", "exitCode": 1}, False)
         old = _make_package(root, "20260621_010104_old", {"state": "finished", "exitCode": 0}, True)
+        _make_package(root, "20260621_010105_session",
+                      {"state": "finished", "exitCode": 0}, True, macro="session_server")
+        _make_package(root, "20260621_010106_unknown",
+                      {"state": "finished", "exitCode": 0}, True, macro="session_server_typo")
         (old / "logs/run_status.json").write_text(
             json.dumps({"state": "finished", "exitCode": 0}), encoding="utf-8"
         )
@@ -67,6 +72,8 @@ def main() -> int:
         assert statuses["failed"] == "failed"
         assert statuses["incomplete"] == "incomplete"
         assert statuses["old"] == "incomplete"
+        assert statuses["session"] == "success"
+        assert statuses["unknown"] == "incomplete"
 
         # Scanner fixtures above deliberately isolate result-state semantics.
         # Duplication must use a real generated input package with its path table.

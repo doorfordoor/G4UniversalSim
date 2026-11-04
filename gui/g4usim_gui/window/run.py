@@ -183,6 +183,10 @@ class RunMixin:
         self.inspect_external_macro(run_after=True)
 
     def _start_current_project(self) -> None:
+        if self.session_owns_process():
+            self.run_page.append_status_message(ui_text(
+                "A session is running; end it before starting a plain run."))
+            return
         if hasattr(self, 'experiment'):
             self._experiment_action('run')
             return
@@ -335,6 +339,11 @@ class RunMixin:
         self.run_page.append_status_message("Process is still running; Kill is available.")
 
     def _on_state_changed(self, state: str) -> None:
+        if getattr(self, '_session_started', False):
+            # The session owns this process; its own panel and header chip report the phase.
+            running = state in {"Starting", "Running"}
+            self.project_page.set_inputs_enabled(not running)
+            return
         if state == 'Starting' and hasattr(self, 'experiment'):
             self._bind_started_run_display()
         self.run_page.set_state(state)
@@ -344,6 +353,9 @@ class RunMixin:
         self._update_editor_busy()
 
     def _on_finished(self, exit_code: int) -> None:
+        if getattr(self, '_session_started', False):
+            # A session exit is not a single run result; the session panel reports its own receipt.
+            return
         self.run_page.set_exit_code(exit_code)
         result = self.runner.last_result
         state = result.state if result else "incomplete"

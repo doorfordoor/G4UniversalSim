@@ -203,6 +203,113 @@ def eof_case(executable: Path, temp: Path) -> None:
     assert any(entry.get("exit_code") == 0 for entry in meta), meta[-3:]
 
 
+def _record_entries(session_dir: Path) -> list[dict[str, object]]:
+    entries: list[dict[str, object]] = []
+    for line in (session_dir / "session.jsonl").read_text(encoding="utf-8").splitlines():
+        try:
+            entry = json.loads(line)
+        except ValueError:
+            continue
+        if isinstance(entry, dict):
+            entries.append(entry)
+    return entries
+
+
+def fatal_during_run_cases(executable: Path, temp: Path) -> None:
+    """Corrupt/overlong frames during a run must fail the session, not exit 0 via EOF."""
+
+    def expect_failed_round(session: "Session", label: str, code: int,
+                            session_dir: Path) -> None:
+        assert code == 3, (label, code, session.frames[-12:])
+        errors = [item for item in session.frames if item.get("kind") == "error"]
+        assert any(item.get("code") == "protocol_error" for item in errors), (label, errors[-4:])
+        started = [item for item in session.frames
+                   if item.get("kind") == "event" and item.get("event") == "run_started"]
+        finished = [item for item in session.frames
+                    if item.get("kind") == "event" and item.get("event") == "run_finished"]
+        assert len(started) == 1, (label, len(started))
+        assert len(finished) == 1, (label, len(finished))
+        record = finished[0]
+        assert record["status"] in {"cancelled", "aborted", "failed"}, (label, record)
+        completed = record["completed_events"]
+        planned = record["planned_events"]
+        assert isinstance(completed, int) and isinstance(planned, int), (label, record)
+        assert 0 <= completed < planned, (label, completed, planned)
+        meta = [entry for entry in _record_entries(session_dir)
+                if entry.get("direction") == "meta"
+                and entry.get("event") in {"session_end", "eof_close"}]
+        assert meta and meta[-1]["exit_code"] == 3, (label, meta[-3:])
+        inputs = [entry.get("text") for entry in _record_entries(session_dir)
+                  if entry.get("direction") == "c2s" and isinstance(entry.get("text"), str)]
+        assert inputs, (label, "no raw client input recorded")
+
+    # -- corrupt frame followed by EOF while a two-worker run is active
+    output = temp / "fatal-corrupt-out"
+    records = temp / "fatal-corrupt-records"
+    session = Session(executable, output, records, threads=2)
+    open_session(session)
+    session_dir = Path(session.state()["session_root"])
+    session.request("run", {"events": 200000}, session.state()["state_revision"], wait=False)
+    session.wait_event("run_started", timeout=300)
+    assert session.process.stdin is not None
+    session.process.stdin.write('{"kind":' + chr(10))
+    session.process.stdin.flush()
+    session.process.stdin.close()
+    try:
+        code = session.process.wait(timeout=180)
+    except subprocess.TimeoutExpired:
+        session.process.kill()
+        session.process.wait(timeout=30)
+        raise AssertionError("backend did not exit after a corrupt frame and EOF")
+    expect_failed_round(session, "corrupt_frame_eof", code, session_dir)
+    raw = [entry.get("text", "") for entry in _record_entries(session_dir)
+           if entry.get("direction") == "c2s"]
+    assert any('{"kind":' in text for text in raw), raw[:6]
+
+    # -- overlong frame with a newline while the run is active and stdin stays open
+    output = temp / "fatal-overlong-out"
+    records = temp / "fatal-overlong-records"
+    session = Session(executable, output, records, threads=2)
+    open_session(session)
+    session_dir = Path(session.state()["session_root"])
+    session.request("run", {"events": 200000}, session.state()["state_revision"], wait=False)
+    session.wait_event("run_started", timeout=300)
+    assert session.process.stdin is not None
+    session.process.stdin.write("x" * 70000 + chr(10))
+    session.process.stdin.flush()
+    try:
+        code = session.process.wait(timeout=180)
+    except subprocess.TimeoutExpired:
+        session.process.kill()
+        session.process.wait(timeout=30)
+        raise AssertionError("backend did not exit after an overlong frame")
+    expect_failed_round(session, "overlong_frame", code, session_dir)
+    errors = [item for item in session.frames if item.get("kind") == "error"]
+    assert any("frame_too_large" in str(item.get("message", "")) for item in errors), errors[-4:]
+
+    # -- short fragment without a newline followed by EOF (no run active)
+    output = temp / "fatal-fragment-out"
+    records = temp / "fatal-fragment-records"
+    session = Session(executable, output, records)
+    session.send({"kind": "hello", "protocol": PROTOCOL})
+    welcome = session.wait(lambda item: item.get("kind") == "welcome", timeout=180.0)
+    fragment_dir = Path(welcome["state"]["session_root"])
+    assert session.process.stdin is not None
+    session.process.stdin.write('{"kind":')
+    session.process.stdin.flush()
+    session.process.stdin.close()
+    code = session.close(expect_exit=None)
+    assert code == 3, (code, session.frames[-8:])
+    fragment_errors = [item for item in session.frames if item.get("kind") == "error"]
+    assert any(item.get("code") == "protocol_error" for item in fragment_errors), session.frames[-8:]
+    assert not [item for item in session.frames
+                if item.get("kind") == "event" and item.get("event") == "run_started"], session.frames[-8:]
+    fragment_meta = [entry for entry in _record_entries(fragment_dir)
+                     if entry.get("direction") == "meta"
+                     and entry.get("event") in {"session_end", "eof_close"}]
+    assert fragment_meta and fragment_meta[-1]["exit_code"] == 3, fragment_meta[-3:]
+
+
 def write_refusal_case(executable: Path, temp: Path, name: str,
                        lines: list[str], expected_code: str) -> None:
     output = temp / f"refusal-{name}-out"
@@ -466,6 +573,7 @@ def main() -> int:
         write_cli_refusal(executable, temp, "records_inside_output", [],
                           "must be outside --output")
         eof_case(executable, temp)
+        fatal_during_run_cases(executable, temp)
         ini_macro_refusal(executable, temp)
         record_boundary_cases(executable, temp)
         two_sessions_keep_history(executable, temp)

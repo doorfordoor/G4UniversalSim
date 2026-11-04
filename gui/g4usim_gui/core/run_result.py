@@ -84,7 +84,10 @@ def evaluate_run_result(
         return result("dry_run", "Configuration checked; no simulation run was requested.")
     if status == "interactive_no_run" and runs == 0 and planned == completed == 0:
         return result("interactive_no_run", "Interactive session ended without a run.")
-    if status != "completed" or macro not in {"completed", "not_run"}:
+    # A controlled session ends its runs with macro_execution_status=session_server;
+    # the remaining conditions (fresh summary, positive runs, per-run counts,
+    # simulation_executed) stay mandatory.  Unknown modes are not success.
+    if status != "completed" or macro not in {"completed", "not_run", "session_server"}:
         return result("incomplete", "Backend or macro status is not a completed state.")
     if runs == 0:
         return result("no_run", "Process completed but no Geant4 run occurred.")
