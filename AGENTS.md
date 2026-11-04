@@ -6,6 +6,9 @@ Linux原生通道补充（主审已签收）：main已实际操作独立真实X1
 
 ## 0. 条目索引与历史全文
 
+- 2026-11-04 F2已验收：冻结864bc036，协议B保留csh/批处理；重放结构预检与内核初始化后/BeamOn前只读语义预检分开，禁止预检修改SourceManager。closing的steps_total计全部操作、steps_executed计完成run；正常终态需核对实际退出和收据。详见docs/agent-history.md同日F2条目及docs/verification/f2-final-20261104/README.md。
+
+
 - 2026-11-04 J3：本轮约定范围已验收并关闭，冻结92134da0；Windows125/150与独立X11代表性、云12报告696/247580及严格门禁完成。历史图身份/非逐页八态、WSLg与约一秒切换限制保留，不外推物理/云Agent验证；后续F2。详见docs/agent-history.md同日J3条目及docs/verification/j3-final-20261104/README.md。
 
 

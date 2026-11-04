@@ -1,0 +1,11 @@
+# F2 重放限定修复第二次独立复验
+
+候选3b713ba9，C盘clean重编，C++指纹fd47ea71a204ee31c8b679bd54f2991f3b5db6b12599449b45e3ef11c00b3805。2worker A/B/A及新进程全事件列比较通过；首轮和末轮status=cancelled两例均exit4、0 run_started，原缺陷已修复。
+
+确定为缺陷：在有效清单最后一次set_source里仅把energy的value改成banana MeV，保持其它全部原件。实际set_source响应rejected/invalid_value，随后仍有3个run_started，最终closing replay_finished、exit0、steps_executed=3。新失败原件out/collab/f2-replay-independent-r2/report.json及process-4.log，原始文件与SHA清单齐全。不能按成功重放签收。
+
+定位SessionServer.cc ValidateReplayPlan只检查source value为非空字符串；ReplaySendOp返回ProcessRequest的循环存活布尔值，把rejected仍继续服务误当成功。限定修复：重放执行明确核对该request的实际响应accepted/applied等成功状态，拒绝即停，不再运行下一步或报告replay_finished；不解析stdout猜回执。整计划源参数用现有校验/解析能力在任何BeamOn前验证，后续非法值也不能先执行前序轮。需要内核粒子表的只读检查可在必要初始化之后、任何事件之前；不新增物理模型/验证框架。
+
+文件仅SessionServer.cc/必要对应声明、现有test_session_replay.py和协议说明，回执outbox/20261104-f2-replay-repair-r2.md。增加后续非法energy及相同机制的source拒绝回归，拒后0事件，实际拒绝不能被记为重放成功；保留已过状态反例与正常单/多worker三轮。不扩工具/CI，不提交推送，冻结待复验。
+
+Windows四例正式与Linux11.3.2构建/专项仍在原进程34866/81889运行，不重复、不改变C源，结果另记原身份。

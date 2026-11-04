@@ -1,0 +1,44 @@
+{
+  "source_steps": [
+    {
+      "completed_events": 5,
+      "op": "run",
+      "params": {
+        "events": 5
+      },
+      "run_id": 0,
+      "run_request_id": "000000000008",
+      "status": "completed"
+    },
+    {
+      "op": "set_source",
+      "params": {
+        "field": "energy",
+        "value": "200 MeV"
+      }
+    },
+    {
+      "completed_events": 5,
+      "op": "run",
+      "params": {
+        "events": 5
+      },
+      "run_id": 1,
+      "run_request_id": "000000000010",
+      "status": "completed"
+    }
+  ],
+  "replay_exit": 0,
+  "cases": [
+    {
+      "pattern": "event_edep_t*.csv",
+      "equal": true,
+      "error": ""
+    },
+    {
+      "pattern": "hits_t*.csv",
+      "equal": true,
+      "error": ""
+    }
+  ]
+}

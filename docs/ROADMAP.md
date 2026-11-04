@@ -1,5 +1,7 @@
 # G4UniversalSim Development Roadmap
 
+2026-11-04：**F2受控多轮运行会话验收完成并关闭**。协议B版本化接口保留csh/批处理；冻结864bc036，云12报告708/255163严格门禁通过，Windows125/150和Linux独立X11真实三轮/取消/重放/退出完成。限定环境重放不代替物理基准。见[最终证据](verification/f2-final-20261104/README.md)。下一完整阶段E4。
+
 2026-11-04：**J3本轮约定范围验收完成，保留证据限制后关闭**。候选92134da0；主审本机正式矩阵与真实Windows125/150、Linux独立X11补验，云12报告696/247580及严格门禁复核通过。约一秒切换及历史图/WSLg限制保留。见[最终证据](verification/j3-final-20261104/README.md)。下一完整阶段F2，先做既定三轮实验与协议提案。
 
 Linux原生通道补充（主审已签收）：main已实际操作独立真实X11/xcb桌面，一次固定HTTP计划passed，操作观察时曾停在awaiting_approval、0事件；随后在观察期间触及300秒预算，整任务保留failed／agent.task_timeout，不称整任务成功。原host exit0、slot_released=true、host与显示服务两组remaining_owned均空、HTTP已关闭；显示辅助子进程退出码[0,1,0]（twm非零保留），不能写全部子进程exit0；代表性原生签收结果为 **独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**。WSLg RAIL任务栏无法展开，第三次host退出且0请求，原失败保留，绝不称该通道成功。Ubuntu实际系统安装x11-xkb-utils，其它本次依赖保持隔离OUT前缀；具体包版本／SHA及安装收据见最终证据，不把早期准备收据system_installs=0外推到之后。
@@ -33,7 +35,7 @@ This file is the single source of truth for progress. Every work session updates
 | C Wizard + built-in plotting | Done (C1 built-in plots, C2 wizard, C3 parameter scans) | see log |
 | D Installer | Done (portable ZIP + Inno Setup installer; uses an existing Geant4 data folder) | see log |
 | E Fixes and foundations | In progress: E1, E2, E3 (Linux incl. Geant4 11.3.2/11.4.3 matrix, done 2026-10-28), E5 done; E4 pending | see log |
-| F System optimisation (backend + GUI) | In progress: F1/F4/F5/F6/F8 done; F2/F3/F7 pending | see log |
+| F System optimisation (backend + GUI) | In progress: F1/F2/F4/F5/F6/F8 done; F3/F7 pending | see log |
 | G 3D view redesign | Done (G1-G6) | see log |
 | H Geant4 capability increments | In progress: H1 done | see log |
 | Q1 完整可靠性审查、修复与验收 | **已完成**：九域审查及R01–R32闭合；Windows105、Linux双版本各105与实窗通过 | 验收代码 `8ecad66`；[最终证据](verification/q1-final-20261029/README.md) |
@@ -152,16 +154,13 @@ Backend:
   data are on, CSV otherwise), git commit and config hash in `run_metadata.json`
   (A1 follow-up), buffered CSV writers; measure hits-heavy runs before/after.
   (Decision needed before changing any default.)
-- **F2 Run session (adjust between runs).** An interactive session driven by the GUI
-  (the audited `csh` session over a pipe): a whitelist of settings that are safe while
-  Geant4 is Idle (source particle/energy/position/direction/shape, beamOn, run name,
-  output toggles that are per-run), every change logged per run in `run_summary.txt`
-  with its origin, and a replay macro written at the end; anything else (geometry,
-  physics, threads) is refused with the reason. Done when: three real runs with
-  changes preserve per-run inputs and reproduce under a defined backend/version,
-  random-engine and thread protocol. Bitwise comparison, where justified, applies
-  to defined event data; it is not a promise across platforms, thread counts, or
-  timestamp-bearing output files. A full configuration switch uses a new process.
+- **F2 Run session (adjust between runs).** Done 2026-11-04, frozen864bc036.
+  Versioned session protocol B retains csh/batch. Audited Idle source particle,
+  energy, position and direction edits carry request/actual receipts; geometry,
+  physics, threads and complete configuration switches require a new process.
+  Real A/B/A, cancellation and separate-process replay passed within the fixed
+  build/data/random-state/thread/order scope. No cross-platform bitwise promise.
+  See [final acceptance](verification/f2-final-20261104/README.md).
 - **F3 Performance.** Profile a hits-heavy and a mesh-heavy run; optional
   `G4TaskRunManager` (`[run] run_manager = mt|tasking`) remains a separate experiment,
   with a defined seed protocol and predeclared event/statistical comparison criteria.
@@ -268,7 +267,7 @@ is marked experimental in the support matrix until benchmarked.
 | --- | --- | --- | --- |
 | **E4** | 当前规范瘦身、历史状态校准、中文快速入门、文档单一事实入口 | 历史条目迁移已有成果；补规则逐项映射，清除 stale 状态，链接与必要 smoke 通过。阶段关闭交 `docs(E4)` | 部分完成，继续收尾 |
 | **F1** | 输出身份、commit/config/项目实际读取资源 hash，未观测输入明确标记；版本化输出与测量后决定缓存/format=auto | 来源/格式节点分开提交；默认CSV不变。依赖 2C/E6，支持 K1/Q2 | 已完成：产品f176d0e；Windows143/143及E6基线、Linux双版本各143、M0双OS各64通过，14次实窗观察/正常关闭与独立复核通过。[最终证据及集成](verification/f1-visible-20261030/README.md)。[自动归档](verification/f1-automated-20261030/README.md)保留两轮失败及当时pending；72次测量完成、缓冲候选撤回。[契约](collab/inbox/20261030-1410-astra-f1-scope.md) |
-| **F2** | GUI 受控 run session、Idle 白名单、逐 run 输入/来源/重放协议 | 完整换配置用新进程；三轮调整的真实状态与限定环境重放；不承诺跨平台/线程数逐位一致。可在 L1 后交付 | 待开始 |
+| **F2** | GUI 受控 run session、Idle 白名单、逐 run 输入/来源/重放协议 | 完整换配置用新进程；三轮调整的真实状态与限定环境重放；不承诺跨平台/线程数逐位一致。可在 L1 后交付 | 已完成（2026-11-04）：864bc036，云708/255163、Win125/150与Linux X11真实运行及重放通过。[最终验收](verification/f2-final-20261104/README.md) |
 | **F3** | hits-heavy/mesh-heavy 的耗时、内存、输出基线及瓶颈优化；tasking 单列实验 | 测量→单一瓶颈变更→前后对照；统计/种子/输出契约不改变。性能优化不能成为接受结果差异的理由 | 待开始 |
 | **F4** | 定位到 editor/row/field/code 的诊断及点击跳转 | 诊断身份不随语言改变，不抹除来源错误；K1/L1 复用同一结构 | 已完成：产品 `7d718d038a00d89995ea773b4772764116b620c3`；Windows 152/152、49913 个 v3 入口与 F1 原始143/48511同代基线门禁；Linux11.3.2 为 152 项、11.4.3 为 152 项（run 41056994075），M0 Windows 为 72 项、Ubuntu 为 72 项（run 41056993987）。CI实际提交 `a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9`，与产品的关系见[提交身份映射](verification/f4-final-20261030/identity/identity-map.json)。Windows原生 13 态、19 次实际观察与进程退出 0；[最终证据](verification/f4-final-20261030/README.md)，[独立审查](collab/reviews/20261030-astra-f4-close-review.md)。 后续F5当前状态见下一行。 |
 | **F5** | 配置事务 undo/redo、自动保存、异常恢复 | 主编辑快照完整；恢复不覆盖原件，撤销后重新验证 | 已完成：5c1eec5，Windows160/50898、双Linux各160、M0双平台各79及F4门禁通过；5d实窗22观察/28截图/退出0经身份映射。[最终证据](verification/f5-final-20261031/README.md) |

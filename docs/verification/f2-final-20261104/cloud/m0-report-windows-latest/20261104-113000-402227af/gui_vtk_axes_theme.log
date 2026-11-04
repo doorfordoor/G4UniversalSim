@@ -1,0 +1,7 @@
+smoke_vtk_axes_theme: mode=objects-only, platform=offscreen
+caption colour: 15 skins, lowest contrast 4.857 (botanical)
+real VTK axis actors: creation, theme switch and rebuild recolor captions; arrows keep their colors
+real PyVista plotter: clear keeps the marker enabled, a new add_axes replaces it
+wiring: marker reference survives clear(), new markers are styled, set_theme restyles
+smoke_vtk_axes_theme: OK (mode=objects-only)
+G4USIM_ASSERTS=210

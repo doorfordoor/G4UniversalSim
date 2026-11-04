@@ -1,0 +1,56 @@
+/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/lib/python3/dist-packages/websockify/websocket.py:31: UserWarning: no 'numpy' module, HyBi protocol will be slower
+  warnings.warn("no 'numpy' module, HyBi protocol will be slower")
+WebSocket server settings:
+  - Listen on 127.0.0.1:6090
+  - Web server. Web root: /mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/share/novnc
+  - No SSL/TLS support (no cert file)
+  - proxying from 127.0.0.1:6090 to 127.0.0.1:5910
+127.0.0.1 - - [04/Nov/2026 19:36:26] code 404, message File not found
+127.0.0.1 - - [04/Nov/2026 19:38:20] 127.0.0.1: Plain non-SSL (ws://) WebSocket connection
+127.0.0.1 - - [04/Nov/2026 19:38:20] 127.0.0.1: Path: '/websockify'
+127.0.0.1 - - [04/Nov/2026 19:38:20] connecting to: 127.0.0.1:5910
+In exit
+Terminating child 4846
+Process Process-3:
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/lib/python3/dist-packages/websockify/websockifyserver.py", line 662, in top_new_client
+    client = self.do_handshake(startsock, address)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/lib/python3/dist-packages/websockify/websockifyserver.py", line 590, in do_handshake
+    self.RequestHandlerClass(retsock, address, self)
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/lib/python3/dist-packages/websockify/websockifyserver.py", line 87, in __init__
+    super().__init__(req, addr, server)
+  File "/usr/lib/python3.12/http/server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+  File "/usr/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/lib/python3/dist-packages/websockify/websockifyserver.py", line 297, in handle
+    super().handle()
+  File "/usr/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/lib/python3/dist-packages/websockify/websocketserver.py", line 40, in handle_one_request
+    super().handle_one_request()
+  File "/usr/lib/python3.12/http/server.py", line 424, in handle_one_request
+    method()
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/lib/python3/dist-packages/websockify/websocketserver.py", line 50, in _websocket_do_GET
+    self.handle_upgrade()
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/lib/python3/dist-packages/websockify/websockifyserver.py", line 203, in handle_upgrade
+    super().handle_upgrade()
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/lib/python3/dist-packages/websockify/websocketserver.py", line 77, in handle_upgrade
+    self.handle_websocket()
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/lib/python3/dist-packages/websockify/websockifyserver.py", line 241, in handle_websocket
+    self.new_websocket_client()
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/lib/python3/dist-packages/websockify/websocketproxy.py", line 123, in new_websocket_client
+    self.do_proxy(tsock)
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/lib/python3/dist-packages/websockify/websocketproxy.py", line 198, in do_proxy
+    ins, outs, excepts = select.select(rlist, wlist, [], 1)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/lib/python3/dist-packages/websockify/websockifyserver.py", line 654, in do_SIGTERM
+    self.terminate()
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/lib/python3/dist-packages/websockify/websockifyserver.py", line 627, in terminate
+    raise self.Terminate()
+websockify.websockifyserver.WebSockifyServer.Terminate

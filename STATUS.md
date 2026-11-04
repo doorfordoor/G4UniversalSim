@@ -1,5 +1,12 @@
 # G4UniversalSim 状态（唯一入口页）
 
+## 2026-11-04 F2 验收完成，转E4
+
+- 产品冻结864bc036，协议B版本化接口、Idle有限源字段、逐轮收据与限定重放完成独立验收，原csh/批处理保留。
+- 云12原报告708用例255163断言及严格门禁通过；Windows125%/150%与Linux独立X11真实三轮、取消、重放、正常退出已核验。4个云工作流均success。
+- 原拒令假成功、预检副作用、正常GUI重放误报已关闭；旧失败及原构建身份保留，物理基准和跨平台逐位一致不在本轮结论内。
+- [最终证据](docs/verification/f2-final-20261104/README.md) · [独立复核](docs/collab/reviews/20261104-f2-final-independent.md)。下一完整阶段E4，按固定清单校准规范、中文入门与两平台复演。
+
 ## 2026-11-04 J3 本轮范围验收完成（保留证据限制）
 
 - 主审签收候选 `92134da0`，J3关闭。B/K/C共用区域层级与三套新增皮肤、代表性Windows125%/150%、Linux独立X11、N1轴文字、宽表双层滚动、状态保持、正常重启/退出完成工程验收；历史图身份、逐页八态未穷举、WSLg等限制分别保留，不称全覆盖。
@@ -11,9 +18,9 @@
 下方J3“未关闭”条目均为当时历史，不覆盖本节最终状态。
 
 
-**接手后先读**　[各阶段详细执行指南](docs/collab/decisions/20261102-stage-execution-guide.md)。近期按 F2 受控运行会话与 DeepSeek 的 [J3 现有界面视觉改造与新增皮肤](docs/collab/decisions/20261102-j3-desktop-skins.md) 分线推进。
+**接手后先读**　[各阶段详细执行指南](docs/collab/decisions/20261102-stage-execution-guide.md)。当前按E4规范与中文入门收尾推进；已完成阶段以ROADMAP及最终证据为准。
 
-**D 盘接手入口**　[后续执行计划与 DeepSeek 开工指令](docs/collab/inbox/20261102-2045-astra-d-workspace-execution.md)。下一完整阶段为 F2，字体与主题的实窗补验可并行。
+**D 盘接手入口**　[后续执行计划与 DeepSeek 开工指令](docs/collab/inbox/20261102-2045-astra-d-workspace-execution.md)。当前完整阶段为E4；F2与J3本轮范围均已关闭。
 
 2026-11-02 D 盘桌面修订已同步。字体、数字显示与主题切换修复见[测量与进度](docs/verification/gui-theme-response-20261102/README.md)。
 

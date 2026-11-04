@@ -1,0 +1,55 @@
+{
+  "candidate": "864bc036d6d7752475e52db4efd2b950cabfcc3d",
+  "qt_platform": "xcb",
+  "display": ":94",
+  "source_session_id": "57d82a7f5b9c5dbecac81535b9c44cfd",
+  "source_threads": 1,
+  "ABA": [
+    100,
+    200,
+    100
+  ],
+  "events_each": 5,
+  "replayable": true,
+  "event_tables": [
+    {
+      "path": "event_edep_t0.csv",
+      "equal": true,
+      "rows": 5
+    },
+    {
+      "path": "event_edep_t0_r1.csv",
+      "equal": true,
+      "rows": 5
+    },
+    {
+      "path": "event_edep_t0_r2.csv",
+      "equal": true,
+      "rows": 5
+    }
+  ],
+  "replay_closing": {
+    "at": "2026-11-04T12:14:59Z",
+    "event": "closing",
+    "exit_code": 0,
+    "kind": "event",
+    "reason": "replay_finished",
+    "session_id": "536e4190c6faf87566cb208b0a327594",
+    "state_revision": 10,
+    "steps_executed": 3,
+    "steps_total": 9
+  },
+  "observed_gui_terminal": "closed, no unexpected exit failure",
+  "physics_validation": "not_established",
+  "replay_session_id": "536e4190c6faf87566cb208b0a327594",
+  "gui_exit": 0,
+  "host_exit": 0,
+  "remaining_owned": [],
+  "display_helper_exit_codes": [
+    0,
+    1,
+    0
+  ],
+  "saved_project": "native-project.json",
+  "visual_evidence": "actual returned noVNC canvas, normal keyboard and mouse input; original automated native_window_evidence not_observed unchanged"
+}

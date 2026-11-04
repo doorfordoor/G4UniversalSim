@@ -1,0 +1,61 @@
+_XSERVTransmkdir: Mode of /tmp/.X11-unix should be set to 1777
+_XSERVTransSocketCreateListener: failed to bind listener
+_XSERVTransSocketUNIXCreateListener: ...SocketCreateListener() failed
+_XSERVTransMakeAllCOTSServerListeners: failed to create listener for unix
+
+Xvnc TigerVNC 1.13.1 - built 2024-04-01 08:26
+Copyright (C) 1999-2022 TigerVNC Team and many others (see README.rst)
+See https://www.tigervnc.org for information on TigerVNC.
+Underlying X server release 12101011
+
+
+Wed Nov  4 19:35:30 2026
+ vncext:      VNC extension running!
+ vncext:      Listening for VNC connections on local interface(s), port 5910
+ vncext:      created VNC server for screen 0
+The XKEYBOARD keymap compiler (xkbcomp) reports:
+> Warning:          Could not resolve keysym XF86CameraAccessEnable
+> Warning:          Could not resolve keysym XF86CameraAccessDisable
+> Warning:          Could not resolve keysym XF86CameraAccessToggle
+> Warning:          Could not resolve keysym XF86NextElement
+> Warning:          Could not resolve keysym XF86PreviousElement
+> Warning:          Could not resolve keysym XF86AutopilotEngageToggle
+> Warning:          Could not resolve keysym XF86MarkWaypoint
+> Warning:          Could not resolve keysym XF86Sos
+> Warning:          Could not resolve keysym XF86NavChart
+> Warning:          Could not resolve keysym XF86FishingChart
+> Warning:          Could not resolve keysym XF86SingleRangeRadar
+> Warning:          Could not resolve keysym XF86DualRangeRadar
+> Warning:          Could not resolve keysym XF86RadarOverlay
+> Warning:          Could not resolve keysym XF86TraditionalSonar
+> Warning:          Could not resolve keysym XF86ClearvuSonar
+> Warning:          Could not resolve keysym XF86SidevuSonar
+> Warning:          Could not resolve keysym XF86NavInfo
+Errors from xkbcomp are not fatal to the X server
+[mi] mieq: warning: overriding existing handler (nil) with 0x63a12acb2580 for event 2
+[mi] mieq: warning: overriding existing handler (nil) with 0x63a12acb2580 for event 3
+
+Wed Nov  4 19:38:20 2026
+ Connections: accepted: 127.0.0.1::54218
+ SConnection: Client needs protocol version 3.8
+ SConnection: Client requests security type None(1)
+ VNCSConnST:  Server default pixel format depth 24 (32bpp) little-endian rgb888
+ VNCSConnST:  Client pixel format depth 24 (32bpp) little-endian bgr888
+
+Wed Nov  4 20:18:27 2026
+ VNCSConnST:  closing 127.0.0.1::54218: Server shutdown
+ EncodeManager: Framebuffer updates: 1980
+ EncodeManager:   Tight:
+ EncodeManager:     Solid: 945 rects, 5.5034 Mpixels
+ EncodeManager:            14.7656 KiB (1:1456.68 ratio)
+ EncodeManager:     Bitmap RLE: 519 rects, 172.633 kpixels
+ EncodeManager:                 15.542 KiB (1:43.7801 ratio)
+ EncodeManager:     Indexed RLE: 3.227 krects, 2.16904 Mpixels
+ EncodeManager:                  413.673 KiB (1:20.5733 ratio)
+ EncodeManager:   Tight (JPEG):
+ EncodeManager:     Full Colour: 1.26 krects, 5.37406 Mpixels
+ EncodeManager:                  4.16826 MiB (1:4.92167 ratio)
+ EncodeManager:   Total: 5.951 krects, 13.2191 Mpixels
+ EncodeManager:          4.60184 MiB (1:10.9728 ratio)
+ ComparingUpdateTracker: 21.3085 Mpixels in / 9.07435 Mpixels out
+ ComparingUpdateTracker: (1:2.34821 ratio)

@@ -1,0 +1,81 @@
+G4UniversalSim GUI Validation Report
+can_run = true
+
+[errors]
+<none>
+
+[warnings]
+<none>
+
+[info]
+Materials summary: 9 material entries parsed.
+Geometry summary: 15 ordinary volumes parsed.
+Sensitive volumes: inner_detector_nx, inner_detector_ny, inner_detector_x, inner_detector_y, outer_detector_nx, outer_detector_ny, outer_detector_x, outer_detector_y
+Bias volumes: lead_shield
+Boolean operations: <none>
+Source summary: preset=proton_beam, particle=proton, energy=10 MeV
+Physics summary: mode=reference, reference=FTFP_BERT_EMZ, default_cut=1 mm, biasing=False
+Scoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100
+Validation passed.
+
+[selected input files]
+materials = C:\Users\123\.codex\worktrees\j3-final\G4UniversalSim\test\materials\test_materials.ini
+geometry = C:\Users\123\.codex\worktrees\j3-final\G4UniversalSim\test\geometry\hierarchical_test.ini
+
+[copied files]
+materials_source_mode = copied from source
+geometry_source_mode = copied from source
+materials = C:\Users\123\.codex\worktrees\j3-final\G4UniversalSim\out\collab\f2-native-final-150\runs\20261104_192514_demo_run\config\materials\material.ini
+geometry = C:\Users\123\.codex\worktrees\j3-final\G4UniversalSim\out\collab\f2-native-final-150\runs\20261104_192514_demo_run\config\geometry\geometry.ini
+main_ini = C:\Users\123\.codex\worktrees\j3-final\G4UniversalSim\out\collab\f2-native-final-150\runs\20261104_192514_demo_run\config\main.ini
+run_macro = C:\Users\123\.codex\worktrees\j3-final\G4UniversalSim\out\collab\f2-native-final-150\runs\20261104_192514_demo_run\macros\run.mac
+output = C:\Users\123\.codex\worktrees\j3-final\G4UniversalSim\out\collab\f2-native-final-150\runs\20261104_192514_demo_run\output
+
+[materials summary]
+path = C:\Users\123\.codex\worktrees\j3-final\G4UniversalSim\out\collab\f2-native-final-150\runs\20261104_192514_demo_run\config\materials\material.ini
+count = 9
+- world kind=nist density=<none> components=1 section=[world]
+- air kind=nist density=<none> components=1 section=[air]
+- silicon kind=nist density=<none> components=1 section=[silicon]
+- copper kind=nist density=<none> components=1 section=[copper]
+- aluminum kind=nist density=<none> components=1 section=[aluminum]
+- lead kind=nist density=<none> components=1 section=[lead]
+- water kind=nist density=<none> components=1 section=[water]
+- iron kind=nist density=<none> components=1 section=[iron]
+- test_polymer kind=atom_count density=1.05 g/cm3 components=1 section=[material.test_polymer]
+
+[geometry summary]
+path = C:\Users\123\.codex\worktrees\j3-final\G4UniversalSim\out\collab\f2-native-final-150\runs\20261104_192514_demo_run\config\geometry\geometry.ini
+template_hint = hierarchical
+volumes = 15
+- world parent=<none> shape=box material=G4_AIR boolean_ops=0 
+- main_chamber parent=world shape=box material=G4_Al boolean_ops=0 
+- target_sphere parent=main_chamber shape=sphere material=G4_Pb boolean_ops=0 
+- water_moderator parent=main_chamber shape=tubs material=G4_WATER boolean_ops=0 
+- lead_shield parent=main_chamber shape=tubs material=G4_Pb boolean_ops=0 bias
+- inner_detector_x parent=main_chamber shape=box material=silicon boolean_ops=0 sensitive
+- inner_detector_nx parent=main_chamber shape=box material=silicon boolean_ops=0 sensitive
+- inner_detector_y parent=main_chamber shape=box material=silicon boolean_ops=0 sensitive
+- inner_detector_ny parent=main_chamber shape=box material=silicon boolean_ops=0 sensitive
+- outer_detector_x parent=main_chamber shape=box material=silicon boolean_ops=0 sensitive
+- outer_detector_nx parent=main_chamber shape=box material=silicon boolean_ops=0 sensitive
+- outer_detector_y parent=main_chamber shape=box material=silicon boolean_ops=0 sensitive
+- outer_detector_ny parent=main_chamber shape=box material=silicon boolean_ops=0 sensitive
+- iron_stand parent=main_chamber shape=trd material=iron boolean_ops=0 
+- cooling_pipe parent=main_chamber shape=tubs material=water boolean_ops=0 
+
+Sensitive volumes:
+- inner_detector_nx
+- inner_detector_ny
+- inner_detector_x
+- inner_detector_y
+- outer_detector_nx
+- outer_detector_ny
+- outer_detector_x
+- outer_detector_y
+
+Bias volumes:
+- lead_shield
+
+Boolean operations:
+- <none>

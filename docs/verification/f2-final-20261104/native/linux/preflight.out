@@ -1,0 +1,11 @@
+PASS parameters: display=:94 rfb=5910 web=6090 (same values launch.sh uses)
+PASS repo_root: /mnt/c/Users/123/.codex/worktrees/j3-final/G4UniversalSim
+PASS source_identity: head=864bc036d6d7752475e52db4efd2b950cabfcc3d status_entries=0 mismatched_files=0
+PASS thin_entry: /mnt/c/Users/123/.codex/worktrees/j3-final/G4UniversalSim/out/collab/j3-production-startup-r1/start_production.py
+PASS vnc_assets: 4/4 assets present
+PASS vnc_dependencies: ldd clean for Xtigervnc/twm; xkbdir present
+PASS gui_environment: PySide6=6.11.3 pyvista=0.48.4 vtk=9.6.2; gui_libs=present
+PASS websockify: websockify loaded
+PASS display_free: display=:94 lock=False socket=False ports={5910: True, 6090: True}
+PASS output_writable: /mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/runs
+preflight: PASS (10/10)

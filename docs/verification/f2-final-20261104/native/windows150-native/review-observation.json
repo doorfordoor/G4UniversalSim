@@ -1,0 +1,42 @@
+{
+  "candidate": "864bc036d6d7752475e52db4efd2b950cabfcc3d",
+  "qt_platform": "windows",
+  "actual_dpr": 1.5,
+  "ABA": [
+    100,
+    200,
+    100
+  ],
+  "events_each": 5,
+  "replay_closing": {
+    "at": "2026-11-04T11:31:30Z",
+    "event": "closing",
+    "exit_code": 0,
+    "kind": "event",
+    "reason": "replay_finished",
+    "session_id": "fc232030334b98daa3224477d1b101a2",
+    "state_revision": 10,
+    "steps_executed": 3,
+    "steps_total": 9
+  },
+  "event_tables": [
+    {
+      "path": "event_edep_t0.csv",
+      "equal": true,
+      "rows": 5
+    },
+    {
+      "path": "event_edep_t0_r1.csv",
+      "equal": true,
+      "rows": 5
+    },
+    {
+      "path": "event_edep_t0_r2.csv",
+      "equal": true,
+      "rows": 5
+    }
+  ],
+  "observed_gui_terminal": "closed, no unexpected exit failure",
+  "gui_exit": 0,
+  "physics_validation": "not_established"
+}

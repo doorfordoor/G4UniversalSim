@@ -1,0 +1,55 @@
+energy spectra
+  gauss mean: mean 9.9729 expected 10 (+-0.018)
+  gauss sigma: std 1.0047 expected 1 (+-0.013)
+  uniform mean: mean 10.042 expected 10 (+-0.053)
+  uniform std: std 2.8759 expected 2.8868 (+-0.037)
+  power(-2) mean: mean 5.0639 expected 5.1169 (+-0.066)
+  exp mean: mean 3.9486 expected 3.9662 (+-0.053)
+  histogram bin 2-4: 0.1717 expected 0.1667 (+-0.0068)
+  histogram bin 4-6: 0.5023 expected 0.5000 (+-0.0091)
+  histogram bin 10-12: 0.3260 expected 0.3333 (+-0.0086)
+  points (triangle) mean: mean 7.3545 expected 7.3333 (+-0.034)
+positions
+  sphere (r/R)^3: mean 0.50559 expected 0.5 (+-0.0053)
+  cylinder rho^2: mean 448.81 expected 450 (+-4.7)
+  cylinder z: std 23.326 expected 23.094 (+-0.3)
+  box x: std 5.8305 expected 5.7735 (+-0.075)
+  box y: std 11.458 expected 11.547 (+-0.15)
+  box z: std 17.251 expected 17.321 (+-0.22)
+  beam circle x: std 1.9697 expected 2 (+-0.026)
+  beam circle y: std 2.0089 expected 2 (+-0.026)
+  beam ellipse x: std 0.99609 expected 1 (+-0.013)
+  beam ellipse y: std 2.9473 expected 3 (+-0.039)
+  rotated plane z: std 11.519 expected 11.547 (+-0.15)
+  rotated rectangle lies in the XZ plane
+  annulus rho^2: mean 252.15 expected 250 (+-1.6)
+  confined box x: std 11.83 expected 11.547 (+-0.26)
+angular distributions
+  cosine law <cos theta>: mean 0.66872 expected 0.66667 (+-0.0043)
+  cone <cos theta>: mean 0.93287 expected 0.93301 (+-0.00071)
+  isotropic <w>: mean 0.011705 expected 0 (+-0.011)
+  isotropic <w^2>: mean 0.34027 expected 0.33333 (+-0.0054)
+  beam1d <theta^2>/sigma^2: mean 1.0433 expected 1 (+-0.026)
+  beam2d x angle: std 0.017812 expected 0.017453 (+-0.00023)
+  beam2d y angle: std 0.071159 expected 0.069813 (+-0.0009)
+  focused: every primary points at the focus
+multiple weighted sources
+  intensity fraction of [source.high]: 0.7455 expected 0.7500 (+-0.0068)
+  [source.high] energy: mean 15.006 expected 15 (+-0.0092)
+  /AIHL/source/energy rejected with several sources
+ions
+  Na-24: 2000 Mg-24 recoils, 1998 in the 4122.9 keV level
+  Na-24 beta: 2000 electrons, mean 551.0 keV (NNDC 554 keV)
+  12C ion beam: primaries are C12 at 1200 MeV
+phase space
+  recorded entry energy: mean 49.915 expected 50 (+-0.082)
+  replay reproduces all 600 recorded entry states (max deviation 4.8e-12)
+  mean edep per event: recorded run 49.4809 MeV, replay 49.3197 MeV (+-0.21)
+  kill = true: recorded protons deposit nothing in the volume
+  two-particle histories with weight 0.5 replay as one event each (6 events recycled from 3)
+  short file without recycle, mixed keys, bad rows and unknown volumes are rejected
+failures before events
+  12 invalid source definitions rejected
+  R12/R13 isotropic reset, deferred ions/native overrides, multi-run and source identity: OK
+test_gps_sources: OK
+G4USIM_ASSERTS=219

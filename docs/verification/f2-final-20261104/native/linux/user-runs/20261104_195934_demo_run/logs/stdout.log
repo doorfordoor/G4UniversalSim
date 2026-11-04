@@ -1,0 +1,822 @@
+
+**************************************************************
+ Geant4 version Name: geant4-11-03-patch-02 [MT]   (25-April-2025)
+  << in Multi-threaded mode >> 
+                       Copyright : Geant4 Collaboration
+                      References : NIM A 506 (2003), 250-303
+                                 : IEEE-TNS 53 (2006), 270-278
+                                 : NIM A 835 (2016), 186-225
+                             WWW : http://geant4.org/
+**************************************************************
+
+G4PhysListFactory::GetReferencePhysList <FTFP_BERT_EMZ>  EMoption= 4
+<<< Geant4 Physics List simulation engine: FTFP_BERT
+
+G4VModularPhysicsList::ReplacePhysics: G4EmStandard with type : 2 is replaced with G4EmStandard_opt4
+
+{"at":"2026-11-04T12:14:53Z","backend":{"build_git_commit":"864bc036d6d7752475e52db4efd2b950cabfcc3d","compiler_id":"GNU","source_fingerprint":"e7de615d4e342114104f970688a7ea5f9789f7b70240b2562a388a50a45704e7"},"kind":"welcome","limits":{"max_events_per_run":100000000,"max_frame_bytes":65536},"protocol":"g4usim-session-v1","replay":{"replayable":true,"schema":"g4usim_session_replay_v1","session_id":"57d82a7f5b9c5dbecac81535b9c44cfd","source_session_dir":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/session-records/20261104_195934_demo_run-20261104-195935/session-57d82a7f5b9c5dbecac81535b9c44cfd","steps":[{"op":"set_source","params":{"field":"particle","value":"proton"}},{"op":"set_source","params":{"field":"energy","value":"100 MeV"}},{"completed_events":5,"op":"run","params":{"events":5},"run_id":0,"run_request_id":"7acf3b153efff71b32bc25ebb3ff8fa8","status":"completed"},{"op":"set_source","params":{"field":"particle","value":"proton"}},{"op":"set_source","params":{"field":"energy","value":"200 MeV"}},{"completed_events":5,"op":"run","params":{"events":5},"run_id":1,"run_request_id":"c6ba662e80d5da172b391d0e69a6f659","status":"completed"},{"op":"set_source","params":{"field":"particle","value":"proton"}},{"op":"set_source","params":{"field":"energy","value":"100 MeV"}},{"completed_events":5,"op":"run","params":{"events":5},"run_id":2,"run_request_id":"f9ae191766dd74138561253dbbd53c7b","status":"completed"}]},"session_id":"536e4190c6faf87566cb208b0a327594","state":{"draft_revision":0,"kernel_state":"pre_init","output_root":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453","phase":"idle","record_root":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-records-20261104-201453","session_root":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-records-20261104-201453/session-536e4190c6faf87566cb208b0a327594","source":{"advanced":false,"direction":[0.0,0.0,1.0],"energy_type":"mono","has_direction":true,"ion":false,"isotropic":false,"mono_energy_MeV":10.0,"particle":"proton","phase_space":false,"position_params":[0.0,0.0,-1.0],"position_shape":"","position_type":"Point","preset":"proton_beam","source_count":1},"state_revision":0}}
+[DetectorConstruction] GeometryManager is dirty; rebuilding world from current geometry state.
+Checking overlaps for volume main_chamber_PV:0 (G4Box) ... OK! 
+Checking overlaps for volume cooling_pipe_PV:0 (G4Tubs) ... OK! 
+Checking overlaps for volume inner_detector_nx_PV:102 (G4Box) ... OK! 
+Checking overlaps for volume inner_detector_ny_PV:104 (G4Box) ... OK! 
+Checking overlaps for volume inner_detector_x_PV:101 (G4Box) ... OK! 
+Checking overlaps for volume inner_detector_y_PV:103 (G4Box) ... OK! 
+Checking overlaps for volume iron_stand_PV:0 (G4Trd) ... OK! 
+Checking overlaps for volume lead_shield_PV:0 (G4Tubs) ... OK! 
+Checking overlaps for volume outer_detector_nx_PV:202 (G4Box) ... OK! 
+Checking overlaps for volume outer_detector_ny_PV:204 (G4Box) ... OK! 
+Checking overlaps for volume outer_detector_x_PV:201 (G4Box) ... OK! 
+Checking overlaps for volume outer_detector_y_PV:203 (G4Box) ... OK! 
+Checking overlaps for volume target_sphere_PV:0 (G4Sphere) ... OK! 
+Checking overlaps for volume water_moderator_PV:0 (G4Tubs) ... OK! 
+[DetectorConstruction] World volume constructed.
+[GeometryRegistry] logical=15, physical=15, sensitive=8, bias=1, regions=9
+[DetectorConstruction] Attached sensitive detector 'AIHLParticleSD' to 8 logical volume(s).
+--- G4CoupledTransportation is used 
+
+ hInelastic FTFP_BERT : threshold between BERT and FTFP is over the interval 
+ for pions :   3 to 6 GeV
+ for kaons :   3 to 6 GeV
+ for proton :  3 to 6 GeV
+ for neutron : 3 to 6 GeV
+
+### Adding tracking cuts for neutron  TimeCut(ns)= 10000  KinEnergyCut(MeV)= 0
+=======================================================================
+======                 Electromagnetic Physics Parameters      ========
+=======================================================================
+LPM effect enabled                                 1
+Enable creation and use of sampling tables         0
+Apply cuts on all EM processes                     0
+Use combined TransportationWithMsc                 Disabled
+Use general process                                1
+Enable linear polarisation for gamma               0
+Enable photoeffect sampling below K-shell          1
+Enable sampling of quantum entanglement            0
+X-section factor for integral approach             0.8
+Min kinetic energy for tables                      100 eV 
+Max kinetic energy for tables                      100 TeV
+Number of bins per decade of a table               20
+Verbose level                                      1
+Verbose level for worker thread                    0
+Bremsstrahlung energy threshold above which 
+  primary e+- is added to the list of secondary    100 TeV
+Bremsstrahlung energy threshold above which primary
+  muon/hadron is added to the list of secondary    100 TeV
+Positron annihilation at rest model                AllisonPositronium
+Enable 3 gamma annihilation on fly                 1
+Lowest triplet kinetic energy                      1 MeV
+Enable sampling of gamma linear polarisation       0
+5D gamma conversion model type                     0
+5D gamma conversion model on isolated ion          0
+Use Ricardo-Gerardo pair production model          0
+Livermore data directory                           epics_2017
+=======================================================================
+======                 Ionisation Parameters                   ========
+=======================================================================
+Step function for e+-                              (0.2, 0.01 mm)
+Step function for muons/hadrons                    (0.1, 0.05 mm)
+Step function for light ions                       (0.1, 0.02 mm)
+Step function for general ions                     (0.1, 0.001 mm)
+Lowest e+e- kinetic energy                         100 eV 
+Lowest muon/hadron kinetic energy                  1 keV
+Use ICRU90 data                                    1
+Fluctuations of dE/dx are enabled                  1
+Type of fluctuation model for leptons and hadrons  Urban
+Use built-in Birks satuaration                     0
+Build CSDA range enabled                           0
+Use cut as a final range enabled                   0
+Enable angular generator interface                 1
+Max kinetic energy for CSDA tables                 1 GeV
+Max kinetic energy for NIEL computation            1 MeV
+Linear loss limit                                  0.01
+Read data from file for e+e- pair production by mu 0
+=======================================================================
+======                 Multiple Scattering Parameters          ========
+=======================================================================
+Type of msc step limit algorithm for e+-           2
+Type of msc step limit algorithm for muons/hadrons 0
+Msc lateral displacement for e+- enabled           1
+Msc lateral displacement for muons and hadrons     1
+Urban msc model lateral displacement alg96         1
+Range factor for msc step limit for e+-            0.08
+Range factor for msc step limit for muons/hadrons  0.2
+Geometry factor for msc step limitation of e+-     2.5
+Safety factor for msc step limit for e+-           0.6
+Skin parameter for msc step limitation of e+-      3
+Lambda limit for msc step limit for e+-            1 mm
+Use Mott correction for e- scattering              1
+Factor used for dynamic computation of angular 
+  limit between single and multiple scattering     1
+Fixed angular limit between single 
+  and multiple scattering                          3.1416 rad
+Upper energy limit for e+- multiple scattering     100 MeV
+Type of electron single scattering model           0
+Type of nuclear form-factor                        1
+Screening factor                                   1
+=======================================================================
+======                 Atomic Deexcitation Parameters          ========
+=======================================================================
+Fluorescence enabled                               1
+Directory in G4LEDATA for fluorescence data files  fluor
+Auger electron cascade enabled                     0
+PIXE atomic de-excitation enabled                  0
+De-excitation module ignores cuts                  0
+Type of PIXE cross section for hadrons             Empirical
+Type of PIXE cross section for e+-                 Livermore
+=======================================================================
+
+### ===  Deexcitation model UAtomDeexcitation is activated for 4 regions:
+          DefaultRegionForTheWorld  1  0  0
+          InnerDetRegion  1  0  0
+          ShieldRegion  1  0  0
+          OuterDetRegion  1  0  0
+### ===  Ignore cuts flag:   0
+
+phot:  for gamma SubType=12 BuildTable=0
+      LambdaPrime table from 200 keV to 100 TeV in 174 bins 
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+ LivermorePhElectric : Emin=    0 eV  Emax=  100 TeV  SauterGavrila Fluo
+
+compt:  for gamma SubType=13 BuildTable=1
+      Lambda table from 100 eV  to 1 MeV, 20 bins/decade, spline: 1
+      LambdaPrime table from 1 MeV to 100 TeV in 160 bins 
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+   LowEPComptonModel : Emin=    0 eV  Emax=   20 MeV Fluo
+        KleinNishina : Emin=   20 MeV Emax=  100 TeV Fluo
+
+conv:  for gamma SubType=14 BuildTable=1
+      Lambda table from 1.022 MeV to 100 TeV, 20 bins/decade, spline: 1
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+      BetheHeitler5D : Emin=    0 eV  Emax=  100 TeV  ModifiedTsai
+
+Rayl:  for gamma SubType=11 BuildTable=1
+      Lambda table from 100 eV  to 150 keV, 20 bins/decade, spline: 0
+      LambdaPrime table from 150 keV to 100 TeV in 176 bins 
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+   LivermoreRayleigh : Emin=    0 eV  Emax=  100 TeV  CullenGenerator
+
+msc:  for e-  SubType= 10
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+  GoudsmitSaunderson : Emin=    0 eV  Emax=  100 MeV Nbins=120 100 eV  - 100 MeV
+          StepLim=SafetyPlus Rfact=0.08 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llim=1 mm
+        WentzelVIUni : Emin=  100 MeV Emax=  100 TeV Nbins=120 100 MeV - 100 TeV
+          StepLim=SafetyPlus Rfact=0.08 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llim=1 mm
+
+eIoni:  for e-  XStype:3  SubType=2
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      StepFunction=(0.2, 0.01 mm), integ: 3, fluct: 1, linLossLim= 0.01
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+             PenIoni : Emin=    0 eV  Emax=  100 keV
+        MollerBhabha : Emin=  100 keV Emax=  100 TeV  deltaVI
+
+eBrem:  for e-  XStype:4  SubType=3
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      LPM flag: 1 for E > 1 GeV,  VertexHighEnergyTh(GeV)= 100000
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+             eBremSB : Emin=    0 eV  Emax=    1 GeV  AngularGen2BS
+            eBremLPM : Emin=    1 GeV Emax=  100 TeV  AngularGen2BS
+
+ePairProd:  for e-  XStype:1  SubType=4
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 0
+      Sampling table 25x1001; from 0.1 GeV to 100 TeV 
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+           ePairProd : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+
+CoulombScat:  for e- XStype:1 SubType=1 BuildTable=1
+      Lambda table from 100 MeV to 100 TeV, 20 bins/decade, spline: 0
+      ThetaMin(p) < Theta(degree) < 180, pLimit(GeV^1)= 0.139531
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+  eCoulombScattering : Emin=  100 MeV Emax=  100 TeV
+
+msc:  for e+  SubType= 10
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+  GoudsmitSaunderson : Emin=    0 eV  Emax=  100 MeV Nbins=120 100 eV  - 100 MeV
+          StepLim=SafetyPlus Rfact=0.08 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llim=1 mm
+        WentzelVIUni : Emin=  100 MeV Emax=  100 TeV Nbins=120 100 MeV - 100 TeV
+          StepLim=SafetyPlus Rfact=0.08 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llim=1 mm
+
+eIoni:  for e+  XStype:3  SubType=2
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      StepFunction=(0.2, 0.01 mm), integ: 3, fluct: 1, linLossLim= 0.01
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+             PenIoni : Emin=    0 eV  Emax=  100 keV
+        MollerBhabha : Emin=  100 keV Emax=  100 TeV  deltaVI
+
+eBrem:  for e+  XStype:4  SubType=3
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      LPM flag: 1 for E > 1 GeV,  VertexHighEnergyTh(GeV)= 100000
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+             eBremSB : Emin=    0 eV  Emax=    1 GeV  AngularGen2BS
+            eBremLPM : Emin=    1 GeV Emax=  100 TeV  AngularGen2BS
+
+ePairProd:  for e+  XStype:1  SubType=4
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 0
+      Sampling table 25x1001; from 0.1 GeV to 100 TeV 
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+           ePairProd : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+
+annihil:  for e+ XStype:2 SubType=5 AtRestModel:Allison BuildTable=0
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+    eplusTo2or3gamma : Emin=    0 eV  Emax=  100 TeV
+
+CoulombScat:  for e+ XStype:1 SubType=1 BuildTable=1
+      Lambda table from 100 MeV to 100 TeV, 20 bins/decade, spline: 0
+      ThetaMin(p) < Theta(degree) < 180, pLimit(GeV^1)= 0.139531
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+  eCoulombScattering : Emin=  100 MeV Emax=  100 TeV
+
+msc:  for proton  SubType= 10
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+        WentzelVIUni : Emin=    0 eV  Emax=  100 TeV Nbins=240 100 eV  - 100 TeV
+          StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llim=1 mm
+
+hIoni:  for proton  XStype:3  SubType=2
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      StepFunction=(0.1, 0.05 mm), integ: 3, fluct: 1, linLossLim= 0.01
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+               Bragg : Emin=    0 eV  Emax=    2 MeV  deltaVI
+          BetheBloch : Emin=    2 MeV Emax=  100 TeV  deltaVI
+
+hBrems:  for proton  XStype:1  SubType=3
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+               hBrem : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+
+hPairProd:  for proton  XStype:1  SubType=4
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      Sampling table 17x1001; from 7.50618 GeV to 100 TeV 
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+           hPairProd : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+
+CoulombScat:  for proton XStype:1 SubType=1 BuildTable=1
+      Lambda table from threshold  to 100 TeV, 20 bins/decade, spline: 0
+      ThetaMin(p) < Theta(degree) < 180, pLimit(GeV^1)= 0.139531
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+  eCoulombScattering : Emin=    0 eV  Emax=  100 TeV
+
+nuclearStopping:  for proton SubType=8 BuildTable=0
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+   ICRU49NucStopping : Emin=    0 eV  Emax=    1 MeV
+
+msc:  for GenericIon  SubType= 10
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+            UrbanMsc : Emin=    0 eV  Emax=  100 TeV
+          StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llim=1 mm
+
+ionIoni:  for GenericIon  XStype:3  SubType=2
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      StepFunction=(0.1, 0.001 mm), integ: 3, fluct: 1, linLossLim= 0.02
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+    LindhardSorensen : Emin=    0 eV  Emax=  100 TeV  deltaVI
+
+nuclearStopping:  for GenericIon SubType=8 BuildTable=0
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+   ICRU49NucStopping : Emin=    0 eV  Emax=    1 MeV
+
+msc:  for alpha  SubType= 10
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+            UrbanMsc : Emin=    0 eV  Emax=  100 TeV
+          StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llim=1 mm
+
+ionIoni:  for alpha  XStype:3  SubType=2
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      StepFunction=(0.1, 0.02 mm), integ: 3, fluct: 1, linLossLim= 0.02
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+            BraggIon : Emin=    0 eV  Emax=7.9452 MeV  deltaVI
+          BetheBloch : Emin=7.9452 MeV Emax=  100 TeV  deltaVI
+
+nuclearStopping:  for alpha SubType=8 BuildTable=0
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+   ICRU49NucStopping : Emin=    0 eV  Emax=    1 MeV
+
+msc:  for anti_proton  SubType= 10
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+        WentzelVIUni : Emin=    0 eV  Emax=  100 TeV Nbins=240 100 eV  - 100 TeV
+          StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llim=1 mm
+
+hIoni:  for anti_proton  XStype:3  SubType=2
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      StepFunction=(0.1, 0.05 mm), integ: 3, fluct: 1, linLossLim= 0.01
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+            ICRU73QO : Emin=    0 eV  Emax=    2 MeV  deltaVI
+          BetheBloch : Emin=    2 MeV Emax=  100 TeV  deltaVI
+
+hBrems:  for anti_proton  XStype:1  SubType=3
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+               hBrem : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+
+hPairProd:  for anti_proton  XStype:1  SubType=4
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      Sampling table 17x1001; from 7.50618 GeV to 100 TeV 
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+           hPairProd : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+
+CoulombScat:  for anti_proton XStype:1 SubType=1 BuildTable=1
+      Lambda table from threshold  to 100 TeV, 20 bins/decade, spline: 0
+      ThetaMin(p) < Theta(degree) < 180, pLimit(GeV^1)= 0.139531
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+  eCoulombScattering : Emin=    0 eV  Emax=  100 TeV
+
+msc:  for kaon+  SubType= 10
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+        WentzelVIUni : Emin=    0 eV  Emax=  100 TeV Nbins=240 100 eV  - 100 TeV
+          StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llim=1 mm
+
+hIoni:  for kaon+  XStype:3  SubType=2
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      StepFunction=(0.1, 0.05 mm), integ: 3, fluct: 1, linLossLim= 0.01
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+               Bragg : Emin=    0 eV  Emax=1.05231 MeV  deltaVI
+          BetheBloch : Emin=1.05231 MeV Emax=  100 TeV  deltaVI
+
+hBrems:  for kaon+  XStype:1  SubType=3
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+               hBrem : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+
+hPairProd:  for kaon+  XStype:1  SubType=4
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      Sampling table 18x1001; from 3.94942 GeV to 100 TeV 
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+           hPairProd : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+
+CoulombScat:  for kaon+ XStype:1 SubType=1 BuildTable=1
+      Lambda table from threshold  to 100 TeV, 20 bins/decade, spline: 0
+      ThetaMin(p) < Theta(degree) < 180, pLimit(GeV^1)= 0.139531
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+  eCoulombScattering : Emin=    0 eV  Emax=  100 TeV
+
+msc:  for kaon-  SubType= 10
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+        WentzelVIUni : Emin=    0 eV  Emax=  100 TeV Nbins=240 100 eV  - 100 TeV
+          StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llim=1 mm
+
+hIoni:  for kaon-  XStype:3  SubType=2
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      StepFunction=(0.1, 0.05 mm), integ: 3, fluct: 1, linLossLim= 0.01
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+            ICRU73QO : Emin=    0 eV  Emax=1.05231 MeV  deltaVI
+          BetheBloch : Emin=1.05231 MeV Emax=  100 TeV  deltaVI
+
+hBrems:  for kaon-  XStype:1  SubType=3
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+               hBrem : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+
+hPairProd:  for kaon-  XStype:1  SubType=4
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      Sampling table 18x1001; from 3.94942 GeV to 100 TeV 
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+           hPairProd : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+
+CoulombScat:  for kaon- XStype:1 SubType=1 BuildTable=1
+      Used Lambda table of kaon+
+      ThetaMin(p) < Theta(degree) < 180, pLimit(GeV^1)= 0.139531
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+  eCoulombScattering : Emin=    0 eV  Emax=  100 TeV
+
+msc:  for mu+  SubType= 10
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+        WentzelVIUni : Emin=    0 eV  Emax=  100 TeV Nbins=240 100 eV  - 100 TeV
+          StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llim=1 mm
+
+muIoni:  for mu+  XStype:3  SubType=2
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      StepFunction=(0.1, 0.05 mm), integ: 3, fluct: 1, linLossLim= 0.01
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+               Bragg : Emin=    0 eV  Emax=  200 keV  deltaVI
+        MuBetheBloch : Emin=  200 keV Emax=  100 TeV  deltaVI
+
+muBrems:  for mu+  XStype:1  SubType=3
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+              MuBrem : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+
+muPairProd:  for mu+  XStype:1  SubType=4
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      Sampling table 21x1001; from 0.85 GeV to 100 TeV 
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+          muPairProd : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+
+CoulombScat:  for mu+ XStype:1 SubType=1 BuildTable=1
+      Lambda table from threshold  to 100 TeV, 20 bins/decade, spline: 0
+      ThetaMin(p) < Theta(degree) < 180, pLimit(GeV^1)= 0.139531
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+  eCoulombScattering : Emin=    0 eV  Emax=  100 TeV
+
+msc:  for mu-  SubType= 10
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+        WentzelVIUni : Emin=    0 eV  Emax=  100 TeV Nbins=240 100 eV  - 100 TeV
+          StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llim=1 mm
+
+muIoni:  for mu-  XStype:3  SubType=2
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      StepFunction=(0.1, 0.05 mm), integ: 3, fluct: 1, linLossLim= 0.01
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+            ICRU73QO : Emin=    0 eV  Emax=  200 keV  deltaVI
+        MuBetheBloch : Emin=  200 keV Emax=  100 TeV  deltaVI
+
+muBrems:  for mu-  XStype:1  SubType=3
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+              MuBrem : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+
+muPairProd:  for mu-  XStype:1  SubType=4
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      Sampling table 21x1001; from 0.85 GeV to 100 TeV 
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+          muPairProd : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+
+CoulombScat:  for mu- XStype:1 SubType=1 BuildTable=1
+      Used Lambda table of mu+
+      ThetaMin(p) < Theta(degree) < 180, pLimit(GeV^1)= 0.139531
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+  eCoulombScattering : Emin=    0 eV  Emax=  100 TeV
+
+msc:  for pi+  SubType= 10
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+        WentzelVIUni : Emin=    0 eV  Emax=  100 TeV Nbins=240 100 eV  - 100 TeV
+          StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llim=1 mm
+
+hIoni:  for pi+  XStype:3  SubType=2
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      StepFunction=(0.1, 0.05 mm), integ: 3, fluct: 1, linLossLim= 0.01
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+               Bragg : Emin=    0 eV  Emax=297.505 keV  deltaVI
+          BetheBloch : Emin=297.505 keV Emax=  100 TeV  deltaVI
+
+hBrems:  for pi+  XStype:1  SubType=3
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+               hBrem : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+
+hPairProd:  for pi+  XStype:1  SubType=4
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      Sampling table 20x1001; from 1.11656 GeV to 100 TeV 
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+           hPairProd : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+
+CoulombScat:  for pi+ XStype:1 SubType=1 BuildTable=1
+      Lambda table from threshold  to 100 TeV, 20 bins/decade, spline: 0
+      ThetaMin(p) < Theta(degree) < 180, pLimit(GeV^1)= 0.139531
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+  eCoulombScattering : Emin=    0 eV  Emax=  100 TeV
+
+msc:  for pi-  SubType= 10
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+        WentzelVIUni : Emin=    0 eV  Emax=  100 TeV Nbins=240 100 eV  - 100 TeV
+          StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llim=1 mm
+
+hIoni:  for pi-  XStype:3  SubType=2
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      StepFunction=(0.1, 0.05 mm), integ: 3, fluct: 1, linLossLim= 0.01
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+            ICRU73QO : Emin=    0 eV  Emax=297.505 keV  deltaVI
+          BetheBloch : Emin=297.505 keV Emax=  100 TeV  deltaVI
+
+hBrems:  for pi-  XStype:1  SubType=3
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+               hBrem : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+
+hPairProd:  for pi-  XStype:1  SubType=4
+      dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+      Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+      Sampling table 20x1001; from 1.11656 GeV to 100 TeV 
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+           hPairProd : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+
+CoulombScat:  for pi- XStype:1 SubType=1 BuildTable=1
+      Used Lambda table of pi+
+      ThetaMin(p) < Theta(degree) < 180, pLimit(GeV^1)= 0.139531
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+  eCoulombScattering : Emin=    0 eV  Emax=  100 TeV
+
+====================================================================
+                  HADRONIC PROCESSES SUMMARY (verbose level 1)
+-----------------------------------------------------------------------
+                           Hadronic Processes for neutron
+  Process: hadElastic
+        Model:             hElasticCHIPS: 0 eV  ---> 100 TeV
+     Cr_sctns:        G4NeutronElasticXS: 0 eV  ---> 100 TeV
+  Process: neutronInelastic
+        Model:                      FTFP: 3 GeV ---> 100 TeV
+        Model:            BertiniCascade: 0 eV  ---> 6 GeV
+     Cr_sctns:      G4NeutronInelasticXS: 0 eV  ---> 100 TeV
+  Process: nCapture
+        Model:               nRadCapture: 0 eV  ---> 100 TeV
+     Cr_sctns:        G4NeutronCaptureXS: 0 eV  ---> 100 TeV
+  Process: nKiller
+-----------------------------------------------------------------------
+                           Hadronic Processes for B-
+  Process: hadElastic
+        Model:              hElasticLHEP: 0 eV  ---> 100 TeV
+     Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+  Process: B-Inelastic
+        Model:                      FTFP: 0 eV  ---> 100 TeV
+     Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+-----------------------------------------------------------------------
+                           Hadronic Processes for D-
+  Process: hadElastic
+        Model:              hElasticLHEP: 0 eV  ---> 100 TeV
+     Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+  Process: D-Inelastic
+        Model:                      FTFP: 0 eV  ---> 100 TeV
+     Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+-----------------------------------------------------------------------
+                           Hadronic Processes for GenericIon
+  Process: ionInelastic
+        Model:  Binary Light Ion Cascade: 0 eV /n ---> 6 GeV/n
+        Model:                      FTFP: 3 GeV/n ---> 100 TeV/n
+     Cr_sctns:  Glauber-Gribov Nucl-nucl: 0 eV  ---> 25.6 PeV
+-----------------------------------------------------------------------
+                           Hadronic Processes for He3
+  Process: hadElastic
+        Model:              hElasticLHEP: 0 eV /n ---> 100 TeV/n
+     Cr_sctns:  Glauber-Gribov Nucl-nucl: 0 eV  ---> 25.6 PeV
+  Process: He3Inelastic
+        Model:  Binary Light Ion Cascade: 0 eV /n ---> 6 GeV/n
+        Model:                      FTFP: 3 GeV/n ---> 100 TeV/n
+     Cr_sctns:  Glauber-Gribov Nucl-nucl: 0 eV  ---> 25.6 PeV
+-----------------------------------------------------------------------
+                           Hadronic Processes for alpha
+  Process: hadElastic
+        Model:              hElasticLHEP: 0 eV /n ---> 100 TeV/n
+     Cr_sctns:  Glauber-Gribov Nucl-nucl: 0 eV  ---> 25.6 PeV
+  Process: alphaInelastic
+        Model:  Binary Light Ion Cascade: 0 eV /n ---> 6 GeV/n
+        Model:                      FTFP: 3 GeV/n ---> 100 TeV/n
+     Cr_sctns:  Glauber-Gribov Nucl-nucl: 0 eV  ---> 25.6 PeV
+-----------------------------------------------------------------------
+                           Hadronic Processes for anti_He3
+  Process: hadElastic
+        Model:              hElasticLHEP: 0 eV /n ---> 100.1 MeV/n
+        Model:              AntiAElastic: 100 MeV/n ---> 100 TeV/n
+     Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+  Process: anti_He3Inelastic
+        Model:                      FTFP: 0 eV /n ---> 100 TeV/n
+     Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+  Process: hFritiofCaptureAtRest
+-----------------------------------------------------------------------
+                           Hadronic Processes for anti_alpha
+  Process: hadElastic
+        Model:              hElasticLHEP: 0 eV /n ---> 100.1 MeV/n
+        Model:              AntiAElastic: 100 MeV/n ---> 100 TeV/n
+     Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+  Process: anti_alphaInelastic
+        Model:                      FTFP: 0 eV /n ---> 100 TeV/n
+     Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+  Process: hFritiofCaptureAtRest
+-----------------------------------------------------------------------
+                           Hadronic Processes for anti_deuteron
+  Process: hadElastic
+        Model:              hElasticLHEP: 0 eV /n ---> 100.1 MeV/n
+        Model:              AntiAElastic: 100 MeV/n ---> 100 TeV/n
+     Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+  Process: anti_deuteronInelastic
+        Model:                      FTFP: 0 eV /n ---> 100 TeV/n
+     Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+  Process: hFritiofCaptureAtRest
+-------------------------------------------------------------------------
+                           Hadronic Processes for anti_hypertriton
+  Process: hFritiofCaptureAtRest
+-----------------------------------------------------------------------
+                           Hadronic Processes for anti_lambda
+  Process: hadElastic
+        Model:              hElasticLHEP: 0 eV  ---> 100 TeV
+     Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+  Process: anti_lambdaInelastic
+        Model:                      FTFP: 0 eV  ---> 100 TeV
+     Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+  Process: hFritiofCaptureAtRest
+-----------------------------------------------------------------------
+                           Hadronic Processes for anti_neutron
+  Process: hadElastic
+        Model:              hElasticLHEP: 0 eV  ---> 100.1 MeV
+        Model:              AntiAElastic: 100 MeV ---> 100 TeV
+     Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+  Process: anti_neutronInelastic
+        Model:                      FTFP: 0 eV  ---> 100 TeV
+     Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+  Process: hFritiofCaptureAtRest
+-----------------------------------------------------------------------
+                           Hadronic Processes for anti_proton
+  Process: hadElastic
+        Model:              hElasticLHEP: 0 eV  ---> 100.1 MeV
+        Model:              AntiAElastic: 100 MeV ---> 100 TeV
+     Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+  Process: anti_protonInelastic
+        Model:                      FTFP: 0 eV  ---> 100 TeV
+     Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+  Process: hFritiofCaptureAtRest
+-----------------------------------------------------------------------
+                           Hadronic Processes for anti_triton
+  Process: hadElastic
+        Model:              hElasticLHEP: 0 eV /n ---> 100.1 MeV/n
+        Model:              AntiAElastic: 100 MeV/n ---> 100 TeV/n
+     Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+  Process: anti_tritonInelastic
+        Model:                      FTFP: 0 eV /n ---> 100 TeV/n
+     Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+  Process: hFritiofCaptureAtRest
+-----------------------------------------------------------------------
+                           Hadronic Processes for deuteron
+  Process: hadElastic
+        Model:              hElasticLHEP: 0 eV /n ---> 100 TeV/n
+     Cr_sctns:  Glauber-Gribov Nucl-nucl: 0 eV  ---> 25.6 PeV
+  Process: dInelastic
+        Model:  Binary Light Ion Cascade: 0 eV /n ---> 6 GeV/n
+        Model:                      FTFP: 3 GeV/n ---> 100 TeV/n
+     Cr_sctns:  Glauber-Gribov Nucl-nucl: 0 eV  ---> 25.6 PeV
+-----------------------------------------------------------------------
+                           Hadronic Processes for e+
+  Process: positronNuclear
+        Model:   G4ElectroVDNuclearModel: 0 eV  ---> 1 PeV
+     Cr_sctns:          ElectroNuclearXS: 0 eV  ---> 100 TeV
+-----------------------------------------------------------------------
+                           Hadronic Processes for e-
+  Process: electronNuclear
+        Model:   G4ElectroVDNuclearModel: 0 eV  ---> 1 PeV
+     Cr_sctns:          ElectroNuclearXS: 0 eV  ---> 100 TeV
+-----------------------------------------------------------------------
+                           Hadronic Processes for gamma
+  Process: photonNuclear
+        Model:               GammaNPreco: 0 eV  ---> 200 MeV
+        Model:            BertiniCascade: 199 MeV ---> 6 GeV
+        Model:           TheoFSGenerator: 3 GeV ---> 100 TeV
+     Cr_sctns:            GammaNuclearXS: 0 eV  ---> 100 TeV
+-----------------------------------------------------------------------
+                           Hadronic Processes for kaon+
+  Process: hadElastic
+        Model:              hElasticLHEP: 0 eV  ---> 100 TeV
+     Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+  Process: kaon+Inelastic
+        Model:                      FTFP: 3 GeV ---> 100 TeV
+        Model:            BertiniCascade: 0 eV  ---> 6 GeV
+     Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+-----------------------------------------------------------------------
+                           Hadronic Processes for kaon-
+  Process: hadElastic
+        Model:              hElasticLHEP: 0 eV  ---> 100 TeV
+     Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+  Process: kaon-Inelastic
+        Model:                      FTFP: 3 GeV ---> 100 TeV
+        Model:            BertiniCascade: 0 eV  ---> 6 GeV
+     Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+  Process: hBertiniCaptureAtRest
+-----------------------------------------------------------------------
+                           Hadronic Processes for lambda
+  Process: hadElastic
+        Model:              hElasticLHEP: 0 eV  ---> 100 TeV
+     Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+  Process: lambdaInelastic
+        Model:                      FTFP: 3 GeV ---> 100 TeV
+        Model:            BertiniCascade: 0 eV  ---> 6 GeV
+     Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+-----------------------------------------------------------------------
+                           Hadronic Processes for mu+
+  Process: muonNuclear
+        Model:      G4MuonVDNuclearModel: 0 eV  ---> 1 PeV
+     Cr_sctns:     KokoulinMuonNuclearXS: 0 eV  ---> 100 TeV
+-----------------------------------------------------------------------
+                           Hadronic Processes for mu-
+  Process: muonNuclear
+        Model:      G4MuonVDNuclearModel: 0 eV  ---> 1 PeV
+     Cr_sctns:     KokoulinMuonNuclearXS: 0 eV  ---> 100 TeV
+  Process: muMinusCaptureAtRest
+-----------------------------------------------------------------------
+                           Hadronic Processes for pi+
+  Process: hadElastic
+        Model:           hElasticGlauber: 0 eV  ---> 100 TeV
+     Cr_sctns:  BarashenkovGlauberGribov: 0 eV  ---> 100 TeV
+  Process: pi+Inelastic
+        Model:                      FTFP: 3 GeV ---> 100 TeV
+        Model:            BertiniCascade: 0 eV  ---> 6 GeV
+     Cr_sctns:  BarashenkovGlauberGribov: 0 eV  ---> 100 TeV
+-----------------------------------------------------------------------
+                           Hadronic Processes for pi-
+  Process: hadElastic
+        Model:           hElasticGlauber: 0 eV  ---> 100 TeV
+     Cr_sctns:  BarashenkovGlauberGribov: 0 eV  ---> 100 TeV
+  Process: pi-Inelastic
+        Model:                      FTFP: 3 GeV ---> 100 TeV
+        Model:            BertiniCascade: 0 eV  ---> 6 GeV
+     Cr_sctns:  BarashenkovGlauberGribov: 0 eV  ---> 100 TeV
+  Process: hBertiniCaptureAtRest
+-----------------------------------------------------------------------
+                           Hadronic Processes for proton
+  Process: hadElastic
+        Model:             hElasticCHIPS: 0 eV  ---> 100 TeV
+     Cr_sctns:  BarashenkovGlauberGribov: 0 eV  ---> 100 TeV
+  Process: protonInelastic
+        Model:                      FTFP: 3 GeV ---> 100 TeV
+        Model:            BertiniCascade: 0 eV  ---> 6 GeV
+     Cr_sctns:  BarashenkovGlauberGribov: 0 eV  ---> 100 TeV
+-----------------------------------------------------------------------
+                           Hadronic Processes for sigma-
+  Process: hadElastic
+        Model:              hElasticLHEP: 0 eV  ---> 100 TeV
+     Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+  Process: sigma-Inelastic
+        Model:                      FTFP: 3 GeV ---> 100 TeV
+        Model:            BertiniCascade: 0 eV  ---> 6 GeV
+     Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+  Process: hBertiniCaptureAtRest
+-----------------------------------------------------------------------
+                           Hadronic Processes for triton
+  Process: hadElastic
+        Model:              hElasticLHEP: 0 eV /n ---> 100 TeV/n
+     Cr_sctns:  Glauber-Gribov Nucl-nucl: 0 eV  ---> 25.6 PeV
+  Process: tInelastic
+        Model:  Binary Light Ion Cascade: 0 eV /n ---> 6 GeV/n
+        Model:                      FTFP: 3 GeV/n ---> 100 TeV/n
+     Cr_sctns:  Glauber-Gribov Nucl-nucl: 0 eV  ---> 25.6 PeV
+=======================================================================
+======       Geant4 Native Pre-compound Model Parameters       ========
+=======================================================================
+Type of pre-compound inverse x-section              1
+Pre-compound model active                           1
+Pre-compound excitation low energy                  100 keV
+Pre-compound excitation high energy                 30 MeV
+Angular generator for pre-compound model            1
+Use NeverGoBack option for pre-compound model       0
+Use SoftCutOff option for pre-compound model        0
+Use CEM transitions for pre-compound model          1
+Use GNASH transitions for pre-compound model        0
+Use HETC submodel for pre-compound model            0
+=======================================================================
+======       Nuclear De-excitation Module Parameters           ========
+=======================================================================
+Type of de-excitation inverse x-section             3
+Type of de-excitation factory                       Evaporation+GEM
+Number of de-excitation channels                    68
+Min excitation energy                               10 eV 
+Min energy per nucleon for multifragmentation       200 GeV
+Limit excitation energy for Fermi BreakUp           20 MeV
+Level density (1/MeV)                               0.075
+Use simple level density model                      1
+Use discrete excitation energy of the residual      0
+Time limit for long lived isomeres                  1 ns 
+Isomer production flag                              1
+Internal e- conversion flag                         1
+Store e- internal conversion data                   1
+Correlated gamma emission flag                      0
+Max 2J for sampling of angular correlations         10
+=======================================================================
+{"duplicate":false,"evidence_level":"kernel_initialized","id":"0000000000100001","kernel_state":"idle","kind":"response","op":"initialize","request_id":"0000000000100000","seq":1,"state_revision":1,"status":"applied"}
+{"application_status":"configured","duplicate":false,"evidence_level":"unknown","id":"0000000000200003","kernel_evidence":"not_observed","kind":"response","op":"set_source","request_id":"0000000000200002","requested":{"field":"particle","value":"proton"},"resolved":{"advanced":false,"direction":[0.0,0.0,1.0],"energy_type":"mono","field":"particle","has_direction":true,"ion":false,"isotropic":false,"mono_energy_MeV":10.0,"particle":"proton","phase_space":false,"position_params":[0.0,0.0,-1.0],"position_shape":"","position_type":"Point","preset":"proton_beam","source_count":1},"seq":2,"state_revision":2,"status":"accepted","status_detail":"accepted by the source manager; kernel consumption is checked per run"}
+{"application_status":"configured","duplicate":false,"evidence_level":"unknown","id":"0000000000200005","kernel_evidence":"not_observed","kind":"response","op":"set_source","request_id":"0000000000200004","requested":{"field":"energy","value":"100 MeV"},"resolved":{"advanced":false,"direction":[0.0,0.0,1.0],"energy_type":"mono","field":"energy","has_direction":true,"ion":false,"isotropic":false,"mono_energy_MeV":100.0,"particle":"proton","phase_space":false,"position_params":[0.0,0.0,-1.0],"position_shape":"","position_type":"Point","preset":"proton_beam","source_count":1},"seq":3,"state_revision":3,"status":"accepted","status_detail":"accepted by the source manager; kernel consumption is checked per run"}
+{"duplicate":false,"id":"0000000000300006","kernel_state":"running","kind":"response","op":"run","planned_events":5,"request_id":"7acf3b153efff71b32bc25ebb3ff8fa8","run_request_id":"7acf3b153efff71b32bc25ebb3ff8fa8","seq":4,"state_revision":3,"status":"accepted"}
+[G4USimProgress] {"schema":"g4usim_progress_v1","run_id":0,"sequence":1,"phase":"begin","planned_events":5,"completed_events":0,"elapsed_s":0,"rate_eps":null,"eta_s":null}
+{"at":"2026-11-04T12:14:58Z","cancel_requested":false,"event":"run_started","kind":"event","planned_events":5,"run_id":0,"run_request_id":"7acf3b153efff71b32bc25ebb3ff8fa8","state_revision":3}
+{"aborted_events":0,"artifacts":[{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/edep_particle_summary_t0.csv","reason":"","relative_to_output":"edep_particle_summary_t0.csv","run_id":0,"scope":"thread","sha256":"1fc8275ae6e3175934ccef0f08002e283087c6008f5a02deef79c29fd368287f","size_bytes":92,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/edep_volume_summary_t0.csv","reason":"","relative_to_output":"edep_volume_summary_t0.csv","run_id":0,"scope":"thread","sha256":"1fc8275ae6e3175934ccef0f08002e283087c6008f5a02deef79c29fd368287f","size_bytes":92,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_final_r0_t-1.json","reason":"","relative_to_output":"effective_config_final_r0_t-1.json","run_id":0,"scope":"run","sha256":"4f6a06434acf0934776dc6336027c985a5ef9ae42190ce104e1ff8c15b115781","size_bytes":372879,"thread_id":null},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_final_r0_t0.json","reason":"","relative_to_output":"effective_config_final_r0_t0.json","run_id":0,"scope":"thread","sha256":"2465baf8d8e4e8fa723e1c9ffa82a58724c29bb9d654936278095a5706e726dc","size_bytes":313159,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_run_0_t-1.json","reason":"","relative_to_output":"effective_config_run_0_t-1.json","run_id":0,"scope":"run","sha256":"5b98e75957cc6b83c31102c123f3939ef6be89fd1c1e92c8dca5921ac6dd39b3","size_bytes":370223,"thread_id":null},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_run_0_t0.json","reason":"","relative_to_output":"effective_config_run_0_t0.json","run_id":0,"scope":"thread","sha256":"0c22076b14fc03434212143e2048b385172f778f72d47852f24c0ebc732aaa76","size_bytes":307363,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/event_edep_t0.csv","reason":"","relative_to_output":"event_edep_t0.csv","run_id":0,"scope":"thread","sha256":"82026cfffc53addae097bdd1ce023822a08396be91dd4db92e0a73df9592b53a","size_bytes":85,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/hist_edep_raw_t0.csv","reason":"","relative_to_output":"hist_edep_raw_t0.csv","run_id":0,"scope":"thread","sha256":"55acb00916e6bf972d081deb9d87a124b60366f2e312b1e45e4a7b3f04af5f32","size_bytes":3939,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/hist_edep_weighted_t0.csv","reason":"","relative_to_output":"hist_edep_weighted_t0.csv","run_id":0,"scope":"thread","sha256":"55acb00916e6bf972d081deb9d87a124b60366f2e312b1e45e4a7b3f04af5f32","size_bytes":3939,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/scorer_statistics.csv","reason":"","relative_to_output":"scorer_statistics.csv","run_id":0,"scope":"run","sha256":"28c734e7a56f990da81ff6b07760ee90007ecc551aba46458cb02f4b1931d0a2","size_bytes":403,"thread_id":null}],"at":"2026-11-04T12:14:58Z","cancel_requested":false,"completed_events":5,"event":"run_finished","kind":"event","planned_events":5,"receipt":{"aborted_events":0,"artifacts":[{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/edep_particle_summary_t0.csv","reason":"","relative_to_output":"edep_particle_summary_t0.csv","run_id":0,"scope":"thread","sha256":"1fc8275ae6e3175934ccef0f08002e283087c6008f5a02deef79c29fd368287f","size_bytes":92,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/edep_volume_summary_t0.csv","reason":"","relative_to_output":"edep_volume_summary_t0.csv","run_id":0,"scope":"thread","sha256":"1fc8275ae6e3175934ccef0f08002e283087c6008f5a02deef79c29fd368287f","size_bytes":92,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_final_r0_t-1.json","reason":"","relative_to_output":"effective_config_final_r0_t-1.json","run_id":0,"scope":"run","sha256":"4f6a06434acf0934776dc6336027c985a5ef9ae42190ce104e1ff8c15b115781","size_bytes":372879,"thread_id":null},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_final_r0_t0.json","reason":"","relative_to_output":"effective_config_final_r0_t0.json","run_id":0,"scope":"thread","sha256":"2465baf8d8e4e8fa723e1c9ffa82a58724c29bb9d654936278095a5706e726dc","size_bytes":313159,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_run_0_t-1.json","reason":"","relative_to_output":"effective_config_run_0_t-1.json","run_id":0,"scope":"run","sha256":"5b98e75957cc6b83c31102c123f3939ef6be89fd1c1e92c8dca5921ac6dd39b3","size_bytes":370223,"thread_id":null},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_run_0_t0.json","reason":"","relative_to_output":"effective_config_run_0_t0.json","run_id":0,"scope":"thread","sha256":"0c22076b14fc03434212143e2048b385172f778f72d47852f24c0ebc732aaa76","size_bytes":307363,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/event_edep_t0.csv","reason":"","relative_to_output":"event_edep_t0.csv","run_id":0,"scope":"thread","sha256":"82026cfffc53addae097bdd1ce023822a08396be91dd4db92e0a73df9592b53a","size_bytes":85,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/hist_edep_raw_t0.csv","reason":"","relative_to_output":"hist_edep_raw_t0.csv","run_id":0,"scope":"thread","sha256":"55acb00916e6bf972d081deb9d87a124b60366f2e312b1e45e4a7b3f04af5f32","size_bytes":3939,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/hist_edep_weighted_t0.csv","reason":"","relative_to_output":"hist_edep_weighted_t0.csv","run_id":0,"scope":"thread","sha256":"55acb00916e6bf972d081deb9d87a124b60366f2e312b1e45e4a7b3f04af5f32","size_bytes":3939,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/scorer_statistics.csv","reason":"","relative_to_output":"scorer_statistics.csv","run_id":0,"scope":"run","sha256":"28c734e7a56f990da81ff6b07760ee90007ecc551aba46458cb02f4b1931d0a2","size_bytes":403,"thread_id":null}],"cancel_requested":false,"completed_events":5,"output_failed":false,"planned_events":5,"run_id":0,"run_request_id":"7acf3b153efff71b32bc25ebb3ff8fa8","schema":"g4usim_session_run_receipt_v1","session_id":"536e4190c6faf87566cb208b0a327594","source":{"advanced":false,"direction":[0.0,0.0,1.0],"energy_type":"mono","has_direction":true,"ion":false,"isotropic":false,"mono_energy_MeV":100.0,"particle":"proton","phase_space":false,"position_params":[0.0,0.0,-1.0],"position_shape":"","position_type":"Point","preset":"proton_beam","source_count":1},"status":"completed"},"receipt_integrity":"written","receipt_path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-records-20261104-201453/session-536e4190c6faf87566cb208b0a327594/run-0000.json","run_id":0,"run_request_id":"7acf3b153efff71b32bc25ebb3ff8fa8","state_revision":4,"status":"completed"}
+[G4USimProgress] {"schema":"g4usim_progress_v1","run_id":0,"sequence":2,"phase":"end","planned_events":5,"completed_events":5,"elapsed_s":0.205439163,"rate_eps":24.33810539,"eta_s":0}
+{"application_status":"configured","duplicate":false,"evidence_level":"unknown","id":"0000000000200008","kernel_evidence":"not_observed","kind":"response","op":"set_source","request_id":"0000000000200007","requested":{"field":"particle","value":"proton"},"resolved":{"advanced":false,"direction":[0.0,0.0,1.0],"energy_type":"mono","field":"particle","has_direction":true,"ion":false,"isotropic":false,"mono_energy_MeV":100.0,"particle":"proton","phase_space":false,"position_params":[0.0,0.0,-1.0],"position_shape":"","position_type":"Point","preset":"proton_beam","source_count":1},"seq":5,"state_revision":5,"status":"accepted","status_detail":"accepted by the source manager; kernel consumption is checked per run"}
+{"application_status":"configured","duplicate":false,"evidence_level":"unknown","id":"000000000020000a","kernel_evidence":"not_observed","kind":"response","op":"set_source","request_id":"0000000000200009","requested":{"field":"energy","value":"200 MeV"},"resolved":{"advanced":false,"direction":[0.0,0.0,1.0],"energy_type":"mono","field":"energy","has_direction":true,"ion":false,"isotropic":false,"mono_energy_MeV":200.0,"particle":"proton","phase_space":false,"position_params":[0.0,0.0,-1.0],"position_shape":"","position_type":"Point","preset":"proton_beam","source_count":1},"seq":6,"state_revision":6,"status":"accepted","status_detail":"accepted by the source manager; kernel consumption is checked per run"}
+{"duplicate":false,"id":"000000000030000b","kernel_state":"running","kind":"response","op":"run","planned_events":5,"request_id":"c6ba662e80d5da172b391d0e69a6f659","run_request_id":"c6ba662e80d5da172b391d0e69a6f659","seq":7,"state_revision":6,"status":"accepted"}
+[G4USimProgress] {"schema":"g4usim_progress_v1","run_id":1,"sequence":3,"phase":"begin","planned_events":5,"completed_events":0,"elapsed_s":0,"rate_eps":null,"eta_s":null}
+{"at":"2026-11-04T12:14:58Z","cancel_requested":false,"event":"run_started","kind":"event","planned_events":5,"run_id":1,"run_request_id":"c6ba662e80d5da172b391d0e69a6f659","state_revision":6}
+{"aborted_events":0,"artifacts":[{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/edep_particle_summary_t0_r1.csv","reason":"","relative_to_output":"edep_particle_summary_t0_r1.csv","run_id":1,"scope":"thread","sha256":"1fc8275ae6e3175934ccef0f08002e283087c6008f5a02deef79c29fd368287f","size_bytes":92,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/edep_volume_summary_t0_r1.csv","reason":"","relative_to_output":"edep_volume_summary_t0_r1.csv","run_id":1,"scope":"thread","sha256":"1fc8275ae6e3175934ccef0f08002e283087c6008f5a02deef79c29fd368287f","size_bytes":92,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_final_r1_t-1.json","reason":"","relative_to_output":"effective_config_final_r1_t-1.json","run_id":1,"scope":"run","sha256":"58bd1fbe62a474463f2ad059fd23eafd7c489bee005ed19f078345f7d886dee4","size_bytes":373327,"thread_id":null},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_final_r1_t0.json","reason":"","relative_to_output":"effective_config_final_r1_t0.json","run_id":1,"scope":"thread","sha256":"78dd6c31cde5e706a4c27a5df97289da03c47ea6ff6be0b27f13d80ac400b9e4","size_bytes":313623,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_run_1_t-1.json","reason":"","relative_to_output":"effective_config_run_1_t-1.json","run_id":1,"scope":"run","sha256":"1f3bb62eb8d30cc12c91a468eb5f69ab4af11dd3a779d67baea597e44c80af5c","size_bytes":370670,"thread_id":null},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_run_1_t0.json","reason":"","relative_to_output":"effective_config_run_1_t0.json","run_id":1,"scope":"thread","sha256":"e1f3668a9979e07f109480843683fea079a842ca717ded692c8182dd9aef4643","size_bytes":307810,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/event_edep_t0_r1.csv","reason":"","relative_to_output":"event_edep_t0_r1.csv","run_id":1,"scope":"thread","sha256":"a4d0b8d8472a6f3cdc0b0f54c7bc3b3b6bb3d043a07a5edda54a1a22ebc18ad5","size_bytes":85,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/hist_edep_raw_t0_r1.csv","reason":"","relative_to_output":"hist_edep_raw_t0_r1.csv","run_id":1,"scope":"thread","sha256":"55acb00916e6bf972d081deb9d87a124b60366f2e312b1e45e4a7b3f04af5f32","size_bytes":3939,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/hist_edep_weighted_t0_r1.csv","reason":"","relative_to_output":"hist_edep_weighted_t0_r1.csv","run_id":1,"scope":"thread","sha256":"55acb00916e6bf972d081deb9d87a124b60366f2e312b1e45e4a7b3f04af5f32","size_bytes":3939,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/scorer_statistics_r1.csv","reason":"","relative_to_output":"scorer_statistics_r1.csv","run_id":1,"scope":"run","sha256":"6bdb95b1e739f6fcd994fb94f2373013bece79be8269180269df7d0700719179","size_bytes":403,"thread_id":null}],"at":"2026-11-04T12:14:58Z","cancel_requested":false,"completed_events":5,"event":"run_finished","kind":"event","planned_events":5,"receipt":{"aborted_events":0,"artifacts":[{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/edep_particle_summary_t0_r1.csv","reason":"","relative_to_output":"edep_particle_summary_t0_r1.csv","run_id":1,"scope":"thread","sha256":"1fc8275ae6e3175934ccef0f08002e283087c6008f5a02deef79c29fd368287f","size_bytes":92,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/edep_volume_summary_t0_r1.csv","reason":"","relative_to_output":"edep_volume_summary_t0_r1.csv","run_id":1,"scope":"thread","sha256":"1fc8275ae6e3175934ccef0f08002e283087c6008f5a02deef79c29fd368287f","size_bytes":92,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_final_r1_t-1.json","reason":"","relative_to_output":"effective_config_final_r1_t-1.json","run_id":1,"scope":"run","sha256":"58bd1fbe62a474463f2ad059fd23eafd7c489bee005ed19f078345f7d886dee4","size_bytes":373327,"thread_id":null},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_final_r1_t0.json","reason":"","relative_to_output":"effective_config_final_r1_t0.json","run_id":1,"scope":"thread","sha256":"78dd6c31cde5e706a4c27a5df97289da03c47ea6ff6be0b27f13d80ac400b9e4","size_bytes":313623,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_run_1_t-1.json","reason":"","relative_to_output":"effective_config_run_1_t-1.json","run_id":1,"scope":"run","sha256":"1f3bb62eb8d30cc12c91a468eb5f69ab4af11dd3a779d67baea597e44c80af5c","size_bytes":370670,"thread_id":null},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_run_1_t0.json","reason":"","relative_to_output":"effective_config_run_1_t0.json","run_id":1,"scope":"thread","sha256":"e1f3668a9979e07f109480843683fea079a842ca717ded692c8182dd9aef4643","size_bytes":307810,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/event_edep_t0_r1.csv","reason":"","relative_to_output":"event_edep_t0_r1.csv","run_id":1,"scope":"thread","sha256":"a4d0b8d8472a6f3cdc0b0f54c7bc3b3b6bb3d043a07a5edda54a1a22ebc18ad5","size_bytes":85,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/hist_edep_raw_t0_r1.csv","reason":"","relative_to_output":"hist_edep_raw_t0_r1.csv","run_id":1,"scope":"thread","sha256":"55acb00916e6bf972d081deb9d87a124b60366f2e312b1e45e4a7b3f04af5f32","size_bytes":3939,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/hist_edep_weighted_t0_r1.csv","reason":"","relative_to_output":"hist_edep_weighted_t0_r1.csv","run_id":1,"scope":"thread","sha256":"55acb00916e6bf972d081deb9d87a124b60366f2e312b1e45e4a7b3f04af5f32","size_bytes":3939,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/scorer_statistics_r1.csv","reason":"","relative_to_output":"scorer_statistics_r1.csv","run_id":1,"scope":"run","sha256":"6bdb95b1e739f6fcd994fb94f2373013bece79be8269180269df7d0700719179","size_bytes":403,"thread_id":null}],"cancel_requested":false,"completed_events":5,"output_failed":false,"planned_events":5,"run_id":1,"run_request_id":"c6ba662e80d5da172b391d0e69a6f659","schema":"g4usim_session_run_receipt_v1","session_id":"536e4190c6faf87566cb208b0a327594","source":{"advanced":false,"direction":[0.0,0.0,1.0],"energy_type":"mono","has_direction":true,"ion":false,"isotropic":false,"mono_energy_MeV":200.0,"particle":"proton","phase_space":false,"position_params":[0.0,0.0,-1.0],"position_shape":"","position_type":"Point","preset":"proton_beam","source_count":1},"status":"completed"},"receipt_integrity":"written","receipt_path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-records-20261104-201453/session-536e4190c6faf87566cb208b0a327594/run-0001.json","run_id":1,"run_request_id":"c6ba662e80d5da172b391d0e69a6f659","state_revision":7,"status":"completed"}
+[G4USimProgress] {"schema":"g4usim_progress_v1","run_id":1,"sequence":4,"phase":"end","planned_events":5,"completed_events":5,"elapsed_s":0.181296285,"rate_eps":27.57916413,"eta_s":0}
+{"application_status":"configured","duplicate":false,"evidence_level":"unknown","id":"000000000020000d","kernel_evidence":"not_observed","kind":"response","op":"set_source","request_id":"000000000020000c","requested":{"field":"particle","value":"proton"},"resolved":{"advanced":false,"direction":[0.0,0.0,1.0],"energy_type":"mono","field":"particle","has_direction":true,"ion":false,"isotropic":false,"mono_energy_MeV":200.0,"particle":"proton","phase_space":false,"position_params":[0.0,0.0,-1.0],"position_shape":"","position_type":"Point","preset":"proton_beam","source_count":1},"seq":8,"state_revision":8,"status":"accepted","status_detail":"accepted by the source manager; kernel consumption is checked per run"}
+{"application_status":"configured","duplicate":false,"evidence_level":"unknown","id":"000000000020000f","kernel_evidence":"not_observed","kind":"response","op":"set_source","request_id":"000000000020000e","requested":{"field":"energy","value":"100 MeV"},"resolved":{"advanced":false,"direction":[0.0,0.0,1.0],"energy_type":"mono","field":"energy","has_direction":true,"ion":false,"isotropic":false,"mono_energy_MeV":100.0,"particle":"proton","phase_space":false,"position_params":[0.0,0.0,-1.0],"position_shape":"","position_type":"Point","preset":"proton_beam","source_count":1},"seq":9,"state_revision":9,"status":"accepted","status_detail":"accepted by the source manager; kernel consumption is checked per run"}
+{"duplicate":false,"id":"0000000000300010","kernel_state":"running","kind":"response","op":"run","planned_events":5,"request_id":"f9ae191766dd74138561253dbbd53c7b","run_request_id":"f9ae191766dd74138561253dbbd53c7b","seq":10,"state_revision":9,"status":"accepted"}
+[G4USimProgress] {"schema":"g4usim_progress_v1","run_id":2,"sequence":5,"phase":"begin","planned_events":5,"completed_events":0,"elapsed_s":0,"rate_eps":null,"eta_s":null}
+{"at":"2026-11-04T12:14:58Z","cancel_requested":false,"event":"run_started","kind":"event","planned_events":5,"run_id":2,"run_request_id":"f9ae191766dd74138561253dbbd53c7b","state_revision":9}
+{"aborted_events":0,"artifacts":[{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/edep_particle_summary_t0_r2.csv","reason":"","relative_to_output":"edep_particle_summary_t0_r2.csv","run_id":2,"scope":"thread","sha256":"1fc8275ae6e3175934ccef0f08002e283087c6008f5a02deef79c29fd368287f","size_bytes":92,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/edep_volume_summary_t0_r2.csv","reason":"","relative_to_output":"edep_volume_summary_t0_r2.csv","run_id":2,"scope":"thread","sha256":"1fc8275ae6e3175934ccef0f08002e283087c6008f5a02deef79c29fd368287f","size_bytes":92,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_final_r2_t-1.json","reason":"","relative_to_output":"effective_config_final_r2_t-1.json","run_id":2,"scope":"run","sha256":"efc4c9c97820b210130ba76ca209e6990a86444da0a31c86686fcb14d7ed721f","size_bytes":373775,"thread_id":null},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_final_r2_t0.json","reason":"","relative_to_output":"effective_config_final_r2_t0.json","run_id":2,"scope":"thread","sha256":"359ed5ea4860c7eb62499dd6afedfa69414891841b8120ed5933bda7ccf3d4df","size_bytes":314071,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_run_2_t-1.json","reason":"","relative_to_output":"effective_config_run_2_t-1.json","run_id":2,"scope":"run","sha256":"a4f2b2df672ec7098e0b124c77f18dc64cbd70ce20bf3cb78443171d11621cb8","size_bytes":371118,"thread_id":null},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_run_2_t0.json","reason":"","relative_to_output":"effective_config_run_2_t0.json","run_id":2,"scope":"thread","sha256":"6ecde158c695d4fee3491aba3051143325292c72500f17503edd7cfbe9202536","size_bytes":308258,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/event_edep_t0_r2.csv","reason":"","relative_to_output":"event_edep_t0_r2.csv","run_id":2,"scope":"thread","sha256":"39b0d907572823d12b888c426f6bf65ab946b035f17a1b5e3820e2c85dcb2165","size_bytes":85,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/hist_edep_raw_t0_r2.csv","reason":"","relative_to_output":"hist_edep_raw_t0_r2.csv","run_id":2,"scope":"thread","sha256":"55acb00916e6bf972d081deb9d87a124b60366f2e312b1e45e4a7b3f04af5f32","size_bytes":3939,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/hist_edep_weighted_t0_r2.csv","reason":"","relative_to_output":"hist_edep_weighted_t0_r2.csv","run_id":2,"scope":"thread","sha256":"55acb00916e6bf972d081deb9d87a124b60366f2e312b1e45e4a7b3f04af5f32","size_bytes":3939,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/scorer_statistics_r2.csv","reason":"","relative_to_output":"scorer_statistics_r2.csv","run_id":2,"scope":"run","sha256":"4895f6c978ab1a480fc7d7a64e41938ac6a63c1e5a53d538d43b65b2283ec342","size_bytes":403,"thread_id":null}],"at":"2026-11-04T12:14:59Z","cancel_requested":false,"completed_events":5,"event":"run_finished","kind":"event","planned_events":5,"receipt":{"aborted_events":0,"artifacts":[{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/edep_particle_summary_t0_r2.csv","reason":"","relative_to_output":"edep_particle_summary_t0_r2.csv","run_id":2,"scope":"thread","sha256":"1fc8275ae6e3175934ccef0f08002e283087c6008f5a02deef79c29fd368287f","size_bytes":92,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/edep_volume_summary_t0_r2.csv","reason":"","relative_to_output":"edep_volume_summary_t0_r2.csv","run_id":2,"scope":"thread","sha256":"1fc8275ae6e3175934ccef0f08002e283087c6008f5a02deef79c29fd368287f","size_bytes":92,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_final_r2_t-1.json","reason":"","relative_to_output":"effective_config_final_r2_t-1.json","run_id":2,"scope":"run","sha256":"efc4c9c97820b210130ba76ca209e6990a86444da0a31c86686fcb14d7ed721f","size_bytes":373775,"thread_id":null},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_final_r2_t0.json","reason":"","relative_to_output":"effective_config_final_r2_t0.json","run_id":2,"scope":"thread","sha256":"359ed5ea4860c7eb62499dd6afedfa69414891841b8120ed5933bda7ccf3d4df","size_bytes":314071,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_run_2_t-1.json","reason":"","relative_to_output":"effective_config_run_2_t-1.json","run_id":2,"scope":"run","sha256":"a4f2b2df672ec7098e0b124c77f18dc64cbd70ce20bf3cb78443171d11621cb8","size_bytes":371118,"thread_id":null},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/effective_config_run_2_t0.json","reason":"","relative_to_output":"effective_config_run_2_t0.json","run_id":2,"scope":"thread","sha256":"6ecde158c695d4fee3491aba3051143325292c72500f17503edd7cfbe9202536","size_bytes":308258,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/event_edep_t0_r2.csv","reason":"","relative_to_output":"event_edep_t0_r2.csv","run_id":2,"scope":"thread","sha256":"39b0d907572823d12b888c426f6bf65ab946b035f17a1b5e3820e2c85dcb2165","size_bytes":85,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/hist_edep_raw_t0_r2.csv","reason":"","relative_to_output":"hist_edep_raw_t0_r2.csv","run_id":2,"scope":"thread","sha256":"55acb00916e6bf972d081deb9d87a124b60366f2e312b1e45e4a7b3f04af5f32","size_bytes":3939,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/hist_edep_weighted_t0_r2.csv","reason":"","relative_to_output":"hist_edep_weighted_t0_r2.csv","run_id":2,"scope":"thread","sha256":"55acb00916e6bf972d081deb9d87a124b60366f2e312b1e45e4a7b3f04af5f32","size_bytes":3939,"thread_id":0},{"integrity_status":"hashed","path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-output-20261104-201453/scorer_statistics_r2.csv","reason":"","relative_to_output":"scorer_statistics_r2.csv","run_id":2,"scope":"run","sha256":"4895f6c978ab1a480fc7d7a64e41938ac6a63c1e5a53d538d43b65b2283ec342","size_bytes":403,"thread_id":null}],"cancel_requested":false,"completed_events":5,"output_failed":false,"planned_events":5,"run_id":2,"run_request_id":"f9ae191766dd74138561253dbbd53c7b","schema":"g4usim_session_run_receipt_v1","session_id":"536e4190c6faf87566cb208b0a327594","source":{"advanced":false,"direction":[0.0,0.0,1.0],"energy_type":"mono","has_direction":true,"ion":false,"isotropic":false,"mono_energy_MeV":100.0,"particle":"proton","phase_space":false,"position_params":[0.0,0.0,-1.0],"position_shape":"","position_type":"Point","preset":"proton_beam","source_count":1},"status":"completed"},"receipt_integrity":"written","receipt_path":"/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/user-runs/20261104_195934_demo_run/config/replay-records-20261104-201453/session-536e4190c6faf87566cb208b0a327594/run-0002.json","run_id":2,"run_request_id":"f9ae191766dd74138561253dbbd53c7b","state_revision":10,"status":"completed"}
+[G4USimProgress] {"schema":"g4usim_progress_v1","run_id":2,"sequence":6,"phase":"end","planned_events":5,"completed_events":5,"elapsed_s":0.174562375,"rate_eps":28.64305667,"eta_s":0}
+{"at":"2026-11-04T12:14:59Z","event":"closing","exit_code":0,"kind":"event","reason":"replay_finished","session_id":"536e4190c6faf87566cb208b0a327594","state_revision":10,"steps_executed":3,"steps_total":9}
+     Cr_sctns:  Glauber-Gribov Nucl-nucl: 0 eV  ---> 25.6 PeV

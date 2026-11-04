@@ -1,0 +1,50 @@
+{
+  "schema": "G4UniversalSimM0TestReport",
+  "version": 2,
+  "profile": "all",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "python": "3.11.9",
+  "git_head": "864bc036d6d7752475e52db4efd2b950cabfcc3d",
+  "source_fingerprint": "e7de615d4e342114104f970688a7ea5f9789f7b70240b2562a388a50a45704e7",
+  "tests_content_fingerprint": "1029dc7c15a6de2b1e35987943306dc13253595bc1cd2a4bba01c7c86f290d55",
+  "git_dirty": false,
+  "git_status_porcelain": "",
+  "backend_executable": "C:\\Users\\123\\.codex\\worktrees\\j3-final\\G4UniversalSim\\out\\collab\\f2-independent-build\\Release\\G4UniversalSim.exe",
+  "backend_provenance": "source_sha256_manifest_matches_executable",
+  "backend_build_identity": {
+    "build_configuration": "Release",
+    "compiler_id": "MSVC",
+    "compiler_version": "19.51.36246.0",
+    "geant4_version_number": 1132,
+    "multithreaded": true
+  },
+  "merge_executable": "C:\\Users\\123\\.codex\\worktrees\\j3-final\\G4UniversalSim\\build_vs2026\\Release\\mergeHistograms.exe",
+  "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+  "merge_provenance": "mergeHistograms executable is missing",
+  "optional_pyvista_coverage": "object_mode_case_registered: gui_vtk_axes_theme; registration alone does not prove execution: the case row records the actual assertions or the dependency failure that stopped it; native widget lifetime stays outside this runner",
+  "untracked_source_files": [],
+  "tracked_source_gate": "pass",
+  "assert_probe": "settrace_assert_lines_v3",
+  "log_digest_algorithm": "sha256_raw_bytes_lf_v2",
+  "assertions_executed_total": 12,
+  "assert_sites_total": 13,
+  "cases_with_assertion_counts": 1,
+  "cases_with_zero_assertions": [],
+  "skip_policy": "failure",
+  "results": [
+    {
+      "name": "geant4_data_locator",
+      "layer": "backend",
+      "script": "scripts/test_geant4_data_locator.py",
+      "assert_sites": 13,
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 1.844,
+      "log": "out\\collab\\f2-final-independent\\data-root-recheck\\20261104-195230-2836af12\\geant4_data_locator.log",
+      "log_sha256": "956dd5d137f3d22d35ea7c45c5016d8fbf771e28e77b446d6d67e07cd4e1203b",
+      "log_digest_algorithm": "sha256_raw_bytes_lf_v2",
+      "assertions_executed": 12,
+      "assert_probe": "settrace_assert_lines_v3"
+    }
+  ]
+}

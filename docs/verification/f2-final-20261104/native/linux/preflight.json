@@ -1,0 +1,180 @@
+{
+  "schema": "g4usim_j3_linux_candidate_r2_preflight",
+  "started": "2026-11-04T19:35:25+0800",
+  "repo": "/mnt/c/Users/123/.codex/worktrees/j3-final/G4UniversalSim",
+  "candidate": {
+    "head": "864bc036d6d7752475e52db4efd2b950cabfcc3d",
+    "files": {
+      "gui/smoke_tests/smoke_config_agent_panel.py": "713619a3848e2637702396c824042f9c7ffccccf62e61b7bcf864b49a05b467e",
+      "gui/smoke_tests/smoke_theme_state.py": "beb0f0d68753b19f6418175f8749ce414c00e0a4e1a921960bda65b564fff181",
+      "gui/g4usim_gui/window/workspace_layout.py": "da297463859f4513202f3667673d2bd6abf1b58d1df1328076c5995b12909918",
+      "gui/smoke_tests/smoke_workspace_layout.py": "1b91a27f767e996400ec2780e37e943f1ae881877b682a6a2acee525344bb778",
+      "gui/g4usim_gui/core/fonts.py": "78432cc6774110706404572498ce786fea0cd5a81b6bfc2f4a24872d38609241",
+      "gui/g4usim_gui/preview3d/pyvista_preview_widget.py": "d7a9dcffb620c6c245856b4f88ac618b03bbc4d6c34525fd479225f636dc422e",
+      "gui/smoke_tests/smoke_vtk_axes_theme.py": "22030597e3028d59da54beb2e08ac10546d022272e0a2c8dd74215f12651fb58",
+      "scripts/run_m0_tests.py": "5b8e6c62e9b5f8f2e62bb6043a9505ee7c5e4a43e12742a90e06721995ce2b8f",
+      ".github/workflows/m0-static-gui.yml": "cf8e17c3920c3652cd82db991a377a6ab205f5edbeb12f2502add5a570a843a0",
+      ".github/workflows/linux-geant4.yml": "b19365cf4f4e2179e1d0736f8d18651a6675b9709c8f91070f314bff1549640d"
+    },
+    "status_entries": []
+  },
+  "display": {
+    "number": 94,
+    "rfb_port": 5910,
+    "web_port": 6090,
+    "source": "env J3_R2_DISPLAY / J3_R2_RFB_PORT / J3_R2_WEB_PORT (defaults 94/5910/6090)"
+  },
+  "assets": {
+    "dedicated": "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-dedicated-xvnc-assets-246/root",
+    "shared": "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root"
+  },
+  "gui_python": "/home/u123/venvs/g4-j3-native-20261103/bin/python",
+  "thin_entry": "/mnt/c/Users/123/.codex/worktrees/j3-final/G4UniversalSim/out/collab/j3-production-startup-r1/start_production.py",
+  "checks": {
+    "parameters": {
+      "passed": true,
+      "detail": "display=:94 rfb=5910 web=6090 (same values launch.sh uses)",
+      "source": "environment J3_R2_DISPLAY / J3_R2_RFB_PORT / J3_R2_WEB_PORT"
+    },
+    "repo_root": {
+      "passed": true,
+      "detail": "/mnt/c/Users/123/.codex/worktrees/j3-final/G4UniversalSim"
+    },
+    "source_identity": {
+      "passed": true,
+      "detail": "head=864bc036d6d7752475e52db4efd2b950cabfcc3d status_entries=0 mismatched_files=0",
+      "head": "864bc036d6d7752475e52db4efd2b950cabfcc3d",
+      "status_entries": [],
+      "mismatched_files": [],
+      "files": {
+        "gui/smoke_tests/smoke_config_agent_panel.py": {
+          "expected": "713619a3848e2637702396c824042f9c7ffccccf62e61b7bcf864b49a05b467e",
+          "actual": "713619a3848e2637702396c824042f9c7ffccccf62e61b7bcf864b49a05b467e"
+        },
+        "gui/smoke_tests/smoke_theme_state.py": {
+          "expected": "beb0f0d68753b19f6418175f8749ce414c00e0a4e1a921960bda65b564fff181",
+          "actual": "beb0f0d68753b19f6418175f8749ce414c00e0a4e1a921960bda65b564fff181"
+        },
+        "gui/g4usim_gui/window/workspace_layout.py": {
+          "expected": "da297463859f4513202f3667673d2bd6abf1b58d1df1328076c5995b12909918",
+          "actual": "da297463859f4513202f3667673d2bd6abf1b58d1df1328076c5995b12909918"
+        },
+        "gui/smoke_tests/smoke_workspace_layout.py": {
+          "expected": "1b91a27f767e996400ec2780e37e943f1ae881877b682a6a2acee525344bb778",
+          "actual": "1b91a27f767e996400ec2780e37e943f1ae881877b682a6a2acee525344bb778"
+        },
+        "gui/g4usim_gui/core/fonts.py": {
+          "expected": "78432cc6774110706404572498ce786fea0cd5a81b6bfc2f4a24872d38609241",
+          "actual": "78432cc6774110706404572498ce786fea0cd5a81b6bfc2f4a24872d38609241"
+        },
+        "gui/g4usim_gui/preview3d/pyvista_preview_widget.py": {
+          "expected": "d7a9dcffb620c6c245856b4f88ac618b03bbc4d6c34525fd479225f636dc422e",
+          "actual": "d7a9dcffb620c6c245856b4f88ac618b03bbc4d6c34525fd479225f636dc422e"
+        },
+        "gui/smoke_tests/smoke_vtk_axes_theme.py": {
+          "expected": "22030597e3028d59da54beb2e08ac10546d022272e0a2c8dd74215f12651fb58",
+          "actual": "22030597e3028d59da54beb2e08ac10546d022272e0a2c8dd74215f12651fb58"
+        },
+        "scripts/run_m0_tests.py": {
+          "expected": "5b8e6c62e9b5f8f2e62bb6043a9505ee7c5e4a43e12742a90e06721995ce2b8f",
+          "actual": "5b8e6c62e9b5f8f2e62bb6043a9505ee7c5e4a43e12742a90e06721995ce2b8f"
+        },
+        ".github/workflows/m0-static-gui.yml": {
+          "expected": "cf8e17c3920c3652cd82db991a377a6ab205f5edbeb12f2502add5a570a843a0",
+          "actual": "cf8e17c3920c3652cd82db991a377a6ab205f5edbeb12f2502add5a570a843a0"
+        },
+        ".github/workflows/linux-geant4.yml": {
+          "expected": "b19365cf4f4e2179e1d0736f8d18651a6675b9709c8f91070f314bff1549640d",
+          "actual": "b19365cf4f4e2179e1d0736f8d18651a6675b9709c8f91070f314bff1549640d"
+        }
+      }
+    },
+    "thin_entry": {
+      "passed": true,
+      "detail": "/mnt/c/Users/123/.codex/worktrees/j3-final/G4UniversalSim/out/collab/j3-production-startup-r1/start_production.py",
+      "sha256": "8959e085132d9423ba52ddb4280dbb8390f62812ffdc0a94a4bd6f6c1241f904"
+    },
+    "vnc_assets": {
+      "passed": true,
+      "detail": "4/4 assets present",
+      "assets": {
+        "Xtigervnc": {
+          "path": "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-dedicated-xvnc-assets-246/root/usr/bin/Xtigervnc",
+          "exists": true,
+          "executable": true,
+          "sha256": "42e3864d61df42097e7f8fe626234939313fc856420ebd3ff74dcf32e0cef219"
+        },
+        "twm": {
+          "path": "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-dedicated-xvnc-assets-246/root/usr/bin/twm",
+          "exists": true,
+          "executable": true,
+          "sha256": "72e241c7fca0e6d669561cee67ead7245119e5022144ea41a1f9769d34c2923d"
+        },
+        "websockify": {
+          "path": "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/bin/websockify",
+          "exists": true,
+          "executable": true,
+          "sha256": "1a14abe56973818410c2a504f66496645dcb0df1b5a3d499a7b6f0cf0c848388"
+        },
+        "novnc": {
+          "path": "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/share/novnc",
+          "exists": true
+        }
+      }
+    },
+    "vnc_dependencies": {
+      "passed": true,
+      "detail": "ldd clean for Xtigervnc/twm; xkbdir present",
+      "dependencies": {
+        "Xtigervnc": {
+          "missing": [],
+          "version": "Xvnc TigerVNC 1.13.1 - built 2024-04-01 08:26"
+        },
+        "twm": {
+          "missing": [],
+          "version": null
+        },
+        "xkbdir": {
+          "path": "/usr/share/X11/xkb",
+          "exists": true
+        }
+      }
+    },
+    "gui_environment": {
+      "passed": true,
+      "detail": "PySide6=6.11.3 pyvista=0.48.4 vtk=9.6.2; gui_libs=present",
+      "python": "/home/u123/venvs/g4-j3-native-20261103/bin/python",
+      "gui_libs": {
+        "path": "/home/u123/g4gui-libs/usr/lib/x86_64-linux-gnu/libxcb-cursor.so.0",
+        "exists": true
+      }
+    },
+    "websockify": {
+      "passed": true,
+      "detail": "websockify loaded",
+      "pythonpath": "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/lib/python3/dist-packages",
+      "binary": "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/bin/websockify",
+      "novnc": "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/l1-linux-existing-window-vnc-246/root/usr/share/novnc"
+    },
+    "display_free": {
+      "passed": true,
+      "detail": "display=:94 lock=False socket=False ports={5910: True, 6090: True}",
+      "pgrep_stdout": "",
+      "lock": "/tmp/.X94-lock",
+      "socket": "/tmp/.X11-unix/X94",
+      "ports": {
+        "5910": true,
+        "6090": true
+      }
+    },
+    "output_writable": {
+      "passed": true,
+      "detail": "/mnt/d/Geant4/G4UniversalSim/out/collab/f2-linux-native-independent/runs"
+    }
+  },
+  "summary": {
+    "passed": 10,
+    "failed": [],
+    "ok": true
+  }
+}
