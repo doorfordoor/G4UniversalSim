@@ -2,19 +2,61 @@
 
 中文完整使用手册：[docs/中文使用手册.md](docs/中文使用手册.md)
 
-G4UniversalSim is a C++17 + Geant4 simulation framework for configuration-driven detector studies. It provides template geometry, material loading, GPS-based sources, reference/manual physics setup, sensitive-detector hits, raw and weighted scoring, cross-section biasing hooks, and lightweight post-processing tools.
+## Project status
 
-## MVP Status
+This repository is a research and engineering workbench (C++17 backend + PySide6 GUI), not a 1.0 release.
+Stage completion is maintained only in [docs/ROADMAP.md](docs/ROADMAP.md); the current snapshot entry
+point is [STATUS.md](STATUS.md); feature coverage and limits live in the
+[support matrix](docs/功能支持矩阵.md).
 
-The current project is intended to build into a runnable Geant4 executable with this workflow:
+- Backend: Geant4 11.3.2/11.4.3 compatible builds. Validated scope (F2 controlled session and replay,
+  stage evidence) is recorded per stage in the matrix and the final evidence directories.
+- GUI: editor/runner for generated configuration packages; some editors remain partial or
+  experimental (matrix §3).
+- Software acceptance (tests, CI, receipts) is separate from physics validation.
+- A stage receipt is not a physics benchmark and does not promise cross-platform bitwise identity.
 
-1. Load `config/main.ini`.
-2. Register detector, physics list, source/actions, scoring, and optional biasing hooks.
-3. Execute a macro such as `macros/run_simple.mac`.
-4. Run `/run/initialize` and `/run/beamOn`.
-5. Write CSV outputs and `run_summary.txt`.
+## Linux Build
 
-Advanced MicroElec/ElectronCapture support is optional and experimental. `EdepScorer` is the most validated scorer; LET, dose, fluence and displacement-damage scoring are experimental and only partially validated - check [docs/功能支持矩阵.md](docs/功能支持矩阵.md) for the exact limits of each.
+Validated recipe (Ubuntu/WSL2 and CI; Geant4 from conda-forge or an equivalent prefix):
+
+```bash
+cmake -S . -B build_linux -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="<Geant4 prefix>"
+cmake --build build_linux -j"$(nproc)"
+./build_linux/G4UniversalSim --check-geant4-data
+./build_linux/G4UniversalSim --capabilities
+```
+
+Environment variables, data discovery, GUI system libraries, CI differences and Geant4 11.4 toolchain
+requirements are documented in [docs/Linux构建与验证.md](docs/Linux构建与验证.md).
+
+## Installed package
+
+Release packages are described in [packaging/README-package.md](packaging/README-package.md):
+`bin\G4UniversalSim.exe` (backend with Geant4/Xerces/VC++ DLLs), `gui\G4UniversalSimGUI.exe`
+(no Python required), and the prerequisite Geant4 **data** (not bundled). Data can be given through the
+installer's “Geant4 数据文件夹” page (`bin\geant4-data.txt`), by editing that file, or with
+`GEANT4_DATA_DIR`; verify with `bin\G4UniversalSim.exe --check-geant4-data`.
+
+The source entry and the installed entry use the same command line and configuration files; only the
+executable path differs. The GUI selects its backend on the Project page or via
+“环境 → 环境发现与诊断”.
+
+## Configuration packages
+
+A run package contains a main INI plus the materials/geometry files it references and a `run.mac`
+wrapper:
+
+- `main.ini` — `[run]`, `[output]`, `[materials]`, `[geometry]`, `[physics]`, `[source]`, `[scoring]`
+- `materials.ini`, `geometry.ini` (or inline sections)
+- `run.mac` — generated `/run/initialize` + `/run/beamOn` wrapper
+
+Run it from the source build or the installed package with the same `--config` arguments (see Minimal
+Run). The GUI writes generated packages under its runs root; the installed GUI writes to
+`Documents\G4UniversalSim\gui_runs` by default.
+
+Advanced F2 controlled sessions use `--session-server` (see [docs/会话协议.md](docs/会话协议.md)); they
+are optional, and the old `--macro`/csh workflows are unchanged.
 
 ## Current Safety Notes
 
@@ -44,40 +86,53 @@ Phase status and the support baseline: `docs/ROADMAP.md` and `docs/功能支持�
 
 ## Requirements
 
-- CMake 3.10 or newer.
-- C++17 compiler.
-- Geant4 with matching compiler ABI.
-- On Windows, if Geant4/Qt/CLHEP were built with MSVC, build this project with MSVC too.
+- CMake 3.21+ and a C++17 compiler.
+- Geant4 11.3.2 or 11.4.3 with matching compiler ABI, plus its physics data sets.
+- Windows: Visual Studio 2026 with the "Desktop development with C++" workload (MSVC ABI);
+  do not mix MinGW/UCRT objects with MSVC Geant4/Qt/CLHEP.
+- Linux: GCC toolchain; GUI additionally needs the system libraries listed in
+  [docs/Linux构建与验证.md](docs/Linux构建与验证.md).
+- Python 3.11 for the GUI and helper scripts only (`gui/requirements.txt`); the backend needs no Python.
+- Geant4 data: set the data variables (for example `GEANT4_DATA_DIR`) or the installer's
+  `bin/geant4-data.txt`; verify with `--check-geant4-data`.
 
 ## Windows Build
 
-Recommended when using an MSVC Geant4 install:
+Presets are the supported path (Visual Studio 2026 with CMake support):
 
 ```powershell
-cmake -S . -B build_vs -G "Visual Studio 17 2022" -A x64
-cmake --build build_vs --config Release
+cmake --preset vs2026-x64
+cmake --build --preset vs2026-release
 ```
 
-Equivalent preset form:
+Raw equivalent (same preset, for reference):
 
 ```powershell
-cmake --preset vs2022-x64
-cmake --build --preset vs2022-release
+cmake -S . -B build_vs2026 -G "Visual Studio 18 2026" -A x64
+cmake --build build_vs2026 --config Release
 ```
 
-Do not mix MinGW/UCRT object files with MSVC-built Geant4, Qt, or CLHEP libraries. That produces unresolved symbols at link time and should be fixed by using a matching toolchain, not by code workarounds.
+Products: `build_vs2026\Release\G4UniversalSim.exe` and `build_vs2026\Release\mergeHistograms.exe`.
+`CMakePresets.json` defines only `vs2026-x64`, `vs2026-release` and `vs2026-debug`; older preset names
+that may appear in old notes are not usable.
 
 ## Minimal Run
 
-```powershell
-.\build_vs\Release\G4UniversalSim.exe --config config/main.ini --macro macros/run_simple.mac
-```
-
-The same macro can also self-load the minimal material, geometry, physics, source, and scoring settings:
+Check the Geant4 data first; `required_complete` must be `true` before any run:
 
 ```powershell
-.\build_vs\Release\G4UniversalSim.exe --macro macros/run_simple.mac
+.\build_vs2026\Release\G4UniversalSim.exe --check-geant4-data
 ```
+
+Then run the example configuration into a fresh output directory:
+
+```powershell
+.\build_vs2026\Release\G4UniversalSim.exe --config config/main.ini --macro macros/run_simple.mac --output test\output\minimal_run
+```
+
+Success means the process exits 0 and **this run's new** `run_summary.txt` reports the planned events as
+completed (see Outputs). A dry-run, an interactive session without a run, or a zero-run exit is not a
+simulation success.
 
 ## Validation Smoke Tests
 
@@ -139,7 +194,11 @@ python scripts\merge_outputs.py --input test\output\hit_smoke_mt --pattern "even
 
 ## Documentation
 
-- [中文使用手册](docs/中文使用手册.md)
+- [中文使用手册](docs/中文使用手册.md) — full end-user manual
+- [GUI 中文快速使用说明](gui/docs/中文快速使用说明.md) — GUI first run and operations
+- [安装包说明](packaging/README-package.md) — installed package and data prerequisites
+- [Linux 构建与验证](docs/Linux构建与验证.md)
+- [环境辅助安装](docs/环境辅助安装.md)
 - [中文几何配置说明](docs/中文几何配置说明.md)
-- [GUI 中文快速使用说明](gui/docs/中文快速使用说明.md)
+- [功能支持矩阵](docs/功能支持矩阵.md) · [ROADMAP](docs/ROADMAP.md) · [STATUS](STATUS.md)
 - [Agent 维护说明](docs/Agent维护说明.md)

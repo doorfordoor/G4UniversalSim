@@ -1,172 +1,60 @@
 # G4UniversalSim Agent 开发约束
 
+> **状态与历史的边界（2026-11-04 E4 收尾）**：本文件只记录实现约束与工作规则。阶段完成度以 `docs/ROADMAP.md` 为准，任务级状态以 `docs/collab/CURRENT-SUPERVISION.md` 为准；下方条目中的“作者交付/未验收/未关闭”等文字是历史记录，不构成当前状态。历史全文见 `docs/agent-history.md`，归档快照见 `docs/archive/`。
+
+
 Linux原生通道补充（主审已签收）：main已实际操作独立真实X11/xcb桌面，一次固定HTTP计划passed，操作观察时曾停在awaiting_approval、0事件；随后在观察期间触及300秒预算，整任务保留failed／agent.task_timeout，不称整任务成功。原host exit0、slot_released=true、host与显示服务两组remaining_owned均空、HTTP已关闭；显示辅助子进程退出码[0,1,0]（twm非零保留），不能写全部子进程exit0；代表性原生签收结果为 **独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**。WSLg RAIL任务栏无法展开，第三次host退出且0请求，原失败保留，绝不称该通道成功。Ubuntu实际系统安装x11-xkb-utils，其它本次依赖保持隔离OUT前缀；具体包版本／SHA及安装收据见最终证据，不把早期准备收据system_installs=0外推到之后。
 
 本文件是仓库级约束，适用于根目录及其子目录。更具体的目录约束可以由更深层的 AGENTS.md 补充；gui/AGENTS.md 适用于 GUI 目录。
 
 ## 0. 条目索引与历史全文
+> 条目按日期保留；状态一律以 ROADMAP/CURRENT-SUPERVISION 为准，本索引不重复判定完成度。
 
-- 2026-11-04 F2已验收：冻结864bc036，协议B保留csh/批处理；重放结构预检与内核初始化后/BeamOn前只读语义预检分开，禁止预检修改SourceManager。closing的steps_total计全部操作、steps_executed计完成run；正常终态需核对实际退出和收据。详见docs/agent-history.md同日F2条目及docs/verification/f2-final-20261104/README.md。
+> 索引只给主题、历史全文位置与相关文档；各阶段完成度仍以 ROADMAP 为准，
+> 实现约束见下文第 1–10 节。条目全文（含行号/反例/回归）已迁入 agent-history。
 
-
-- 2026-11-04 J3：本轮约定范围已验收并关闭，冻结92134da0；Windows125/150与独立X11代表性、云12报告696/247580及严格门禁完成。历史图身份/非逐页八态、WSLg与约一秒切换限制保留，不外推物理/云Agent验证；后续F2。详见docs/agent-history.md同日J3条目及docs/verification/j3-final-20261104/README.md。
-
-
-- 2026-11-03 J3 独立审查响应：独立复验不同意关闭（`docs/collab/reviews/20261103-j3-closure-review.md`）；外观断言必须用 `theme.current_skin()`（无参读应用属性，传窗口会恒回退 B）；`reveal_current()` 不得隐藏既有停靠页，Results 页整宽由 `focus_analysis_view()` 负责；紧凑布局（<1400 逻辑像素）隐藏 AI 与 3D 预览两个可选 dock，外部面板入口是 View → Panels 而非命令面板；`paletteSearch` 边框用 `border_strong`；候选冻结与三 profile 基线在 `docs/verification/j3-close-20261103/`；J3 仍为未关闭。
-
-- 2026-11-02 J3 第七阶段（作者交付，未验收）：Help 菜单的快捷键表由 `ShellMixin.shortcut_rows()` 提供、对话框由 `build_shortcut_dialog()` 构建（测试/截图用非阻塞版本，`show_shortcuts()` 才 exec）；关于文本由 `about_text()` 生成（含 GUI/PySide6/Qt 版本、应用根目录、后端路径），不要在别处重复拼这些事实。新增菜单项必须进 `i18n.ZH_CN` 与 `_set_language` 覆盖路径；导航 tooltip 与快捷键表、无障碍描述保持同一文案。回归 `gui_help_menu` 及 `gui_main_window`/`gui_command_palette`/`gui_theme_response`/`gui_j1_appearance`；证据 `docs/verification/j3-help-20261102/README.md`（5 例、211 断言）；J3 未关闭。
-- 2026-11-02 J3 第六阶段（作者交付，未验收）：3D 模型树在 `gui/g4usim_gui/preview3d/model_tree.py`，从 `GeometryDocument` 构建，widget 侧只渲染与联动、不得自行推断父子关系；树节点与 3D 选中必须双向同步，过滤时保留命中节点的父链；打开 3D 标签自动 `refresh_3d_preview()` 的入口在 `_on_workspace_tab_changed`。回归 `gui_model_tree`（离屏只覆盖纯函数 21 断言，widget 联动需 Windows 平台直接跑 27 断言）及 `gui_3d_view`/`gui_config_editors`/`gui_workspace_layout`/`gui_main_window`/`gui_command_palette`/`gui_k1_panel`；证据 `docs/verification/j3-modeltree-20261102/README.md`（7 例、1965 断言）；J3 未关闭。
-- 2026-11-02 J3 第五阶段（作者交付，未验收）：`WorkspacePageStack.reveal_current()` 离开停靠页时必须隐藏该页 dock（否则配置编辑器会在 Run Console/Results/Run History/Parameter Scans 继续占宽）；导航到 Results 页时 `WorkspaceLayout.focus_analysis_view()` 收起 3D 预览与 AI 面板并显示日志 dock。回归入口 `gui_workspace_layout`/`gui_main_window`/`gui_command_palette`/`gui_3d_view`/`gui_config_editors`/`gui_k1_panel`/`gui_k1_history_scope`；证据 `docs/verification/j3-analysis-docks-20261102/README.md`（7 例、2022 断言）；J3 未关闭。
-
-- 2026-11-02 J3 第四阶段（作者交付，未验收）：`WorkspaceLayout.preset_for_page()` 按页面映射 configuration/running/analysis（0–4 / 5 / 6–8），`focus_current_page()` 只切停靠面板并 `reveal_current()`；View → Workspace layout 的 “Fit workspace to current page”（`Ctrl+Shift+L`、`workspaceFocusPage`）与命令面板 Actions 同名条目都走它；该动作不得自动触发、不得改页面内容/项目状态/运行状态，手动预设与隐藏面板必须继续生效。证据 `docs/verification/j3-focus-20261102/README.md`（7 个 GUI 用例、399 断言）；J3 未关闭。
-
-2026-11-02 J3 第三阶段（作者交付，未验收）：3D 视图视点/投影控件用两行 `QGridLayout`（窄 dock 不再横向裁剪），图例 190→168、剖切滑块最小宽 80；3D 预览选项分行；配置 setup 面板最小宽 300、分栏 330/650；配置标签 padding 7/11；状态栏恢复提示单行 max 320；`QToolButton:focus` 用 `focus_ring`、侧栏 focus 用 `sidebar_hover`；`undo`/`redo` 图标由 `_refresh_icons` 统一着色、`transactions` 建完工具栏补刷一次。证据 `docs/verification/j3-panels-20261102/README.md`（gui 72/0/0、10227 断言）；J3 未关闭。
-
-2026-11-02 J3 第二阶段（作者交付，未验收）：侧栏 `WORKFLOW`/`RUN & ANALYZE` 分组与选中轨道、页头面包屑、Ctrl+K 命令面板
-  （`gui/g4usim_gui/widgets/command_palette.py`：Pages/Actions/Appearances 分组、标签严格匹配优先、Up/Down 跳过组标题、Enter 运行/Esc 关闭、
-  选外观会切到所属明暗组）、状态栏 `Appearance: <皮肤名>`、菜单栏/编辑历史工具条/状态栏统一用皮肤浅表面；新增用例 `gui_command_palette`，
-  完整 GUI profile 72/72、10227 断言通过。新增外观条目必须同时进 `_command_palette_entries()` 与 `gui_command_palette` 的分组计数，
-  否则命令面板与测试不一致。证据 `docs/verification/j3-shell-20261102/README.md`；区域层级实窗改造/对比度实测/性能/独立复验仍未做。
-- 2026-11-02 J3 第一阶段（作者交付，未验收）：外观改为 28 颜色角色 + 15 套皮肤注册表（历史 B/K/C + 纸墨/砂岩/苔原/石墨/霜蓝/高对比/午夜蓝/电路夜班/板岩/余烬/极光/夜视对比），注册表构建时把 muted/border/selection/focus 归一化到正文 4.5:1、边界与焦点 3:1；样式表 = 历史基座 + 新视觉层（`$token` 单遍替换），`View → Appearance` 按明暗分组、分别记忆 `appearance/light_skin`/`dark_skin`（旧 `light_palette` 仅 B/K 镜像），`_set_skin` 会切到该皮肤自己的明暗组；新增 static `theme_registry`（113 断言点）与 `check` 图标。**QSS 陷阱：`QMainWindow::separator` 不得设 `width/height`（1px 会在浮动态 dock + offscreen 下使 Qt 崩溃）；`QDockWidget > QWidget` 会命中内部标题容器，不要写。** 证据见 [第一阶段证据](docs/verification/j3-theme-v1-20261102/README.md)。
-
-- 2026-11-02 L1 本轮验收与交付：阶段签收 **本轮约定范围验收完成**；冻结246e4f6，Windows六profile308/183347、CI十二原报告662/228978，Windows安装显式attempt2且原失败保留。新Windows125/150仅受限原生，WSLg **独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**；EE真实云／人工单对／只读恢复按原身份映射，不扩NL质量／提速／科学等级。完整操作合同见[同名历史](docs/agent-history.md#2026-11-02-l1本轮验收与交付)与[最终证据](docs/verification/l1-final-20261102/README.md)。
-
-
-- 2026-11-02 L1 EE验收快照与原生布局后续候选：EE四本机／十二CI报告、真实云与受控恢复的限定证据分开；native150原失败保留、布局候选限定独审PASS，下一候选仍待，阶段未关闭，见[同名历史条目](docs/agent-history.md#2026-11-02-l1-ee验收快照与原生布局后续候选)。
-
-- 2026-11-02 L1 路径显示 raw 修复候选：K1 生成包显示只回绑三条路径，不能重排非路径草稿或改变 F5/K1 资格；正常业务载入与 legacy 全量投影保持原行为。首候选失败与后续身份分开，见[同名历史条目](docs/agent-history.md#2026-11-02-l1-路径显示-raw-修复候选)。
-
-- 2026-11-02 L1 配置 Agent 实施候选：固定白名单、同计划新授权新任务、只读恢复及待正式验收边界，见[同名历史条目](docs/agent-history.md#2026-11-02-l1-配置-agent-实施候选)与[L1说明](docs/L1配置Agent.md)。
-
-- 2026-11-02 J2/F8与E7本轮验收：测试／构建冻结2ec5b14；15/7注册元数据、真实平台接口、限定原生及docs-only身份合同见[同名历史条目](docs/agent-history.md#2026-11-02-j2f8与e7本轮验收完成测试冻结2ec5b14)和[最终证据](docs/verification/j2-f8-final-20261102/README.md)。旧失败／历史身份保留，不扩实体或科学等级。
-
-- 2026-11-02 J2/F8第四修复候选：test-only接口、字节映射及未关闭边界见[同名历史条目](docs/agent-history.md#2026-11-02-j2f8-第四修复候选18c5858平台测试接口与证据映射)。
-
-- 2026-11-02 J2/F8第三修复候选：相关专项独审已完成，完整新候选验收待进行；2901f42本机已过范围不代表CI/原生整体通过；History三显式buddy/动态语言、QLayout类型递归、K1 policy规范身份与原拼写首尾guard的候选边界见 docs/agent-history.md 同名新条目。原失败与旧身份保留，未宣告阶段关闭。
-
-- 2026-11-02 J2/F8候选：E7实体元数据、命名源/显式构造器替换与v8快照已接线；完整验收未关闭。修改前读 docs/agent-history.md 同日条目及 docs/J2编辑覆盖与F8验收.md，保持原source/运行/物理证据边界。
-
-- 2026-11-02 J2/F8首轮验收修复：external与generated来源核验按实际输入模式分开，完整编辑包闭包保持；F8延迟显露只能服务仍当前的owned焦点。诊断code兼容/迁移、完整PyVista环境及首尾构建/报告身份门禁见同日历史条目，旧失败证据不得改写。
-
-
-
-- 2026-11-01 I2/J1 已完成：6310969仅补测试，380产品文件与5fe0a10相同；Windows/Linux runtime/SDK、冻结工具、正式矩阵与26图/4次正常退出的原生范围已验。布局/3D覆盖不进F5/K1，安装与环境/运行/物理四事实分开。长短TEMP、独立Xerces helper和历史未归因失败边界见 `docs/agent-history.md` 的“I2/J1 最终验收与测试环境修订”及[最终证据](docs/verification/i2-j1-final-20261101/README.md)。
-
-- 2026-11-01 I2/J1 实施候选：安装、环境就绪和模拟成功分别核验；发布包版本与 Geant4 版本独立。冻结程序必须隔离宿主 DLL 搜索路径、核对源码及产物身份，不能凭自检可启动复用旧 GUI。布局沿用单实例与原业务所有者，外观仅视图状态。完整约定、旧失败与撤回见 `docs/agent-history.md` 的“I2/J1 桌面交付实施候选”；当前阶段是否关闭仍看 STATUS/ROADMAP。
-
-- 2026-10-31 K1 验收关闭：资源路径 P1 与永久回归 P2 经独审和 Windows/Linux 正式单例关闭；5644e1e 仅追加回归，350 产品字节保持2914b39，原矩阵与原生证据按原身份沿用。晚变化链接仍须在 resolve 前拒绝；WSL /mnt/c 发布限制及旧失败不抹去。全文见 `docs/agent-history.md` 的“K1 资源路径 P1 与阶段验收关闭”，[最终证据](docs/verification/k1-final-20261031/README.md)。
-
-- 2026-10-31 K1 显示契约：成功且非陈旧的生成/运行命令投影覆盖 external 无 package；有效 launch 的实际 argv 优先，兼容计划命令不冒实际事实，目录未知不回填编辑 cwd。pending 按服务逐项显示，不联动其他层。全文见 `docs/agent-history.md`，回归 `smoke_k1_workflow.py`、`smoke_k1_panel.py`。
-
-- 2026-10-31 K1 配置包搬移：匹配资源的四个路径草稿随规范路径搬移，非法草稿保留；staging 与 writer 收据先检查链接再比较规范路径。真实 GUI 下一动作、Windows 别名及旧异步 smoke 反例见 `docs/agent-history.md`；第三冻结失败和未完成独审不得用局部通过覆盖。
-
-- 2026-10-31 K1 实施中：统一动作服务复用 F4/F5/runner，四层验证独立；输入变化及 Undo 后历史不得恢复当前资格。资源包重写路径后的哈希与原始读取证据分别保存；I1 只给环境事实。范围与验收见 `docs/collab/inbox/20261031-k1-execution.md`，不得以专项通过提前关闭 K1。
-- 2026-10-31 K1 终态发布：finishing 上下文独占 EvidenceJob，迟到 finished 先保留退出事实再停止重复验证；成功落盘后一次 completed，存储失败显式 failed。后台返回时取消原因用 `experiment.cancelled`，未取消且输入变化才用 `experiment.inputs_changed`；不追改历史。启动前拒绝仍发 failed 进度、不造 finished。全文见 `docs/agent-history.md`，回归 `scripts/test_k1_terminal_publication.py`、`gui/smoke_tests/smoke_live_progress.py`；组件回归不代替真实取消复验。
-- 2026-10-31 K1 深目录启动：`--working-directory` 必须在 Manager/数据发现前生效，失败不读写启动祖先；Windows manifest 和共用 `backend_launch` 只改变创建进程入口，不能改 F1/F4 路径身份或增加进程所有者。旧后端明确拒绝，不在错误目录重试。完整契约及首轮失败见 `docs/agent-history.md`；真实深目录回归 `scripts/test_backend_working_directory.py`。
-
-- 2026-10-31 F5：已完成；冻结5c1eec5、原生5d身份映射及失败历史见[最终证据](docs/verification/f5-final-20261031/README.md)。完整契约仍在docs/agent-history.md及配置撤销与恢复；稀疏worker去重N仅为master完整N的下界，空表头N未知。后续分派按[模型规则](docs/collab/MODEL-POLICY.md)，不让常规子任务继承最高推理档。下方旧状态按原日期理解。
-
-- 2026-10-30 F5候选：主编辑快照/事务统一Undo/Redo，v7保留材料/几何及raw drafts，源阻断从捕获原文重建；旧包恢复仍遵守E6当前包语义。每会话恢复OS锁、单调revision和已退役屏障；发布后清理不能反转保存成功。双投影失败须冻结，不能保存坏view。改相关入口前读 `docs/agent-history.md` 的F5条目及 `docs/配置撤销与恢复.md`；完整验收状态看STATUS/ROADMAP。
-
-- 2026-10-30 F4阶段关闭记录（已完成）：产品7d718d038a00d89995ea773b4772764116b620c3，正式矩阵/原生退出/独立审查见[最终证据](docs/verification/f4-final-20261030/README.md)。保留下方候选与失败契约；单元格可见性、旧快照拒绝、逻辑文本与原始字节身份分开。全文追加到docs/agent-history.md；F5未启动。
-
-- 2026-10-30 F4候选：诊断身份、字段和来源须由规则生产，不能解析翻译文本猜位置；旧文本报告与blocking保持，重复源行保留独立记录。定位不修改模型，编辑/重载/切项目后旧快照失效；源内容只读且区分逻辑文本SHA与F1原始字节SHA。完整契约见 `docs/agent-history.md` 同日F4条目及 `docs/结构化诊断与定位.md`；阶段验收以ROADMAP为准。
-
-- 2026-10-30 F1阶段关闭：产品f176d0e自动矩阵及14次Windows原生观察/正常退出、独立复核通过；GUI ede037f仅文档差异，不能伪改构建commit相等。合成历史行仍为结果未证实，07图像与滞后UIA分开解释；原自动归档pending保持原字节。完整契约见agent-history同日关闭条目与 `docs/verification/f1-visible-20261030/README.md`。
-- 2026-10-30 F1自动矩阵历史节点：产品f176d0e，Windows143/48511v3及E6基线、Linux双版本各143、M0双OS各64通过；自动归档原件保持。该节点实窗pending、阶段未关闭；最终状态见上条，不得追改历史收据。详情见agent-history同日自动归档条目及 `docs/verification/f1-automated-20261030/README.md`。
-
-- 2026-10-30 F1 GDML 收尾：原生句柄取得后的缓冲分配必须在关闭保护范围内；测试线程异常须转回调用线程，仅 `std::bad_alloc`/Xerces `OutOfMemoryException` 作为预期分配拒绝，全局测试适配器须异常安全恢复。Windows通过不能覆盖Linux异常族差异。详情见agent-history同日第二轮条目。
-
-- 2026-10-30 F1首轮回归：后台加载时预设图表必须绑定当前目录/请求序号，完成后再选择；未知key必须清空旧图并明确报错，不能仅加等待掩盖默认图。Qt回传显式排队，旧请求完成不得覆盖新请求。Windows全量显式传实际 `G4USIM_GEANT4_DATA`，沿用E6普通权限路径，不更改系统链接权限。详见agent-history同日F1首轮失败条目。
-
-- 2026-10-30 F1候选：来源扩展严格区分读取/接受/运行/字节一致；不得重读源文件伪造历史hash。产物显式scope，metadata唯一自排除，新协议缺损不得降级；auto仅显式选择、默认CSV不变。GUI每次新动作后台重验，搬移锚定当前根。完整契约及候选验收边界见 `docs/agent-history.md` 同日F1条目与 `docs/输出身份与来源.md`。
-
-- 2026-10-30 E6阶段关闭：实现a779634的自动矩阵与12状态实窗补验通过；合成Inspect命令检查、真实运行与原生截图观察分开计证，旧自动归档pending不得追改。完整范围与首个GUI host退出码unknown边界见 `docs/agent-history.md` 同日“E6 实窗补验与阶段关闭”及 `docs/verification/e6-visible-20261030/README.md`。
-
-- 2026-10-30 E6候选：主INI版本标记与独立几何版本严格分开，版本拒绝须保持旧reader；迁移副本源SHA复核/exclusive发布，发布后清理失败仅warning；旧项目已知兼容、未知/类型冲突拒绝；schema394项，GUI编辑范围不扩。改动前读 `docs/agent-history.md` 同日E6条目与 `docs/配置兼容与迁移.md`，阶段证据以STATUS/ROADMAP为准。
-
-- 2026-10-29 完整 2C 回归衔接：有效配置文件按 `g4usim_effective_config_v1` 登记；dry-run 配置证据不是模拟执行。故障注入的 `_t0` 仅用于单 worker 确定性覆盖，多 worker 使用 `_any_worker` 在实际回调原子竞争一次，不能假定 worker0 分到事件。稀疏 ROOT 总 N 必须来自可靠 metadata，不能假定所有 worker 都工作。全文及正反例见 `docs/agent-history.md` 的“完整 2C 首轮全量回归衔接”。
-
-- 2026-10-29 Q1 运行边界：Dose 用扣 daughter 的本体质量；GDML SD 保留真实对象，无法表达的 bias 名碰撞和持久 touchable 路径歧义须拒绝；材料解析/实际构造都检查数值及版本壳层范围；局部场最近显式祖先、冲突在 master 拒绝；延迟 GPS 按真实源身份管理，pending 动态/别名命令必须拒绝；SD 回调异常锁存并中止。更改这些路径前读 `docs/agent-history.md` 的 Q1 几何、材料、源与场条目及其回归。
-
-- 2026-10-29 Q1 数值与统计口径：非有限值/事件矩/worker 合并溢出须锁存失败，不限幅伪造结果；仅 ROOT 也检查 master mesh。scorer/mesh CSV v2 追加估计方法与可用状态，N<2/零分母/零总量不能显示零误差条；ROOT 稀疏行不提供完整 N。保持原近似公式，按事件归一化不得标为按初级粒子；LET 比值不得再除 N，网格投影无协方差不得画合成误差。全文与回归见 `docs/agent-history.md` 的 Q1 条目。
-
-- 2026-10-29 R-01/R-02 失败证据：csh 中配置后 `setMainConfig` 拒绝必须登记 app 失败、停止后续输入并非零退出；不实现热重载。
-  metadata 打开/写入/关闭失败锁存 `run_metadata_open/write/close`，可写文本摘要纠正为 failed，失败 JSON 不列入产物；
-  `summary_write_status=completed` 仅指文本摘要成功关闭，不等于 JSON/模拟成功。回归 `test_interactive_commands.py`、`test_run_summary.py`；全文见 `docs/agent-history.md`。
-
-- 2026-10-29 历史2C配置快照子集：`Config/EffectiveConfig` 区分缺失值与显式 null，事务拒绝不得改变 revision；
-  `--dump-effective-config <新文件|->` 只 Configure + preflight，不执行 macro/事件、不创建运行输出目录，拒绝覆盖已有文件（含硬链接）。
-  该次验收仅配置阶段Manager子集；命名源/相空间源不导出旧单源缓存，非mono不导出mono energy。其历史范围不扩大；当前完整2C见文末验收索引，配置值仍不能直接证明内核应用。
-  回归 `test_effective_config_model.py`、`test_effective_config_export.py`、`smoke_effective_config.py`；全文见 `docs/agent-history.md`。
-
-2026-10-19 → 2026-10-27 的 29 条实施契约全文（含文件路径、行号、反例与回归入口）在 [docs/agent-history.md](docs/agent-history.md)。下表只列**仍然有效的操作规则**；改动相关模块前必须先读对应历史条目全文，只读索引不足以动手。新增条目：全文追加到 `docs/agent-history.md`，本表加一行，不要再在本文件堆长段落。
-
-- 2026-10-28 Geant4 11.4 支持与版本矩阵：`src/Core/Geant4DataLocator.cc` 的数据集表按 `G4VERSION_NUMBER` 分段，新增
-  `>= 1140 && < 1150` 分支（12 个数据集，前 5 个 required）；升级 Geant4 小版本必须同步这张表，否则构建期 `#error`。
-  11.4 的构建门槛是 expat ≥ 2.8.5、zlib ≥ 1.3.2、freetype ≥ 2.14.3（Ubuntu 24.04 的系统库都不够），CMake 必须显式传
-  `-DEXPAT_INCLUDE_DIR/-DEXPAT_LIBRARY/-DZLIB_INCLUDE_DIR/-DZLIB_LIBRARY/-DFREETYPE_INCLUDE_DIRS/-DFREETYPE_LIBRARY`
-  指向安装前缀；`.github/workflows/linux-geant4.yml` 用 `matrix.geant4: ['11.3.2', '11.4.3']` 双版本构建，只有 11.4 leg 传这些参数。
-  测试脚本不得断言 Geant4 版本相关的字面量：数据文件夹从 `--check-geant4-data` 的 discovery 取（`datasets[0].folder`），
-  激发态核名用数值容差匹配（11.3 `Ni60[2505.753]` vs 11.4 `Ni60[2505.75300]` 只是格式化差异），不得按字符串精确相等。
-  回归 `scripts/test_geant4_data_locator.py`、`scripts/test_physics_a6.py`、`scripts/test_gps_sources.py`；
-  环境细节见 [docs/Linux构建与验证.md](docs/Linux构建与验证.md) §8。
-- 2026-10-28 F6 进度协议 `sequence`：`src/Actions/RunProgress.cc` 的 `Emit()` 在 `run_id` 后写进程级单调 `sequence`
-  （只在 telemetry mutex 下自增，`Begin()` 不重置，跨 run 递增）；`gui/g4usim_gui/core/run_progress.py` 的 `ProgressParser` 必须在字段出现时
-  要求非负整数且严格递增、重复或回退即丢弃，字段缺失时保持旧行为（旧后端仍可解析）。该字段只是顺序证据，不得用来判定模拟成功或物理完整。
-  回归 `gui/smoke_tests/smoke_live_progress.py`（重复/回退/非整数/缺失四类断言）与 `scripts/test_live_progress.py`（所有真实消息严格递增、跨 run 单调）；
-  契约见 [docs/实时运行进度.md](docs/实时运行进度.md)。
-- 2026-10-28 2B 屏蔽/涂层场景 GUI 端到端：场景页 `gui/g4usim_gui/widgets/scenario_page.py` 与 headless 驱动
-  `gui/g4usim_gui/core/scenario_shielding.py` 只能调用 `scenario_model.render()/generate()` 与 `analyze.analyze(output_dir)`，
-  不得在 GUI 里拼 INI、重算 TID/DDD 或把缺证据写成零；生成前必须三层校验（字段解析 → `problems()` → `config_schema`），
-  运行后必须核对 `run_summary.txt` 的 `status`/完成事件数并显示证据列与 NIEL 表 sha256；新增页面要同步
-  `gui/smoke_tests/smoke_main_window_ui.py` 的页数/导航索引断言与 `core/i18n.py` 的 `ZH_CN`。`make_scenario.py` 必须继续导出
-  `CUSTOM`/`ENVIRONMENT`/`NIST_DENSITY`/`UNITS`/`length_mm`/`density`/`pore_centres`/`spectrum_from_integral_flux`/`spectrum_points`
-  （兄弟场景生成器从它导入，漏掉会在 Linux CI 的 backend profile 暴露）。回归 `scripts/test_shielding_scenario_model.py`、
-  `scripts/test_scenario_shielding_core.py`、`gui/smoke_tests/smoke_scenario_page.py`、`gui/smoke_tests/smoke_scenario_backend.py`；
-  新增后端/集成测试必须读 `G4USIM_EXE`（runner 注入；`--executable` 指向 Linux `build_linux/G4UniversalSim`），
-  不得写死 `build_vs2026` 或盘符路径——static 用例 `platform_paths` 会检查。  契约见 `docs/屏蔽涂层场景端到端.md`。
-- 2026-10-28 D-7 屏蔽场景证据语义：`scenarios/shielding_coating/analyze.py` 不得把缺证据当零结果——运行事实（`status`/`summary_write_status`/`output_failure_status`/`run_count`/`completed_events == planned_events > 0`）不满足即退出码 3 且不写报告；统计文件用 `run_metadata.json`（`schema = run_metadata_json_v1`）的 `generated_files` 区分"被删"（退出码 3）与"这一轮确实没统计"（按零报告但带 `evidence = no_statistics_file_zero_deposition`）；相空间缺失/为空/跨轮次/事件号超出完成事件数为证据错误；报告新增 `evidence` 段。回归 `scripts/test_shielding_coating.py` 覆盖五种反例（删统计文件、失败摘要、零事件、陈旧相空间、真零沉积）。全文见 `docs/agent-history.md`。
-
-- 2026-10-28 命令失败传播：`/AIHL/biasing/*` 修改类命令在交互会话里被拒绝时必须计入交互失败（`interactive_command_failure_kind = biasing`）、停止会话、写 `status=failed` 并非零退出，不得只 `JustWarning` 后继续跑未偏置物理；`/AIHL/material/*` 的 9 个修改命令只允许 `PreInit`（`print`/`list` 只读不受限），初始化后调用由 Geant4 拒绝并让会话失败（`geant4_illegal_application_state`），batch 的 `main.cc` 守卫保留为纵深防御；`ParseStrictDouble` 拒绝 `inf`/`nan`/溢出值（`Config value '<v>' is not a finite double`），数值配置字段不得以非有限值进入偏置权重或可视化属性。回归 `scripts/test_interactive_commands.py`（biasing/material 两个新用例）、`scripts/test_config_value_finiteness.py`。
-- 2026-10-28 证据门禁自洽性：`scripts/check_report_evidence.py` 必须校验逐用例断言 ≥1、`exit_code == 0`、逐项求和与 `assertions_executed_total` 一致、`cases_with_zero_assertions`/`cases_with_assertion_counts` 与实际记录一致、`log_sha256` 与实际日志字节一致，发布报告不得含 fail/skip；日志与报告用 `write_bytes` 写 UTF-8/LF、摘要对落盘字节计算（`log_digest_algorithm = sha256_raw_bytes_lf_v2`），不得对内存字符串算摘要；归档旧报告只能加 `--allow-legacy-digest`/`--allow-legacy-probe` 复核，不得追改或用新口径冒充；CI 的 static/gui 各自跑完分别过门禁。回归 `scripts/test_report_evidence.py`。
-- 2026-10-28 E3 Linux CI：`.github/workflows/linux-geant4.yml` 在真实 GitHub Actions 上转绿（`a5970ff`，`codex` run 40634469313 与 roadmap run 40634465977），`ubuntu-24.04` + conda-forge Geant4 11.3.2 上 static / offscreen GUI / backend / integration 四个 profile 全部通过并各自过证据门禁，随后用篡改副本做负向对照——引用 CI 绿时必须给 run id 与提交，不得用“workflow 已写”或“本机 WSL 等价拓扑”冒充。三条硬约束：①job 级 `env` 不能用 `${{ runner.temp }}` 等非允许上下文（workflow 校验阶段就会零 job，先用 `actionlint` 查）；②conda 前缀下必须把 `QT_PLUGIN_PATH` 指向 PySide6 自带的 `Qt/plugins`，否则 Qt6 找不到 offscreen 插件（`qt.qpa.plugin: ... in ""`），GUI 用例全灭；③公开仓库的 Actions 日志需登录，失败用例由 `scripts/ci_annotate_failures.py` 发成公开的 `::error`/`::warning` 注解（workflow 中 `if: failure()`），它只是日志的替代品、不是完整日志。另：`m0-static-gui.yml` 仍是 `disabled_manually`（需仓库所有者启用；历史 GUI 步骤失败原因待日志），Geant4 11.2/11.4 矩阵未开始；本机修掉的两个 GCC-only 三目缺陷、PySide6 退出 `SIGSEGV` 与 `scripts/test_geant4_data_locator.py` 的数据集目录推导规则继续有效。全文见 `docs/agent-history.md`。
-- 2026-10-28 测试平台报告 v2：每个用例经 `tools/test_assert_probe.py` 记录已执行 `assert` 数（helper 必须用 `assert` 表达；退出 0 但无 `G4USIM_ASSERTS=` marker 判 fail）；`report.json` v2 带 `tests_content_fingerprint`（scripts/tools/gui smoke/config/scenarios/schema/macros/test，哈希前归一 CRLF）与逐用例 `log_sha256`；`scripts/check_report_evidence.py` 是 CI 证据门禁，`--fail-on-skip` 不得让 skip 冒充绿色；探针 `settrace_assert_lines_v2` 同时跟踪脚本启动的线程（worker pool 内的 `assert` 也计数，但脚本运行前已存在的线程不计）；用 `raise AssertionError` 或收集式 `return 1` 表达的判定不计入断言数，必须改成 `assert`；被原始字节哈希的输入固定 `text eol=lf`。阶段 1b 起 79 个用例全部报告非零断言（`cases_with_zero_assertions=[]`），验收阈值是断言总数不下降且该列表为空；跨线程逐项判定可以先收集再在主线程 `assert not problems` 聚合，但聚合点以外的逐项判定不计入断言数；E2-S1 的六个 editor→writer 边界是 static 用例 `writer_boundary`，基准脚本的断言必须放在 `write_report()` 之后，不得在逐基准循环内提前退出。
-- 2026-10-27 B1 位移损伤粒子名：`[scoring.displacement]` 键按 `G4ParticleTable` 大小写不敏感解析为规范名，在 `BeginRun`（首个事件前）校验（配置期粒子表为空）；未知名字报主 INI 文件、行号与候选后失败，不得静默让 DDD 恒为 0；回归 `scripts/test_displacement_damage.py`。
-- 2026-10-27 B2/B3/B4：主 INI 重复 section/键只告警 `[ConfigWarning] duplicate declaration` 并写摘要 `config_duplicate_count`，后值生效、不得改成拒绝；敏感探测器按配置名创建（禁硬编码 `AIHLParticleSD`）；`enableSD`/`setSDName`/`setSeed` 仅 `PreInit`，初始化后必须失败而非改缓存；回归 `test_config_duplicate_declarations.py`、`test_command_state_gating.py`。
-- 2026-10-27 F6：`Actions/RunProgress` 输出 `[G4USimProgress] ` + `g4usim_progress_v1` JSON，约 0.5 s 限频，终值取 `G4Run::GetNumberOfEvent()`；零事件不补造消息，进度不替代 `run_result` 判定；契约 `docs/实时运行进度.md`、回归 `test_live_progress.py`。
-- 2026-10-26 E2原验收353个字段；2C增加modules四项，E6候选增加field/biasing及主版本标记37项，共394。改描述/默认/别名/范围必须跑 `scripts/generate_config_schema.py`，C++ 表、Python 数据、矩阵第 5 节与覆盖清单禁手改；macro/CLI和辅助文件仍用专用解析器，不把字段登记当物理验证。回归 `test_config_schema.py`、`test_config_schema_context.py`、`test_field_biasing_schema.py`。
-- 2026-10-23 H1 粒子径迹：`[output] trajectories = N` 在 `SteppingAction` 开头记录（步前体积，被杀的步也记录），每 worker 每轮写 `trajectories_tN[_rR].json`，master 不写；回归 `test_trajectories.py`。
-- 2026-10-22 D 安装包：`Core/Geant4DataLocator` 仅在无 `GEANT4_DATA_DIR`/G4…DATA 变量时读可执行文件旁 `geant4-data.txt`；`packaging/build_package.py` 只写 git 忽略的 `out/`；打包验证须清空 PATH 与 Geant4 变量；数据集清单按 Geant4 11.3 写死。
-- 2026-10-22 B4 探测器响应：脉冲幅度就是 `event_edep` 沉积能（探测器为唯一敏感体），分辨率只在 `analyze_detector.py` 由用户参数施加；γ 源只在包外壳圆锥内抽样，绝对效率乘 `cone_fraction_of_4pi`；参考值全为解析式，不得声称实测效率。
-- 2026-10-22 B3 半导体器件：NIEL 表由 `convert_srniel.py` 从 SR-NIEL 生成；Φ_eq 用 ASTM E722 的 95 MeV·mb；TID 病例保持 δ 电子平衡且仅电磁物理；DDD 病例只检验注量与折积，不得称其验证了 NIEL 数据。
-- 2026-10-22 B2 屏蔽/涂层：DDD 按 Σ w·l·NIEL(E)/V，不得改用 `GetNonIonizingEnergyDeposit`；NIEL 表必须有出处；屏蔽剂量率仅法向入射；NIST 原表只能由 `make_reference.py` 再生成。
-- 2026-10-22 B1 物理基准：`reference.csv` 每行带出处，判据 |模拟−参考| ≤ 容差×参考 + 3σ；CSDA 用仅电磁物理；`G4_WATER` I = 78 eV 造成的约 +0.6 % 偏差不得靠改材料或放宽容差贴合。
-- 2026-10-22 A7 电磁场：`FieldSetup` 每线程在 `ConstructSDandField` 开头建场；`G4FieldManager` 由 `G4FieldManagerStore` 删除，不能再用 `G4AutoDelete`；回归 `test_fields_a7.py`。
-- 2026-10-22 A6 物理：`[physics.region.<名称>]` 区分大小写（取自 `originalSection`）；`max_track_length` 是自产生总长度、`min_kinetic_energy` 在步开始时判断，均为 Geant4 语义，测试与文档不得改写；`dumpProcesses` 只读；回归 `test_physics_a6.py`。
-- 2026-10-22 A5 几何：新实体/`replica|parameterised`/STL/`exportMesh`/GDML 均实验性；新实体只在 master 预计算 `GetCubicVolume()`（避免 worker 惰性缓存竞态），旧实体与布尔实体不得这样做；`assembly`、非 normal placement、A5 实体作布尔工具仍拒绝；Geant4 无 GDML 时配置阶段拒绝；回归 `test_geometry_a5.py`。
-- 2026-10-22 A4 高级 GPS 源：`SourceSpec` 多源、能量/位置/角分布高级类型、离子、相空间均实验性；`PrepareForRun()` 应用并记 `source_prepare_run` 失败；多源时单字段 `/AIHL/source/*` 命令必须拒绝；GUI 仍不得生成这些字段；回归 `test_gps_sources.py`。
-- 2026-10-22 A3 统计不确定度：逐事件 `sum`/`sum_sq`，worker 在 `Write()` 提交、master 写 `scorer_statistics[_rR].csv`；LET 比值误差用 delta 方法；不得把统计误差说成物理系统误差或已验偏置运行；回归 `test_statistical_uncertainty.py`。
-- 2026-10-21 M5 输出后处理原型：registry API v1 只显式加载可信 Python 模块，`dose_json` 独占发布 JSON；无沙箱、无 C++ scorer 动态注册、非任意输出转换；回归 `test_output_extensions.py`。
-- 2026-10-21 M1 矩形平面源：仅 XY 平面 `rectangle` + `center` + 正 `halfx/halfy` 传到 GPS；GUI 只写受支持子集并拒绝 square/annulus；首条 sensitive hit 不是 GPS 顶点，未验证采样均匀性。
-- 2026-10-21 跨阶段切片策略：不要求 M0 全部完成才做其他阶段原型；实验性 Dose 必须提示无通量/时间归一化与无独立物理基准。
-- 2026-10-21 M0 源字段冲突：`isotropic=true` 与显式 `direction` 冲突、point/plane 专有字段混写、省略 `position_type` 时 `center/radius` 不得静默丢弃，全部在配置阶段失败；GUI isotropic writer 不得写 `direction`。
-- 2026-10-21 M0 源空值：显式空白 `[source]/preset|particle|energy` 在配置阶段报错；字段缺失才允许沿用默认值或 preset。
-- 2026-10-19 M0 数值有限性：`UnitParser` 与 Source setter、GUI 均拒绝 `NaN`/`Inf`/换算后溢出的数值。
-- 2026-10-19 M0 固定方向：固定方向必须用 GPS `planar` + 归一化向量（`beam1d` 会恒沿 -Z）；`preset=isotropic_*` 后显式 `isotropic=false` 且无 `direction` 必须前置拒绝。
-- 2026-10-19 M0 平面圆心：`SetPlaneBeamAt` 必须传三轴中心，旧 `SetPlaneBeam(radius,z,direction)` 保留 x=y=0 兼容。
-- M0 源位置 INI 失败边界：`position_type` 只实现 `point`/`plane`，未知或空值、`point` 缺 `position` 必须在初始化前失败。
-- M0 原生 GPS 交错回归：GPS 已创建后单字段 setter 只同步对应字段，首次惰性创建才整体回放；`effective_source_energy_MeV` 是 Manager 缓存，不是原生 GPS 当前采样能量。
-- M0 计分生命周期：`ActionInitialization::Build()` 克隆 master `ScoringManager`；`ScoringMessenger` 的修改命令只允许 `PreInit`；`effective_scoring_event_edep_enabled` 才是最终 Manager 值。
-- M0 输出后缀：worker 在 `Build()` 强制 `_tN`，`setThreadSuffix false` 必须拒绝，不能造成并发 CSV 覆盖。
-- M0 线程数：`/AIHL/app/setNumThreads` 仅 `PreInit` 有效；初始化后必须明确失败，改线程数须新进程。
-- M0 输出目录：`/AIHL/output/setDir`、`setThreadSuffix`、`/AIHL/app/setOutputDir` 仅 `PreInit`；失败不得改 context 与来源；`OutputManager::IsInitialized()` 不能替代 Geant4 状态门禁。
-
-本文件是仓库级约束，适用于根目录及其子目录。更具体的目录约束可以由更深层的 AGENTS.md 补充；gui/AGENTS.md 适用于 GUI 目录。
-
-- 2026-10-29 Q1 R25–R30：偏置须worker TLS私有算符、真实绑定与逐run/thread完整EndRun收据，master挂接不证明运行；派生XS溢出/下溢锁存失败。RNG命令须语义守卫，setSeeds 2–99非零long、safe restore仅受支持格式，不能以原生返回0确认忽略命令。目录后处理以metadata名单为准并支持复制重定位，legacy明确未验证；原生mergeHistograms有metadata时只允许显式输入。v3断言探针不计表达式frame，旧报告不改、跨probe不比较；ParticleHit权重必须步前，phase_space边界权重保持。已有run后拒绝会重置MT主线程run ID的内核重初始化，偏置自动Initialize只做首次；普通多run须保留master/worker相同ID。完整契约及回归见docs/agent-history.md同日条目。
-
-- 2026-10-29 Q1 R32：交互执行必须显式 `--ui --ui-session csh`；裸 `--ui` 或 INI interactive 未选 csh 在 macro 执行前拒绝（dry-run 例外），不能恢复未经审计的 G4UIExecutive 旁路。Python 桌面 GUI 不依赖此入口。R31 极值测试不得把工作量差当作 worker 分配证明，须记录实际溢出捕获阶段。全文见 `docs/agent-history.md`。
+- 2026-11-04 F2已验收：冻结864bc036，协议B保留csh/批处理；重放结构预检与内核初始化后/BeamOn前只读语义预检分开，禁止预检修改SourceManager。closing的steps_total计全部操作、s…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-11-04 J3：本轮约定范围已验收并关闭，冻结92134da0；Windows125/150与独立X11代表性、云12报告696/247580及严格门禁完成。历史图身份/非逐页八态、WSLg与约一秒切换限制保留，不外推物理…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-11-03 J3 独立审查响应：独立复验不同意关闭（`docs/collab/reviews/20261103-j3-closure-review.md`）；外观断言必须用 `theme.current_skin()`（无参…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-11-02 J3 第七阶段（作者交付，未验收）：Help 菜单的快捷键表由 `ShellMixin.shortcut_rows()` 提供、对话框由 `build_shortcut_dialog()` 构建（测试/截图用非阻…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-11-02 J3 第四阶段（作者交付，未验收）：`WorkspaceLayout.preset_for_page()` 按页面映射 configuration/running/analysis（0–4 / 5 / 6–8），…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-11-02 J3 第三阶段（作者交付，未验收）：3D 视图视点/投影控件用两行 `QGridLayout`（窄 dock 不再横向裁剪），图例 190→168、剖切滑块最小宽 80；3D 预览选项分行；配置 setup 面板…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-11-02 J3 第二阶段（作者交付，未验收）：侧栏 `WORKFLOW`/`RUN & ANALYZE` 分组与选中轨道、页头面包屑、Ctrl+K 命令面板（历史全文见 [docs/agent-history.md](docs/agent-history.md)）；相关：[README.md](docs/verification/j3-theme-v1-20261102/README.md)
+- 2026-11-02 L1 本轮验收与交付：阶段签收 **本轮约定范围验收完成**；冻结246e4f6，Windows六profile308/183347、CI十二原报告662/228978，Windows安装显式attempt2且原…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）；相关：[agent-history.md#2026-11-02-l1本轮验收与交付](docs/agent-history.md#2026-11-02-l1本轮验收与交付)、[README.md](docs/verification/l1-final-20261102/README.md)
+- 2026-11-02 L1 EE验收快照与原生布局后续候选：EE四本机／十二CI报告、真实云与受控恢复的限定证据分开；native150原失败保留、布局候选限定独审PASS，下一候选仍待，阶段未关闭，见[同名历史条目](docs/ag…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）；相关：[agent-history.md#2026-11-02-l1-ee验收快照与原生布局后续候选](docs/agent-history.md#2026-11-02-l1-ee验收快照与原生布局后续候选)
+- 2026-11-02 L1 路径显示 raw 修复候选：K1 生成包显示只回绑三条路径，不能重排非路径草稿或改变 F5/K1 资格；正常业务载入与 legacy 全量投影保持原行为。首候选失败与后续身份分开，见[同名历史条目](doc…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）；相关：[agent-history.md#2026-11-02-l1-路径显示-raw-修复候选](docs/agent-history.md#2026-11-02-l1-路径显示-raw-修复候选)
+- 2026-11-02 L1 配置 Agent 实施候选：固定白名单、同计划新授权新任务、只读恢复及待正式验收边界，见[同名历史条目](docs/agent-history.md#2026-11-02-l1-配置-agent-实施候选)…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）；相关：[agent-history.md#2026-11-02-l1-配置-agent-实施候选](docs/agent-history.md#2026-11-02-l1-配置-agent-实施候选)、[L1配置Agent.md](docs/L1配置Agent.md)
+- 2026-11-02 J2/F8与E7本轮验收：测试／构建冻结2ec5b14；15/7注册元数据、真实平台接口、限定原生及docs-only身份合同见[同名历史条目](docs/agent-history.md#2026-11-02-…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）；相关：[agent-history.md#2026-11-02-j2f8与e7本轮验收完成测试冻结2ec5b14](docs/agent-history.md#2026-11-02-j2f8与e7本轮验收完成测试冻结2ec5b14)、[README.md](docs/verification/j2-f8-final-20261102/README.md)
+- 2026-11-02 J2/F8第四修复候选：test-only接口、字节映射及未关闭边界见[同名历史条目](docs/agent-history.md#2026-11-02-j2f8-第四修复候选18c5858平台测试接口与证据映射)。（历史全文见 [docs/agent-history.md](docs/agent-history.md)）；相关：[agent-history.md#2026-11-02-j2f8-第四修复候选18c5858平台测试接口与证据映射](docs/agent-history.md#2026-11-02-j2f8-第四修复候选18c5858平台测试接口与证据映射)
+- 2026-11-02 J2/F8第三修复候选：相关专项独审已完成，完整新候选验收待进行；2901f42本机已过范围不代表CI/原生整体通过；History三显式buddy/动态语言、QLayout类型递归、K1 policy规范身份与…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-11-02 J2/F8候选：E7实体元数据、命名源/显式构造器替换与v8快照已接线；完整验收未关闭。修改前读 docs/agent-history.md 同日条目及 docs/J2编辑覆盖与F8验收.md，保持原source…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-11-02 J2/F8首轮验收修复：external与generated来源核验按实际输入模式分开，完整编辑包闭包保持；F8延迟显露只能服务仍当前的owned焦点。诊断code兼容/迁移、完整PyVista环境及首尾构建/报…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-11-01 I2/J1 已完成：6310969仅补测试，380产品文件与5fe0a10相同；Windows/Linux runtime/SDK、冻结工具、正式矩阵与26图/4次正常退出的原生范围已验。布局/3D覆盖不进F5/…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）；相关：[README.md](docs/verification/i2-j1-final-20261101/README.md)
+- 2026-11-01 I2/J1 实施候选：安装、环境就绪和模拟成功分别核验；发布包版本与 Geant4 版本独立。冻结程序必须隔离宿主 DLL 搜索路径、核对源码及产物身份，不能凭自检可启动复用旧 GUI。布局沿用单实例与原业务所有…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-10-31 K1 验收关闭：资源路径 P1 与永久回归 P2 经独审和 Windows/Linux 正式单例关闭；5644e1e 仅追加回归，350 产品字节保持2914b39，原矩阵与原生证据按原身份沿用。晚变化链接仍须在…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）；相关：[README.md](docs/verification/k1-final-20261031/README.md)
+- 2026-10-31 K1 显示契约：成功且非陈旧的生成/运行命令投影覆盖 external 无 package；有效 launch 的实际 argv 优先，兼容计划命令不冒实际事实，目录未知不回填编辑 cwd。pending 按服务…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-10-31 K1 配置包搬移：匹配资源的四个路径草稿随规范路径搬移，非法草稿保留；staging 与 writer 收据先检查链接再比较规范路径。真实 GUI 下一动作、Windows 别名及旧异步 smoke 反例见 `d…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-10-31 K1 实施中：统一动作服务复用 F4/F5/runner，四层验证独立；输入变化及 Undo 后历史不得恢复当前资格。资源包重写路径后的哈希与原始读取证据分别保存；I1 只给环境事实。范围与验收见 `docs/c…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-10-31 F5：已完成；冻结5c1eec5、原生5d身份映射及失败历史见[最终证据](docs/verification/f5-final-20261031/README.md)。完整契约仍在docs/agent-hist…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）；相关：[README.md](docs/verification/f5-final-20261031/README.md)、[MODEL-POLICY.md](docs/collab/MODEL-POLICY.md)
+- 2026-10-30 F5候选：主编辑快照/事务统一Undo/Redo，v7保留材料/几何及raw drafts，源阻断从捕获原文重建；旧包恢复仍遵守E6当前包语义。每会话恢复OS锁、单调revision和已退役屏障；发布后清理不能反…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-10-30 F4阶段关闭记录（已完成）：产品7d718d038a00d89995ea773b4772764116b620c3，正式矩阵/原生退出/独立审查见[最终证据](docs/verification/f4-final-…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）；相关：[README.md](docs/verification/f4-final-20261030/README.md)
+- 2026-10-30 F4候选：诊断身份、字段和来源须由规则生产，不能解析翻译文本猜位置；旧文本报告与blocking保持，重复源行保留独立记录。定位不修改模型，编辑/重载/切项目后旧快照失效；源内容只读且区分逻辑文本SHA与F1原始…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-10-30 F1阶段关闭：产品f176d0e自动矩阵及14次Windows原生观察/正常退出、独立复核通过；GUI ede037f仅文档差异，不能伪改构建commit相等。合成历史行仍为结果未证实，07图像与滞后UIA分开解…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-10-30 F1 GDML 收尾：原生句柄取得后的缓冲分配必须在关闭保护范围内；测试线程异常须转回调用线程，仅 `std::bad_alloc`/Xerces `OutOfMemoryException` 作为预期分配拒绝，…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-10-30 F1首轮回归：后台加载时预设图表必须绑定当前目录/请求序号，完成后再选择；未知key必须清空旧图并明确报错，不能仅加等待掩盖默认图。Qt回传显式排队，旧请求完成不得覆盖新请求。Windows全量显式传实际 `G4…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-10-30 F1候选：来源扩展严格区分读取/接受/运行/字节一致；不得重读源文件伪造历史hash。产物显式scope，metadata唯一自排除，新协议缺损不得降级；auto仅显式选择、默认CSV不变。GUI每次新动作后台重…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-10-30 E6阶段关闭：实现a779634的自动矩阵与12状态实窗补验通过；合成Inspect命令检查、真实运行与原生截图观察分开计证，旧自动归档pending不得追改。完整范围与首个GUI host退出码unknown边…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-10-30 E6候选：主INI版本标记与独立几何版本严格分开，版本拒绝须保持旧reader；迁移副本源SHA复核/exclusive发布，发布后清理失败仅warning；旧项目已知兼容、未知/类型冲突拒绝；schema394…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-10-29 完整 2C 回归衔接：有效配置文件按 `g4usim_effective_config_v1` 登记；dry-run 配置证据不是模拟执行。故障注入的 `_t0` 仅用于单 worker 确定性覆盖，多 work…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-10-29 Q1 运行边界：Dose 用扣 daughter 的本体质量；GDML SD 保留真实对象，无法表达的 bias 名碰撞和持久 touchable 路径歧义须拒绝；材料解析/实际构造都检查数值及版本壳层范围；局部…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-10-29 Q1 数值与统计口径：非有限值/事件矩/worker 合并溢出须锁存失败，不限幅伪造结果；仅 ROOT 也检查 master mesh。scorer/mesh CSV v2 追加估计方法与可用状态，N<2/零分母…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-10-29 R-01/R-02 失败证据：csh 中配置后 `setMainConfig` 拒绝必须登记 app 失败、停止后续输入并非零退出；不实现热重载。（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-10-29 历史2C配置快照子集：`Config/EffectiveConfig` 区分缺失值与显式 null，事务拒绝不得改变 revision；（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-10-19 → 2026-10-27 的 29 条实施契约全文（含文件路径、行号、反例与回归入口）在 [docs/agent-history.md](docs/agent-history.md)。下表只列**仍然有效的操作规…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-10-28 Geant4 11.4 支持与版本矩阵：`src/Core/Geant4DataLocator.cc` 的数据集表按 `G4VERSION_NUMBER` 分段，新增（历史全文见 [docs/agent-history.md](docs/agent-history.md)）；相关：[Linux构建与验证.md](docs/Linux构建与验证.md)、[实时运行进度.md](docs/实时运行进度.md)
+- 2026-10-28 命令失败传播：`/AIHL/biasing/*` 修改类命令在交互会话里被拒绝时必须计入交互失败（`interactive_command_failure_kind = biasing`）、停止会话、写 `sta…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-10-29 Q1 R25–R30：偏置须worker TLS私有算符、真实绑定与逐run/thread完整EndRun收据，master挂接不证明运行；派生XS溢出/下溢锁存失败。RNG命令须语义守卫，setSeeds 2–…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
+- 2026-10-29 Q1 R32：交互执行必须显式 `--ui --ui-session csh`；裸 `--ui` 或 INI interactive 未选 csh 在 macro 执行前拒绝（dry-run 例外），不能恢复未经…（历史全文见 [docs/agent-history.md](docs/agent-history.md)）
 
 ## 1. 事实来源和支持判定
 

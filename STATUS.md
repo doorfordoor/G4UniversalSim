@@ -1,5 +1,7 @@
 # G4UniversalSim 状态（唯一入口页）
 
+> 本页只维护**当前快照与入口**。阶段完成度以 [ROADMAP](docs/ROADMAP.md) 为准，任务级状态以 [CURRENT-SUPERVISION](docs/collab/CURRENT-SUPERVISION.md) 为准。带日期的旧条目保留原日期、原失败与当时结论，作为历史快照阅读，不再代表当前状态；全文见 [docs/agent-history.md](docs/agent-history.md) 与 [docs/archive/](docs/archive/README.md)。
+
 ## 2026-11-04 F2 验收完成，转E4
 
 - 产品冻结864bc036，协议B版本化接口、Idle有限源字段、逐轮收据与限定重放完成独立验收，原csh/批处理保留。
@@ -239,20 +241,15 @@ E7只关闭本轮15/7统一factory注册、能力元数据和GUI离线定义接�
 
 ## 一句话定位
 
-2026-10-31：K1 可信实验工作流与配置导出已完成阶段验收，I1 已独立完成。第七产品冻结 `2914b39` 的 Windows 182/182、57181 个 v3 入口及官方 CI 548/548、133720 个入口保持原身份；资源路径 P1 已通过独审，`5644e1e` 永久回归补充在 Windows/Linux 分别 36/33 个入口通过严格门禁。产品字节未变，未新增物理或性能基准；已正常快进集成并推送至 `codex`。详见[验收证据](docs/verification/k1-final-20261031/README.md)及[ROADMAP](docs/ROADMAP.md)。
-
-当前工作：2026-11-01 **I2 辅助安装与双平台交付、J1 可调整工作区已完成阶段验收**。安装计划、受校验获取、发布/取消/恢复/卸载及 runtime/SDK 流程通过 Windows/Linux 实际验证；停靠布局、主题及 3D 颜色/透明度控制通过组件、冻结桌面与 Windows 实窗验收，DeepSeek 已实际参与前端设计。最终测试提交 `6310969` 仅修三个测试，产品文件与 `5fe0a10` 相同；旧失败和未归因的历史偶发失败保留。详见[最终证据与边界](docs/verification/i2-j1-final-20261101/README.md)。下一阶段为 J2/F8，空白创建、多源/物理组合等反馈按既定排期推进，AI 仍未接入。 验收提交`c3276e3`已正常快进并推送至`codex`，见[实际集成收据](docs/verification/i2-j1-close-20261101/README.md)。
-
 配置驱动、可复现、可验证的 Geant4 桌面工作台（C++17 后端 + PySide6 前端 + 场景包/基准/测试平台）。
-当前是"有真实物理验证的 Beta"，不是 1.0：核心链路可用，大量高级能力仍是实验性，产品完成度低于工程纪律。
+当前是“有真实物理验证的 Beta”，不是 1.0：F2 受控多轮会话与重放、J3 GUI 主题与外壳、L1 环境安装/工作区
+已完成各自约定范围验收（细节与限制见最终证据和支撑矩阵）；物理基准、跨平台逐位一致与任意场景正确性不在这些
+阶段结论之内。
 
-## 当前计划入口（2026-10-29 编号整理）
+## 当前计划入口
 
-统一工作项、排期波次、依赖、Q1 审查范围与提交节点均在 [ROADMAP](docs/ROADMAP.md) 的“统一代号与排期”一节。本对话作为 **Q1 完整可靠性审查、修复与验收**的主负责人；隔壁审查作为独立证据来源，不必等它全部结束。已有反例按代码基线复用；Q1 已在冻结范围完成验收，见[最终报告](docs/verification/q1-final-20261029/README.md)。
-
-当前顺序：Q1（已完成）→ 2C（已完成）→ E6（已完成）→ F1（已完成）→ F4（已完成）→ F5（已完成）→ K1（已完成，I1 已完成）→ I2/J1（已完成）→ J2/F8 → L1/F2；J2 中实际依赖实体元数据的部分先满足 E7。其后科研波次 Q2/H2/H3、F3/F7，与 K2/L2 按依赖安排；H4–H9 和 M5 保留后续独立阶段。这是导航摘要，具体状态与默认顺序以 ROADMAP 为准。用户一次启动一个完整代号，阶段内的提交和专项测试由负责人连续推进。
-
-2026-10-29 Q1已完成：九域审查、R01–R32闭合并交叉复核；验收代码 `8ecad66`。干净Windows **105 PASS / 0 FAIL / 0 SKIP**，83770个v3入口；旧同代98项基线79303，逐例/总数与原始日志门禁通过。Linux11.3.2/11.4.3真实CI各105（run40855144863），Windows/Ubuntu static+GUI各42（run40855144672），Windows实窗保存/生成/运行/取消/关窗通过。[完整收据](docs/verification/q1-final-20261029/README.md)；旧失败证据保留，历史偏置结果须重跑，原生交互迁移显式csh。
+唯一工作项/排期/依赖/提交节点见 [ROADMAP](docs/ROADMAP.md) 的“统一代号与排期”；当前完整阶段与逐项状态见
+[CURRENT-SUPERVISION](docs/collab/CURRENT-SUPERVISION.md)。本页不另立计划或阶段状态。
 
 ## 2026-10-31 F5 当前验收
 
@@ -336,11 +333,13 @@ R03–R32现已完成修复与回归，旧[反例证据](docs/verification/r03-r
 
 ## 阶段状态（摘要，详表见 ROADMAP）
 
-- A 核心功能、B 场景包与基准、C 向导/绘图/扫描、D 安装包、G 3D 预览：已完成。
-- E 修复：E1（GUI 与后端规则一致）、E2（配置 schema）、E3（Linux CI，含 Geant4 11.3.2 / 11.4.3 版本矩阵）、E5（GUI 拆分）已完成（E3 见 ROADMAP 的“done for Linux”；M0 workflow 已由所有者启用并在 `402a9f2` 双平台全绿；11.2 未测）；E4 已做部分规范迁移和链接检查，仍需收尾；新增 E6/E7 的范围见 ROADMAP。
-- F 优化：F6（实时运行进度）已完成，2026-10-28 追加可选 `sequence`（进程级单调、跨 run 不重置，GUI 拒绝重复/回退行；旧后端仍可解析），契约见 [docs/实时运行进度.md](docs/实时运行进度.md)；F1 输出与来源已完成（见上方验收边界）；F4 校验定位已完成；F2 运行会话、F3 性能/tasking、F5 undo/autosave、F7 二维扫描、F8 GUI 收尾未做。
-- H 增量：H1（径迹输出）已完成；H2–H9（过滤计分、平行世界、方差降低、光学、活化、DNA、体素体模、通用直方图）未做。
-- M0 全模块 EffectiveConfig / 模块开关归已完成的2C；SolidRegistry 归 E7，仍未实现。M0–M5 是长期目标汇总，不与新工作项重复计算完成度。
+- **唯一登记处**：[ROADMAP](docs/ROADMAP.md) 的阶段表与“统一代号与排期”；本页不重复维护各阶段完成度。
+- **当前完整阶段**：E4（规范与中文入门收尾，进行中），逐项状态见
+  [CURRENT-SUPERVISION](docs/collab/CURRENT-SUPERVISION.md)。
+- **最近完成**：F2（受控多轮会话与重放，864bc036）、J3（GUI 主题/外壳，92134da0）、
+  L1（环境安装/工作区/3D，246e4f6）。保留限制见各最终证据与支撑矩阵，不外推物理验证。
+- 历史阶段的日期条目与旧结论保留在下方，作为历史快照；阶段迁移记录见
+  [docs/agent-history.md](docs/agent-history.md)。
 
 ## 阶段 2B（屏蔽/涂层场景 GUI 端到端，已完成 2026-10-28）
 
@@ -351,29 +350,10 @@ R03–R32现已完成修复与回归，旧[反例证据](docs/verification/r03-r
 
 ## 正在做 / 下一步
 
-阶段 1（文档与仓库卫生，进行中）：
-
-1. 已完成：修文档里的反向错误（README 与中文使用手册中“LET/GDML/STL/自动合并未实现”的旧说法）；
-2. 已完成：`STATUS.md` 单一入口 + 5 份过期快照归档 `docs/archive/`（含 [归档索引](docs/archive/README.md)）；
-3. 已完成：`_backup_git_*` 进 `.gitignore`、25 个本地分支推远端（CI 从零变为逐分支可触发）；
-4. 已完成：`AGENTS.md` 48.5 KB → 33.5 KB（29 条日期条目全文迁入 `docs/agent-history.md`，只留索引）、`docs/Agent维护说明.md` 文档地图重写、新增 static 用例 `doc_links`（53 个 Markdown 文件 100 条相对链接全部可解析）；
-5. 已完成：历史审计结论对照表 [docs/collab/outbox/20261028-0120-deepseek-legacy-audit-crosscheck.md](docs/collab/outbox/20261028-0120-deepseek-legacy-audit-crosscheck.md)（`总体判断.md`、2026-10-03 现场审计、E2、F6、阶段 0 逐条判定为仍成立/已修复/部分成立/已过时，仍成立的 9 条按阶段归位）；
-6. 已完成：报告加断言级计数与工作区/测试内容双哈希、默认报告目录改 `out/verification`、CI 把 skip 当失败（`--fail-on-skip` + `check_report_evidence.py` 门禁）；顺带修复 `.gitattributes` 让 checkout 换行改变源码指纹的真实缺陷；
-7. 已完成：支持矩阵第 2–3 节每条功能标注证据类型（外部表 / 解析式 / 同源自洽 / 自测 / 未验证），第 1 节给出判定口径；
-8. 已完成：E2-S1 六个 editor→writer 边界升级为 static 用例 `writer_boundary`；9 个零断言用例改写成 `assert` 表达（断言证据从 115305 增至 116133，零断言列表清空）。
-9. 已完成：Astra 2026-10-28 审查的 6 条缺陷全部闭合（D-1 证据门禁可篡改绕过、D-2 日志摘要与磁盘字节不符、D-3 文档漂移、D-4 交互偏置拒绝只告警、D-5 材料交互无生命周期门禁、D-6 `ParseStrictDouble` 接受 inf/nan）。
-10. 已完成：D-7（`scenarios/shielding_coating/analyze.py` 缺证据当零结果）闭合——运行事实不达标即退出码 3 且不写报告，统计文件用 `run_metadata.json` 的 `generated_files` 区分“被删”与“真零”，相空间跨轮次/越界为证据错误，报告新增 `evidence` 段，回归含五种反例。
-11. 已完成：E3 Linux CI 在真实 Actions 上转绿（四 profile + 注解 + 篡改负向对照），并顺带修掉三个 CI-only 缺陷（job 级 `env` 上下文、conda Qt5 插件遮蔽 PySide6 Qt6 插件、公开仓库日志不可读）。
-
-阶段 2（2B 场景已定为**屏蔽 shielding_coating**）：
-
-- 2A：Linux + Geant4 11.3/11.4 CI（E3）——已完成（Actions 双版本矩阵绿，见上）；遗留 11.2 兼容性；
-- 2B：屏蔽场景 GUI 端到端 + schema 驱动编辑器——**已完成（2026-10-28，见上节）**；
-- 2C：完整 EffectiveConfig + 模块 off/auto/on（Astra 主导设计）——原 DSH 基线的**只读测绘**见 [docs/collab/outbox/20261028-2000-deepseek-effectiveconfig-survey.md](docs/collab/outbox/20261028-2000-deepseek-effectiveconfig-survey.md)：
-  现状（13 个 `effective_*` 标量、11 个来源字段、materials 六态、19 个 main_ini section、散落布尔开关、缺 `--dump-effective-config`）、
-  六条缺口（无对象 ID、无 requested/resolved/applied 四元组、缺 BeginOfRun 快照、无 off/auto/on 语义、GUI 无结构化入口、验收只能数 353 字段），
-  以及当时的切片建议与五个待 Astra 决定的问题。该测绘后的configured子集及最终完整2C已分别验收，见本页开头；不能再将当时“未写代码”的状态应用于当前隔离分支。
-- 铁律：阶段 2 冻结新功能，目标是压低 `experimental` 比例，而不是扩大分母。
+当前完整阶段是 **E4（规范与中文入门收尾）**：按固定清单执行事实映射、两平台中文说明、独立复演与冻结验收。
+逐项状态见 [CURRENT-SUPERVISION](docs/collab/CURRENT-SUPERVISION.md)，阶段完成度见
+[ROADMAP](docs/ROADMAP.md)。历史阶段（阶段 1、2B、2C 等）的当时计划与完成记录已迁入
+[docs/agent-history.md](docs/agent-history.md)，不再作为当前待办。
 
 ## 已知缺口（不要把以下当作已完成）
 
@@ -421,6 +401,6 @@ R03–R32现已完成修复与回归，旧[反例证据](docs/verification/r03-r
 5. `git log --oneline -15` 与 `git status`；
 6. 需要动后端时跑 `python -B scripts/run_m0_tests.py --profile backend --require-tracked-sources`（需要本机 Geant4 与已构建 exe）。
 
-## 2026-11-03 J3 整体验收：退回修复
+## 2026-11-03 J3 整体验收：退回修复（历史，已由 2026-11-04 关闭）
 
 产品 d4400b26 仍未关闭。独立实窗与性能补验发现 B/K/苔原成功标签实际混色文字对比度不足（4.345/4.345/4.310 < 4.5）；完整状态矩阵及部分DPI/跨平台门禁仍未完成。本轮未改产品代码。[整体结论与修复提案](docs/verification/j3-whole-review-20261103/README.md)。

@@ -949,3 +949,405 @@ Windows真实系统125/150、双层宽表滚动及反向、向导/浮动/快捷�
 ## 2026-11-04 F2受控多轮会话验收完成
 
 最终产品864bc036、C++指纹e7de615d，正式云12报告708/255163严格通过，Windows125/150和Linux独立X11真实运行/取消/重放/退出验收完成。协议B版本化会话保留csh/批处理，按docs/会话协议.md维护；完整配置、几何、物理、线程修改新进程。重放结构预检在hello/初始化前，依赖粒子表与数值域的语义预检在初始化后/任何BeamOn前，必须ApplySourceEdit(apply=false)无副作用，整计划非法编辑不能先执行前面的run。ReplaySendOp判断真实ACK，不把服务继续布尔当成功。closing.steps_total含所有操作、steps_executed为完成run，GUI根据原因/实际退出/收据轮数判终态。固定构建/数据/随机初态/线程/顺序内比较；不承诺跨平台/线程数逐位一致或独立物理验证。原3b/fd47失败、作者临时bc8c及dirty3b/d378、最终864/e7报告不得混同。Linux辅助twm退出1与WSLg限制保留，不称全部子进程0。最终证据见verification/f2-final-20261104/README.md，后续E4。
+
+## 2026-11-04 E4 文档收尾迁移（原文保留）
+
+> E4-2 把下列**状态性旧文**从当前入口页迁到这里；原日期与原文不变，规则类内容留在规则文件，操作说明留在中文入门。E4-1 映射回执见 `docs/collab/outbox/20261104-e4-facts-map.md`。
+
+### STATUS 旧“一句话定位”
+
+## 一句话定位
+
+2026-10-31：K1 可信实验工作流与配置导出已完成阶段验收，I1 已独立完成。第七产品冻结 `2914b39` 的 Windows 182/182、57181 个 v3 入口及官方 CI 548/548、133720 个入口保持原身份；资源路径 P1 已通过独审，`5644e1e` 永久回归补充在 Windows/Linux 分别 36/33 个入口通过严格门禁。产品字节未变，未新增物理或性能基准；已正常快进集成并推送至 `codex`。详见[验收证据](verification/k1-final-20261031/README.md)及[ROADMAP](ROADMAP.md)。
+
+当前工作：2026-11-01 **I2 辅助安装与双平台交付、J1 可调整工作区已完成阶段验收**。安装计划、受校验获取、发布/取消/恢复/卸载及 runtime/SDK 流程通过 Windows/Linux 实际验证；停靠布局、主题及 3D 颜色/透明度控制通过组件、冻结桌面与 Windows 实窗验收，DeepSeek 已实际参与前端设计。最终测试提交 `6310969` 仅修三个测试，产品文件与 `5fe0a10` 相同；旧失败和未归因的历史偶发失败保留。详见[最终证据与边界](verification/i2-j1-final-20261101/README.md)。下一阶段为 J2/F8，空白创建、多源/物理组合等反馈按既定排期推进，AI 仍未接入。 验收提交`c3276e3`已正常快进并推送至`codex`，见[实际集成收据](verification/i2-j1-close-20261101/README.md)。
+
+配置驱动、可复现、可验证的 Geant4 桌面工作台（C++17 后端 + PySide6 前端 + 场景包/基准/测试平台）。
+当前是"有真实物理验证的 Beta"，不是 1.0：核心链路可用，大量高级能力仍是实验性，产品完成度低于工程纪律。
+
+### STATUS 旧“当前计划入口”
+
+## 当前计划入口（2026-10-29 编号整理）
+
+统一工作项、排期波次、依赖、Q1 审查范围与提交节点均在 [ROADMAP](ROADMAP.md) 的“统一代号与排期”一节。本对话作为 **Q1 完整可靠性审查、修复与验收**的主负责人；隔壁审查作为独立证据来源，不必等它全部结束。已有反例按代码基线复用；Q1 已在冻结范围完成验收，见[最终报告](verification/q1-final-20261029/README.md)。
+
+当前顺序：Q1（已完成）→ 2C（已完成）→ E6（已完成）→ F1（已完成）→ F4（已完成）→ F5（已完成）→ K1（已完成，I1 已完成）→ I2/J1（已完成）→ J2/F8 → L1/F2；J2 中实际依赖实体元数据的部分先满足 E7。其后科研波次 Q2/H2/H3、F3/F7，与 K2/L2 按依赖安排；H4–H9 和 M5 保留后续独立阶段。这是导航摘要，具体状态与默认顺序以 ROADMAP 为准。用户一次启动一个完整代号，阶段内的提交和专项测试由负责人连续推进。
+
+2026-10-29 Q1已完成：九域审查、R01–R32闭合并交叉复核；验收代码 `8ecad66`。干净Windows **105 PASS / 0 FAIL / 0 SKIP**，83770个v3入口；旧同代98项基线79303，逐例/总数与原始日志门禁通过。Linux11.3.2/11.4.3真实CI各105（run40855144863），Windows/Ubuntu static+GUI各42（run40855144672），Windows实窗保存/生成/运行/取消/关窗通过。[完整收据](verification/q1-final-20261029/README.md)；旧失败证据保留，历史偏置结果须重跑，原生交互迁移显式csh。
+
+### STATUS 旧“阶段状态（摘要）”
+
+## 阶段状态（摘要，详表见 ROADMAP）
+
+- A 核心功能、B 场景包与基准、C 向导/绘图/扫描、D 安装包、G 3D 预览：已完成。
+- E 修复：E1（GUI 与后端规则一致）、E2（配置 schema）、E3（Linux CI，含 Geant4 11.3.2 / 11.4.3 版本矩阵）、E5（GUI 拆分）已完成（E3 见 ROADMAP 的“done for Linux”；M0 workflow 已由所有者启用并在 `402a9f2` 双平台全绿；11.2 未测）；E4 已做部分规范迁移和链接检查，仍需收尾；新增 E6/E7 的范围见 ROADMAP。
+- F 优化：F6（实时运行进度）已完成，2026-10-28 追加可选 `sequence`（进程级单调、跨 run 不重置，GUI 拒绝重复/回退行；旧后端仍可解析），契约见 [docs/实时运行进度.md](实时运行进度.md)；F1 输出与来源已完成（见上方验收边界）；F4 校验定位已完成；F2 运行会话、F3 性能/tasking、F5 undo/autosave、F7 二维扫描、F8 GUI 收尾未做。
+- H 增量：H1（径迹输出）已完成；H2–H9（过滤计分、平行世界、方差降低、光学、活化、DNA、体素体模、通用直方图）未做。
+- M0 全模块 EffectiveConfig / 模块开关归已完成的2C；SolidRegistry 归 E7，仍未实现。M0–M5 是长期目标汇总，不与新工作项重复计算完成度。
+
+### STATUS 旧“正在做 / 下一步（阶段1/2B/2C）”
+
+## 正在做 / 下一步
+
+阶段 1（文档与仓库卫生，进行中）：
+
+1. 已完成：修文档里的反向错误（README 与中文使用手册中“LET/GDML/STL/自动合并未实现”的旧说法）；
+2. 已完成：`STATUS.md` 单一入口 + 5 份过期快照归档 `docs/archive/`（含 [归档索引](archive/README.md)）；
+3. 已完成：`_backup_git_*` 进 `.gitignore`、25 个本地分支推远端（CI 从零变为逐分支可触发）；
+4. 已完成：`AGENTS.md` 48.5 KB → 33.5 KB（29 条日期条目全文迁入 `docs/agent-history.md`，只留索引）、`docs/Agent维护说明.md` 文档地图重写、新增 static 用例 `doc_links`（53 个 Markdown 文件 100 条相对链接全部可解析）；
+5. 已完成：历史审计结论对照表 [docs/collab/outbox/20261028-0120-deepseek-legacy-audit-crosscheck.md](collab/outbox/20261028-0120-deepseek-legacy-audit-crosscheck.md)（`总体判断.md`、2026-10-03 现场审计、E2、F6、阶段 0 逐条判定为仍成立/已修复/部分成立/已过时，仍成立的 9 条按阶段归位）；
+6. 已完成：报告加断言级计数与工作区/测试内容双哈希、默认报告目录改 `out/verification`、CI 把 skip 当失败（`--fail-on-skip` + `check_report_evidence.py` 门禁）；顺带修复 `.gitattributes` 让 checkout 换行改变源码指纹的真实缺陷；
+7. 已完成：支持矩阵第 2–3 节每条功能标注证据类型（外部表 / 解析式 / 同源自洽 / 自测 / 未验证），第 1 节给出判定口径；
+8. 已完成：E2-S1 六个 editor→writer 边界升级为 static 用例 `writer_boundary`；9 个零断言用例改写成 `assert` 表达（断言证据从 115305 增至 116133，零断言列表清空）。
+9. 已完成：Astra 2026-10-28 审查的 6 条缺陷全部闭合（D-1 证据门禁可篡改绕过、D-2 日志摘要与磁盘字节不符、D-3 文档漂移、D-4 交互偏置拒绝只告警、D-5 材料交互无生命周期门禁、D-6 `ParseStrictDouble` 接受 inf/nan）。
+10. 已完成：D-7（`scenarios/shielding_coating/analyze.py` 缺证据当零结果）闭合——运行事实不达标即退出码 3 且不写报告，统计文件用 `run_metadata.json` 的 `generated_files` 区分“被删”与“真零”，相空间跨轮次/越界为证据错误，报告新增 `evidence` 段，回归含五种反例。
+11. 已完成：E3 Linux CI 在真实 Actions 上转绿（四 profile + 注解 + 篡改负向对照），并顺带修掉三个 CI-only 缺陷（job 级 `env` 上下文、conda Qt5 插件遮蔽 PySide6 Qt6 插件、公开仓库日志不可读）。
+
+阶段 2（2B 场景已定为**屏蔽 shielding_coating**）：
+
+- 2A：Linux + Geant4 11.3/11.4 CI（E3）——已完成（Actions 双版本矩阵绿，见上）；遗留 11.2 兼容性；
+- 2B：屏蔽场景 GUI 端到端 + schema 驱动编辑器——**已完成（2026-10-28，见上节）**；
+- 2C：完整 EffectiveConfig + 模块 off/auto/on（Astra 主导设计）——原 DSH 基线的**只读测绘**见 [docs/collab/outbox/20261028-2000-deepseek-effectiveconfig-survey.md](collab/outbox/20261028-2000-deepseek-effectiveconfig-survey.md)：
+  现状（13 个 `effective_*` 标量、11 个来源字段、materials 六态、19 个 main_ini section、散落布尔开关、缺 `--dump-effective-config`）、
+  六条缺口（无对象 ID、无 requested/resolved/applied 四元组、缺 BeginOfRun 快照、无 off/auto/on 语义、GUI 无结构化入口、验收只能数 353 字段），
+  以及当时的切片建议与五个待 Astra 决定的问题。该测绘后的configured子集及最终完整2C已分别验收，见本页开头；不能再将当时“未写代码”的状态应用于当前隔离分支。
+- 铁律：阶段 2 冻结新功能，目标是压低 `experimental` 比例，而不是扩大分母。
+
+### GUI 快速入门旧 J2/F8 候选状态段（2026-11-02）
+
+2026-11-02 J2/F8候选提供空白项目、内存材料/几何、命名多源和物理组合编辑，完整流程见[J2/F8说明](J2编辑覆盖与F8验收.md)。外部输入模式检查当前选定的主配置/宏，不因保留的生成模式编辑历史而拒绝；切回生成模式仍检查编辑来源，完整离线编辑包仍要求所有保留资源存在。跨页快捷键和Tab会在停靠区域布局完成后显露当前焦点及可容纳的完整标签/控件；切换焦点不会被旧显露任务抢回。正式阶段验收仍在进行。
+
+### GUI 快速入门旧 F4 完成段（2026-10-30）
+
+2026-10-30 F4 已完成：[验收与边界](verification/f4-final-20261030/README.md)。表格定位应看到确切单元格；源文件变化时只显示明确标记的历史快照。此状态不表示配置已运行或物理正确。
+
+### GUI 快速入门文末历史段（运行判定/F6/2C/Q1/F1，原文）
+
+# 运行结果判定（M0-3C4 工作区候选）
+
+## 实时进度（F6）
+
+运行控制台新增进度条，显示当前 run 的已处理/计划事件数、平均速率与预计剩余时间。初始化、零事件或旧后端未报告进度时显示未知；每轮重新计数。达到 100% 后仍可能在收尾或写出，不能代替下面的最终结果判定。停止或强制结束后保留最后观察进度并显示冻结；Windows 控制台程序不响应停止时可继续强制结束。ETA 只是本轮剩余事件的估算，不含后续轮次和不可预测的写出耗时。
+
+协议及限制见 [实时运行进度](实时运行进度.md)。
+
+## 最终结果
+
+运行页会同时显示进程退出码和模拟结果。退出码为 0 不等于模拟成功：只有本次新生成的 `run_summary.txt` 证实后端和 macro 完成、至少执行一个 run、每轮计划事件全部完成且逐轮合计与摘要总数一致时才显示“模拟成功”。仅配置检查（dry-run）、交互会话结束但未运行、正常退出但无 run 会单独标记；停止、强制结束、摘要缺失或旧摘要不会被历史页误判为成功。历史页对旧版状态文件缺少摘要新鲜度证据的条目保守显示“结果未证实”。
+
+
+### 2026-10-29：有效配置审查（2C 开发中）
+
+新增配置阶段 Manager 子集导出与只读查看器，完整消费者、运行应用证据与模块三态仍未交付；不提升现有功能支持等级。契约见 [有效配置快照](EffectiveConfig.md)。
+
+
+2026-10-29 Q1 结果与保存约定：有 `run_metadata.json` 的输出目录只自动读取它登记的本轮文件；旧worker文件不会混入统计。必需登记缺失、元数据清单损坏或已登记文件缺失会显示错误并清除旧显示；没有manifest的目录仍可按legacy读取，但明确未验证。复制结果目录按manifest原根重定位，不访问旧机器路径；合并计划建立后，来源模式、manifest或输入列表改变时须刷新计划后重新开始。这些检查不等于文件内容签名或物理验证。
+
+保存项目采用同目录临时文件和原子替换，写出失败保留原项目。未来版本和无法识别的项目字段明确拒绝，避免重新保存时静默丢失；自动迁移仍在E6。扫描成功须有正事件数、每轮完成和可靠新摘要；关窗终止该窗口持有的进程。正常Python桌面GUI不依赖原生Geant4 UI；若外部INI主动设置interactive，请使用受审计的csh入口，裸UI执行会被拒绝。
+
+
+2026-10-30 F1 候选：结果摘要与运行历史分别展示运行状态和输出字节身份。新来源扩展按当前目录中的登记文件逐个核对SHA-256及长度；哈希一致只表示相对于记录的文件字节一致，不证明来源认证、物理正确或运行成功。详情保留执行标识、构建身份与实际读取输入的历史记录；原输入后来移动或删除不抹掉记录，也不表示当前输入已核验。旧v1仍可读取，但警告缺少内容哈希。新扩展无效、内容不一致或登记文件缺失时拒绝自动分析，刷新清除旧结果。复制目录仅从新根读取，合并开始前重新核对字节；后处理文件不改写原始清单。此为候选行为，真实窗口和阶段验收以专项记录为准。
+
+
+F1候选的“结果→概览”和运行历史选中项内嵌身份详情：分别查看构建、输入历史读取与输出文件身份，选中行后可点击复制或按Ctrl+C复制完整路径和SHA。原始JSON默认折叠。输入表是历史实际读取记录，不会为展示而重新读取原输入；元数据自身排除哈希避免循环自引用。错误刷新会清除旧身份表，未登记的额外文件仅不属于自动证据集合，不因此认定内容遭修改。
+
+
+F1身份校验会在后台运行：开始刷新或切换目录时清除旧身份表，显示“正在校验输出哈希”；过时请求不会覆盖新选择。历史搬移后实际打开当前运行包的output，原快照路径仅作记录显示。同一次刷新复用该次已核验的快照，各次独立刷新及合并执行前仍重新计算内容哈希，不凭时间戳或长度相信旧结果。
+
+## 2026-11-04 E4 规则索引瘦身迁移（原 AGENTS.md §0 历史条目，原文保留）
+
+本段为 E4-2 首轮独审修正：AGENTS.md 只保留主题索引与实现规则，以下为原 §0
+历史条目全文（含链接、日期、原失败与回归入口），未改写正文；链接按 docs/ 相对布局归一。
+
+- 2026-11-04 F2已验收：冻结864bc036，协议B保留csh/批处理；重放结构预检与内核初始化后/BeamOn前只读语义预检分开，禁止预检修改SourceManager。closing的steps_total计全部操作、steps_executed计完成run；正常终态需核对实际退出和收据。详见docs/agent-history.md同日F2条目及docs/verification/f2-final-20261104/README.md。
+
+- 2026-11-04 J3：本轮约定范围已验收并关闭，冻结92134da0；Windows125/150与独立X11代表性、云12报告696/247580及严格门禁完成。历史图身份/非逐页八态、WSLg与约一秒切换限制保留，不外推物理/云Agent验证；后续F2。详见docs/agent-history.md同日J3条目及docs/verification/j3-final-20261104/README.md。
+
+- 2026-11-03 J3 独立审查响应：独立复验不同意关闭（`docs/collab/reviews/20261103-j3-closure-review.md`）；外观断言必须用 `theme.current_skin()`（无参读应用属性，传窗口会恒回退 B）；`reveal_current()` 不得隐藏既有停靠页，Results 页整宽由 `focus_analysis_view()` 负责；紧凑布局（<1400 逻辑像素）隐藏 AI 与 3D 预览两个可选 dock，外部面板入口是 View → Panels 而非命令面板；`paletteSearch` 边框用 `border_strong`；候选冻结与三 profile 基线在 `docs/verification/j3-close-20261103/`；J3 仍为未关闭。
+
+- 2026-11-02 J3 第七阶段（作者交付，未验收）：Help 菜单的快捷键表由 `ShellMixin.shortcut_rows()` 提供、对话框由 `build_shortcut_dialog()` 构建（测试/截图用非阻塞版本，`show_shortcuts()` 才 exec）；关于文本由 `about_text()` 生成（含 GUI/PySide6/Qt 版本、应用根目录、后端路径），不要在别处重复拼这些事实。新增菜单项必须进 `i18n.ZH_CN` 与 `_set_language` 覆盖路径；导航 tooltip 与快捷键表、无障碍描述保持同一文案。回归 `gui_help_menu` 及 `gui_main_window`/`gui_command_palette`/`gui_theme_response`/`gui_j1_appearance`；证据 `docs/verification/j3-help-20261102/README.md`（5 例、211 断言）；J3 未关闭。
+- 2026-11-02 J3 第六阶段（作者交付，未验收）：3D 模型树在 `gui/g4usim_gui/preview3d/model_tree.py`，从 `GeometryDocument` 构建，widget 侧只渲染与联动、不得自行推断父子关系；树节点与 3D 选中必须双向同步，过滤时保留命中节点的父链；打开 3D 标签自动 `refresh_3d_preview()` 的入口在 `_on_workspace_tab_changed`。回归 `gui_model_tree`（离屏只覆盖纯函数 21 断言，widget 联动需 Windows 平台直接跑 27 断言）及 `gui_3d_view`/`gui_config_editors`/`gui_workspace_layout`/`gui_main_window`/`gui_command_palette`/`gui_k1_panel`；证据 `docs/verification/j3-modeltree-20261102/README.md`（7 例、1965 断言）；J3 未关闭。
+- 2026-11-02 J3 第五阶段（作者交付，未验收）：`WorkspacePageStack.reveal_current()` 离开停靠页时必须隐藏该页 dock（否则配置编辑器会在 Run Console/Results/Run History/Parameter Scans 继续占宽）；导航到 Results 页时 `WorkspaceLayout.focus_analysis_view()` 收起 3D 预览与 AI 面板并显示日志 dock。回归入口 `gui_workspace_layout`/`gui_main_window`/`gui_command_palette`/`gui_3d_view`/`gui_config_editors`/`gui_k1_panel`/`gui_k1_history_scope`；证据 `docs/verification/j3-analysis-docks-20261102/README.md`（7 例、2022 断言）；J3 未关闭。
+
+- 2026-11-02 J3 第四阶段（作者交付，未验收）：`WorkspaceLayout.preset_for_page()` 按页面映射 configuration/running/analysis（0–4 / 5 / 6–8），`focus_current_page()` 只切停靠面板并 `reveal_current()`；View → Workspace layout 的 “Fit workspace to current page”（`Ctrl+Shift+L`、`workspaceFocusPage`）与命令面板 Actions 同名条目都走它；该动作不得自动触发、不得改页面内容/项目状态/运行状态，手动预设与隐藏面板必须继续生效。证据 `docs/verification/j3-focus-20261102/README.md`（7 个 GUI 用例、399 断言）；J3 未关闭。
+
+2026-11-02 J3 第三阶段（作者交付，未验收）：3D 视图视点/投影控件用两行 `QGridLayout`（窄 dock 不再横向裁剪），图例 190→168、剖切滑块最小宽 80；3D 预览选项分行；配置 setup 面板最小宽 300、分栏 330/650；配置标签 padding 7/11；状态栏恢复提示单行 max 320；`QToolButton:focus` 用 `focus_ring`、侧栏 focus 用 `sidebar_hover`；`undo`/`redo` 图标由 `_refresh_icons` 统一着色、`transactions` 建完工具栏补刷一次。证据 `docs/verification/j3-panels-20261102/README.md`（gui 72/0/0、10227 断言）；J3 未关闭。
+
+2026-11-02 J3 第二阶段（作者交付，未验收）：侧栏 `WORKFLOW`/`RUN & ANALYZE` 分组与选中轨道、页头面包屑、Ctrl+K 命令面板
+  （`gui/g4usim_gui/widgets/command_palette.py`：Pages/Actions/Appearances 分组、标签严格匹配优先、Up/Down 跳过组标题、Enter 运行/Esc 关闭、
+  选外观会切到所属明暗组）、状态栏 `Appearance: <皮肤名>`、菜单栏/编辑历史工具条/状态栏统一用皮肤浅表面；新增用例 `gui_command_palette`，
+  完整 GUI profile 72/72、10227 断言通过。新增外观条目必须同时进 `_command_palette_entries()` 与 `gui_command_palette` 的分组计数，
+  否则命令面板与测试不一致。证据 `docs/verification/j3-shell-20261102/README.md`；区域层级实窗改造/对比度实测/性能/独立复验仍未做。
+- 2026-11-02 J3 第一阶段（作者交付，未验收）：外观改为 28 颜色角色 + 15 套皮肤注册表（历史 B/K/C + 纸墨/砂岩/苔原/石墨/霜蓝/高对比/午夜蓝/电路夜班/板岩/余烬/极光/夜视对比），注册表构建时把 muted/border/selection/focus 归一化到正文 4.5:1、边界与焦点 3:1；样式表 = 历史基座 + 新视觉层（`$token` 单遍替换），`View → Appearance` 按明暗分组、分别记忆 `appearance/light_skin`/`dark_skin`（旧 `light_palette` 仅 B/K 镜像），`_set_skin` 会切到该皮肤自己的明暗组；新增 static `theme_registry`（113 断言点）与 `check` 图标。**QSS 陷阱：`QMainWindow::separator` 不得设 `width/height`（1px 会在浮动态 dock + offscreen 下使 Qt 崩溃）；`QDockWidget > QWidget` 会命中内部标题容器，不要写。** 证据见 [第一阶段证据](verification/j3-theme-v1-20261102/README.md)。
+
+- 2026-11-02 L1 本轮验收与交付：阶段签收 **本轮约定范围验收完成**；冻结246e4f6，Windows六profile308/183347、CI十二原报告662/228978，Windows安装显式attempt2且原失败保留。新Windows125/150仅受限原生，WSLg **独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**；EE真实云／人工单对／只读恢复按原身份映射，不扩NL质量／提速／科学等级。完整操作合同见[同名历史](agent-history.md#2026-11-02-l1本轮验收与交付)与[最终证据](verification/l1-final-20261102/README.md)。
+
+- 2026-11-02 L1 EE验收快照与原生布局后续候选：EE四本机／十二CI报告、真实云与受控恢复的限定证据分开；native150原失败保留、布局候选限定独审PASS，下一候选仍待，阶段未关闭，见[同名历史条目](agent-history.md#2026-11-02-l1-ee验收快照与原生布局后续候选)。
+
+- 2026-11-02 L1 路径显示 raw 修复候选：K1 生成包显示只回绑三条路径，不能重排非路径草稿或改变 F5/K1 资格；正常业务载入与 legacy 全量投影保持原行为。首候选失败与后续身份分开，见[同名历史条目](agent-history.md#2026-11-02-l1-路径显示-raw-修复候选)。
+
+- 2026-11-02 L1 配置 Agent 实施候选：固定白名单、同计划新授权新任务、只读恢复及待正式验收边界，见[同名历史条目](agent-history.md#2026-11-02-l1-配置-agent-实施候选)与[L1说明](L1配置Agent.md)。
+
+- 2026-11-02 J2/F8与E7本轮验收：测试／构建冻结2ec5b14；15/7注册元数据、真实平台接口、限定原生及docs-only身份合同见[同名历史条目](agent-history.md#2026-11-02-j2f8与e7本轮验收完成测试冻结2ec5b14)和[最终证据](verification/j2-f8-final-20261102/README.md)。旧失败／历史身份保留，不扩实体或科学等级。
+
+- 2026-11-02 J2/F8第四修复候选：test-only接口、字节映射及未关闭边界见[同名历史条目](agent-history.md#2026-11-02-j2f8-第四修复候选18c5858平台测试接口与证据映射)。
+
+- 2026-11-02 J2/F8第三修复候选：相关专项独审已完成，完整新候选验收待进行；2901f42本机已过范围不代表CI/原生整体通过；History三显式buddy/动态语言、QLayout类型递归、K1 policy规范身份与原拼写首尾guard的候选边界见 docs/agent-history.md 同名新条目。原失败与旧身份保留，未宣告阶段关闭。
+
+- 2026-11-02 J2/F8候选：E7实体元数据、命名源/显式构造器替换与v8快照已接线；完整验收未关闭。修改前读 docs/agent-history.md 同日条目及 docs/J2编辑覆盖与F8验收.md，保持原source/运行/物理证据边界。
+
+- 2026-11-02 J2/F8首轮验收修复：external与generated来源核验按实际输入模式分开，完整编辑包闭包保持；F8延迟显露只能服务仍当前的owned焦点。诊断code兼容/迁移、完整PyVista环境及首尾构建/报告身份门禁见同日历史条目，旧失败证据不得改写。
+
+- 2026-11-01 I2/J1 已完成：6310969仅补测试，380产品文件与5fe0a10相同；Windows/Linux runtime/SDK、冻结工具、正式矩阵与26图/4次正常退出的原生范围已验。布局/3D覆盖不进F5/K1，安装与环境/运行/物理四事实分开。长短TEMP、独立Xerces helper和历史未归因失败边界见 `docs/agent-history.md` 的“I2/J1 最终验收与测试环境修订”及[最终证据](verification/i2-j1-final-20261101/README.md)。
+
+- 2026-11-01 I2/J1 实施候选：安装、环境就绪和模拟成功分别核验；发布包版本与 Geant4 版本独立。冻结程序必须隔离宿主 DLL 搜索路径、核对源码及产物身份，不能凭自检可启动复用旧 GUI。布局沿用单实例与原业务所有者，外观仅视图状态。完整约定、旧失败与撤回见 `docs/agent-history.md` 的“I2/J1 桌面交付实施候选”；当前阶段是否关闭仍看 STATUS/ROADMAP。
+
+- 2026-10-31 K1 验收关闭：资源路径 P1 与永久回归 P2 经独审和 Windows/Linux 正式单例关闭；5644e1e 仅追加回归，350 产品字节保持2914b39，原矩阵与原生证据按原身份沿用。晚变化链接仍须在 resolve 前拒绝；WSL /mnt/c 发布限制及旧失败不抹去。全文见 `docs/agent-history.md` 的“K1 资源路径 P1 与阶段验收关闭”，[最终证据](verification/k1-final-20261031/README.md)。
+
+- 2026-10-31 K1 显示契约：成功且非陈旧的生成/运行命令投影覆盖 external 无 package；有效 launch 的实际 argv 优先，兼容计划命令不冒实际事实，目录未知不回填编辑 cwd。pending 按服务逐项显示，不联动其他层。全文见 `docs/agent-history.md`，回归 `smoke_k1_workflow.py`、`smoke_k1_panel.py`。
+
+- 2026-10-31 K1 配置包搬移：匹配资源的四个路径草稿随规范路径搬移，非法草稿保留；staging 与 writer 收据先检查链接再比较规范路径。真实 GUI 下一动作、Windows 别名及旧异步 smoke 反例见 `docs/agent-history.md`；第三冻结失败和未完成独审不得用局部通过覆盖。
+
+- 2026-10-31 K1 实施中：统一动作服务复用 F4/F5/runner，四层验证独立；输入变化及 Undo 后历史不得恢复当前资格。资源包重写路径后的哈希与原始读取证据分别保存；I1 只给环境事实。范围与验收见 `docs/collab/inbox/20261031-k1-execution.md`，不得以专项通过提前关闭 K1。
+- 2026-10-31 K1 终态发布：finishing 上下文独占 EvidenceJob，迟到 finished 先保留退出事实再停止重复验证；成功落盘后一次 completed，存储失败显式 failed。后台返回时取消原因用 `experiment.cancelled`，未取消且输入变化才用 `experiment.inputs_changed`；不追改历史。启动前拒绝仍发 failed 进度、不造 finished。全文见 `docs/agent-history.md`，回归 `scripts/test_k1_terminal_publication.py`、`gui/smoke_tests/smoke_live_progress.py`；组件回归不代替真实取消复验。
+- 2026-10-31 K1 深目录启动：`--working-directory` 必须在 Manager/数据发现前生效，失败不读写启动祖先；Windows manifest 和共用 `backend_launch` 只改变创建进程入口，不能改 F1/F4 路径身份或增加进程所有者。旧后端明确拒绝，不在错误目录重试。完整契约及首轮失败见 `docs/agent-history.md`；真实深目录回归 `scripts/test_backend_working_directory.py`。
+
+- 2026-10-31 F5：已完成；冻结5c1eec5、原生5d身份映射及失败历史见[最终证据](verification/f5-final-20261031/README.md)。完整契约仍在docs/agent-history.md及配置撤销与恢复；稀疏worker去重N仅为master完整N的下界，空表头N未知。后续分派按[模型规则](collab/MODEL-POLICY.md)，不让常规子任务继承最高推理档。下方旧状态按原日期理解。
+
+- 2026-10-30 F5候选：主编辑快照/事务统一Undo/Redo，v7保留材料/几何及raw drafts，源阻断从捕获原文重建；旧包恢复仍遵守E6当前包语义。每会话恢复OS锁、单调revision和已退役屏障；发布后清理不能反转保存成功。双投影失败须冻结，不能保存坏view。改相关入口前读 `docs/agent-history.md` 的F5条目及 `docs/配置撤销与恢复.md`；完整验收状态看STATUS/ROADMAP。
+
+- 2026-10-30 F4阶段关闭记录（已完成）：产品7d718d038a00d89995ea773b4772764116b620c3，正式矩阵/原生退出/独立审查见[最终证据](verification/f4-final-20261030/README.md)。保留下方候选与失败契约；单元格可见性、旧快照拒绝、逻辑文本与原始字节身份分开。全文追加到docs/agent-history.md；F5未启动。
+
+- 2026-10-30 F4候选：诊断身份、字段和来源须由规则生产，不能解析翻译文本猜位置；旧文本报告与blocking保持，重复源行保留独立记录。定位不修改模型，编辑/重载/切项目后旧快照失效；源内容只读且区分逻辑文本SHA与F1原始字节SHA。完整契约见 `docs/agent-history.md` 同日F4条目及 `docs/结构化诊断与定位.md`；阶段验收以ROADMAP为准。
+
+- 2026-10-30 F1阶段关闭：产品f176d0e自动矩阵及14次Windows原生观察/正常退出、独立复核通过；GUI ede037f仅文档差异，不能伪改构建commit相等。合成历史行仍为结果未证实，07图像与滞后UIA分开解释；原自动归档pending保持原字节。完整契约见agent-history同日关闭条目与 `docs/verification/f1-visible-20261030/README.md`。
+- 2026-10-30 F1自动矩阵历史节点：产品f176d0e，Windows143/48511v3及E6基线、Linux双版本各143、M0双OS各64通过；自动归档原件保持。该节点实窗pending、阶段未关闭；最终状态见上条，不得追改历史收据。详情见agent-history同日自动归档条目及 `docs/verification/f1-automated-20261030/README.md`。
+
+- 2026-10-30 F1 GDML 收尾：原生句柄取得后的缓冲分配必须在关闭保护范围内；测试线程异常须转回调用线程，仅 `std::bad_alloc`/Xerces `OutOfMemoryException` 作为预期分配拒绝，全局测试适配器须异常安全恢复。Windows通过不能覆盖Linux异常族差异。详情见agent-history同日第二轮条目。
+
+- 2026-10-30 F1首轮回归：后台加载时预设图表必须绑定当前目录/请求序号，完成后再选择；未知key必须清空旧图并明确报错，不能仅加等待掩盖默认图。Qt回传显式排队，旧请求完成不得覆盖新请求。Windows全量显式传实际 `G4USIM_GEANT4_DATA`，沿用E6普通权限路径，不更改系统链接权限。详见agent-history同日F1首轮失败条目。
+
+- 2026-10-30 F1候选：来源扩展严格区分读取/接受/运行/字节一致；不得重读源文件伪造历史hash。产物显式scope，metadata唯一自排除，新协议缺损不得降级；auto仅显式选择、默认CSV不变。GUI每次新动作后台重验，搬移锚定当前根。完整契约及候选验收边界见 `docs/agent-history.md` 同日F1条目与 `docs/输出身份与来源.md`。
+
+- 2026-10-30 E6阶段关闭：实现a779634的自动矩阵与12状态实窗补验通过；合成Inspect命令检查、真实运行与原生截图观察分开计证，旧自动归档pending不得追改。完整范围与首个GUI host退出码unknown边界见 `docs/agent-history.md` 同日“E6 实窗补验与阶段关闭”及 `docs/verification/e6-visible-20261030/README.md`。
+
+- 2026-10-30 E6候选：主INI版本标记与独立几何版本严格分开，版本拒绝须保持旧reader；迁移副本源SHA复核/exclusive发布，发布后清理失败仅warning；旧项目已知兼容、未知/类型冲突拒绝；schema394项，GUI编辑范围不扩。改动前读 `docs/agent-history.md` 同日E6条目与 `docs/配置兼容与迁移.md`，阶段证据以STATUS/ROADMAP为准。
+
+- 2026-10-29 完整 2C 回归衔接：有效配置文件按 `g4usim_effective_config_v1` 登记；dry-run 配置证据不是模拟执行。故障注入的 `_t0` 仅用于单 worker 确定性覆盖，多 worker 使用 `_any_worker` 在实际回调原子竞争一次，不能假定 worker0 分到事件。稀疏 ROOT 总 N 必须来自可靠 metadata，不能假定所有 worker 都工作。全文及正反例见 `docs/agent-history.md` 的“完整 2C 首轮全量回归衔接”。
+
+- 2026-10-29 Q1 运行边界：Dose 用扣 daughter 的本体质量；GDML SD 保留真实对象，无法表达的 bias 名碰撞和持久 touchable 路径歧义须拒绝；材料解析/实际构造都检查数值及版本壳层范围；局部场最近显式祖先、冲突在 master 拒绝；延迟 GPS 按真实源身份管理，pending 动态/别名命令必须拒绝；SD 回调异常锁存并中止。更改这些路径前读 `docs/agent-history.md` 的 Q1 几何、材料、源与场条目及其回归。
+
+- 2026-10-29 Q1 数值与统计口径：非有限值/事件矩/worker 合并溢出须锁存失败，不限幅伪造结果；仅 ROOT 也检查 master mesh。scorer/mesh CSV v2 追加估计方法与可用状态，N<2/零分母/零总量不能显示零误差条；ROOT 稀疏行不提供完整 N。保持原近似公式，按事件归一化不得标为按初级粒子；LET 比值不得再除 N，网格投影无协方差不得画合成误差。全文与回归见 `docs/agent-history.md` 的 Q1 条目。
+
+- 2026-10-29 R-01/R-02 失败证据：csh 中配置后 `setMainConfig` 拒绝必须登记 app 失败、停止后续输入并非零退出；不实现热重载。
+  metadata 打开/写入/关闭失败锁存 `run_metadata_open/write/close`，可写文本摘要纠正为 failed，失败 JSON 不列入产物；
+  `summary_write_status=completed` 仅指文本摘要成功关闭，不等于 JSON/模拟成功。回归 `test_interactive_commands.py`、`test_run_summary.py`；全文见 `docs/agent-history.md`。
+
+- 2026-10-29 历史2C配置快照子集：`Config/EffectiveConfig` 区分缺失值与显式 null，事务拒绝不得改变 revision；
+  `--dump-effective-config <新文件|->` 只 Configure + preflight，不执行 macro/事件、不创建运行输出目录，拒绝覆盖已有文件（含硬链接）。
+  该次验收仅配置阶段Manager子集；命名源/相空间源不导出旧单源缓存，非mono不导出mono energy。其历史范围不扩大；当前完整2C见文末验收索引，配置值仍不能直接证明内核应用。
+  回归 `test_effective_config_model.py`、`test_effective_config_export.py`、`smoke_effective_config.py`；全文见 `docs/agent-history.md`。
+
+2026-10-19 → 2026-10-27 的 29 条实施契约全文（含文件路径、行号、反例与回归入口）在 [docs/agent-history.md](agent-history.md)。下表只列**仍然有效的操作规则**；改动相关模块前必须先读对应历史条目全文，只读索引不足以动手。新增条目：全文追加到 `docs/agent-history.md`，本表加一行，不要再在本文件堆长段落。
+
+- 2026-10-28 Geant4 11.4 支持与版本矩阵：`src/Core/Geant4DataLocator.cc` 的数据集表按 `G4VERSION_NUMBER` 分段，新增
+  `>= 1140 && < 1150` 分支（12 个数据集，前 5 个 required）；升级 Geant4 小版本必须同步这张表，否则构建期 `#error`。
+  11.4 的构建门槛是 expat ≥ 2.8.5、zlib ≥ 1.3.2、freetype ≥ 2.14.3（Ubuntu 24.04 的系统库都不够），CMake 必须显式传
+  `-DEXPAT_INCLUDE_DIR/-DEXPAT_LIBRARY/-DZLIB_INCLUDE_DIR/-DZLIB_LIBRARY/-DFREETYPE_INCLUDE_DIRS/-DFREETYPE_LIBRARY`
+  指向安装前缀；`.github/workflows/linux-geant4.yml` 用 `matrix.geant4: ['11.3.2', '11.4.3']` 双版本构建，只有 11.4 leg 传这些参数。
+  测试脚本不得断言 Geant4 版本相关的字面量：数据文件夹从 `--check-geant4-data` 的 discovery 取（`datasets[0].folder`），
+  激发态核名用数值容差匹配（11.3 `Ni60[2505.753]` vs 11.4 `Ni60[2505.75300]` 只是格式化差异），不得按字符串精确相等。
+  回归 `scripts/test_geant4_data_locator.py`、`scripts/test_physics_a6.py`、`scripts/test_gps_sources.py`；
+  环境细节见 [docs/Linux构建与验证.md](Linux构建与验证.md) §8。
+- 2026-10-28 F6 进度协议 `sequence`：`src/Actions/RunProgress.cc` 的 `Emit()` 在 `run_id` 后写进程级单调 `sequence`
+  （只在 telemetry mutex 下自增，`Begin()` 不重置，跨 run 递增）；`gui/g4usim_gui/core/run_progress.py` 的 `ProgressParser` 必须在字段出现时
+  要求非负整数且严格递增、重复或回退即丢弃，字段缺失时保持旧行为（旧后端仍可解析）。该字段只是顺序证据，不得用来判定模拟成功或物理完整。
+  回归 `gui/smoke_tests/smoke_live_progress.py`（重复/回退/非整数/缺失四类断言）与 `scripts/test_live_progress.py`（所有真实消息严格递增、跨 run 单调）；
+  契约见 [docs/实时运行进度.md](实时运行进度.md)。
+- 2026-10-28 2B 屏蔽/涂层场景 GUI 端到端：场景页 `gui/g4usim_gui/widgets/scenario_page.py` 与 headless 驱动
+  `gui/g4usim_gui/core/scenario_shielding.py` 只能调用 `scenario_model.render()/generate()` 与 `analyze.analyze(output_dir)`，
+  不得在 GUI 里拼 INI、重算 TID/DDD 或把缺证据写成零；生成前必须三层校验（字段解析 → `problems()` → `config_schema`），
+  运行后必须核对 `run_summary.txt` 的 `status`/完成事件数并显示证据列与 NIEL 表 sha256；新增页面要同步
+  `gui/smoke_tests/smoke_main_window_ui.py` 的页数/导航索引断言与 `core/i18n.py` 的 `ZH_CN`。`make_scenario.py` 必须继续导出
+  `CUSTOM`/`ENVIRONMENT`/`NIST_DENSITY`/`UNITS`/`length_mm`/`density`/`pore_centres`/`spectrum_from_integral_flux`/`spectrum_points`
+  （兄弟场景生成器从它导入，漏掉会在 Linux CI 的 backend profile 暴露）。回归 `scripts/test_shielding_scenario_model.py`、
+  `scripts/test_scenario_shielding_core.py`、`gui/smoke_tests/smoke_scenario_page.py`、`gui/smoke_tests/smoke_scenario_backend.py`；
+  新增后端/集成测试必须读 `G4USIM_EXE`（runner 注入；`--executable` 指向 Linux `build_linux/G4UniversalSim`），
+  不得写死 `build_vs2026` 或盘符路径——static 用例 `platform_paths` 会检查。  契约见 `docs/屏蔽涂层场景端到端.md`。
+- 2026-10-28 D-7 屏蔽场景证据语义：`scenarios/shielding_coating/analyze.py` 不得把缺证据当零结果——运行事实（`status`/`summary_write_status`/`output_failure_status`/`run_count`/`completed_events == planned_events > 0`）不满足即退出码 3 且不写报告；统计文件用 `run_metadata.json`（`schema = run_metadata_json_v1`）的 `generated_files` 区分"被删"（退出码 3）与"这一轮确实没统计"（按零报告但带 `evidence = no_statistics_file_zero_deposition`）；相空间缺失/为空/跨轮次/事件号超出完成事件数为证据错误；报告新增 `evidence` 段。回归 `scripts/test_shielding_coating.py` 覆盖五种反例（删统计文件、失败摘要、零事件、陈旧相空间、真零沉积）。全文见 `docs/agent-history.md`。
+
+- 2026-10-28 命令失败传播：`/AIHL/biasing/*` 修改类命令在交互会话里被拒绝时必须计入交互失败（`interactive_command_failure_kind = biasing`）、停止会话、写 `status=failed` 并非零退出，不得只 `JustWarning` 后继续跑未偏置物理；`/AIHL/material/*` 的 9 个修改命令只允许 `PreInit`（`print`/`list` 只读不受限），初始化后调用由 Geant4 拒绝并让会话失败（`geant4_illegal_application_state`），batch 的 `main.cc` 守卫保留为纵深防御；`ParseStrictDouble` 拒绝 `inf`/`nan`/溢出值（`Config value '<v>' is not a finite double`），数值配置字段不得以非有限值进入偏置权重或可视化属性。回归 `scripts/test_interactive_commands.py`（biasing/material 两个新用例）、`scripts/test_config_value_finiteness.py`。
+- 2026-10-28 证据门禁自洽性：`scripts/check_report_evidence.py` 必须校验逐用例断言 ≥1、`exit_code == 0`、逐项求和与 `assertions_executed_total` 一致、`cases_with_zero_assertions`/`cases_with_assertion_counts` 与实际记录一致、`log_sha256` 与实际日志字节一致，发布报告不得含 fail/skip；日志与报告用 `write_bytes` 写 UTF-8/LF、摘要对落盘字节计算（`log_digest_algorithm = sha256_raw_bytes_lf_v2`），不得对内存字符串算摘要；归档旧报告只能加 `--allow-legacy-digest`/`--allow-legacy-probe` 复核，不得追改或用新口径冒充；CI 的 static/gui 各自跑完分别过门禁。回归 `scripts/test_report_evidence.py`。
+- 2026-10-28 E3 Linux CI：`.github/workflows/linux-geant4.yml` 在真实 GitHub Actions 上转绿（`a5970ff`，`codex` run 40634469313 与 roadmap run 40634465977），`ubuntu-24.04` + conda-forge Geant4 11.3.2 上 static / offscreen GUI / backend / integration 四个 profile 全部通过并各自过证据门禁，随后用篡改副本做负向对照——引用 CI 绿时必须给 run id 与提交，不得用“workflow 已写”或“本机 WSL 等价拓扑”冒充。三条硬约束：①job 级 `env` 不能用 `${{ runner.temp }}` 等非允许上下文（workflow 校验阶段就会零 job，先用 `actionlint` 查）；②conda 前缀下必须把 `QT_PLUGIN_PATH` 指向 PySide6 自带的 `Qt/plugins`，否则 Qt6 找不到 offscreen 插件（`qt.qpa.plugin: ... in ""`），GUI 用例全灭；③公开仓库的 Actions 日志需登录，失败用例由 `scripts/ci_annotate_failures.py` 发成公开的 `::error`/`::warning` 注解（workflow 中 `if: failure()`），它只是日志的替代品、不是完整日志。另：`m0-static-gui.yml` 仍是 `disabled_manually`（需仓库所有者启用；历史 GUI 步骤失败原因待日志），Geant4 11.2/11.4 矩阵未开始；本机修掉的两个 GCC-only 三目缺陷、PySide6 退出 `SIGSEGV` 与 `scripts/test_geant4_data_locator.py` 的数据集目录推导规则继续有效。全文见 `docs/agent-history.md`。
+- 2026-10-28 测试平台报告 v2：每个用例经 `tools/test_assert_probe.py` 记录已执行 `assert` 数（helper 必须用 `assert` 表达；退出 0 但无 `G4USIM_ASSERTS=` marker 判 fail）；`report.json` v2 带 `tests_content_fingerprint`（scripts/tools/gui smoke/config/scenarios/schema/macros/test，哈希前归一 CRLF）与逐用例 `log_sha256`；`scripts/check_report_evidence.py` 是 CI 证据门禁，`--fail-on-skip` 不得让 skip 冒充绿色；探针 `settrace_assert_lines_v2` 同时跟踪脚本启动的线程（worker pool 内的 `assert` 也计数，但脚本运行前已存在的线程不计）；用 `raise AssertionError` 或收集式 `return 1` 表达的判定不计入断言数，必须改成 `assert`；被原始字节哈希的输入固定 `text eol=lf`。阶段 1b 起 79 个用例全部报告非零断言（`cases_with_zero_assertions=[]`），验收阈值是断言总数不下降且该列表为空；跨线程逐项判定可以先收集再在主线程 `assert not problems` 聚合，但聚合点以外的逐项判定不计入断言数；E2-S1 的六个 editor→writer 边界是 static 用例 `writer_boundary`，基准脚本的断言必须放在 `write_report()` 之后，不得在逐基准循环内提前退出。
+- 2026-10-27 B1 位移损伤粒子名：`[scoring.displacement]` 键按 `G4ParticleTable` 大小写不敏感解析为规范名，在 `BeginRun`（首个事件前）校验（配置期粒子表为空）；未知名字报主 INI 文件、行号与候选后失败，不得静默让 DDD 恒为 0；回归 `scripts/test_displacement_damage.py`。
+- 2026-10-27 B2/B3/B4：主 INI 重复 section/键只告警 `[ConfigWarning] duplicate declaration` 并写摘要 `config_duplicate_count`，后值生效、不得改成拒绝；敏感探测器按配置名创建（禁硬编码 `AIHLParticleSD`）；`enableSD`/`setSDName`/`setSeed` 仅 `PreInit`，初始化后必须失败而非改缓存；回归 `test_config_duplicate_declarations.py`、`test_command_state_gating.py`。
+- 2026-10-27 F6：`Actions/RunProgress` 输出 `[G4USimProgress] ` + `g4usim_progress_v1` JSON，约 0.5 s 限频，终值取 `G4Run::GetNumberOfEvent()`；零事件不补造消息，进度不替代 `run_result` 判定；契约 `docs/实时运行进度.md`、回归 `test_live_progress.py`。
+- 2026-10-26 E2原验收353个字段；2C增加modules四项，E6候选增加field/biasing及主版本标记37项，共394。改描述/默认/别名/范围必须跑 `scripts/generate_config_schema.py`，C++ 表、Python 数据、矩阵第 5 节与覆盖清单禁手改；macro/CLI和辅助文件仍用专用解析器，不把字段登记当物理验证。回归 `test_config_schema.py`、`test_config_schema_context.py`、`test_field_biasing_schema.py`。
+- 2026-10-23 H1 粒子径迹：`[output] trajectories = N` 在 `SteppingAction` 开头记录（步前体积，被杀的步也记录），每 worker 每轮写 `trajectories_tN[_rR].json`，master 不写；回归 `test_trajectories.py`。
+- 2026-10-22 D 安装包：`Core/Geant4DataLocator` 仅在无 `GEANT4_DATA_DIR`/G4…DATA 变量时读可执行文件旁 `geant4-data.txt`；`packaging/build_package.py` 只写 git 忽略的 `out/`；打包验证须清空 PATH 与 Geant4 变量；数据集清单按 Geant4 11.3 写死。
+- 2026-10-22 B4 探测器响应：脉冲幅度就是 `event_edep` 沉积能（探测器为唯一敏感体），分辨率只在 `analyze_detector.py` 由用户参数施加；γ 源只在包外壳圆锥内抽样，绝对效率乘 `cone_fraction_of_4pi`；参考值全为解析式，不得声称实测效率。
+- 2026-10-22 B3 半导体器件：NIEL 表由 `convert_srniel.py` 从 SR-NIEL 生成；Φ_eq 用 ASTM E722 的 95 MeV·mb；TID 病例保持 δ 电子平衡且仅电磁物理；DDD 病例只检验注量与折积，不得称其验证了 NIEL 数据。
+- 2026-10-22 B2 屏蔽/涂层：DDD 按 Σ w·l·NIEL(E)/V，不得改用 `GetNonIonizingEnergyDeposit`；NIEL 表必须有出处；屏蔽剂量率仅法向入射；NIST 原表只能由 `make_reference.py` 再生成。
+- 2026-10-22 B1 物理基准：`reference.csv` 每行带出处，判据 |模拟−参考| ≤ 容差×参考 + 3σ；CSDA 用仅电磁物理；`G4_WATER` I = 78 eV 造成的约 +0.6 % 偏差不得靠改材料或放宽容差贴合。
+- 2026-10-22 A7 电磁场：`FieldSetup` 每线程在 `ConstructSDandField` 开头建场；`G4FieldManager` 由 `G4FieldManagerStore` 删除，不能再用 `G4AutoDelete`；回归 `test_fields_a7.py`。
+- 2026-10-22 A6 物理：`[physics.region.<名称>]` 区分大小写（取自 `originalSection`）；`max_track_length` 是自产生总长度、`min_kinetic_energy` 在步开始时判断，均为 Geant4 语义，测试与文档不得改写；`dumpProcesses` 只读；回归 `test_physics_a6.py`。
+- 2026-10-22 A5 几何：新实体/`replica|parameterised`/STL/`exportMesh`/GDML 均实验性；新实体只在 master 预计算 `GetCubicVolume()`（避免 worker 惰性缓存竞态），旧实体与布尔实体不得这样做；`assembly`、非 normal placement、A5 实体作布尔工具仍拒绝；Geant4 无 GDML 时配置阶段拒绝；回归 `test_geometry_a5.py`。
+- 2026-10-22 A4 高级 GPS 源：`SourceSpec` 多源、能量/位置/角分布高级类型、离子、相空间均实验性；`PrepareForRun()` 应用并记 `source_prepare_run` 失败；多源时单字段 `/AIHL/source/*` 命令必须拒绝；GUI 仍不得生成这些字段；回归 `test_gps_sources.py`。
+- 2026-10-22 A3 统计不确定度：逐事件 `sum`/`sum_sq`，worker 在 `Write()` 提交、master 写 `scorer_statistics[_rR].csv`；LET 比值误差用 delta 方法；不得把统计误差说成物理系统误差或已验偏置运行；回归 `test_statistical_uncertainty.py`。
+- 2026-10-21 M5 输出后处理原型：registry API v1 只显式加载可信 Python 模块，`dose_json` 独占发布 JSON；无沙箱、无 C++ scorer 动态注册、非任意输出转换；回归 `test_output_extensions.py`。
+- 2026-10-21 M1 矩形平面源：仅 XY 平面 `rectangle` + `center` + 正 `halfx/halfy` 传到 GPS；GUI 只写受支持子集并拒绝 square/annulus；首条 sensitive hit 不是 GPS 顶点，未验证采样均匀性。
+- 2026-10-21 跨阶段切片策略：不要求 M0 全部完成才做其他阶段原型；实验性 Dose 必须提示无通量/时间归一化与无独立物理基准。
+- 2026-10-21 M0 源字段冲突：`isotropic=true` 与显式 `direction` 冲突、point/plane 专有字段混写、省略 `position_type` 时 `center/radius` 不得静默丢弃，全部在配置阶段失败；GUI isotropic writer 不得写 `direction`。
+- 2026-10-21 M0 源空值：显式空白 `[source]/preset|particle|energy` 在配置阶段报错；字段缺失才允许沿用默认值或 preset。
+- 2026-10-19 M0 数值有限性：`UnitParser` 与 Source setter、GUI 均拒绝 `NaN`/`Inf`/换算后溢出的数值。
+- 2026-10-19 M0 固定方向：固定方向必须用 GPS `planar` + 归一化向量（`beam1d` 会恒沿 -Z）；`preset=isotropic_*` 后显式 `isotropic=false` 且无 `direction` 必须前置拒绝。
+- 2026-10-19 M0 平面圆心：`SetPlaneBeamAt` 必须传三轴中心，旧 `SetPlaneBeam(radius,z,direction)` 保留 x=y=0 兼容。
+- M0 源位置 INI 失败边界：`position_type` 只实现 `point`/`plane`，未知或空值、`point` 缺 `position` 必须在初始化前失败。
+- M0 原生 GPS 交错回归：GPS 已创建后单字段 setter 只同步对应字段，首次惰性创建才整体回放；`effective_source_energy_MeV` 是 Manager 缓存，不是原生 GPS 当前采样能量。
+- M0 计分生命周期：`ActionInitialization::Build()` 克隆 master `ScoringManager`；`ScoringMessenger` 的修改命令只允许 `PreInit`；`effective_scoring_event_edep_enabled` 才是最终 Manager 值。
+- M0 输出后缀：worker 在 `Build()` 强制 `_tN`，`setThreadSuffix false` 必须拒绝，不能造成并发 CSV 覆盖。
+- M0 线程数：`/AIHL/app/setNumThreads` 仅 `PreInit` 有效；初始化后必须明确失败，改线程数须新进程。
+- M0 输出目录：`/AIHL/output/setDir`、`setThreadSuffix`、`/AIHL/app/setOutputDir` 仅 `PreInit`；失败不得改 context 与来源；`OutputManager::IsInitialized()` 不能替代 Geant4 状态门禁。
+
+本文件是仓库级约束，适用于根目录及其子目录。更具体的目录约束可以由更深层的 AGENTS.md 补充；gui/AGENTS.md 适用于 GUI 目录。
+
+- 2026-10-29 Q1 R25–R30：偏置须worker TLS私有算符、真实绑定与逐run/thread完整EndRun收据，master挂接不证明运行；派生XS溢出/下溢锁存失败。RNG命令须语义守卫，setSeeds 2–99非零long、safe restore仅受支持格式，不能以原生返回0确认忽略命令。目录后处理以metadata名单为准并支持复制重定位，legacy明确未验证；原生mergeHistograms有metadata时只允许显式输入。v3断言探针不计表达式frame，旧报告不改、跨probe不比较；ParticleHit权重必须步前，phase_space边界权重保持。已有run后拒绝会重置MT主线程run ID的内核重初始化，偏置自动Initialize只做首次；普通多run须保留master/worker相同ID。完整契约及回归见docs/agent-history.md同日条目。
+
+- 2026-10-29 Q1 R32：交互执行必须显式 `--ui --ui-session csh`；裸 `--ui` 或 INI interactive 未选 csh 在 macro 执行前拒绝（dry-run 例外），不能恢复未经审计的 G4UIExecutive 旁路。Python 桌面 GUI 不依赖此入口。R31 极值测试不得把工作量差当作 worker 分配证明，须记录实际溢出捕获阶段。全文见 `docs/agent-history.md`。
+
+## 2026-11-04 E4 规则索引瘦身迁移（原 gui/AGENTS.md 历史条目，原文保留）
+
+本段为 E4-2 首轮独审修正：gui/AGENTS.md 只保留索引与现行 GUI 规则，以下为原历史条目全文，
+未改写正文；链接按 docs/ 相对布局归一。
+
+Linux原生通道补充（主审已签收）：main已实际操作独立真实X11/xcb桌面，一次固定HTTP计划passed，操作观察时曾停在awaiting_approval、0事件；随后在观察期间触及300秒预算，整任务保留failed／agent.task_timeout，不称整任务成功。原host exit0、slot_released=true、host与显示服务两组remaining_owned均空、HTTP已关闭；显示辅助子进程退出码[0,1,0]（twm非零保留），不能写全部子进程exit0；代表性原生签收结果为 **独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**。WSLg RAIL任务栏无法展开，第三次host退出且0请求，原失败保留，绝不称该通道成功。Ubuntu实际系统安装x11-xkb-utils，其它本次依赖保持隔离OUT前缀；具体包版本／SHA及安装收据见最终证据，不把早期准备收据system_installs=0外推到之后。
+
+2026-11-02 L1本轮验收：阶段签收 **本轮约定范围验收完成**，WSLg **独立X11/xcb代表性原生已通过，正常退出及清理完成；WSLg RAIL失败限制保留**。冻结246e4f6；真实六本机／十二CI与安装重试、两档有限原生见[最终证据](verification/l1-final-20261102/README.md)和[完整历史](agent-history.md#2026-11-02-l1本轮验收与交付)。原F5／K1所有者不变；恢复只查询旧身份不重发、不恢复授权／当前资格，默认evaluate仅完成性。已有EE云任务与一对操作者记录不冒新native／模型质量／提速；图像/UIA永久local-only。原日期候选规则保留。
+
+2026-11-02 L1 AI布局后续候选：52px导致AI全控件不可读是必须修复的新P2，不以旧F6窄边界豁免。OUT候选仅panel按当前文字／样式计算两列最小宽度及footer inset／reflow，不改workspace／core／F5／K1或翻译；125%／150%各1216组件入口与原产品负向分别保留，候选已收限定独审PASS并由main精确apply两path；按当前focused-target及可容纳joint合同核验，retained125非焦点右列可裁剪、不保证全footer同时同屏；新候选完整验收及新native仍待。见[候选历史](agent-history.md#2026-11-02-l1-ee验收快照与原生布局后续候选)。
+
+2026-11-02 L1 路径显示 raw 修复候选：`ProjectPage.show_generated_paths` 仅回显 config/macro/output 三条路径，实际 K1 display binder 不得为显示刷新其它控件原文、revision 或验证资格；正常业务载入和 legacy 全量投影仍走原 `set_project`。原 D1 五域任务失败、窄修及后续待验身份分别计证，见[候选历史](agent-history.md#2026-11-02-l1-路径显示-raw-修复候选)。
+
+2026-11-02 L1配置Agent实施候选：只写既有体积/单能point固定方向源/运行/reference物理/计分的通用字段白名单，读取范围来自UI捕获上下文。默认仅规划，用户审阅差异后以当前新授权批准同plan，`approve_with_authorization`复核同快照并新建task，旧task取消留史、原授权不改、reason记reviewed_from，不重调模型；恢复实例不得借此提权，只查旧operation/run/record并只读显示，执行须新prompt新task。权限不足停步，事务/runner仍归F5/K1，取消/关闭不得误停其它所有者。密钥不落任务/项目/日志，系统存储缺失明确拒绝；本地仅兼容协议，不附权重或宣称其质量。核心专项独审已过但目前只有旧2ec EXE开发链与真实云模型任务集02，新候选重新构建/正式矩阵/CI/实窗待验，默认evaluate仅完成性，非物理比较。完整接口见[L1说明](L1配置Agent.md)与[候选历史](agent-history.md#2026-11-02-l1-配置-agent-实施候选)；下方J2历史字节保留。
+
+2026-11-02 J2/F8与E7本轮约定验收完成：测试冻结2ec5b14，后续仅docs/evidence；History真实Label/buddy/provider、焦点/事务/资源及15/7元数据约定见[最终历史条目](agent-history.md#2026-11-02-j2f8与e7本轮验收完成测试冻结2ec5b14)和[最终证据](verification/j2-f8-final-20261102/README.md)。18c三档映射与2ec125补验分开，文件审不冒视觉；旧dated候选原文保留，不扩大科学等级。
+
+2026-11-02 J2/F8第三修复候选：相关专项独审已完成，完整新候选验收待进行；History只用三个明确buddy及既有语言刷新链，真实QLayout才可递归count/itemAt；F6窄dock界限不修、不放宽可容纳joint判据。K1 policy final-v1专项独审已通过603入口，完整新候选验收仍待进行；原拼写安全检查不得被canonical匹配替代。详见 ../docs/agent-history.md 同名条目；2901f42旧raw不改，新修复三档原生补验仍待完成。
+
+2026-11-02 J2/F8候选：高级详情原文使用原F5模型/事务，按当前实体与字段定位F4诊断；无源恢复不清空，已导入来源丢失不洗白。v7完整快照仅枚举迁移至v8，离线完整编辑包闭合休眠资源。修改前读 ../docs/agent-history.md 同日条目与 ../docs/J2编辑覆盖与F8验收.md；尚未正式验收。
+
+2026-11-02 J2/F8第二候选：external Inspect不把休眠generated编辑来源当实际输入，但generated来源检查及完整编辑包闭包不变；焦点延迟显露须绑定仍有效、当前、owned控件，新焦点/关闭取消旧任务。诊断code迁移须按结构化事实及明确文档，旧JSON保持原身份。详见同日历史“首轮验收修复”，原失败报告不得改绿。
+
+2026-11-01 I2/J1 已完成约定验收：本机停靠/主题、3D会话覆盖、代表性DPI与重启/运行中切换已实际检查，未做物理跨屏/热插拔。安装后只追加候选并重新发现，布局不改F5/K1或创建第二runner；源码/冻结身份及关闭所有权约束保留。安装GUI测试的临时根须规范化后与I1返回路径比较，不能放宽候选集合或增加等待掩盖差异。详见 `../docs/agent-history.md` 同日最终条目及[最终证据](verification/i2-j1-final-20261101/README.md)；下方候选段保留历史时点。
+
+2026-11-01 I2/J1 候选：安装完成只追加候选并重新执行 I1 发现，不自动选中或运行；自动候选与安装补充候选分开保存。工作区复用原编辑器/runner/实验服务，布局和主题不进入 F5/K1 项目状态。自检须尊重 close 被业务收尾拒绝的事实，不强制析构仍活动的窗口，也不能改默认历史目录来掩盖关闭竞态。完整说明见 `../docs/agent-history.md` 的“I2/J1 桌面交付实施候选”；尚不宣称阶段验收完成。
+
+2026-10-31 K1 已完成阶段验收：资源路径 P1 与永久回归 P2 已独审关闭；5644e1e 新增精确晚变化测试，产品保持2914b39，原生证据沿原身份映射且保留勘误。详见 `../docs/agent-history.md` 的“K1 资源路径 P1 与阶段验收关闭”及[最终证据](verification/k1-final-20261031/README.md)；下方实施中/未关闭条目按历史节点理解。
+
+2026-10-31 K1 实施中：主实验入口组合现有 EditSession、G4USimRunner、F4 diagnostics 与 package writer，不能另建事务/进程所有者。验证四层分别显示，初始化和真实事件必须有各自证据；环境选择不触发模拟，导入包不自动继承历史通过。DeepSeek 面板交付及修复须分开署实，离屏/实窗/真实模拟分别验收。完整契约见 `../docs/collab/inbox/20261031-k1-execution.md`；当前不宣称阶段完成。
+
+2026-10-31 F5：已完成；冻结5c1eec5、原生5d身份映射及失败历史见[最终证据](verification/f5-final-20261031/README.md)。完整契约仍在docs/agent-history.md及配置撤销与恢复；稀疏worker去重N仅为master完整N的下界，空表头N未知。后续分派按[模型规则](collab/MODEL-POLICY.md)，不让常规子任务继承最高推理档。下方旧状态按原日期理解。
+
+2026-10-30 F5候选：Project/Configuration共用完整事务，raw非法草稿必须保留并正常阻断Generate；不能由get_project同步清空。普通项目v7恢复完整编辑内容，历史包仍从当前包材料/几何重建。Undo/恢复使包与F4诊断身份失效，不恢复旧运行成功；自动保存独立于普通保存。投影及回滚双失败需冻结保存/生成/运行并保留最后可证实快照。测试必须显式隔离recovery/history，产品不得按offscreen旁路交互。详见 `../docs/配置撤销与恢复.md` 和agent-history；下方F4“F5未启动”仅是旧关闭时记录。
+
+2026-10-30 F4阶段关闭记录（已完成）：产品 `7d718d038a00d89995ea773b4772764116b620c3`；Windows 152/152、49913 个 v3 入口与 F1 原始143/48511同代基线门禁；Linux11.3.2 为 152 项、11.4.3 为 152 项（run 41056994075），M0 Windows 为 72 项、Ubuntu 为 72 项（run 41056993987）。CI实际提交 `a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9`，与产品的关系见[提交身份映射](verification/f4-final-20261030/identity/identity-map.json)。Windows原生 13 态、19 次实际观察与进程退出 0；[最终证据](verification/f4-final-20261030/README.md)，[独立审查](collab/reviews/20261030-astra-f4-close-review.md)。原生观察须使用产品Fusion和主题初始化；QA生命周期修正不冒充产品修复。保留下方旧候选原文，F5未启动。
+
+2026-10-30 F4候选：`core/diagnostics` 是统一结构，producer记录 code/editor/collection/row/field/source，不能从翻译报错反推。导航先检查当前快照和完整目标，不得改业务值或dirty；旧报告不可重绑定到新项目。无控件/源身份/完整预览范围就明确拒绝，源文本只能只读。瞬态记录不进入dataclass持久快照；Project与Config跨页也须失效守卫。运行包保留txt并写diagnostics v1 JSON。全文见 `../docs/结构化诊断与定位.md`，此条不宣称完整验收。
+
+2026-10-30 F1异步预设图：OutputPage.show_plot返回true可表示已排队，并不证明图已显示；意图绑定目录和EvidenceJob请求序号，过期完成丢弃，同根refresh保留选择。未知key在ready和queued两路径都清旧图并报错。Qt回传显式QueuedConnection；示例入口不能重复刷新丢失请求。测试等真实任务完成并断言预设dataset/current_plot，不能只加sleep或接受默认第一图。
+
+2026-10-30 F1候选：output/provenance统一严格校验新扩展，旧记录明确unverified；历史输入hash不代表当前源文件复核。当前结果根是唯一自动读取锚点，历史快照路径仅作记录。运行与文件身份分别显示。身份SHA和历史扫描后台执行，新请求/关窗取消且拒绝过期发布；一次操作内复用、下一动作fresh SHA、Merge执行前强制fresh，不用mtime缓存。父窗口接受关闭也须清理嵌入页任务，关闭被ignore不能永久禁用页面。见 `../docs/输出身份与来源.md` 与agent-history；本条不宣称阶段完整验收。
+
+2026-10-30 E6阶段已关闭：自动回归与Windows实窗补验见 `../docs/verification/e6-visible-20261030/README.md`；下方候选条目保留实现契约，不能把历史pending或合成Inspect当当前验收结论。
+
+2026-10-30 E6 Qt空数据回归：当前Linux Python3.11/PySide6 6.12缺失combo UserRole读取有实证引用损耗，项目标准模型的空数据读取使用widgets/qt_data.combo_data；保持root/column和0/False/空字符串语义。不得用os._exit、忽略非零退出或补造None引用绕过；原GUI导入393断言全部保留。诊断和适用边界见 `../docs/agent-history.md` 的“E6 第二轮平台失败与 Qt 空数据读取”，正式回归smoke_qt_combo_data与smoke_project_import_projection。
+
+2026-10-30 E6候选：迁移副本由core计划/发布，窗口不重写格式规则。未知/冲突/重复JSON/非有限/不合法类型拒绝；旧项目仍可按已知兼容规则打开，不强制旧版只读。显式editor不能因空锚点被整对象默认重置；原始JSON位置双别名冲突拒绝，缺失单别名可派生。导入发布前按实际控件范围检查整数，禁止静默限幅；空选项明确显示空，未知选项保留。不得将GUI范围升级为后端物理限制。Recent/Snapshot错误保持warning，普通Open为critical。主INI新副本限同目录；几何资源保持原目标，不自动启source-copy或解除J2编辑blocker。已有目标/链接绝不能覆盖；发布后cleanup_warning须显示为成功附警告。只有保存成功后才切project_file，打开副本必须显式；格式检查不称模拟成功。完整契约见 `../docs/配置兼容与迁移.md` 和agent-history，候选不等于阶段已验收。
+
+2026-10-29 R32：执行原生 Geant4 交互会话仅允许显式 `--ui --ui-session csh`；裸 `--ui` 或 INI `interactive=true` 未选择 csh 时在初始化及 macro 执行前明确拒绝并写失败摘要，不自动降级。dry-run 不开启会话，仍可使用裸 `--ui`。Python 桌面 GUI 正常 Run/后端几何预览继续使用 batch config/macro，不受此限制；不要把桌面 GUI 与原生 Qt UI 会话混称。修复已在8ecad66真实Windows及Linux双版本回归通过，证据见 `docs/verification/q1-final-20261029/README.md`。
+
+2026-10-29 Q1 R25–R30 当前边界：后端偏置算符按 worker 私有创建；GUI 解读摘要必须区分 master 几何挂接计划与逐 `(runID, threadID)` 的真实 wrapped process、绑定和 EndRun 完成收据，缺收据失败，proposal/applied 计数只证明调用。hits/HitRecord 的 `weight` 已纠正为步前统计权重，Edep/Dose/Fluence/LET/DDD 使用同一口径；相空间保留边界采样权重。历史偏置计分须重算；同次运行与原生 energyDeposit/cellFlux 的有限专项对照不等于一般无偏性、方差收益或全自动物理验证。generated 模式仍无 biasing 规则编辑器。
+
+2026-10-29 Q1：项目保存须同目录临时文件写完并原子替换，失败保留原文件；未来版本/未知字段须拒绝并指出路径，不能静默丢弃。刷新结果先清旧证据；扫描 success 必须有正完成数与逐 run 一致性；后端预览仅发布最后请求。主窗口关闭只停止其持有的主 run/scan/geometry/inspect/merge/extension/scenario 进程与队列，有界等待后确认停止；不能按进程名杀其他任务。完整回归 `smoke_q1_public_paths.py`，真实 Windows 窗口另见 `smoke_q1_windows.py`。绘图总量按完成事件数归一化，LET 比值不再归一化；旧 per_primary API 弃用但保留旧数值。小样本/零分母/零总量误差不可用，网格跨 cell 投影无协方差不画误差。全文与迁移见 `docs/输出数据契约.md` 和 `docs/agent-history.md`。
+
+2026-10-29 2C 只读有效配置页：`core/effective_config.py` 读取 `g4usim_effective_config_v1`，上限 4 MiB，
+拒绝重复 key/path、非有限值及无运行证据的 applied；缺失 requested/resolved 显示未知，显式 JSON null 保持 null。
+`widgets/effective_config_page.py` 仅加载与查看文件，不运行后端、不编辑项目、不推断模拟成功；失败加载保留旧快照并标陈旧。
+搜索同时匹配 canonical path 与解码对象名；语言切换按 canonical path 保留选择。当前数据是 Manager 子集，
+不能把 manager_accepted 译为已在 Geant4 生效。页序新增“有效配置”在场景与运行之间，共 9 页；导航、i18n、
+`smoke_main_window_ui.py` 必须同步。专项 `smoke_effective_config.py` 和真实导出 `scripts/test_effective_config_export.py`。
+
+2026-10-28 2B 场景页：`widgets/scenario_page.py` 是屏蔽/涂层场景的端到端入口，不是通用编辑器；字段来自
+`core/scenario_shielding.py` 的 `ShieldingSpec`（基础 7 + 高级 8），校验三层（字段解析 → `problems()` → `config_schema`），
+有任一问题不得生成或运行。页面不重复实现物理与文件格式：生成走 `scenarios/shielding_coating/scenario_model.py` 的纯函数
+`render()/generate()`（`make_scenario.py` 只是 CLI 包装，二者逐字节一致），分析走 `analyze.py` 的 `analyze(output_dir)`；
+不得在页面里拼 INI 或重算 TID/DDD。运行必须核对 `run_summary.txt` 的 `status` 与完成事件数，缺证据时按 `evidence_items()`
+显示标签（`no_statistics_file_zero_deposition` 等）或失败原因，不得把缺失写成零。结果表五列（Group/Label/Value/Unit/Evidence）
+必须每行带证据；DDD 行必须显示 NIEL 表路径与 sha256。进程生命周期：`start_run()` 用 QProcess、`stop_run()` kill、`closeEvent` kill；
+日志写入场景目录 `backend.log` 且视图有行数上限。新增页面必须同步 `smoke_main_window_ui.py` 的页数/导航索引断言与
+`core/i18n.py` 的 `ZH_CN` 键（表头与动态文本走页面自己的 `refresh_language()`）。回归：`smoke_scenario_page.py`（Qt）、
+`smoke_scenario_backend.py`（12 步真后端）、`scripts/test_scenario_shielding_core.py`、`scripts/test_shielding_scenario_model.py`、
+`scripts/test_shielding_analysis.py`。
+
+2026-10-27 GUI 源字段保留：Setup 栏的 summary widgets 只能镜像它真正暴露的标量源字段（preset/particle/energy/position/direction）与 physics/scoring 字段；源几何与角分布（`position_mode`/`position_type`/`source_shape`/`center`/`halfx`/`halfy`/`radius`/`isotropic`/`angular_mode`）属于 Source editor，任何槽都不得无条件重置为 `point`/`fixed`——`widgets/config/run_config.py` 曾这么做，导致 plane/rectangle/isotropic 源在用户改一个数字后静默退回点源+固定束流、生成的 main.ini 丢字段而运行仍“成功”。回归 `gui/smoke_tests/smoke_source_field_preservation.py`（端到端写 main.ini 后断言字段仍在，含 point 反向 sanity）；同类重置只允许带明确条件（空值补默认、旧别名归一化）。进度终态文案走既有 `Result: {state}`；stdout/stderr/merged 三个日志视图必须有行数上限，merged 前缀只在行首插入，runner 的日志 tag 解析必须跨 chunk 缓冲完整行。
+
+2026-10-27 F6：`core/run_progress.py` 有界增量解析版本化 stdout 进度；runner 每次启动重置，分别增量解码 stdout/stderr，退出先排空尾流再判最终结果。RunPage 未知进度不造百分比，计数全到但未 end 显示收尾中；停止/强杀/失败时进度条保留最后观察值，状态文字改用终态文案（结果：模拟成功／用户停止／强制结束／结果未证实），不再输出“进度已冻结”。end 不代表成功，最终状态仍由 run_result.py 决定。新消息版本、噪声前缀、坏 JSON、非有限数、超长行、倒序、跨 run、无换行 EOF 必须保留测试；smoke_live_progress.py 和 smoke_live_progress_backend.py 分别验证协议/Qt 与真实 Geant4，契约见 docs/实时运行进度.md。
+
+2026-10-26 E2：`core/config_schema.py` 只做字段描述/标量必要条件；`structured` 会要求上下文校验，不能吞掉这个结果并当作可运行。动态源/区域/网格及独立几何模板可查询描述，但不扩大 editor/writer 白名单。源长度/能量、physics.default_cut 和 Edep 直方图复用 schema；跨字段 max>min 等仍由 editor 验证。材料已知键从生成数据读取，元素/同位素仍原文保留。writer 不再生成未消费的 physics.mode，参考模式仍由 reference 决定。四份生成产物一律由 scripts/generate_config_schema.py 更新。
+
+2026-10-22 D 安装包：源码与安装包路径只经 `core/install_layout.py` 判断（冻结时 `sys.executable` 是 GUI 本身）：应用根、默认后端（包内 `bin/` 或 `build_vs2026/Release`）、运行包目录（冻结时为“文档\G4UniversalSim\gui_runs”）、脚本目录与运行辅助脚本的 Python（冻结时找 `G4USIM_PYTHON` 或 PATH 中的 python，找不到则禁用并说明）。不要再用 `Path(__file__).parents[...]` 或 `sys.executable` 定位仓库与 Python。`app.py --self-test <报告.json>` 供打包验证，冻结窗口程序没有控制台，必须写文件。
+
+2026-10-22 C3 参数扫描：`core/scan.py`（无 Qt）只扫描配置页编辑器能生成的设置，逐点 `apply_value` 深拷贝基准，先 `validate_scan` 全部通过再写任何文件，再用 `create_run_package` 生成普通运行包并写 `scan.json`（G4UniversalSimScan v1）；`core/scan_runner.py` 逐点复用 `G4USimRunner`（日志、`run_status.json`、`evaluate_run_result` 判定一致），以 attempt 令牌保证每点只结束一次（启动失败只有 errorOccurred、崩溃两者都有），并传入该点自己的 seed，不能用基准 seed 覆盖 `run.seed` 扫描。结果只读该点合并的 `scorer_statistics.csv`。QWidget 子类属性不得与 Qt 虚方法同名（`metric` 曾覆盖 `QPaintDevice.metric()` 导致绘制时访问违例）。冒烟测试中的计时器要可停止，退出前在 QApplication 仍存在时删除带 QProcess 的页面。专项 `smoke_scans.py`、`smoke_scans_backend.py`。
+
+2026-10-22 C2 新建仿真向导：业务逻辑在 `core/wizard.py`（无 Qt），只产生编辑器已能生成的子集（NIST 材料、box/tubs、点源 fixed/isotropic 与矩形面源、参考物理列表、hits/event_edep/Edep/Dose/Fluence），不得借向导写出编辑器之外的后端字段；结果通过 `apply_to_project` 原位写入现有 `G4USimProject` 并由 `_set_project` 刷新页面，生成包必须走 `create_run_package`。校验消息与摘要以 (模板, 参数) 返回再 `ui_format`。向导页面在 `initializePage` 填控件时须屏蔽信号回读（`_loading`），否则半填的控件会覆盖 spec。新增 ZH_CN 键前检查重复：字典字面量中重复键会静默覆盖。专项 `smoke_new_simulation_wizard.py`（模型、对话框、主窗口与生成包；须替换模态 QMessageBox）与 `smoke_new_simulation_backend.py`（五个场景真实运行与物理合理性）。
+
+2026-10-22 C1 内置图表（2026-10-29 修正归一化口径）：数据读取只放在 `output/plot_data.py`（无 Qt，numpy），页面 `widgets/plot_panel.py` 只选数据集/视图、用 matplotlib 绘制并导出；图中数值必须与后端文件一致（scorer_statistics 的 value/std_error，网格 CSV 或 ROOT 的 sum 与 rel_error，box 网格坐标取 `run_metadata.json` 的 bins/size_mm（半宽）/center_mm）。每事件归一化用 `run_summary.txt` 的 `run_<R>_completed_events`，不能称为每初级粒子。说明文字以 (模板, 参数) 返回再经 `ui_format` 翻译。视图 combobox 的 data 用字符串（`profile:<轴>`、`map:<x>:<y>`），PySide6 的 `findData` 不能匹配 Python tuple。matplotlib 缺失时输出页仍须可用。专项 `smoke_plots.py`（合成逐值）与 `smoke_plots_backend.py`（真实后端，CSV/ROOT 网格一致）。
+
+2026-10-21 M3/M5 Results JSON 导出原型：`widgets/output_page.py` 通过 `output/extension_runner.py` 的 `QProcess` 运行正式 Python CLI `dose_json`/`fluence_json`；只在存在模拟输出目录且目标为尚不存在的 JSON 文件时允许启动，重复启动拒绝，支持取消、启动/退出失败报告与页面关闭时子进程清理。GUI 对 schema、version、extension ID/version、data、warnings 和无效 JSON 常量执行读取校验，刷新文件列表；`smoke_output_extensions_gui.py` 覆盖真实 Qt 子进程和错误路径。导出成功只说明发现的 CSV 被后处理，必须提示检查上游 run_summary、worker 文件完整性及独立物理 benchmark，不能提升实验性 Dose/Fluence 的支持等级。
+
+2026-10-21 Rectangle Source GUI 原型：`source_shape=rectangle` 在 generated 模式仅开放 XY 平面、`center`、有限正 `halfx/halfy`，按 `shape=rectangle` 写出且不混入 `radius`；fixed/isotropic 两种角分布遵循方向字段互斥；square、annulus、其他高级分布继续阻止运行包。`gui/smoke_tests/smoke_source_editor_v2.py` 检查生成及非法输入；C++ 真实采样专项见 `scripts/test_run_summary.py`。普通预览不代表源平面任意旋转受支持。
+
+2026-10-21 Dose GUI 原型已开放：`ScoringSettings` 与 `ScoringEditableModel` 双向保留 `dose`（默认 false），writer 只在选择时写 `dose=true`，且必须依赖默认 scorer 自动创建；Results / Dose (Gy) 使用 `read_dose_summaries()` 合并已发现的 worker 数据，质量不能跨线程累加，缺失/损坏文件需提示。GUI smoke 入口 `gui/smoke_tests/smoke_dose_results.py`；尚未独立物理标定，文案必须标明实验性。
+
+2026-10-21 Fluence GUI 实验性原型：`fluence` 默认 false，配置模型、生成包 writer 与 Results / Fluence (mm^-2) 已接通。GUI 按 `(runID, physical touchable path)` 聚合已发现的 worker CSV，只累加 raw/weighted track length、每体积只取一次并重新计算 mm^-2；拒绝 schema、非有限值、坏文件及 worker 体积冲突，缺失 worker 只能提示风险。专项 `gui/smoke_tests/smoke_fluence_results.py`；零 Edep Geantino 和 ST/MT 双 run 真实验证见 `scripts/test_fluence_scoring.py`。仅适用于 daughter-free sensitive solid，不能宣称 surface fluence 或独立物理基准已通过。
+
+2026-10-21 Source isotropic 输出约束：`angular_mode=isotropic` 时，generated main.ini 只输出 `isotropic=true`，不输出模型中保留供 fixed 模式使用的 `direction` 字段；后端明确拒绝 `isotropic=true` 与显式 `direction` 冲突。点源写 `position`，圆形平面源写 `center`/`radius`；禁止混写两种位置字段。`smoke_source_editor_v2.py` 同时验证点源和平面源的 isotropic writer。
+
+2026-10-19 Source Editor 数值门禁：运行包中的 `energy`、`position`、`direction`、`radius` 不允许 `NaN`、`Inf` 和超出有限浮点范围的表示；validator 在生成前拒绝，后端 `UnitParser` 保留最终约束。由 `gui/smoke_tests/smoke_source_editor_v2.py` 覆盖。该门禁不表示全部单位和参数组合已完成 GUI 验证。
+
+2026-10-19 平面源位置映射：Source Editor 的 `Position` 在 `position_mode=plane` 时必须生成 `[source]/center`（三轴及单位），在 `point` 时生成 `[source]/position`；GUI 预览中心、writer 和 Geant4 GPS 实际采样必须一致。`gui/smoke_tests/smoke_source_editor_v2.py` 检查偏移 4 mm 的生成配置，`scripts/test_run_summary.py` 核对真实后端 hits。旧 `planeBeam` 命令保留零 x/y 的兼容语义，不能扩大为任意空间分布已验证。
+
+2026-10-22 界面刷新：主题色只在 `core/theme.py`（样式表 + `build_palette` 的 Qt palette；“系统”主题读 `styleHints().colorScheme()`，因为应用 palette 已是自定义的）；图标只用 `core/icons.py` 的 SVG 线条图标，主题切换时由 `MainWindow._refresh_icons` 和各页 `refresh_theme` 重绘，样式表中的箭头图片由 `_svg_url` 写到临时目录。matplotlib 图用 `plot_panel.style_axes`/`draw_empty`，字体族列表带 CJK 回退（`font.family` 而非 `font.sans-serif`，否则不逐字回退）。开始页 `widgets/start_page.py` 的示例在 `core/examples.py`（无 Qt）登记：示例 = 向导 spec + `examples/gallery/<id>/` 附带结果，载入走 `apply_simulation_wizard`，附带文件只读、输出仍写运行目录；附带结果只能由 `examples/gallery/build_gallery.py` 用真实后端生成，卡片描述须与数据一致（`smoke_start_page.py` 核对）。`core/scan.load_manifest` 支持相对路径与目录移动后的改基；运行包缺失的扫描只读（`ScanPage.is_read_only`）。页序：开始、项目、配置、运行、结果、历史、扫描；结果页分组为 `tabs`（概览、图表、表格、文件、工具）及 `data_tabs`/`file_tabs`/`tool_tabs`，配置页消息/原始文件/NIST 在 `details_tabs`。Tab 文字不能含 `&`（会被当作助记符）。
+
+2026-10-23 E1 GUI/后端规则一致：材料名一律经 `parsers/materials_parser.material_reference_status`（自定义名去空白后不区分大小写，NIST 名区分大小写，其他 `G4_` 名只警告），与后端 `MaterialManager::GetMaterial` 一致；`[material.X]` 定义 X，`[NIST]`/`[element.*]`/`[isotope.*]` 不是材料行，原文保存在 `preserved_sections` 并由 writer 写在材料之前；组分保留 `名称:数值`；体积分数材料无 density 即 auto；材料循环引用报错。后端支持而编辑器不支持的形状（`geometry_editor_model.BACKEND_SHAPES`，与 `GeometryUtils.cc` 的 `ParseShape` 同步）是编辑器限制：提示原始文件复制模式，勾选后降为警告。默认演示项目用 `test/materials/test_materials.ini`。新规则差异由 `scripts/test_gui_backend_agreement.py`（统一平台 `gui_backend_agreement`）发现：新增几何/材料夹具会自动加入，判定不一致必须修正 GUI 或在 `EXPECTED` 中写明原因。
+
+2026-10-23 G1 后端几何默认显示：配置页 3D 标签可见且勾选“自动显示 Geant4 几何”时，`schedule_backend_geometry` 在修改后 1.2 秒、切换到该页后 0.1 秒发出 `autoBackendGeometryRequested`；导出期间显示编辑器草图并注明近似。writer 不得在调用方文档上做校验（`generate_geometry_ini_text` 校验副本），否则会抹掉页面的材料错误。专项 `smoke_backend_geometry_auto.py`（真实后端：无运行包导出、缓存、去抖、忙时合并、编辑器错误、后端错误、关闭自动）。
+
+2026-10-23 G2/G3 3D 视图：后端几何与编辑器草图都转为 `preview3d/view_model.ViewItem` 列表，由 `ViewState` 决定可见性（世界、隐藏、单独显示、按材料）、颜色（常见材料固定色，其余按名称顺序取调色板）、样式（容器半透明、敏感体实心、选中描边且其余变淡）和剖切平面；`pyvista_preview_widget.py` 只把它们映射到 VTK 属性，不在控件里写判定逻辑。体积名：后端物理/逻辑体名去掉 `_PV`/`_LV` 即编辑器名；`volumeSelected` 与体积表双向联动（`select_geometry_row` 屏蔽信号避免回环）。点击与拖动以 4 像素区分。VTK 在 Windows 上不能用 Qt offscreen 平台渲染，`smoke_3d_view.py` 的控件部分切换到 windows 平台、无显示时跳过；独立 QtInteractor 关闭前先 `_plotter.close()`，否则测试退出时 wglMakeCurrent 报错。
+
+2026-10-23 E2 配置 schema：GUI 对已迁移字段（`[run]`、`[general]`、`[output]`）的检查用 `core/config_schema.check_value`（与后端解析一致：32 位整数、布尔词、能量单位、空值取默认等），不要再手写同类规则；GUI 自己更严的上限写在 schema 字段的 `gui` 中（如 trajectories 的 1000）。编辑某字段的控件用 `i18n.set_schema_tooltip(widget, section, key)` 设置提示，语言切换时由 `apply_language` 按 schema 重写。`core/config_schema_data.py` 是生成文件。
+
+2026-10-23 G4/G5 草图与源：草图几何只在 `preview3d/sketch_geometry.py`（无 Qt/VTK）：数值按后端解析（`ParseDoubleWithUnit` 无单位为 mm/rad，旋转 `ParseAngle` 逐分量，`SplitVectorText` 分割），放置为 `G4PVPlacement(R, t)`、R = Rz·Ry·Rx 是坐标系旋转，实体按 R⁻¹ 转动，沿父链组合；各实体参数顺序照 `VolumeBuilder::Create*Solid`，改后端实体时须同步并跑 `scripts/test_sketch_accuracy.py`（统一平台 `gui_sketch_accuracy`；把旋转约定改错会失败）。`PreviewVolume.vertices/faces` 是世界坐标网格，画不出的写 `not_drawn` 原因并进消息，不得静默跳过；A5/placement 键存于只读 `preview_properties`（不写回，不算 legacy metadata）。源图元由 `source_builder._build_glyphs` 生成：平面源固定在 XY 平面（GPS 不用 normal），只有 point/circle/rectangle × fixed/isotropic 为 `generated`，其余淡色并标注仅预览；描述是 (模板, 值) 嵌套元组，由 `describe_source` 逐层 `ui_format`。Geant4 几何上只在 generated 模式叠加源（`show_backend_geometry(with_source=...)`）。专项 `smoke_source_glyphs.py` 用 H1 径迹核对真实初级粒子的起点与方向。
+
+2026-10-23 G6 径迹叠加：`preview3d/trajectories.py` 无 Qt，读取一次 run 的全部 worker 文件（默认最后一轮）并按事件排序，schema/单位、跨文件重复事件、体积索引越界都报 ValueError；`TrackFilter` 按事件（None 为全部）、隐藏粒子、仅初级和次级最低初始能量筛选，初级径迹不受能量阈值影响；粒子颜色固定。`pyvista_preview_widget.py` 每种粒子一个线集 actor（不可拾取、不重置相机），`_render` 清场后重画；有径迹时 `ViewState.tracks_shown` 使未选中体积不透明度不超过 0.15。`load_tracks` 依次尝试项目输出目录、Output 页目录，最后才弹目录对话框；`_on_finished` 以 quiet 方式自动加载。配置页各编辑器标签页包在 `_scrolled` 的 QScrollArea（`editorScroll`）中，测试取标签页内容须解包；3D 页索引用 `preview3d_tab_index()`。截图脚本必须替换 `QMessageBox` 的 warning/information，否则会在用户桌面留下模态框。专项 `smoke_trajectory_view.py`（含真实后端 Generate and Run）。
+
+2026-10-23 E5 拆分：配置页在 `widgets/config/`，每个编辑器一个模块，内含其控件与布局的 QWidget（`SetupPanel`、`MaterialsEditor`、`GeometryEditor`、`Preview3DPanel`、`RunConfigEditor`、`DetailsPanel`，可单独构建）和其逻辑 mixin（另有 `layers.py`、`booleans.py`）；`ConfigBuilderPage` 只保存共享状态（文档与模型）、组合这些控件并做跨编辑器协调，通过 `_adopt` 把各控件挂到页面属性上（重名即报错）。标签页的构建顺序决定共用控件的最终位置（布尔表在“Boolean Ops”、3D 消息框在“Messages and files”），改顺序即改界面。`_connect_signals` 按原顺序调用各模块的连接函数，同一信号的槽按此顺序执行。主窗口行为在 `window/`（shell、project、run、content 四个 mixin），`main_window.py` 只剩构造、信号连接和关闭；测试替换模块函数时要替换其所在模块（例如 `window.run.create_run_package`）。新控件属性名在整页内必须唯一（`add_volume_button` 曾被材料和几何两处共用）。专项 `smoke_config_editors.py`。
+
+## 2026-10-29 完整 2C 查看器候选补充
+
+## 2026-11-02 J3 实施：皮肤注册表与设计系统（第一阶段）
+
+## 2026-11-02 J3 第二阶段：外壳、命令面板与状态栏
+
+## 2026-11-02 J3 第三阶段：工作区面板布局
+
+## 2026-11-02 J3 第四阶段：按页面适配工作区
+
+## 2026-11-02 J3 第五阶段：导航时 dock 可见性
+
+## J3 第六阶段：3D 模型树与体积筛选（2026-11-02，作者交付未验收）
+
+## J3 第七阶段：帮助菜单、快捷键表与关于对话框（2026-11-02，作者交付未验收）
+
+## 2026-11-03 J3 审查响应
