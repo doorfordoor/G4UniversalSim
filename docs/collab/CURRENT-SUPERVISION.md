@@ -1,44 +1,49 @@
 # 当前监督接续索引
 
-更新：2026-11-04（Asia/Shanghai）。当前阶段F2，J3本轮约定范围已验收关闭。产品候选92134da062e8e3a203a39ff59fcd2b87bd0ffef1，随后仅文档/证据集成。当前Git实际SHA优先核查，不重读整套历史。
+更新：2026-11-04（Asia/Shanghai）。本文件覆盖当前状态，历史详见各阶段验收报告。
 
-## 当前阶段与清单
+## 当前阶段
 
-F2受控多轮运行会话；固定清单docs/collab/decisions/20261104-f2-closeout.md。先三轮隔离实验与协议提案；既定用户协议选择前不改生产入口。J3普通文案、浮动默认大小和进一步提速不作为F2前置。
+F2：受控多轮运行会话。J3已关闭，最终报告见docs/verification/j3-final-20261104/README.md，不重新开启。
 
-| 项 | 状态 |
-| --- | --- |
-| 三轮真实进程实验/白名单/拒绝反例 | 进行中：round34已接收，turn40实际读取源码、命令门禁及轨迹计分入口 |
-| csh/版本协议提案与选择 | 未开始：等待具体实验材料，之后按既定决策点处理 |
-| 后端会话/重放 | 未开始 |
-| GUI下一轮面板 | 未开始 |
-| 独审/正式矩阵与跨平台 | 未开始 |
-| 冻结集成/下一阶段E4 | 未开始 |
+## 清单文件
 
-## J3已完成证据
+docs/collab/decisions/20261104-f2-closeout.md；沿用已冻结六项，不新增前置或提高标准。
 
-- 最终docs/verification/j3-final-20261104/README.md，独审docs/collab/reviews/20261104-j3-closeout-independent.md。签收代表性工程范围并保留限制，不称所有页面八态人工穷举。禁止为历史图补齐再次升级前置工具。
-- 主审本机4eeb干净static49/5672、GUI77/10822、integration33/6830；92134仅两测试+CI环境修复，原两例独审2/1241与严格门禁通过。
-- 真实云Linux41743389619（11.3.2/11.4.3四profile）+M0 41743389791（Windows attempt2/Ubuntu）共12原报告696次用例/247580断言，四ZIP摘要及所有归档报告严格门禁复核通过；Windows原生3D35条。首失败/原job单次重试保留，环境未跟踪目录dirty不改写。desktop-package41743389622成功，Windows/Linux各自构建。
-- Windows真实125/150、宽表双层/逆序、向导/浮动/快捷键、草稿Undo/Redo及200万真实运行切主题完成；系统已恢复125%。最终125生产两次正常启动恢复纸墨/结果布局（083812/084400），均exit0/DPR1.25。
-- Linux独立X11三新皮肤/N1/中文图表/模型选择/恢复/4历史轨迹/旋转/正常退出；两run无自有残留，辅助twm1保留。WSLg旧限制不写通过。
-- 原生会话12194/38041/57920/87205全部exit0。当前无主审验收窗口占用。原C effective-config独立区保持，审查另用C j3-final；q1-final持codex供集成。
+## 候选身份
 
-## 执行通道与运行中任务
+当前产品基线92134da062e8e3a203a39ff59fcd2b87bd0ffef1；D盘roadmap/F2-controlled-session当前提交9c268fb08d4b82b536ae024dc6a7883a8d709b5f，后续本轮仅协作记录。J3已在8631af58正常快进集成并推送codex。F2尚无产品候选，作者首轮仅隔离实验/提案，不改生产入口。C盘j3-final独立审查区保留。
 
-DeepSeek原session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4；task g4-j3-desktop-20261103复用绑定，实际deepseek-account-vision/deepseek-flash/max。F2请求f2-protocol-evidence-8631af58-20261104已实际派发，round34 accepted=true、replayed=false；turn40正在执行，最新独立读取到26758。绑定/请求/游标在out/collab/desktop-bridge/context.json，原始接收及状态在同目录f2-protocol-evidence-receipt.json、f2-current-status.json。当前不是F2验收通过，不重发同一任务。
+## 清单状态表
 
-J3文档/证据提交8631af58c68d5189aed5d9ec29f72c6f47c44f16已推送roadmap/gui-theme-response，并经C盘q1-final正常快进集成及推送codex；两远端分支实际均为该SHA。D盘当前分支roadmap/F2-controlled-session从该节点继续，主审只更新协作记录，不修改作者实验文件。现有定时任务g4universalsim已保存为F2、ACTIVE、原频率保留；读回提示词与20261104-f2-automation-prompt.md字节一致且无替换字符。集成收据见reviews/20261104-j3-integration-receipt.md。
+| 清单项 | 状态 | 证据/下一动作 |
+| --- | --- | --- |
+| 三轮隔离实验与白名单 | 进行中 | round34实际执行；已查源码与单/多源配置探测，真实三轮和拒绝证据仍待交付 |
+| 协议与证据设计 | 未开始 | 首轮交具体比较提案后独审，再按既定协议决策点选择 |
+| 后端会话与重放 | 未开始 | 协议选择后实施 |
+| GUI下一轮面板 | 未开始 | 随后端契约实施，DeepSeek负责设计 |
+| 独审与原正式矩阵 | 未开始 | 交付后主审独立复现并按实际影响验证 |
+| 冻结集成与交班 | 未开始 | 完整F2通过后转E4 |
 
-## 下一步
+## 本轮结果
 
-跟进F2已运行的三轮隔离实验、白名单/拒绝反例与协议提案；只读取新增回执，作者交付后主审独立重现，提出具体协议推荐。执行范围仅out/collab/f2-session-baseline-20261104及约定outbox，不改生产入口。不要先造新的SDK代理、LangGraph或通用宿主；J3已经关闭，不重复其正式测试。
+依用户新稿优化并实际更新g4universalsim定时提示词；保留ACTIVE/每60分钟/原对话及原分工。实际保存内容与docs/collab/decisions/20261104-f2-automation-prompt.md、20261104-supervision-automation-v2.md完全一致，无Unicode替换字符。一个主目标不等于每轮做完即停；两轮受阻按有效尝试计，不把异步等待算失败，不自动跳过阻断项；限制分别注明待决定或主审已签收。未派重复任务，未改变产品或验收门槛。
 
-## 待用户决定及保留限制
+## 运行中任务
 
-当前无需用户动作。F2协议选择按docs/开发接续计划.md§6/§9：收到具体实测/提案并审阅后再提供选项，之前继续可独立工作。
-J3已接受的非阻断证据限制：历史after图提交身份、旧逐状态前图及部分逐页状态归档不全；代表性验收不是全排列。WSLg失败、约一秒主题切换、未验物理/云Agent批准按实际范围保留，不重新打开阶段。
+DeepSeek原session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4；task g4-j3-desktop-20261103；request f2-protocol-evidence-8631af58-20261104，round34 accepted=true/replayed=false。实际配置deepseek-account-vision/deepseek-flash/max；独立查询running，turn40。已处理游标26886，最新回执/绑定见out/collab/desktop-bridge/context.json、f2-current-status.json。首轮产物范围out/collab/f2-session-baseline-20261104及docs/collab/outbox/20261104-f2-session-baseline.md；最终作者回执尚未出现。
+
+## 下一轮目标
+
+先跟进原任务新增交付，不重发。三轮真实同进程A/B/A、拒令后不继续运行的反例、有限白名单及协议比较交付后，主审读原始输入/输出/事件/退出与产物，独立重现并提出推荐。既定协议选择前可继续隔离实验和设计，不改生产入口；不新增SDK/LangGraph/通用验收工具，不重测J3。
+
+## 待用户决定/限制
+
+| 项 | 处理状态 | 影响与继续条件 |
+| --- | --- | --- |
+| F2受控csh或版本化协议 | 待具体材料，当前无需用户动作 | docs/开发接续计划.md§6/§9原决策点；交实测和独审推荐后再给明确选项，当前实验不受阻 |
+| J3历史图/代表性平台及约一秒切主题 | 主审已签收，非F2阻断 | 详见J3最终报告；不冒称全排列人工覆盖或提速完成，不重新开启阶段 |
 
 ## 后续待办
 
-F2之后E4→Q2→H2/H3→F3/F7及K2/L2等按Roadmap依赖推进；J3普通文案/默认浮动尺寸和进一步提速随相关阶段处理。D盘保存交付，C盘保留独立审查。无增量不重复扫描/测试，实际工作优先，只有显著原验收缺陷插入最小修复。
+F2后按ROADMAP进入E4→Q2→H2/H3→F3/F7及K2/L2等依赖阶段。J3普通文案、默认浮动尺寸和进一步提速随相关阶段处理。Windows/Linux统一版本分平台交付；D盘保存代码和记录，C盘独立复验。没有新证据不重复扫描、测试或派工。
