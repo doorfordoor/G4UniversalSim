@@ -1,0 +1,7 @@
+# E4集成与Q2启动收据
+
+E4文档范围签收1280b44dda2a0e6bf8ccc67388b6ec77b6e46890，roadmap/E4-docs与codex已普通推送、读回一致。H8未提交规划保留。应用产品仍绑定864bc036，文档云f7793dcb和云环境92b285d6分别记录。
+
+Q1最终f25da40f把E4记为部分完成，本轮补后续入口/规范缺口。将完整安装矩阵扩大为E4前置已纠正。Linux清理释放11838394368字节并完成runtime/SDK安装。Windows剩余作业保留运行状态，作为附带CI独立跟进。
+
+原g4universalsim通过应用automation_update切Q2并读回，与20261105-q2-automation-prompt.md副本相同，ACTIVE及原频率/目标保持。D盘进入roadmap/Q2-scientific-baselines。DeepSeek原task/session复用，q2-reference-proposal-1280b44d-20261105接单round70，GET确认running及deepseek-flash/max。执行遵循固定Q2清单，首交参考/病例规格，独审后冻结再运行。
