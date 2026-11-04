@@ -1,0 +1,55 @@
+{
+  "schema": "q2_reference_let_freeze_v1",
+  "case": "REF-LET-01",
+  "backend_build": "864bc036d6d7752475e52db4efd2b950cabfcc3d",
+  "data_file": "scenarios\\benchmarks\\shielding_range\\nist\\PSTAR_Si.txt",
+  "data_sha256": "71cfaaf13545201276c24195d96a4fafd2341bf5fbd26ed52133cce0b42f2422",
+  "material": "G4_Si",
+  "density_g_cm3": 2.33,
+  "dimensions_mm": [
+    10,
+    10,
+    0.02
+  ],
+  "physics_reference": "FTFP_BERT_EMZ",
+  "default_cut": "1 um",
+  "particle": "proton",
+  "source_position_mm": [
+    0,
+    0,
+    -3
+  ],
+  "direction": [
+    0,
+    0,
+    1
+  ],
+  "threads": 1,
+  "events_per_case": 2000,
+  "seeds": [
+    20261111,
+    20261112
+  ],
+  "references": [
+    {
+      "energy": 10.0,
+      "mid": 9.918640484915057,
+      "let": 8.10751145090545
+    },
+    {
+      "energy": 100.0,
+      "mid": 99.98639444889122,
+      "let": 1.3599232692852166
+    }
+  ],
+  "reference_method": "log-log interpolate CSDA range at E0, subtract rho*t/2 in g/cm2, inverse log-log interpolate energy, interpolate electronic stopping at mid and multiply rho*0.1",
+  "acceptance": {
+    "let_t_abs_error": "<=0.015*reference+3*sigma",
+    "sigma": "current valid uncorrected_delta_ratio_v1 relative_error * abs(let_t)",
+    "let_d_minus_let_t": "nonnegative within printed-value precision",
+    "relative_let_d_minus_t": "<=0.05",
+    "required_status": "completed run at frozen N; valid uncertainty estimator and finite values",
+    "failure_action": "retain output and diagnose, never increase events or adjust cut/tolerance post hoc"
+  },
+  "scope": "two monoenergetic proton energies, Si20um, this backend/data; no heavy-ion/thick-target claim"
+}

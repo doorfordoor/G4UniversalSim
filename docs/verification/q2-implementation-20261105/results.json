@@ -1,0 +1,1936 @@
+{
+  "schema": "g4usim_q2_2_comparator_v1",
+  "arithmetic_gate_relative": 1e-06,
+  "printed_significant_digits": 12,
+  "cases": {
+    "IMP-DOSE-01": {
+      "case": "IMP-DOSE-01",
+      "checks": [
+        {
+          "id": "EVID-SUMMARY-FILE",
+          "what": "run_summary.txt exists",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "C:\\Users\\123\\.codex\\worktrees\\j3-final\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\runs\\IMP-DOSE-01\\output\\run_summary.txt"
+        },
+        {
+          "id": "EVID-SUMMARY-PARSE",
+          "what": "run_summary.txt [Values] parsed",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "194 facts"
+        },
+        {
+          "id": "EVID-SUMMARY-STATUS",
+          "what": "run_summary [status]",
+          "expected": "completed",
+          "actual": "completed",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-SUMMARY-WRITE",
+          "what": "run_summary [summary_write_status]",
+          "expected": "completed",
+          "actual": "completed",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-OUTPUT-FAILURE",
+          "what": "run_summary [output_failure_status]",
+          "expected": "none",
+          "actual": "none",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-MACRO-STATUS",
+          "what": "run_summary [macro_execution_status]",
+          "expected": "completed",
+          "actual": "completed",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-SIMULATION-EXECUTED",
+          "what": "run_summary [simulation_executed]",
+          "expected": "true",
+          "actual": "true",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-PROGRAM-EXIT",
+          "what": "run_summary [program_exit_code]",
+          "expected": "0",
+          "actual": "0",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-RUN-COUNT",
+          "what": "run_summary [run_count]",
+          "expected": "1",
+          "actual": "1",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-RUN-0-PLANNED",
+          "what": "run_summary [run_0_planned_events]",
+          "expected": "20000",
+          "actual": "20000",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-RUN-0-COMPLETED",
+          "what": "run_summary [run_0_completed_events]",
+          "expected": "20000",
+          "actual": "20000",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-PLANNED-TOTAL",
+          "what": "run_summary planned_event_count",
+          "expected": "20000",
+          "actual": "20000",
+          "status": "pass",
+          "detail": "frozen N"
+        },
+        {
+          "id": "EVID-COMPLETED-TOTAL",
+          "what": "run_summary actual_completed_event_count",
+          "expected": "20000",
+          "actual": "20000",
+          "status": "pass",
+          "detail": "frozen N"
+        },
+        {
+          "id": "EVID-METADATA-FILE",
+          "what": "run_metadata.json exists",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "C:\\Users\\123\\.codex\\worktrees\\j3-final\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\runs\\IMP-DOSE-01\\output\\run_metadata.json"
+        },
+        {
+          "id": "EVID-METADATA-PARSE",
+          "what": "run_metadata.json parses",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "type dict"
+        },
+        {
+          "id": "EVID-METADATA-SCHEMA",
+          "what": "run_metadata schema",
+          "expected": "run_metadata_json_v1",
+          "actual": "run_metadata_json_v1",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-METADATA-RUNS",
+          "what": "metadata has exactly one run with planned=completed=frozen N",
+          "expected": {
+            "runs": 1,
+            "planned": 20000,
+            "completed": 20000
+          },
+          "actual": {
+            "runs": 1,
+            "planned": 20000,
+            "completed": 20000
+          },
+          "status": "pass",
+          "detail": "run_metadata[]"
+        },
+        {
+          "id": "EVID-ASSET-DECLARED-dose_volume_summary_t0.csv",
+          "what": "dose_volume_summary_t0.csv declared in run_metadata generated_files",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "manifest entry"
+        },
+        {
+          "id": "EVID-ASSET-INTEGRITY-dose_volume_summary_t0.csv",
+          "what": "dose_volume_summary_t0.csv metadata integrity_status",
+          "expected": "hashed",
+          "actual": "hashed",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SIZE-dose_volume_summary_t0.csv",
+          "what": "dose_volume_summary_t0.csv size matches metadata",
+          "expected": 303,
+          "actual": 303,
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SHA-dose_volume_summary_t0.csv",
+          "what": "dose_volume_summary_t0.csv sha256 matches metadata",
+          "expected": "92650f157f16a3d3a46f0594cbb6530108a8373e4747d8cd9c099bc8a34df52c",
+          "actual": "92650f157f16a3d3a46f0594cbb6530108a8373e4747d8cd9c099bc8a34df52c",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-DECLARED-hits_t0.csv",
+          "what": "hits_t0.csv declared in run_metadata generated_files",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "manifest entry"
+        },
+        {
+          "id": "EVID-ASSET-INTEGRITY-hits_t0.csv",
+          "what": "hits_t0.csv metadata integrity_status",
+          "expected": "hashed",
+          "actual": "hashed",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SIZE-hits_t0.csv",
+          "what": "hits_t0.csv size matches metadata",
+          "expected": 33338899,
+          "actual": 33338899,
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SHA-hits_t0.csv",
+          "what": "hits_t0.csv sha256 matches metadata",
+          "expected": "d7418182d19acb04943b57ebd1fcb97d9e7106e2a4671d8dc271f0ad5a817f7c",
+          "actual": "d7418182d19acb04943b57ebd1fcb97d9e7106e2a4671d8dc271f0ad5a817f7c",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-DECLARED-event_edep_t0.csv",
+          "what": "event_edep_t0.csv declared in run_metadata generated_files",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "manifest entry"
+        },
+        {
+          "id": "EVID-ASSET-INTEGRITY-event_edep_t0.csv",
+          "what": "event_edep_t0.csv metadata integrity_status",
+          "expected": "hashed",
+          "actual": "hashed",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SIZE-event_edep_t0.csv",
+          "what": "event_edep_t0.csv size matches metadata",
+          "expected": 289282,
+          "actual": 289282,
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SHA-event_edep_t0.csv",
+          "what": "event_edep_t0.csv sha256 matches metadata",
+          "expected": "2403d3783f4640992e523b028a624c0021c2dcff640d2d9739fa2b0d53217f36",
+          "actual": "2403d3783f4640992e523b028a624c0021c2dcff640d2d9739fa2b0d53217f36",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-DECLARED-scorer_statistics.csv",
+          "what": "scorer_statistics.csv declared in run_metadata generated_files",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "manifest entry"
+        },
+        {
+          "id": "EVID-ASSET-INTEGRITY-scorer_statistics.csv",
+          "what": "scorer_statistics.csv metadata integrity_status",
+          "expected": "hashed",
+          "actual": "hashed",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SIZE-scorer_statistics.csv",
+          "what": "scorer_statistics.csv size matches metadata",
+          "expected": 686,
+          "actual": 686,
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SHA-scorer_statistics.csv",
+          "what": "scorer_statistics.csv sha256 matches metadata",
+          "expected": "8052db38695e4da6ad68bcbd10d28ac78b21871358abb0457669ee2aec7171a6",
+          "actual": "8052db38695e4da6ad68bcbd10d28ac78b21871358abb0457669ee2aec7171a6",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-SCORER-N",
+          "what": "every scorer_statistics row n_events equals frozen N",
+          "expected": 20000,
+          "actual": 20000,
+          "status": "pass"
+        },
+        {
+          "id": "DOSE-SUMMARY-COLUMNS",
+          "what": "dose_volume_summary_t0.csv required columns",
+          "status": "pass",
+          "missing": []
+        },
+        {
+          "id": "DOSE-MASS",
+          "what": "mass = 200 mm3 x 2.33 g/cm3 = 4.66e-4 kg",
+          "reported": 0.000466,
+          "recomputed": 0.00046600000000000005,
+          "reported_interval": [
+            0.0004659999999995,
+            0.0004660000000005
+          ],
+          "recomputed_interval": [
+            0.0004659999999999996,
+            0.0004660000000000005
+          ],
+          "abs_diff": 5.421010862427522e-20,
+          "relative_diff": 1.1633070520230733e-16,
+          "status": "pass",
+          "volume_mm3_derived": 200.0,
+          "density_g_cm3": 2.33
+        },
+        {
+          "id": "DOSE-HITS-COLUMNS",
+          "what": "hits_t0.csv required columns",
+          "status": "pass",
+          "missing": []
+        },
+        {
+          "id": "DOSE-HITS-EVENTS",
+          "status": "pass",
+          "what": "unique hit events equals summary n_events",
+          "reported": 20000,
+          "recomputed": 20000,
+          "rows": 150456
+        },
+        {
+          "id": "DOSE-EDEP-HITS",
+          "what": "sum of hits edep_MeV",
+          "reported": 199939.283762,
+          "recomputed": 199939.28376200743,
+          "reported_interval": [
+            199939.2837615,
+            199939.2837625
+          ],
+          "recomputed_interval": [
+            199939.28373528918,
+            199939.28378872568
+          ],
+          "abs_diff": 7.4214767664670944e-09,
+          "relative_diff": 3.7118652356987826e-14,
+          "status": "pass"
+        },
+        {
+          "id": "DOSE-WEIGHTED-HITS",
+          "what": "sum of hits edep_MeV*weight (all weights are 1)",
+          "reported": 199939.283762,
+          "recomputed": 199939.28376200743,
+          "reported_interval": [
+            199939.2837615,
+            199939.2837625
+          ],
+          "recomputed_interval": [
+            199939.28373528918,
+            199939.28378872568
+          ],
+          "abs_diff": 7.4214767664670944e-09,
+          "relative_diff": 3.7118652356987826e-14,
+          "status": "pass"
+        },
+        {
+          "id": "DOSE-VALUE-HITS",
+          "what": "sum(hits edep)*MeV->J / analytic mass",
+          "reported": 6.87420705284e-05,
+          "recomputed": 6.874207052836565e-05,
+          "reported_interval": [
+            6.874207052835e-05,
+            6.874207052845e-05
+          ],
+          "recomputed_interval": [
+            6.874207051917946e-05,
+            6.874207053755183e-05
+          ],
+          "abs_diff": 3.435565634063442e-17,
+          "relative_diff": 4.997762807630412e-13,
+          "status": "pass"
+        },
+        {
+          "id": "DOSE-WEIGHTED-VALUE",
+          "what": "weighted edep -> Gy",
+          "reported": 6.87420705284e-05,
+          "recomputed": 6.874207052836565e-05,
+          "reported_interval": [
+            6.874207052835e-05,
+            6.874207052845e-05
+          ],
+          "recomputed_interval": [
+            6.874207051917946e-05,
+            6.874207053755183e-05
+          ],
+          "abs_diff": 3.435565634063442e-17,
+          "relative_diff": 4.997762807630412e-13,
+          "status": "pass"
+        },
+        {
+          "id": "DOSE-EVENT-COLUMNS",
+          "what": "event_edep_t0.csv required columns",
+          "status": "pass",
+          "missing": []
+        },
+        {
+          "id": "DOSE-EVENT-COUNT",
+          "status": "pass",
+          "reported": 20000,
+          "recomputed": 20000
+        },
+        {
+          "id": "DOSE-EDEP-EVENTS",
+          "what": "sum of event_edep raw_edep_MeV",
+          "reported": 199939.283762,
+          "recomputed": 199939.28376201584,
+          "reported_interval": [
+            199939.2837615,
+            199939.2837625
+          ],
+          "recomputed_interval": [
+            199939.2837584642,
+            199939.28376556747
+          ],
+          "abs_diff": 1.5832483768463135e-08,
+          "relative_diff": 7.918645836157069e-14,
+          "status": "pass"
+        },
+        {
+          "id": "DOSE-EDEP-SANITY",
+          "status": "pass",
+          "what": "0 < total edep <= N*10 MeV (frozen: N*10 only order of magnitude)",
+          "recomputed": 199939.28376201584,
+          "upper": 200000.0
+        },
+        {
+          "id": "DOSE-STATS-COLUMNS",
+          "what": "scorer_statistics.csv required columns",
+          "status": "pass",
+          "missing": []
+        }
+      ],
+      "n_events": 20000,
+      "mass_kg_analytic": 0.00046600000000000005,
+      "dose_Gy": 6.87420705284e-05,
+      "failed": 0,
+      "checks_count": 47,
+      "failed_ids": [],
+      "status": "pass"
+    },
+    "IMP-FLU-01": {
+      "case": "IMP-FLU-01",
+      "checks": [
+        {
+          "id": "EVID-SUMMARY-FILE",
+          "what": "run_summary.txt exists",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "C:\\Users\\123\\.codex\\worktrees\\j3-final\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\runs\\IMP-FLU-01\\output\\run_summary.txt"
+        },
+        {
+          "id": "EVID-SUMMARY-PARSE",
+          "what": "run_summary.txt [Values] parsed",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "194 facts"
+        },
+        {
+          "id": "EVID-SUMMARY-STATUS",
+          "what": "run_summary [status]",
+          "expected": "completed",
+          "actual": "completed",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-SUMMARY-WRITE",
+          "what": "run_summary [summary_write_status]",
+          "expected": "completed",
+          "actual": "completed",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-OUTPUT-FAILURE",
+          "what": "run_summary [output_failure_status]",
+          "expected": "none",
+          "actual": "none",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-MACRO-STATUS",
+          "what": "run_summary [macro_execution_status]",
+          "expected": "completed",
+          "actual": "completed",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-SIMULATION-EXECUTED",
+          "what": "run_summary [simulation_executed]",
+          "expected": "true",
+          "actual": "true",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-PROGRAM-EXIT",
+          "what": "run_summary [program_exit_code]",
+          "expected": "0",
+          "actual": "0",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-RUN-COUNT",
+          "what": "run_summary [run_count]",
+          "expected": "1",
+          "actual": "1",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-RUN-0-PLANNED",
+          "what": "run_summary [run_0_planned_events]",
+          "expected": "20000",
+          "actual": "20000",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-RUN-0-COMPLETED",
+          "what": "run_summary [run_0_completed_events]",
+          "expected": "20000",
+          "actual": "20000",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-PLANNED-TOTAL",
+          "what": "run_summary planned_event_count",
+          "expected": "20000",
+          "actual": "20000",
+          "status": "pass",
+          "detail": "frozen N"
+        },
+        {
+          "id": "EVID-COMPLETED-TOTAL",
+          "what": "run_summary actual_completed_event_count",
+          "expected": "20000",
+          "actual": "20000",
+          "status": "pass",
+          "detail": "frozen N"
+        },
+        {
+          "id": "EVID-METADATA-FILE",
+          "what": "run_metadata.json exists",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "C:\\Users\\123\\.codex\\worktrees\\j3-final\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\runs\\IMP-FLU-01\\output\\run_metadata.json"
+        },
+        {
+          "id": "EVID-METADATA-PARSE",
+          "what": "run_metadata.json parses",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "type dict"
+        },
+        {
+          "id": "EVID-METADATA-SCHEMA",
+          "what": "run_metadata schema",
+          "expected": "run_metadata_json_v1",
+          "actual": "run_metadata_json_v1",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-METADATA-RUNS",
+          "what": "metadata has exactly one run with planned=completed=frozen N",
+          "expected": {
+            "runs": 1,
+            "planned": 20000,
+            "completed": 20000
+          },
+          "actual": {
+            "runs": 1,
+            "planned": 20000,
+            "completed": 20000
+          },
+          "status": "pass",
+          "detail": "run_metadata[]"
+        },
+        {
+          "id": "EVID-ASSET-DECLARED-fluence_volume_summary_t0.csv",
+          "what": "fluence_volume_summary_t0.csv declared in run_metadata generated_files",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "manifest entry"
+        },
+        {
+          "id": "EVID-ASSET-INTEGRITY-fluence_volume_summary_t0.csv",
+          "what": "fluence_volume_summary_t0.csv metadata integrity_status",
+          "expected": "hashed",
+          "actual": "hashed",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SIZE-fluence_volume_summary_t0.csv",
+          "what": "fluence_volume_summary_t0.csv size matches metadata",
+          "expected": 264,
+          "actual": 264,
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SHA-fluence_volume_summary_t0.csv",
+          "what": "fluence_volume_summary_t0.csv sha256 matches metadata",
+          "expected": "3ab33532445458777e1700a69143606c5f752e1db18f5717ed0f77bf1bf426e2",
+          "actual": "3ab33532445458777e1700a69143606c5f752e1db18f5717ed0f77bf1bf426e2",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-DECLARED-scorer_statistics.csv",
+          "what": "scorer_statistics.csv declared in run_metadata generated_files",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "manifest entry"
+        },
+        {
+          "id": "EVID-ASSET-INTEGRITY-scorer_statistics.csv",
+          "what": "scorer_statistics.csv metadata integrity_status",
+          "expected": "hashed",
+          "actual": "hashed",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SIZE-scorer_statistics.csv",
+          "what": "scorer_statistics.csv size matches metadata",
+          "expected": 580,
+          "actual": 580,
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SHA-scorer_statistics.csv",
+          "what": "scorer_statistics.csv sha256 matches metadata",
+          "expected": "a7c1160080c3d4b27639c8d6f321a0c0691b0388b8ebd1eaeb319a95bc6e5f56",
+          "actual": "a7c1160080c3d4b27639c8d6f321a0c0691b0388b8ebd1eaeb319a95bc6e5f56",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-SCORER-N",
+          "what": "every scorer_statistics row n_events equals frozen N",
+          "expected": 20000,
+          "actual": 20000,
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ZERO-DEPOSIT-NO-HITS",
+          "what": "geantino zero-deposition output has no hits file",
+          "expected": false,
+          "actual": false,
+          "status": "pass",
+          "detail": "documented contract"
+        },
+        {
+          "id": "FLU-SUMMARY-COLUMNS",
+          "what": "fluence_volume_summary_t0.csv required columns",
+          "status": "pass",
+          "missing": []
+        },
+        {
+          "id": "FLU-N",
+          "status": "pass",
+          "reported": 20000,
+          "recomputed": 20000
+        },
+        {
+          "id": "FLU-VOLUME",
+          "what": "geometry volume 10*10*0.1 mm3",
+          "reported": 10.0,
+          "recomputed": 10.0,
+          "reported_interval": [
+            9.99999999995,
+            10.00000000005
+          ],
+          "recomputed_interval": [
+            9.999999999999991,
+            10.000000000000009
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "FLU-LENGTH",
+          "what": "N x 0.1 mm deterministic geantino tracks",
+          "reported": 2000.0,
+          "recomputed": 2000.0,
+          "reported_interval": [
+            1999.999999995,
+            2000.000000005
+          ],
+          "recomputed_interval": [
+            1999.9999999999982,
+            2000.0000000000018
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "FLU-FLUENCE",
+          "what": "track length / volume = 200 mm^-2",
+          "reported": 200.0,
+          "recomputed": 200.0,
+          "reported_interval": [
+            199.9999999995,
+            200.0000000005
+          ],
+          "recomputed_interval": [
+            199.99999999999983,
+            200.00000000000017
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "FLU-WEIGHTED-FLUENCE",
+          "what": "unit weights",
+          "reported": 200.0,
+          "recomputed": 200.0,
+          "reported_interval": [
+            199.9999999995,
+            200.0000000005
+          ],
+          "recomputed_interval": [
+            199.99999999999983,
+            200.00000000000017
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "FLU-ZERO-DEPOSIT-NO-HITS",
+          "status": "pass",
+          "what": "geantino zero-deposition case has no hits file (documented contract)",
+          "hits_file_present": false
+        },
+        {
+          "id": "FLU-STATS-COLUMNS",
+          "what": "scorer_statistics.csv required columns",
+          "status": "pass",
+          "missing": []
+        },
+        {
+          "id": "FLU-STATS-VALUE",
+          "what": "statistics total fluence",
+          "reported": 200.0,
+          "recomputed": 200.0,
+          "reported_interval": [
+            199.9999999995,
+            200.0000000005
+          ],
+          "recomputed_interval": [
+            199.99999999999983,
+            200.00000000000017
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "FLU-STATS-MEAN",
+          "what": "per-event fluence 0.01 mm^-2",
+          "reported": 0.01,
+          "recomputed": 0.01,
+          "reported_interval": [
+            0.00999999999995,
+            0.01000000000005
+          ],
+          "recomputed_interval": [
+            0.009999999999999992,
+            0.010000000000000009
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "FLU-STATS-SUMSQ",
+          "what": "sum_sq = N * per-event^2 = 2",
+          "reported": 2.0,
+          "recomputed": 2.0,
+          "reported_interval": [
+            1.999999999995,
+            2.000000000005
+          ],
+          "recomputed_interval": [
+            1.9999999999999982,
+            2.0000000000000018
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        }
+      ],
+      "n_events": 20000,
+      "fluence_mm-2": 200.0,
+      "failed": 0,
+      "checks_count": 38,
+      "failed_ids": [],
+      "status": "pass"
+    },
+    "IMP-LET-01-10MeV": {
+      "case": "IMP-LET-01-10MeV",
+      "checks": [
+        {
+          "id": "EVID-SUMMARY-FILE",
+          "what": "run_summary.txt exists",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "C:\\Users\\123\\.codex\\worktrees\\j3-final\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\runs\\IMP-LET-01-10MeV\\output\\run_summary.txt"
+        },
+        {
+          "id": "EVID-SUMMARY-PARSE",
+          "what": "run_summary.txt [Values] parsed",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "194 facts"
+        },
+        {
+          "id": "EVID-SUMMARY-STATUS",
+          "what": "run_summary [status]",
+          "expected": "completed",
+          "actual": "completed",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-SUMMARY-WRITE",
+          "what": "run_summary [summary_write_status]",
+          "expected": "completed",
+          "actual": "completed",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-OUTPUT-FAILURE",
+          "what": "run_summary [output_failure_status]",
+          "expected": "none",
+          "actual": "none",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-MACRO-STATUS",
+          "what": "run_summary [macro_execution_status]",
+          "expected": "completed",
+          "actual": "completed",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-SIMULATION-EXECUTED",
+          "what": "run_summary [simulation_executed]",
+          "expected": "true",
+          "actual": "true",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-PROGRAM-EXIT",
+          "what": "run_summary [program_exit_code]",
+          "expected": "0",
+          "actual": "0",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-RUN-COUNT",
+          "what": "run_summary [run_count]",
+          "expected": "1",
+          "actual": "1",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-RUN-0-PLANNED",
+          "what": "run_summary [run_0_planned_events]",
+          "expected": "2000",
+          "actual": "2000",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-RUN-0-COMPLETED",
+          "what": "run_summary [run_0_completed_events]",
+          "expected": "2000",
+          "actual": "2000",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-PLANNED-TOTAL",
+          "what": "run_summary planned_event_count",
+          "expected": "2000",
+          "actual": "2000",
+          "status": "pass",
+          "detail": "frozen N"
+        },
+        {
+          "id": "EVID-COMPLETED-TOTAL",
+          "what": "run_summary actual_completed_event_count",
+          "expected": "2000",
+          "actual": "2000",
+          "status": "pass",
+          "detail": "frozen N"
+        },
+        {
+          "id": "EVID-METADATA-FILE",
+          "what": "run_metadata.json exists",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "C:\\Users\\123\\.codex\\worktrees\\j3-final\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\runs\\IMP-LET-01-10MeV\\output\\run_metadata.json"
+        },
+        {
+          "id": "EVID-METADATA-PARSE",
+          "what": "run_metadata.json parses",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "type dict"
+        },
+        {
+          "id": "EVID-METADATA-SCHEMA",
+          "what": "run_metadata schema",
+          "expected": "run_metadata_json_v1",
+          "actual": "run_metadata_json_v1",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-METADATA-RUNS",
+          "what": "metadata has exactly one run with planned=completed=frozen N",
+          "expected": {
+            "runs": 1,
+            "planned": 2000,
+            "completed": 2000
+          },
+          "actual": {
+            "runs": 1,
+            "planned": 2000,
+            "completed": 2000
+          },
+          "status": "pass",
+          "detail": "run_metadata[]"
+        },
+        {
+          "id": "EVID-ASSET-DECLARED-let_volume_summary_t0.csv",
+          "what": "let_volume_summary_t0.csv declared in run_metadata generated_files",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "manifest entry"
+        },
+        {
+          "id": "EVID-ASSET-INTEGRITY-let_volume_summary_t0.csv",
+          "what": "let_volume_summary_t0.csv metadata integrity_status",
+          "expected": "hashed",
+          "actual": "hashed",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SIZE-let_volume_summary_t0.csv",
+          "what": "let_volume_summary_t0.csv size matches metadata",
+          "expected": 437,
+          "actual": 437,
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SHA-let_volume_summary_t0.csv",
+          "what": "let_volume_summary_t0.csv sha256 matches metadata",
+          "expected": "ac92988ec1623f10891bebfb7287e14588a7a54b99d19433c96573c00bb722b3",
+          "actual": "ac92988ec1623f10891bebfb7287e14588a7a54b99d19433c96573c00bb722b3",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-DECLARED-scorer_statistics.csv",
+          "what": "scorer_statistics.csv declared in run_metadata generated_files",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "manifest entry"
+        },
+        {
+          "id": "EVID-ASSET-INTEGRITY-scorer_statistics.csv",
+          "what": "scorer_statistics.csv metadata integrity_status",
+          "expected": "hashed",
+          "actual": "hashed",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SIZE-scorer_statistics.csv",
+          "what": "scorer_statistics.csv size matches metadata",
+          "expected": 566,
+          "actual": 566,
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SHA-scorer_statistics.csv",
+          "what": "scorer_statistics.csv sha256 matches metadata",
+          "expected": "d60c43e5044cd0d78c8b926f80e98f02551d7c73a68d3ff3bf39c1d93bc66f3a",
+          "actual": "d60c43e5044cd0d78c8b926f80e98f02551d7c73a68d3ff3bf39c1d93bc66f3a",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-SCORER-N",
+          "what": "every scorer_statistics row n_events equals frozen N",
+          "expected": 2000,
+          "actual": 2000,
+          "status": "pass"
+        },
+        {
+          "id": "IMP-LET-01-10MeV-SUMMARY-COLUMNS",
+          "what": "let_volume_summary_t0.csv required columns",
+          "status": "pass",
+          "missing": []
+        },
+        {
+          "id": "IMP-LET-01-10MeV-LET-T",
+          "what": "let_t = sum_wSl / sum_wl",
+          "reported": 8.10102792672,
+          "recomputed": 8.101027926701073,
+          "reported_interval": [
+            8.101027926715,
+            8.101027926725001
+          ],
+          "recomputed_interval": [
+            8.101027926678448,
+            8.101027926723699
+          ],
+          "abs_diff": 1.892708212380967e-11,
+          "relative_diff": 2.336380308155905e-12,
+          "status": "pass"
+        },
+        {
+          "id": "IMP-LET-01-10MeV-LET-D",
+          "what": "let_d = sum_wS2l / sum_wSl",
+          "reported": 8.10114300199,
+          "recomputed": 8.101143001981683,
+          "reported_interval": [
+            8.101143001985,
+            8.101143001995
+          ],
+          "recomputed_interval": [
+            8.101143001953755,
+            8.10114300200961
+          ],
+          "abs_diff": 8.316902722071973e-12,
+          "relative_diff": 1.0266332442260274e-12,
+          "status": "pass"
+        },
+        {
+          "id": "IMP-LET-01-10MeV-LET-T-DELTA",
+          "what": "let_t value for delta check (auxiliary)",
+          "reported": 8.10102792672,
+          "recomputed": 8.101027926701073,
+          "reported_interval": [
+            8.101027926715,
+            8.101027926725001
+          ],
+          "recomputed_interval": [
+            8.101027926678448,
+            8.101027926723699
+          ],
+          "abs_diff": 1.892708212380967e-11,
+          "relative_diff": 2.336380308155905e-12,
+          "status": "pass"
+        },
+        {
+          "id": "IMP-LET-01-10MeV-LET-T-VAR",
+          "status": "pass",
+          "what": "let_t delta variance non-negative",
+          "value": 4.254034407721874e-10
+        },
+        {
+          "id": "IMP-LET-01-10MeV-STATS-COLUMNS",
+          "what": "scorer_statistics.csv required columns",
+          "status": "pass",
+          "missing": []
+        },
+        {
+          "id": "IMP-LET-01-10MeV-LET_T-REL",
+          "what": "delta method R = sqrt(S2_A/A^2 + S2_B/B^2 - 2*Sum(ab)/(A*B))",
+          "reported": 2.0625308244e-05,
+          "recomputed": 2.0625310683046387e-05,
+          "reported_interval": [
+            2.062530824395e-05,
+            2.0625308244049998e-05
+          ],
+          "recomputed_interval": [
+            2.0625137456474042e-05,
+            2.0625483909618732e-05
+          ],
+          "abs_diff": 2.4390463878188468e-12,
+          "relative_diff": 1.1825501323593134e-07,
+          "status": "pass"
+        },
+        {
+          "id": "IMP-LET-01-10MeV-LET_T-STATS-VALUE",
+          "what": "statistics ratio value",
+          "reported": 8.10102792672,
+          "recomputed": 8.10102792672,
+          "reported_interval": [
+            8.101027926715,
+            8.101027926725001
+          ],
+          "recomputed_interval": [
+            8.101027926715,
+            8.101027926725001
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "IMP-LET-01-10MeV-LET_D-REL",
+          "what": "delta method R = sqrt(S2_A/A^2 + S2_B/B^2 - 2*Sum(ab)/(A*B))",
+          "reported": 2.07042017786e-05,
+          "recomputed": 2.070418212553906e-05,
+          "reported_interval": [
+            2.070420177855e-05,
+            2.070420177865e-05
+          ],
+          "recomputed_interval": [
+            2.0703958207979425e-05,
+            2.0704406043098694e-05
+          ],
+          "abs_diff": 1.965306094066691e-11,
+          "relative_diff": 9.492305547843165e-07,
+          "status": "pass"
+        },
+        {
+          "id": "IMP-LET-01-10MeV-LET_D-STATS-VALUE",
+          "what": "statistics ratio value",
+          "reported": 8.10114300199,
+          "recomputed": 8.10114300199,
+          "reported_interval": [
+            8.101143001985,
+            8.101143001995
+          ],
+          "recomputed_interval": [
+            8.101143001985,
+            8.101143001995
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "IMP-LET-01-10MeV-N",
+          "status": "pass",
+          "reported": 2000,
+          "recomputed": 2000
+        }
+      ],
+      "n_events": 2000,
+      "let_t": 8.101027926701073,
+      "let_d": 8.101143001981683,
+      "delta_rel_t": 2.0625310683046387e-05,
+      "delta_rel_d": 2.070418212553906e-05,
+      "failed": 0,
+      "checks_count": 37,
+      "failed_ids": [],
+      "status": "pass"
+    },
+    "IMP-LET-01-100MeV": {
+      "case": "IMP-LET-01-100MeV",
+      "checks": [
+        {
+          "id": "EVID-SUMMARY-FILE",
+          "what": "run_summary.txt exists",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "C:\\Users\\123\\.codex\\worktrees\\j3-final\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\runs\\IMP-LET-01-100MeV\\output\\run_summary.txt"
+        },
+        {
+          "id": "EVID-SUMMARY-PARSE",
+          "what": "run_summary.txt [Values] parsed",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "194 facts"
+        },
+        {
+          "id": "EVID-SUMMARY-STATUS",
+          "what": "run_summary [status]",
+          "expected": "completed",
+          "actual": "completed",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-SUMMARY-WRITE",
+          "what": "run_summary [summary_write_status]",
+          "expected": "completed",
+          "actual": "completed",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-OUTPUT-FAILURE",
+          "what": "run_summary [output_failure_status]",
+          "expected": "none",
+          "actual": "none",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-MACRO-STATUS",
+          "what": "run_summary [macro_execution_status]",
+          "expected": "completed",
+          "actual": "completed",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-SIMULATION-EXECUTED",
+          "what": "run_summary [simulation_executed]",
+          "expected": "true",
+          "actual": "true",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-PROGRAM-EXIT",
+          "what": "run_summary [program_exit_code]",
+          "expected": "0",
+          "actual": "0",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-RUN-COUNT",
+          "what": "run_summary [run_count]",
+          "expected": "1",
+          "actual": "1",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-RUN-0-PLANNED",
+          "what": "run_summary [run_0_planned_events]",
+          "expected": "2000",
+          "actual": "2000",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-RUN-0-COMPLETED",
+          "what": "run_summary [run_0_completed_events]",
+          "expected": "2000",
+          "actual": "2000",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-PLANNED-TOTAL",
+          "what": "run_summary planned_event_count",
+          "expected": "2000",
+          "actual": "2000",
+          "status": "pass",
+          "detail": "frozen N"
+        },
+        {
+          "id": "EVID-COMPLETED-TOTAL",
+          "what": "run_summary actual_completed_event_count",
+          "expected": "2000",
+          "actual": "2000",
+          "status": "pass",
+          "detail": "frozen N"
+        },
+        {
+          "id": "EVID-METADATA-FILE",
+          "what": "run_metadata.json exists",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "C:\\Users\\123\\.codex\\worktrees\\j3-final\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\runs\\IMP-LET-01-100MeV\\output\\run_metadata.json"
+        },
+        {
+          "id": "EVID-METADATA-PARSE",
+          "what": "run_metadata.json parses",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "type dict"
+        },
+        {
+          "id": "EVID-METADATA-SCHEMA",
+          "what": "run_metadata schema",
+          "expected": "run_metadata_json_v1",
+          "actual": "run_metadata_json_v1",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-METADATA-RUNS",
+          "what": "metadata has exactly one run with planned=completed=frozen N",
+          "expected": {
+            "runs": 1,
+            "planned": 2000,
+            "completed": 2000
+          },
+          "actual": {
+            "runs": 1,
+            "planned": 2000,
+            "completed": 2000
+          },
+          "status": "pass",
+          "detail": "run_metadata[]"
+        },
+        {
+          "id": "EVID-ASSET-DECLARED-let_volume_summary_t0.csv",
+          "what": "let_volume_summary_t0.csv declared in run_metadata generated_files",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "manifest entry"
+        },
+        {
+          "id": "EVID-ASSET-INTEGRITY-let_volume_summary_t0.csv",
+          "what": "let_volume_summary_t0.csv metadata integrity_status",
+          "expected": "hashed",
+          "actual": "hashed",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SIZE-let_volume_summary_t0.csv",
+          "what": "let_volume_summary_t0.csv size matches metadata",
+          "expected": 434,
+          "actual": 434,
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SHA-let_volume_summary_t0.csv",
+          "what": "let_volume_summary_t0.csv sha256 matches metadata",
+          "expected": "6d592ea640175226d7113564deb2554d0f875e7b68657c49257561c8249963e8",
+          "actual": "6d592ea640175226d7113564deb2554d0f875e7b68657c49257561c8249963e8",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-DECLARED-scorer_statistics.csv",
+          "what": "scorer_statistics.csv declared in run_metadata generated_files",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "manifest entry"
+        },
+        {
+          "id": "EVID-ASSET-INTEGRITY-scorer_statistics.csv",
+          "what": "scorer_statistics.csv metadata integrity_status",
+          "expected": "hashed",
+          "actual": "hashed",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SIZE-scorer_statistics.csv",
+          "what": "scorer_statistics.csv size matches metadata",
+          "expected": 566,
+          "actual": 566,
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SHA-scorer_statistics.csv",
+          "what": "scorer_statistics.csv sha256 matches metadata",
+          "expected": "ec8efde5937a72739216d00e4a8e6b6b9ff26538034284b04de6b976ff43c755",
+          "actual": "ec8efde5937a72739216d00e4a8e6b6b9ff26538034284b04de6b976ff43c755",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-SCORER-N",
+          "what": "every scorer_statistics row n_events equals frozen N",
+          "expected": 2000,
+          "actual": 2000,
+          "status": "pass"
+        },
+        {
+          "id": "IMP-LET-01-100MeV-SUMMARY-COLUMNS",
+          "what": "let_volume_summary_t0.csv required columns",
+          "status": "pass",
+          "missing": []
+        },
+        {
+          "id": "IMP-LET-01-100MeV-LET-T",
+          "what": "let_t = sum_wSl / sum_wl",
+          "reported": 1.3603544191,
+          "recomputed": 1.3603544190952181,
+          "reported_interval": [
+            1.360354419095,
+            1.360354419105
+          ],
+          "recomputed_interval": [
+            1.3603544190922676,
+            1.3603544190981687
+          ],
+          "abs_diff": 4.781952611665474e-12,
+          "relative_diff": 3.515225550433524e-12,
+          "status": "pass"
+        },
+        {
+          "id": "IMP-LET-01-100MeV-LET-D",
+          "what": "let_d = sum_wS2l / sum_wSl",
+          "reported": 1.36048023323,
+          "recomputed": 1.3604802332278616,
+          "reported_interval": [
+            1.360480233225,
+            1.360480233235
+          ],
+          "recomputed_interval": [
+            1.3604802332256927,
+            1.3604802332300305
+          ],
+          "abs_diff": 2.1382895454280515e-12,
+          "relative_diff": 1.5717167314892968e-12,
+          "status": "pass"
+        },
+        {
+          "id": "IMP-LET-01-100MeV-LET-T-DELTA",
+          "what": "let_t value for delta check (auxiliary)",
+          "reported": 1.3603544191,
+          "recomputed": 1.3603544190952181,
+          "reported_interval": [
+            1.360354419095,
+            1.360354419105
+          ],
+          "recomputed_interval": [
+            1.3603544190922676,
+            1.3603544190981687
+          ],
+          "abs_diff": 4.781952611665474e-12,
+          "relative_diff": 3.515225550433524e-12,
+          "status": "pass"
+        },
+        {
+          "id": "IMP-LET-01-100MeV-LET-T-VAR",
+          "status": "pass",
+          "what": "let_t delta variance non-negative",
+          "value": 1.8136037473887034e-08
+        },
+        {
+          "id": "IMP-LET-01-100MeV-STATS-COLUMNS",
+          "what": "scorer_statistics.csv required columns",
+          "status": "pass",
+          "missing": []
+        },
+        {
+          "id": "IMP-LET-01-100MeV-LET_T-REL",
+          "what": "delta method R = sqrt(S2_A/A^2 + S2_B/B^2 - 2*Sum(ab)/(A*B))",
+          "reported": 0.000134670086863,
+          "recomputed": 0.000134670106088497,
+          "reported_interval": [
+            0.0001346700868625,
+            0.00013467008686350002
+          ],
+          "recomputed_interval": [
+            0.0001346700654941431,
+            0.00013467014668285088
+          ],
+          "abs_diff": 1.9225496981087678e-11,
+          "relative_diff": 1.4275994531744002e-07,
+          "status": "pass"
+        },
+        {
+          "id": "IMP-LET-01-100MeV-LET_T-STATS-VALUE",
+          "what": "statistics ratio value",
+          "reported": 1.3603544191,
+          "recomputed": 1.3603544191,
+          "reported_interval": [
+            1.360354419095,
+            1.360354419105
+          ],
+          "recomputed_interval": [
+            1.360354419095,
+            1.360354419105
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "IMP-LET-01-100MeV-LET_D-REL",
+          "what": "delta method R = sqrt(S2_A/A^2 + S2_B/B^2 - 2*Sum(ab)/(A*B))",
+          "reported": 0.000227056268652,
+          "recomputed": 0.00022705627175177476,
+          "reported_interval": [
+            0.0002270562686515,
+            0.00022705626865250002
+          ],
+          "recomputed_interval": [
+            0.0002270562535346198,
+            0.00022705628996892973
+          ],
+          "abs_diff": 3.0997747500326883e-12,
+          "relative_diff": 1.3652011134145029e-08,
+          "status": "pass"
+        },
+        {
+          "id": "IMP-LET-01-100MeV-LET_D-STATS-VALUE",
+          "what": "statistics ratio value",
+          "reported": 1.36048023323,
+          "recomputed": 1.36048023323,
+          "reported_interval": [
+            1.360480233225,
+            1.360480233235
+          ],
+          "recomputed_interval": [
+            1.360480233225,
+            1.360480233235
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "IMP-LET-01-100MeV-N",
+          "status": "pass",
+          "reported": 2000,
+          "recomputed": 2000
+        }
+      ],
+      "n_events": 2000,
+      "let_t": 1.3603544190952181,
+      "let_d": 1.3604802332278616,
+      "delta_rel_t": 0.000134670106088497,
+      "delta_rel_d": 0.00022705627175177476,
+      "failed": 0,
+      "checks_count": 37,
+      "failed_ids": [],
+      "status": "pass"
+    },
+    "IMP-DDD-01": {
+      "case": "IMP-DDD-01",
+      "checks": [
+        {
+          "id": "EVID-SUMMARY-FILE",
+          "what": "run_summary.txt exists",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "C:\\Users\\123\\.codex\\worktrees\\j3-final\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\runs\\IMP-DDD-01\\output\\run_summary.txt"
+        },
+        {
+          "id": "EVID-SUMMARY-PARSE",
+          "what": "run_summary.txt [Values] parsed",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "194 facts"
+        },
+        {
+          "id": "EVID-SUMMARY-STATUS",
+          "what": "run_summary [status]",
+          "expected": "completed",
+          "actual": "completed",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-SUMMARY-WRITE",
+          "what": "run_summary [summary_write_status]",
+          "expected": "completed",
+          "actual": "completed",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-OUTPUT-FAILURE",
+          "what": "run_summary [output_failure_status]",
+          "expected": "none",
+          "actual": "none",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-MACRO-STATUS",
+          "what": "run_summary [macro_execution_status]",
+          "expected": "completed",
+          "actual": "completed",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-SIMULATION-EXECUTED",
+          "what": "run_summary [simulation_executed]",
+          "expected": "true",
+          "actual": "true",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-PROGRAM-EXIT",
+          "what": "run_summary [program_exit_code]",
+          "expected": "0",
+          "actual": "0",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-RUN-COUNT",
+          "what": "run_summary [run_count]",
+          "expected": "1",
+          "actual": "1",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-RUN-0-PLANNED",
+          "what": "run_summary [run_0_planned_events]",
+          "expected": "20000",
+          "actual": "20000",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-RUN-0-COMPLETED",
+          "what": "run_summary [run_0_completed_events]",
+          "expected": "20000",
+          "actual": "20000",
+          "status": "pass",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-PLANNED-TOTAL",
+          "what": "run_summary planned_event_count",
+          "expected": "20000",
+          "actual": "20000",
+          "status": "pass",
+          "detail": "frozen N"
+        },
+        {
+          "id": "EVID-COMPLETED-TOTAL",
+          "what": "run_summary actual_completed_event_count",
+          "expected": "20000",
+          "actual": "20000",
+          "status": "pass",
+          "detail": "frozen N"
+        },
+        {
+          "id": "EVID-METADATA-FILE",
+          "what": "run_metadata.json exists",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "C:\\Users\\123\\.codex\\worktrees\\j3-final\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\runs\\IMP-DDD-01\\output\\run_metadata.json"
+        },
+        {
+          "id": "EVID-METADATA-PARSE",
+          "what": "run_metadata.json parses",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "type dict"
+        },
+        {
+          "id": "EVID-METADATA-SCHEMA",
+          "what": "run_metadata schema",
+          "expected": "run_metadata_json_v1",
+          "actual": "run_metadata_json_v1",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-METADATA-RUNS",
+          "what": "metadata has exactly one run with planned=completed=frozen N",
+          "expected": {
+            "runs": 1,
+            "planned": 20000,
+            "completed": 20000
+          },
+          "actual": {
+            "runs": 1,
+            "planned": 20000,
+            "completed": 20000
+          },
+          "status": "pass",
+          "detail": "run_metadata[]"
+        },
+        {
+          "id": "EVID-ASSET-DECLARED-displacement_volume_summary_t0.csv",
+          "what": "displacement_volume_summary_t0.csv declared in run_metadata generated_files",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "manifest entry"
+        },
+        {
+          "id": "EVID-ASSET-INTEGRITY-displacement_volume_summary_t0.csv",
+          "what": "displacement_volume_summary_t0.csv metadata integrity_status",
+          "expected": "hashed",
+          "actual": "hashed",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SIZE-displacement_volume_summary_t0.csv",
+          "what": "displacement_volume_summary_t0.csv size matches metadata",
+          "expected": 328,
+          "actual": 328,
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SHA-displacement_volume_summary_t0.csv",
+          "what": "displacement_volume_summary_t0.csv sha256 matches metadata",
+          "expected": "c71655f6ff4ed77795c7e4b0e101bbee9c58e2c569be7e360d3c0e38e4f349cd",
+          "actual": "c71655f6ff4ed77795c7e4b0e101bbee9c58e2c569be7e360d3c0e38e4f349cd",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-DECLARED-fluence_volume_summary_t0.csv",
+          "what": "fluence_volume_summary_t0.csv declared in run_metadata generated_files",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "manifest entry"
+        },
+        {
+          "id": "EVID-ASSET-INTEGRITY-fluence_volume_summary_t0.csv",
+          "what": "fluence_volume_summary_t0.csv metadata integrity_status",
+          "expected": "hashed",
+          "actual": "hashed",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SIZE-fluence_volume_summary_t0.csv",
+          "what": "fluence_volume_summary_t0.csv size matches metadata",
+          "expected": 264,
+          "actual": 264,
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SHA-fluence_volume_summary_t0.csv",
+          "what": "fluence_volume_summary_t0.csv sha256 matches metadata",
+          "expected": "3ab33532445458777e1700a69143606c5f752e1db18f5717ed0f77bf1bf426e2",
+          "actual": "3ab33532445458777e1700a69143606c5f752e1db18f5717ed0f77bf1bf426e2",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-DECLARED-scorer_statistics.csv",
+          "what": "scorer_statistics.csv declared in run_metadata generated_files",
+          "expected": true,
+          "actual": true,
+          "status": "pass",
+          "detail": "manifest entry"
+        },
+        {
+          "id": "EVID-ASSET-INTEGRITY-scorer_statistics.csv",
+          "what": "scorer_statistics.csv metadata integrity_status",
+          "expected": "hashed",
+          "actual": "hashed",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SIZE-scorer_statistics.csv",
+          "what": "scorer_statistics.csv size matches metadata",
+          "expected": 985,
+          "actual": 985,
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ASSET-SHA-scorer_statistics.csv",
+          "what": "scorer_statistics.csv sha256 matches metadata",
+          "expected": "711b5a16353a2bd8dad9c8d1364caa4548ad4623808ce939042176f33339ae59",
+          "actual": "711b5a16353a2bd8dad9c8d1364caa4548ad4623808ce939042176f33339ae59",
+          "status": "pass"
+        },
+        {
+          "id": "EVID-SCORER-N",
+          "what": "every scorer_statistics row n_events equals frozen N",
+          "expected": 20000,
+          "actual": 20000,
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ZERO-DEPOSIT-NO-HITS",
+          "what": "geantino zero-deposition output has no hits file",
+          "expected": false,
+          "actual": false,
+          "status": "pass",
+          "detail": "documented contract"
+        },
+        {
+          "id": "DDD-SUMMARY-COLUMNS",
+          "what": "displacement_volume_summary_t0.csv required columns",
+          "status": "pass",
+          "missing": []
+        },
+        {
+          "id": "DDD-VOLUME",
+          "what": "geometry volume 10 mm3",
+          "reported": 10.0,
+          "recomputed": 10.0,
+          "reported_interval": [
+            9.99999999995,
+            10.00000000005
+          ],
+          "recomputed_interval": [
+            9.999999999999991,
+            10.000000000000009
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "DDD-LENGTH",
+          "what": "N x 0.1 mm geantino tracks",
+          "reported": 2000.0,
+          "recomputed": 2000.0,
+          "reported_interval": [
+            1999.999999995,
+            2000.000000005
+          ],
+          "recomputed_interval": [
+            1999.9999999999982,
+            2000.0000000000018
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "DDD-VALUE",
+          "what": "L*NIEL*100/V = 60 MeV/g",
+          "reported": 60.0,
+          "recomputed": 60.0,
+          "reported_interval": [
+            59.99999999995,
+            60.00000000005
+          ],
+          "recomputed_interval": [
+            59.99999999999994,
+            60.00000000000006
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "DDD-SUMSQ",
+          "what": "N * per-event^2 = 0.18",
+          "reported": 0.18,
+          "recomputed": 0.18,
+          "reported_interval": [
+            0.1799999999995,
+            0.18000000000049998
+          ],
+          "recomputed_interval": [
+            0.17999999999999983,
+            0.18000000000000016
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "DDD-OUT-OF-RANGE",
+          "what": "all steps inside synthetic table energy domain",
+          "reported": 0.0,
+          "recomputed": 0.0,
+          "reported_interval": [
+            0.0,
+            0.0
+          ],
+          "recomputed_interval": [
+            0.0,
+            0.0
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "DDD-N",
+          "status": "pass",
+          "reported": 20000,
+          "recomputed": 20000
+        },
+        {
+          "id": "DDD-FLUENCE-COLUMNS",
+          "what": "fluence_volume_summary_t0.csv required columns",
+          "status": "pass",
+          "missing": []
+        },
+        {
+          "id": "DDD-CROSS-FLUENCE",
+          "what": "fluence cross-check 200 mm^-2",
+          "reported": 200.0,
+          "recomputed": 200.0,
+          "reported_interval": [
+            199.9999999995,
+            200.0000000005
+          ],
+          "recomputed_interval": [
+            200.0,
+            200.0
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "DDD-CROSS-LENGTH",
+          "what": "track length cross-check 2000 mm",
+          "reported": 2000.0,
+          "recomputed": 2000.0,
+          "reported_interval": [
+            1999.999999995,
+            2000.000000005
+          ],
+          "recomputed_interval": [
+            2000.0,
+            2000.0
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "DDD-TABLE-SHA",
+          "what": "niel_table path sha256 equals the frozen synthetic table",
+          "frozen_sha256": "bbf159bc16506fcff8d40e2d6f56f176e1ab62b3f792402a2bdbdf7c990ea89a",
+          "recorded_path": "C:\\Users\\123\\.codex\\worktrees\\j3-final\\G4UniversalSim\\out\\collab\\q2-implementation-v1\\inputs\\niel_constant_0p003.csv",
+          "status": "pass",
+          "recorded_sha256": "bbf159bc16506fcff8d40e2d6f56f176e1ab62b3f792402a2bdbdf7c990ea89a"
+        }
+      ],
+      "n_events": 20000,
+      "ddd_MeV_g": 60.0,
+      "failed": 0,
+      "checks_count": 42,
+      "failed_ids": [],
+      "status": "pass"
+    }
+  },
+  "status": "pass"
+}

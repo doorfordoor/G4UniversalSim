@@ -1,0 +1,354 @@
+{
+  "schema": "g4usim_q2_2_comparator_v1",
+  "arithmetic_gate_relative": 1e-06,
+  "printed_significant_digits": 12,
+  "cases": {
+    "IMP-FLU-01": {
+      "case": "IMP-FLU-01",
+      "checks": [
+        {
+          "id": "EVID-SUMMARY-FILE",
+          "what": "run_summary.txt exists",
+          "expected": true,
+          "actual": false,
+          "status": "fail",
+          "detail": "C:\\Users\\123\\.codex\\worktrees\\j3-final\\G4UniversalSim\\out\\collab\\q2-independent-review-v1\\missing-facts\\runs\\IMP-FLU-01\\output\\run_summary.txt"
+        },
+        {
+          "id": "EVID-SUMMARY-STATUS",
+          "what": "run_summary [status]",
+          "expected": "completed",
+          "actual": null,
+          "status": "fail",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-SUMMARY-WRITE",
+          "what": "run_summary [summary_write_status]",
+          "expected": "completed",
+          "actual": null,
+          "status": "fail",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-OUTPUT-FAILURE",
+          "what": "run_summary [output_failure_status]",
+          "expected": "none",
+          "actual": null,
+          "status": "fail",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-MACRO-STATUS",
+          "what": "run_summary [macro_execution_status]",
+          "expected": "completed",
+          "actual": null,
+          "status": "fail",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-SIMULATION-EXECUTED",
+          "what": "run_summary [simulation_executed]",
+          "expected": "true",
+          "actual": null,
+          "status": "fail",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-PROGRAM-EXIT",
+          "what": "run_summary [program_exit_code]",
+          "expected": "0",
+          "actual": null,
+          "status": "fail",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-RUN-COUNT",
+          "what": "run_summary [run_count]",
+          "expected": "1",
+          "actual": null,
+          "status": "fail",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-RUN-0-PLANNED",
+          "what": "run_summary [run_0_planned_events]",
+          "expected": "20000",
+          "actual": null,
+          "status": "fail",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-RUN-0-COMPLETED",
+          "what": "run_summary [run_0_completed_events]",
+          "expected": "20000",
+          "actual": null,
+          "status": "fail",
+          "detail": "frozen lifecycle rule"
+        },
+        {
+          "id": "EVID-PLANNED-TOTAL",
+          "what": "run_summary planned_event_count",
+          "expected": "20000",
+          "actual": null,
+          "status": "fail",
+          "detail": "frozen N"
+        },
+        {
+          "id": "EVID-COMPLETED-TOTAL",
+          "what": "run_summary actual_completed_event_count",
+          "expected": "20000",
+          "actual": null,
+          "status": "fail",
+          "detail": "frozen N"
+        },
+        {
+          "id": "EVID-METADATA-FILE",
+          "what": "run_metadata.json exists",
+          "expected": true,
+          "actual": false,
+          "status": "fail",
+          "detail": "C:\\Users\\123\\.codex\\worktrees\\j3-final\\G4UniversalSim\\out\\collab\\q2-independent-review-v1\\missing-facts\\runs\\IMP-FLU-01\\output\\run_metadata.json"
+        },
+        {
+          "id": "EVID-METADATA-SCHEMA",
+          "what": "run_metadata schema",
+          "expected": "run_metadata_json_v1",
+          "actual": null,
+          "status": "fail"
+        },
+        {
+          "id": "EVID-METADATA-RUNS",
+          "what": "metadata has exactly one run with planned=completed=frozen N",
+          "expected": {
+            "runs": 1,
+            "planned": 20000,
+            "completed": 20000
+          },
+          "actual": {
+            "runs": 0,
+            "planned": null,
+            "completed": null
+          },
+          "status": "fail",
+          "detail": "run_metadata[]"
+        },
+        {
+          "id": "EVID-ASSET-DECLARED-fluence_volume_summary_t0.csv",
+          "what": "fluence_volume_summary_t0.csv declared in run_metadata generated_files",
+          "expected": true,
+          "actual": false,
+          "status": "fail",
+          "detail": "manifest entry"
+        },
+        {
+          "id": "EVID-ASSET-INTEGRITY-fluence_volume_summary_t0.csv",
+          "what": "fluence_volume_summary_t0.csv metadata integrity_status",
+          "expected": "hashed",
+          "actual": null,
+          "status": "fail"
+        },
+        {
+          "id": "EVID-ASSET-DECLARED-scorer_statistics.csv",
+          "what": "scorer_statistics.csv declared in run_metadata generated_files",
+          "expected": true,
+          "actual": false,
+          "status": "fail",
+          "detail": "manifest entry"
+        },
+        {
+          "id": "EVID-ASSET-INTEGRITY-scorer_statistics.csv",
+          "what": "scorer_statistics.csv metadata integrity_status",
+          "expected": "hashed",
+          "actual": null,
+          "status": "fail"
+        },
+        {
+          "id": "EVID-SCORER-N",
+          "what": "every scorer_statistics row n_events equals frozen N",
+          "expected": 20000,
+          "actual": 20000,
+          "status": "pass"
+        },
+        {
+          "id": "EVID-ZERO-DEPOSIT-NO-HITS",
+          "what": "geantino zero-deposition output has no hits file",
+          "expected": false,
+          "actual": false,
+          "status": "pass",
+          "detail": "documented contract"
+        },
+        {
+          "id": "FLU-SUMMARY-COLUMNS",
+          "what": "fluence_volume_summary_t0.csv required columns",
+          "status": "pass",
+          "missing": []
+        },
+        {
+          "id": "FLU-N",
+          "status": "pass",
+          "reported": 20000,
+          "recomputed": 20000
+        },
+        {
+          "id": "FLU-VOLUME",
+          "what": "geometry volume 10*10*0.1 mm3",
+          "reported": 10.0,
+          "recomputed": 10.0,
+          "reported_interval": [
+            9.99999999995,
+            10.00000000005
+          ],
+          "recomputed_interval": [
+            9.999999999999991,
+            10.000000000000009
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "FLU-LENGTH",
+          "what": "N x 0.1 mm deterministic geantino tracks",
+          "reported": 2000.0,
+          "recomputed": 2000.0,
+          "reported_interval": [
+            1999.999999995,
+            2000.000000005
+          ],
+          "recomputed_interval": [
+            1999.9999999999982,
+            2000.0000000000018
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "FLU-FLUENCE",
+          "what": "track length / volume = 200 mm^-2",
+          "reported": 200.0,
+          "recomputed": 200.0,
+          "reported_interval": [
+            199.9999999995,
+            200.0000000005
+          ],
+          "recomputed_interval": [
+            199.99999999999983,
+            200.00000000000017
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "FLU-WEIGHTED-FLUENCE",
+          "what": "unit weights",
+          "reported": 200.0,
+          "recomputed": 200.0,
+          "reported_interval": [
+            199.9999999995,
+            200.0000000005
+          ],
+          "recomputed_interval": [
+            199.99999999999983,
+            200.00000000000017
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "FLU-ZERO-DEPOSIT-NO-HITS",
+          "status": "pass",
+          "what": "geantino zero-deposition case has no hits file (documented contract)",
+          "hits_file_present": false
+        },
+        {
+          "id": "FLU-STATS-COLUMNS",
+          "what": "scorer_statistics.csv required columns",
+          "status": "pass",
+          "missing": []
+        },
+        {
+          "id": "FLU-STATS-VALUE",
+          "what": "statistics total fluence",
+          "reported": 200.0,
+          "recomputed": 200.0,
+          "reported_interval": [
+            199.9999999995,
+            200.0000000005
+          ],
+          "recomputed_interval": [
+            199.99999999999983,
+            200.00000000000017
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "FLU-STATS-MEAN",
+          "what": "per-event fluence 0.01 mm^-2",
+          "reported": 0.01,
+          "recomputed": 0.01,
+          "reported_interval": [
+            0.00999999999995,
+            0.01000000000005
+          ],
+          "recomputed_interval": [
+            0.009999999999999992,
+            0.010000000000000009
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        },
+        {
+          "id": "FLU-STATS-SUMSQ",
+          "what": "sum_sq = N * per-event^2 = 2",
+          "reported": 2.0,
+          "recomputed": 2.0,
+          "reported_interval": [
+            1.999999999995,
+            2.000000000005
+          ],
+          "recomputed_interval": [
+            1.9999999999999982,
+            2.0000000000000018
+          ],
+          "abs_diff": 0.0,
+          "relative_diff": 0.0,
+          "status": "pass"
+        }
+      ],
+      "n_events": 20000,
+      "fluence_mm-2": 200.0,
+      "failed": 19,
+      "checks_count": 32,
+      "failed_ids": [
+        "EVID-SUMMARY-FILE",
+        "EVID-SUMMARY-STATUS",
+        "EVID-SUMMARY-WRITE",
+        "EVID-OUTPUT-FAILURE",
+        "EVID-MACRO-STATUS",
+        "EVID-SIMULATION-EXECUTED",
+        "EVID-PROGRAM-EXIT",
+        "EVID-RUN-COUNT",
+        "EVID-RUN-0-PLANNED",
+        "EVID-RUN-0-COMPLETED",
+        "EVID-PLANNED-TOTAL",
+        "EVID-COMPLETED-TOTAL",
+        "EVID-METADATA-FILE",
+        "EVID-METADATA-SCHEMA",
+        "EVID-METADATA-RUNS",
+        "EVID-ASSET-DECLARED-fluence_volume_summary_t0.csv",
+        "EVID-ASSET-INTEGRITY-fluence_volume_summary_t0.csv",
+        "EVID-ASSET-DECLARED-scorer_statistics.csv",
+        "EVID-ASSET-INTEGRITY-scorer_statistics.csv"
+      ],
+      "status": "fail"
+    }
+  },
+  "status": "fail"
+}

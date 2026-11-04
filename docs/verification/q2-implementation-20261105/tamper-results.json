@@ -1,0 +1,400 @@
+{
+  "schema": "g4usim_q2_2_tamper_v1",
+  "tampers": [
+    {
+      "tamper": "dose-mass-double",
+      "case": "IMP-DOSE-01",
+      "mutation": "tamper_dose_mass",
+      "expected_check": "DOSE-MASS",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "DOSE-MASS"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "dose-unit-x1000",
+      "case": "IMP-DOSE-01",
+      "mutation": "tamper_dose_unit",
+      "expected_check": "DOSE-VALUE-HITS",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "DOSE-VALUE-HITS",
+        "DOSE-WEIGHTED-VALUE"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "dose-missing-column",
+      "case": "IMP-DOSE-01",
+      "mutation": "tamper_dose_missing_column",
+      "expected_check": "DOSE-SUMMARY-COLUMNS",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "DOSE-SUMMARY-COLUMNS"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "dose-missing-events",
+      "case": "IMP-DOSE-01",
+      "mutation": "tamper_dose_missing_events",
+      "expected_check": "DOSE-EDEP-EVENTS",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "DOSE-HITS-EVENTS",
+        "DOSE-EDEP-HITS",
+        "DOSE-WEIGHTED-HITS",
+        "DOSE-VALUE-HITS",
+        "DOSE-WEIGHTED-VALUE",
+        "DOSE-EVENT-COUNT",
+        "DOSE-EDEP-EVENTS"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "dose-missing-hits",
+      "case": "IMP-DOSE-01",
+      "mutation": "tamper_dose_missing_hits",
+      "expected_check": "EVID-ASSET-FILE-hits_t0.csv",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "EVID-ASSET-FILE-hits_t0.csv",
+        "DOSE-HITS-COLUMNS"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "fluence-volume-factor",
+      "case": "IMP-FLU-01",
+      "mutation": "tamper_fluence_volume",
+      "expected_check": "FLU-VOLUME",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "FLU-VOLUME"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "fluence-unit-x10",
+      "case": "IMP-FLU-01",
+      "mutation": "tamper_fluence_unit",
+      "expected_check": "FLU-FLUENCE",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "FLU-FLUENCE"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "fluence-missing-column",
+      "case": "IMP-FLU-01",
+      "mutation": "tamper_fluence_missing_column",
+      "expected_check": "FLU-SUMMARY-COLUMNS",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "FLU-SUMMARY-COLUMNS"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "let-cross-moment",
+      "case": "IMP-LET-01-10MeV",
+      "mutation": "tamper_let_cross",
+      "expected_check": "IMP-LET-01-10MeV-LET_T-REL",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "IMP-LET-01-10MeV-LET-T-VAR",
+        "IMP-LET-01-10MeV-LET_T-REL"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "let-value",
+      "case": "IMP-LET-01-10MeV",
+      "mutation": "tamper_let_value",
+      "expected_check": "IMP-LET-01-10MeV-LET-T",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "IMP-LET-01-10MeV-LET-T",
+        "IMP-LET-01-10MeV-LET-T-DELTA",
+        "IMP-LET-01-10MeV-LET_T-STATS-VALUE"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "let-missing-column",
+      "case": "IMP-LET-01-10MeV",
+      "mutation": "tamper_let_missing_column",
+      "expected_check": "IMP-LET-01-10MeV-SUMMARY-COLUMNS",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "IMP-LET-01-10MeV-SUMMARY-COLUMNS"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "ddd-volume-factor",
+      "case": "IMP-DDD-01",
+      "mutation": "tamper_ddd_volume",
+      "expected_check": "DDD-VOLUME",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "DDD-VOLUME"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "ddd-value-unit",
+      "case": "IMP-DDD-01",
+      "mutation": "tamper_ddd_value",
+      "expected_check": "DDD-VALUE",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "DDD-VALUE"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "ddd-table-modified",
+      "case": "IMP-DDD-01",
+      "mutation": "tamper_ddd_table",
+      "expected_check": "DDD-TABLE-SHA",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "DDD-TABLE-SHA"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "ddd-missing-column",
+      "case": "IMP-DDD-01",
+      "mutation": "tamper_ddd_missing_column",
+      "expected_check": "DDD-SUMMARY-COLUMNS",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "DDD-SUMMARY-COLUMNS"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "evidence-missing-summary",
+      "case": "IMP-FLU-01",
+      "mutation": "evidence_missing_summary",
+      "expected_check": "EVID-SUMMARY-FILE",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "EVID-SUMMARY-FILE",
+        "EVID-SUMMARY-STATUS",
+        "EVID-SUMMARY-WRITE",
+        "EVID-OUTPUT-FAILURE",
+        "EVID-MACRO-STATUS",
+        "EVID-SIMULATION-EXECUTED",
+        "EVID-PROGRAM-EXIT",
+        "EVID-RUN-COUNT",
+        "EVID-RUN-0-PLANNED",
+        "EVID-RUN-0-COMPLETED",
+        "EVID-PLANNED-TOTAL",
+        "EVID-COMPLETED-TOTAL"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "evidence-missing-metadata",
+      "case": "IMP-FLU-01",
+      "mutation": "evidence_missing_metadata",
+      "expected_check": "EVID-METADATA-FILE",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "EVID-METADATA-FILE",
+        "EVID-METADATA-SCHEMA",
+        "EVID-METADATA-RUNS",
+        "EVID-ASSET-DECLARED-fluence_volume_summary_t0.csv",
+        "EVID-ASSET-INTEGRITY-fluence_volume_summary_t0.csv",
+        "EVID-ASSET-DECLARED-scorer_statistics.csv",
+        "EVID-ASSET-INTEGRITY-scorer_statistics.csv"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "evidence-failed-summary",
+      "case": "IMP-FLU-01",
+      "mutation": "evidence_failed_summary",
+      "expected_check": "EVID-SUMMARY-STATUS",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "EVID-SUMMARY-STATUS",
+        "EVID-MACRO-STATUS"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "evidence-zero-events",
+      "case": "IMP-FLU-01",
+      "mutation": "evidence_zero_events",
+      "expected_check": "EVID-METADATA-RUNS",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "EVID-RUN-0-COMPLETED",
+        "EVID-COMPLETED-TOTAL",
+        "EVID-METADATA-RUNS"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "evidence-fewer-events",
+      "case": "IMP-FLU-01",
+      "mutation": "evidence_fewer_events",
+      "expected_check": "EVID-COMPLETED-TOTAL",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "EVID-RUN-0-COMPLETED",
+        "EVID-COMPLETED-TOTAL",
+        "EVID-METADATA-RUNS"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "evidence-corrupt-summary",
+      "case": "IMP-FLU-01",
+      "mutation": "evidence_corrupt_summary",
+      "expected_check": "EVID-SUMMARY-PARSE",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "EVID-SUMMARY-PARSE",
+        "EVID-SUMMARY-STATUS",
+        "EVID-SUMMARY-WRITE",
+        "EVID-OUTPUT-FAILURE",
+        "EVID-MACRO-STATUS",
+        "EVID-SIMULATION-EXECUTED",
+        "EVID-PROGRAM-EXIT",
+        "EVID-RUN-COUNT",
+        "EVID-RUN-0-PLANNED",
+        "EVID-RUN-0-COMPLETED",
+        "EVID-PLANNED-TOTAL",
+        "EVID-COMPLETED-TOTAL"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "evidence-corrupt-metadata",
+      "case": "IMP-FLU-01",
+      "mutation": "evidence_corrupt_metadata",
+      "expected_check": "EVID-METADATA-PARSE",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "EVID-METADATA-PARSE",
+        "EVID-METADATA-SCHEMA",
+        "EVID-METADATA-RUNS",
+        "EVID-ASSET-DECLARED-fluence_volume_summary_t0.csv",
+        "EVID-ASSET-INTEGRITY-fluence_volume_summary_t0.csv",
+        "EVID-ASSET-DECLARED-scorer_statistics.csv",
+        "EVID-ASSET-INTEGRITY-scorer_statistics.csv"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "evidence-asset-not-declared",
+      "case": "IMP-DOSE-01",
+      "mutation": "evidence_asset_not_declared",
+      "expected_check": "EVID-ASSET-DECLARED-event_edep_t0.csv",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "EVID-ASSET-DECLARED-event_edep_t0.csv",
+        "EVID-ASSET-INTEGRITY-event_edep_t0.csv"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "evidence-asset-sha-mismatch",
+      "case": "IMP-DOSE-01",
+      "mutation": "evidence_asset_sha_mismatch",
+      "expected_check": "EVID-ASSET-SHA-hits_t0.csv",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "EVID-ASSET-SIZE-hits_t0.csv",
+        "EVID-ASSET-SHA-hits_t0.csv"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "evidence-stale-product",
+      "case": "IMP-FLU-01",
+      "mutation": "evidence_stale_product",
+      "expected_check": "FLU-SUMMARY-COLUMNS",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "FLU-SUMMARY-COLUMNS"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "evidence-missing-both",
+      "case": "IMP-FLU-01",
+      "mutation": "evidence_missing_both",
+      "expected_check": "EVID-SUMMARY-FILE",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "EVID-SUMMARY-FILE",
+        "EVID-SUMMARY-STATUS",
+        "EVID-SUMMARY-WRITE",
+        "EVID-OUTPUT-FAILURE",
+        "EVID-MACRO-STATUS",
+        "EVID-SIMULATION-EXECUTED",
+        "EVID-PROGRAM-EXIT",
+        "EVID-RUN-COUNT",
+        "EVID-RUN-0-PLANNED",
+        "EVID-RUN-0-COMPLETED",
+        "EVID-PLANNED-TOTAL",
+        "EVID-COMPLETED-TOTAL",
+        "EVID-METADATA-FILE",
+        "EVID-METADATA-SCHEMA",
+        "EVID-METADATA-RUNS",
+        "EVID-ASSET-DECLARED-fluence_volume_summary_t0.csv",
+        "EVID-ASSET-INTEGRITY-fluence_volume_summary_t0.csv",
+        "EVID-ASSET-DECLARED-scorer_statistics.csv",
+        "EVID-ASSET-INTEGRITY-scorer_statistics.csv"
+      ],
+      "status": "pass"
+    },
+    {
+      "tamper": "evidence-wrong-exit",
+      "case": "IMP-FLU-01",
+      "mutation": "evidence_wrong_exit",
+      "expected_check": "EVID-PROGRAM-EXIT",
+      "detected": true,
+      "expected_check_hit": true,
+      "failed_ids": [
+        "EVID-PROGRAM-EXIT"
+      ],
+      "status": "pass"
+    }
+  ],
+  "status": "pass"
+}
