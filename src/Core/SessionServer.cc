@@ -315,6 +315,9 @@ struct SessionServer::Impl {
     std::vector<SessionJson::Json> replaySteps;
     int replayCurrentRunStep = -1;
     long long replayRequestCounter = 0;
+    std::string lastRunStatus;
+    long long lastRunCompletedEvents = -1;
+    int lastRunId = -1;
 
     OutputManager* output = nullptr;
     SourceManager* source = nullptr;
@@ -1088,6 +1091,9 @@ struct SessionServer::Impl {
         } else if (outputFailed) {
             receiptStatus = "failed";
         }
+        lastRunStatus = receiptStatus;
+        lastRunCompletedEvents = completedEvents;
+        lastRunId = runId;
         if (!replayMode && replayCurrentRunStep >= 0 &&
             replayCurrentRunStep < static_cast<int>(replaySteps.size())) {
             SessionJson::Json& step = replaySteps[static_cast<std::size_t>(replayCurrentRunStep)];
@@ -2054,6 +2060,120 @@ struct SessionServer::Impl {
         return false;
     }
 
+    bool ValidateReplayPlan(const SessionJson::Json& steps, std::string& error)
+    {
+        if (!steps.is_array()) {
+            error = "the recorded steps are not an array";
+            return false;
+        }
+        if (steps.empty()) {
+            error = "the session recorded no steps";
+            return false;
+        }
+        if (steps.size() > 10000) {
+            error = "the recorded step plan is too large";
+            return false;
+        }
+        bool sawRun = false;
+        for (std::size_t index = 0; index < steps.size(); ++index) {
+            const SessionJson::Json& step = steps[index];
+            const std::string prefix = "step " + std::to_string(index);
+            if (!step.is_object()) {
+                error = prefix + " is not an object";
+                return false;
+            }
+            const auto opIt = step.find("op");
+            if (opIt == step.end() || !opIt->is_string()) {
+                error = prefix + " has no op";
+                return false;
+            }
+            const std::string op = opIt->get<std::string>();
+            const auto paramsIt = step.find("params");
+            if (paramsIt == step.end() || !paramsIt->is_object()) {
+                error = prefix + " has no params object";
+                return false;
+            }
+            if (op == "set_source") {
+                const auto fieldIt = paramsIt->find("field");
+                const auto valueIt = paramsIt->find("value");
+                if (fieldIt == paramsIt->end() || !fieldIt->is_string() ||
+                    valueIt == paramsIt->end() || !valueIt->is_string()) {
+                    error = prefix + " has an invalid set_source request";
+                    return false;
+                }
+                const std::string field = fieldIt->get<std::string>();
+                if (field != "particle" && field != "energy" && field != "position" &&
+                    field != "direction" && field != "plane_beam") {
+                    error = prefix + " edits an unsupported source field";
+                    return false;
+                }
+                const std::string value = valueIt->get<std::string>();
+                if (value.empty() || value.size() > 4096) {
+                    error = prefix + " has an invalid source value";
+                    return false;
+                }
+            } else if (op == "run") {
+                sawRun = true;
+                if (paramsIt->size() != 1) {
+                    error = prefix + " has unexpected run parameters";
+                    return false;
+                }
+                const auto eventsIt = paramsIt->find("events");
+                if (eventsIt == paramsIt->end() || !eventsIt->is_number_integer()) {
+                    error = prefix + " has no integer events value";
+                    return false;
+                }
+                const long long events = eventsIt->get<long long>();
+                if (events <= 0 || events > kMaxSessionEvents) {
+                    error = prefix + " has an out-of-range events value";
+                    return false;
+                }
+                const auto statusIt = step.find("status");
+                if (statusIt == step.end() || !statusIt->is_string() ||
+                    statusIt->get<std::string>() != "completed") {
+                    error = prefix + " is not a completed source run";
+                    return false;
+                }
+                const auto completedIt = step.find("completed_events");
+                if (completedIt == step.end() || !completedIt->is_number_integer()) {
+                    error = prefix + " has no recorded completion count";
+                    return false;
+                }
+                if (completedIt->get<long long>() != events) {
+                    error = prefix + " did not complete exactly its planned events";
+                    return false;
+                }
+                const auto runIdIt = step.find("run_id");
+                if (runIdIt == step.end() || !runIdIt->is_number_integer() ||
+                    runIdIt->get<long long>() < 0) {
+                    error = prefix + " has no valid source run id";
+                    return false;
+                }
+                const auto requestIt = step.find("run_request_id");
+                if (requestIt == step.end() || !requestIt->is_string()) {
+                    error = prefix + " has no source request id";
+                    return false;
+                }
+                const std::string requestId = requestIt->get<std::string>();
+                if (requestId.empty() || requestId.size() > 64 ||
+                    !std::all_of(requestId.begin(), requestId.end(), [](unsigned char c) {
+                        return std::isxdigit(c) != 0;
+                    })) {
+                    error = prefix + " has an invalid source request id";
+                    return false;
+                }
+            } else {
+                error = prefix + " uses an unsupported operation";
+                return false;
+            }
+        }
+        if (!sawRun) {
+            error = "the session recorded no run step";
+            return false;
+        }
+        return true;
+    }
+
     bool PrepareReplay()
     {
         std::error_code error;
@@ -2089,6 +2209,14 @@ struct SessionServer::Impl {
         if (!manifest.value("replayable", false)) {
             return ReplayRefuse("the source session is not replayable: " +
                                 manifest.value("reason", std::string("unknown reason")));
+        }
+        const auto planIt = manifest.find("steps");
+        if (planIt == manifest.end()) {
+            return ReplayRefuse("the replay manifest records no steps");
+        }
+        std::string planError;
+        if (!ValidateReplayPlan(*planIt, planError)) {
+            return ReplayRefuse("the replay manifest is not replayable: " + planError);
         }
         if (manifest.value("snapshot_sha256", std::string()) !=
             input_provenance::Sha256(snapshotText)) {
@@ -2250,8 +2378,17 @@ struct SessionServer::Impl {
             }
         }
         std::size_t executed = 0;
+        std::size_t runSteps = 0;
+        for (const auto& step : replaySteps) {
+            if (step.value("op", std::string()) == "run") ++runSteps;
+        }
         if (failure.empty()) {
-            for (const auto& step : replaySteps) {
+            for (std::size_t index = 0; index < replaySteps.size(); ++index) {
+                const SessionJson::Json& step = replaySteps[index];
+                if (!step.is_object()) {
+                    failure = "replay step " + std::to_string(index) + " is not an object";
+                    break;
+                }
                 const std::string op = step.value("op", std::string());
                 const SessionJson::Json params = step.value("params", SessionJson::Json::object());
                 if (op == "set_source") {
@@ -2260,13 +2397,26 @@ struct SessionServer::Impl {
                         break;
                     }
                 } else if (op == "run") {
+                    const std::string status = step.value("status", std::string());
+                    if (status != "completed") {
+                        failure = "replay step " + std::to_string(index) +
+                                  " is not a completed source run";
+                        break;
+                    }
                     if (!ReplaySendOp("run", params, ReplayIdFor(step, 0x300000), 0x300000)) {
                         failure = "replay run failed";
                         break;
                     }
-                    const std::string status = step.value("status", std::string());
-                    if (status != "completed") {
-                        failure = "the source run was not completed";
+                    if (lastRunStatus != "completed") {
+                        failure = "the replayed run ended as " + lastRunStatus;
+                        break;
+                    }
+                    const long long expectedCompleted = step.value("completed_events", -1LL);
+                    if (lastRunCompletedEvents != expectedCompleted) {
+                        failure = "the replayed run completed " +
+                                  std::to_string(lastRunCompletedEvents) +
+                                  " events but the source run completed " +
+                                  std::to_string(expectedCompleted);
                         break;
                     }
                     ++executed;
@@ -2279,6 +2429,10 @@ struct SessionServer::Impl {
                     break;
                 }
             }
+        }
+        if (failure.empty() && executed != runSteps) {
+            failure = "the replay executed " + std::to_string(executed) +
+                      " runs but the source session recorded " + std::to_string(runSteps);
         }
         if (failure.empty() && replayManifest["provenance_final"].value("count", 0) > 0) {
             const SessionJson::Json finalProvenance = ProvenanceIdentity();
@@ -2307,6 +2461,7 @@ struct SessionServer::Impl {
             exitCode.store(4, std::memory_order_relaxed);
             return 4;
         }
+        replayExecuted = true;
         exitCode.store(0, std::memory_order_relaxed);
         return 0;
     }

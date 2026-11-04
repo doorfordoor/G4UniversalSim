@@ -179,7 +179,8 @@ def refusal_case(executable: Path, temp: Path, name: str, *,
                  threads: int = 1, output: Path | None = None,
                  extra_args: list[str] | None = None,
                  expected_text: str = "",
-                 pre_existing_output: bool = False) -> None:
+                 pre_existing_output: bool = False,
+                 before_welcome: bool = False) -> None:
     directory = source_dir if source_dir is not None else Path(str(source["session_dir"]))
     replay = start_replay(executable, temp, name, directory, threads=threads,
                           output=output, extra_args=extra_args)
@@ -187,6 +188,9 @@ def refusal_case(executable: Path, temp: Path, name: str, *,
     text = "\n".join(replay.raw_lines)
     assert code != 0, (code, replay.raw_lines[-16:])
     assert "session replay refused" in text, text[-2000:]
+    if before_welcome:
+        welcomes = [item for item in replay.frames if item.get("kind") == "welcome"]
+        assert not welcomes, welcomes
     if expected_text:
         assert expected_text in text, text[-2000:]
     run_frames = [item for item in replay.frames
@@ -263,6 +267,30 @@ def corrupt_session(source_dir: Path, temp: Path, name: str, mutate) -> Path:
         manifest["snapshot_sha256"] = __import__("hashlib").sha256(
             snapshot_path.read_bytes()).hexdigest()
         manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    elif mutate == "first_run_cancelled":
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        run_steps = [step for step in manifest["steps"] if step["op"] == "run"]
+        run_steps[0]["status"] = "cancelled"
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    elif mutate == "later_run_cancelled":
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        run_steps = [step for step in manifest["steps"] if step["op"] == "run"]
+        run_steps[-1]["status"] = "cancelled"
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    elif mutate == "completed_events_mismatch":
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        run_steps = [step for step in manifest["steps"] if step["op"] == "run"]
+        run_steps[0]["completed_events"] = int(run_steps[0]["params"]["events"]) - 1
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    elif mutate == "invalid_event_count":
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        run_steps = [step for step in manifest["steps"] if step["op"] == "run"]
+        run_steps[0]["params"]["events"] = 0
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    elif mutate == "unsupported_step":
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["steps"].append({"op": "cancel", "params": {}})
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
     elif mutate == "missing_snapshot":
         snapshot_path.unlink()
     else:
@@ -320,6 +348,7 @@ def main() -> int:
         closing = replay["closing"]
         assert closing is not None and closing["reason"] == "replay_finished", closing
         assert closing["steps_executed"] == 3, closing
+        assert closing["steps_total"] == len(steps), closing
         original = collect_table(Path(str(source["output"])), "event_edep_t*.csv")
         replayed = collect_table(Path(str(replay["output"])), "event_edep_t*.csv")
         compare_tables(original, replayed, "single event table")
@@ -338,6 +367,8 @@ def main() -> int:
                                    Path(str(source_mt["session_dir"])), threads=2)
         assert replay_mt["exit_code"] == 0, replay_mt["session"].raw_lines[-16:]
         assert replay_mt["closing"]["reason"] == "replay_finished"
+        assert replay_mt["closing"]["steps_executed"] == 2, replay_mt["closing"]
+        assert replay_mt["closing"]["steps_total"] == len(source_mt["manifest"]["steps"])
         compare_tables(collect_table(Path(str(source_mt["output"])), "event_edep_t*.csv"),
                        collect_table(Path(str(replay_mt["output"])), "event_edep_t*.csv"),
                        "multi event table")
@@ -368,6 +399,17 @@ def main() -> int:
                      source_dir=corrupt_session(single_dir, temp, "mut-prov",
                                                 "provenance_digest"),
                      expected_text="different input bytes")
+        for mutation, expected in (
+            ("first_run_cancelled", "completed source run"),
+            ("later_run_cancelled", "completed source run"),
+            ("completed_events_mismatch", "complete exactly its planned events"),
+            ("invalid_event_count", "out-of-range events"),
+            ("unsupported_step", "unsupported operation"),
+        ):
+            refusal_case(executable, temp, f"manifest-{mutation}",
+                         source_dir=corrupt_session(single_dir, temp, f"mut-{mutation}",
+                                                    mutation),
+                         expected_text=expected, before_welcome=True)
         refusal_case(executable, temp, "not-replayable",
                      source_dir=corrupt_session(single_dir, temp, "mut-incomplete",
                                                 "not_replayable"),
