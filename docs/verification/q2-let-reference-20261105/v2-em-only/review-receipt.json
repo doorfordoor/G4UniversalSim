@@ -1,0 +1,96 @@
+{
+  "schema": "q2_let_v2_independent_review",
+  "source_backend_sha256": "f8a8119da5d68814a14920056d85a7f30e4f8380d393ea1d439cc8ca2726820f",
+  "frozen_inputs": "20261105-q2-let-reference-freeze-v2.json",
+  "physics_scope": "EM-only option4; v1 full-physics failure is not replaced",
+  "driver_checks_total": 116,
+  "driver_failed": 0,
+  "individual_error_interval_checks": [
+    {
+      "case": "ref_let_10",
+      "quantity": "let_t",
+      "reported": "2.12479953065e-05",
+      "interval": [
+        "0.0000212478429588844302410523440562451295030518755",
+        "0.0000212481792548657694554325510405814620895772378"
+      ],
+      "status": "pass"
+    },
+    {
+      "case": "ref_let_10",
+      "quantity": "let_d",
+      "reported": "2.13355886531e-05",
+      "interval": [
+        "0.0000213353753275366042475527571069495457767532655",
+        "0.0000213358098981426464724758698561602503354744864"
+      ],
+      "status": "pass"
+    },
+    {
+      "case": "ref_let_100",
+      "quantity": "let_t",
+      "reported": "2.39991238284e-06",
+      "interval": [
+        "0.00000239741025448681017069802059271001509045673766",
+        "0.00000240196695287233400146428073648620031344460725"
+      ],
+      "status": "pass"
+    },
+    {
+      "case": "ref_let_100",
+      "quantity": "let_d",
+      "reported": "2.40188990272e-06",
+      "interval": [
+        "0.00000240030871178196273140302123134290643821560710",
+        "0.00000240375378965016511514435613015097889775141796"
+      ],
+      "status": "pass"
+    }
+  ],
+  "values": [
+    {
+      "case": "ref_let_10",
+      "let_t": "8.10111615849",
+      "let_d": "8.10123277098",
+      "relative_d_minus_t": "0.0000143946201632709185158183297743117015074637159"
+    },
+    {
+      "case": "ref_let_100",
+      "let_t": "1.36016812632",
+      "let_d": "1.36016814997",
+      "relative_d_minus_t": "1.73875563927425703800990095237449469187176181E-8"
+    }
+  ],
+  "tamper_results": {
+    "schema": "g4usim_q2_ref_let_tamper_v1",
+    "case": "REF-LET-01-EM",
+    "total": 3,
+    "detected": 3,
+    "tampers": [
+      {
+        "id": "REF-NUMERIC-SHIFT",
+        "mutation": "copy of the frozen reference with 10 MeV LET +6%",
+        "expected_check": "REF-LET-T-ABS",
+        "exit_code": 1,
+        "detected": true,
+        "evidence": "out/collab/q2-reference-let-v2/tampered/freeze-let-shifted.json"
+      },
+      {
+        "id": "REF-SOURCE-MAPPING",
+        "mutation": "copy of results where the 10 MeV case claims the 100 MeV energy",
+        "expected_check": "REF-LET-T-ABS",
+        "exit_code": 1,
+        "detected": true,
+        "evidence": "out/collab/q2-reference-let-v2/tampered/results-energy-swapped.json"
+      },
+      {
+        "id": "REF-DATA-SHA",
+        "mutation": "copy of PSTAR_Si.txt with one stopping-power digit changed",
+        "expected_check": "data_sha256 mismatch",
+        "exit_code": 1,
+        "detected": true,
+        "evidence": "out/collab/q2-reference-let-v2/tampered/PSTAR_Si_modified.txt"
+      }
+    ]
+  }
+}

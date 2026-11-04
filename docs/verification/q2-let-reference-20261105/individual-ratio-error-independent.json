@@ -1,0 +1,45 @@
+{
+  "method": "12 significant digit half-unit intervals; independent positive-moment interval propagation; uncorrected delta ratio; no t-d covariance claim",
+  "checks": [
+    {
+      "case": "ref_let_10",
+      "quantity": "let_t",
+      "recomputed_enclosing_interval": [
+        "0.0000203017210232641648114647250923028757237009969",
+        "0.0000203020730121246750267768251983058149367422854"
+      ],
+      "reported": "2.03019202057e-05",
+      "status": "pass"
+    },
+    {
+      "case": "ref_let_10",
+      "quantity": "let_d",
+      "recomputed_enclosing_interval": [
+        "0.0000203818110564235015181018164237613700407847871",
+        "0.0000203822660182658984084124489365040220047292501"
+      ],
+      "reported": "2.0382015488e-05",
+      "status": "pass"
+    },
+    {
+      "case": "ref_let_100",
+      "quantity": "let_t",
+      "recomputed_enclosing_interval": [
+        "0.0117446281165189575307031079878289599480933409",
+        "0.0117446281174675542127763494437925525537899703"
+      ],
+      "reported": "0.0117446281168",
+      "status": "pass"
+    },
+    {
+      "case": "ref_let_100",
+      "quantity": "let_d",
+      "recomputed_enclosing_interval": [
+        "0.181346329700978331808106597136255540335318535",
+        "0.181346329701706126674428030761559029547754901"
+      ],
+      "reported": "0.181346329701",
+      "status": "pass"
+    }
+  ]
+}
