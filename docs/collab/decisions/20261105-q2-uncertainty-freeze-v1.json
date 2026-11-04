@@ -1,0 +1,1320 @@
+{
+  "schema": "g4usim_q2_uncertainty_preregister_v1",
+  "task_id": "q2-uncertainty-preregister-v1-20261105",
+  "status": "frozen",
+  "execution_authorized": true,
+  "created": "2026-11-05",
+  "purpose": "Turn the frozen Q2-4 list into a finite, executable and independently repeatable contract: cases, draft inputs, row/missing-row semantics, checks, tolerances, counterexamples, and stopping conditions. No Geant4 run is performed or authorized by this document.",
+  "scope": [
+    "Seven pre-registered cases: UNC-TOT, UNC-N1, UNC-ZERO, UNC-LET-COV, UNC-MT-SPARSE, UNC-COMPONENT, UNC-COVERAGE.",
+    "Pure mathematics and component-level checks for the statistics, plus a finite independent-batch coverage experiment.",
+    "Public CSV and metadata evidence only; every raw quantity has a named source column and file."
+  ],
+  "out_of_scope": [
+    "No product, test, benchmark, freeze or table changes; no new observation fields, CLI or acceptance framework.",
+    "No universal confidence/coverage claim; no physical dose/LET validation.",
+    "No new cases, resampling, extra batches, or tolerance/seed changes after seeing results.",
+    "Finite-value protection is not re-verified beyond the existing product behaviour."
+  ],
+  "backend": {
+    "build": "864bc036d6d7752475e52db4efd2b950cabfcc3d",
+    "exe_sha256": "f8a8119da5d68814a14920056d85a7f30e4f8380d393ea1d439cc8ca2726820f",
+    "geant4": "11.3.2",
+    "data_check_command": "--check-geant4-data"
+  },
+  "reference_documents": [
+    {
+      "path": "docs/collab/decisions/20261105-q2-uncertainty-coverage-design-v1.json",
+      "sha256": "f179a241d77ef483a143c086c31c2e14fd5c63a84422071298d6ae83251a3af3"
+    },
+    {
+      "path": "docs/collab/reviews/20261105-q2-uncertainty-preregister-review.md",
+      "sha256": "55b73bc7ad8817f6adec67c249bf270dfa3b0ff2a8746db9d4f709efbda9e9db"
+    },
+    {
+      "path": "docs/collab/decisions/20261105-q2-dose-reference-freeze-v1.json",
+      "sha256": "a2a799e90bd941b4969beab62be408013420dfbd684c4e8e52f07775308e498d"
+    },
+    {
+      "path": "docs/collab/decisions/20261105-q2-fluence-reference-freeze-v1.json",
+      "sha256": "d9ceb71f9cb6a3bcf4029010eb2bf2212c6b014dca9967b40277e01379b077b3"
+    },
+    {
+      "path": "docs/collab/decisions/20261105-q2-let-reference-freeze-v1.json",
+      "sha256": "b22b7d6535d226f632719f759003b391d2153f28802a348ae4b071a178136af1"
+    }
+  ],
+  "design_input": {
+    "path": "docs/collab/decisions/20261105-q2-uncertainty-coverage-design-v1.json",
+    "sha256": "f179a241d77ef483a143c086c31c2e14fd5c63a84422071298d6ae83251a3af3",
+    "reproduced": {
+      "p": "25/36",
+      "single_batch_covered_K_range": [
+        1347,
+        1429
+      ],
+      "single_batch_coverage_probability": "0.955913711531559450469938471146634229478641391760449724745053",
+      "coverage_count_minimum": 57,
+      "probability_below_minimum": "0.00698051532398270997145110458852696896657979204623148452122967",
+      "aggregate_central_99_range": [
+        88464,
+        89313
+      ],
+      "aggregate_expected_K": "88888.8888888888888888888888888888888888888888888888888888889",
+      "method": "independent exact-rational derivation: exact binomial normaliser 36^N, integer-interval equivalence, Decimal tails; see verify_coverage.py"
+    }
+  },
+  "pure_math": {
+    "coverage": {
+      "program": "out/collab/q2-uncertainty-proposal-v1/verify_coverage.py",
+      "sha256": "7fc7db48b7b8889ef16744130640d7d7616ad3345b1cc84cd0e0aa2bc57cfb5a",
+      "results": "out/collab/q2-uncertainty-proposal-v1/verify_coverage_results.json",
+      "results_sha256": "fc09a56999d5ea812cb089af76db0dc8585e7e0f46fe95c38bdddd097a3a141e",
+      "status": "pass",
+      "checks": "19/19",
+      "command": "python -B out/collab/q2-uncertainty-proposal-v1/verify_coverage.py"
+    },
+    "moments": {
+      "program": "out/collab/q2-uncertainty-proposal-v1/verify_moments.py",
+      "sha256": "270e253de7f941c8add805707a30de8b657f022ddbb6b62a873c7c4fd69b55ab",
+      "results": "out/collab/q2-uncertainty-proposal-v1/verify_moments_results.json",
+      "results_sha256": "b3f2131766f826ead9fa32241b0f1e398bce77ef6bfa09195f51e7d74835d0a3",
+      "status": "pass",
+      "checks": "11/11",
+      "command": "python -B out/collab/q2-uncertainty-proposal-v1/verify_moments.py"
+    }
+  },
+  "inputs": {
+    "draft_root": "out/collab/q2-uncertainty-proposal-v1/inputs",
+    "manifest": "out/collab/q2-uncertainty-proposal-v1/inputs_manifest.json",
+    "manifest_sha256": "048bec9bd7582c2ced7ace5654056b4c20ca9c6d6db1b0d1122bcaf53f0009e4",
+    "generator": "out/collab/q2-uncertainty-proposal-v1/make_inputs.py",
+    "generator_sha256": "9b4390578560ccb9559529cff5e568b04e91a44d3b6692d8a7506758f01ad1bd",
+    "note": "Draft INI files use output paths under out/collab/q2-uncertainty-v1/runs/<case>/output; the execution task must copy them into its own candidate directory, verify every SHA, and may override the output directory with --output. The coverage batches must override only the seed with --seed."
+  },
+  "output_semantics": {
+    "run_summary.txt": {
+      "scope": "run",
+      "required": true,
+      "notes": "status must be completed, program_exit_code 0, actual_completed_event_count must equal the number of events that actually ran; never use generated-file count as completion."
+    },
+    "run_metadata.json": {
+      "scope": "run",
+      "required": true,
+      "notes": "schema run_metadata_json_v1; values.actual_completed_event_count, values.actual_threads, runs[].completed_events and generated_files[].sha256 are the completion and asset-identity evidence; run_metadata.json records itself with integrity_status=self_reference_excluded."
+    },
+    "dose_volume_summary_t0.csv": {
+      "scope": "thread",
+      "required_when": "dose=true",
+      "rows": "one row per sensitive volume that received at least one non-zero deposition in that worker; header-only file is a valid representation when nothing was scored",
+      "columns": [
+        "runID",
+        "volume_path",
+        "volume_name",
+        "mass_kg",
+        "raw_edep_MeV",
+        "weighted_edep_MeV",
+        "raw_dose_Gy",
+        "weighted_dose_Gy",
+        "raw_edep_sum_sq_MeV2",
+        "weighted_edep_sum_sq_MeV2",
+        "n_events"
+      ],
+      "notes": "n_events is the worker's completed-event count (each event including zero-deposition events); rows are per worker (suffix _tN)."
+    },
+    "let_volume_summary_t0.csv": {
+      "scope": "thread",
+      "required_when": "let=true",
+      "rows": "one row per sensitive volume that received at least one valid LET step in that worker; header-only file is a valid representation when nothing was scored",
+      "columns": [
+        "runID",
+        "volume_path",
+        "volume_name",
+        "particles",
+        "steps",
+        "sum_wl_mm",
+        "sum_wSl_MeV",
+        "sum_wS2l_MeV2_per_mm",
+        "let_t_keV_per_um",
+        "let_d_keV_per_um",
+        "sum_sq_wl_mm2",
+        "sum_sq_wSl_MeV2",
+        "sum_sq_wS2l_MeV4_per_mm2",
+        "sum_wl_x_wSl_MeV_mm",
+        "sum_wSl_x_wS2l_MeV3_per_mm",
+        "n_events"
+      ],
+      "notes": "valid LET step = stepLength>0, positive track weight, non-neutral particle (ElectronicStoppingPower of a geantino is 0) and a passing particle filter; n_events is the worker's completed-event count."
+    },
+    "event_edep_t0.csv": {
+      "scope": "thread",
+      "required_when": "event_edep=true",
+      "rows": "exactly one row per completed event handled by the worker, including events with zero deposition; 20 rows for 20 events on one thread",
+      "columns": [
+        "runID",
+        "eventID",
+        "raw_edep_MeV",
+        "weighted_edep_MeV"
+      ],
+      "notes": "raw_edep_MeV is the sum of every positive-deposition step's edep in MeV for the event (unweighted); weighted_edep_MeV is the same sum with edep*trackWeight; all sensitive volumes contribute to the single per-event row, so a single sensitive volume is required for per-volume attribution."
+    },
+    "scorer_statistics.csv": {
+      "scope": "run",
+      "required_when": "any HistoryStatistics entry was submitted",
+      "rows": "one row per (scorer, quantity, key); absent when nothing was scored (for example the zero-deposition case)",
+      "columns": [
+        "runID",
+        "scorer",
+        "quantity",
+        "key",
+        "name",
+        "unit",
+        "estimator",
+        "n_events",
+        "entries",
+        "value",
+        "mean_per_event",
+        "std_error",
+        "rel_error",
+        "fom_per_s",
+        "run_wall_time_s",
+        "sum",
+        "sum_sq",
+        "uncertainty_estimator",
+        "uncertainty_status"
+      ],
+      "notes": "n_events is the global run event count (zero contributions included); entries is the number of events with a non-zero contribution; rel_error uses sqrt(sum_sq/sum^2 - 1/N) with the global N; uncertainty_status follows the HistoryStatistics priority (events<2 insufficient_events, ratio denominator zero undefined_ratio, numerator zero zero_total, else approximate); estimator total for scalar quantities and ratio for LET ratios."
+    }
+  },
+  "formulas": {
+    "dose_generation": "dose_Gy_per_event_i = edep_MeV_i * 1.602176634e-13 / mass_kg; sum_Gy = sum_i dose_i; the dose CSV n_events is N (zero-deposition events contribute zero dose but count in N).",
+    "dose_moments": "S = sum_i x_i over all completed events (x_i=0 for zero deposition); S2 = sum_i x_i^2; R = sqrt(S2/S^2 - 1/N); sigma = R*|S|; do not use the number of hits rows as N.",
+    "event_edep_merge": "For every completed event there is exactly one event_edep row; the dose S output must equal sum(raw_edep_MeV_i)*1.602176634e-13/mass_kg within the pre-registered half-unit interval, and the event_edep raw sum must equal the dose CSV raw_edep_MeV.",
+    "ratio_delta": "Q = B/A where the per-event moments are the moments of the weighted tallies: R_Q^2 = sumSq_B/B^2 + sumSq_A/A^2 - 2*sum_AB/(A*B), with sumSq_A=sum_i a_i^2 and sum_AB=sum_i a_i*b_i over completed events (zero contributions included). For unit-weight runs this coincides with the ordinary sample moments; the general formula is not an unweighted formula. For LET: let_t = B/A (A=sum_wl, B=sum_wSl, sum_AB=BA=sum_wl_x_wSl) so R_t^2 = sumSq_wSl/B^2 + sumSq_wl/A^2 - 2*BA/(A*B); let_d = C/B (denominator B=sum_wSl, numerator C=sum_wS2l, cross AC=sum_wSl_x_wS2l) so R_d^2 = sumSq_wS2l/C^2 + sumSq_wSl/B^2 - 2*AC/(B*C). Both delta ratios use their own cross moment; the unknown covariance between the two ratios is not set to zero.",
+    "half_unit_interval": "Every project CSV scalar is printed with std::setprecision(12) in general format, which drops trailing zeros; the number of printed decimals therefore does not state the precision. For a non-zero finite printed value d the conservative half unit is h = 0.5 * 10^(floor(log10(|d|)) - 11), computed from the magnitude (Decimal.adjusted()), with the wider side used at a magnitude boundary; e.g. h(1)=5e-12, h(1000)=5e-9, h(1e-9)=5e-21. A printed exact zero is exact: no 0.5 tolerance is invented and zero is not given an interval. This half unit is propagated through every comparison of raw quantities, ratios and moments (sums, sumsq, masses, volumes, areas, rel_error, sigma and differences), never replaced by a uniform 1e-12 relative tolerance. Pure math verification (verify_moments.py, 20/20 pass) demonstrates the fixtures 1, 1000, 1e-9, -1000, 1.36016812632 and exact 0, shows the old string-exponent rule would be >=1e9 times looser, and shows the half-unit interval of let_d - let_t for the frozen REF-LET-01-EM 100 MeV values is about 4.2e-4 relative while the single values are 3.7e-12 relative.",
+    "fluence_bernoulli": "For a fully covering 12x12 mm beam and a 10x10x0.1 mm Galactic slab, every crossing event contributes exactly 0.1 mm / 10 mm^3 = 0.01 mm^-2, so Phi = K/100 mm^-2 and sumSq/sum^2 - 1/N = 1/K - 1/N exactly for the uncorrected event-moment estimator. This is a model assumption that the execution must verify per batch: every event with a fluence entry has merged path length 0.1 mm.",
+    "coverage_single_batch": "covered(K) := |K/100 - N/144| <= 2*(K/100)*sqrt(1/K - 1/N). With N=2000 and p=25/36 the exact integer equivalent used by verify_coverage.py is 36*|K - 12500/9| <= 2*sqrt(K*(1 - K/2000))*36; the frozen values are K in [1347,1429], probability 0.9559137115315595. The execution must apply the criterion to printed Phi and rel_error (half-unit intervals) and cross-check it with the exact integer form."
+  },
+  "cases": [
+    {
+      "id": "UNC-TOT",
+      "title": "Event totals and zero contributions",
+      "purpose": "Merge the raw per-event depositions, recompute S, S^2 and entries with the completed events that never appear (zero contribution) folded into N.",
+      "inputs": {
+        "main_ini": "out/collab/q2-uncertainty-v1/inputs/main_unc_tot.ini",
+        "geometry": "out/collab/q2-uncertainty-v1/inputs/geometry_unc_tot.ini",
+        "materials": "out/collab/q2-uncertainty-v1/inputs/materials.ini",
+        "macro": "out/collab/q2-uncertainty-v1/inputs/run_unc_tot.mac",
+        "seed": 20261120,
+        "threads": 1,
+        "events": 20,
+        "physics": "EM option4 only; default_cut 10 um",
+        "scoring": "dose=true, event_edep=true, hits=false; single sensitive Slab (10x10x0.02 mm Si, mass 4.66e-06 kg); 12x12 mm square proton beam at z=-1 mm"
+      },
+      "backend_command_template": "<backend exe> --config {root}/inputs/main_unc_tot.ini --macro {root}/inputs/run_unc_tot.mac --output {root}/runs/unc_tot/output",
+      "expected_artifacts": [
+        "run_summary.txt",
+        "run_metadata.json",
+        "dose_volume_summary_t0.csv",
+        "event_edep_t0.csv",
+        "scorer_statistics.csv"
+      ],
+      "raw_quantities": [
+        {
+          "name": "S",
+          "source": "event_edep_t0.csv raw_edep_MeV",
+          "unit": "MeV",
+          "semantics": "sum over all completed events, zero rows included"
+        },
+        {
+          "name": "S2",
+          "source": "event_edep_t0.csv raw_edep_MeV",
+          "unit": "MeV^2",
+          "semantics": "sum of squares over the same rows"
+        },
+        {
+          "name": "N",
+          "source": "run_summary.actual_completed_event_count and run_metadata.runs[0].completed_events",
+          "unit": "events",
+          "semantics": "must be 20; a complete event_edep file also has exactly 20 rows by contract, so the row count is not an independent N; nonzero-contribution entries and ordinary hits row counts are not N"
+        },
+        {
+          "name": "dose_sum",
+          "source": "dose_volume_summary_t0.csv raw_dose_Gy/weighted_dose_Gy",
+          "unit": "Gy",
+          "semantics": "summed per event, mass from the same row"
+        },
+        {
+          "name": "dose_stats",
+          "source": "scorer_statistics.csv rows scorer=dose quantity=raw_dose|weighted_dose",
+          "unit": "Gy",
+          "semantics": "value, mean_per_event, std_error, rel_error, n_events, entries, uncertainty_status"
+        }
+      ],
+      "checks": [
+        {
+          "id": "TOT-COMPLETED",
+          "rule": "run_summary.status=completed, program_exit_code=0, actual_completed_event_count=20; run_metadata.runs[0].completed_events=20"
+        },
+        {
+          "id": "TOT-EVENT-ROWS",
+          "rule": "event_edep_t0.csv has exactly 20 data rows and eventID values are exactly the 20 completed event ids (one row per event; duplicates or missing ids fail)"
+        },
+        {
+          "id": "TOT-ZERO-ROWS-KEPT",
+          "rule": "if any event has zero deposition, its event_edep row exists with raw_edep_MeV=0; no row may be dropped and no zero row may be fabricated for a non-completed event"
+        },
+        {
+          "id": "TOT-EDEP-EQ-DOSE",
+          "rule": "sum(event_edep raw_edep_MeV)*1.602176634e-13/mass_kg equals dose CSV raw_dose_Gy, and sum(event_edep weighted_edep_MeV)*1.602176634e-13/mass_kg equals dose CSV weighted_dose_Gy, both within the half-unit interval propagated from the printed values and mass_kg; event_edep already provides weighted_edep_MeV, so no per-step weight column is needed for the weighted identity"
+        },
+        {
+          "id": "TOT-MOMENTS",
+          "rule": "R = sqrt(S2/S^2 - 1/N) equals the printed dose rel_error within the propagated half-unit interval; entries equals count(raw_edep>0); n_events=20; uncertainty_status=approximate"
+        },
+        {
+          "id": "TOT-NOT-HITS-ROWS",
+          "rule": "N comes from run_summary/metadata and must equal the number of data rows of a complete event_edep file (one row per completed event, duplicates or missing event ids rejected by TOT-EVENT-ROWS); using the number of nonzero-contribution entries, or the number of ordinary hits rows, as N is rejected by TOT-MOMENTS/TOT-EVENT-ROWS; because a legitimate complete file has exactly N rows, a same-valued case is never claimed to be detectable — the counterexample mutates a copy with a missing/duplicated event row, or uses the component fixture"
+        },
+        {
+          "id": "TOT-MASS",
+          "rule": "dose CSV mass_kg equals the geometric Si mass 4.66e-06 kg within the half-unit interval; no hit-count-based mass"
+        }
+      ],
+      "missing_row_semantics": {
+        "run_summary.txt": {
+          "scope": "run",
+          "required": true,
+          "notes": "status must be completed, program_exit_code 0, actual_completed_event_count must equal the number of events that actually ran; never use generated-file count as completion."
+        },
+        "run_metadata.json": {
+          "scope": "run",
+          "required": true,
+          "notes": "schema run_metadata_json_v1; values.actual_completed_event_count, values.actual_threads, runs[].completed_events and generated_files[].sha256 are the completion and asset-identity evidence; run_metadata.json records itself with integrity_status=self_reference_excluded."
+        },
+        "dose_volume_summary_t0.csv": {
+          "scope": "thread",
+          "required_when": "dose=true",
+          "rows": "one row per sensitive volume that received at least one non-zero deposition in that worker; header-only file is a valid representation when nothing was scored",
+          "columns": [
+            "runID",
+            "volume_path",
+            "volume_name",
+            "mass_kg",
+            "raw_edep_MeV",
+            "weighted_edep_MeV",
+            "raw_dose_Gy",
+            "weighted_dose_Gy",
+            "raw_edep_sum_sq_MeV2",
+            "weighted_edep_sum_sq_MeV2",
+            "n_events"
+          ],
+          "notes": "n_events is the worker's completed-event count (each event including zero-deposition events); rows are per worker (suffix _tN)."
+        },
+        "let_volume_summary_t0.csv": {
+          "scope": "thread",
+          "required_when": "let=true",
+          "rows": "one row per sensitive volume that received at least one valid LET step in that worker; header-only file is a valid representation when nothing was scored",
+          "columns": [
+            "runID",
+            "volume_path",
+            "volume_name",
+            "particles",
+            "steps",
+            "sum_wl_mm",
+            "sum_wSl_MeV",
+            "sum_wS2l_MeV2_per_mm",
+            "let_t_keV_per_um",
+            "let_d_keV_per_um",
+            "sum_sq_wl_mm2",
+            "sum_sq_wSl_MeV2",
+            "sum_sq_wS2l_MeV4_per_mm2",
+            "sum_wl_x_wSl_MeV_mm",
+            "sum_wSl_x_wS2l_MeV3_per_mm",
+            "n_events"
+          ],
+          "notes": "valid LET step = stepLength>0, positive track weight, non-neutral particle (ElectronicStoppingPower of a geantino is 0) and a passing particle filter; n_events is the worker's completed-event count."
+        },
+        "event_edep_t0.csv": {
+          "scope": "thread",
+          "required_when": "event_edep=true",
+          "rows": "exactly one row per completed event handled by the worker, including events with zero deposition; 20 rows for 20 events on one thread",
+          "columns": [
+            "runID",
+            "eventID",
+            "raw_edep_MeV",
+            "weighted_edep_MeV"
+          ],
+          "notes": "raw_edep_MeV is the sum of every positive-deposition step's edep in MeV for the event (unweighted); weighted_edep_MeV is the same sum with edep*trackWeight; all sensitive volumes contribute to the single per-event row, so a single sensitive volume is required for per-volume attribution."
+        },
+        "scorer_statistics.csv": {
+          "scope": "run",
+          "required_when": "any HistoryStatistics entry was submitted",
+          "rows": "one row per (scorer, quantity, key); absent when nothing was scored (for example the zero-deposition case)",
+          "columns": [
+            "runID",
+            "scorer",
+            "quantity",
+            "key",
+            "name",
+            "unit",
+            "estimator",
+            "n_events",
+            "entries",
+            "value",
+            "mean_per_event",
+            "std_error",
+            "rel_error",
+            "fom_per_s",
+            "run_wall_time_s",
+            "sum",
+            "sum_sq",
+            "uncertainty_estimator",
+            "uncertainty_status"
+          ],
+          "notes": "n_events is the global run event count (zero contributions included); entries is the number of events with a non-zero contribution; rel_error uses sqrt(sum_sq/sum^2 - 1/N) with the global N; uncertainty_status follows the HistoryStatistics priority (events<2 insufficient_events, ratio denominator zero undefined_ratio, numerator zero zero_total, else approximate); estimator total for scalar quantities and ratio for LET ratios."
+        }
+      },
+      "notes": "Single sensitive volume only, so the per-event event_edep row has unambiguous per-volume attribution. The comparison uses the half-unit interval of printed 12-digit values, not a relative tolerance.",
+      "limitations": [
+        "Only one geometry and one sensitive volume; conclusions do not generalize to multiple SDs.",
+        "event_edep provides weighted_edep_MeV directly, so the weighted dose identity is checked without any per-step weight column; a difference in weights is not needed."
+      ]
+    },
+    {
+      "id": "UNC-N1",
+      "title": "N<2 statistics status",
+      "purpose": "A deterministic in-volume point source guarantees a scored event; verify the N=1 public statistics are labelled insufficient rather than treated as a valid zero error.",
+      "inputs": {
+        "main_ini": "out/collab/q2-uncertainty-v1/inputs/main_unc_n1.ini",
+        "geometry": "out/collab/q2-uncertainty-v1/inputs/geometry_unc_n1.ini",
+        "materials": "out/collab/q2-uncertainty-v1/inputs/materials.ini",
+        "macro": "out/collab/q2-uncertainty-v1/inputs/run_unc_n1.mac",
+        "seed": 20261121,
+        "threads": 1,
+        "events": 1,
+        "physics": "EM option4 only; default_cut 10 um",
+        "scoring": "dose=true, let=true (particles=proton), hits=false; sensitive Si slab 10x10x2 mm centred at the origin; point proton 10 MeV at (0,0,0) along +z"
+      },
+      "backend_command_template": "<backend exe> --config {root}/inputs/main_unc_n1.ini --macro {root}/inputs/run_unc_n1.mac --output {root}/runs/unc_n1/output",
+      "expected_artifacts": [
+        "run_summary.txt",
+        "run_metadata.json",
+        "dose_volume_summary_t0.csv",
+        "let_volume_summary_t0.csv",
+        "scorer_statistics.csv"
+      ],
+      "raw_quantities": [
+        {
+          "name": "dose",
+          "source": "dose_volume_summary_t0.csv",
+          "unit": "Gy",
+          "semantics": "non-zero single event; n_events=1"
+        },
+        {
+          "name": "let",
+          "source": "let_volume_summary_t0.csv",
+          "unit": "keV/um",
+          "semantics": "let_t, let_d from a valid proton step"
+        },
+        {
+          "name": "stats",
+          "source": "scorer_statistics.csv",
+          "unit": "mixed",
+          "semantics": "4 rows: dose raw/weighted (total) and let_t/let_d (ratio)"
+        }
+      ],
+      "checks": [
+        {
+          "id": "N1-COMPLETED",
+          "rule": "actual_completed_event_count=1; run_metadata.runs[0].completed_events=1"
+        },
+        {
+          "id": "N1-DOSE-ROW",
+          "rule": "dose CSV has exactly one row for the sensitive volume with finite raw_dose_Gy>0, mass 4.66e-04 kg, n_events=1"
+        },
+        {
+          "id": "N1-LET-ROW",
+          "rule": "let CSV has exactly one row with finite positive let_t>0 and let_d>0, n_events=1; the geometry and 10 MeV point source make a valid LET step deterministic, so a missing row is a failure rather than an expected zero"
+        },
+        {
+          "id": "N1-STATUS",
+          "rule": "all four scorer_statistics rows have n_events=1 and uncertainty_status=insufficient_events; the delta formula can still produce a tiny non-zero floating-point rel_error, so the printed rel_error is not required to be exactly zero and is never presented as a usable confidence error; insufficient_events is the only accepted status"
+        },
+        {
+          "id": "N1-NO-ZERO-FABRICATION",
+          "rule": "no row may be added with status approximate or with a fabricated non-zero error; the status priority from HistoryStatistics (N<2 first) is the arbiter"
+        }
+      ],
+      "missing_row_semantics": {
+        "run_summary.txt": {
+          "scope": "run",
+          "required": true,
+          "notes": "status must be completed, program_exit_code 0, actual_completed_event_count must equal the number of events that actually ran; never use generated-file count as completion."
+        },
+        "run_metadata.json": {
+          "scope": "run",
+          "required": true,
+          "notes": "schema run_metadata_json_v1; values.actual_completed_event_count, values.actual_threads, runs[].completed_events and generated_files[].sha256 are the completion and asset-identity evidence; run_metadata.json records itself with integrity_status=self_reference_excluded."
+        },
+        "dose_volume_summary_t0.csv": {
+          "scope": "thread",
+          "required_when": "dose=true",
+          "rows": "one row per sensitive volume that received at least one non-zero deposition in that worker; header-only file is a valid representation when nothing was scored",
+          "columns": [
+            "runID",
+            "volume_path",
+            "volume_name",
+            "mass_kg",
+            "raw_edep_MeV",
+            "weighted_edep_MeV",
+            "raw_dose_Gy",
+            "weighted_dose_Gy",
+            "raw_edep_sum_sq_MeV2",
+            "weighted_edep_sum_sq_MeV2",
+            "n_events"
+          ],
+          "notes": "n_events is the worker's completed-event count (each event including zero-deposition events); rows are per worker (suffix _tN)."
+        },
+        "let_volume_summary_t0.csv": {
+          "scope": "thread",
+          "required_when": "let=true",
+          "rows": "one row per sensitive volume that received at least one valid LET step in that worker; header-only file is a valid representation when nothing was scored",
+          "columns": [
+            "runID",
+            "volume_path",
+            "volume_name",
+            "particles",
+            "steps",
+            "sum_wl_mm",
+            "sum_wSl_MeV",
+            "sum_wS2l_MeV2_per_mm",
+            "let_t_keV_per_um",
+            "let_d_keV_per_um",
+            "sum_sq_wl_mm2",
+            "sum_sq_wSl_MeV2",
+            "sum_sq_wS2l_MeV4_per_mm2",
+            "sum_wl_x_wSl_MeV_mm",
+            "sum_wSl_x_wS2l_MeV3_per_mm",
+            "n_events"
+          ],
+          "notes": "valid LET step = stepLength>0, positive track weight, non-neutral particle (ElectronicStoppingPower of a geantino is 0) and a passing particle filter; n_events is the worker's completed-event count."
+        },
+        "event_edep_t0.csv": {
+          "scope": "thread",
+          "required_when": "event_edep=true",
+          "rows": "exactly one row per completed event handled by the worker, including events with zero deposition; 20 rows for 20 events on one thread",
+          "columns": [
+            "runID",
+            "eventID",
+            "raw_edep_MeV",
+            "weighted_edep_MeV"
+          ],
+          "notes": "raw_edep_MeV is the sum of every positive-deposition step's edep in MeV for the event (unweighted); weighted_edep_MeV is the same sum with edep*trackWeight; all sensitive volumes contribute to the single per-event row, so a single sensitive volume is required for per-volume attribution."
+        },
+        "scorer_statistics.csv": {
+          "scope": "run",
+          "required_when": "any HistoryStatistics entry was submitted",
+          "rows": "one row per (scorer, quantity, key); absent when nothing was scored (for example the zero-deposition case)",
+          "columns": [
+            "runID",
+            "scorer",
+            "quantity",
+            "key",
+            "name",
+            "unit",
+            "estimator",
+            "n_events",
+            "entries",
+            "value",
+            "mean_per_event",
+            "std_error",
+            "rel_error",
+            "fom_per_s",
+            "run_wall_time_s",
+            "sum",
+            "sum_sq",
+            "uncertainty_estimator",
+            "uncertainty_status"
+          ],
+          "notes": "n_events is the global run event count (zero contributions included); entries is the number of events with a non-zero contribution; rel_error uses sqrt(sum_sq/sum^2 - 1/N) with the global N; uncertainty_status follows the HistoryStatistics priority (events<2 insufficient_events, ratio denominator zero undefined_ratio, numerator zero zero_total, else approximate); estimator total for scalar quantities and ratio for LET ratios."
+        }
+      },
+      "notes": "The expectation is written before execution from the producer source: DoseScorer/LETScorer score the in-volume primary, and HistoryStatistics marks N<2 as insufficient_events. If the fixed input produces a missing row, report a real failure (do not change the seed or the geometry).",
+      "limitations": [
+        "Single event in a 2 mm slab; the result says nothing about dose accuracy or LET physics."
+      ]
+    },
+    {
+      "id": "UNC-ZERO",
+      "title": "No deposition and no selected particles",
+      "purpose": "A geantino point source inside the same slab gives zero deposition and no charged-physics LET step; verify the producer's public representation of empty scoring (header-only files, no statistics file, no fabricated zero rows).",
+      "inputs": {
+        "main_ini": "out/collab/q2-uncertainty-v1/inputs/main_unc_zero.ini",
+        "geometry": "out/collab/q2-uncertainty-v1/inputs/geometry_unc_n1.ini",
+        "materials": "out/collab/q2-uncertainty-v1/inputs/materials.ini",
+        "macro": "out/collab/q2-uncertainty-v1/inputs/run_unc_zero.mac",
+        "seed": 20261122,
+        "threads": 1,
+        "events": 100,
+        "physics": "EM option4 only; default_cut 10 um",
+        "scoring": "dose=true, let=true (particles=proton), hits=false, event_edep=false; geantino 100 MeV point at (0,0,0) along +z"
+      },
+      "backend_command_template": "<backend exe> --config {root}/inputs/main_unc_zero.ini --macro {root}/inputs/run_unc_zero.mac --output {root}/runs/unc_zero/output",
+      "expected_artifacts": [
+        "run_summary.txt",
+        "run_metadata.json",
+        "dose_volume_summary_t0.csv",
+        "let_volume_summary_t0.csv"
+      ],
+      "raw_quantities": [
+        {
+          "name": "dose_empty",
+          "source": "dose_volume_summary_t0.csv",
+          "unit": "none",
+          "semantics": "header-only file, no data rows"
+        },
+        {
+          "name": "let_empty",
+          "source": "let_volume_summary_t0.csv",
+          "unit": "none",
+          "semantics": "header-only file, no data rows"
+        },
+        {
+          "name": "stats",
+          "source": "scorer_statistics.csv",
+          "unit": "none",
+          "semantics": "absent because no HistoryStatistics entry is submitted"
+        }
+      ],
+      "checks": [
+        {
+          "id": "ZERO-COMPLETED",
+          "rule": "actual_completed_event_count=100; run_summary.status=completed"
+        },
+        {
+          "id": "ZERO-DOSE-HEADER-ONLY",
+          "rule": "dose_volume_summary_t0.csv exists with the exact header and zero data rows"
+        },
+        {
+          "id": "ZERO-LET-HEADER-ONLY",
+          "rule": "let_volume_summary_t0.csv exists with the exact header and zero data rows"
+        },
+        {
+          "id": "ZERO-STATS-ABSENT",
+          "rule": "scorer_statistics.csv is absent; absence is the contract, not a zero-error row"
+        },
+        {
+          "id": "ZERO-NO-FABRICATION",
+          "rule": "no zero_total or undefined_ratio row exists anywhere; a fabricated row is a failure"
+        },
+        {
+          "id": "ZERO-METADATA",
+          "rule": "run_metadata.generated_files lists the two header-only files with their sha256 and the run completion is still recorded"
+        }
+      ],
+      "missing_row_semantics": {
+        "run_summary.txt": {
+          "scope": "run",
+          "required": true,
+          "notes": "status must be completed, program_exit_code 0, actual_completed_event_count must equal the number of events that actually ran; never use generated-file count as completion."
+        },
+        "run_metadata.json": {
+          "scope": "run",
+          "required": true,
+          "notes": "schema run_metadata_json_v1; values.actual_completed_event_count, values.actual_threads, runs[].completed_events and generated_files[].sha256 are the completion and asset-identity evidence; run_metadata.json records itself with integrity_status=self_reference_excluded."
+        },
+        "dose_volume_summary_t0.csv": {
+          "scope": "thread",
+          "required_when": "dose=true",
+          "rows": "one row per sensitive volume that received at least one non-zero deposition in that worker; header-only file is a valid representation when nothing was scored",
+          "columns": [
+            "runID",
+            "volume_path",
+            "volume_name",
+            "mass_kg",
+            "raw_edep_MeV",
+            "weighted_edep_MeV",
+            "raw_dose_Gy",
+            "weighted_dose_Gy",
+            "raw_edep_sum_sq_MeV2",
+            "weighted_edep_sum_sq_MeV2",
+            "n_events"
+          ],
+          "notes": "n_events is the worker's completed-event count (each event including zero-deposition events); rows are per worker (suffix _tN)."
+        },
+        "let_volume_summary_t0.csv": {
+          "scope": "thread",
+          "required_when": "let=true",
+          "rows": "one row per sensitive volume that received at least one valid LET step in that worker; header-only file is a valid representation when nothing was scored",
+          "columns": [
+            "runID",
+            "volume_path",
+            "volume_name",
+            "particles",
+            "steps",
+            "sum_wl_mm",
+            "sum_wSl_MeV",
+            "sum_wS2l_MeV2_per_mm",
+            "let_t_keV_per_um",
+            "let_d_keV_per_um",
+            "sum_sq_wl_mm2",
+            "sum_sq_wSl_MeV2",
+            "sum_sq_wS2l_MeV4_per_mm2",
+            "sum_wl_x_wSl_MeV_mm",
+            "sum_wSl_x_wS2l_MeV3_per_mm",
+            "n_events"
+          ],
+          "notes": "valid LET step = stepLength>0, positive track weight, non-neutral particle (ElectronicStoppingPower of a geantino is 0) and a passing particle filter; n_events is the worker's completed-event count."
+        },
+        "event_edep_t0.csv": {
+          "scope": "thread",
+          "required_when": "event_edep=true",
+          "rows": "exactly one row per completed event handled by the worker, including events with zero deposition; 20 rows for 20 events on one thread",
+          "columns": [
+            "runID",
+            "eventID",
+            "raw_edep_MeV",
+            "weighted_edep_MeV"
+          ],
+          "notes": "raw_edep_MeV is the sum of every positive-deposition step's edep in MeV for the event (unweighted); weighted_edep_MeV is the same sum with edep*trackWeight; all sensitive volumes contribute to the single per-event row, so a single sensitive volume is required for per-volume attribution."
+        },
+        "scorer_statistics.csv": {
+          "scope": "run",
+          "required_when": "any HistoryStatistics entry was submitted",
+          "rows": "one row per (scorer, quantity, key); absent when nothing was scored (for example the zero-deposition case)",
+          "columns": [
+            "runID",
+            "scorer",
+            "quantity",
+            "key",
+            "name",
+            "unit",
+            "estimator",
+            "n_events",
+            "entries",
+            "value",
+            "mean_per_event",
+            "std_error",
+            "rel_error",
+            "fom_per_s",
+            "run_wall_time_s",
+            "sum",
+            "sum_sq",
+            "uncertainty_estimator",
+            "uncertainty_status"
+          ],
+          "notes": "n_events is the global run event count (zero contributions included); entries is the number of events with a non-zero contribution; rel_error uses sqrt(sum_sq/sum^2 - 1/N) with the global N; uncertainty_status follows the HistoryStatistics priority (events<2 insufficient_events, ratio denominator zero undefined_ratio, numerator zero zero_total, else approximate); estimator total for scalar quantities and ratio for LET ratios."
+        }
+      },
+      "notes": "DoseScorer/LETScorer write their CSV at run end even with no scored volume; WriteScorerStatisticsCsv is only called for submitted entries. Both are verified from source before this case. If a producer instead skips the empty file, report the contract mismatch; do not invent the row.",
+      "limitations": [
+        "Empty scoring representation only; it says nothing about detector behaviour under real particles."
+      ]
+    },
+    {
+      "id": "UNC-LET-COV",
+      "title": "Ratio covariance from public cross moments",
+      "purpose": "Recompute both LET delta-method relative errors from the public A/B/C and BA/AC moments; no physical 5% LET_d/LET_t bound is used here.",
+      "inputs": {
+        "main_ini": "out/collab/q2-uncertainty-v1/inputs/main_unc_let_cov.ini",
+        "geometry": "out/collab/q2-uncertainty-v1/inputs/geometry_unc_let_cov.ini",
+        "materials": "out/collab/q2-uncertainty-v1/inputs/materials.ini",
+        "macro": "out/collab/q2-uncertainty-v1/inputs/run_unc_let_cov.mac",
+        "seed": 20261123,
+        "threads": 1,
+        "events": 2000,
+        "physics": "reference = FTFP_BERT_EMZ; default_cut 10 um (same as the frozen REF-LET-v1 case)",
+        "scoring": "let=true (particles=proton), hits=false, event_edep=false, dose=false; LetTarget 10x10x0.02 mm Si; point proton 100 MeV at (0,0,-3) mm along +z"
+      },
+      "backend_command_template": "<backend exe> --config {root}/inputs/main_unc_let_cov.ini --macro {root}/inputs/run_unc_let_cov.mac --output {root}/runs/unc_let_cov/output",
+      "expected_artifacts": [
+        "run_summary.txt",
+        "run_metadata.json",
+        "let_volume_summary_t0.csv",
+        "scorer_statistics.csv"
+      ],
+      "raw_quantities": [
+        {
+          "name": "A",
+          "source": "let CSV sum_wl_mm",
+          "unit": "mm",
+          "semantics": "sum of weighted step length per event"
+        },
+        {
+          "name": "B",
+          "source": "let CSV sum_wSl_MeV",
+          "unit": "MeV",
+          "semantics": "sum of weighted stopping-power*length"
+        },
+        {
+          "name": "C",
+          "source": "let CSV sum_wS2l_MeV2_per_mm",
+          "unit": "MeV^2/mm",
+          "semantics": "sum of weighted squared stopping-power*length"
+        },
+        {
+          "name": "BA",
+          "source": "let CSV sum_wl_x_wSl_MeV_mm",
+          "unit": "MeV*mm",
+          "semantics": "cross moment of let_t numerator and denominator"
+        },
+        {
+          "name": "AC",
+          "source": "let CSV sum_wSl_x_wS2l_MeV3_per_mm",
+          "unit": "MeV^3/mm",
+          "semantics": "cross moment of let_d numerator and denominator"
+        },
+        {
+          "name": "stats",
+          "source": "scorer_statistics.csv rows scorer=let quantity=let_t|let_d",
+          "unit": "keV/um",
+          "semantics": "value, rel_error, std_error, n_events, entries"
+        }
+      ],
+      "checks": [
+        {
+          "id": "LET-COV-ROWS",
+          "rule": "exactly one let CSV row; n_events=2000; particles=proton; steps>0"
+        },
+        {
+          "id": "LET-COV-LET-VALUES",
+          "rule": "let_t = B/A and let_d = C/B equal the printed let_t_keV_per_um and let_d_keV_per_um within the half-unit interval"
+        },
+        {
+          "id": "LET-COV-RT",
+          "rule": "R_t^2 = sum_sq_wSl/B^2 + sum_sq_wl/A^2 - 2*BA/(A*B) equals the printed let_t rel_error^2 within the propagated interval; n_events=2000; status=approximate"
+        },
+        {
+          "id": "LET-COV-RD",
+          "rule": "with B=sum_wSl and C=sum_wS2l: R_d^2 = sum_sq_wS2l/C^2 + sum_sq_wSl/B^2 - 2*AC/(B*C) equals the printed let_d rel_error^2 within the propagated interval; the two squared moments have different denominators and a swapped-denominator recomputation must be detected (asymmetric fixture in verify_moments.py)"
+        },
+        {
+          "id": "LET-COV-CROSS-MOMENTS",
+          "rule": "the recomputation uses BA and AC from the CSV; setting either cross moment to zero must be detected as a mismatch (counterexample)"
+        },
+        {
+          "id": "LET-COV-NO-PHYSICAL-BOUND",
+          "rule": "no comparison against 0.05 or any LET_d/LET_t physical bound is part of this case; only the statistical identity is checked"
+        }
+      ],
+      "missing_row_semantics": {
+        "run_summary.txt": {
+          "scope": "run",
+          "required": true,
+          "notes": "status must be completed, program_exit_code 0, actual_completed_event_count must equal the number of events that actually ran; never use generated-file count as completion."
+        },
+        "run_metadata.json": {
+          "scope": "run",
+          "required": true,
+          "notes": "schema run_metadata_json_v1; values.actual_completed_event_count, values.actual_threads, runs[].completed_events and generated_files[].sha256 are the completion and asset-identity evidence; run_metadata.json records itself with integrity_status=self_reference_excluded."
+        },
+        "dose_volume_summary_t0.csv": {
+          "scope": "thread",
+          "required_when": "dose=true",
+          "rows": "one row per sensitive volume that received at least one non-zero deposition in that worker; header-only file is a valid representation when nothing was scored",
+          "columns": [
+            "runID",
+            "volume_path",
+            "volume_name",
+            "mass_kg",
+            "raw_edep_MeV",
+            "weighted_edep_MeV",
+            "raw_dose_Gy",
+            "weighted_dose_Gy",
+            "raw_edep_sum_sq_MeV2",
+            "weighted_edep_sum_sq_MeV2",
+            "n_events"
+          ],
+          "notes": "n_events is the worker's completed-event count (each event including zero-deposition events); rows are per worker (suffix _tN)."
+        },
+        "let_volume_summary_t0.csv": {
+          "scope": "thread",
+          "required_when": "let=true",
+          "rows": "one row per sensitive volume that received at least one valid LET step in that worker; header-only file is a valid representation when nothing was scored",
+          "columns": [
+            "runID",
+            "volume_path",
+            "volume_name",
+            "particles",
+            "steps",
+            "sum_wl_mm",
+            "sum_wSl_MeV",
+            "sum_wS2l_MeV2_per_mm",
+            "let_t_keV_per_um",
+            "let_d_keV_per_um",
+            "sum_sq_wl_mm2",
+            "sum_sq_wSl_MeV2",
+            "sum_sq_wS2l_MeV4_per_mm2",
+            "sum_wl_x_wSl_MeV_mm",
+            "sum_wSl_x_wS2l_MeV3_per_mm",
+            "n_events"
+          ],
+          "notes": "valid LET step = stepLength>0, positive track weight, non-neutral particle (ElectronicStoppingPower of a geantino is 0) and a passing particle filter; n_events is the worker's completed-event count."
+        },
+        "event_edep_t0.csv": {
+          "scope": "thread",
+          "required_when": "event_edep=true",
+          "rows": "exactly one row per completed event handled by the worker, including events with zero deposition; 20 rows for 20 events on one thread",
+          "columns": [
+            "runID",
+            "eventID",
+            "raw_edep_MeV",
+            "weighted_edep_MeV"
+          ],
+          "notes": "raw_edep_MeV is the sum of every positive-deposition step's edep in MeV for the event (unweighted); weighted_edep_MeV is the same sum with edep*trackWeight; all sensitive volumes contribute to the single per-event row, so a single sensitive volume is required for per-volume attribution."
+        },
+        "scorer_statistics.csv": {
+          "scope": "run",
+          "required_when": "any HistoryStatistics entry was submitted",
+          "rows": "one row per (scorer, quantity, key); absent when nothing was scored (for example the zero-deposition case)",
+          "columns": [
+            "runID",
+            "scorer",
+            "quantity",
+            "key",
+            "name",
+            "unit",
+            "estimator",
+            "n_events",
+            "entries",
+            "value",
+            "mean_per_event",
+            "std_error",
+            "rel_error",
+            "fom_per_s",
+            "run_wall_time_s",
+            "sum",
+            "sum_sq",
+            "uncertainty_estimator",
+            "uncertainty_status"
+          ],
+          "notes": "n_events is the global run event count (zero contributions included); entries is the number of events with a non-zero contribution; rel_error uses sqrt(sum_sq/sum^2 - 1/N) with the global N; uncertainty_status follows the HistoryStatistics priority (events<2 insufficient_events, ratio denominator zero undefined_ratio, numerator zero zero_total, else approximate); estimator total for scalar quantities and ratio for LET ratios."
+        }
+      },
+      "notes": "No distributional threshold and no old LET_d/LET_t 5% external bound; the case only checks the public covariance arithmetic. The two delta ratios keep their own cross moments; the covariance between them is unknown and not assumed zero.",
+      "limitations": [
+        "A single 100 MeV point in 20 um Si; no physical validation of LET or of the physics list."
+      ]
+    },
+    {
+      "id": "UNC-MT-SPARSE",
+      "title": "Sparse multi-thread merging",
+      "purpose": "N=2 on 4 workers guarantees at least two workers cannot have events, but the two events may land on the same worker; merge by global event id and by worker moments, never by averaging per-worker relative errors. The actual allocation is recorded; when fewer than two workers contain events the worker-average comparison is reported as not distinguishable instead of failing.",
+      "inputs": {
+        "main_ini": "out/collab/q2-uncertainty-v1/inputs/main_unc_mt_sparse.ini",
+        "geometry": "out/collab/q2-uncertainty-v1/inputs/geometry_unc_n1.ini",
+        "materials": "out/collab/q2-uncertainty-v1/inputs/materials.ini",
+        "macro": "out/collab/q2-uncertainty-v1/inputs/run_unc_mt_sparse.mac",
+        "seed": 20261124,
+        "threads": 4,
+        "events": 2,
+        "physics": "EM option4 only; default_cut 10 um",
+        "scoring": "dose=true, let=true, event_edep=true, hits=false; point proton 10 MeV at (0,0,0) in the 10x10x2 mm Si slab"
+      },
+      "backend_command_template": "<backend exe> --config {root}/inputs/main_unc_mt_sparse.ini --macro {root}/inputs/run_unc_mt_sparse.mac --output {root}/runs/unc_mt_sparse/output",
+      "expected_artifacts": [
+        "run_summary.txt",
+        "run_metadata.json",
+        "event_edep_t*.csv (any subset of {0,1,2,3})",
+        "dose_volume_summary_t*.csv",
+        "let_volume_summary_t*.csv",
+        "scorer_statistics.csv"
+      ],
+      "raw_quantities": [
+        {
+          "name": "global_events",
+          "source": "all event_edep_t*.csv rows",
+          "unit": "events",
+          "semantics": "exactly 2 unique global event ids across all workers; no duplicated id is allowed to double count"
+        },
+        {
+          "name": "global_S",
+          "source": "sum raw_edep_MeV over the 2 rows",
+          "unit": "MeV",
+          "semantics": "equals the merged dose sum; N=2"
+        },
+        {
+          "name": "worker_dose",
+          "source": "dose_volume_summary_t*.csv",
+          "unit": "Gy",
+          "semantics": "sums and n_events add across workers"
+        },
+        {
+          "name": "worker_let",
+          "source": "let_volume_summary_t*.csv",
+          "unit": "mixed",
+          "semantics": "A/B/C/BA/AC add across workers; ratios are computed only after merging"
+        }
+      ],
+      "checks": [
+        {
+          "id": "MT-METADATA",
+          "rule": "actual_threads=4; actual_completed_event_count=2; run_metadata.runs[0].completed_events=2"
+        },
+        {
+          "id": "MT-EVENT-IDS",
+          "rule": "the union of event_edep eventIDs has size 2 and no duplicate; empty/missing worker files are allowed and are not an error"
+        },
+        {
+          "id": "MT-EDEP-MERGE",
+          "rule": "sum(raw_edep_MeV) equals dose CSV raw_dose_Gy*mass/1.602176634e-13, and sum(weighted_edep_MeV) equals dose CSV weighted_dose_Gy*mass/1.602176634e-13, both within the half-unit interval; weighted_edep_MeV is directly available, so no per-step weight column is required"
+        },
+        {
+          "id": "MT-DOSE-STATS",
+          "rule": "dose scorer_statistics n_events=2, entries=number of events with deposition, rel_error equals sqrt(S2/S^2-1/2) from the merged moments"
+        },
+        {
+          "id": "MT-LET-MERGE",
+          "rule": "merge A,B,C,BA,AC and the three second moments sum_sq_wl, sum_sq_wSl, sum_sq_wS2l by summation (never by averaging per-worker errors); then compute let_t=B/A, let_d=C/B and both delta rel_errors from the merged moments and match the printed rows"
+        },
+        {
+          "id": "MT-NO-WORKER-AVERAGE",
+          "rule": "the comparator records the merged rel_error and, for information, the arithmetic mean of per-worker relative errors when at least two workers contain events; it does NOT require the two numbers to differ under the actual sparse allocation, because N=2 can fall in one worker or the wrong average can be numerically degenerate; distinguishability is established only by a pre-specified component/copy fixture (two non-empty workers with different per-worker errors), keeping the frozen seed"
+        }
+      ],
+      "missing_row_semantics": {
+        "run_summary.txt": {
+          "scope": "run",
+          "required": true,
+          "notes": "status must be completed, program_exit_code 0, actual_completed_event_count must equal the number of events that actually ran; never use generated-file count as completion."
+        },
+        "run_metadata.json": {
+          "scope": "run",
+          "required": true,
+          "notes": "schema run_metadata_json_v1; values.actual_completed_event_count, values.actual_threads, runs[].completed_events and generated_files[].sha256 are the completion and asset-identity evidence; run_metadata.json records itself with integrity_status=self_reference_excluded."
+        },
+        "dose_volume_summary_t0.csv": {
+          "scope": "thread",
+          "required_when": "dose=true",
+          "rows": "one row per sensitive volume that received at least one non-zero deposition in that worker; header-only file is a valid representation when nothing was scored",
+          "columns": [
+            "runID",
+            "volume_path",
+            "volume_name",
+            "mass_kg",
+            "raw_edep_MeV",
+            "weighted_edep_MeV",
+            "raw_dose_Gy",
+            "weighted_dose_Gy",
+            "raw_edep_sum_sq_MeV2",
+            "weighted_edep_sum_sq_MeV2",
+            "n_events"
+          ],
+          "notes": "n_events is the worker's completed-event count (each event including zero-deposition events); rows are per worker (suffix _tN)."
+        },
+        "let_volume_summary_t0.csv": {
+          "scope": "thread",
+          "required_when": "let=true",
+          "rows": "one row per sensitive volume that received at least one valid LET step in that worker; header-only file is a valid representation when nothing was scored",
+          "columns": [
+            "runID",
+            "volume_path",
+            "volume_name",
+            "particles",
+            "steps",
+            "sum_wl_mm",
+            "sum_wSl_MeV",
+            "sum_wS2l_MeV2_per_mm",
+            "let_t_keV_per_um",
+            "let_d_keV_per_um",
+            "sum_sq_wl_mm2",
+            "sum_sq_wSl_MeV2",
+            "sum_sq_wS2l_MeV4_per_mm2",
+            "sum_wl_x_wSl_MeV_mm",
+            "sum_wSl_x_wS2l_MeV3_per_mm",
+            "n_events"
+          ],
+          "notes": "valid LET step = stepLength>0, positive track weight, non-neutral particle (ElectronicStoppingPower of a geantino is 0) and a passing particle filter; n_events is the worker's completed-event count."
+        },
+        "event_edep_t0.csv": {
+          "scope": "thread",
+          "required_when": "event_edep=true",
+          "rows": "exactly one row per completed event handled by the worker, including events with zero deposition; 20 rows for 20 events on one thread",
+          "columns": [
+            "runID",
+            "eventID",
+            "raw_edep_MeV",
+            "weighted_edep_MeV"
+          ],
+          "notes": "raw_edep_MeV is the sum of every positive-deposition step's edep in MeV for the event (unweighted); weighted_edep_MeV is the same sum with edep*trackWeight; all sensitive volumes contribute to the single per-event row, so a single sensitive volume is required for per-volume attribution."
+        },
+        "scorer_statistics.csv": {
+          "scope": "run",
+          "required_when": "any HistoryStatistics entry was submitted",
+          "rows": "one row per (scorer, quantity, key); absent when nothing was scored (for example the zero-deposition case)",
+          "columns": [
+            "runID",
+            "scorer",
+            "quantity",
+            "key",
+            "name",
+            "unit",
+            "estimator",
+            "n_events",
+            "entries",
+            "value",
+            "mean_per_event",
+            "std_error",
+            "rel_error",
+            "fom_per_s",
+            "run_wall_time_s",
+            "sum",
+            "sum_sq",
+            "uncertainty_estimator",
+            "uncertainty_status"
+          ],
+          "notes": "n_events is the global run event count (zero contributions included); entries is the number of events with a non-zero contribution; rel_error uses sqrt(sum_sq/sum^2 - 1/N) with the global N; uncertainty_status follows the HistoryStatistics priority (events<2 insufficient_events, ratio denominator zero undefined_ratio, numerator zero zero_total, else approximate); estimator total for scalar quantities and ratio for LET ratios."
+        }
+      },
+      "notes": "N<threads guarantees at least two empty workers; the proposal never assumes worker 0 has an event or that every worker writes a non-empty file. Sparse per-worker files are expected, not a failure.",
+      "limitations": [
+        "Only two events; the case checks merge arithmetic, not statistical accuracy.",
+        "Path-type quantities are not recovered from ordinary hits when hits are disabled."
+      ]
+    },
+    {
+      "id": "UNC-COMPONENT",
+      "title": "Real shared-implementation status boundaries",
+      "purpose": "Call the real HistoryStatistics implementation through a one-off component probe (not a Python mirror) for the status-priority fixtures and the frozen covariance fixture; no product interface is added.",
+      "inputs": {
+        "main_ini": "out/collab/q2-uncertainty-v1/inputs/n/a (C++ probe, not an INI)",
+        "geometry": "out/collab/q2-uncertainty-v1/inputs/n/a",
+        "materials": "out/collab/q2-uncertainty-v1/inputs/materials.ini",
+        "macro": "out/collab/q2-uncertainty-v1/inputs/n/a",
+        "seed": 0,
+        "threads": 1,
+        "events": 0,
+        "physics": "none (no Geant4 run)",
+        "scoring": "component-level only"
+      },
+      "backend_command_template": "<backend exe> --config {root}/inputs/n/a (C++ probe, not an INI) --macro {root}/inputs/n/a --output {root}/runs/unc_component/output",
+      "expected_artifacts": [
+        "probe results JSON produced under out/collab/q2-uncertainty-v1/probe/"
+      ],
+      "raw_quantities": [
+        {
+          "name": "status_and_moments",
+          "source": "probe output",
+          "unit": "n/a",
+          "semantics": "each fixture returns the documented status and moments"
+        }
+      ],
+      "checks": [
+        {
+          "id": "CMP-BUILD",
+          "rule": "the probe compiles against the repository's real src/Scoring/HistoryStatistics.cc; the build command and the source SHA are recorded"
+        },
+        {
+          "id": "CMP-FIXTURES",
+          "rule": "fixtures: N=0,num=1,total -> insufficient_events; N=1,num=0,ratio,den=0 -> insufficient_events; N=2,num=1,ratio,den=0 -> undefined_ratio; N=2,num=0,total -> zero_total; N=2,num=0,ratio,den=1 -> zero_total; N=2,num=1,total -> approximate; N=2,num=1,ratio,den=1 -> approximate"
+        },
+        {
+          "id": "CMP-COVARIANCE",
+          "rule": "fixture A=[1,2,0], B=[2,1,0]: A=B=3, sumSqA=sumSqB=5, sum_AB=4, ratio=1, R=sqrt(2)/3"
+        },
+        {
+          "id": "CMP-NO-MIRROR",
+          "rule": "the probe source must link the real implementation (compile line includes src/Scoring/HistoryStatistics.cc); a self-contained Python re-implementation is not acceptable"
+        }
+      ],
+      "missing_row_semantics": "n/a",
+      "notes": "Component evidence only; it does not prove run-level files exist or that any case's statistics are correct.",
+      "limitations": [
+        "The probe is a one-off artifact under the candidate directory, not a new product interface or test framework.",
+        "Finite-value protection is out of scope for this pre-registration."
+      ]
+    },
+    {
+      "id": "UNC-COVERAGE",
+      "title": "Independent finite coverage batches",
+      "purpose": "64 fixed-seed independent geantino batches test whether the reported uncorrected-event standard error covers the known total fluence; coverage is asserted only for this frozen model and sample.",
+      "inputs": {
+        "main_ini": "out/collab/q2-uncertainty-v1/inputs/main_unc_coverage.ini",
+        "geometry": "out/collab/q2-uncertainty-v1/inputs/geometry_unc_coverage.ini",
+        "materials": "out/collab/q2-uncertainty-v1/inputs/materials.ini",
+        "macro": "out/collab/q2-uncertainty-v1/inputs/run_unc_coverage.mac",
+        "seed": "220001..220064 (one seed per batch, CLI override)",
+        "threads": 1,
+        "events": 2000,
+        "physics": "EM option4; default_cut 0.7 mm (frozen fluence reference settings)",
+        "scoring": "fluence=true, hits=false, event_edep=false; 10x10x0.1 mm Galactic slab; 12x12 mm square geantino beam at z=-2 mm along +z"
+      },
+      "backend_command_template": "<backend exe> --config {root}/inputs/main_unc_coverage.ini --macro {root}/inputs/run_unc_coverage.mac --output {root}/runs/unc_coverage/output",
+      "expected_artifacts": [
+        "64 x (run_summary.txt, run_metadata.json, fluence_volume_summary_t0.csv, scorer_statistics.csv)"
+      ],
+      "raw_quantities": [
+        {
+          "name": "K",
+          "source": "per batch: scorer_statistics.csv entries for raw_fluence/weighted_fluence, cross-checked with round(track_length/0.1) and with the event second moment; hits=false, so no per-event path is observable",
+          "unit": "events",
+          "semantics": "number of events with a fluence entry; the frozen straight-path model predicts every entry carries exactly 0.1 mm, sum_sq = K*0.1^2 and sum = K*0.1 mm; this is a finite analytic consistency check of the printed moments, not a reading of each event path"
+        },
+        {
+          "name": "Phi",
+          "source": "fluence CSV raw_fluence_mm-2",
+          "unit": "mm^-2",
+          "semantics": "K/100 for the full-coverage model"
+        },
+        {
+          "name": "R",
+          "source": "scorer_statistics.csv rel_error",
+          "unit": "none",
+          "semantics": "sqrt(1/K-1/N) exactly for this Bernoulli model"
+        },
+        {
+          "name": "covered",
+          "source": "K and printed Phi/R",
+          "unit": "bool",
+          "semantics": "|Phi - N/144| <= 2*Phi*R with half-unit intervals, and the exact integer criterion as cross-check"
+        }
+      ],
+      "checks": [
+        {
+          "id": "COV-BATCHES",
+          "rule": "exactly 64 runs with seeds 220001..220064, one each, all completed with N=2000; no extra batches, no resampling, no seed changes; unavailable samples are retained and reported, and any genuine failure stops the comparison instead of being replaced"
+        },
+        {
+          "id": "COV-PATH",
+          "rule": "per batch the entry count K, total track length and event second moment are mutually consistent with the frozen straight-path model (K=round(track_length/0.1), sum_sq=K*0.1^2); because hits=false the batch has no per-event path observation, so this is a finite analytic consistency check of the printed moments and must not be described as having read every event path; any inconsistency fails closed instead of tuning"
+        },
+        {
+          "id": "COV-K-RANGE",
+          "rule": "report all K; the frozen single-batch covered range is [1347,1429]; do not widen it"
+        },
+        {
+          "id": "COV-MODEL-PROB",
+          "rule": "reproduce the frozen design probability 0.9559137115315595 and the minimum covered count 57 (P(C<57)=0.006980515324) from the exact binomial; the design input is reproduced by verify_coverage.py (19/19 pass)"
+        },
+        {
+          "id": "COV-COUNT",
+          "rule": "C = count(covered batches); C >= 57 must pass; C < 57 must fail without resampling"
+        },
+        {
+          "id": "COV-AGGREGATE",
+          "rule": "sum(K) must lie in the frozen central 99% range [88464,89313]; the expected total is 88888.888...; a miss is a fail, not a reason to extend sampling"
+        },
+        {
+          "id": "COV-SCOPE",
+          "rule": "the conclusion is limited to this frozen distribution/model/sample; no universal confidence claim"
+        }
+      ],
+      "missing_row_semantics": "n/a (all batches must produce the same files)",
+      "notes": "The Bernoulli model requires the full 12x12 mm beam to cross the 10x10x0.1 mm slab with a full 0.1 mm path for every hit event. hits=false, so execution checks the model through the printed entry count, total path and event second moments per batch (not by reading each event path) and fails closed on inconsistency.",
+      "limitations": [
+        "64 batches are independent only in the fixed-seed sense; the design does not claim universal coverage.",
+        "Two tests each at 1% control; the union-bound false-rejection probability is <=2%, not a joint 1% claim."
+      ]
+    }
+  ],
+  "execution": {
+    "candidate_root": "out/collab/q2-uncertainty-v1",
+    "forbidden_changes": [
+      "product code, build files, tests, benchmarks, frozen decisions, NIEL tables, ROADMAP, STATUS",
+      "frozen seeds/N/threads/cut/geometries/tolerances after observing results",
+      "Git commits"
+    ],
+    "run_command": "<backend> --config <root>/inputs/<main_ini> --macro <root>/inputs/<macro> --output <root>/runs/<case>/output (coverage adds --seed <2200NN> for batch NN)",
+    "required_identity_checks": [
+      "backend exe SHA = f8a8119da5d68814a14920056d85a7f30e4f8380d393ea1d439cc8ca2726820f and build 864bc036",
+      "Geant4 11.3.2 and --check-geant4-data required_complete",
+      "every input INI SHA from inputs_manifest.json",
+      "run_summary/metadata completion fields and every generated asset SHA"
+    ],
+    "failure_action": "Keep the original inputs/outputs/logs and report the failure; never tune seeds, N, cut, tolerances, geometry or reference values to make a comparison pass."
+  },
+  "counterexamples": [
+    {
+      "id": "CE-DROP-ZERO-ROW",
+      "target": "UNC-TOT",
+      "mutation": "delete one zero-deposition event_edep row",
+      "must_fail": "TOT-EVENT-ROWS"
+    },
+    {
+      "id": "CE-HITS-AS-N",
+      "target": "UNC-TOT",
+      "mutation": "use nonzero-contribution entries or ordinary hits row counts as N instead of the complete event count; a same-valued legitimate file is not claimed detectable, so the copy has a missing or duplicated event row",
+      "must_fail": "TOT-NOT-HITS-ROWS / TOT-MOMENTS"
+    },
+    {
+      "id": "CE-ZERO-ERROR",
+      "target": "UNC-ZERO",
+      "mutation": "fabricate a zero_total row in scorer_statistics.csv",
+      "must_fail": "ZERO-STATS-ABSENT / ZERO-NO-FABRICATION"
+    },
+    {
+      "id": "CE-UNKNOWN-COVARIANCE-ZERO",
+      "target": "UNC-LET-COV",
+      "mutation": "set BA and AC to zero in the recomputation",
+      "must_fail": "LET-COV-CROSS-MOMENTS"
+    },
+    {
+      "id": "CE-WORKER-AVERAGE",
+      "target": "UNC-MT-SPARSE",
+      "mutation": "average per-worker rel_error instead of merging moments, applied to the pre-specified two-non-empty-worker fixture (the frozen sparse run is not forced to expose the difference)",
+      "must_fail": "MT-NO-WORKER-AVERAGE / MT-DOSE-STATS"
+    },
+    {
+      "id": "CE-MISSING-METADATA",
+      "target": "all",
+      "mutation": "delete run_metadata.json",
+      "must_fail": "EVID-METADATA"
+    },
+    {
+      "id": "CE-RESAMPLE",
+      "target": "UNC-COVERAGE",
+      "mutation": "replace a batch seed or add a batch",
+      "must_fail": "COV-BATCHES"
+    },
+    {
+      "id": "CE-MASS-UNIT",
+      "target": "UNC-TOT",
+      "mutation": "use mass in grams where kg is required in the dose identity",
+      "must_fail": "TOT-EDEP-EQ-DOSE"
+    }
+  ],
+  "stopping": {
+    "deliverable": "out/collab/q2-uncertainty-v1/** plus docs/collab/outbox/20261105-q2-uncertainty-v1.md; candidate stops after independent review",
+    "no_extension": "no extra batches, no re-runs to replace results, no tolerance changes after observing results",
+    "unavailable": "a genuine unavailable sample (missing output, execution failure) is retained and reported; coverage comparison is not completed by replacement"
+  },
+  "boundaries": [
+    "No universal coverage or confidence claim; results apply to this frozen model (12x12 mm beam, 10x10x0.1 mm Galactic slab, p=25/36, N=2000, seeds 220001..220064).",
+    "UNC-COMPONENT is component-level evidence only; it does not prove run-level products.",
+    "UNC-N1 and UNC-ZERO deliberately exercise extreme statistics; they say nothing about detector physics.",
+    "The dose/MC cross-check uses printed 12-digit values and magnitude-based half-unit intervals; absolute mc-truth accuracy is not claimed.",
+    "A complete event_edep file has exactly N data rows by contract, so its row count is not an independent N; rejection of entries/hits-row counts as N uses a mutated copy or the component fixture, never a claim that equal values differ.",
+    "The wrong per-worker error average is not required to differ under the frozen sparse allocation; distinguishability is shown only with the pre-specified two-worker component/copy fixture.",
+    "Coverage batches run with hits=false and therefore have no per-event path observation; the frozen straight-path model is supported only by the consistency of the entry count, total path and event second moments, not by reading every event path."
+  ],
+  "open_questions_for_supervisor": [],
+  "next_task": {
+    "id": "q2-uncertainty-execution-v1",
+    "summary": "After this draft is frozen and independently reviewed: copy inputs, run the seven cases (64 coverage batches), build the component probe, write the analysis/comparator and counterexample suite, produce README + receipt, run doc_links and git checks, then stop for independent review."
+  },
+  "freeze": {
+    "date": "2026-11-05",
+    "source_proposal_sha256": "bfe5e0b2378686741074ed1b6022605e03c569f5debd05003334dc3b31853905",
+    "review": "docs/collab/reviews/20261105-q2-uncertainty-preregister-r2.md",
+    "component_production_sources": {
+      "src/Scoring/HistoryStatistics.cc": "91fdcc6421507286ffddc1a021e716acac6d2bb43f4ac4a841ac8001b7b4eaaa",
+      "include/Scoring/HistoryStatistics.hh": "abad43750bb5403683a9da638e375a936ebdab76526b4c18790cba4815056643",
+      "include/Scoring/NumericChecks.hh": "dae1399a57fee4a04bd949acef9b8dfd9a1a1b60ce44ab6d6b8b5d5b6d70f448"
+    },
+    "resolved_decisions": [
+      "UNC-ZERO: enabled Dose/LET CSV writers produce registered header-only files; no scorer_statistics entry means no statistics file. Preserve these producer semantics.",
+      "A candidate-local minimal C++ probe may compile the actual HistoryStatistics implementation; no production API/build/test edits.",
+      "Keep em=option4 and the existing geantino inputs unchanged.",
+      "Retain genuine execution/evidence failures and stop; never replace seeds or extend samples."
+    ],
+    "clarifications": [
+      "Fluence CSV path moments are L=0.1*K mm and L2=0.01*K mm^2; statistics fluence moments are S=L/V=0.01*K mm^-2 and S2=L2/V^2=0.0001*K mm^-4, with V=10 mm^3. Do not mix path and fluence units.",
+      "Single-batch noncoverage is an observation, not a run failure. Count coverage over exactly 64 seeds; only C<57 or aggregate K outside the frozen range fails the statistical criteria.",
+      "Independent reproduction, if used, repeats the same registered design and seeds in a separately identified dataset. It is not 128 independent random batches and must not be pooled or used to replace failures.",
+      "Repository relocation may rewrite only absolute resource/output paths; preserve all physical/statistical values and record both original and relocated input hashes. CLI seed overrides are only the frozen coverage seed table."
+    ],
+    "no_simulation_in_this_approval": true,
+    "authorization_scope": "Implement and execute only this frozen Q2-4 design under out/collab/q2-uncertainty-v1, plus its named outbox receipt. No production changes or additional experiments."
+  }
+}
