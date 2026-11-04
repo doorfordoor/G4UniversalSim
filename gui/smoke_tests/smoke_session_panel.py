@@ -28,11 +28,14 @@ from g4usim_gui.core import i18n, theme  # noqa: E402
 from g4usim_gui.core.session_model import (  # noqa: E402
     PROTOCOL,
     ReceiptCheck,
+    next_revision,
     parse_energy_text,
     receipt_check_for_event,
     session_eligibility,
     verify_receipt_reference,
 )
+from g4usim_gui.core.session_client import SessionClient  # noqa: E402
+from PySide6.QtCore import QObject, Signal  # noqa: E402
 
 
 def answer(value: object) -> None:
@@ -122,16 +125,86 @@ def model_checks(directory: Path) -> None:
         ("50keV", 0.05, ""),
         ("1.5e2 MeV", 150.0, ""),
         ("2 GeV", 2000.0, ""),
+        ("1 eV", 1e-6, ""),
+        ("1 keV", 1e-3, ""),
+        ("1 TeV", 1e6, ""),
+        ("100", 100.0, ""),
         ("", None, "energy_empty"),
         ("50 banana", None, "energy_unit"),
         ("abc MeV", None, "energy_number"),
         ("-1 MeV", None, "energy_range"),
         ("inf MeV", None, "energy_number"),
+        # Case-sensitive units: milli-eV is not mega-eV.
+        ("1 meV", None, "energy_unit"),
+        ("1 mev", None, "energy_unit"),
+        ("1 MEV", None, "energy_unit"),
+        # Overflow (inf) and underflow (0) are rejected before reaching the backend.
+        ("1e308 TeV", None, "energy_range"),
+        ("1e-323 eV", None, "energy_range"),
+        ("1e999 MeV", None, "energy_number"),
     ):
         value, reason = parse_energy_text(text)
         assert reason == key, (text, reason, key)
         if expected is not None:
             assert value is not None and abs(value - expected) < 1e-12, (text, value)
+    assert next_revision(5, 3) == 5
+    assert next_revision(5, 5) == 5
+    assert next_revision(0, 7) == 7
+    assert next_revision(5, True) == 5
+    assert next_revision(5, -2) == 5
+    assert next_revision(5, None) == 5
+    assert next_revision(-3, 2) == 2
+
+    class StubRunner(QObject):
+        sessionData = Signal(bytes, bool)
+        processStarted = Signal()
+        finished = Signal(int)
+        errorOccurred = Signal(str)
+
+        def __init__(self) -> None:
+            super().__init__()
+            self.session_started = 0
+            self.running = False
+            self.killed = False
+
+        def is_running(self) -> bool:
+            return self.running
+
+        def start_session(self, project, command) -> None:
+            self.session_started += 1
+            self.running = True
+
+        def write_session_data(self, payload) -> int:
+            return len(payload)
+
+        def kill(self) -> None:
+            self.killed = True
+            self.running = False
+
+    stub = StubRunner()
+    client = SessionClient(stub)
+    try:
+        client._adopt_revision({"state_revision": 5})
+        assert client.snapshot()["state_revision"] == 5
+        # A stale ack that arrives after a newer state must not roll the client back.
+        client._adopt_revision({"state_revision": 3})
+        assert client._revision == 5 and client.snapshot()["state_revision"] == 5
+        client._adopt_revision({"state_revision": True})
+        client._adopt_revision({"state_revision": -4})
+        client._adopt_revision({"state_revision": None})
+        assert client.snapshot()["state_revision"] == 5
+        client._adopt_revision({"state_revision": 6})
+        assert client.snapshot()["state_revision"] == 6
+        project = type("Project", (), {"configPath": "main.ini", "threads": 1})()
+        client.start(project, ["G4UniversalSim.exe"])
+        client._handshake_timer.stop()
+        assert stub.session_started == 1
+        # A new session starts from revision 0 and never compares across sessions.
+        assert client._revision == 0 and client.snapshot()["state_revision"] == 0
+        assert client.snapshot()["phase"] == "starting"
+    finally:
+        client.deleteLater()
+
     editable, reason = session_eligibility(base_view())
     assert editable and reason == "", (editable, reason)
     for patch, key in (

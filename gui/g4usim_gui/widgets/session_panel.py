@@ -574,8 +574,8 @@ class SessionPanel(QWidget):
         reason = str(rejection.get("reason") or "unknown")
         message = str(rejection.get("message") or "")
         self.feedback_view.append("<p><b>{label}</b> {reason}<br>{message}</p>".format(
-            label=_escape(ui_text("Rejected")), reason=_escape(reason),
-            message=_escape(message)))
+            label=_escape(ui_text("Rejected")), reason=_escape(ui_text(reason)),
+            message=_escape(ui_text(message))))
         self.status_chip.setText(ui_text("Rejected"))
         self.status_chip.setProperty("statusRole", "failed")
         self._repolish(self.status_chip)

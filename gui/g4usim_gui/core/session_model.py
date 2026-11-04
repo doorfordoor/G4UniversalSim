@@ -14,6 +14,7 @@ from dataclasses import dataclass, field
 import hashlib
 import json
 from pathlib import Path
+import math
 import re
 from typing import Any, Iterable
 
@@ -79,8 +80,34 @@ def format_energy(value: Any) -> str:
     return "0 MeV"
 
 
+#: Human-readable energy validation messages keyed by the parser error code.
+ENERGY_ERROR_TEXT = {
+    "energy_empty": "Enter an energy value.",
+    "energy_number": "The energy value is not a valid number.",
+    "energy_unit": "The energy unit must be exactly eV, keV, MeV, GeV or TeV.",
+    "energy_range": "The energy must be finite and greater than zero after conversion.",
+}
+
+#: Energy unit spelling -> MeV factor.  Units are case sensitive on purpose:
+#: ``meV`` (milli-eV) is not ``MeV`` (mega-eV), so ambiguous spellings are
+#: rejected instead of being silently reinterpreted.
+ENERGY_UNIT_FACTORS = {
+    "eV": 1e-6,
+    "keV": 1e-3,
+    "MeV": 1.0,
+    "GeV": 1e3,
+    "TeV": 1e6,
+}
+
+
 def parse_energy_text(text: str) -> tuple[float | None, str]:
-    """Parse ``100 MeV``/``50keV``/``1.5e2 MeV`` into MeV; return (None, key) on error."""
+    """Parse ``100 MeV``/``50keV``/``1.5e2 MeV`` into MeV; return (None, key) on error.
+
+    The unit spelling must be exactly one of ``eV``/``keV``/``MeV``/``GeV``/``TeV``;
+    a bare number keeps the historical MeV default.  The converted value must be
+    finite and positive: overflow (``inf``) and underflow (``0``) are rejected in
+    the GUI so no invalid energy is ever sent to the backend.
+    """
     raw = (text or "").strip()
     if not raw:
         return None, "energy_empty"
@@ -91,25 +118,33 @@ def parse_energy_text(text: str) -> tuple[float | None, str]:
     if not match:
         return None, "energy_number"
     number_text = match.group(1)
-    unit = (match.group(2) or "mev").lower()
-    factors = {
-        "ev": 1e-6,
-        "kev": 1e-3,
-        "mev": 1.0,
-        "gev": 1e3,
-        "tev": 1e6,
-    }
-    if unit not in factors:
+    unit_text = match.group(2) or ""
+    factor = 1.0 if not unit_text else ENERGY_UNIT_FACTORS.get(unit_text)
+    if factor is None:
         return None, "energy_unit"
     try:
         number = float(number_text)
     except ValueError:
         return None, "energy_number"
-    if number != number or number in (float("inf"), float("-inf")):
-        return None, "energy_number"
-    if number <= 0.0:
+    if not math.isfinite(number) or number <= 0.0:
+        return None, "energy_range" if math.isfinite(number) else "energy_number"
+    mev = number * factor
+    if not math.isfinite(mev) or mev <= 0.0:
         return None, "energy_range"
-    return number * factors[unit], ""
+    return mev, ""
+
+
+def next_revision(current: Any, candidate: Any) -> int:
+    """Return the session revision after ``candidate``; the current value never regresses.
+
+    A session's ``state_revision`` is monotonic: acks for older requests may
+    arrive after a newer state snapshot, and their cached revision must not pull
+    the client back.  Non-integer, boolean and negative candidates are ignored.
+    """
+    accepted = current if isinstance(current, int) and not isinstance(current, bool) and current >= 0 else 0
+    if not isinstance(candidate, int) or isinstance(candidate, bool) or candidate < 0:
+        return accepted
+    return candidate if candidate > accepted else accepted
 
 
 @dataclass(frozen=True)

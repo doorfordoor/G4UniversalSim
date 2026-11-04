@@ -17,6 +17,8 @@ from PySide6.QtCore import QObject, QTimer, Signal
 
 from g4usim_gui.core.run_progress import PREFIX as PROGRESS_PREFIX, ProgressParser
 from g4usim_gui.core.session_model import (
+    ENERGY_ERROR_TEXT,
+    next_revision,
     DRAFT_TEXT,
     MAX_EVENTS,
     PROTOCOL,
@@ -105,10 +107,11 @@ class SessionClient(QObject):
         self._view["draft"] = {"status": status, "message": message or DRAFT_TEXT.get(status, "")}
 
     def _adopt_revision(self, frame: dict[str, Any]) -> None:
-        revision = frame.get("state_revision")
-        if isinstance(revision, int):
-            self._revision = revision
-            self._view["state_revision"] = revision
+        # Session revisions only move forward: a stale cached ack must not roll
+        # the client back to a revision the backend already superseded.
+        revision = next_revision(self._revision, frame.get("state_revision"))
+        self._revision = revision
+        self._view["state_revision"] = revision
 
     # -------------------------------------------------------------- lifecycle
     def start(self, project, command: list[str]) -> None:
@@ -228,7 +231,8 @@ class SessionClient(QObject):
             return
         energy_mev, error = parse_energy_text(energy_text)
         if energy_mev is None:
-            self._reject_local(error or "energy_number", f"Invalid energy: {energy_text!r}")
+            message = ENERGY_ERROR_TEXT.get(error or "energy_number", "Invalid energy.")
+            self._reject_local(error or "energy_number", f"{message} ({energy_text!r})")
             return
         if int(events) <= 0 or int(events) > MAX_EVENTS:
             self._reject_local("invalid_events", f"Events must be in 1..{MAX_EVENTS}.")
@@ -449,8 +453,7 @@ class SessionClient(QObject):
         source = state.get("source")
         if isinstance(source, dict):
             self._view["source"] = dict(source)
-        if isinstance(state.get("state_revision"), int):
-            self._view["state_revision"] = state["state_revision"]
+        self._adopt_revision(state)
         if isinstance(state.get("draft_revision"), int):
             self._view["draft_revision"] = state["draft_revision"]
         for key in ("output_root", "record_root", "session_root"):
