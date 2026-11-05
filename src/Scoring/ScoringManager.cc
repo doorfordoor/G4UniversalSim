@@ -29,6 +29,7 @@
 #include <memory>
 #include <set>
 #include <iostream>
+#include <cstdint>
 #include <cstdlib>
 #include <stdexcept>
 
@@ -1366,9 +1367,11 @@ void ScoringManager::RecordVolumeFilterRunReceipts(int runId)
         const std::string level = observedSteps ? "run_validated" : "thread_applied";
         const std::string reason =
             observedSteps ? "" : "no scored steps observed; runtime filtering not validated";
-        Value::Object observed{{"candidate_steps", accepted + rejected},
-                               {"accepted_steps", accepted},
-                               {"rejected_steps", rejected},
+        // long long -> Value is ambiguous on LP64 (int64_t is long), so the
+        // receipt counters are converted explicitly and keep their integer type.
+        Value::Object observed{{"candidate_steps", Value(static_cast<std::int64_t>(accepted + rejected))},
+                               {"accepted_steps", Value(static_cast<std::int64_t>(accepted))},
+                               {"rejected_steps", Value(static_cast<std::int64_t>(rejected))},
                                {"section", spec.config.section},
                                {"location", spec.location}};
         auto receipt = Receipt("scoring/filter/" + spec.scorer, std::move(observed), "scoring_filter_run",
