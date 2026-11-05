@@ -1621,6 +1621,21 @@ struct SessionServer::Impl {
             if (events <= 0 || events > kMaxSessionEvents) {
                 return Reject(frame, op, "invalid_params", "events must be in 1..100000000");
             }
+            // Run prerequisites that depend on the constructed kernel must be
+            // validated before accepted/started/replay registration and before
+            // BeamOn: a rejected run must not create a run receipt or process a
+            // single event. The validation records its failure stage itself.
+            try {
+                simulation.ValidateScoringVolumeConfigsBeforeRun();
+            } catch (const std::exception& error) {
+                Reject(frame, op, "scoring_config_invalid", error.what());
+                {
+                    std::lock_guard<std::mutex> guard(stateMutex);
+                    exitCode = 2;
+                    phase = Phase::ShuttingDown;
+                }
+                return false;
+            }
             {
                 std::lock_guard<std::mutex> guard(stateMutex);
                 phase = Phase::Running;

@@ -37,10 +37,17 @@ LETScorer::LETScorer(const std::string& name)
 
 LETScorer::~LETScorer() = default;
 
+void LETScorer::SetFilter(std::unique_ptr<VolumeFilter> filter)
+{
+    filter_ = std::move(filter);
+}
+
 void LETScorer::BeginRun(int runID)
 {
     runID_ = runID;
     events_ = 0;
+    filterAccepted_ = 0;
+    filterRejected_ = 0;
     touched_.clear();
     volumes_.clear();
 }
@@ -74,6 +81,13 @@ void LETScorer::ScoreHit(const HitRecord& hit)
     // LETstep <= 0 marks neutral particles or steps without a stopping power.
     if (!ScoringNumeric::PositiveLETStep(hit.LETstep, hit.stepLength, hit.weight)) return;
     if (!particles_.empty() && particles_.count(hit.particleName) == 0) return;
+    if (filter_) {
+        if (!filter_->Matches(hit)) {
+            ++filterRejected_;
+            return;
+        }
+        ++filterAccepted_;
+    }
     if (hit.doseVolumePath.empty()) {
         throw std::runtime_error("LETScorer requires a sensitive touchable path for " + hit.volumeName);
     }
@@ -167,6 +181,8 @@ void LETScorer::Reset()
 {
     runID_ = -1;
     events_ = 0;
+    filterAccepted_ = 0;
+    filterRejected_ = 0;
     touched_.clear();
     volumes_.clear();
 }

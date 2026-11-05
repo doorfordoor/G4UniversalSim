@@ -76,6 +76,14 @@ bool IsKnownDynamicSection(const std::string& section)
         return separator != std::string::npos && separator > 0 &&
                separator + 1 < suffix.size() && suffix.find('.', separator + 1) == std::string::npos;
     }
+    if (StartsWith(section, "scoring.filter.")) {
+        const std::string suffix = section.substr(std::string("scoring.filter.").size());
+        return !suffix.empty() && suffix.find('.') == std::string::npos;
+    }
+    if (StartsWith(section, "scoring.spectrum.")) {
+        const std::string suffix = section.substr(std::string("scoring.spectrum.").size());
+        return !suffix.empty() && suffix.find('.') == std::string::npos;
+    }
     return false;
 }
 
@@ -97,6 +105,8 @@ std::vector<std::string> DynamicKeys(const std::string& section)
         return ConfigSchema::Keys("main_ini", "source.<name>", true);
     }
     if (StartsWith(section, "biasing.xs.")) return ConfigSchema::Keys("main_ini", "biasing.xs.<particle>.<process>");
+    if (StartsWith(section, "scoring.filter.")) return ConfigSchema::Keys("main_ini", "scoring.filter.<scorer>");
+    if (StartsWith(section, "scoring.spectrum.")) return ConfigSchema::Keys("main_ini", "scoring.spectrum.<scorer>");
     return {};
 }
 

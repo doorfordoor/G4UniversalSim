@@ -33,12 +33,25 @@ void DisplacementScorer::SetTables(const TableMap& tables)
     tables_ = tables;
 }
 
+void DisplacementScorer::SetFilter(std::unique_ptr<VolumeFilter> filter)
+{
+    filter_ = std::move(filter);
+}
+
+void DisplacementScorer::SetSpectrum(std::unique_ptr<VolumeSpectrum> spectrum)
+{
+    spectrum_ = std::move(spectrum);
+}
+
 void DisplacementScorer::BeginRun(int runID)
 {
     runID_ = runID;
     events_ = 0;
+    filterAccepted_ = 0;
+    filterRejected_ = 0;
     touched_.Clear();
     volumes_.clear();
+    if (spectrum_) spectrum_->Clear();
 }
 
 void DisplacementScorer::EndEvent(int)
@@ -56,6 +69,13 @@ void DisplacementScorer::ScoreHit(const HitRecord& hit)
         throw std::runtime_error("DisplacementScorer rejects nonfinite/negative step length, weight or energy");
     }
     if (hit.stepLength == 0.0) return;
+    if (filter_) {
+        if (!filter_->Matches(hit)) {
+            ++filterRejected_;
+            return;
+        }
+        ++filterAccepted_;
+    }
     if (hit.doseVolumePath.empty() || !std::isfinite(hit.fluenceVolume) || hit.fluenceVolume <= 0.0) {
         throw std::runtime_error("DisplacementScorer requires a positive daughter-free sensitive solid volume and "
                                  "touchable path for " + hit.volumeName);
@@ -77,6 +97,10 @@ void DisplacementScorer::ScoreHit(const HitRecord& hit)
     particle.trackLength = ScoringNumeric::Add(particle.trackLength, lengthMm, "DDD track length");
     const double ddd = lengthMm * niel * kMm2PerCm2 / (volume.volume / (mm * mm * mm));
     if (!std::isfinite(ddd)) throw std::runtime_error("DisplacementScorer accumulated nonfinite DDD");
+    if (spectrum_ && spectrum_->IsConfigured()) {
+        // Pre-step kinetic energy (hits CSV source); weighted amount = this step's DDD in MeV/g.
+        spectrum_->Add(hit.doseVolumePath, volume.name, hit.kineticEnergy, ddd);
+    }
     if (ddd > 0.0) {
         touched_.Add(particle.ddd, ddd);
         touched_.Add(volume.total, ddd);
@@ -119,12 +143,18 @@ void DisplacementScorer::Write(OutputManager& output)
     writer.Close();
     output.RegisterGeneratedFile(writer.GetFilename(), OutputManager::ArtifactScope::Thread,
                                  output.GetRunId(), output.GetThreadId());
+    if (spectrum_ && spectrum_->IsConfigured()) {
+        spectrum_->Write(output, runID_, "displacement", "MeV/g", events_);
+    }
 }
 
 void DisplacementScorer::Reset()
 {
     runID_ = -1;
     events_ = 0;
+    filterAccepted_ = 0;
+    filterRejected_ = 0;
     touched_.Clear();
     volumes_.clear();
+    if (spectrum_) spectrum_->Clear();
 }

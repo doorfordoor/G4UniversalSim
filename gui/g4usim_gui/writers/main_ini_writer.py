@@ -10,6 +10,8 @@ from g4usim_gui.editors.source_physics_scoring_model import (
     validate_physics_model,
     validate_scoring_model,
     validate_source_model,
+    FILTER_SCORERS,
+    SPECTRUM_SCORERS,
 )
 from g4usim_gui.models.package_model import GeometrySettings, RunPackage
 from g4usim_gui.models.physics_model import PhysicsSettings
@@ -74,6 +76,30 @@ def build_main_ini_text(
     if errors:
         raise ValueError("Cannot generate main.ini with editor validation errors:\n" + "\n".join(errors))
 
+    volume_sections = []
+    for scorer in FILTER_SCORERS:
+        row = (scoring_model.volume_filters or {}).get(scorer) or {}
+        if not row.get("enabled"):
+            continue
+        lines = [f"[scoring.filter.{scorer}]"]
+        if row.get("particles"):
+            lines.append(f"particles = {row['particles']}")
+        if row.get("energy_min"):
+            lines.append(f"energy_min = {row['energy_min']}")
+        if row.get("energy_max"):
+            lines.append(f"energy_max = {row['energy_max']}")
+        volume_sections.append("\n".join(lines))
+    for scorer in SPECTRUM_SCORERS:
+        row = (scoring_model.volume_spectra or {}).get(scorer) or {}
+        if not row.get("enabled"):
+            continue
+        volume_sections.append("\n".join([
+            f"[scoring.spectrum.{scorer}]",
+            f"bins = {row.get('bins')}",
+            f"min = {row.get('min')}",
+            f"max = {row.get('max')}",
+        ]))
+    volume_block = ("\n\n" + "\n\n".join(volume_sections)) if volume_sections else ""
     seed_line = f"seed = {run.seed}\n" if run.seed is not None else ""
     trajectory_line = (f"trajectories = {scoring_model.trajectory_events}\n"
                        if scoring_model.trajectory_events > 0 else "")
@@ -134,7 +160,7 @@ min = {scoring_model.hist_min}
 max = {scoring_model.hist_max}
 volume_summary = {_bool(scoring_model.volume_summary)}
 particle_summary = {_bool(scoring_model.particle_summary)}
-
+{volume_block}
 """
 
 

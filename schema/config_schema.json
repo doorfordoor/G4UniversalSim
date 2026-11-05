@@ -2068,6 +2068,120 @@
             "editable": "external_only"
           }
         },
+        "scoring.filter.<scorer>": {
+          "migrated": true,
+          "independent": false,
+          "description_zh": "按体积 scorer（dose/fluence/let/displacement）的粒子与步前动能过滤。所有条件按 AND 组合，particles 内部为 OR；能量区间半开 [energy_min, energy_max)。该段只过滤已启用的 scorer，并需要 [scoring]/auto_create_default_scorers = true；未配置时保持旧行为，不产生新文件或摘要键。",
+          "parser": "src/Scoring/ScoringManager.cc:ParseVolumeConfig",
+          "tests": [
+            "scripts/test_h2_volume_scoring.py"
+          ],
+          "validation": "configure; run_begin",
+          "rules": [
+            "filter 段只接受 particles、energy_min、energy_max 三个键；未知键在配置阶段报文件/行。",
+            "particles 使用精确 Geant4 粒子名（大小写敏感），'all' 只能单独出现；粒子名在 BeginRun 首事件前用 G4ParticleTable 校验，未知名称以 output_failure_stage=scoring_filter_particle 失败。",
+            "energy_min 默认为 0 且包含；energy_max 默认为无上界且不包含；两者必须有限且 max > min。",
+            "过滤在既有物理守卫之后、累计之前执行；LET 同样按步前动能过滤。"
+          ],
+          "keys": {
+            "particles": {
+              "type": "structured",
+              "default": null,
+              "support": "experimental",
+              "since": "H2",
+              "description": "Comma-separated exact Geant4 particle names, or 'all' alone",
+              "description_zh": "逗号分隔的精确 Geant4 粒子名；或单独写 all 表示不限制粒子。",
+              "gui": {
+                "editable": "external_only"
+              }
+            },
+            "energy_min": {
+              "type": "energy",
+              "default": "0 MeV",
+              "support": "experimental",
+              "since": "H2",
+              "description": "Pre-step kinetic energy lower bound, inclusive",
+              "description_zh": "步前动能下界（包含）。",
+              "gui": {
+                "editable": "external_only"
+              }
+            },
+            "energy_max": {
+              "type": "energy",
+              "default": null,
+              "support": "experimental",
+              "since": "H2",
+              "description": "Pre-step kinetic energy upper bound, exclusive",
+              "description_zh": "步前动能上界（不包含）；省略表示无上界。",
+              "gui": {
+                "editable": "external_only"
+              }
+            }
+          },
+          "dynamic": true,
+          "gui": {
+            "editable": "external_only"
+          }
+        },
+        "scoring.spectrum.<scorer>": {
+          "migrated": true,
+          "independent": false,
+          "description_zh": "按体积把 dose/fluence/displacement 的加权量记录为步前动能谱。bin 半开，最后一个 bin 闭合于 max：E == max 进入最后 bin 而不是 overflow；E < min 为 underflow，E > max 为 overflow。LET 是比值，不支持谱。需要 CSV 输出并需要 [scoring]/auto_create_default_scorers = true；未配置时保持旧行为。",
+          "parser": "src/Scoring/ScoringManager.cc:ParseVolumeConfig",
+          "tests": [
+            "scripts/test_h2_volume_scoring.py"
+          ],
+          "validation": "configure; run_begin; output",
+          "rules": [
+            "spectrum 段只接受 bins、min、max 三个键且三者必需；未知键或缺失键在配置阶段报文件/行。",
+            "bins 为 >= 1 的整数；min 为有限非负能量；max 必须有限且大于 min。",
+            "只接受 dose、fluence、displacement；let 在配置阶段拒绝。",
+            "输出格式必须是 CSV：配置末尾与 BeginOfRunAction 打开输出前各校验一次，ROOT 或解析为 ROOT 的 auto 在配置阶段拒绝。",
+            "输出文件 spectrum_<scorer>_tN.csv，表头 runID,scorer,volume_path,volume_name,region,bin,low_edge_MeV,high_edge_MeV,amount,unit,n_events；每体积先 N 个 bin 行，再 underflow、overflow；数值 12 位有效数字。",
+            "任何谱文件写出后 run_summary 记 spectrum_csv_schema_version = 1；全局 output_csv_schema_version 保持 3。"
+          ],
+          "keys": {
+            "bins": {
+              "type": "int",
+              "default": null,
+              "support": "experimental",
+              "since": "H2",
+              "description": "Number of kinetic-energy bins, at least 1",
+              "description_zh": "动能 bin 数量，至少 1。",
+              "min": 1,
+              "max": 1000000,
+              "gui": {
+                "editable": "external_only"
+              }
+            },
+            "min": {
+              "type": "energy",
+              "default": null,
+              "support": "experimental",
+              "since": "H2",
+              "description": "Spectrum lower edge in MeV; finite and non-negative",
+              "description_zh": "谱下边界（MeV），有限且非负。",
+              "gui": {
+                "editable": "external_only"
+              }
+            },
+            "max": {
+              "type": "energy",
+              "default": null,
+              "support": "experimental",
+              "since": "H2",
+              "description": "Spectrum upper edge in MeV; finite and greater than min",
+              "description_zh": "谱上边界（MeV），有限且大于 min。",
+              "gui": {
+                "editable": "external_only"
+              }
+            }
+          },
+          "dynamic": true,
+          "gui": {
+            "editable": "external_only"
+          }
+        },
         "scoring.mesh.<name>": {
           "migrated": true,
           "independent": false,

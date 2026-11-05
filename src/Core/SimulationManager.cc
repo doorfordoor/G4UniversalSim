@@ -755,6 +755,12 @@ bool SimulationManager::FinalizeRunSummary(const std::string& status,
     generated.erase(std::unique(generated.begin(), generated.end()), generated.end());
     summary.SetGeneratedFiles(generated);
     summary.Set("generated_file_count", static_cast<int>(generated.size()));
+    for (const std::string& path : generated) {
+        if (FileUtils::Filename(path).rfind("spectrum_", 0) == 0) {
+            summary.Set("spectrum_csv_schema_version", 1);
+            break;
+        }
+    }
     summary.Set("summary_write_status", "completed");
 
     outputManager_->WriteRunSummary();
@@ -806,6 +812,12 @@ bool SimulationManager::FinalizeRunSummary(const std::string& status,
         generated.erase(std::remove(generated.begin(), generated.end(), metadata), generated.end());
         summary.SetGeneratedFiles(generated);
         summary.Set("generated_file_count", static_cast<int>(generated.size()));
+        for (const std::string& path : generated) {
+            if (FileUtils::Filename(path).rfind("spectrum_", 0) == 0) {
+                summary.Set("spectrum_csv_schema_version", 1);
+                break;
+            }
+        }
         // summary_write_status describes successful text-summary completion,
         // not metadata success. If this corrective write fails it throws and
         // the existing summary-failure path remains authoritative.
@@ -1219,6 +1231,26 @@ void SimulationManager::ValidateBiasingProcessTargets()
 {
     if (biasingManager_ && biasingManager_->IsEnabled()) {
         biasingManager_->ValidateActiveProcessRules();
+    }
+}
+
+void SimulationManager::ValidateScoringVolumeConfigsBeforeRun()
+{
+    if (!scoringManager_ || !scoringManager_->HasVolumeConfig()) {
+        return;
+    }
+    try {
+        scoringManager_->ValidateVolumeConfigsForRun();
+    } catch (const std::exception& error) {
+        const std::string message = error.what();
+        const bool particleFailure =
+            message.find("unknown Geant4 particle") != std::string::npos;
+        if (outputManager_) {
+            outputManager_->RecordOutputFailure(
+                particleFailure ? "scoring_filter_particle" : "scoring_volume_config",
+                message, 0);
+        }
+        throw;
     }
 }
 

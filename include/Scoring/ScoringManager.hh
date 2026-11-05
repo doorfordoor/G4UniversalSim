@@ -5,6 +5,8 @@
 #include "Scoring/PhaseSpace.hh"
 #include "Scoring/ScorerBase.hh"
 #include "Scoring/TrajectoryRecorder.hh"
+#include "Scoring/VolumeFilter.hh"
+#include "Scoring/VolumeSpectrum.hh"
 
 #include <map>
 #include <memory>
@@ -117,6 +119,25 @@ public:
     void RecordEffectiveConfigApplied(int runId, int threadId);
     void SuppressModule(bool trajectoriesOnly, const effective_config::Origin& origin);
 
+    // Roadmap H2-2: [scoring.filter.<scorer>] and [scoring.spectrum.<scorer>].
+    struct VolumeFilterSpec {
+        std::string scorer;
+        VolumeFilterConfig config;
+        std::string location;   // "file:line [section]"
+    };
+    struct VolumeSpectrumSpec {
+        std::string scorer;
+        VolumeSpectrumConfig config;
+        std::string location;
+    };
+    const std::vector<VolumeFilterSpec>& GetVolumeFilterSpecs() const { return filterSpecs_; }
+    const std::vector<VolumeSpectrumSpec>& GetVolumeSpectrumSpecs() const { return spectrumSpecs_; }
+    bool HasVolumeConfig() const { return !filterSpecs_.empty() || !spectrumSpecs_.empty(); }
+    // Roadmap H2-4: validates configured filter particle names against the live
+    // Geant4 particle table and the requested output format. Must run before the
+    // event loop starts so a rejected configuration processes zero events.
+    void ValidateVolumeConfigsForRun();
+
     // Phase-space recording ([phase_space] in the main INI): particles entering
     // the named physical volume are written to phase_space_tN[_rR].csv.
     // Trajectories of the first N events ([output] trajectories, roadmap H1).
@@ -150,6 +171,11 @@ private:
     EdepScorer* GetEdepScorer();
     const EdepScorer* GetEdepScorer() const;
     void ApplyEdepSettings(EdepScorer& scorer) const;
+    void ParseVolumeConfig(const ConfigManager& config);
+    void ApplyVolumeConfigsToScorers();
+    void RecordVolumeFilterAttachReceipts(int runId);
+    void RecordVolumeFilterRunReceipts(int runId);
+    void RecordVolumeSpectrumWriteReceipts(int runId);
     void SetScorerEnabledIfExists(const std::string& name, bool enable);
     void BeginPhaseSpaceRun();
     void EndPhaseSpaceRun();
@@ -173,6 +199,8 @@ private:
     // Geant4 particle table is still empty; resolved in BeginRun before the first event.
     bool nielNamesPending_ = false;
     std::map<std::string, std::string> nielPendingLocations_;  // raw key -> "file line N"
+    std::vector<VolumeFilterSpec> filterSpecs_;
+    std::vector<VolumeSpectrumSpec> spectrumSpecs_;
     std::set<std::string> letParticles_;
     bool autoCreateDefaultScorers_ = true;
 

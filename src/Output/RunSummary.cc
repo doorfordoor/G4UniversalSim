@@ -44,6 +44,17 @@ std::string GeneratedFileSchema(const std::string& path)
         return "scorer_statistics_csv_v2";
     if (name.size() > 5 && name.compare(name.size() - 5, 5, ".root") == 0 &&
         name.rfind("g4usim", 0) == 0) return "g4usim_root_v" + std::to_string(AnalysisOutput::kRootSchemaVersion);
+    if (name.rfind("spectrum_", 0) == 0) {
+        std::ifstream spectrum(path);
+        std::string spectrumHeader;
+        if (spectrum && std::getline(spectrum, spectrumHeader)) {
+            if (!spectrumHeader.empty() && spectrumHeader.back() == '\r') spectrumHeader.pop_back();
+            if (spectrumHeader ==
+                "runID,scorer,volume_path,volume_name,region,bin,low_edge_MeV,high_edge_MeV,amount,unit,n_events")
+                return "spectrum_kinetic_energy_csv_v1";
+        }
+        return "unknown";
+    }
     std::ifstream input(path);
     std::string header;
     if (!input || !std::getline(input, header)) return "unknown";

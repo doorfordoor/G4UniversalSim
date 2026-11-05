@@ -27,12 +27,25 @@ FluenceScorer::FluenceScorer(const std::string& name)
 
 FluenceScorer::~FluenceScorer() = default;
 
+void FluenceScorer::SetFilter(std::unique_ptr<VolumeFilter> filter)
+{
+    filter_ = std::move(filter);
+}
+
+void FluenceScorer::SetSpectrum(std::unique_ptr<VolumeSpectrum> spectrum)
+{
+    spectrum_ = std::move(spectrum);
+}
+
 void FluenceScorer::BeginRun(int runID)
 {
     runID_ = runID;
     events_ = 0;
+    filterAccepted_ = 0;
+    filterRejected_ = 0;
     touched_.Clear();
     volumes_.clear();
+    if (spectrum_) spectrum_->Clear();
 }
 
 void FluenceScorer::EndEvent(int)
@@ -47,6 +60,13 @@ void FluenceScorer::ScoreHit(const HitRecord& hit)
         throw std::runtime_error("FluenceScorer rejects nonfinite/negative step length or nonfinite weight");
     }
     if (hit.stepLength == 0.0) return;
+    if (filter_) {
+        if (!filter_->Matches(hit)) {
+            ++filterRejected_;
+            return;
+        }
+        ++filterAccepted_;
+    }
     if (hit.doseVolumePath.empty() || !std::isfinite(hit.fluenceVolume) || hit.fluenceVolume <= 0.0) {
         throw std::runtime_error("FluenceScorer requires a positive daughter-free sensitive solid volume and touchable path for " + hit.volumeName);
     }
@@ -64,6 +84,12 @@ void FluenceScorer::ScoreHit(const HitRecord& hit)
     }
     touched_.Add(volume.rawLength, hit.stepLength);
     touched_.Add(volume.weightedLength, weightedStep);
+    if (spectrum_ && spectrum_->IsConfigured()) {
+        // Same weighted quantity as the fluence row: w*length_mm/V_mm3, weight applied once.
+        const double volumeMm3 = hit.fluenceVolume / (mm * mm * mm);
+        spectrum_->Add(hit.doseVolumePath, volume.name, hit.kineticEnergy,
+                       (hit.stepLength / mm) * hit.weight / volumeMm3);
+    }
 }
 
 void FluenceScorer::Write(OutputManager& output)
@@ -128,12 +154,18 @@ void FluenceScorer::Write(OutputManager& output)
     writer.Close();
     output.RegisterGeneratedFile(writer.GetFilename(), OutputManager::ArtifactScope::Thread,
                                  output.GetRunId(), output.GetThreadId());
+    if (spectrum_ && spectrum_->IsConfigured()) {
+        spectrum_->Write(output, runID_, "fluence", "mm^-2", events_);
+    }
 }
 
 void FluenceScorer::Reset()
 {
     runID_ = -1;
     events_ = 0;
+    filterAccepted_ = 0;
+    filterRejected_ = 0;
     touched_.Clear();
     volumes_.clear();
+    if (spectrum_) spectrum_->Clear();
 }

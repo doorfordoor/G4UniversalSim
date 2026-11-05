@@ -1,6 +1,8 @@
 #include "Scoring/ScoringManager.hh"
 
 #include "Config/ConfigManager.hh"
+#include "Config/EffectiveRuntime.hh"
+#include "Config/InputProvenance.hh"
 #include "Output/AnalysisOutput.hh"
 #include "Output/CsvWriter.hh"
 #include "Output/OutputManager.hh"
@@ -18,7 +20,14 @@
 #include "G4PhysicalVolumeStore.hh"
 #include "G4RunManager.hh"
 
+#include <algorithm>
+#include <cmath>
 #include <filesystem>
+#include <limits>
+#include <fstream>
+#include <iterator>
+#include <memory>
+#include <set>
 #include <iostream>
 #include <cstdlib>
 #include <stdexcept>
@@ -97,6 +106,126 @@ std::string NielKeyLocation(const ConfigManager& config, const std::string& rawK
     return "main config";
 }
 
+
+// ---------------------------------------------------------------------------
+// Roadmap H2-2: [scoring.filter.<scorer>] / [scoring.spectrum.<scorer>] support.
+// ---------------------------------------------------------------------------
+constexpr const char* kFilterSectionPrefix = "scoring.filter.";
+constexpr const char* kSpectrumSectionPrefix = "scoring.spectrum.";
+
+bool IsVolumeFilterSection(const std::string& section)
+{
+    return section.rfind(kFilterSectionPrefix, 0) == 0;
+}
+
+bool IsVolumeSpectrumSection(const std::string& section)
+{
+    return section.rfind(kSpectrumSectionPrefix, 0) == 0;
+}
+
+bool HasVolumeSections(const ConfigManager& config)
+{
+    for (const IniSectionInfo& info : config.GetSectionInfo()) {
+        if (IsVolumeFilterSection(info.section) || IsVolumeSpectrumSection(info.section)) return true;
+    }
+    return false;
+}
+
+std::string VolumeSectionLocation(const ConfigManager& config, const IniSectionInfo& info)
+{
+    const std::string path = config.GetMainConfigPath();
+    return (path.empty() ? std::string("<main ini>") : path) + ":" + std::to_string(info.lineNumber) +
+           " [" + info.section + "]";
+}
+
+std::string JoinNames(const std::set<std::string>& names)
+{
+    std::string text;
+    for (const std::string& name : names) {
+        if (!text.empty()) text += ", ";
+        text += name;
+    }
+    return text;
+}
+
+void RejectUnknownVolumeKeys(const ConfigManager& config, const IniSectionInfo& info,
+                             const std::set<std::string>& allowed)
+{
+    for (const std::string& key : config.GetKeys(info.section)) {
+        if (allowed.count(key) != 0) continue;
+        throw std::runtime_error("Unknown key '" + key + "' in [" + info.section + "] at " +
+                                 VolumeSectionLocation(config, info) + "; expected " + JoinNames(allowed));
+    }
+}
+
+double VolumeEnergy(const ConfigManager& config, const IniSectionInfo& info, const std::string& key,
+                    const std::string& text, bool minimum)
+{
+    double value = 0.0;
+    try {
+        value = UnitParser::ParseEnergy(text);
+    } catch (const std::exception&) {
+        throw std::runtime_error("[" + info.section + "]/" + key + " at " + VolumeSectionLocation(config, info) +
+                                 " is not a valid energy: '" + text + "'");
+    }
+    if (!std::isfinite(value) || (minimum && value < 0.0)) {
+        throw std::runtime_error("[" + info.section + "]/" + key + " at " + VolumeSectionLocation(config, info) +
+                                 " must be a finite " + (minimum ? "non-negative " : "") + "energy, got '" + text +
+                                 "'");
+    }
+    return value;
+}
+
+void ParseVolumeParticles(const ConfigManager& config, const IniSectionInfo& info, bool& allParticles,
+                          std::set<std::string>& particles)
+{
+    allParticles = false;
+    particles.clear();
+    if (!config.HasKey(info.section, "particles")) return;
+    const std::string raw = StringUtils::Trim(config.GetString(info.section, "particles"));
+    if (raw.empty()) {
+        throw std::runtime_error("[" + info.section + "]/particles at " + VolumeSectionLocation(config, info) +
+                                 " must list at least one Geant4 particle name or 'all'");
+    }
+    std::vector<std::string> tokens;
+    for (const std::string& piece : StringUtils::Split(raw, ',')) {
+        const std::string token = StringUtils::Trim(piece);
+        if (token.empty()) {
+            throw std::runtime_error("[" + info.section + "]/particles at " + VolumeSectionLocation(config, info) +
+                                     " contains an empty particle name");
+        }
+        tokens.push_back(token);
+    }
+    const bool hasAll = std::find(tokens.begin(), tokens.end(), "all") != tokens.end();
+    if (hasAll) {
+        if (tokens.size() != 1) {
+            throw std::runtime_error("[" + info.section + "]/particles at " + VolumeSectionLocation(config, info) +
+                                     " cannot mix 'all' with other particle names");
+        }
+        allParticles = true;
+        return;
+    }
+    for (const std::string& token : tokens) particles.insert(token);
+}
+
+bool RequireCsvForSpectra(const OutputManager* output, const std::vector<std::string>& sections,
+                          const std::string& stage)
+{
+    if (sections.empty() || !output) return true;
+    if (output->WritesCsv()) return true;
+    std::string message = "Kinetic-energy spectra require CSV output; " + stage + " resolved format is ";
+    message += OutputManager::FormatName(output->GetFormat());
+    message += " (requested " + std::string(OutputManager::FormatName(output->GetRequestedFormat()));
+    const std::string reason = output->FormatSelectionReason();
+    if (!reason.empty()) message += ", reason: " + reason;
+    message += ") for ";
+    for (std::size_t i = 0; i < sections.size(); ++i) {
+        if (i != 0) message += ", ";
+        message += "[" + sections[i] + "]";
+    }
+    throw std::runtime_error(message);
+}
+
 }  // namespace
 
 ScoringManager::ScoringManager() = default;
@@ -121,6 +250,8 @@ std::unique_ptr<ScoringManager> ScoringManager::CloneForThread(OutputManager* ou
     clone->nielTables_ = nielTables_;
     clone->nielNamesPending_ = nielNamesPending_;
     clone->nielPendingLocations_ = nielPendingLocations_;
+    clone->filterSpecs_ = filterSpecs_;
+    clone->spectrumSpecs_ = spectrumSpecs_;
     clone->autoCreateDefaultScorers_ = autoCreateDefaultScorers_;
     clone->edepRawHistogramEnabled_ = edepRawHistogramEnabled_;
     clone->edepWeightedHistogramEnabled_ = edepWeightedHistogramEnabled_;
@@ -338,6 +469,8 @@ void ScoringManager::Clear()
     nielTables_.clear();
     nielNamesPending_ = false;
     nielPendingLocations_.clear();
+    filterSpecs_.clear();
+    spectrumSpecs_.clear();
     currentRunID_ = -1;
     currentEventID_ = -1;
     currentEventRawEdep_ = 0.0;
@@ -395,6 +528,7 @@ void ScoringManager::EnsureDefaultScorers()
     SetScorerEnabledIfExists("dose", doseScoringEnabled_);
     SetScorerEnabledIfExists("fluence", fluenceScoringEnabled_);
     SetScorerEnabledIfExists("displacement", displacementScoringEnabled_);
+    ApplyVolumeConfigsToScorers();
 }
 
 bool ScoringManager::HasScorer(const std::string& name) const
@@ -446,7 +580,19 @@ void ScoringManager::BeginRun(int runID)
     }
     if (autoCreateDefaultScorers_) EnsureDefaultScorers();
     if (!enabled_) return;
+    try {
+        ValidateVolumeConfigsForRun();
+    } catch (const std::exception& error) {
+        const std::string message = error.what();
+        if (outputManager_) {
+            const bool particleFailure = message.find("unknown Geant4 particle") != std::string::npos;
+            outputManager_->RecordOutputFailure(particleFailure ? "scoring_filter_particle" : "scoring_volume_config",
+                                                message, runID);
+        }
+        throw;
+    }
     for (ScorerBase* scorer : EnabledScorers()) scorer->BeginRun(runID);
+    RecordVolumeFilterAttachReceipts(runID);
 }
 
 void ScoringManager::EndRun(int runID)
@@ -457,6 +603,7 @@ void ScoringManager::EndRun(int runID)
         outputManager_->GetRunId(), outputManager_->GetThreadId());
     if (!enabled_) return;
     for (ScorerBase* scorer : EnabledScorers()) scorer->EndRun(runID);
+    RecordVolumeFilterRunReceipts(runID);
 }
 
 void ScoringManager::BeginEvent(int eventID)
@@ -646,6 +793,7 @@ void ScoringManager::WriteAll()
 {
     if (!enabled_ || !outputManager_) return;
     for (ScorerBase* scorer : EnabledScorers()) scorer->Write(*outputManager_);
+    RecordVolumeSpectrumWriteReceipts(outputManager_->GetRunId());
 }
 
 void ScoringManager::LoadFromConfig(const ConfigManager& config)
@@ -679,6 +827,9 @@ void ScoringManager::LoadFromConfig(const ConfigManager& config)
         }
         phaseSpaceKill_ = config.GetBool("phase_space", "kill", false);
     }
+    if (!config.HasSection("scoring") && HasVolumeSections(config)) {
+        throw std::runtime_error("[scoring.filter.*] and [scoring.spectrum.*] require a [scoring] section");
+    }
     if (!config.HasSection("scoring")) {
         effectiveState_->reader = config.GetMainReader();
         effectiveState_->Accept(config.GetMainReader(), ExportEffectiveConfigFields());
@@ -697,6 +848,13 @@ void ScoringManager::LoadFromConfig(const ConfigManager& config)
     if (enabled_ && (doseScoringEnabled_ || fluenceScoringEnabled_ || displacementScoringEnabled_) &&
         !autoCreateDefaultScorers_) {
         throw std::runtime_error("Dose/Fluence/Displacement scoring requires [scoring]/auto_create_default_scorers = true");
+    }
+    if (HasVolumeSections(config)) {
+        if (!autoCreateDefaultScorers_) {
+            throw std::runtime_error("[scoring.filter.*] and [scoring.spectrum.*] require "
+                                     "[scoring]/auto_create_default_scorers = true (no built-in scorer would be created)");
+        }
+        ParseVolumeConfig(config);
     }
     if (config.HasSection("scoring.displacement")) {
         std::map<std::string, std::shared_ptr<const NielTable>> tables;
@@ -926,5 +1084,346 @@ void ScoringManager::SetScorerEnabledIfExists(const std::string& name, bool enab
 {
     if (auto* scorer = GetScorer(name)) {
         scorer->SetEnabled(enable);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Roadmap H2-2: volume filter / spectrum configuration and evidence.
+// ---------------------------------------------------------------------------
+
+namespace {
+
+std::string FileSha256(const std::filesystem::path& path)
+{
+    std::ifstream input(path, std::ios::binary);
+    const std::string bytes((std::istreambuf_iterator<char>(input)), std::istreambuf_iterator<char>());
+    return input_provenance::Sha256(bytes);
+}
+
+std::pair<long long, long long> FilterCounts(ScoringManager& manager, const std::string& scorer)
+{
+    if (auto* dose = dynamic_cast<DoseScorer*>(manager.GetScorer(scorer))) {
+        return {dose->GetFilterAcceptedSteps(), dose->GetFilterRejectedSteps()};
+    }
+    if (auto* fluence = dynamic_cast<FluenceScorer*>(manager.GetScorer(scorer))) {
+        return {fluence->GetFilterAcceptedSteps(), fluence->GetFilterRejectedSteps()};
+    }
+    if (auto* let = dynamic_cast<LETScorer*>(manager.GetScorer(scorer))) {
+        return {let->GetFilterAcceptedSteps(), let->GetFilterRejectedSteps()};
+    }
+    if (auto* displacement = dynamic_cast<DisplacementScorer*>(manager.GetScorer(scorer))) {
+        return {displacement->GetFilterAcceptedSteps(), displacement->GetFilterRejectedSteps()};
+    }
+    return {0, 0};
+}
+
+std::string FormatFailureMessage(const std::string& stage, const OutputManager& output,
+                                 const std::vector<std::string>& sections)
+{
+    std::string message = "Kinetic-energy spectra require CSV output; " + stage + " resolved format is ";
+    message += OutputManager::FormatName(output.GetFormat());
+    message += " (requested " + std::string(OutputManager::FormatName(output.GetRequestedFormat()));
+    const std::string reason = output.FormatSelectionReason();
+    if (!reason.empty()) message += ", reason: " + reason;
+    message += ") for ";
+    for (std::size_t i = 0; i < sections.size(); ++i) {
+        if (i != 0) message += ", ";
+        message += "[" + sections[i] + "]";
+    }
+    return message;
+}
+
+}  // namespace
+
+void ScoringManager::ParseVolumeConfig(const ConfigManager& config)
+{
+    filterSpecs_.clear();
+    spectrumSpecs_.clear();
+    const std::set<std::string> filterScorers{"dose", "fluence", "let", "displacement"};
+    const std::set<std::string> spectrumScorers{"dose", "fluence", "displacement"};
+    const std::set<std::string> filterKeys{"particles", "energy_min", "energy_max"};
+    const std::set<std::string> spectrumKeys{"bins", "min", "max"};
+    std::vector<std::string> spectrumSections;
+
+    for (const IniSectionInfo& info : config.GetSectionInfo()) {
+        const bool filterSection = IsVolumeFilterSection(info.section);
+        const bool spectrumSection = IsVolumeSpectrumSection(info.section);
+        if (!filterSection && !spectrumSection) continue;
+        const std::string prefix = filterSection ? kFilterSectionPrefix : kSpectrumSectionPrefix;
+        const std::string scorer = info.section.substr(prefix.size());
+        const std::string location = VolumeSectionLocation(config, info);
+
+        if (filterSection) {
+            if (filterScorers.count(scorer) == 0) {
+                throw std::runtime_error("Unknown scoring filter topic '" + scorer +
+                                         "'; expected dose, fluence, let or displacement (" + location + ")");
+            }
+            RejectUnknownVolumeKeys(config, info, filterKeys);
+            const bool scorerEnabled = scorer == "dose"        ? doseScoringEnabled_
+                                       : scorer == "fluence"  ? fluenceScoringEnabled_
+                                       : scorer == "let"      ? letScoringEnabled_
+                                                              : displacementScoringEnabled_;
+            if (!enabled_ || !scorerEnabled) {
+                throw std::runtime_error("[" + info.section + "] at " + location + " requires [scoring] " +
+                                         scorer + " = true (a filter cannot enable a scorer)");
+            }
+            VolumeFilterConfig cfg;
+            cfg.section = info.section;
+            cfg.location = location;
+            ParseVolumeParticles(config, info, cfg.allParticles, cfg.particles);
+            const bool hasParticles = config.HasKey(info.section, "particles");
+            const bool hasMin = config.HasKey(info.section, "energy_min");
+            const bool hasMax = config.HasKey(info.section, "energy_max");
+            if (!hasParticles && !hasMin && !hasMax) {
+                throw std::runtime_error("[" + info.section + "] at " + location +
+                                         " declares no condition; set at least one of particles, energy_min or "
+                                         "energy_max");
+            }
+            if (hasMin) {
+                cfg.energyMinMeV =
+                    VolumeEnergy(config, info, "energy_min", config.GetString(info.section, "energy_min"), true);
+            }
+            if (hasMax) {
+                cfg.energyMaxMeV =
+                    VolumeEnergy(config, info, "energy_max", config.GetString(info.section, "energy_max"), false);
+            }
+            if (!(cfg.energyMaxMeV > cfg.energyMinMeV)) {
+                throw std::runtime_error("[" + info.section + "] at " + location +
+                                         " energy_max must be greater than energy_min");
+            }
+            filterSpecs_.push_back(VolumeFilterSpec{scorer, std::move(cfg), location});
+            continue;
+        }
+
+        if (scorer == "let") {
+            throw std::runtime_error("Spectrum for scorer 'let' is not supported; LET is a ratio and cannot be "
+                                     "binned additively (" + location + ")");
+        }
+        if (spectrumScorers.count(scorer) == 0) {
+            throw std::runtime_error("Unknown scoring spectrum topic '" + scorer +
+                                     "'; expected dose, fluence or displacement (" + location + ")");
+        }
+        RejectUnknownVolumeKeys(config, info, spectrumKeys);
+        const bool scorerEnabled = scorer == "dose" ? doseScoringEnabled_
+                                   : scorer == "fluence" ? fluenceScoringEnabled_
+                                                          : displacementScoringEnabled_;
+        if (!enabled_ || !scorerEnabled) {
+            throw std::runtime_error("[" + info.section + "] at " + location + " requires [scoring] " + scorer +
+                                     " = true (a spectrum cannot enable a scorer)");
+        }
+        if (!config.HasKey(info.section, "bins") || !config.HasKey(info.section, "min") ||
+            !config.HasKey(info.section, "max")) {
+            throw std::runtime_error("[" + info.section + "] at " + location + " requires bins, min and max");
+        }
+        const std::string binsText = StringUtils::Trim(config.GetString(info.section, "bins"));
+        long long bins = 0;
+        try {
+            std::size_t consumed = 0;
+            bins = std::stoll(binsText, &consumed);
+            if (consumed != binsText.size()) bins = 0;
+        } catch (const std::exception&) {
+            bins = 0;
+        }
+        if (bins < 1) {
+            throw std::runtime_error("[" + info.section + "]/bins at " + location +
+                                     " must be an integer >= 1, got '" + binsText + "'");
+        }
+        if (bins > 1000000) {
+            throw std::runtime_error("[" + info.section + "]/bins at " + location +
+                                     " is unreasonably large; use at most 1000000 bins");
+        }
+        VolumeSpectrumConfig cfg;
+        cfg.section = info.section;
+        cfg.location = location;
+        cfg.bins = static_cast<int>(bins);
+        cfg.minMeV = VolumeEnergy(config, info, "min", config.GetString(info.section, "min"), true);
+        cfg.maxMeV = VolumeEnergy(config, info, "max", config.GetString(info.section, "max"), false);
+        if (!(cfg.maxMeV > cfg.minMeV)) {
+            throw std::runtime_error("[" + info.section + "] at " + location +
+                                     " max must be greater than min");
+        }
+        const double width = (cfg.maxMeV - cfg.minMeV) / static_cast<double>(cfg.bins);
+        if (!std::isfinite(width) || width <= 0.0) {
+            throw std::runtime_error("[" + info.section + "] at " + location +
+                                     " bin width (max - min) / bins is not a representable positive finite number");
+        }
+        spectrumSections.push_back(info.section);
+        spectrumSpecs_.push_back(VolumeSpectrumSpec{scorer, std::move(cfg), location});
+    }
+
+    if (!spectrumSections.empty() && outputManager_ && !outputManager_->WritesCsv()) {
+        throw std::runtime_error(FormatFailureMessage("configuration", *outputManager_, spectrumSections));
+    }
+}
+
+void ScoringManager::ApplyVolumeConfigsToScorers()
+{
+    for (const VolumeFilterSpec& spec : filterSpecs_) {
+        auto filter = std::make_unique<VolumeFilter>(spec.config);
+        if (auto* dose = dynamic_cast<DoseScorer*>(GetScorer(spec.scorer))) {
+            dose->SetFilter(std::move(filter));
+        } else if (auto* fluence = dynamic_cast<FluenceScorer*>(GetScorer(spec.scorer))) {
+            fluence->SetFilter(std::move(filter));
+        } else if (auto* let = dynamic_cast<LETScorer*>(GetScorer(spec.scorer))) {
+            let->SetFilter(std::move(filter));
+        } else if (auto* displacement = dynamic_cast<DisplacementScorer*>(GetScorer(spec.scorer))) {
+            displacement->SetFilter(std::move(filter));
+        }
+    }
+    for (const VolumeSpectrumSpec& spec : spectrumSpecs_) {
+        auto spectrum = std::make_unique<VolumeSpectrum>(spec.config);
+        if (auto* dose = dynamic_cast<DoseScorer*>(GetScorer(spec.scorer))) {
+            dose->SetSpectrum(std::move(spectrum));
+        } else if (auto* fluence = dynamic_cast<FluenceScorer*>(GetScorer(spec.scorer))) {
+            fluence->SetSpectrum(std::move(spectrum));
+        } else if (auto* displacement = dynamic_cast<DisplacementScorer*>(GetScorer(spec.scorer))) {
+            displacement->SetSpectrum(std::move(spectrum));
+        }
+    }
+}
+
+void ScoringManager::ValidateVolumeConfigsForRun()
+{
+    if (spectrumSpecs_.empty() && filterSpecs_.empty()) return;
+    // This runs before the event loop, so default scorers may not be created
+    // yet (BeginRun calls EnsureDefaultScorers). The parsed enable flags are
+    // therefore the authoritative record of whether a topic is active.
+    const auto active = [this](const std::string& scorer) {
+        if (scorer == "dose") return doseScoringEnabled_;
+        if (scorer == "fluence") return fluenceScoringEnabled_;
+        if (scorer == "let") return letScoringEnabled_;
+        if (scorer == "displacement") return displacementScoringEnabled_;
+        return false;
+    };
+    std::vector<std::string> spectrumSections;
+    for (const VolumeSpectrumSpec& spec : spectrumSpecs_) spectrumSections.push_back(spec.config.section);
+    if (!spectrumSections.empty() && outputManager_ && !outputManager_->WritesCsv()) {
+        throw std::runtime_error(FormatFailureMessage("run begin", *outputManager_, spectrumSections));
+    }
+    for (const VolumeSpectrumSpec& spec : spectrumSpecs_) {
+        if (!active(spec.scorer)) {
+            throw std::runtime_error("[scoring.spectrum." + spec.scorer + "] at " + spec.location +
+                                     " targets scorer '" + spec.scorer + "' which is not active; enable it in "
+                                     "[scoring] or remove the spectrum section");
+        }
+    }
+    for (const VolumeFilterSpec& spec : filterSpecs_) {
+        if (!active(spec.scorer)) {
+            throw std::runtime_error("[scoring.filter." + spec.scorer + "] at " + spec.location +
+                                     " targets scorer '" + spec.scorer + "' which is not active; enable it in "
+                                     "[scoring] or remove the filter section");
+        }
+        if (!spec.config.HasParticleCondition() || spec.config.allParticles) continue;
+        for (const std::string& name : spec.config.particles) {
+            if (G4ParticleTable::GetParticleTable()->FindParticle(name) == nullptr) {
+                throw std::runtime_error("[scoring.filter." + spec.scorer + "]/particles at " + spec.location +
+                                         " lists unknown Geant4 particle '" + name + "'");
+            }
+        }
+    }
+}
+
+void ScoringManager::RecordVolumeFilterAttachReceipts(int runId)
+{
+    if (filterSpecs_.empty()) return;
+    using namespace effective_config;
+    const int actualThread = G4Threading::G4GetThreadId();
+    for (const VolumeFilterSpec& spec : filterSpecs_) {
+        Value energyMax = std::isfinite(spec.config.energyMaxMeV)
+            ? Value(spec.config.energyMaxMeV) : Value();
+        Value::Object observed{{"section", spec.config.section},
+                               {"location", spec.location},
+                               {"particle_filter", spec.config.HasParticleCondition()},
+                               {"all_particles", spec.config.allParticles},
+                               {"energy_min_MeV", spec.config.energyMinMeV},
+                               {"energy_max_MeV", std::move(energyMax)}};
+        if (!spec.config.allParticles) {
+            observed["particles"] = Value::Array{};
+            auto& list = std::get<Value::Array>(observed["particles"].data);
+            for (const std::string& name : spec.config.particles) list.emplace_back(name);
+        }
+        auto receipt = Receipt("scoring/filter/" + spec.scorer + "/attached", std::move(observed),
+                               "scoring_filter_attach", "Scorer accepted the parsed volume filter before its first event",
+                               "kernel_constructed", "applied");
+        auto& details = std::get<Value::Object>(receipt.data);
+        details["run_id"] = runId;
+        details["thread_id"] = actualThread;
+        effectiveState_->Record(std::move(receipt));
+    }
+}
+
+void ScoringManager::RecordVolumeFilterRunReceipts(int runId)
+{
+    if (filterSpecs_.empty()) return;
+    using namespace effective_config;
+    const int actualThread = G4Threading::G4GetThreadId();
+    for (const VolumeFilterSpec& spec : filterSpecs_) {
+        const auto counts = FilterCounts(*this, spec.scorer);
+        const long long accepted = counts.first;
+        const long long rejected = counts.second;
+        const bool observedSteps = accepted + rejected > 0;
+        const std::string status = observedSteps ? "applied" : "unknown";
+        const std::string level = observedSteps ? "run_validated" : "thread_applied";
+        const std::string reason =
+            observedSteps ? "" : "no scored steps observed; runtime filtering not validated";
+        Value::Object observed{{"candidate_steps", accepted + rejected},
+                               {"accepted_steps", accepted},
+                               {"rejected_steps", rejected},
+                               {"section", spec.config.section},
+                               {"location", spec.location}};
+        auto receipt = Receipt("scoring/filter/" + spec.scorer, std::move(observed), "scoring_filter_run",
+                               "Cumulative filter decisions observed by this thread", level, status, reason);
+        auto& details = std::get<Value::Object>(receipt.data);
+        details["run_id"] = runId;
+        details["thread_id"] = actualThread;
+        effectiveState_->Record(std::move(receipt));
+    }
+}
+
+void ScoringManager::RecordVolumeSpectrumWriteReceipts(int runId)
+{
+    if (spectrumSpecs_.empty() || !outputManager_) return;
+    using namespace effective_config;
+    const int actualThread = G4Threading::G4GetThreadId();
+    std::vector<OutputManager::ArtifactEvidence> artifacts;
+    try {
+        artifacts = outputManager_->CollectRunArtifacts(runId);
+    } catch (const std::exception&) {
+        artifacts.clear();
+    }
+    for (const VolumeSpectrumSpec& spec : spectrumSpecs_) {
+        const std::string expected = outputManager_->MakeThreadFilename("spectrum_" + spec.scorer + ".csv");
+        const std::filesystem::path expectedPath = std::filesystem::u8path(outputManager_->MakeOutputPath(expected));
+        const OutputManager::ArtifactEvidence* found = nullptr;
+        for (const auto& artifact : artifacts) {
+            if (artifact.path.empty()) continue;
+            const std::filesystem::path candidate = std::filesystem::u8path(artifact.path).filename();
+            if (candidate == expectedPath.filename()) {
+                found = &artifact;
+                break;
+            }
+        }
+        Value::Object observed{{"section", spec.config.section},
+                               {"location", spec.location},
+                               {"bins", spec.config.bins},
+                               {"min_MeV", spec.config.minMeV},
+                               {"max_MeV", spec.config.maxMeV}};
+        std::string status = "unknown";
+        std::string level = "thread_applied";
+        std::string reason = "spectrum file was not observed in the generated-file registry";
+        if (found) {
+            observed["path"] = outputManager_->MakeOutputPath(expected);
+            observed["sha256"] = found->sha256.has_value() ? Value(*found->sha256) : Value();
+            observed["size_bytes"] = found->size_bytes.has_value() ? Value(static_cast<std::int64_t>(*found->size_bytes)) : Value();
+            status = "applied";
+            level = "run_validated";
+            reason.clear();
+        }
+        auto receipt = Receipt("scoring/spectrum/" + spec.scorer, std::move(observed), "scoring_spectrum_write",
+                               "Spectrum file written and registered by this thread", level, status, reason);
+        auto& details = std::get<Value::Object>(receipt.data);
+        details["run_id"] = runId;
+        details["thread_id"] = actualThread;
+        effectiveState_->Record(std::move(receipt));
     }
 }

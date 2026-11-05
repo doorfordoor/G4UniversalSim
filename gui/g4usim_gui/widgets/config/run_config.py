@@ -8,6 +8,7 @@ from PySide6.QtWidgets import (
     QComboBox,
     QFrame,
     QFormLayout,
+    QGridLayout,
     QGroupBox,
     QHBoxLayout,
     QLabel,
@@ -115,6 +116,26 @@ class RunConfigEditor(QWidget):
         self.scoring_editor_particle_summary.setChecked(True)
         self.scoring_editor_auto_create = QCheckBox("Auto-create default scorers")
         self.scoring_editor_auto_create.setChecked(True)
+        self.scoring_editor_filter_widgets: dict[str, tuple[QCheckBox, QLineEdit, QLineEdit, QLineEdit]] = {}
+        for scorer in ("dose", "fluence", "let"):
+            enabled = QCheckBox(ui_format("Filter {scorer} steps", scorer=scorer))
+            particles = QLineEdit("")
+            particles.setPlaceholderText(ui_text("all or comma-separated Geant4 particle names"))
+            energy_min = QLineEdit("")
+            energy_min.setPlaceholderText(ui_text("empty = no lower bound"))
+            energy_max = QLineEdit("")
+            energy_max.setPlaceholderText(ui_text("empty = no upper bound"))
+            self.scoring_editor_filter_widgets[scorer] = (enabled, particles, energy_min, energy_max)
+        self.scoring_editor_spectrum_widgets: dict[str, tuple[QCheckBox, QSpinBox, QLineEdit, QLineEdit]] = {}
+        for scorer in ("dose", "fluence"):
+            enabled = QCheckBox(ui_format("Kinetic-energy spectrum for {scorer}", scorer=scorer))
+            bins = QSpinBox()
+            # Backend rejects bins outside 1..1000000; keep the editor consistent.
+            bins.setRange(1, 1_000_000)
+            bins.setValue(10)
+            low = QLineEdit("0 MeV")
+            high = QLineEdit("1.5 MeV")
+            self.scoring_editor_spectrum_widgets[scorer] = (enabled, bins, low, high)
         # Use the same field hints in Setup and Run Config, including language changes.
         for widget, section, key in (
             (self.source_editor_energy, "source", "energy"),
@@ -248,6 +269,34 @@ class RunConfigEditor(QWidget):
         layout.addWidget(switches)
         layout.addWidget(hist)
         layout.addWidget(summary)
+        volume = QGroupBox(ui_text("Volume filters and kinetic-energy spectra (optional)"))
+        volume_layout = QVBoxLayout(volume)
+        volume_layout.addWidget(create_hint_label(ui_text(
+            "Filters compose with AND inside the selected scorer. Filter windows are half-open [min,max); "
+            "spectra use the pre-step kinetic energy and only the last bin is closed at max. "
+            "Displacement filtering needs a hand-written NIEL table and is not offered here.")))
+        filter_grid = QGridLayout()
+        for column, label in enumerate(("Enable", "Particles", "Energy min", "Energy max")):
+            filter_grid.addWidget(QLabel(label), 0, column)
+        for row_index, scorer in enumerate(("dose", "fluence", "let"), start=1):
+            enabled, particles, energy_min, energy_max = self.scoring_editor_filter_widgets[scorer]
+            filter_grid.addWidget(enabled, row_index, 0)
+            filter_grid.addWidget(particles, row_index, 1)
+            filter_grid.addWidget(energy_min, row_index, 2)
+            filter_grid.addWidget(energy_max, row_index, 3)
+        volume_layout.addLayout(filter_grid)
+        spectrum_grid = QGridLayout()
+        for column, label in enumerate(("Enable", "Scorer", "Bins", "Min", "Max")):
+            spectrum_grid.addWidget(QLabel(label), 0, column)
+        for row_index, scorer in enumerate(("dose", "fluence"), start=1):
+            enabled, bins, low, high = self.scoring_editor_spectrum_widgets[scorer]
+            spectrum_grid.addWidget(enabled, row_index, 0)
+            spectrum_grid.addWidget(QLabel(scorer), row_index, 1)
+            spectrum_grid.addWidget(bins, row_index, 2)
+            spectrum_grid.addWidget(low, row_index, 3)
+            spectrum_grid.addWidget(high, row_index, 4)
+        volume_layout.addLayout(spectrum_grid)
+        layout.addWidget(volume)
         layout.addWidget(create_hint_label(ui_text("Dose and Fluence are experimental sensitive-volume scorers; LET remains unavailable.")))
         layout.addWidget(QLabel("Validation messages"))
         layout.addWidget(self.scoring_editor_messages, 1)
@@ -306,6 +355,17 @@ class RunConfigMixin:
             self.scoring_editor_auto_create,
         ]:
             widget.stateChanged.connect(self._update_sps_from_widgets)
+        for scorer, widgets in self.scoring_editor_filter_widgets.items():
+            enabled, particles, energy_min, energy_max = widgets
+            enabled.stateChanged.connect(self._update_sps_from_widgets)
+            for edit in (particles, energy_min, energy_max):
+                edit.textEdited.connect(self._update_sps_from_widgets)
+        for scorer, widgets in self.scoring_editor_spectrum_widgets.items():
+            enabled, bins, low, high = widgets
+            enabled.stateChanged.connect(self._update_sps_from_widgets)
+            bins.valueChanged.connect(self._update_sps_from_widgets)
+            for edit in (low, high):
+                edit.textEdited.connect(self._update_sps_from_widgets)
         self.scoring_editor_bins.valueChanged.connect(self._update_sps_from_widgets)
         self.scoring_editor_trajectories.valueChanged.connect(self._update_sps_from_widgets)
         self.source_editor_preview_rays.valueChanged.connect(self._update_sps_from_widgets)
@@ -381,6 +441,21 @@ class RunConfigMixin:
         self.scoring_editor_volume_summary.setChecked(self.scoring_editor.volume_summary)
         self.scoring_editor_particle_summary.setChecked(self.scoring_editor.particle_summary)
         self.scoring_editor_auto_create.setChecked(self.scoring_editor.auto_create_default_scorers)
+        for scorer, (enabled, particles, energy_min, energy_max) in self.scoring_editor_filter_widgets.items():
+            row = (self.scoring_editor.volume_filters or {}).get(scorer) or {}
+            enabled.setChecked(bool(row.get("enabled")))
+            particles.setText(str(row.get("particles", "")))
+            energy_min.setText(str(row.get("energy_min", "")))
+            energy_max.setText(str(row.get("energy_max", "")))
+        for scorer, (enabled, bins, low, high) in self.scoring_editor_spectrum_widgets.items():
+            row = (self.scoring_editor.volume_spectra or {}).get(scorer) or {}
+            enabled.setChecked(bool(row.get("enabled")))
+            try:
+                bins.setValue(int(row.get("bins", 10)))
+            except (TypeError, ValueError):
+                bins.setValue(10)
+            low.setText(str(row.get("min", "0 MeV")))
+            high.setText(str(row.get("max", "10 MeV")))
         self._building = False
         self._sync_sps_summary_widgets()
         self._validate_sps_editors()
@@ -441,6 +516,24 @@ class RunConfigMixin:
         self.scoring_editor.volume_summary = self.scoring_editor_volume_summary.isChecked()
         self.scoring_editor.particle_summary = self.scoring_editor_particle_summary.isChecked()
         self.scoring_editor.auto_create_default_scorers = self.scoring_editor_auto_create.isChecked()
+        self.scoring_editor.volume_filters = {
+            scorer: {
+                "enabled": enabled.isChecked(),
+                "particles": particles.text().strip(),
+                "energy_min": energy_min.text().strip(),
+                "energy_max": energy_max.text().strip(),
+            }
+            for scorer, (enabled, particles, energy_min, energy_max) in self.scoring_editor_filter_widgets.items()
+        }
+        self.scoring_editor.volume_spectra = {
+            scorer: {
+                "enabled": enabled.isChecked(),
+                "bins": bins.value(),
+                "min": low.text().strip(),
+                "max": high.text().strip(),
+            }
+            for scorer, (enabled, bins, low, high) in self.scoring_editor_spectrum_widgets.items()
+        }
         self.scoring_editor.is_dirty = True
         self._sync_sps_summary_widgets()
         self._validate_sps_editors()

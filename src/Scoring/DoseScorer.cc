@@ -26,12 +26,25 @@ DoseScorer::DoseScorer(const std::string& name)
 
 DoseScorer::~DoseScorer() = default;
 
+void DoseScorer::SetFilter(std::unique_ptr<VolumeFilter> filter)
+{
+    filter_ = std::move(filter);
+}
+
+void DoseScorer::SetSpectrum(std::unique_ptr<VolumeSpectrum> spectrum)
+{
+    spectrum_ = std::move(spectrum);
+}
+
 void DoseScorer::BeginRun(int runID)
 {
     runID_ = runID;
     events_ = 0;
+    filterAccepted_ = 0;
+    filterRejected_ = 0;
     touched_.Clear();
     volumes_.clear();
+    if (spectrum_) spectrum_->Clear();
 }
 
 void DoseScorer::EndEvent(int)
@@ -43,6 +56,13 @@ void DoseScorer::EndEvent(int)
 void DoseScorer::ScoreHit(const HitRecord& hit)
 {
     if (hit.edep == 0.0) return;
+    if (filter_) {
+        if (!filter_->Matches(hit)) {
+            ++filterRejected_;
+            return;
+        }
+        ++filterAccepted_;
+    }
     if (hit.doseVolumePath.empty() || !std::isfinite(hit.doseMass) || hit.doseMass <= 0.0) {
         throw std::runtime_error("DoseScorer requires a positive Geant4 physical-volume mass and touchable path for " + hit.volumeName);
     }
@@ -56,8 +76,14 @@ void DoseScorer::ScoreHit(const HitRecord& hit)
     } else if (std::abs(volume.mass - hit.doseMass) > 1e-9 * volume.mass) {
         throw std::runtime_error("DoseScorer detected changing mass for touchable " + hit.doseVolumePath);
     }
+    const double weightedEdep = hit.edep * hit.weight;
     touched_.Add(volume.rawEdep, hit.edep);
-    touched_.Add(volume.weightedEdep, hit.edep * hit.weight);
+    touched_.Add(volume.weightedEdep, weightedEdep);
+    if (spectrum_ && spectrum_->IsConfigured()) {
+        // Same weighted quantity as the dose row: w*edep_J/mass_kg, weight applied once.
+        spectrum_->Add(hit.doseVolumePath, volume.name, hit.kineticEnergy,
+                       weightedEdep / joule / (volume.mass / kg));
+    }
     if (!std::isfinite(volume.rawEdep.event) || !std::isfinite(volume.weightedEdep.event)) {
         throw std::runtime_error("DoseScorer accumulated nonfinite energy deposition");
     }
@@ -109,12 +135,18 @@ void DoseScorer::Write(OutputManager& output)
     writer.Close();
     output.RegisterGeneratedFile(writer.GetFilename(), OutputManager::ArtifactScope::Thread,
                                  output.GetRunId(), output.GetThreadId());
+    if (spectrum_ && spectrum_->IsConfigured()) {
+        spectrum_->Write(output, runID_, "dose", "Gy", events_);
+    }
 }
 
 void DoseScorer::Reset()
 {
     runID_ = -1;
     events_ = 0;
+    filterAccepted_ = 0;
+    filterRejected_ = 0;
     touched_.Clear();
     volumes_.clear();
+    if (spectrum_) spectrum_->Clear();
 }

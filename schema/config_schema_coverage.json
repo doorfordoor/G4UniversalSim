@@ -2349,6 +2349,90 @@
     },
     {
       "file": "main_ini",
+      "section": "scoring.filter.<scorer>",
+      "key": "particles",
+      "scalar_check": false,
+      "parser": "src/Scoring/ScoringManager.cc:ParseVolumeConfig",
+      "validation": "configure; run_begin",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_h2_volume_scoring.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.filter.<scorer>",
+      "key": "energy_min",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:ParseVolumeConfig",
+      "validation": "configure; run_begin",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_h2_volume_scoring.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.filter.<scorer>",
+      "key": "energy_max",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:ParseVolumeConfig",
+      "validation": "configure; run_begin",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_h2_volume_scoring.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.spectrum.<scorer>",
+      "key": "bins",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:ParseVolumeConfig",
+      "validation": "configure; run_begin; output",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_h2_volume_scoring.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.spectrum.<scorer>",
+      "key": "min",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:ParseVolumeConfig",
+      "validation": "configure; run_begin; output",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_h2_volume_scoring.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.spectrum.<scorer>",
+      "key": "max",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:ParseVolumeConfig",
+      "validation": "configure; run_begin; output",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_h2_volume_scoring.py"
+      ]
+    },
+    {
+      "file": "main_ini",
       "section": "scoring.mesh.<name>",
       "key": "shape",
       "scalar_check": true,

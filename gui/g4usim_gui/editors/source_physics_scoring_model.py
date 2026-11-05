@@ -38,6 +38,27 @@ SOURCE_PRESETS = [
 ]
 
 
+# H2-3 volume filters / kinetic-energy spectra. The GUI only exposes scorers
+# that its own scoring switches can enable. Displacement scoring needs an
+# explicit NIEL table, so its filter stays a hand-written configuration.
+FILTER_SCORERS = ("dose", "fluence", "let")
+SPECTRUM_SCORERS = ("dose", "fluence")
+
+
+def default_volume_filters() -> dict[str, dict]:
+    return {
+        scorer: {"enabled": False, "particles": "", "energy_min": "", "energy_max": ""}
+        for scorer in FILTER_SCORERS
+    }
+
+
+def default_volume_spectra() -> dict[str, dict]:
+    return {
+        scorer: {"enabled": False, "bins": 10, "min": "0 MeV", "max": "10 MeV"}
+        for scorer in SPECTRUM_SCORERS
+    }
+
+
 @dataclass
 class SourceEditableModel:
     gps_sources: list[GPSDefinition] = field(default_factory=list)
@@ -152,6 +173,8 @@ class ScoringEditableModel:
     fluence: bool = False
     trajectory_events: int = 0     # [output] trajectories (0 = off)
     auto_create_default_scorers: bool = True
+    volume_filters: dict[str, dict] = field(default_factory=default_volume_filters)
+    volume_spectra: dict[str, dict] = field(default_factory=default_volume_spectra)
     verbose: int = 1
     is_dirty: bool = False
     errors: list[str] = field(default_factory=list)
@@ -384,6 +407,21 @@ def validate_physics_model(model: PhysicsEditableModel) -> PhysicsEditableModel:
     return model
 
 
+def _validate_spectrum_bins(value) -> int | None:
+    """Return the raw integer bin count or None; never truncate or coerce."""
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        bins = value
+    elif isinstance(value, str) and value.strip().isdigit():
+        bins = int(value.strip())
+    else:
+        return None
+    if bins < 1 or bins > 1_000_000:
+        return None
+    return bins
+
+
 def validate_scoring_model(model: ScoringEditableModel) -> ScoringEditableModel:
     reset_diagnostics(model)
     model.errors = []
@@ -423,7 +461,114 @@ def validate_scoring_model(model: ScoringEditableModel) -> ScoringEditableModel:
         _record_model(model, 'scoring', 'trajectories.range', 'error', f"trajectories must be 0 (off) to {gui_max} events", 'trajectory_events')
     elif model.trajectory_events > 100:
         _record_model(model, 'scoring', 'trajectories.size_hint', 'warning', "trajectory files grow quickly with secondaries; use a few events", 'trajectory_events')
+    _validate_volume_filters_and_spectra(model)
     return model
+
+
+
+def _volume_energy(model: ScoringEditableModel, text: str, field: str, label: str):
+    value = quantity(text, "energy")
+    if value is None or not math.isfinite(value):
+        _record_model(model, "scoring", "volume_energy.invalid", "error",
+                      f"{label} must be a finite energy such as '1 MeV'", field)
+        return None
+    return value
+
+
+def _validate_volume_filters_and_spectra(model: ScoringEditableModel) -> None:
+    """Reject rows that the C++ consumer would refuse before generation."""
+    enabled = {"dose": model.dose, "fluence": model.fluence, "let": model.let}
+    filters = model.volume_filters if isinstance(model.volume_filters, dict) else {}
+    for scorer in FILTER_SCORERS:
+        row = filters.get(scorer)
+        if not isinstance(row, dict) or not row.get("enabled"):
+            continue
+        field_prefix = "volume_filters." + scorer
+        if not enabled.get(scorer):
+            _record_model(model, "scoring", "filter.scorer.disabled", "error",
+                          f"{scorer} filter requires [scoring] {scorer} = true",
+                          field_prefix + ".enabled")
+            continue
+        if not model.auto_create_default_scorers:
+            _record_model(model, "scoring", "filter.requires_default", "error",
+                          f"{scorer} filter requires auto-create default scorers",
+                          field_prefix + ".enabled")
+        particles = str(row.get("particles", "")).strip()
+        tokens = [token.strip() for token in particles.split(",")] if particles else []
+        if not particles:
+            _record_model(model, "scoring", "filter.particles.required", "error",
+                          "filter particles must be 'all' or an explicit particle list",
+                          field_prefix + ".particles")
+        elif any(not token for token in tokens):
+            _record_model(model, "scoring", "filter.particles.empty_entry", "error",
+                          "filter particles must not contain empty entries",
+                          field_prefix + ".particles")
+        elif "all" in tokens and len(tokens) != 1:
+            _record_model(model, "scoring", "filter.particles.all_mixed", "error",
+                          "particles = all cannot be combined with explicit particle names",
+                          field_prefix + ".particles")
+        elif any(not re.fullmatch(r"[A-Za-z0-9_+\-]+", token) for token in tokens):
+            _record_model(model, "scoring", "filter.particles.invalid", "error",
+                          "filter particles must be Geant4 particle names or all",
+                          field_prefix + ".particles")
+        low = 0.0
+        high = math.inf
+        low_text = str(row.get("energy_min", "")).strip()
+        high_text = str(row.get("energy_max", "")).strip()
+        if low_text:
+            value = _volume_energy(model, low_text, field_prefix + ".energy_min", "energy_min")
+            if value is not None:
+                low = value
+        if high_text:
+            value = _volume_energy(model, high_text, field_prefix + ".energy_max", "energy_max")
+            if value is not None:
+                high = value
+        if low < 0.0:
+            _record_model(model, "scoring", "filter.energy.negative", "error",
+                          "energy_min must be >= 0", field_prefix + ".energy_min")
+        if high <= low:
+            _record_model(model, "scoring", "filter.energy.order", "error",
+                          "energy_max must be greater than energy_min",
+                          field_prefix + ".energy_max")
+    spectra = model.volume_spectra if isinstance(model.volume_spectra, dict) else {}
+    for scorer in SPECTRUM_SCORERS:
+        row = spectra.get(scorer)
+        if not isinstance(row, dict) or not row.get("enabled"):
+            continue
+        field_prefix = "volume_spectra." + scorer
+        if not enabled.get(scorer):
+            _record_model(model, "scoring", "spectrum.scorer.disabled", "error",
+                          f"{scorer} spectrum requires [scoring] {scorer} = true",
+                          field_prefix + ".enabled")
+            continue
+        if not model.auto_create_default_scorers:
+            _record_model(model, "scoring", "spectrum.requires_default", "error",
+                          f"{scorer} spectrum requires auto-create default scorers",
+                          field_prefix + ".enabled")
+        bins = _validate_spectrum_bins(row.get("bins"))
+        if bins is None:
+            _record_model(model, "scoring", "spectrum.bins.range", "error",
+                          "spectrum bins must be an integer in 1..1000000",
+                          field_prefix + ".bins")
+        low_text = str(row.get("min", "")).strip()
+        high_text = str(row.get("max", "")).strip()
+        low = _volume_energy(model, low_text, field_prefix + ".min",
+                             "spectrum min") if low_text else None
+        if not low_text:
+            _record_model(model, "scoring", "spectrum.min.required", "error",
+                          "spectrum min is required", field_prefix + ".min")
+        high = _volume_energy(model, high_text, field_prefix + ".max",
+                              "spectrum max") if high_text else None
+        if not high_text:
+            _record_model(model, "scoring", "spectrum.max.required", "error",
+                          "spectrum max is required", field_prefix + ".max")
+        if low is not None and low < 0.0:
+            _record_model(model, "scoring", "spectrum.min.negative", "error",
+                          "spectrum min must be >= 0", field_prefix + ".min")
+        if low is not None and high is not None and high <= low:
+            _record_model(model, "scoring", "spectrum.range.order", "error",
+                          "spectrum max must be greater than min", field_prefix + ".max")
+
 
 
 def source_model_to_snapshot(model: SourceEditableModel) -> dict:

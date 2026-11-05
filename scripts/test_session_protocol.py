@@ -32,7 +32,8 @@ class Session:
     """Line-oriented client: every JSON frame is matched by predicate."""
 
     def __init__(self, executable: Path, output_dir: Path, record_dir: Path,
-                 threads: int = 1, extra_args: list[str] | None = None) -> None:
+                 threads: int = 1, extra_args: list[str] | None = None,
+                 config: Path | None = None) -> None:
         self.executable = executable
         self.output_dir = output_dir
         self.record_dir = record_dir
@@ -42,7 +43,7 @@ class Session:
         self.process = subprocess.Popen(
             [
                 str(executable),
-                "--config", str(ROOT / "config" / "main.ini"),
+                "--config", str(config if config is not None else ROOT / "config" / "main.ini"),
                 "--session-server",
                 "--output", str(output_dir),
                 "--session-record-dir", str(record_dir),
@@ -579,6 +580,7 @@ def main() -> int:
         record_boundary_cases(executable, temp)
         two_sessions_keep_history(executable, temp)
         mt16_terminal_case(executable, temp)
+        v7_unknown_particle_session_case(executable, temp)
 
     return 0
 # ---------------------------------------------------------------- repair scenarios
@@ -723,6 +725,127 @@ def mt16_terminal_case(executable: Path, temp: Path) -> None:
     else:
         assert isinstance(finished.get("artifacts"), list), finished
     finish_session(session)
+
+def v7_unknown_particle_session_case(executable: Path, temp: Path) -> None:
+    """A run refused by kernel-level scoring validation must leave no run at all.
+
+    The controlled session applies its source and initializes the kernel before
+    BeamOn, so the scoring-filter particle check must happen in the run request
+    before accepted/started/replay registration.  A refused run must not create a
+    run receipt, must not emit run_started/run_finished, must exit non-zero and
+    must write a failed summary with zero planned and zero completed events.
+    """
+    case = temp / "v7-session"
+    case.mkdir(parents=True, exist_ok=True)
+    geometry = case / "geometry.ini"
+    geometry.write_text(
+        """[world]
+shape = box
+size = 40 mm, 40 mm, 40 mm
+material = G4_Galactic
+
+[volume.Slab]
+parent = world
+shape = box
+size = 10 mm, 10 mm, 0.1 mm
+material = G4_Galactic
+position = 0 mm, 0 mm, 0 mm
+sensitive = true
+""",
+        encoding="utf-8",
+    )
+    config = case / "main.ini"
+    config.write_text(
+        f"""[run]
+name = v7_session
+threads = 1
+seed = 20261307
+interactive = false
+verbose = 0
+check_overlaps = false
+dry_run = false
+
+[output]
+dir = out
+format = csv
+
+[geometry]
+template = hierarchical
+config = {geometry}
+default_world_material = G4_Galactic
+
+[physics]
+em = option4
+default_cut = 0.7 mm
+
+[scoring]
+enabled = true
+hits = true
+event_edep = false
+edep = false
+dose = true
+fluence = false
+auto_create_default_scorers = true
+
+[scoring.filter.dose]
+particles = muon
+
+[source]
+particle = gamma
+energy = 1 MeV
+position_type = plane
+shape = square
+halfx = 4 mm
+center = 0, 0, -2 mm
+direction = 0, 0, 1
+""",
+        encoding="utf-8",
+    )
+    output = case / "output"
+    records = case / "records"
+    session = Session(executable, output, records, config=config)
+    welcome = open_session(session)
+    session_dir = Path(welcome["state"]["session_root"])
+    state = session.state()
+    request = session.request("run", {"events": 10}, state["state_revision"], wait=False)
+    response = session.wait(lambda item: item.get("kind") == "response" and
+                            item.get("id") == request["id"])
+    assert response["status"] == "rejected", response
+    assert response["reason"] == "scoring_config_invalid", response
+    assert isinstance(response.get("message"), str) and response["message"], response
+    assert "run_id" not in response, response
+    run_events = [item for item in session.frames
+                  if item.get("kind") == "event" and
+                  item.get("event") in {"run_started", "run_finished"}]
+    assert run_events == [], run_events
+    accepted = [item for item in session.frames
+                if item.get("kind") == "response" and item.get("op") == "run" and
+                item.get("status") != "rejected"]
+    assert accepted == [], accepted
+    code = session.close(expect_exit=None)
+    assert code != 0, (code, session.raw_lines[-20:])
+    assert not list(session_dir.glob("run-*.json")), list(session_dir.iterdir())
+
+    summary_paths = list(output.glob("run_summary*.txt"))
+    assert len(summary_paths) == 1, summary_paths
+    summary: dict[str, str] = {}
+    for line in summary_paths[0].read_text(encoding="utf-8").splitlines():
+        if " = " in line and not line.startswith("["):
+            key, value = line.split(" = ", 1)
+            summary[key.strip()] = value.strip()
+    assert summary.get("status") == "failed", summary.get("status")
+    assert summary.get("output_failure_stage") == "scoring_filter_particle", summary
+    assert summary.get("run_count") == "0", summary.get("run_count")
+    assert summary.get("actual_completed_event_count") == "0", summary
+    metadata = json.loads((output / "run_metadata.json").read_text(encoding="utf-8"))
+    assert metadata.get("runs") == [], metadata.get("runs")
+    planned = summary.get("run_0_planned_events")
+    assert planned in (None, "", "0"), planned
+    for pattern in ("hits_t*.csv", "event_edep_t*.csv", "dose_volume_summary_t*.csv",
+                    "fluence_volume_summary_t*.csv", "spectrum_*.csv",
+                    "scorer_statistics*.csv", "edep_*summary_t*.csv"):
+        assert not list(output.glob(pattern)), (pattern, list(output.iterdir()))
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

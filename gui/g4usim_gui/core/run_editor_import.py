@@ -287,6 +287,18 @@ def parse_run_editor_ini(text: str, *, source_path: str | Path, previous_source=
             for key,value in values.items():
                 if hasattr(row,key): setattr(row,key,boolean(section,key) if type(getattr(row,key)) is bool else value)
             physics.bias_rules.append(row)
+        elif section.startswith("scoring.filter."):
+            scorer = section.split(".", 2)[2]
+            if scorer not in {"dose", "fluence", "let", "displacement"}:
+                fail(section, "", "unknown volume filter scorer")
+            else:
+                closed(section, {"particles", "energy_min", "energy_max"})
+        elif section.startswith("scoring.spectrum."):
+            scorer = section.split(".", 2)[2]
+            if scorer not in {"dose", "fluence", "displacement"}:
+                fail(section, "", "unknown kinetic-energy spectrum scorer")
+            else:
+                closed(section, {"bins", "min", "max"})
         elif section in OTHER_KEYS:
             closed(section,OTHER_KEYS[section])
             if section=="general" and values.get("schema_version","1")!="1":

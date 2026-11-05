@@ -14,6 +14,7 @@
 #include "Utils/StringUtils.hh"
 
 #include <algorithm>
+#include <cmath>
 #include <sstream>
 
 std::vector<effective_config::Field> ScoringManager::ExportEffectiveConfigFields() const
@@ -102,6 +103,26 @@ std::vector<effective_config::Field> ScoringManager::ExportEffectiveConfigFields
     add("phase_space", "", "volume", phaseSpaceVolume_, "phase_space", "volume");
     add("phase_space", "", "particles", List({phaseSpaceParticles_.begin(), phaseSpaceParticles_.end()}), "phase_space", "particles");
     add("phase_space", "", "kill", phaseSpaceKill_, "phase_space", "kill");
+    // Roadmap H2-2: only sections actually declared are exported; absent sections
+    // leave both the file output and the effective-config view unchanged.
+    for (const VolumeFilterSpec& spec : filterSpecs_) {
+        const std::string object = "filter/" + spec.scorer;
+        Value particles = List({spec.config.particles.begin(), spec.config.particles.end()});
+        if (spec.config.allParticles) particles = Value("all");
+        add("scoring", object, "particles", std::move(particles), spec.config.section, "particles");
+        add("scoring", object, "energy_min", spec.config.energyMinMeV / MeV, spec.config.section, "energy_min", "MeV");
+        // An absent energy_max means "unbounded"; EffectiveConfig values must be
+        // finite, so the unbounded case is published as JSON null instead of +inf.
+        Value energyMax = std::isfinite(spec.config.energyMaxMeV)
+            ? Value(spec.config.energyMaxMeV / MeV) : Value();
+        add("scoring", object, "energy_max", std::move(energyMax), spec.config.section, "energy_max", "MeV");
+    }
+    for (const VolumeSpectrumSpec& spec : spectrumSpecs_) {
+        const std::string object = "spectrum/" + spec.scorer;
+        add("scoring", object, "bins", static_cast<std::int64_t>(spec.config.bins), spec.config.section, "bins");
+        add("scoring", object, "min", spec.config.minMeV / MeV, spec.config.section, "min", "MeV");
+        add("scoring", object, "max", spec.config.maxMeV / MeV, spec.config.section, "max", "MeV");
+    }
     return result;
 }
 

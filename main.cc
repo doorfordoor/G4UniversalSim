@@ -14,6 +14,7 @@
 #include "Utils/StringUtils.hh"
 #include "Detector/DetectorConstruction.hh"
 #include "G4RunManager.hh"
+#include "G4StateManager.hh"
 #include "G4UIterminal.hh"
 #include "G4UIcsh.hh"
 #include "G4UImanager.hh"
@@ -969,6 +970,13 @@ int main(int argc, char** argv) {
                 "Geant4 may silently ignore BeamOn without processing events.");
           }
           try {
+            sim.ValidateScoringVolumeConfigsBeforeRun();
+          } catch (...) {
+            macroFailure = MacroFailureInfo{command.sourceFile.string(), static_cast<int>(command.lineNumber), command.text, 0, false};
+            macroStatus = "failed";
+            throw;
+          }
+          try {
             const int nextRunId = static_cast<int>(sim.GetOutputManager()->GetRunSummary().GetRuns().size());
             sim.GetOutputManager()->ValidateOutputTargetDirectories(
                 nextRunId, sim.GetContext().GetNumThreads());
@@ -1126,6 +1134,19 @@ int main(int argc, char** argv) {
             }
             RandomCommandGuard::Validate(resolved);
             sim.ValidateEffectiveModuleCommand(resolved);
+            if (token == "/run/beamon" &&
+                G4StateManager::GetStateManager()->GetCurrentState() != G4State_PreInit) {
+              try {
+                sim.ValidateScoringVolumeConfigsBeforeRun();
+              } catch (const std::exception& error) {
+                const std::string message = error.what();
+                const std::string kind =
+                    message.find("unknown Geant4 particle") != std::string::npos
+                        ? "scoring_filter_particle"
+                        : "scoring_volume_config";
+                throw SemanticCommandError(message, kind);
+              }
+            }
             return RandomCommandGuard::ExecuteRestoreIfRequested(resolved);
           } catch (const SemanticCommandError&) {
             throw;
@@ -1135,6 +1156,20 @@ int main(int argc, char** argv) {
         }, [&](const std::string& command) {
           sim.ConfirmMacroCommandSuccess(sim.NoteMacroCommand(command));
           sim.RecordSuccessfulMacroCommand(command, "", 0);
+          const std::string resolved = StringUtils::NormalizeCommandSlashes(StringUtils::Trim(
+              G4UImanager::GetUIpointer()->SolveAlias(command.c_str())));
+          std::istringstream stream(resolved);
+          std::string token;
+          stream >> token;
+          if (StringUtils::ToLower(token) == "/run/initialize") {
+            // The kernel is now initialized: validate configured volume filters
+            // before any later /run/beamOn can generate events. A failure is
+            // recorded in the shared latch; the session stops on the next check.
+            try {
+              sim.ValidateScoringVolumeConfigsBeforeRun();
+            } catch (const std::exception&) {
+            }
+          }
         });
         ui.SessionStart();
         unrecognizedCommand = ui.UnrecognizedCommandDiagnostic();

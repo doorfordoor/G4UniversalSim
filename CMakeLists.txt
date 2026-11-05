@@ -115,6 +115,30 @@ if(BUILD_TESTING)
         src/Config/InputProvenance.cc)
     target_compile_features(randomCommandGuardCheck PRIVATE cxx_std_17)
     target_link_libraries(randomCommandGuardCheck ${Geant4_LIBRARIES})
+    # Exercise the real volume-filter/spectrum scorer path without transport
+    # (H2-2 component checks: partitions, weight-once, spectrum boundaries).
+    add_executable(h2VolumeScoringCheck tools/h2VolumeScoringCheck.cc
+        src/Scoring/DoseScorer.cc src/Scoring/FluenceScorer.cc src/Scoring/LETScorer.cc
+        src/Scoring/DisplacementScorer.cc src/Scoring/VolumeSpectrum.cc
+        src/Scoring/HistoryStatistics.cc src/Scoring/NielTable.cc
+        src/Scoring/ScorerBase.cc src/Scoring/ScoringMeshExport.cc
+        src/Output/OutputManager.cc src/Output/CsvWriter.cc src/Output/RunSummary.cc
+        src/Output/AnalysisOutput.cc src/Output/Histogram1D.cc src/Output/Histogram2D.cc
+        src/Output/EffectiveOutput.cc
+        src/Config/EffectiveConfig.cc src/Config/InputProvenance.cc src/Config/ConfigValue.cc
+        src/Config/IniReader.cc
+        src/Utils/FileUtils.cc src/Utils/StringUtils.cc)
+    target_compile_features(h2VolumeScoringCheck PRIVATE cxx_std_17)
+    target_include_directories(h2VolumeScoringCheck PRIVATE ${PROJECT_BINARY_DIR}/generated)
+    target_link_libraries(h2VolumeScoringCheck ${Geant4_LIBRARIES})
+    add_test(
+        NAME h2_volume_scoring_check
+        COMMAND h2VolumeScoringCheck ${PROJECT_BINARY_DIR}/h2-component-output
+    )
+    set_tests_properties(h2_volume_scoring_check PROPERTIES
+        LABELS "h2;component"
+        TIMEOUT 120
+    )
     find_package(Python3 COMPONENTS Interpreter QUIET)
     if(Python3_Interpreter_FOUND)
         foreach(profile static gui backend integration)

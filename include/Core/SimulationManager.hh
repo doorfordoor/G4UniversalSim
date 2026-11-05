@@ -108,6 +108,9 @@ public:
     std::function<void(const GeometryRegistry&)> CreateGeometryPostBuildCallback() const;
     void InitializeSourceAfterPhysicsListRegistered();
     void ValidateBiasingProcessTargets();
+    // Roadmap H2-4: rejects configured scoring filters before the event loop
+    // starts; the failure is recorded through the shared output failure latch.
+    void ValidateScoringVolumeConfigsBeforeRun();
     void EnableInteractivePhysicsGuard();
     std::size_t GetInteractivePhysicsFailureCount() const;
     std::string GetLastInteractivePhysicsFailure() const;

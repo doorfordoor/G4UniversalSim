@@ -2,8 +2,10 @@
 
 #include "Scoring/HistoryStatistics.hh"
 #include "Scoring/ScorerBase.hh"
+#include "Scoring/VolumeFilter.hh"
 
 #include <map>
+#include <memory>
 #include <vector>
 #include <set>
 #include <string>
@@ -36,6 +38,12 @@ public:
     void SetParticles(const std::set<std::string>& particles);
     const std::set<std::string>& GetParticles() const;
 
+    // Roadmap H2-2: optional per-step filter; LET has no additive spectrum.
+    void SetFilter(std::unique_ptr<VolumeFilter> filter);
+    const VolumeFilter* GetFilter() const { return filter_.get(); }
+    long long GetFilterAcceptedSteps() const { return filterAccepted_; }
+    long long GetFilterRejectedSteps() const { return filterRejected_; }
+
 private:
     struct VolumeLET {
         std::string name;
@@ -60,4 +68,7 @@ private:
     std::vector<VolumeLET*> touched_;
     std::set<std::string> particles_;
     std::map<std::string, VolumeLET> volumes_;
+    std::unique_ptr<VolumeFilter> filter_;
+    long long filterAccepted_ = 0;
+    long long filterRejected_ = 0;
 };
