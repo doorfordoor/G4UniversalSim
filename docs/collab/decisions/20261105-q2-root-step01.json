@@ -1,0 +1,29 @@
+{
+  "purpose": "discriminate charged-particle continuous deposition step-weight discretization from likelihood update errors",
+  "groups": [
+    "analog",
+    "biased_factor1.2"
+  ],
+  "max_step_mm": 0.01,
+  "batches_each": 8,
+  "events_each": 2000,
+  "seeds": [
+    20261021,
+    20261022,
+    20261023,
+    20261024,
+    20261025,
+    20261026,
+    20261027,
+    20261028,
+    20261029,
+    20261030,
+    20261031,
+    20261032,
+    20261033,
+    20261034,
+    20261035,
+    20261036
+  ],
+  "criterion": "single Welch99 interval; no reruns/extension; separate diagnosis not replacing original data"
+}

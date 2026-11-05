@@ -1,0 +1,61 @@
+{
+  "schema": "g4usim_q2_biasing_repair_r2_identity_v1",
+  "campaign": "q2-biasing-repair-r2-20261105",
+  "created_utc": "2026-11-05T14:10:55+00:00",
+  "plan": {
+    "path": "out/collab/q2-biasing-repair-r2/plan.json",
+    "sha256": "a345fc8a58f4a607e4b90f653b81aaaba4d4d6022632d1108cecfa6fab3a48dd"
+  },
+  "freeze": {
+    "path": "docs/collab/decisions/20261105-q2-biasing-freeze-r1.json",
+    "sha256": "d2e3837d5202616f2a2f6dc2d2269286ec68eb447464c0826cf23e2953c6c6e7"
+  },
+  "proposal": {
+    "path": "out/collab/q2-biasing-proposal-v1/proposal.json",
+    "sha256": "a7f590fd85a56749af1487207c6cbc238a9b6d4b04fb2d28ba5e6e31d4f54d9a"
+  },
+  "seed_order": {
+    "path": "out/collab/q2-biasing-repair-r2/seed-order.json",
+    "sha256": "8a6a58f7331e77328a8901dd767970c77a023f9e78ddebc0ce7d5138e4310b11"
+  },
+  "inputs": {
+    "geometry.ini": {
+      "path": "out/collab/q2-biasing-repair-r2/inputs/geometry.ini",
+      "sha256": "11a04452702285ab5d972f32813b84e8daa55c37fa507739c539a27bebdfa9e8",
+      "size_bytes": 344
+    },
+    "main_analog.ini": {
+      "path": "out/collab/q2-biasing-repair-r2/inputs/main_analog.ini",
+      "sha256": "4a8d33597559fc0a41688479c64c7d770fc8e290e9d45e16e441c2b2a268b56d",
+      "size_bytes": 698
+    },
+    "main_biased.ini": {
+      "path": "out/collab/q2-biasing-repair-r2/inputs/main_biased.ini",
+      "sha256": "11a79313cd9ad2e5f8b7a66f6010a3ee93d8e57b28a1dc2f5af39b454fcae2ed",
+      "size_bytes": 1233
+    },
+    "run.mac": {
+      "path": "out/collab/q2-biasing-repair-r2/inputs/run.mac",
+      "sha256": "3e03251ece7c954720dbb27209c093390b3ea48acdac9e4a9e79a1c95dce18da",
+      "size_bytes": 169
+    }
+  },
+  "backend": {
+    "path": "out/collab/q2-backend-864bc036/G4UniversalSim.exe",
+    "sha256": "f8a8119da5d68814a14920056d85a7f30e4f8380d393ea1d439cc8ca2726820f",
+    "size_bytes": 2786304,
+    "build_git_commit": "864bc036d6d7752475e52db4efd2b950cabfcc3d",
+    "source_fingerprint": "e7de615d4e342114104f970688a7ea5f9789f7b70240b2562a388a50a45704e7",
+    "geant4_version_number": 1132,
+    "geant4_data_required_complete": true
+  },
+  "checks": [
+    "biased factor=1.2 with the original gates",
+    "analog registers no biasing operator",
+    "analog Target max_step = 0.01 mm",
+    "biased Target max_step = 0.01 mm",
+    "group inputs are identical outside physics.biasing and [biasing.*]",
+    "geometry Target sensitive and bias-marked"
+  ],
+  "failed": []
+}

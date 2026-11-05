@@ -1,0 +1,164 @@
+{
+  "schema": "g4usim_q2_biasing_repair_r2_tamper_v1",
+  "status": "pass",
+  "baseline": {
+    "source": "evaluation.json",
+    "sha256": "aeb48cd8550cf257c8b60875aabcdd0aba9b12fca8912f15ffec9ca8d3f8eb7c",
+    "status": "pass",
+    "checks": 428,
+    "failed": [],
+    "note": "full 32-batch comparison ran once; only the mutated target batches are re-read here"
+  },
+  "cases": [
+    {
+      "id": "CE-ANALOG-REGISTERED",
+      "description": "analog batch receives the biased config signature (log + summary)",
+      "target": "EP-analog_00-WORKER-EVIDENCE",
+      "target_present_in_baseline": true,
+      "target_passing_in_baseline": true,
+      "batches_copied": [
+        "analog_00",
+        "biased_00"
+      ],
+      "batches_recomputed": [
+        "analog_00"
+      ],
+      "target_batch_checks": 13,
+      "detected": true,
+      "failed_ids": [
+        "EP-analog_00-WORKER-EVIDENCE"
+      ]
+    },
+    {
+      "id": "CE-WEIGHT-MISSING",
+      "description": "every non-unit weight of a biased batch is removed",
+      "target": "EP-biased_00-WEIGHT-NONUNIT",
+      "target_present_in_baseline": true,
+      "target_passing_in_baseline": true,
+      "batches_copied": [
+        "biased_00"
+      ],
+      "batches_recomputed": [
+        "biased_00"
+      ],
+      "target_batch_checks": 13,
+      "detected": true,
+      "failed_ids": [
+        "EP-biased_00-WEIGHT-POSITIVE",
+        "EP-biased_00-WEIGHT-NONUNIT"
+      ]
+    },
+    {
+      "id": "CE-WORKER-RECEIPT-MISSING",
+      "description": "one required biasing receipt line is missing",
+      "target": "EP-biased_00-WORKER-EVIDENCE",
+      "target_present_in_baseline": true,
+      "target_passing_in_baseline": true,
+      "batches_copied": [
+        "biased_00"
+      ],
+      "batches_recomputed": [
+        "biased_00"
+      ],
+      "target_batch_checks": 13,
+      "detected": true,
+      "failed_ids": [
+        "EP-biased_00-WORKER-EVIDENCE"
+      ]
+    },
+    {
+      "id": "CE-DROP-EVENT-ROW",
+      "description": "one event_edep row is dropped",
+      "target": "EP-analog_01-EVENT-ROWS",
+      "target_present_in_baseline": true,
+      "target_passing_in_baseline": true,
+      "batches_copied": [
+        "analog_01"
+      ],
+      "batches_recomputed": [
+        "analog_01"
+      ],
+      "target_batch_checks": 13,
+      "detected": true,
+      "failed_ids": [
+        "EP-analog_01-EVENT-ROWS",
+        "EP-analog_01-DOSE-RECON",
+        "EP-analog_01-STATS-RECON"
+      ]
+    },
+    {
+      "id": "CE-ANALOG-WEIGHT",
+      "description": "an analog weight is no longer exactly one",
+      "target": "EP-analog_02-WEIGHT-NONUNIT",
+      "target_present_in_baseline": true,
+      "target_passing_in_baseline": true,
+      "batches_copied": [
+        "analog_02"
+      ],
+      "batches_recomputed": [
+        "analog_02"
+      ],
+      "target_batch_checks": 13,
+      "detected": true,
+      "failed_ids": [
+        "EP-analog_02-WEIGHT-POSITIVE",
+        "EP-analog_02-WEIGHT-NONUNIT"
+      ]
+    },
+    {
+      "id": "CE-STATS-S2",
+      "description": "weighted dose sum_sq is changed by one percent",
+      "target": "EP-biased_01-STATS-RECON",
+      "target_present_in_baseline": true,
+      "target_passing_in_baseline": true,
+      "batches_copied": [
+        "biased_01"
+      ],
+      "batches_recomputed": [
+        "biased_01"
+      ],
+      "target_batch_checks": 13,
+      "detected": true,
+      "failed_ids": [
+        "EP-biased_01-STATS-RECON"
+      ]
+    },
+    {
+      "id": "CE-DROP-BATCH",
+      "description": "one batch disappears from the campaign records",
+      "target": "CMP-RUNS-PRESENT",
+      "target_present_in_baseline": true,
+      "target_passing_in_baseline": true,
+      "batches_copied": [],
+      "batches_recomputed": [],
+      "batches_reused_from_baseline": 32,
+      "detected": true,
+      "failed_ids": [
+        "CMP-RUNS-PRESENT",
+        "CMP-SEED-ORDER",
+        "CMP-GROUPS"
+      ],
+      "baseline_status": "fail"
+    }
+  ],
+  "detected": 7,
+  "total": 7,
+  "originals": {
+    "batches_hashed": [
+      "analog_00",
+      "analog_01",
+      "analog_02",
+      "biased_00",
+      "biased_01",
+      "biased_15"
+    ],
+    "files_hashed": 114,
+    "unchanged": true,
+    "changed": []
+  },
+  "scope": {
+    "ep_cases_recompute": "one batch per case through compare.compute_batch",
+    "drop_batch_reuse": "existing comparison with cached batch results; 31 batches reused, 0 recomputed",
+    "batches_not_re_read": 27
+  }
+}

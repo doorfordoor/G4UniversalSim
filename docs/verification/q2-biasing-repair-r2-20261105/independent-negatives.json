@@ -1,0 +1,41 @@
+{
+  "cases": [
+    {
+      "case": "CE-ANALOG-REGISTERED",
+      "target": "EP-analog_00-WORKER-EVIDENCE",
+      "detected": true
+    },
+    {
+      "case": "CE-WEIGHT-MISSING",
+      "target": "EP-biased_00-WEIGHT-NONUNIT",
+      "detected": true
+    },
+    {
+      "case": "CE-WORKER-RECEIPT-MISSING",
+      "target": "EP-biased_00-WORKER-EVIDENCE",
+      "detected": true
+    },
+    {
+      "case": "CE-DROP-EVENT-ROW",
+      "target": "EP-analog_01-EVENT-ROWS",
+      "detected": true
+    },
+    {
+      "case": "CE-ANALOG-WEIGHT",
+      "target": "EP-analog_02-WEIGHT-NONUNIT",
+      "detected": true
+    },
+    {
+      "case": "CE-STATS-S2",
+      "target": "EP-biased_01-STATS-RECON",
+      "detected": true
+    },
+    {
+      "case": "CE-DROP-BATCH",
+      "target": "CMP-RUNS-PRESENT",
+      "detected": true
+    }
+  ],
+  "detected": 7,
+  "scope": "six mutated batches recomputed directly with delivered comparator; missing-batch gate re-evaluated with verified baseline batch results; no transport rerun"
+}

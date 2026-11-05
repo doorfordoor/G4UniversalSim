@@ -1,0 +1,27 @@
+{
+  "purpose": "fixed diagnostic of factor sensitivity, not replacement of original failed comparison",
+  "factor": 1.2,
+  "seeds": [
+    20261001,
+    20261002,
+    20261003,
+    20261004,
+    20261005,
+    20261006,
+    20261007,
+    20261008,
+    20261009,
+    20261010,
+    20261011,
+    20261012,
+    20261013,
+    20261014,
+    20261015,
+    20261016
+  ],
+  "events": 2000,
+  "threads": 2,
+  "reference": "original 16 analog batches 20260801..20260816, reused and explicitly not newly balanced timing",
+  "criterion": "single independent Welch99 mean difference; interval inclusion does not prove equivalence; no repeat/extension",
+  "hypothesis": "factor10 weights produce severely concentrated sampling; f1.2 selected from constant-cross-section two-collision model second moment finite for f<2: E(W^2)=[f(2-f)]^-2. This simplified model does not prove real transport tail."
+}

@@ -1,0 +1,135 @@
+{
+  "schema": "g4usim_q2_biasing_repair_r2_plan_v1",
+  "campaign": "q2-biasing-repair-r2-20261105",
+  "status": "fixed_before_any_run",
+  "purpose": "Repair the applicability domain of the Q2-5 biasing benchmark after the root-cause investigation found that the factor-10 configuration is not a valid physical equivalence test for this charged-particle case. This r2 benchmark narrows the case to factor 1.2 with a symmetric 0.01 mm maximum step in the sensitive target. It is not a fix for all charged-particle occurrence-biasing systematic errors.",
+  "original_data": {
+    "campaign": "out/collab/q2-biasing-execution-v1",
+    "policy": "kept byte-identical; r2 never overwrites or backfills it"
+  },
+  "root_investigation": {
+    "path": "out/collab/q2-root-investigation",
+    "files": {
+      "q2-root-factor12/plan.json": "62a36cf208df69b3207c94bf173837337dd6fbb5c531f131286bb4b946600208",
+      "q2-root-factor12/comparison.json": "b8c8ab1344fbabf0c3e7263b1a74482f69da7fceb0a8256b7af5fe8780c11add",
+      "q2-root-factor12/records.json": "76f8f2bf69813d218f317afe153f9d6f12f5fc3afaa87d72688a76e634dd4887",
+      "q2-root-step01/plan.json": "b299079f5cb639eb57c1b2163171af2a2c69cb17793b9bb9f61e3aec312c032b",
+      "q2-root-step01/comparison.json": "c8710ab5f55f147e102c480dcaf52d6c2bb07cafb64d205875ba4af555b248af",
+      "q2-root-step01/records.json": "692d07216bc82bf9f4aaf3e686abdbdae6df1541c16530fade6b34a26f47ebb9"
+    },
+    "findings_reused": [
+      "all 4095 issued primary steps satisfy log(wpost/wpre) = (sigma_b - sigma_a)*step_length - log(f) at eBrem occurrence; no simple missing survival weight or counting error",
+      "independent seeds factor 1.2 with the original step size: dose ratio 0.974554949, Welch 99% CI [-3.48979e-12, -2.03468e-12] (still low)",
+      "symmetric 0.01 mm region max_step, 8+8 independent batches: ratio 1.000044886, Welch 99% CI [-1.451914e-12, 1.461625e-12] (diagnostic only)"
+    ],
+    "limits": "The diagnostic cannot backfill the original 32 batches and does not prove universal unbiasedness."
+  },
+  "configuration": {
+    "case": "10 MeV electrons, 10 mm G4_Pb cube, G4_Galactic world, point source at origin +z, FTFP_BERT, cut 0.1 mm, dose+hits+event_edep",
+    "factor": 1.2,
+    "region_max_step": "0.01 mm",
+    "groups": [
+      "analog",
+      "biased"
+    ],
+    "difference_between_groups": "physics.biasing and the [biasing.*] rule only; both groups carry the same 0.01 mm target region step limit"
+  },
+  "inputs": {
+    "geometry.ini": {
+      "path": "out/collab/q2-biasing-repair-r2/inputs/geometry.ini",
+      "sha256": "11a04452702285ab5d972f32813b84e8daa55c37fa507739c539a27bebdfa9e8",
+      "size_bytes": 344
+    },
+    "main_analog.ini": {
+      "path": "out/collab/q2-biasing-repair-r2/inputs/main_analog.ini",
+      "sha256": "4a8d33597559fc0a41688479c64c7d770fc8e290e9d45e16e441c2b2a268b56d",
+      "size_bytes": 698
+    },
+    "main_biased.ini": {
+      "path": "out/collab/q2-biasing-repair-r2/inputs/main_biased.ini",
+      "sha256": "11a79313cd9ad2e5f8b7a66f6010a3ee93d8e57b28a1dc2f5af39b454fcae2ed",
+      "size_bytes": 1233
+    },
+    "run.mac": {
+      "path": "out/collab/q2-biasing-repair-r2/inputs/run.mac",
+      "sha256": "3e03251ece7c954720dbb27209c093390b3ea48acdac9e4a9e79a1c95dce18da",
+      "size_bytes": 169
+    }
+  },
+  "backend": {
+    "path": "out/collab/q2-backend-864bc036/G4UniversalSim.exe",
+    "sha256": "f8a8119da5d68814a14920056d85a7f30e4f8380d393ea1d439cc8ca2726820f",
+    "size_bytes": 2786304,
+    "build_git_commit": "864bc036d6d7752475e52db4efd2b950cabfcc3d",
+    "source_fingerprint": "e7de615d4e342114104f970688a7ea5f9789f7b70240b2562a388a50a45704e7",
+    "geant4_version_number": 1132,
+    "geant4_data_required_complete": true
+  },
+  "provenance": {
+    "frozen_freeze": {
+      "path": "docs/collab/decisions/20261105-q2-biasing-freeze-r1.json",
+      "sha256": "d2e3837d5202616f2a2f6dc2d2269286ec68eb447464c0826cf23e2953c6c6e7"
+    },
+    "proposal": {
+      "path": "out/collab/q2-biasing-proposal-v1/proposal.json",
+      "sha256": "a7f590fd85a56749af1487207c6cbc238a9b6d4b04fb2d28ba5e6e31d4f54d9a"
+    }
+  },
+  "run_design": {
+    "batches_per_group": 16,
+    "batches_total": 32,
+    "events_per_batch": 2000,
+    "threads": 2,
+    "seeds": {
+      "first": 20261101,
+      "last": 20261132,
+      "count": 32,
+      "rule": "odd analog, even biased, interleaved"
+    },
+    "argv_template": "<backend> --config inputs/main_<group>.ini --macro inputs/run.mac --output runs/<batch>/output --seed <seed> --threads 2",
+    "allowed_runs": 32
+  },
+  "criterion": {
+    "primary": "single Welch 99% two-sided mean-difference interval on per-completed-event weighted dose (Gy/event), equal batch counts per group",
+    "decision_semantics": "detected if the interval excludes zero; compatible otherwise; compatibility at this resolution is not equivalence or unbiasedness",
+    "ci_relative_width_max": 0.05,
+    "ci_relative_width_rule": "half_width / analog batch mean; if greater than 0.05 the campaign is insufficient to sign off even this limited case and is reported as limited",
+    "per_batch_gates": [
+      "EP-<batch>-COMPLETED",
+      "EP-<batch>-SEED",
+      "EP-<batch>-PHYSICS",
+      "EP-<batch>-METADATA-HASHES",
+      "EP-<batch>-EVENT-ROWS",
+      "EP-<batch>-MASS",
+      "EP-<batch>-DOSE-RECON",
+      "EP-<batch>-STATS-RECON",
+      "EP-<batch>-SCORING-ENABLED",
+      "EP-<batch>-WEIGHT-POSITIVE",
+      "EP-<batch>-WEIGHT-NONUNIT",
+      "EP-<batch>-WORKER-EVIDENCE",
+      "EP-<batch>-NO-UNKNOWN"
+    ],
+    "efficiency": "report real host wall time per batch and the scorer's run_wall_time_s plus FOM; a slow or no-gain result is a valid result and is not hidden"
+  },
+  "stopping": {
+    "allowed_runs": 32,
+    "no_retry_of_failed_seeds": true,
+    "no_extension": true,
+    "no_overwrite": true,
+    "failure_action": "stop the campaign, retain the failure, report it; do not silently replace with the remaining batches"
+  },
+  "explicitly_forbidden": [
+    "changing the production ParticleHit pre-step weight to a post-step or midpoint weight",
+    "calibrating dose with the diagnostic mean",
+    "claiming 0.01 mm as a universal guarantee",
+    "using this r2 outcome for other particles, other factors, neutral particles or the original factor-10 result",
+    "modifying production statistics formulas, physics algorithms, global default step length, frozen evidence or the original 32 batches",
+    "committing Git changes"
+  ],
+  "applicability": {
+    "signoff_scope": "only this repaired 10 MeV electron / G4_Pb / 10 mm factor-1.2 case with the stated target step upper bound",
+    "not_claimed": "elimination of all charged-particle occurrence-biasing systematic errors; physical unbiasedness of factor-10; equivalence of analog and biased transport",
+    "known_limits": "the 59% factor-10 discrepancy is not fully decomposed; this repair changes configuration and applicability statements, not the production physics"
+  },
+  "created_utc": "2026-11-05T14:10:55+00:00"
+}
