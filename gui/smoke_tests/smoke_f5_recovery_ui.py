@@ -58,6 +58,41 @@ def rejected(action, message):
         assert False, "Recovery accepted a stale or conflicting notification"
 
 
+def feed_continuous_changes(controller, *, first=2, last=21, spacing_ms=15):
+    """Prove the maximum timer, not the debounce, protects continuous input.
+
+    The debounce interval is lengthened past the whole input window, so a write
+    started while changes keep arriving can only come from the maximum timer.
+    The timer only *starts* the asynchronous write, so the caller still has to
+    wait for the real receipt; asserting after a fixed number of milliseconds
+    would mix timer starvation with thread and Qt delivery latency.
+    """
+    controller._debounce.setInterval(5000)
+    started = []
+    started_event = threading.Event()
+    real_publish = controller.session.publish
+
+    def observed_publish(*args, **kwargs):
+        started.append(args[1] if len(args) > 1 else kwargs.get("revision"))
+        started_event.set()
+        return real_publish(*args, **kwargs)
+
+    with patch.object(controller.session, "publish", observed_publish):
+        fired_at_revision = None
+        for revision in range(first, last + 1):
+            controller.changed(payload(f"rapid {revision}"), revision)
+            QTest.qWait(spacing_ms)
+            if started_event.is_set() and fired_at_revision is None:
+                fired_at_revision = revision
+        assert fired_at_revision is not None, (
+            "The maximum timer did not start a recovery write during continuous input")
+        assert fired_at_revision < last, "The maximum timer only fired after the input window"
+        wait_until(lambda: controller.last_receipt is not None
+                   and controller.last_receipt.revision > 1)
+        assert controller.last_receipt.revision in started
+        return started
+
+
 def main():
     app = QApplication.instance() or QApplication([])
     app.setQuitOnLastWindowClosed(False)
@@ -75,10 +110,7 @@ def main():
         assert controller.last_receipt.revision == 1
         assert controller.session.path.is_file()
         assert not controller.store.discover(), "Another window could recover this active controller"
-        for revision in range(2, 22):
-            controller.changed(payload(f"rapid {revision}"), revision)
-            QTest.qWait(15)  # Continuous input cannot starve the maximum timer.
-        assert controller.last_receipt.revision > 1
+        feed_continuous_changes(controller)
         assert controller.flush()
         assert controller.last_receipt.revision == 21
         assert controller.saved()

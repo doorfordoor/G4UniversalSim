@@ -1,0 +1,10 @@
+# Q2-6 云门禁限定修复：F5 恢复时序断言（2026-11-05 r1）
+范围：候选 `1fa1a6e5` 的 M0 run `42054193736` / Windows job `127337983931` 中 `gui_f5_recovery` 失败。仅改 `gui/smoke_tests/smoke_f5_recovery_ui.py` 与本文；未重开 F5、未改科研算法/产品代码、未扩验收工具、未触发 CI、未提交 Git。
+- 失败点（原文件 :81）：连续 20 次 `changed`+`QTest.qWait(15)` 后 `assert controller.last_receipt.revision > 1`。该断言把“maximum 定时器未饥饿”与“线程写入 + `QueuedConnection` 回执已完成”混为一谈：`_maximum`（本测试 80 ms）只调用 `_start_pending()` 把写入提交到单线程池，完成回执经排队信号回到 Qt 线程，固定 300 ms 总窗口不保证后者完成。定位为待验证的时序假设，不宣称产品缺陷。
+- 受控迟延反例（修改前契约，临时脚本）：rev1 回执后把 `session.publish` 包成先 `sleep(1.2)`，执行完全相同的 20×15 ms 循环 → `last_receipt.revision` 仍为 1，`pending=True`、`future=True`；旧断言在同样输入下失败。证明原断言可被 I/O 延迟打穿，且不延长 sleep 也不得靠停止输入后的 debounce/flush 蒙混。
+- 修订（新 helper `feed_continuous_changes`）：①`_debounce` 拉长到 5000 ms > 整个输入窗口，窗口内开始的写入只能来自 maximum（同时记录实际 publish 的 revision 与发生位置）；②断言写入在窗口内启动且 `fired_at_revision < 21`（不能在输入结束后才触发）；③再用既有 `wait_until` 有界等待真实 `last_receipt.revision > 1`，并断言回执 revision 属于窗口内实际启动的 publish（≤5 s 线程与 Qt 投递延迟允许，超过即失败）；④原 `flush()`→revision 21、`saved()` 及后续未完成写入/迟到 revision/同 revision 冲突/退役/对话框/恢复回调/损坏文件/原件观察等全部检查保持不变。
+- 正向结果：正常执行观察到窗口内 publish revisions `[5, 21]`、`last_receipt.revision==5`（有界等待拿到真实回执），随后 `flush()` 收口 21；注册用例原路径 `python -B scripts/run_m0_tests.py --profile gui --case gui_f5_recovery` → **PASS asserts=65/62**（1 pass / 0 fail / 0 skip，报告 `out/verification/20261105-235317-dbdd09e6/report.json`）。
+- 负向结果（禁用 maximum）：patch `_maximum.start` 为 no-op，debounce 仍 5000 > 输入窗口 → 窗口内无任何 publish，新断言以 “The maximum timer did not start a recovery write during continuous input” 失败；无法靠停止输入后的 debounce/flush 通过（flush 在断言之后才调用）。
+- 迟延超界结果（有界等待有效性）：publish 延迟 6.0 s（>5 s 等待）→ 新等待以 “Qt recovery condition did not complete” 失败，不会静默把固定 sleep 当成功。
+- 实际改动：`gui/smoke_tests/smoke_f5_recovery_ui.py` +36/−4（LF）；无产品代码/科研数据/冻结/ROADMAP/CURRENT 改动；`check_doc_links.py` 1452 链接/432 文件/0 断链；工作树仅本文件与监督端既有改动。
+- 停止条件：完成本用例修正、正反例与记录即停写；若云上仍出现同一断言失败，按新报告的实际 publish revision 与等待耗时定位线程/磁盘延迟，不重启 F5 或再改产品。范围外建议：暂无；若需长期防回归，可另立任务把上述受控迟延脚本转为受跟踪 static 用例（本轮未扩工具）。
