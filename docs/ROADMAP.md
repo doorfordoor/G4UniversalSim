@@ -261,7 +261,7 @@ is marked experimental in the support matrix until benchmarked.
 | **2C** | 完整 EffectiveConfig：11 类真实消费者、稳定对象身份、完整来源链、实际读取字节哈希、事务替换/删除、configure/run_begin/finalization、内核/worker 证据、off/auto/on、GUI 审查 | Q1 基线；每类消费者有正反例，拒绝不污染 revision/来源；unknown 不伪装 applied；现有协议兼容 | 已完成（产品 `f4770b0`）；`70a1aba` 仅为历史配置子集。[完整2C最终证据](verification/2c-full-20261029/README.md)，不扩张E6/F1/Q2等范围 |
 | **E6** | E2 范围补齐与配置兼容：field/biasing schema；主 INI 版本策略；几何 v2/项目格式迁移与诊断去重 | 2C；生成表不手改；旧输入/别名、未来未知版本、迁移副本、**现有编辑子集** writer 兼容/往返。扩大编辑范围归 J2，不让 E6 等待 J2，不顺带开放 assembly/材料温压等 | 已完成：代码 `a779634`，Windows134、Linux双版本各134、M0双平台各58；实窗12状态与真实2/2事件、独立复核通过。[最终证据与集成状态](verification/e6-visible-20261030/README.md)。E2 原状态保持完成 |
 | **E7** | SolidRegistry 与统一实体能力元数据；后端构造、校验、能力查询、GUI 可消费定义逐步归一 | E6/现有 A5；实体逐项差分、缓存/线程生命周期守卫与旧配置不变；不借重构增加未验实体 | 2026-11-02 **本轮15/7约定范围完成**：既有15原语/7布尔工具统一factory注册、能力元数据及GUI离线定义接线，兼容/缓存生命周期/适用矩阵通过；实体集合、A5实验性与科学等级不变；测试冻结2ec5b14，见[最终证据](verification/j2-f8-final-20261102/README.md) |
-| **Q2** | 科研基准与适用范围：Dose/Fluence/LET/DDD、统计不确定度、现有 XS biasing 与 analog 对照、独立数据/解析参考与可复现实验 | Q1、F1；V-01 的口径先在 Q1 明确，Q2 再验证有限样本/覆盖与适用边界；不以同源自洽或 process 挂接代替独立证据 | 待完整验收，复用 A/B 已有限定基准 |
+| **Q2** | 科研基准与适用范围：Dose/Fluence/LET/DDD、统计不确定度、现有 XS biasing 与 analog 对照、独立数据/解析参考与可复现实验 | Q1、F1；V-01 的口径先在 Q1 明确，Q2 再验证有限样本/覆盖与适用边界；不以同源自洽或 process 挂接代替独立证据 | 已完成本轮限定范围验收（2026-11-06），科学产品864bc036、最终文档/测试ed6aad6a；LET/DDD/NIEL/偏置适用域限制保留。[最终证据](verification/q2-final-20261105/README.md) |
 
 #### 原 E/F 余项（保留原编号）
 

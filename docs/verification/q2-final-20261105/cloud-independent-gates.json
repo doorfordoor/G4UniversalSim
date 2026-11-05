@@ -1,0 +1,106 @@
+{
+  "archives": [
+    {
+      "name": "m0-report-ubuntu-latest",
+      "sha256": "5eee3843a0baf7add36550d894274407a35c7f035dbebd108954f009d7dd513c",
+      "size": 846066
+    },
+    {
+      "name": "m0-report-windows-latest",
+      "sha256": "1b59600ddf26bc8db6398fa8773cc2d2d8486adf901cec8fd489b9041d0a6d99",
+      "size": 773765
+    },
+    {
+      "name": "linux-evidence-11.3.2",
+      "sha256": "f7d72944b1eb4c1baf6b5bf8ed7a097c6dc77ee3a55e47b40a00748a956162a7",
+      "size": 32356186
+    },
+    {
+      "name": "linux-evidence-11.4.3",
+      "sha256": "aea5a875d98fdcfa51f29e426578308d6539fa9517c600bfed919cda33394b02",
+      "size": 32033581
+    },
+    {
+      "name": "full-installation-Windows",
+      "sha256": "8fcd3cc85b8657f421f8167d6e1e65154d5684a19cd93cf87d26587677a0ec4d",
+      "size": 29429465
+    },
+    {
+      "name": "full-installation-Linux",
+      "sha256": "8f28e982172eb8bcec0e39669779c8ccb4baed933a0d2fc2e2e5b234d6ad5b0d",
+      "size": 32750769
+    },
+    {
+      "name": "frozen-desktop-Linux",
+      "sha256": "b8ef3b9e49851f12e67a395d00970024d37f0cd63a4c99f31e8d7b7da377a945",
+      "size": 24491
+    },
+    {
+      "name": "frozen-desktop-Windows",
+      "sha256": "07c17e94ca8fa61a6b7649522424f05e4fb6fe6f18ef8cda5e93d4192c1a3a81",
+      "size": 28148
+    }
+  ],
+  "reports": [
+    {
+      "report": "out\\collab\\q2-final-cloud\\m0-report-ubuntu-latest\\20261105-163559-23febd08\\report.json",
+      "exit": 0,
+      "gate": "report evidence: OK D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-final-cloud\\m0-report-ubuntu-latest\\20261105-163559-23febd08\\report.json\n  version 2, profile static, 49 cases, 5665 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source e7de615d4e34..., tests 7aa0438bd451..."
+    },
+    {
+      "report": "out\\collab\\q2-final-cloud\\m0-report-ubuntu-latest\\20261105-163731-a830cb33\\report.json",
+      "exit": 0,
+      "gate": "report evidence: OK D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-final-cloud\\m0-report-ubuntu-latest\\20261105-163731-a830cb33\\report.json\n  version 2, profile gui, 78 cases, 10914 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source e7de615d4e34..., tests 7aa0438bd451..."
+    },
+    {
+      "report": "out\\collab\\q2-final-cloud\\m0-report-windows-latest\\20261105-162117-0c4bafa3\\report.json",
+      "exit": 0,
+      "gate": "report evidence: OK D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-final-cloud\\m0-report-windows-latest\\20261105-162117-0c4bafa3\\report.json\n  version 2, profile static, 49 cases, 5668 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source e7de615d4e34..., tests 7aa0438bd451..."
+    },
+    {
+      "report": "out\\collab\\q2-final-cloud\\m0-report-windows-latest\\20261105-162530-ef56b201\\report.json",
+      "exit": 0,
+      "gate": "report evidence: OK D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-final-cloud\\m0-report-windows-latest\\20261105-162530-ef56b201\\report.json\n  version 2, profile gui, 78 cases, 10944 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source e7de615d4e34..., tests 7aa0438bd451..."
+    },
+    {
+      "report": "out\\collab\\q2-final-cloud\\linux-evidence-11.3.2\\linux-backend\\20261105-163345-9cd86352\\report.json",
+      "exit": 0,
+      "gate": "report evidence: OK D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-final-cloud\\linux-evidence-11.3.2\\linux-backend\\20261105-163345-9cd86352\\report.json\n  version 2, profile backend, 66 cases, 92115 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source e7de615d4e34..., tests 7aa0438bd451..."
+    },
+    {
+      "report": "out\\collab\\q2-final-cloud\\linux-evidence-11.3.2\\linux-gui\\20261105-162508-3da99349\\report.json",
+      "exit": 0,
+      "gate": "report evidence: OK D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-final-cloud\\linux-evidence-11.3.2\\linux-gui\\20261105-162508-3da99349\\report.json\n  version 2, profile gui, 78 cases, 10914 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source e7de615d4e34..., tests 7aa0438bd451..."
+    },
+    {
+      "report": "out\\collab\\q2-final-cloud\\linux-evidence-11.3.2\\linux-integration\\20261105-165137-e667138a\\report.json",
+      "exit": 0,
+      "gate": "report evidence: OK D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-final-cloud\\linux-evidence-11.3.2\\linux-integration\\20261105-165137-e667138a\\report.json\n  version 2, profile integration, 34 cases, 6881 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source e7de615d4e34..., tests 7aa0438bd451..."
+    },
+    {
+      "report": "out\\collab\\q2-final-cloud\\linux-evidence-11.3.2\\linux-static\\20261105-162331-218af173\\report.json",
+      "exit": 0,
+      "gate": "report evidence: OK D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-final-cloud\\linux-evidence-11.3.2\\linux-static\\20261105-162331-218af173\\report.json\n  version 2, profile static, 49 cases, 5665 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source e7de615d4e34..., tests 7aa0438bd451..."
+    },
+    {
+      "report": "out\\collab\\q2-final-cloud\\linux-evidence-11.4.3\\linux-backend\\20261105-162959-d052386d\\report.json",
+      "exit": 0,
+      "gate": "report evidence: OK D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-final-cloud\\linux-evidence-11.4.3\\linux-backend\\20261105-162959-d052386d\\report.json\n  version 2, profile backend, 66 cases, 82966 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source e7de615d4e34..., tests 7aa0438bd451..."
+    },
+    {
+      "report": "out\\collab\\q2-final-cloud\\linux-evidence-11.4.3\\linux-gui\\20261105-162326-24e8cf8b\\report.json",
+      "exit": 0,
+      "gate": "report evidence: OK D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-final-cloud\\linux-evidence-11.4.3\\linux-gui\\20261105-162326-24e8cf8b\\report.json\n  version 2, profile gui, 78 cases, 10914 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source e7de615d4e34..., tests 7aa0438bd451..."
+    },
+    {
+      "report": "out\\collab\\q2-final-cloud\\linux-evidence-11.4.3\\linux-integration\\20261105-164408-80ed7c11\\report.json",
+      "exit": 0,
+      "gate": "report evidence: OK D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-final-cloud\\linux-evidence-11.4.3\\linux-integration\\20261105-164408-80ed7c11\\report.json\n  version 2, profile integration, 34 cases, 6881 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source e7de615d4e34..., tests 7aa0438bd451..."
+    },
+    {
+      "report": "out\\collab\\q2-final-cloud\\linux-evidence-11.4.3\\linux-static\\20261105-162212-4f08a769\\report.json",
+      "exit": 0,
+      "gate": "report evidence: OK D:\\Geant4\\G4UniversalSim\\out\\collab\\q2-final-cloud\\linux-evidence-11.4.3\\linux-static\\20261105-162212-4f08a769\\report.json\n  version 2, profile static, 49 cases, 5665 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source e7de615d4e34..., tests 7aa0438bd451..."
+    }
+  ]
+}
