@@ -1,0 +1,31 @@
+{
+  "files": [
+    {
+      "path": "inputs/geometry.ini",
+      "sha256": "11a04452702285ab5d972f32813b84e8daa55c37fa507739c539a27bebdfa9e8",
+      "size_bytes": 344
+    },
+    {
+      "path": "inputs/main_analog.ini",
+      "sha256": "a82265c8fe1fabc24a860361672b7e53c20e655937645251f6ca69325502737b",
+      "size_bytes": 627
+    },
+    {
+      "path": "inputs/main_biased.ini",
+      "sha256": "6cae4bcb87cb497fee1146b2e65bab982894d9b982ed66ddcc271d677c7bcce0",
+      "size_bytes": 1161
+    },
+    {
+      "path": "inputs/run.mac",
+      "sha256": "3e03251ece7c954720dbb27209c093390b3ea48acdac9e4a9e79a1c95dce18da",
+      "size_bytes": 169
+    },
+    {
+      "path": "seed-order.json",
+      "sha256": "2615ae075708b4a4e24708c49a8862d58f0a3fbea99aacd681964732b2adb702",
+      "size_bytes": 6257
+    }
+  ],
+  "group_difference": "only [physics] biasing and the [biasing] section; run name, geometry, source, scoring, physics reference, cut and threads are identical",
+  "schema": "g4usim_q2_biasing_inputs_manifest_v1"
+}

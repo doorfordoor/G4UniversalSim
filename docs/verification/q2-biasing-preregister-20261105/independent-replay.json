@@ -1,0 +1,27 @@
+[
+  {
+    "args": [
+      "make_inputs.py",
+      "--check"
+    ],
+    "exit": 0,
+    "stdout": "inputs verified: 6 files byte-identical\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "verify_math.py"
+    ],
+    "exit": 0,
+    "stdout": "24/24 pure-math checks passed\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "verify_config.py"
+    ],
+    "exit": 0,
+    "stdout": "27/27 config checks passed\n",
+    "stderr": ""
+  }
+]

@@ -1,0 +1,789 @@
+{
+  "backend": {
+    "build": "864bc036d6d7752475e52db4efd2b950cabfcc3d",
+    "data_check": "<backend> --check-geant4-data (required_complete=true)",
+    "exe": "out/collab/q2-backend-864bc036/G4UniversalSim.exe",
+    "exe_sha256": "f8a8119da5d68814a14920056d85a7f30e4f8380d393ea1d439cc8ca2726820f",
+    "geant4": "11.3.2"
+  },
+  "batch_design": {
+    "batches_per_group": 16,
+    "events_per_batch": 2000,
+    "order": {
+      "rule": "pairs alternate analog-first / biased-first so neither group is systematically earlier in the run sequence",
+      "runs": [
+        {
+          "batch": "analog_00",
+          "group": "analog",
+          "order": 1,
+          "pair": 0,
+          "seed": 20260801
+        },
+        {
+          "batch": "biased_00",
+          "group": "biased",
+          "order": 2,
+          "pair": 0,
+          "seed": 20260817
+        },
+        {
+          "batch": "biased_01",
+          "group": "biased",
+          "order": 3,
+          "pair": 1,
+          "seed": 20260818
+        },
+        {
+          "batch": "analog_01",
+          "group": "analog",
+          "order": 4,
+          "pair": 1,
+          "seed": 20260802
+        },
+        {
+          "batch": "analog_02",
+          "group": "analog",
+          "order": 5,
+          "pair": 2,
+          "seed": 20260803
+        },
+        {
+          "batch": "biased_02",
+          "group": "biased",
+          "order": 6,
+          "pair": 2,
+          "seed": 20260819
+        },
+        {
+          "batch": "biased_03",
+          "group": "biased",
+          "order": 7,
+          "pair": 3,
+          "seed": 20260820
+        },
+        {
+          "batch": "analog_03",
+          "group": "analog",
+          "order": 8,
+          "pair": 3,
+          "seed": 20260804
+        },
+        {
+          "batch": "analog_04",
+          "group": "analog",
+          "order": 9,
+          "pair": 4,
+          "seed": 20260805
+        },
+        {
+          "batch": "biased_04",
+          "group": "biased",
+          "order": 10,
+          "pair": 4,
+          "seed": 20260821
+        },
+        {
+          "batch": "biased_05",
+          "group": "biased",
+          "order": 11,
+          "pair": 5,
+          "seed": 20260822
+        },
+        {
+          "batch": "analog_05",
+          "group": "analog",
+          "order": 12,
+          "pair": 5,
+          "seed": 20260806
+        },
+        {
+          "batch": "analog_06",
+          "group": "analog",
+          "order": 13,
+          "pair": 6,
+          "seed": 20260807
+        },
+        {
+          "batch": "biased_06",
+          "group": "biased",
+          "order": 14,
+          "pair": 6,
+          "seed": 20260823
+        },
+        {
+          "batch": "biased_07",
+          "group": "biased",
+          "order": 15,
+          "pair": 7,
+          "seed": 20260824
+        },
+        {
+          "batch": "analog_07",
+          "group": "analog",
+          "order": 16,
+          "pair": 7,
+          "seed": 20260808
+        },
+        {
+          "batch": "analog_08",
+          "group": "analog",
+          "order": 17,
+          "pair": 8,
+          "seed": 20260809
+        },
+        {
+          "batch": "biased_08",
+          "group": "biased",
+          "order": 18,
+          "pair": 8,
+          "seed": 20260825
+        },
+        {
+          "batch": "biased_09",
+          "group": "biased",
+          "order": 19,
+          "pair": 9,
+          "seed": 20260826
+        },
+        {
+          "batch": "analog_09",
+          "group": "analog",
+          "order": 20,
+          "pair": 9,
+          "seed": 20260810
+        },
+        {
+          "batch": "analog_10",
+          "group": "analog",
+          "order": 21,
+          "pair": 10,
+          "seed": 20260811
+        },
+        {
+          "batch": "biased_10",
+          "group": "biased",
+          "order": 22,
+          "pair": 10,
+          "seed": 20260827
+        },
+        {
+          "batch": "biased_11",
+          "group": "biased",
+          "order": 23,
+          "pair": 11,
+          "seed": 20260828
+        },
+        {
+          "batch": "analog_11",
+          "group": "analog",
+          "order": 24,
+          "pair": 11,
+          "seed": 20260812
+        },
+        {
+          "batch": "analog_12",
+          "group": "analog",
+          "order": 25,
+          "pair": 12,
+          "seed": 20260813
+        },
+        {
+          "batch": "biased_12",
+          "group": "biased",
+          "order": 26,
+          "pair": 12,
+          "seed": 20260829
+        },
+        {
+          "batch": "biased_13",
+          "group": "biased",
+          "order": 27,
+          "pair": 13,
+          "seed": 20260830
+        },
+        {
+          "batch": "analog_13",
+          "group": "analog",
+          "order": 28,
+          "pair": 13,
+          "seed": 20260814
+        },
+        {
+          "batch": "analog_14",
+          "group": "analog",
+          "order": 29,
+          "pair": 14,
+          "seed": 20260815
+        },
+        {
+          "batch": "biased_14",
+          "group": "biased",
+          "order": 30,
+          "pair": 14,
+          "seed": 20260831
+        },
+        {
+          "batch": "biased_15",
+          "group": "biased",
+          "order": 31,
+          "pair": 15,
+          "seed": 20260832
+        },
+        {
+          "batch": "analog_15",
+          "group": "analog",
+          "order": 32,
+          "pair": 15,
+          "seed": 20260816
+        }
+      ]
+    },
+    "planned_events": 64000,
+    "runs": 32,
+    "scale_justification": {
+      "conclusion": "under a per-event CV between 0.1 and 0.3 the design resolves relative differences of roughly 0.2% to 0.7% at 99% confidence; differences below that are only declared compatible at this resolution, never equivalent",
+      "frozen_after_review": true,
+      "kind": "pre-registered design prior, not a measured result",
+      "method": "group mean = mean of 16 independent batch means; each 2000-event batch mean has relative standard error CV/sqrt(2000); the group mean then has relative SE divided by sqrt(16); a Welch 99% interval for the difference has half-width t*sqrt(2)*group SE",
+      "per_event_cv_prior_table": [
+        {
+          "batch_relative_se": 0.00223606797749979,
+          "expected_99pct_half_width_relative": 0.00217406245520894,
+          "group_relative_se": 0.0005590169943749475,
+          "per_event_cv": 0.1
+        },
+        {
+          "batch_relative_se": 0.00447213595499958,
+          "expected_99pct_half_width_relative": 0.00434812491041788,
+          "group_relative_se": 0.001118033988749895,
+          "per_event_cv": 0.2
+        },
+        {
+          "batch_relative_se": 0.006708203932499369,
+          "expected_99pct_half_width_relative": 0.006522187365626819,
+          "group_relative_se": 0.0016770509831248422,
+          "per_event_cv": 0.3
+        }
+      ],
+      "resource_basis": "32 runs x 2000 events on the same host, 2 threads, serial launch; comparable frozen Q2 cases of 2000 events ran in the low single-digit seconds on this host, so the whole campaign is a minutes-scale run. No wall-clock number is promised by this draft."
+    },
+    "seeds": {
+      "analog_seeds": [
+        20260801,
+        20260802,
+        20260803,
+        20260804,
+        20260805,
+        20260806,
+        20260807,
+        20260808,
+        20260809,
+        20260810,
+        20260811,
+        20260812,
+        20260813,
+        20260814,
+        20260815,
+        20260816
+      ],
+      "biased_seeds": [
+        20260817,
+        20260818,
+        20260819,
+        20260820,
+        20260821,
+        20260822,
+        20260823,
+        20260824,
+        20260825,
+        20260826,
+        20260827,
+        20260828,
+        20260829,
+        20260830,
+        20260831,
+        20260832
+      ],
+      "block": [
+        20260801,
+        20260832
+      ],
+      "disjoint_from_frozen_used_seeds": true,
+      "seed_order_file": {
+        "path": "seed-order.json",
+        "sha256": "2615ae075708b4a4e24708c49a8862d58f0a3fbea99aacd681964732b2adb702"
+      },
+      "used_seed_inventory": [
+        220001,
+        220002,
+        220003,
+        220004,
+        220005,
+        220006,
+        220007,
+        220008,
+        220009,
+        220010,
+        220011,
+        220012,
+        220013,
+        220014,
+        220015,
+        220016,
+        220017,
+        220018,
+        220019,
+        220020,
+        220021,
+        220022,
+        220023,
+        220024,
+        220025,
+        220026,
+        220027,
+        220028,
+        220029,
+        220030,
+        220031,
+        220032,
+        220033,
+        220034,
+        220035,
+        220036,
+        220037,
+        220038,
+        220039,
+        220040,
+        220041,
+        220042,
+        220043,
+        220044,
+        220045,
+        220046,
+        220047,
+        220048,
+        220049,
+        220050,
+        220051,
+        220052,
+        220053,
+        220054,
+        220055,
+        220056,
+        220057,
+        220058,
+        220059,
+        220060,
+        220061,
+        220062,
+        220063,
+        220064,
+        20261106,
+        20261107,
+        20261108,
+        20261109,
+        20261110,
+        20261113,
+        20261114,
+        20261120,
+        20261121,
+        20261122,
+        20261123,
+        20261124,
+        20261201,
+        20261202,
+        20261203,
+        20261204,
+        20261205,
+        20261206,
+        20261207,
+        20261208,
+        20261209,
+        20261210,
+        20261211,
+        20261212,
+        20261213,
+        20261214,
+        20261215,
+        20261216,
+        20261217,
+        20261218,
+        20261219,
+        20261220,
+        20261221,
+        20261222,
+        20261223,
+        20261224,
+        20261225,
+        20261226,
+        20261227,
+        20261228,
+        20261229,
+        20261230,
+        20261231,
+        20261232
+      ]
+    },
+    "threads": 2
+  },
+  "biasing_rule": {
+    "apply_to_secondaries": false,
+    "cross_section_arithmetic": "analogXS = 1/interactionLength; biasedXS = factor*analogXS",
+    "expected_observations": "The biased group must contain at least one finite, positive hit weight different from 1 and a worker receipt with applied_callbacks>0; the analog group must keep unit hit weights. No fixed discrete weight values and no interaction-count probabilities are required or predicted. A batch lacking the non-unit-weight signature is a failed batch.",
+    "factor": 10.0,
+    "max_interactions": 2,
+    "min_weight": 0.05,
+    "no_weight_prediction_limit": "The radiation length of G4_Pb is not the eBrem mean free path, and the 5 mm centre-to-boundary distance is not enough to infer how many interactions occur; only the kernel run can establish that.",
+    "only_primary": true,
+    "particle": "e-",
+    "process": "eBrem",
+    "volumes": [
+      "Target"
+    ],
+    "weight_observation": "The implementation uses G4BOptnChangeCrossSection: the operation proposes a cross-section change, and the weight actually assigned to a track depends on which operations the kernel proposes and applies and on transport that survives without an interaction. A factor=10 cross-section ratio therefore does NOT determine a complete-track weight set. The realized weights must be observed from the run's own hits/phase-space evidence and the worker receipts; they are not predicted by this draft."
+  },
+  "boundaries": [
+    "this draft does not run, seed, bootstrap or inspect the biasing case results",
+    "one rule on one primary electron; no claim about other particles, processes, materials, geometries, factors or secondary biasing",
+    "the interval is a finite-sample compatibility statement, not a proof of global unbiasedness or equivalence",
+    "no product code, tests, frozen references, tables or phase files are touched"
+  ],
+  "case_id": "Q2-5-XS-BIAS",
+  "common_inputs": {
+    "geometry": "inputs/geometry.ini",
+    "geometry_facts": {
+      "source_to_boundary": "the point source sits at the centre, so a forward primary has 5 mm to the nearest boundary; this is a geometry fact only and is not used to predict the number of interactions",
+      "target": "10 mm cube, G4_Pb, sensitive=true, bias=true, centred at origin",
+      "target_local_frame": "world frame (no translation in the geometry file)",
+      "world": "100 mm box, G4_Galactic"
+    },
+    "output": "CSV; --output and --seed are command-line arguments so the two config files stay byte-identical except the gate",
+    "physics": "FTFP_BERT with default_cut 0.1 mm; the biased group additionally enables the generic-biasing wrapping",
+    "run_name": "q25_biasing_case (identical in both groups)",
+    "scoring": "explicitly enabled=true, hits=true, event_edep=true, dose=true; let=false, fluence=false, edep=false; auto_create_default_scorers=true; no mesh. The Dose scorer is enabled explicitly, not through a default, and the configuration-phase facts must confirm it.",
+    "source": "one primary: e-, 10 MeV, point (0,0,0) mm, direction (0,0,1)",
+    "threads": 2
+  },
+  "config_checks": {
+    "covers": [
+      "both rendered configs carry the explicit scoring flags (dose=true, let=false, fluence=false) and differ only in the biasing gate",
+      "the --inspect-run facts (configuration phase only, execution_performed=false) report those scoring fields as consumed and the expected biasing gate difference; inspection never stands in for a run"
+    ],
+    "inspect": {
+      "analog": {
+        "path": "inspect_analog.json",
+        "sha256": "d163c8042ccde444ec56a5e6a2e67420e11c4effbfab79e70c4b388e5e70d3c8"
+      },
+      "biased": {
+        "path": "inspect_biased.json",
+        "sha256": "9702ee21b1ed45731331e6293d67752e2574487238b8eabe6884145b69c33a48"
+      }
+    },
+    "results": {
+      "path": "verify_config_results.json",
+      "sha256": "f43e6830ec079b67285d1419fa8c7b0227c555dbd1e813384bd8e46eca411d80"
+    },
+    "script": {
+      "path": "verify_config.py",
+      "sha256": "d938df64b8603c3eff2ecdb46c840a4633abdaf89770d25c5b089742d6b9ad70"
+    }
+  },
+  "counterexamples_for_execution": [
+    "CE-ANALOG-REGISTERED: copy the biased config as the analog run (or the reverse) and require EP-WORKER-EVIDENCE to fail",
+    "CE-WEIGHT-MISSING: delete all non-unit-weight hits from a copy of a biased batch and require EP-WEIGHT-NONUNIT to fail",
+    "CE-WORKER-RECEIPT-MISSING: remove worker receipts from a copy and require EP-WORKER-EVIDENCE to fail",
+    "CE-DROP-EVENT-ROW: delete one event row from a copy and require EP-EVENT-ROWS to fail",
+    "CE-ANALOG-WEIGHT: alter an analog hit weight to 0.1 in a copy and require EP-WEIGHT-NONUNIT to fail",
+    "CE-STATS-S2: alter sum_sq in a copy and require EP-STATS-RECON to fail",
+    "CE-DROP-BATCH: drop the worst pair from a copy of the analysis and require the analysis driver to refuse (frozen batch list is the only allowed input)"
+  ],
+  "created": "2026-11-05",
+  "efficiency": {
+    "conditions": "same host, 2 threads, serial launch, equal event budget per run",
+    "fom": "FOM = 1/(R^2 * run_wall_time_s) per run, recomputed from the printed moments and time; no fabricated zero or guessed time",
+    "report": "group means/medians of time and FOM, batch-level distribution, and the statement that equal or worse efficiency is a valid result",
+    "timing_source": "scorer_statistics.csv run_wall_time_s (production field); host wall clock recorded by the execution driver separately and never substituted for the production field"
+  },
+  "execution_authorized": false,
+  "execution_plan": {
+    "authorization": "requires a separate reviewed decision; this draft is not authorization to simulate",
+    "command_template": "<backend> --config inputs/main_<group>.ini --macro inputs/run.mac --output runs/<batch>/output --seed <seed> --threads 2",
+    "expected_outputs": [
+      "run_summary.txt",
+      "run_metadata.json",
+      "event_edep_t<N>.csv",
+      "dose_volume_summary_t<N>.csv",
+      "hits_t<N>.csv",
+      "scorer_statistics.csv"
+    ],
+    "run_sequence": "seed-order.json runs list, executed in order; each run gets its own output directory under runs/<batch>/output",
+    "stop_rule": "stop the campaign at the first failed batch and keep raw evidence"
+  },
+  "failure_and_limited_rules": [
+    "backend exit nonzero, status != completed, missing summary/event/statistics file, completed_events != 2000, missing event rows, non-finite numbers, missing/duplicated worker receipts, missing non-unit weight signature, or non-approximate uncertainty status => batch fails; no replacement batch and no resampling is allowed",
+    "a batch whose evidence is incomplete is reported as failed, not silently replaced by remaining batches; the campaign stops and the raw evidence is kept",
+    "statistical anomaly (batch mean far from its group) is reported descriptively and never converted into a backend-defect claim"
+  ],
+  "groups": {
+    "analog": {
+      "biasing_section": "absent",
+      "config": "inputs/main_analog.ini",
+      "note": "analog means no biasing operator is registered at all; this is not factor=1, which would still wrap and change the weight arithmetic",
+      "operator_registered": false,
+      "physics_biasing_gate": false
+    },
+    "biased": {
+      "biasing_section": "[biasing] enabled=true with one [biasing.xs.e-.eBrem] rule",
+      "config": "inputs/main_biased.ini",
+      "operator_registered": true,
+      "physics_biasing_gate": true
+    }
+  },
+  "inputs": {
+    "inputs/geometry.ini": {
+      "sha256": "11a04452702285ab5d972f32813b84e8daa55c37fa507739c539a27bebdfa9e8",
+      "size_bytes": 344
+    },
+    "inputs/main_analog.ini": {
+      "sha256": "a82265c8fe1fabc24a860361672b7e53c20e655937645251f6ca69325502737b",
+      "size_bytes": 627
+    },
+    "inputs/main_biased.ini": {
+      "sha256": "6cae4bcb87cb497fee1146b2e65bab982894d9b982ed66ddcc271d677c7bcce0",
+      "size_bytes": 1161
+    },
+    "inputs/run.mac": {
+      "sha256": "3e03251ece7c954720dbb27209c093390b3ea48acdac9e4a9e79a1c95dce18da",
+      "size_bytes": 169
+    },
+    "seed-order.json": {
+      "sha256": "2615ae075708b4a4e24708c49a8862d58f0a3fbea99aacd681964732b2adb702",
+      "size_bytes": 6257
+    }
+  },
+  "out_of_scope_suggestions": [
+    "secondary biasing and per-process factor scans are separate preregistrations",
+    "a full XS audit (table provenance and physical evaluation) belongs to the independent NIEL/XS audit track, not to this weight-arithmetic test",
+    "if the campaign shows a resolution-limited result, sizing a follow-up needs a new frozen design rather than extending this one"
+  ],
+  "primary_comparison": {
+    "decision_rules": {
+      "anomaly": "any batch with missing evidence, non-finite values or failed checks stops the comparison; batches are never dropped, and anomalous batch means are listed descriptively, not tested pairwise for significance",
+      "compatible": "interval contains 0: report 'no difference beyond the preset error at this resolution'; this is not equivalence and not evidence of global unbiasedness",
+      "degenerate": "zero standard error: report an exact arithmetic result under the frozen model only; no 99% coverage claim",
+      "detected": "interval excludes 0: report a difference at this resolution; do not attribute it to a backend defect and do not call the bias factor wrong"
+    },
+    "formulas": {
+      "delta": "mean_biased - mean_analog",
+      "df": "(v_b+v_a)^2 / (v_b^2/15 + v_a^2/15), v=var/n",
+      "interval": "delta +/- t(0.995, df) * se",
+      "se": "sqrt(var_biased/16 + var_analog/16) with sample variances (n-1)"
+    },
+    "limitations": [
+      "16 batches per group: the Welch interval is a finite-sample approximation whose coverage is not exact under non-normal or unequal-variance data",
+      "batch means are independent by construction (distinct seeds); this is not a paired shared-random-numbers design",
+      "only one primary comparison is allowed; per-pair or repeated tests are not performed and cannot be reported as a significance result",
+      "time order is balanced but cannot exclude slow drift; the order list is fixed and not re-randomised after seeing data"
+    ],
+    "test": "one two-sided Welch 99% interval for (mean_biased - mean_analog) over the 16 independent batch means per group"
+  },
+  "primary_endpoint": {
+    "batch_moments": "S=sum D_i; S2=sum D_i^2; R=sqrt(S2/S^2 - 1/N); sigma_event=R*mean_b",
+    "checks": [
+      "EP-COMPLETED: run_summary status=completed, program_exit_code=0, actual_completed_event_count=2000",
+      "EP-EVENT-ROWS: the union of event IDs across worker event_edep files is exactly 0..1999; every batch has N=2000 rows; a missing row is a failure",
+      "EP-MASS: dose CSV mass_kg equals rho*V using G4_Pb density 11.35 g/cm3 and V=1 cm3 within the 12-digit half-unit interval; the CSV value is primary",
+      "EP-DOSE-RECON: sum of weighted dose rows across workers equals sum_i D_i within the half-unit interval plus the stated accumulation bound",
+      "EP-STATS-RECON: statistics S, S2, R for weighted dose equal the values recomputed from the event rows (R=sqrt(S2/S^2-1/N)); entries equals the number of nonzero-dose events",
+      "EP-WEIGHT-POSITIVE: every nonzero hit weight is finite and >0; sum of hit weighted_edep equals event weighted_edep within rounding",
+      "EP-SCORING-ENABLED: the effective configuration facts must show scoring.enabled=true, hits=true, event_edep=true, dose=true, let=false, fluence=false and auto_create_default_scorers=true; relying on the default dose=false is a failed input (the defect the v1 review found)",
+      "EP-WEIGHT-NONUNIT: biased group must show at least one finite positive hit weight != 1 in every batch; analog group must show weight == 1 on every hit; a missing signature fails the batch. No particular discrete weight value is required because the realized weights are kernel outcomes, not cross-section arithmetic",
+      "EP-WORKER-EVIDENCE: each biased run has a real [G4USimBiasing] worker receipt per (run,thread) with operators=1, matched_rules=1, tls_verified, end_run_completed, proposals>0 and no failure; the analog run must report no attached biasing operator, not biasing_effect_observed",
+      "EP-NO-UNKNOWN: biasing_effect_observed=unknown or configuration acceptance alone is never accepted as weight evidence"
+    ],
+    "per_batch_formula": "mean_b = (1/N) * sum_i D_i; N=2000; zero-deposition events are kept and enter the mean as 0",
+    "per_event_formula": "D_i = weighted_edep_MeV_i * 1.602176634e-13 / mass_kg",
+    "quantity": "per-completed-event weighted deposited dose in Target, Gy/event",
+    "sources": {
+      "dose_summary": "dose_volume_summary_tN.csv: mass_kg, weighted_dose_Gy, weighted_edep_MeV, weighted_edep_sum_sq_MeV2, n_events",
+      "event_edep": "event_edep_tN.csv: runID,eventID,raw_edep_MeV,weighted_edep_MeV; one row per completed event including zero deposition",
+      "hits": "hits_tN.csv: observed deposition steps with weight; a witness of emitted steps and weights, not a complete event or scoring-step set",
+      "statistics": "scorer_statistics.csv: total row for weighted dose with n_events, entries, value, sum, sum_sq, rel_error, uncertainty_estimator, uncertainty_status"
+    }
+  },
+  "pure_math": {
+    "checks": [
+      {
+        "detail": "t(0.995,1)=63.656741162871 expected=63.656741162872",
+        "id": "MATH-T-QUANTILE-1",
+        "ok": true
+      },
+      {
+        "detail": "t(0.995,2)=9.924843200918 expected=9.924843200918",
+        "id": "MATH-T-QUANTILE-2",
+        "ok": true
+      },
+      {
+        "detail": "t(0.995,5)=4.032142983555 expected=4.032142984135",
+        "id": "MATH-T-QUANTILE-5",
+        "ok": true
+      },
+      {
+        "detail": "t(0.995,10)=3.169272672617 expected=3.169272672617",
+        "id": "MATH-T-QUANTILE-10",
+        "ok": true
+      },
+      {
+        "detail": "t(0.995,15)=2.946712883475 expected=2.946712883475",
+        "id": "MATH-T-QUANTILE-15",
+        "ok": true
+      },
+      {
+        "detail": "t(0.995,30)=2.749995653567 expected=2.749995653567",
+        "id": "MATH-T-QUANTILE-30",
+        "ok": true
+      },
+      {
+        "detail": "t(0.995,100)=2.625890521438 expected=2.625890521438",
+        "id": "MATH-T-QUANTILE-100",
+        "ok": true
+      },
+      {
+        "detail": "t(0.995,1e7)=2.575829795738 normal=2.575829303549",
+        "id": "MATH-T-NORMAL-LIMIT",
+        "ok": true
+      },
+      {
+        "detail": "t quantile decreases with df toward the normal limit",
+        "id": "MATH-T-MONOTONE",
+        "ok": true
+      },
+      {
+        "detail": "null delta=0.000e+00 CI=[-1.945e-03,1.945e-03]",
+        "id": "MATH-POS-COMPAT",
+        "ok": true
+      },
+      {
+        "detail": "1% delta detected, half_width=1.945e-03",
+        "id": "MATH-POS-DETECT",
+        "ok": true
+      },
+      {
+        "detail": "Student-t includes zero while a normal-quantile rule would reject",
+        "id": "MATH-NEG-NORMAL-QUANTILE",
+        "ok": true
+      },
+      {
+        "detail": "half width equals critical * standard error",
+        "id": "MATH-NEG-REPRODUCE-FIXTURE",
+        "ok": true
+      },
+      {
+        "detail": "event-level pseudo SE=1.581e-05 vs batch SE=7.071e-04 (~1/sqrt(2000))",
+        "id": "MATH-NEG-PSEUDOREPLICATION",
+        "ok": true
+      },
+      {
+        "detail": "dropping the worst batch changes the interval, so it is a forbidden post-hoc choice",
+        "id": "MATH-NEG-DROP-BATCH",
+        "ok": true
+      },
+      {
+        "detail": "identical constant batches are degenerate, not 'no difference proven'",
+        "id": "MATH-ZERO-VARIANCE",
+        "ok": true
+      },
+      {
+        "detail": "zero-variance group gives df=15 and a finite Welch interval",
+        "id": "MATH-ONE-SIDED-ZERO-VARIANCE",
+        "ok": true
+      },
+      {
+        "detail": "infinite batch means raise instead of producing a finite-looking interval",
+        "id": "MATH-NEG-INFINITE",
+        "ok": true
+      },
+      {
+        "detail": "16x2000 batches resolve sub-percent differences under the stated CV priors",
+        "id": "MATH-DESIGN-RESOLUTION",
+        "ok": true
+      },
+      {
+        "detail": "32 seeds, 32 unique",
+        "id": "MATH-SEEDS-UNIQUE",
+        "ok": true
+      },
+      {
+        "detail": "batch seeds do not intersect the frozen/used Q2 seed inventory",
+        "id": "MATH-SEEDS-DISJOINT",
+        "ok": true
+      },
+      {
+        "detail": "16 seeds per group",
+        "id": "MATH-SEEDS-PER-GROUP",
+        "ok": true
+      },
+      {
+        "detail": "16 complete pairs, one run per group",
+        "id": "MATH-ORDER-PAIRS",
+        "ok": true
+      },
+      {
+        "detail": "analog runs first in 8/16 pairs",
+        "id": "MATH-ORDER-BALANCED",
+        "ok": true
+      }
+    ],
+    "covers": [
+      "Student-t quantile from an independent incomplete-beta implementation against published constants and the normal limit",
+      "positive fixtures: null (compatible) and 1% shift (detected)",
+      "negative controls: normal quantile instead of t at the boundary changes the decision; event-level pseudo-replication understates the error; dropping the worst batch changes the interval; zero variance is not equivalence; infinite batch means are rejected",
+      "seed table uniqueness/disjointness and balanced run order",
+      "design-resolution prior table (analytic, not measured)"
+    ],
+    "does_not_cover": "No assumption about realized track-weight values, interaction counts or survival probabilities is made or tested here; those are execution observations, not mathematical identities.",
+    "failed": [],
+    "passed": 24,
+    "results": {
+      "path": "verify_math_results.json",
+      "sha256": "6d36e5beca1492749d4d256150f9d4fb561007fe30f7693f2285dc3702bfd985"
+    },
+    "script": {
+      "path": "verify_math.py",
+      "sha256": "7fffc6ae18655dd594ede47bd4d34c182b2877cfa1f92c35a1fdd8175eefc049"
+    },
+    "status": "pass"
+  },
+  "reference_documents": {
+    "inbox": {
+      "path": "docs/collab/inbox/20261105-q2-biasing-preregister-v1.md",
+      "sha256": "972bf852e5d4ae1511c6fdd01a87d0a6b25ab725844ca87405f21e553cdb20e7"
+    },
+    "q2_fixed_list": {
+      "path": "docs/collab/decisions/20261105-q2-closeout.md",
+      "sha256": "95e4b31b4c1383a14d01337df2c67bf031debb60c1651ef97272641f88b4768d"
+    },
+    "regression_step_weight": {
+      "path": "scripts/test_biasing_step_weight.py",
+      "sha256": "d090ea85e5de431b28f34eb7860fb9264d1e8d3d4d173be132bac2ca7d4a9154"
+    },
+    "regression_worker_runtime": {
+      "path": "scripts/test_biasing_worker_runtime.py",
+      "sha256": "8dcd78ac5d6f977cab1a615b1bfc0d313f17ef19e7a23f41f4fdf1d8868d79c8"
+    },
+    "review": {
+      "path": "docs/collab/reviews/20261105-q2-biasing-preregister-review.md",
+      "sha256": "a5e57ec647437da38e13f2f0a0a9bd2050966a9c361e1633321f571e7801c1cf"
+    }
+  },
+  "reproduction": [
+    "python -B make_inputs.py --check   # byte-identical drafts",
+    "python -B verify_math.py --write  # pure-math checks",
+    "python -B build_proposal.py       # this JSON",
+    "execution (only after independent review): see proposal.execution_plan"
+  ],
+  "schema": "g4usim_q2_biasing_preregister_v1",
+  "scope_statement": "Preregisters one XS-biasing versus analog comparison on a single 1 cm lead cube with 10 MeV electrons. The expected observable is the track-weight change produced by one bremsstrahlung rule on the primary; the comparison is the weighted deposited dose per completed event. Only the linear weight arithmetic of a registered biasing operation is exercised.",
+  "status": "draft",
+  "task": "q2-biasing-preregister-v1-20261105"
+}

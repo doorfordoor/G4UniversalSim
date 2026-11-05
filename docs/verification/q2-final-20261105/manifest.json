@@ -1,0 +1,222 @@
+{
+  "schema": "g4usim_q2_final_package_manifest_v1",
+  "purpose": "Index of Q2-1..Q2-5 frozen evidence for Q2-6 acceptance. Not a new scientific validation.",
+  "delivered_for": "Q2-6 final package (evidence commit b5c6a77b)",
+  "platform_basis": {
+    "windows_release": true,
+    "geant4": "11.3.2",
+    "note": "independent Q2 science runs are Windows/11.3.2 only"
+  },
+  "product": {
+    "build_git_commit": "864bc036d6d7752475e52db4efd2b950cabfcc3d",
+    "cpp_source_fingerprint": "e7de615d4e342114104f970688a7ea5f9789f7b70240b2562a388a50a45704e7",
+    "exe": {
+      "path": "out/collab/q2-backend-864bc036/G4UniversalSim.exe",
+      "sha256": "f8a8119da5d68814a14920056d85a7f30e4f8380d393ea1d439cc8ca2726820f",
+      "size_bytes": 2786304
+    }
+  },
+  "entrypoints": [
+    {
+      "path": "docs/Q2科研基准与适用范围.md",
+      "sha256": "5a69464ff6ee31655aaa3187bba5129186faa4a26b58896b88c5cf0b41e4f463",
+      "size_bytes": 15494
+    },
+    {
+      "path": "scenarios/benchmarks/README.md",
+      "sha256": "f272a9aa0960f5349fb38b65205eade7d98776b152bff7a25d299bb5cf60e3db",
+      "size_bytes": 3206
+    },
+    {
+      "path": "docs/中文使用手册.md",
+      "sha256": "6de98165ed994b4e5b27bf29a957c6d09812e64f58f4ff0ebf354ac473c1f23d",
+      "size_bytes": 59298
+    }
+  ],
+  "cases": [
+    {
+      "case": "REF-LET-01 v2 (EM-only)",
+      "freeze": "docs/collab/decisions/20261105-q2-let-reference-freeze-v2.json",
+      "inputs": "out/collab/q2-reference-let-v2/inputs",
+      "comparator": "out/collab/q2-reference-let-v2/compare.py",
+      "raw": "out/collab/q2-reference-let-v2/runs",
+      "evidence": "docs/verification/q2-let-reference-20261105/v2-em-only/README.md",
+      "status": "pass",
+      "freeze_sha256": "4a5ddbe1067589d8437fe604db79f47c68c61e30f9c69d7c86b9d8104166bf5b",
+      "comparator_sha256": "c958ae35f888f1ec60e157325424da617a88798935638056c03cc90334037b0f",
+      "evidence_sha256": "fa9b29b47494eea08fd30f02555fc5e1b12095b28c35cd0e15b65635ed5bae6c"
+    },
+    {
+      "case": "REF-LET-01 v1 (failed, retained)",
+      "freeze": "docs/collab/decisions/20261105-q2-let-reference-freeze-v1.json",
+      "inputs": "out/collab/q2-reference-let-v1/inputs",
+      "comparator": "out/collab/q2-reference-let-v1/compare.py",
+      "raw": "out/collab/q2-reference-let-v1/runs",
+      "evidence": "docs/verification/q2-let-reference-20261105/README.md",
+      "status": "fail-retained",
+      "freeze_sha256": "b22b7d6535d226f632719f759003b391d2153f28802a348ae4b071a178136af1",
+      "comparator_sha256": "84fd246239c3d8a0d5e48d354c51e99a3f131a3ec977271d4730dd5d644888c1",
+      "evidence_sha256": "005201b3472882d6d73dd05627b536f1425df7b8bfe15c1b5e02064240fefd3f"
+    },
+    {
+      "case": "REF-DOSE-01",
+      "freeze": "docs/collab/decisions/20261105-q2-dose-reference-freeze-v1.json",
+      "inputs": "out/collab/q2-reference-dose-v1/inputs",
+      "comparator": "out/collab/q2-reference-dose-v1/compare.py",
+      "raw": "out/collab/q2-reference-dose-v1/runs",
+      "evidence": "docs/verification/q2-dose-reference-20261105/README.md",
+      "status": "pass",
+      "freeze_sha256": "a2a799e90bd941b4969beab62be408013420dfbd684c4e8e52f07775308e498d",
+      "comparator_sha256": "7fcd66a0f25faf1d74a79c9f384efddddad93977f8da70549f4a7e82337f48ed",
+      "evidence_sha256": "d0c186a49e8fafda38497b7fefbdfc1333712ca473bfe501f595831723189c0e"
+    },
+    {
+      "case": "REF-FLU-01",
+      "freeze": "docs/collab/decisions/20261105-q2-fluence-reference-freeze-v1.json",
+      "inputs": "out/collab/q2-reference-fluence-v1/inputs",
+      "comparator": "out/collab/q2-reference-fluence-v1/compare.py",
+      "raw": "out/collab/q2-reference-fluence-v1/runs",
+      "evidence": "docs/verification/q2-fluence-reference-20261105/README.md",
+      "status": "pass",
+      "freeze_sha256": "d9ceb71f9cb6a3bcf4029010eb2bf2212c6b014dca9967b40277e01379b077b3",
+      "comparator_sha256": "1bd545064adae51972a34ee83cafcd1fc74d7146e2a59bb3bfa25094b3304477",
+      "evidence_sha256": "9656e01ddcbab2a232f098dbac22eba037928e116a257705a144263129206c2f"
+    },
+    {
+      "case": "REF-DDD-01",
+      "freeze": "docs/collab/decisions/20261105-q2-ddd-reference-freeze-v1.json",
+      "inputs": "out/collab/q2-reference-ddd-v1/inputs",
+      "comparator": "out/collab/q2-reference-ddd-v1/compare.py",
+      "raw": "out/collab/q2-reference-ddd-v1/runs",
+      "evidence": "docs/verification/q2-ddd-reference-20261105/README.md",
+      "status": "limited",
+      "freeze_sha256": "65877c33ad74111f5c567d060f495eccea074b378b3c5bd0b9bdd4f6e40b6a7c",
+      "comparator_sha256": "ac28944a83c7bd6aa913590d49c0cfc85a2f5c62773ce28a6ab589011c600b29",
+      "evidence_sha256": "05a14a7a1eae09b03408d694d5e22b8cdded132427af7c35ed486192dd942aff"
+    },
+    {
+      "case": "REF-DDD-02 NIEL table audit",
+      "freeze": "docs/collab/decisions/20261105-q2-niel-table-audit-freeze-v1.json",
+      "inputs": "scenarios/semiconductor/niel",
+      "comparator": "out/collab/q2-niel-table-audit-v1/audit.py",
+      "raw": "scenarios/semiconductor/niel",
+      "evidence": "docs/verification/q2-niel-table-audit-20261105/README.md",
+      "status": "limited",
+      "freeze_sha256": "92cfff501fcdff2fc0ea40010f02b23f3eabf45cb3b16c1d9a027c08a7702bb4",
+      "comparator_sha256": "c0f894c4a71dc3085dcee66581b021aa35cbaa4a41e8bb1a1a43fb6d930e9d88",
+      "evidence_sha256": "d5ba36d5b3c54c5e68527b2c54d23a0f1809438b91aa9c8289d26c3ac29e47fd"
+    },
+    {
+      "case": "Q2-2 implementation",
+      "freeze": null,
+      "inputs": "out/collab/q2-implementation-v1/inputs",
+      "comparator": "out/collab/q2-implementation-v1/comparator.py",
+      "raw": "out/collab/q2-implementation-v1/runs",
+      "evidence": "docs/verification/q2-implementation-20261105/README.md",
+      "status": "pass",
+      "comparator_sha256": "a9e37392df623507b1647184aab54492344cfc7ea89c0a333437945a5b2601e5",
+      "evidence_sha256": "b7eeea04aa1a45a0e6b68b705d54d463699f7927167797e1b59e84513fcf9932"
+    },
+    {
+      "case": "Q2-4 uncertainty",
+      "freeze": "docs/collab/decisions/20261105-q2-uncertainty-freeze-v1.json",
+      "inputs": "out/collab/q2-uncertainty-v1/inputs",
+      "comparator": "out/collab/q2-uncertainty-v1/compare.py",
+      "raw": "out/collab/q2-uncertainty-v1/runs",
+      "evidence": "docs/verification/q2-uncertainty-execution-20261105/README.md",
+      "status": "pass",
+      "freeze_sha256": "5768cc413d7e05b586fdbe8074342e52ec14cdbf27fbc037163604775e0381b6",
+      "comparator_sha256": "b6a8bb4b3fc79fc687370524fab31cca643b8c9deec96b32dacc010ea3db831c",
+      "evidence_sha256": "7231fcbb9daf9c6ccb51bed16238e67aaf1cb74ba50fa4c162866d1b45e419e7"
+    },
+    {
+      "case": "Q2-5 r2 repair (factor 1.2 / 0.01 mm)",
+      "freeze": "docs/collab/decisions/20261105-q2-biasing-freeze-r1.json",
+      "inputs": "out/collab/q2-biasing-repair-r2/inputs",
+      "comparator": "out/collab/q2-biasing-repair-r2/compare.py",
+      "raw": "out/collab/q2-biasing-repair-r2/runs",
+      "evidence": "docs/verification/q2-biasing-repair-r2-20261105/README.md",
+      "status": "pass-limited-scope",
+      "freeze_sha256": "d2e3837d5202616f2a2f6dc2d2269286ec68eb447464c0826cf23e2953c6c6e7",
+      "comparator_sha256": "aae0df250d8f13cd575e7a50605fadb2e668b1dc95fb80589a7b70a2ae7dfd5c",
+      "evidence_sha256": "beef694d1b1bd296a935daf1692cd147d6fe1d00322dcaccc2f81569d600fad2"
+    },
+    {
+      "case": "Q2-5 original factor=10 (failed, retained)",
+      "freeze": "docs/collab/decisions/20261105-q2-biasing-freeze-r1.json",
+      "inputs": "out/collab/q2-biasing-execution-v1/inputs",
+      "comparator": "out/collab/q2-biasing-execution-v1/compare.py",
+      "raw": "out/collab/q2-biasing-execution-v1/runs",
+      "evidence": "out/collab/q2-biasing-execution-v1/README.md",
+      "status": "fail-retained",
+      "freeze_sha256": "d2e3837d5202616f2a2f6dc2d2269286ec68eb447464c0826cf23e2953c6c6e7",
+      "comparator_sha256": "a4f54ba6bf6c8cf31ee2e422efde9d9432f8ce6ae3c47527d1eac5070c2b5db7",
+      "evidence_sha256": "01a2c4d0be5a99b6df903aa1baee9ef96f5d36adc9a07d7955ec650bff42b065"
+    }
+  ],
+  "evidence_reuse": {
+    "f2_final": "docs/verification/f2-final-20261104/README.md (same build/fingerprint, integration only)",
+    "workflows": [
+      ".github/workflows/m0-static-gui.yml",
+      ".github/workflows/linux-geant4.yml",
+      ".github/workflows/desktop-package.yml",
+      ".github/workflows/full-installation.yml"
+    ],
+    "cannot_substitute": "Windows 11.3.2 science data for Linux, Geant4 11.4 or cloud CI"
+  },
+  "limitations": [
+    "LET v1 retained failure (100 MeV LET_d-LET_t 21.06%)",
+    "DDD overall limited (257 pass/0 fail/6 limited)",
+    "NIEL table audit limited (structure/arithmetic only)",
+    "Q2-5 original factor=10 retained failure (ratio 0.4058)",
+    "Q2-5 r2 valid only for one case with max_step=0.01 mm",
+    "statistical scope limited to checked distributions/samples"
+  ],
+  "no_new_science": true,
+  "existing_cloud_records": {
+    "product_commit": "864bc036d6d7752475e52db4efd2b950cabfcc3d",
+    "source": "docs/verification/f2-final-20261104/ci-runs-final.json",
+    "runs": [
+      {
+        "workflow": "Linux build and backend regression",
+        "run_id": 41820515533,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "M0 static and GUI regression",
+        "run_id": 41820515013,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "I2 desktop package delivery",
+        "run_id": 41820515045,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "I2 native runtime and SDK installation",
+        "run_id": 41820515620,
+        "conclusion": "success"
+      }
+    ],
+    "docs_only_commit": "f7793dcbc198f17e0bae935004df1d2a727a159e",
+    "docs_only_source": "docs/verification/e4-final-20261105/ci-accepted-runs.json",
+    "docs_only_runs": [
+      {
+        "workflow": "Linux build and backend regression",
+        "run_id": 41860688390,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "M0 static and GUI regression",
+        "run_id": 41860689162,
+        "conclusion": "success"
+      },
+      {
+        "workflow": "I2 desktop package delivery",
+        "run_id": 41860688420,
+        "conclusion": "success"
+      }
+    ],
+    "policy": "reuse by original commit/run id; main reviewer selects any necessary new batch; no new framework or science runs"
+  }
+}

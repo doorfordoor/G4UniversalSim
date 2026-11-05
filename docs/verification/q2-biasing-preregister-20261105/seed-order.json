@@ -1,0 +1,384 @@
+{
+  "analog_seeds": [
+    20260801,
+    20260802,
+    20260803,
+    20260804,
+    20260805,
+    20260806,
+    20260807,
+    20260808,
+    20260809,
+    20260810,
+    20260811,
+    20260812,
+    20260813,
+    20260814,
+    20260815,
+    20260816
+  ],
+  "batches_per_group": 16,
+  "biased_seeds": [
+    20260817,
+    20260818,
+    20260819,
+    20260820,
+    20260821,
+    20260822,
+    20260823,
+    20260824,
+    20260825,
+    20260826,
+    20260827,
+    20260828,
+    20260829,
+    20260830,
+    20260831,
+    20260832
+  ],
+  "disjoint_from_used": true,
+  "events_per_batch": 2000,
+  "order_rule": "pairs alternate analog-first / biased-first so neither group is systematically earlier in the run sequence",
+  "runs": [
+    {
+      "batch": "analog_00",
+      "group": "analog",
+      "order": 1,
+      "pair": 0,
+      "seed": 20260801
+    },
+    {
+      "batch": "biased_00",
+      "group": "biased",
+      "order": 2,
+      "pair": 0,
+      "seed": 20260817
+    },
+    {
+      "batch": "biased_01",
+      "group": "biased",
+      "order": 3,
+      "pair": 1,
+      "seed": 20260818
+    },
+    {
+      "batch": "analog_01",
+      "group": "analog",
+      "order": 4,
+      "pair": 1,
+      "seed": 20260802
+    },
+    {
+      "batch": "analog_02",
+      "group": "analog",
+      "order": 5,
+      "pair": 2,
+      "seed": 20260803
+    },
+    {
+      "batch": "biased_02",
+      "group": "biased",
+      "order": 6,
+      "pair": 2,
+      "seed": 20260819
+    },
+    {
+      "batch": "biased_03",
+      "group": "biased",
+      "order": 7,
+      "pair": 3,
+      "seed": 20260820
+    },
+    {
+      "batch": "analog_03",
+      "group": "analog",
+      "order": 8,
+      "pair": 3,
+      "seed": 20260804
+    },
+    {
+      "batch": "analog_04",
+      "group": "analog",
+      "order": 9,
+      "pair": 4,
+      "seed": 20260805
+    },
+    {
+      "batch": "biased_04",
+      "group": "biased",
+      "order": 10,
+      "pair": 4,
+      "seed": 20260821
+    },
+    {
+      "batch": "biased_05",
+      "group": "biased",
+      "order": 11,
+      "pair": 5,
+      "seed": 20260822
+    },
+    {
+      "batch": "analog_05",
+      "group": "analog",
+      "order": 12,
+      "pair": 5,
+      "seed": 20260806
+    },
+    {
+      "batch": "analog_06",
+      "group": "analog",
+      "order": 13,
+      "pair": 6,
+      "seed": 20260807
+    },
+    {
+      "batch": "biased_06",
+      "group": "biased",
+      "order": 14,
+      "pair": 6,
+      "seed": 20260823
+    },
+    {
+      "batch": "biased_07",
+      "group": "biased",
+      "order": 15,
+      "pair": 7,
+      "seed": 20260824
+    },
+    {
+      "batch": "analog_07",
+      "group": "analog",
+      "order": 16,
+      "pair": 7,
+      "seed": 20260808
+    },
+    {
+      "batch": "analog_08",
+      "group": "analog",
+      "order": 17,
+      "pair": 8,
+      "seed": 20260809
+    },
+    {
+      "batch": "biased_08",
+      "group": "biased",
+      "order": 18,
+      "pair": 8,
+      "seed": 20260825
+    },
+    {
+      "batch": "biased_09",
+      "group": "biased",
+      "order": 19,
+      "pair": 9,
+      "seed": 20260826
+    },
+    {
+      "batch": "analog_09",
+      "group": "analog",
+      "order": 20,
+      "pair": 9,
+      "seed": 20260810
+    },
+    {
+      "batch": "analog_10",
+      "group": "analog",
+      "order": 21,
+      "pair": 10,
+      "seed": 20260811
+    },
+    {
+      "batch": "biased_10",
+      "group": "biased",
+      "order": 22,
+      "pair": 10,
+      "seed": 20260827
+    },
+    {
+      "batch": "biased_11",
+      "group": "biased",
+      "order": 23,
+      "pair": 11,
+      "seed": 20260828
+    },
+    {
+      "batch": "analog_11",
+      "group": "analog",
+      "order": 24,
+      "pair": 11,
+      "seed": 20260812
+    },
+    {
+      "batch": "analog_12",
+      "group": "analog",
+      "order": 25,
+      "pair": 12,
+      "seed": 20260813
+    },
+    {
+      "batch": "biased_12",
+      "group": "biased",
+      "order": 26,
+      "pair": 12,
+      "seed": 20260829
+    },
+    {
+      "batch": "biased_13",
+      "group": "biased",
+      "order": 27,
+      "pair": 13,
+      "seed": 20260830
+    },
+    {
+      "batch": "analog_13",
+      "group": "analog",
+      "order": 28,
+      "pair": 13,
+      "seed": 20260814
+    },
+    {
+      "batch": "analog_14",
+      "group": "analog",
+      "order": 29,
+      "pair": 14,
+      "seed": 20260815
+    },
+    {
+      "batch": "biased_14",
+      "group": "biased",
+      "order": 30,
+      "pair": 14,
+      "seed": 20260831
+    },
+    {
+      "batch": "biased_15",
+      "group": "biased",
+      "order": 31,
+      "pair": 15,
+      "seed": 20260832
+    },
+    {
+      "batch": "analog_15",
+      "group": "analog",
+      "order": 32,
+      "pair": 15,
+      "seed": 20260816
+    }
+  ],
+  "schema": "g4usim_q2_biasing_seed_order_v1",
+  "seed_block": [
+    20260801,
+    20260832
+  ],
+  "threads": 2,
+  "used_seed_inventory": [
+    220001,
+    220002,
+    220003,
+    220004,
+    220005,
+    220006,
+    220007,
+    220008,
+    220009,
+    220010,
+    220011,
+    220012,
+    220013,
+    220014,
+    220015,
+    220016,
+    220017,
+    220018,
+    220019,
+    220020,
+    220021,
+    220022,
+    220023,
+    220024,
+    220025,
+    220026,
+    220027,
+    220028,
+    220029,
+    220030,
+    220031,
+    220032,
+    220033,
+    220034,
+    220035,
+    220036,
+    220037,
+    220038,
+    220039,
+    220040,
+    220041,
+    220042,
+    220043,
+    220044,
+    220045,
+    220046,
+    220047,
+    220048,
+    220049,
+    220050,
+    220051,
+    220052,
+    220053,
+    220054,
+    220055,
+    220056,
+    220057,
+    220058,
+    220059,
+    220060,
+    220061,
+    220062,
+    220063,
+    220064,
+    20261106,
+    20261107,
+    20261108,
+    20261109,
+    20261110,
+    20261113,
+    20261114,
+    20261120,
+    20261121,
+    20261122,
+    20261123,
+    20261124,
+    20261201,
+    20261202,
+    20261203,
+    20261204,
+    20261205,
+    20261206,
+    20261207,
+    20261208,
+    20261209,
+    20261210,
+    20261211,
+    20261212,
+    20261213,
+    20261214,
+    20261215,
+    20261216,
+    20261217,
+    20261218,
+    20261219,
+    20261220,
+    20261221,
+    20261222,
+    20261223,
+    20261224,
+    20261225,
+    20261226,
+    20261227,
+    20261228,
+    20261229,
+    20261230,
+    20261231,
+    20261232
+  ]
+}

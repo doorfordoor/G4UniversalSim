@@ -18,3 +18,16 @@ python scripts/run_benchmarks.py --output benchmark_report
 | `shielding_range` | 质子/电子在 Al、Si 中的 CSDA 射程；质子穿过 Al/Si 平板后的平均能量（屏蔽场景包 B2） | NIST PSTAR / ESTAR（`nist/` 原表） | 射程：质子 1.5 %，电子 3 %；剩余能量 1 % |
 
 2026-10-22 完整模式（4 线程，Geant4 11.3.2）全部通过（`shielding_range` 同日加入），详见各包 README。这些基准验证所选物理列表在这些条件下与参考数据一致，不代表任意材料、能量或几何下的结果都已验证。
+
+## Q2 科研基准入口（Q2-1…Q2-5，2026-11-05）
+
+上面的 `Phase B` 基准只验证所选物理列表在特定条件下的射程/衰减/响应；Q2 科研基准
+是另一组**独立参考病例**（LET、Dose、Fluence、DDD、NIEL 表审计、统计不确定度、
+XS 偏置），其定义、冻结合同、精确输入/比较器/原始数据位置、统计口径与**适用域限制**
+集中记录在 [`docs/Q2科研基准与适用范围.md`](../../docs/Q2科研基准与适用范围.md)。
+
+使用前必须注意：Q2 独立科学运行绑定 Windows Release 产品 `864bc036…` / exe
+`f8a8119d…` / Geant4 `11.3.2`，不能冒充 Linux 或 11.4；原 Q2-3 LET v1 失败、
+DDD/ NIEL 的 limited、Q2-5 原 `factor=10` 失败都是**保留的已知限制**，不得省略。
+入口文档只做索引，不重复大体积 `runs/` 与旧报告；科学判定以各病例冻结合同与
+`docs/verification/q2-*` 最终记录为准。
