@@ -1,0 +1,45 @@
+{
+  "original-v1.zip": {
+    "bytes": 7021306,
+    "sha256": "3dfd72a31ed65a7b2eba22347bb904db12e696ce98978071257d2f6c31eec7a2"
+  },
+  "original-v1-manifest.json": {
+    "bytes": 186002,
+    "sha256": "a46bf5af7c9df92a59b398500a924057a7412b5b4c4b3002a6834474fb2dc1a7"
+  },
+  "audit_raw.py": {
+    "bytes": 10833,
+    "sha256": "1f5cfa6c4e876b7a5ec44686962db86851df55f5eca606c8f92e8774c009a54f"
+  },
+  "independent-raw-report.json": {
+    "bytes": 1063,
+    "sha256": "eb5fc5eaeeff7635777cf0d01b1dc5d132e14f09960d5a70f2b38f9d95a09165"
+  },
+  "merge_probe.cc": {
+    "bytes": 1351,
+    "sha256": "c489a16259318b4923318451434e84e369ccf961d41deb96e1fba3d181209cdf"
+  },
+  "merge-probe.json": {
+    "bytes": 133,
+    "sha256": "345c6dea58b1571e2253a5a014700b436b13b556b67c4e7cfa30b901df045755",
+    "compiler": "D:/msys64/ucrt64/bin/g++.exe",
+    "arguments": [
+      "-std=c++17",
+      "-Iinclude",
+      "merge_probe.cc",
+      "src/Scoring/HistoryStatistics.cc",
+      "-o",
+      "merge_probe.exe"
+    ],
+    "binary_sha256": "2b5fea4ca2440635f217fa6ee20bfc50a07b62378fdae3c073f791568bad1c4f",
+    "product": "864bc036d6d7752475e52db4efd2b950cabfcc3d"
+  },
+  "witness_compare.py": {
+    "bytes": 2787,
+    "sha256": "7ba7c1139e5ed0bf082088cb32926578f2ea77babecfd3a532806c443843660e"
+  },
+  "witness-v1.json": {
+    "bytes": 321,
+    "sha256": "39fae2dd63bbc43d73199ec677b42e2495aa2671806494ba27b185eef7e5157c"
+  }
+}
