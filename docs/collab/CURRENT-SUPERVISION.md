@@ -14,21 +14,21 @@ D盘roadmap/Q2-scientific-baselines；应用产品冻结864bc036d6d7752475e52db4
 ## 清单状态表
 | 清单项 | 状态 | 责任与证据 |
 | --- | --- | --- |
-| Q2-1定义/参考/预注册 | 进行中 | 四量参考/NIEL表审计及Q2-4统计合同已独审冻结；Q2-5偏置方案已排队编制 |
+| Q2-1定义/参考/预注册 | 进行中 | 四量参考/NIEL表审计及Q2-4统计合同已独审冻结；Q2-5偏置预注册编制中 |
 | Q2-2确定性单位/实现 | 通过 | Windows四类五运行、201检查及27反例；跨平台正式范围归Q2-6 |
 | Q2-3独立参考/适用域 | 限制 | 主审已签收限定范围：LET电磁v2、Dose四点、Fluence；DDD完整观测及NIEL物理评价限制见独审/归档，不外推物理等级 |
-| Q2-4统计不确定度 | 进行中 | 69次原始运行、130123事件及真实合并组件独立核对通过；初版比较证据三处未达冻结标准，round86/turn71修订中 |
-| Q2-5 XS偏置/analog | 未开始 | round87已入队，Q2-4修订停写后编制预注册；未授权输运 |
+| Q2-4统计不确定度 | 通过 | 69次原始运行、130123事件、3656项独立核对、真实合并组件及修订定向反例；R1已签收，初版证据保留 |
+| Q2-5 XS偏置/analog | 进行中 | round87/turn72正在编制冻结前草案，未授权输运 |
 | Q2-6整阶段验收交班 | 未开始 | 支持平台/版本回归、严格证据/云结果和科学范围签收 |
 
 ## 本轮结果
-Q2-4原始运行完成；C盘独立3656项核对无异常，63/64覆盖、总K=88809，220004/K=1436为预期允许的未覆盖批次。真实共享C++组件合并R=0.5，错误平均0.353553390593。原件1109成员/CRC及逐成员SHA已归档到docs/verification/q2-uncertainty-execution-20261105。初版“worker平均”副本只改事件行；LET master value=100、覆盖entries=1两个篡改仍漏检，见docs/collab/reviews/20261105-q2-uncertainty-execution-review-v1.md。仅修比较、反例和报告；不得重跑69次，原运行和初版记录保留。
+Q2-4 R1通过冻结范围。C盘独立3656项、63/64覆盖、总K=88809；220004/K=1436为允许的未覆盖批次。独立复编真实C++的7状态、协方差与合并R=0.5，拒绝错误平均0.353553390593。修订比较器527/527、8个原定反例和2个修订定向检查；1001个受保护文件（982运行、17输入、2身份）逐一与原版相同，无新增输运。证据docs/verification/q2-uncertainty-execution-20261105；签收docs/collab/reviews/20261105-q2-uncertainty-execution-review-r1.md。
 
 ## 运行中任务
-原task g4-j3-desktop-20261103、session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4，Flash/Max。round85/turn70完成并归档。round86/turn71请求q2-uncertainty-evidence-fix-r1-20261105正在修补三处，回执docs/collab/outbox/20261105-q2-uncertainty-v1-r1.md；round87请求q2-biasing-preregister-v1-20261105已入同一会话队列，不打断修订，回执docs/collab/outbox/20261105-q2-biasing-preregister-v1.md。请求/游标见out/collab/desktop-bridge/context.json；无主审后台命令。
+原task g4-j3-desktop-20261103、session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4，Flash/Max。round86/turn71实际完成；round87请求q2-biasing-preregister-v1-20261105实际进入turn72。任务docs/collab/inbox/20261105-q2-biasing-preregister-v1.md，回执docs/collab/outbox/20261105-q2-biasing-preregister-v1.md，草案out/collab/q2-biasing-proposal-v1。请求/游标见out/collab/desktop-bridge/context.json；无主审后台命令。
 
 ## 下一轮目标
-复验round86的精确差分、实际两worker组件和三条定向反例；比对runs/inputs/identity与原件SHA，不重跑已核原始输运。并行跟进round87预注册草案，独审冻结前不运行偏置/analog。Q2-6可按实际变更复用864bc036原矩阵云报告及92b285d6安装报告，各保留原SHA；不冒充科学新结果。Q2尚未关闭，定时阶段不变，不扩工具。
+跟进round87：独审同几何源/截面、实际worker和权重、独立种子与单主比较、计时FOM和缺失/停止规则；冻结前不运行偏置/analog。不重跑Q2-4。Q2-6按实际变更核864bc036原矩阵云报告及92b285d6安装报告，各保留原SHA；不冒充科学新结果。Q2尚未关闭，定时阶段不变，不扩工具。
 
 ## 待用户决定/限制
 | 项 | 决定 | 影响/动作 |

@@ -1,0 +1,17 @@
+{
+  "schema": "g4usim_q2_uncertainty_history_probe_v1",
+  "fixtures": [
+    {"fixture": "N=0,num=1,total", "events": 0, "numerator": 1, "ratio": false, "denominator": 0, "status": "insufficient_events"},
+    {"fixture": "N=1,num=0,ratio,den=0", "events": 1, "numerator": 0, "ratio": true, "denominator": 0, "status": "insufficient_events"},
+    {"fixture": "N=2,num=1,ratio,den=0", "events": 2, "numerator": 1, "ratio": true, "denominator": 0, "status": "undefined_ratio"},
+    {"fixture": "N=2,num=0,total", "events": 2, "numerator": 0, "ratio": false, "denominator": 0, "status": "zero_total"},
+    {"fixture": "N=2,num=0,ratio,den=1", "events": 2, "numerator": 0, "ratio": true, "denominator": 1, "status": "zero_total"},
+    {"fixture": "N=2,num=1,total", "events": 2, "numerator": 1, "ratio": false, "denominator": 0, "status": "approximate"},
+    {"fixture": "N=2,num=1,ratio,den=1", "events": 2, "numerator": 1, "ratio": true, "denominator": 1, "status": "approximate"}
+  ],
+  "covariance": {"A": 3, "B": 3, "sum_sq_A": 5, "sum_sq_B": 5, "cross": 4, "entries_A": 2, "entries_B": 2, "ratio": 1, "relative_error": 0.47140452079103179,
+    "tally_source": "HistoryTallySet per-event accumulation", "expected_relative_error": 0.47140452079103173},
+  "total_moments": {"sum": 4, "sum_sq": 8, "entries": 2, "relative_error": 0.40824829046386302, "expected_relative_error": 0.40824829046386302},
+  "worker_merge": {"worker_values": [[1, 1], [0, 4]], "events_total": 4, "merged": {"sum": 6, "sum_sq": 18, "entries": 3, "relative_error": 0.5}, "per_worker_relative_errors": [0, 0.70710678118654757], "wrong_average_relative_error": 0.35355339059327379, "expected_wrong_average_relative_error": 0.35355339059327379, "source": "HistoryTallySet + HistoryStatistics::Submit/Take real implementation"},
+  "ok": true
+}
