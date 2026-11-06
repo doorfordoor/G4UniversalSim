@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from g4usim_gui.core import install_layout
+from g4usim_gui.core import install_layout, parallel_world_scope
 from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.core.project import G4USimProject
 from g4usim_gui.widgets.diagnostic_panel import DiagnosticPanel
@@ -63,7 +63,10 @@ class ProjectPage(QWidget):
 
         self.status_summary = QLabel()
         self.status_summary.setWordWrap(True)
-        self.status_summary.setMinimumHeight(120)
+        self.status_summary.setMinimumHeight(150)
+        self.parallel_note = create_hint_label("")
+        self.parallel_note.setWordWrap(True)
+        self.parallel_note.hide()
 
         content = QWidget()
         layout = QVBoxLayout(content)
@@ -97,6 +100,7 @@ class ProjectPage(QWidget):
         run_form.addRow("Seed", self.seed)
         run_form.addRow("Run name", self.run_name)
         run_form.addRow("Status", self.status_summary)
+        run_form.addRow("", self.parallel_note)
 
         splitter = QSplitter()
         splitter.addWidget(setup_group)
@@ -291,6 +295,8 @@ class ProjectPage(QWidget):
             output_status = ui_text(
                 "ok" if output.exists() and output.is_dir() else "creatable" if output.parent.exists() else "missing parent"
             )
+        scope = parallel_world_scope.read_inputs_scope(
+            str(self.run_input_mode.currentData() or "generated"), self.config_path.text())
         lines = [
             ui_format("Executable: {status}", status=status_for_file(self.executable.text(), required=True)),
             ui_format("Config: {status}", status=status_for_file(self.config_path.text(), required=False)),
@@ -305,5 +311,15 @@ class ProjectPage(QWidget):
                     else "not set/missing"
                 ),
             ),
+            parallel_world_scope.status_line(scope),
         ]
         self.status_summary.setText("\n".join(lines))
+        if scope.status in {"enabled", "disabled"}:
+            self.parallel_note.setText(ui_text(
+                "Parallel scoring volumes live in the external main INI. The GUI shows their status "
+                "and rejects unsupported combinations, but does not edit them; the 3D preview draws "
+                "only the mass geometry."
+            ))
+            self.parallel_note.show()
+        else:
+            self.parallel_note.hide()

@@ -1957,6 +1957,44 @@ ZH_CN.update({
     'Replaying': '重放中',
 })
 
+ZH_CN.update({
+    'Parallel world: not configured': '平行世界计分：未配置',
+    'Parallel world: cannot read the external main INI': '平行世界计分：无法读取外部主 INI',
+    'Parallel world: disabled (external [parallel_world])': '平行世界计分：已禁用（外部 [parallel_world]）',
+    'Parallel world: enabled, name {name}': '平行世界计分：已启用，名称 {name}',
+    '; ghost geometry {path}': '；ghost 几何 {path}',
+    '; geometry file missing': '；几何文件缺失',
+    'Parallel world: ROOT output is not supported with a parallel scoring world.':
+        '平行世界计分：不支持 ROOT 输出。',
+    'Parallel world: biasing is not supported with a parallel scoring world.':
+        '平行世界计分：不支持偏置。',
+    'Parallel world: electromagnetic fields are not supported with a parallel scoring world.':
+        '平行世界计分：不支持电磁场。',
+    'Parallel world: native scoring meshes are not supported with a parallel scoring world.':
+        '平行世界计分：不支持原生计分网格。',
+    'Parallel world: LET and displacement damage scoring are not supported with a parallel scoring world.':
+        '平行世界计分：不支持 LET 与位移损伤计分。',
+    'Parallel world: [parallel_world] geometry_config is required when enabled=true.':
+        '平行世界计分：enabled=true 时必须设置 [parallel_world] geometry_config。',
+    'Parallel world: [parallel_world] with enabled=false must not declare name or geometry_config.':
+        '平行世界计分：enabled=false 时不得同时声明 name 或 geometry_config。',
+    'Parallel world: invalid boolean for [parallel_world]/enabled: {value}':
+        '平行世界计分：[parallel_world]/enabled 的布尔值无效：{value}',
+    'Parallel world: geometry file does not exist: {path}': '平行世界计分：几何文件不存在：{path}',
+    'Parallel world: geometry path is not a file: {path}': '平行世界计分：几何路径不是文件：{path}',
+    'Parallel world: enabled in the external main INI but not carried by '
+    'generated inputs; switch Inputs to External': '平行世界计分：外部主 INI 已启用，但生成输入不会携带该段；'
+    '请把输入模式切换为外部。',
+    'Parallel world: the project uses generated inputs, so [parallel_world] in the '
+    'external main INI would not be used; switch Inputs to External or configure the '
+    'run package externally.': '平行世界计分：项目当前使用生成输入，外部主 INI 中的 [parallel_world] 不会被使用；'
+    '请把输入模式切换为外部，或在外部配置中维护该段。',
+    'parallel-world scoring is external-only; keep the main INI external and edit [parallel_world] there':
+        '平行世界计分只支持外部主 INI；请保持外部输入并在主 INI 中编辑 [parallel_world]。',
+    'Parallel scoring volumes live in the external main INI. The GUI shows their status and rejects unsupported combinations, but does not edit them; the 3D preview draws only the mass geometry.':
+        '平行计分体积定义在外部主 INI 中。GUI 仅显示状态并拒绝不支持的组合，不提供编辑；3D 预览只绘制质量几何。',
+})
+
 
 def default_language() -> LanguageCode:
     return "zh_CN" if QLocale.system().language() == QLocale.Chinese else "en"

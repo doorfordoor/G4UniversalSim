@@ -98,6 +98,10 @@ public:
     void ScoreHit(const HitRecord& hit);
     // Accumulate a zero-deposition step for fluence only, without hits or Edep.
     void ScoreFluenceStep(const HitRecord& hit);
+    // Roadmap H3: one ghost step inside the optional parallel scoring world.
+    // Routes to the dose/fluence scorers only; never accumulates the event Edep,
+    // writes hits, or touches LET/displacement/edep scoring.
+    void ScoreParallelHit(const HitRecord& hit);
     // Record failures before a transport step can be converted to HitRecord.
     void ReportFluenceTransportFailure(const std::string& message);
     // Charged step without energy deposit: LET track-length contribution only.

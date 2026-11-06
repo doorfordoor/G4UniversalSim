@@ -203,6 +203,7 @@ CASES = (
     Case("gui_live_progress", "gui/smoke_tests/smoke_live_progress.py", "gui", ("qt",)),
     Case("gui_live_progress_backend", "gui/smoke_tests/smoke_live_progress_backend.py", "integration", ("qt", "exe")),
     Case("gui_scenario_backend", "gui/smoke_tests/smoke_scenario_backend.py", "integration", ("qt", "exe")),
+    Case("gui_parallel_world_entry", "gui/smoke_tests/smoke_parallel_world_entry.py", "integration", ("qt", "exe")),
     Case("gui_session_backend", "gui/smoke_tests/smoke_session_backend.py", "integration", ("qt", "exe")),
     Case("gui_theme_state_backend", "gui/smoke_tests/smoke_theme_state_backend.py", "integration", ("qt", "exe")),
     Case("live_progress", "scripts/test_live_progress.py", "backend", ("exe",)),
@@ -228,6 +229,9 @@ CASES = (
     Case("dose_scoring", "scripts/test_dose_scoring.py", "backend", ("exe",)),
     Case("fluence_scoring", "scripts/test_fluence_scoring.py", "backend", ("exe",)),
     Case("h2_volume_scoring", "scripts/test_h2_volume_scoring.py", "backend", ("exe",)),
+    Case("parallel_world", "scripts/test_parallel_world.py", "backend", ("exe",), timeout=2400),
+    # H3-2 R-COMP: the dedicated parallel entry must not fold into the mass-world tally.
+    Case("parallel_scoring_component", "scripts/test_parallel_scoring_component.py", "backend", ("exe",)),
     Case("h2_benchmarks", "scripts/test_h2_benchmarks.py", "backend", ("exe",)),
     Case("root_output", "scripts/test_root_output.py", "backend", ("exe", "uproot")),
     Case("scoring_mesh", "scripts/test_scoring_mesh.py", "backend", ("exe", "uproot")),

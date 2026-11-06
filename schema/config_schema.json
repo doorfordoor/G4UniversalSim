@@ -18,6 +18,10 @@
     "empty": "\"default\": an empty value counts as absent (the backend reads it with its string helpers), so the default applies",
     "case_sensitive": "true: enum values preserve case, e.g. STL length unit mm is valid but MM is not"
   },
+  "excluded": {
+    "main_ini": [],
+    "reason": "E6 includes field and biasing descriptions and generated keys. Macro/CLI, GDML/STL contents and auxiliary table formats keep their dedicated parsers; schema inventory does not imply GUI editability or physical validation."
+  },
   "files": {
     "main_ini": {
       "title": "主配置 INI，--config",
@@ -3054,6 +3058,68 @@
             "editable": "external_only"
           },
           "dynamic": true
+        },
+        "parallel_world": {
+          "migrated": true,
+          "independent": false,
+          "description_zh": "可选平行计分世界（H3）：在质量几何之外构建同名 ghost 世界，用声明的 box 体积或规则网格单元独立计分 dose 与 fluence。默认关闭，关闭时行为与旧版本一致；启用时只支持 CSV 输出、无偏置/场/mesh/LET/位移损伤。",
+          "description": "Optional parallel scoring world (H3): a ghost scoring world built next to the mass geometry, scoring dose and fluence on declared box volumes or regular grid cells. Disabled by default; disabled behaviour matches older releases. Supported combinations exclude ROOT output, biasing, fields, scoring meshes, LET and displacement damage.",
+          "parser": "src/ParallelWorld/ParallelWorldConfig.cc:Load",
+          "tests": [
+            "scripts/test_parallel_world.py"
+          ],
+          "validation": "configure; initialize; transport; output",
+          "rules": [
+            "enabled=true 时 geometry_config 必填且必须存在；enabled=false 时不得同时声明 name/geometry_config 等键。",
+            "geometry_config 是独立闭合 INI：只允许 [world]（material=G4_Galactic）、[volume.<name>]、[grid.<name>]；v1 只支持 box 与规则 box 网格，nx*ny*nz <= 4096。",
+            "不支持组合：ROOT 输出、biasing、[field]、[scoring.mesh.*]、LET、位移损伤；任一组合在配置阶段拒绝。",
+            "并行世界只计 dose/fluence，不写 hits、不累加 event_edep、不参与 LET/DDD/直方图；剂量归一化用声明的材料参考质量。",
+            "声明体积名与派生网格单元名在全部 [volume.*]/[grid.*] 展开后必须唯一；展开总数（含派生单元）<= 4096；不同评分盒只允许面/边/点接触，内部正体积重叠拒绝。",
+            "材料一致性只在可证明质量世界存在同解析材料身份、整盒包含且无内部异材质后代时写 true；旋转祖先或异材质后代导致无法证明时写 unknown。",
+            "配置完成后经 macro/csh/受控 session 引入 ROOT、biasing、native /score mesh、场、LET 或位移损伤时，须在 /run/initialize 内核构造前重新校验并拒绝。",
+            "ghost 步的物理体 copyNo 统一为 0（含派生网格单元）；逐 run 收据仅对完成计划事件的 run 记录该 run 输出文件的真实 SHA-256，失败或未完成 run 不写成功收据。"
+          ],
+          "keys": {
+            "enabled": {
+              "type": "bool",
+              "default": "false",
+              "support": "experimental",
+              "since": "H3-2",
+              "description": "Enable the optional parallel scoring world; false keeps legacy behaviour",
+              "description_zh": "启用可选平行计分世界；false 保持旧行为（默认）",
+              "gui": {
+                "editable": "external_only"
+              }
+            },
+            "name": {
+              "type": "string",
+              "default": "ScoringWorld",
+              "min_length": 1,
+              "support": "experimental",
+              "since": "H3-2",
+              "description": "Ghost world name; unique, no '/', '#', whitespace or mass-world/volume collision",
+              "description_zh": "ghost 世界名；唯一，不含 /、#、空白，且不与质量世界/体积名冲突",
+              "gui": {
+                "editable": "external_only"
+              }
+            },
+            "geometry_config": {
+              "type": "existing_file",
+              "default": "",
+              "support": "experimental",
+              "since": "H3-2",
+              "path_base": "main_ini",
+              "description": "Independent closed parallel-geometry INI, relative to the main INI directory",
+              "description_zh": "独立闭合的平行几何 INI，相对主 INI 目录解析",
+              "gui": {
+                "editable": "external_only"
+              }
+            }
+          },
+          "gui": {
+            "editable": "external_only",
+            "note": "GUI does not edit or generate the parallel scoring world in this release (H3-3); the backend still validates and runs it."
+          }
         }
       }
     },
@@ -6082,10 +6148,183 @@
           }
         }
       }
+    },
+    "geometry_parallel_ini": {
+      "title": "平行计分几何 INI（H3，独立文件）",
+      "sections": {
+        "world": {
+          "migrated": true,
+          "independent": true,
+          "parser": "src/ParallelWorld/ParallelWorldConfig.cc:ParseGeometryFile",
+          "tests": [
+            "scripts/test_parallel_world.py"
+          ],
+          "validation": "configure; geometry_build",
+          "gui": {
+            "editable": "external_only",
+            "note": "H3-3: 平行计分几何由外部文件维护，GUI 只读取用于状态、诊断与资源闭包；不提供图形编辑器。"
+          },
+          "description_zh": "平行计分世界的根声明；H3 v1 只允许 material = G4_Galactic，不写尺寸，世界包含关系由声明的 box 体积/网格与质量世界共同校验。",
+          "rules": [
+            "只允许 material 键且必须精确为 G4_Galactic；出现其它键或尺寸在本阶段被拒绝。",
+            "平行世界名称由主 INI 的 [parallel_world]/name 决定，不得与质量世界根体积或逻辑/物理体积重名。"
+          ],
+          "keys": {
+            "material": {
+              "type": "string",
+              "default": null,
+              "support": "experimental",
+              "since": "H3-3",
+              "description": "Ghost world material; must be G4_Galactic in H3 v1",
+              "description_zh": "平行世界（ghost）材料；H3 v1 仅支持 G4_Galactic",
+              "validation": "configure"
+            }
+          }
+        },
+        "volume.<name>": {
+          "migrated": true,
+          "independent": true,
+          "parser": "src/ParallelWorld/ParallelWorldConfig.cc:ParseGeometryFile",
+          "tests": [
+            "scripts/test_parallel_world.py"
+          ],
+          "validation": "configure; geometry_build",
+          "gui": {
+            "editable": "external_only",
+            "note": "H3-3: 平行计分几何由外部文件维护，GUI 只读取用于状态、诊断与资源闭包；不提供图形编辑器。"
+          },
+          "description_zh": "平行计分声明的 box 计分体积；H3 v1 只支持 parent = world、shape = box，尺寸与位置按 Geant4 内部单位 mm 解析。",
+          "rules": [
+            "只允许 parent/shape/size/position/material/sensitive 六个键；shape 必须显式写 box，size 为三个正值，sensitive 必须为 true。",
+            "parent 必须为 world；不允许旋转、嵌套体积、placement、replica/parameterised、布尔、装配、GDML、STL/tessellated 与 region/cuts/visual/bias 键。",
+            "声明名与网格派生单元名展开后必须全局唯一，内部正体积交叠在构造前拒绝（面/边/点接触允许），展开单元总数须 <= 4096。",
+            "material 必须在主材料文件中存在且密度有限大于 0；质量世界若为 GDML/tessellated 等非 box 模板则拒绝。"
+          ],
+          "keys": {
+            "parent": {
+              "type": "structured",
+              "default": null,
+              "support": "experimental",
+              "since": "H3-3",
+              "description": "Parent volume name; must be world",
+              "description_zh": "父体积名；H3 v1 必须为 world"
+            },
+            "shape": {
+              "type": "structured",
+              "default": null,
+              "support": "experimental",
+              "since": "H3-3",
+              "description": "Shape; must be box in H3 v1",
+              "description_zh": "实体类型；H3 v1 必须为 box"
+            },
+            "size": {
+              "type": "structured",
+              "default": null,
+              "support": "experimental",
+              "since": "H3-3",
+              "description": "Full-box size as three lengths, e.g. 20, 20, 2 mm",
+              "description_zh": "整盒尺寸，三个长度分量，例如 20, 20, 2 mm",
+              "syntax": "20, 20, 2 | 20 mm, 20 mm, 2 mm"
+            },
+            "position": {
+              "type": "structured",
+              "default": null,
+              "support": "experimental",
+              "since": "H3-3",
+              "description": "Centre position; omitted means the origin",
+              "description_zh": "中心位置；缺省为原点",
+              "syntax": "0, 0, 0 | 0, 0, -20 mm"
+            },
+            "material": {
+              "type": "string",
+              "default": null,
+              "support": "experimental",
+              "since": "H3-3",
+              "description": "Material name from the main materials file",
+              "description_zh": "主材料文件中的材料名"
+            },
+            "sensitive": {
+              "type": "bool",
+              "default": null,
+              "support": "experimental",
+              "since": "H3-3",
+              "description": "Must be true: declared boxes are scoring volumes",
+              "description_zh": "必须为 true：声明体积即计分体积"
+            }
+          }
+        },
+        "grid.<name>": {
+          "migrated": true,
+          "independent": true,
+          "parser": "src/ParallelWorld/ParallelWorldConfig.cc:ParseGeometryFile",
+          "tests": [
+            "scripts/test_parallel_world.py"
+          ],
+          "validation": "configure; geometry_build",
+          "gui": {
+            "editable": "external_only",
+            "note": "H3-3: 平行计分几何由外部文件维护，GUI 只读取用于状态、诊断与资源闭包；不提供图形编辑器。"
+          },
+          "description_zh": "平行计分规则 box 网格；展开为 nx*ny*nz 个计分单元，单元名 <grid>_<ix>_<iy>_<iz>（ix 最快），全局上限 4096。",
+          "rules": [
+            "只允许 parent/size/position/material/bins/sensitive 六个键；parent 必须为 world，bins 为三个 >=1 整数且乘积 <= 4096。",
+            "单元尺寸 dx/dy/dz = size/bins，单元中心由区域中心与 (i+0.5)*d 计算；与独立声明的 box 体积同样参与名称唯一、内部交叠与包含校验。",
+            "材料与几何限制同 [volume.<name>]；v1 不支持 Geant4 原生 /score mesh 与平行世界组合。"
+          ],
+          "keys": {
+            "parent": {
+              "type": "structured",
+              "default": null,
+              "support": "experimental",
+              "since": "H3-3",
+              "description": "Parent volume name; must be world",
+              "description_zh": "父体积名；H3 v1 必须为 world"
+            },
+            "size": {
+              "type": "structured",
+              "default": null,
+              "support": "experimental",
+              "since": "H3-3",
+              "description": "Total grid-region size as three lengths",
+              "description_zh": "网格区域总尺寸，三个长度分量",
+              "syntax": "20, 20, 2"
+            },
+            "position": {
+              "type": "structured",
+              "default": null,
+              "support": "experimental",
+              "since": "H3-3",
+              "description": "Grid-region centre; omitted means the origin",
+              "description_zh": "网格区域中心；缺省为原点"
+            },
+            "material": {
+              "type": "string",
+              "default": null,
+              "support": "experimental",
+              "since": "H3-3",
+              "description": "Material name for every cell",
+              "description_zh": "所有单元使用的材料名"
+            },
+            "bins": {
+              "type": "structured",
+              "default": null,
+              "support": "experimental",
+              "since": "H3-3",
+              "description": "Cell counts nx, ny, nz; each >= 1 and nx*ny*nz <= 4096",
+              "description_zh": "三个方向的单元数；各 >= 1 且乘积 <= 4096",
+              "syntax": "4, 4, 1"
+            },
+            "sensitive": {
+              "type": "bool",
+              "default": null,
+              "support": "experimental",
+              "since": "H3-3",
+              "description": "Must be true: grid cells are scoring volumes",
+              "description_zh": "必须为 true：网格单元即计分单元"
+            }
+          }
+        }
+      }
     }
-  },
-  "excluded": {
-    "main_ini": [],
-    "reason": "E6 includes field and biasing descriptions and generated keys. Macro/CLI, GDML/STL contents and auxiliary table formats keep their dedicated parsers; schema inventory does not imply GUI editability or physical validation."
   }
 }

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from g4usim_gui.core import parallel_world_scope
 from g4usim_gui.core.diagnostics import emit_diagnostic, semantic_snapshot
 from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.core.project import G4USimProject, RUN_INPUT_MODES
@@ -22,6 +23,11 @@ def validate_project_report(project: G4USimProject, *, ready_to_run: bool = Fals
 
     def error(code: str, field: str, message: str, *, key: str = '', **params) -> None:
         emit_diagnostic(report, 'project.' + code, 'error', message,
+                        origin='project_validation', editor='project', field=field,
+                        message_key=key or message, params=params)
+
+    def warning(code: str, field: str, message: str, *, key: str = '', **params) -> None:
+        emit_diagnostic(report, 'project.' + code, 'warning', message,
                         origin='project_validation', editor='project', field=field,
                         message_key=key or message, params=params)
 
@@ -62,6 +68,10 @@ def validate_project_report(project: G4USimProject, *, ready_to_run: bool = Fals
     if project.workspaceRoot and not Path(project.workspaceRoot).expanduser().is_dir():
         error('workspace_missing', 'workspace_root', f'Workspace root does not exist: {project.workspaceRoot}',
               key='Workspace root does not exist: {path}', path=project.workspaceRoot)
+    for issue in parallel_world_scope.read_scope(project).issues:
+        emit = warning if issue.code == 'parallel_world_generated_mode' else error
+        emit(issue.code, 'config_path', ui_format(issue.message, **issue.params),
+             key=issue.message, **issue.params)
     if not project.outputDir:
         error('output_required', 'output_dir', 'Output directory is required.')
     else:

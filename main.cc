@@ -938,6 +938,18 @@ int main(int argc, char** argv) {
           macroStatus = "failed";
           throw std::runtime_error("/run/reinitializeGeometry with attached biasing operators is not safe in this lifecycle; start a fresh process with the new geometry instead.");
         }
+        if (commandName == "/run/initialize") {
+          // Contract E: dependency guards must run before the physics/SD are
+          // constructed; nested guards after /run/initialize cannot undo that.
+          try {
+            sim.ValidateParallelWorldDependencies();
+          } catch (...) {
+            macroFailure = MacroFailureInfo{command.sourceFile.string(), static_cast<int>(command.lineNumber),
+                                            command.text, 0, false};
+            macroStatus = "failed";
+            throw;
+          }
+        }
         if (commandName == "/run/initialize" || commandName == "/run/beamon") {
           if (physicsListDirty) {
             runManager->SetUserInitialization(sim.CreatePhysicsList().release());
@@ -971,6 +983,7 @@ int main(int argc, char** argv) {
           }
           try {
             sim.ValidateScoringVolumeConfigsBeforeRun();
+            sim.ValidateParallelWorldForRun();
           } catch (...) {
             macroFailure = MacroFailureInfo{command.sourceFile.string(), static_cast<int>(command.lineNumber), command.text, 0, false};
             macroStatus = "failed";
@@ -1051,6 +1064,7 @@ int main(int argc, char** argv) {
           kernelInitialized = true;
           try {
             sim.ValidateBiasingProcessTargets();
+            sim.ValidateParallelWorldForRun();
           } catch (...) {
             macroFailure = MacroFailureInfo{command.sourceFile.string(), static_cast<int>(command.lineNumber), command.text, 0, false};
             macroStatus = "failed";
@@ -1134,6 +1148,13 @@ int main(int argc, char** argv) {
             }
             RandomCommandGuard::Validate(resolved);
             sim.ValidateEffectiveModuleCommand(resolved);
+            if (token == "/run/initialize") {
+              try {
+                sim.ValidateParallelWorldDependencies();
+              } catch (const std::exception& error) {
+                throw SemanticCommandError(error.what(), "parallel_world_config");
+              }
+            }
             if (token == "/run/beamon" &&
                 G4StateManager::GetStateManager()->GetCurrentState() != G4State_PreInit) {
               try {
@@ -1145,6 +1166,11 @@ int main(int argc, char** argv) {
                         ? "scoring_filter_particle"
                         : "scoring_volume_config";
                 throw SemanticCommandError(message, kind);
+              }
+              try {
+                sim.ValidateParallelWorldForRun();
+              } catch (const std::exception& error) {
+                throw SemanticCommandError(error.what(), "parallel_world_config");
               }
             }
             return RandomCommandGuard::ExecuteRestoreIfRequested(resolved);
@@ -1167,6 +1193,7 @@ int main(int argc, char** argv) {
             // recorded in the shared latch; the session stops on the next check.
             try {
               sim.ValidateScoringVolumeConfigsBeforeRun();
+              sim.ValidateParallelWorldForRun();
             } catch (const std::exception&) {
             }
           }

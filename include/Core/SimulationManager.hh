@@ -49,6 +49,10 @@ class BiasingMessenger;
 class ScoringManager;
 class ScoringMessenger;
 
+namespace parallel_world {
+class ParallelWorldConfig;
+}
+
 class SimulationManager {
 public:
     SimulationManager();
@@ -111,6 +115,12 @@ public:
     // Roadmap H2-4: rejects configured scoring filters before the event loop
     // starts; the failure is recorded through the shared output failure latch.
     void ValidateScoringVolumeConfigsBeforeRun();
+    // Roadmap H3: verifies the kernel-built parallel scoring world before
+    // the first event and latches failures in the shared output register.
+    // Pre-initialize dependency guard (biasing/field/ROOT/native mesh/LET/DDD).
+    void ValidateParallelWorldDependencies();
+    void ValidateParallelWorldForRun();
+    const parallel_world::ParallelWorldConfig* GetParallelWorldConfig() const;
     void EnableInteractivePhysicsGuard();
     std::size_t GetInteractivePhysicsFailureCount() const;
     std::string GetLastInteractivePhysicsFailure() const;
@@ -165,6 +175,10 @@ private:
     void MarkRuntimeValueOrigin(const std::string& field);
     void InitializeEffectiveConfig();
     void RefreshEffectiveConfig() const;
+    // Binds the parallel-world material proof and the effective-configuration
+    // view to the current mass geometry (used after PreInit geometry changes and
+    // at the /run/initialize boundary).
+    void RefreshParallelWorldForCurrentGeometry();
     std::vector<effective_config::Field> ExportStartupFields() const;
     void ConfirmEffectiveCommand(const std::string&, const effective_config::Origin&);
     effective_config::Snapshot EffectiveSnapshot(const std::string& stage, std::optional<std::int64_t> runId,
@@ -205,6 +219,7 @@ private:
     std::unique_ptr<SourceManager> sourceManager_;
     std::unique_ptr<BiasingManager> biasingManager_;
     std::unique_ptr<ScoringManager> scoringManager_;
+    std::shared_ptr<parallel_world::ParallelWorldConfig> parallelWorldConfig_;
 
     std::string materialsFile_;
     std::vector<std::string> scoringMeshCommands_;

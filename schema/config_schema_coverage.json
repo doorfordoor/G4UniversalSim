@@ -3285,6 +3285,48 @@
       ]
     },
     {
+      "file": "main_ini",
+      "section": "parallel_world",
+      "key": "enabled",
+      "scalar_check": true,
+      "parser": "src/ParallelWorld/ParallelWorldConfig.cc:Load",
+      "validation": "configure; initialize; transport; output",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_parallel_world.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "parallel_world",
+      "key": "name",
+      "scalar_check": true,
+      "parser": "src/ParallelWorld/ParallelWorldConfig.cc:Load",
+      "validation": "configure; initialize; transport; output",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_parallel_world.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "parallel_world",
+      "key": "geometry_config",
+      "scalar_check": true,
+      "parser": "src/ParallelWorld/ParallelWorldConfig.cc:Load",
+      "validation": "configure; initialize; transport; output",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_parallel_world.py"
+      ]
+    },
+    {
       "file": "materials_ini",
       "section": "nist",
       "key": "materials",
@@ -6801,6 +6843,201 @@
         "scripts/test_geometry_config_diagnostics.py",
         "scripts/test_geometry_a5.py",
         "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_parallel_ini",
+      "section": "world",
+      "key": "material",
+      "scalar_check": true,
+      "parser": "src/ParallelWorld/ParallelWorldConfig.cc:ParseGeometryFile",
+      "validation": "configure",
+      "gui": {
+        "editable": "external_only",
+        "note": "H3-3: 平行计分几何由外部文件维护，GUI 只读取用于状态、诊断与资源闭包；不提供图形编辑器。"
+      },
+      "tests": [
+        "scripts/test_parallel_world.py"
+      ]
+    },
+    {
+      "file": "geometry_parallel_ini",
+      "section": "volume.<name>",
+      "key": "parent",
+      "scalar_check": false,
+      "parser": "src/ParallelWorld/ParallelWorldConfig.cc:ParseGeometryFile",
+      "validation": "configure; geometry_build",
+      "gui": {
+        "editable": "external_only",
+        "note": "H3-3: 平行计分几何由外部文件维护，GUI 只读取用于状态、诊断与资源闭包；不提供图形编辑器。"
+      },
+      "tests": [
+        "scripts/test_parallel_world.py"
+      ]
+    },
+    {
+      "file": "geometry_parallel_ini",
+      "section": "volume.<name>",
+      "key": "shape",
+      "scalar_check": false,
+      "parser": "src/ParallelWorld/ParallelWorldConfig.cc:ParseGeometryFile",
+      "validation": "configure; geometry_build",
+      "gui": {
+        "editable": "external_only",
+        "note": "H3-3: 平行计分几何由外部文件维护，GUI 只读取用于状态、诊断与资源闭包；不提供图形编辑器。"
+      },
+      "tests": [
+        "scripts/test_parallel_world.py"
+      ]
+    },
+    {
+      "file": "geometry_parallel_ini",
+      "section": "volume.<name>",
+      "key": "size",
+      "scalar_check": false,
+      "parser": "src/ParallelWorld/ParallelWorldConfig.cc:ParseGeometryFile",
+      "validation": "configure; geometry_build",
+      "gui": {
+        "editable": "external_only",
+        "note": "H3-3: 平行计分几何由外部文件维护，GUI 只读取用于状态、诊断与资源闭包；不提供图形编辑器。"
+      },
+      "tests": [
+        "scripts/test_parallel_world.py"
+      ]
+    },
+    {
+      "file": "geometry_parallel_ini",
+      "section": "volume.<name>",
+      "key": "position",
+      "scalar_check": false,
+      "parser": "src/ParallelWorld/ParallelWorldConfig.cc:ParseGeometryFile",
+      "validation": "configure; geometry_build",
+      "gui": {
+        "editable": "external_only",
+        "note": "H3-3: 平行计分几何由外部文件维护，GUI 只读取用于状态、诊断与资源闭包；不提供图形编辑器。"
+      },
+      "tests": [
+        "scripts/test_parallel_world.py"
+      ]
+    },
+    {
+      "file": "geometry_parallel_ini",
+      "section": "volume.<name>",
+      "key": "material",
+      "scalar_check": true,
+      "parser": "src/ParallelWorld/ParallelWorldConfig.cc:ParseGeometryFile",
+      "validation": "configure; geometry_build",
+      "gui": {
+        "editable": "external_only",
+        "note": "H3-3: 平行计分几何由外部文件维护，GUI 只读取用于状态、诊断与资源闭包；不提供图形编辑器。"
+      },
+      "tests": [
+        "scripts/test_parallel_world.py"
+      ]
+    },
+    {
+      "file": "geometry_parallel_ini",
+      "section": "volume.<name>",
+      "key": "sensitive",
+      "scalar_check": true,
+      "parser": "src/ParallelWorld/ParallelWorldConfig.cc:ParseGeometryFile",
+      "validation": "configure; geometry_build",
+      "gui": {
+        "editable": "external_only",
+        "note": "H3-3: 平行计分几何由外部文件维护，GUI 只读取用于状态、诊断与资源闭包；不提供图形编辑器。"
+      },
+      "tests": [
+        "scripts/test_parallel_world.py"
+      ]
+    },
+    {
+      "file": "geometry_parallel_ini",
+      "section": "grid.<name>",
+      "key": "parent",
+      "scalar_check": false,
+      "parser": "src/ParallelWorld/ParallelWorldConfig.cc:ParseGeometryFile",
+      "validation": "configure; geometry_build",
+      "gui": {
+        "editable": "external_only",
+        "note": "H3-3: 平行计分几何由外部文件维护，GUI 只读取用于状态、诊断与资源闭包；不提供图形编辑器。"
+      },
+      "tests": [
+        "scripts/test_parallel_world.py"
+      ]
+    },
+    {
+      "file": "geometry_parallel_ini",
+      "section": "grid.<name>",
+      "key": "size",
+      "scalar_check": false,
+      "parser": "src/ParallelWorld/ParallelWorldConfig.cc:ParseGeometryFile",
+      "validation": "configure; geometry_build",
+      "gui": {
+        "editable": "external_only",
+        "note": "H3-3: 平行计分几何由外部文件维护，GUI 只读取用于状态、诊断与资源闭包；不提供图形编辑器。"
+      },
+      "tests": [
+        "scripts/test_parallel_world.py"
+      ]
+    },
+    {
+      "file": "geometry_parallel_ini",
+      "section": "grid.<name>",
+      "key": "position",
+      "scalar_check": false,
+      "parser": "src/ParallelWorld/ParallelWorldConfig.cc:ParseGeometryFile",
+      "validation": "configure; geometry_build",
+      "gui": {
+        "editable": "external_only",
+        "note": "H3-3: 平行计分几何由外部文件维护，GUI 只读取用于状态、诊断与资源闭包；不提供图形编辑器。"
+      },
+      "tests": [
+        "scripts/test_parallel_world.py"
+      ]
+    },
+    {
+      "file": "geometry_parallel_ini",
+      "section": "grid.<name>",
+      "key": "material",
+      "scalar_check": true,
+      "parser": "src/ParallelWorld/ParallelWorldConfig.cc:ParseGeometryFile",
+      "validation": "configure; geometry_build",
+      "gui": {
+        "editable": "external_only",
+        "note": "H3-3: 平行计分几何由外部文件维护，GUI 只读取用于状态、诊断与资源闭包；不提供图形编辑器。"
+      },
+      "tests": [
+        "scripts/test_parallel_world.py"
+      ]
+    },
+    {
+      "file": "geometry_parallel_ini",
+      "section": "grid.<name>",
+      "key": "bins",
+      "scalar_check": false,
+      "parser": "src/ParallelWorld/ParallelWorldConfig.cc:ParseGeometryFile",
+      "validation": "configure; geometry_build",
+      "gui": {
+        "editable": "external_only",
+        "note": "H3-3: 平行计分几何由外部文件维护，GUI 只读取用于状态、诊断与资源闭包；不提供图形编辑器。"
+      },
+      "tests": [
+        "scripts/test_parallel_world.py"
+      ]
+    },
+    {
+      "file": "geometry_parallel_ini",
+      "section": "grid.<name>",
+      "key": "sensitive",
+      "scalar_check": true,
+      "parser": "src/ParallelWorld/ParallelWorldConfig.cc:ParseGeometryFile",
+      "validation": "configure; geometry_build",
+      "gui": {
+        "editable": "external_only",
+        "note": "H3-3: 平行计分几何由外部文件维护，GUI 只读取用于状态、诊断与资源闭包；不提供图形编辑器。"
+      },
+      "tests": [
+        "scripts/test_parallel_world.py"
       ]
     }
   ],

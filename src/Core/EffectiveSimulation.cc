@@ -11,6 +11,7 @@
 #include "Biasing/BiasingManager.hh"
 #include "Output/OutputManager.hh"
 #include "Output/RunSummary.hh"
+#include "ParallelWorld/ParallelWorldConfig.hh"
 #include "Utils/FileUtils.hh"
 #include "Utils/StringUtils.hh"
 #include "G4VModularPhysicsList.hh"
@@ -139,6 +140,9 @@ void SimulationManager::InitializeEffectiveConfig()
     startupEffective_.Accept(startupEffective_.reader, ExportStartupFields());
     outputManager_->AcceptEffectiveConfig(configManager_->GetMainReader());
     geometryManager_->AcceptEffectiveConfig(configManager_->GetMainReader());
+    if (parallelWorldConfig_ && parallelWorldConfig_->enabled()) {
+        parallelWorldConfig_->AcceptEffectiveConfig(configManager_->GetMainReader());
+    }
     // CLI values are applied after the INI consumer, but their provenance must
     // retain the earlier declarations rather than attributing the final value to INI.
     if (commandLineOverrides_.outputDir) {
@@ -163,6 +167,7 @@ void SimulationManager::RefreshEffectiveConfig() const
     add(physicsManager_->ExportEffectiveConfigFields()); add(fieldConfig_.ExportEffectiveConfigFields());
     add(scoringManager_->ExportEffectiveConfigFields()); add(ScoringMeshConfig::ExportEffectiveConfigFields());
     add(biasingManager_->ExportEffectiveConfigFields());
+    if (parallelWorldConfig_ && parallelWorldConfig_->enabled()) add(parallelWorldConfig_->ExportEffectiveConfigFields());
     std::set<std::string> paths; for (const auto& field : fields) paths.insert(field.path);
     std::vector<std::string> removed;
     const auto previous = effectiveRegistry_.Capture("configure");
@@ -191,7 +196,13 @@ void SimulationManager::ConfirmEffectiveCommand(const std::string& command, cons
     if (!query) {
         if (token.rfind("/aihl/source/",0)==0 || token.rfind("/gps/",0)==0) sourceManager_->ConfirmEffectiveConfigMutation(command,origin);
         if (token.rfind("/aihl/physics/",0)==0) physicsManager_->ConfirmEffectiveConfigMutation(command,origin);
-        if (token.rfind("/aihl/geometry/",0)==0) geometryManager_->ConfirmEffectiveConfigMutation(command,origin);
+        if (token.rfind("/aihl/geometry/",0)==0) {
+            geometryManager_->ConfirmEffectiveConfigMutation(command,origin);
+            // The geometry tree may now differ from the one Configure() proved.
+            // Re-derive the parallel-world proof immediately so a stale `true`
+            // cannot survive the mutation.
+            RefreshParallelWorldForCurrentGeometry();
+        }
         if (token.rfind("/aihl/material/",0)==0) materialManager_->ConfirmEffectiveConfigMutation(command,origin);
         if (token.rfind("/aihl/biasing/",0)==0) biasingManager_->ConfirmEffectiveConfigMutation(command,origin);
         if (token.rfind("/aihl/scoring/",0)==0) scoringManager_->ConfirmEffectiveConfigMutation(command,origin);
@@ -226,6 +237,8 @@ effective_config::Snapshot SimulationManager::EffectiveSnapshot(const std::strin
     Append(evidence, sourceManager_->ExportEffectiveConfigEvidence()); Append(evidence, physicsManager_->ExportEffectiveConfigEvidence());
     Append(evidence, fieldConfig_.ExportEffectiveConfigEvidence()); Append(evidence, geometryManager_->ExportEffectiveConfigEvidence());
     Append(evidence, materialManager_->ExportEffectiveConfigEvidence()); Append(evidence, biasingManager_->ExportEffectiveConfigEvidence());
+    if (parallelWorldConfig_ && parallelWorldConfig_->enabled())
+        Append(evidence, parallelWorldConfig_->ExportEffectiveConfigEvidence());
     Append(evidence, ScoringMeshConfig::ExportEffectiveConfigEvidence());
     Append(evidence, (scoring ? scoring : scoringManager_.get())->ExportEffectiveConfigEvidence());
     Append(evidence, (output ? output : outputManager_.get())->ExportEffectiveConfigEvidence());
@@ -254,7 +267,7 @@ effective_config::Snapshot SimulationManager::EffectiveSnapshot(const std::strin
         {"thread_id",stage=="configure" ? Value() : Value(thread)},
         {"role",stage=="configure" ? "configuration" : (G4Threading::IsWorkerThread()?"worker":(G4Threading::IsMultithreadedApplication()?"master":"sequential"))},
         {"inputs",std::move(inputs)},{"evidence",std::move(scoped)},{"accepted_commands",effectiveCommands_},
-        {"coverage",Value::Object{{"consumers",Value::Array{"startup","legacy_source","named_and_phase_space_source","geometry","materials","physics","scoring_and_mesh","field","biasing","output_and_trajectories","commands"}},
+        {"coverage",Value::Object{{"consumers",Value::Array{"startup","legacy_source","named_and_phase_space_source","geometry","materials","physics","scoring_and_mesh","field","biasing","output_and_trajectories","parallel_world","commands"}},
             {"application","Only value-matched, scoped runtime receipts; absent evidence remains unproven"}}},
         {"execution_performed",stage=="run_begin" || !outputManager_->GetRunSummary().GetRuns().empty()},
         {"thread_finalizations",effectiveThreadFinals_},

@@ -5,6 +5,8 @@
 #include "Field/FieldSetup.hh"
 #include "Geometry/GeometryManager.hh"
 #include "Geometry/GeometryRegistry.hh"
+#include "ParallelWorld/ParallelWorldConfig.hh"
+#include "ParallelWorld/ScoringParallelWorld.hh"
 
 #include "G4Exception.hh"
 #include "G4LogicalVolume.hh"
@@ -25,10 +27,45 @@ DetectorConstruction::DetectorConstruction(GeometryManager* geometryManager)
 
 DetectorConstruction::~DetectorConstruction() = default;
 
+void DetectorConstruction::SetParallelWorldConfig(
+    std::shared_ptr<const parallel_world::ParallelWorldConfig> config)
+{
+    parallelWorldConfig_ = std::move(config);
+    if (parallelWorldConfig_ && parallelWorldConfig_->enabled() && !parallelWorldRegistered_) {
+        // Register once, before CreateDetectorConstruction returns: Geant4 builds
+        // every registered parallel world right after Construct() during
+        // initialization, so a parallel world registered later would be skipped.
+        scoringParallelWorld_ = new parallel_world::ScoringParallelWorld(parallelWorldConfig_);
+        scoringParallelWorld_->SetOutputManager(parallelWorldOutputManager_);
+        RegisterParallelWorld(scoringParallelWorld_);
+        parallelWorldRegistered_ = true;
+    }
+}
+
+void DetectorConstruction::SetParallelWorldOutputManager(OutputManager* outputManager)
+{
+    parallelWorldOutputManager_ = outputManager;
+    if (scoringParallelWorld_ != nullptr) scoringParallelWorld_->SetOutputManager(outputManager);
+}
+
+const std::shared_ptr<const parallel_world::ParallelWorldConfig>& DetectorConstruction::GetParallelWorldConfig() const
+{
+    return parallelWorldConfig_;
+}
+
+parallel_world::ScoringParallelWorld* DetectorConstruction::GetScoringParallelWorld() const
+{
+    return scoringParallelWorld_;
+}
+
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
     if (!geometryManager_) {
         throw std::runtime_error("DetectorConstruction::Construct failed: GeometryManager is null");
+    }
+    if (parallelWorldConfig_ && parallelWorldConfig_->enabled() && !parallelWorldRegistered_) {
+        throw std::runtime_error("DetectorConstruction::Construct failed: the parallel scoring world was not "
+                                 "registered before initialization (SetParallelWorldConfig must run first)");
     }
     if (geometryManager_->IsDirty() && verboseLevel_ > 0) {
         G4cout << "[DetectorConstruction] GeometryManager is dirty; rebuilding world from current geometry state." << G4endl;

@@ -1534,6 +1534,17 @@ struct SessionServer::Impl {
         }
 
         if (op == "initialize") {
+            try {
+                simulation.ValidateParallelWorldDependencies();
+            } catch (const std::exception& error) {
+                Reject(frame, op, "parallel_world_config_invalid", error.what());
+                {
+                    std::lock_guard<std::mutex> guard(stateMutex);
+                    exitCode = 2;
+                    phase = Phase::ShuttingDown;
+                }
+                return false;
+            }
             if (kernelInitialized) return Reject(frame, op, "already_initialized", "the kernel is already initialized");
             const int status = G4UImanager::GetUIpointer()->ApplyCommand("/run/initialize");
             if (status != 0) {
@@ -1548,6 +1559,16 @@ struct SessionServer::Impl {
                 std::lock_guard<std::mutex> guard(stateMutex);
                 kernelInitialized = true;
                 ++stateRevision;
+            }
+            try {
+                simulation.ValidateParallelWorldForRun();
+            } catch (const std::exception& error) {
+                {
+                    std::lock_guard<std::mutex> guard(stateMutex);
+                    exitCode = 2;
+                    phase = Phase::ShuttingDown;
+                }
+                return Reject(frame, op, "parallel_world_init_failed", error.what());
             }
             replayPreRunProvenance = ProvenanceIdentity();
             SessionJson::Json payload;
@@ -1629,6 +1650,17 @@ struct SessionServer::Impl {
                 simulation.ValidateScoringVolumeConfigsBeforeRun();
             } catch (const std::exception& error) {
                 Reject(frame, op, "scoring_config_invalid", error.what());
+                {
+                    std::lock_guard<std::mutex> guard(stateMutex);
+                    exitCode = 2;
+                    phase = Phase::ShuttingDown;
+                }
+                return false;
+            }
+            try {
+                simulation.ValidateParallelWorldForRun();
+            } catch (const std::exception& error) {
+                Reject(frame, op, "parallel_world_config_invalid", error.what());
                 {
                     std::lock_guard<std::mutex> guard(stateMutex);
                     exitCode = 2;

@@ -139,6 +139,22 @@ if(BUILD_TESTING)
         LABELS "h2;component"
         TIMEOUT 120
     )
+    # H3-2 component checks: the dedicated parallel-scoring entry point must
+    # reach dose/fluence only, never fold into event Edep or write hits.
+    add_executable(parallelScoringCheck tools/parallelScoringCheck.cc ${SOURCES})
+    target_compile_features(parallelScoringCheck PRIVATE cxx_std_17)
+    target_include_directories(parallelScoringCheck PRIVATE ${PROJECT_BINARY_DIR}/generated)
+    target_compile_definitions(parallelScoringCheck PRIVATE
+        G4USIM_BUILD_CONFIGURATION="$<IF:$<BOOL:$<CONFIG>>,$<CONFIG>,unknown>")
+    target_link_libraries(parallelScoringCheck ${Geant4_LIBRARIES})
+    add_test(
+        NAME parallel_scoring_component
+        COMMAND parallelScoringCheck ${PROJECT_BINARY_DIR}/h3-component-output
+    )
+    set_tests_properties(parallel_scoring_component PROPERTIES
+        LABELS "h3;component"
+        TIMEOUT 180
+    )
     find_package(Python3 COMPONENTS Interpreter QUIET)
     if(Python3_Interpreter_FOUND)
         foreach(profile static gui backend integration)

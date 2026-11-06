@@ -71,7 +71,7 @@ _ENV_PROJECTION = {
                       "selected_path_sha256": (str, type(None))}],
     },
 }
-_ROLES = {"main", "materials", "macro", "stl", "spectrum", "niel", "phase_space", "random_state", "copies", "gdml", "reference", "geometry", "field_map"}
+_ROLES = {"main", "materials", "macro", "stl", "spectrum", "niel", "phase_space", "random_state", "copies", "gdml", "reference", "geometry", "parallel_geometry", "field_map"}
 _INPUT_COMMANDS = {
     "/control/execute": "macro", "/AIHL/material/load": "materials",
     "/AIHL/geometry/loadConfig": "geometry", "/random/resetEngineFrom": "random_state",
@@ -243,7 +243,7 @@ class _Closure:
         self.nodes[key] = node
         self.active.add(key)
         try:
-            if role in {"main", "materials", "geometry"}:
+            if role in {"main", "materials", "geometry", "parallel_geometry"}:
                 data = self.ini(raw.decode("utf-8"), path, relative, role, mode, base).encode("utf-8")
             elif role == "macro":
                 data = self.macro(raw.decode("utf-8-sig"), path, relative, mode).encode("utf-8")
@@ -265,6 +265,23 @@ class _Closure:
         # All resources occupy one directory. No '..' is needed for any input.
         return PurePosixPath(target).name if local else target
 
+    def ref_main_relative(self, value: str, base: Path, role: str, relative: str) -> str:
+        """Rewrite a path the backend resolves against the owner file's directory.
+
+        ``[parallel_world] geometry_config`` is read relative to the main INI, while the
+        closure puts every resource in one directory. Keep the recorded text valid for both
+        the live workspace and the extracted bundle instead of assuming the process CWD.
+        """
+        target = self.add(_resolve(value, base), role)
+        folder = PurePosixPath(relative).parent
+        if folder == PurePosixPath("."):
+            return PurePosixPath(target).name
+        try:
+            return PurePosixPath(target).relative_to(folder).as_posix()
+        except ValueError:
+            import posixpath
+            return posixpath.relpath(str(target), str(folder))
+
     def ini(self, text, path, relative, role, mode, base=None):
         lines, sections, fields = _scan(text, str(path))
         values = {(f.section.lower(), f.key.lower()): f.value for f in fields}
@@ -274,7 +291,9 @@ class _Closure:
             version = values.get(("general", "schema_version"), "1")
             if version != "1":
                 raise ValueError(f"Unsupported main INI version: {path}: {version}")
-        schema_file = "main_ini" if role == "main" else "materials_ini" if role == "materials" else f"geometry_{TEMPLATE_ALIASES.get(mode, mode)}_ini"
+        schema_file = ("main_ini" if role == "main" else "materials_ini" if role == "materials"
+                       else "geometry_parallel_ini" if role == "parallel_geometry"
+                       else f"geometry_{TEMPLATE_ALIASES.get(mode, mode)}_ini")
         if role == "geometry" and values.get(("global", "version"), "1") not in {"1", "2"}:
             raise ValueError(f"Unsupported geometry version: {path}")
         for section, line in sections:
@@ -291,6 +310,11 @@ class _Closure:
                     replace = self.ref(value, self.cwd, "materials", relative)
                 elif section == "geometry" and key in {"config", "configfile"}:
                     replace = self.ref(value, self.cwd, "geometry", relative, mode=mode)
+                elif section == "parallel_world" and key == "geometry_config":
+                    # The backend resolves this file against the main INI directory, not the
+                    # process working directory, so the closure must do the same.
+                    replace = "" if not value.strip(_SPACE) else self.ref_main_relative(
+                        value, path.parent, "parallel_geometry", relative)
                 elif section == "run" and key == "macro":
                     replace = self.ref(value, self.cwd, "macro", relative, mode=mode)
                 elif (section == "source" or section.startswith("source.")) and key == "spectrum_file":

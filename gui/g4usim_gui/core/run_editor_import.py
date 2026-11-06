@@ -299,6 +299,8 @@ def parse_run_editor_ini(text: str, *, source_path: str | Path, previous_source=
                 fail(section, "", "unknown kinetic-energy spectrum scorer")
             else:
                 closed(section, {"bins", "min", "max"})
+        elif section == "parallel_world":
+            fail(section, "", "parallel-world scoring is external-only; keep the main INI external and edit [parallel_world] there")
         elif section in OTHER_KEYS:
             closed(section,OTHER_KEYS[section])
             if section=="general" and values.get("schema_version","1")!="1":

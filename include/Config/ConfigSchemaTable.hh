@@ -16,7 +16,7 @@ struct KeySpec {
 };
 
 // main INI sections whose keys come from the schema
-inline constexpr const char* kMainIniSections[] = {"run", "general", "output", "source", "phase_space", "physics", "physics.microelec", "physics.radioactive_decay", "scoring", "scoring.edep", "scoring.let", "materials", "geometry", "modules", "field", "biasing", "biasing.xs"};
+inline constexpr const char* kMainIniSections[] = {"run", "general", "output", "source", "phase_space", "physics", "physics.microelec", "physics.radioactive_decay", "scoring", "scoring.edep", "scoring.let", "materials", "geometry", "modules", "field", "biasing", "biasing.xs", "parallel_world"};
 
 inline constexpr KeySpec kMainIniKeys[] = {
     {"run", "threads", "", ValueType::Int, "1", "supported"},
@@ -137,6 +137,9 @@ inline constexpr KeySpec kMainIniKeys[] = {
     {"biasing.xs", "apply_to_secondaries", "", ValueType::Bool, "false", "deprecated"},
     {"biasing.xs", "min_weight", "", ValueType::Number, "0.05", "deprecated"},
     {"biasing.xs", "max_interactions", "", ValueType::Int, "5", "deprecated"},
+    {"parallel_world", "enabled", "", ValueType::Bool, "false", "experimental"},
+    {"parallel_world", "name", "", ValueType::String, "ScoringWorld", "experimental"},
+    {"parallel_world", "geometry_config", "", ValueType::ExistingFile, "", "experimental"},
 };
 
 }  // namespace ConfigSchema
@@ -364,6 +367,9 @@ inline constexpr FieldKey kFieldKeys[] = {
     {"main_ini", "biasing.xs.<particle>.<process>", "min_weight", true},
     {"main_ini", "biasing.xs.<particle>.<process>", "max_interactions", true},
     {"main_ini", "biasing.xs.<particle>.<process>", "volumes", true},
+    {"main_ini", "parallel_world", "enabled", true},
+    {"main_ini", "parallel_world", "name", true},
+    {"main_ini", "parallel_world", "geometry_config", true},
     {"materials_ini", "nist", "materials", true},
     {"materials_ini", "isotope.<name>", "symbol", true},
     {"materials_ini", "isotope.<name>", "z", true},
@@ -572,6 +578,19 @@ inline constexpr FieldKey kFieldKeys[] = {
     {"geometry_gdml_ini", "gdml", "sensitive_volumes", true},
     {"geometry_gdml_ini", "gdml", "bias_volumes", true},
     {"geometry_gdml_ini", "gdml", "world_name", true},
+    {"geometry_parallel_ini", "world", "material", true},
+    {"geometry_parallel_ini", "volume.<name>", "parent", true},
+    {"geometry_parallel_ini", "volume.<name>", "shape", true},
+    {"geometry_parallel_ini", "volume.<name>", "size", true},
+    {"geometry_parallel_ini", "volume.<name>", "position", true},
+    {"geometry_parallel_ini", "volume.<name>", "material", true},
+    {"geometry_parallel_ini", "volume.<name>", "sensitive", true},
+    {"geometry_parallel_ini", "grid.<name>", "parent", true},
+    {"geometry_parallel_ini", "grid.<name>", "size", true},
+    {"geometry_parallel_ini", "grid.<name>", "position", true},
+    {"geometry_parallel_ini", "grid.<name>", "material", true},
+    {"geometry_parallel_ini", "grid.<name>", "bins", true},
+    {"geometry_parallel_ini", "grid.<name>", "sensitive", true},
 };
 inline std::vector<std::string> Keys(const std::string& file, const std::string& section, bool diagnostic = false) {
     std::vector<std::string> result;

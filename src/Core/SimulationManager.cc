@@ -25,6 +25,8 @@
 #include "Biasing/BiasingManager.hh"
 #include "Biasing/BiasingMessenger.hh"
 #include "Scoring/ScoringMessenger.hh"
+#include "ParallelWorld/ParallelWorldConfig.hh"
+#include "ParallelWorld/ScoringParallelWorld.hh"
 #include "Scoring/ScoringManager.hh"
 #include "Scoring/ScoringMeshConfig.hh"
 #include "Scoring/ThreadLocalScoringContext.hh"
@@ -32,20 +34,30 @@
 #include "Utils/StringUtils.hh"
 
 #include "BuildInfo.hh"
+#include "G4Box.hh"
+#include "G4LogicalVolume.hh"
+#include "G4ParallelWorldPhysics.hh"
 #include "G4RunManager.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4ThreeVector.hh"
+#include "G4VSolid.hh"
+#include "G4VPhysicalVolume.hh"
 #include "G4Version.hh"
 #include "G4StateManager.hh"
-#include "G4SystemOfUnits.hh"
+#include "G4ScoringManager.hh"
+#include "G4ScoringManager.hh"
 #ifdef G4MULTITHREADED
 #include "G4MTRunManager.hh"
 #endif
 #include "Randomize.hh"
 
+#include <cmath>
 #include <iostream>
 #include <algorithm>
 #include <chrono>
 #include <cstdlib>
 #include <ctime>
+#include <sstream>
 #include <map>
 #include <sstream>
 #include <stdexcept>
@@ -614,8 +626,45 @@ bool SimulationManager::FinalizeRunSummary(const std::string& status,
             throw std::runtime_error("Injected main-thread final close failure");
         }
     });
-    if (configured_) finalizeOutput("effective_config_finalization", [this]() { WriteEffectiveFinalization(); });
-
+    // Contract D receipts must be recorded before the finalization snapshot is
+    // written, and both the finalization write and the artifact evidence
+    // collection below must observe the same completion boundary: a file that
+    // run_summary.txt lists can never be missing from run_metadata.json.
+    if (parallelWorldConfig_ && parallelWorldConfig_->enabled()) {
+        const bool receiptsOutputFailed = outputManager_->HasOutputFailure();
+        for (const auto& run : outputManager_->GetRunSummary().GetRuns()) {
+            if (receiptsOutputFailed || run.completedEvents <= 0 ||
+                run.completedEvents != run.plannedEvents) {
+                continue;
+            }
+            effective_config::Value::Array files;
+            try {
+                for (const auto& artifact : outputManager_->CollectRunArtifacts(run.runId, false)) {
+                    if (!artifact.sha256 || artifact.path.empty() ||
+                        artifact.integrity_status != "hashed") {
+                        continue;
+                    }
+                    files.emplace_back(effective_config::Value::Object{
+                        {"path", artifact.path}, {"sha256", *artifact.sha256}});
+                }
+            } catch (const std::exception& error) {
+                outputManager_->RecordOutputFailure("parallel_world_run_evidence",
+                                                    error.what(), run.runId);
+                continue;
+            }
+            if (files.empty()) continue;  // no completed output => no success receipt
+            effective_config::Value::Object outputSha256;
+            outputSha256.emplace("files", effective_config::Value(std::move(files)));
+            outputSha256.emplace("completed_events",
+                                 static_cast<std::int64_t>(run.completedEvents));
+            parallelWorldConfig_->RecordRunValidated(run.runId, run.completedEvents,
+                                                    parallelWorldConfig_->volumeCount(),
+                                                    outputSha256);
+        }
+    }
+    if (configured_) {
+        finalizeOutput("effective_config_finalization", [this]() { WriteEffectiveFinalization(); });
+    }
     RunSummary& summary = outputManager_->GetRunSummary();
     const auto& runs = summary.GetRuns();
     std::int64_t plannedEvents = 0;
@@ -734,6 +783,25 @@ bool SimulationManager::FinalizeRunSummary(const std::string& status,
     summary.Set("configured_seed", context_.HasSeed() ? std::to_string(context_.GetSeed()) : "unset");
     summary.Set("initial_engine_seed", "unknown");
     summary.SetBool("macro_seed_modified", macroSeedModified_);
+
+    if (parallelWorldConfig_ && parallelWorldConfig_->enabled()) {
+        summary.SetBool("parallel_world_enabled", true);
+        summary.Set("parallel_world_name", parallelWorldConfig_->name());
+        summary.SetPath("parallel_world_geometry_config", parallelWorldConfig_->geometryConfigFile());
+        summary.Set("parallel_world_geometry_sha256", parallelWorldConfig_->geometrySha256());
+        summary.Set("parallel_world_volume_count", parallelWorldConfig_->volumeCount());
+        if (parallelWorldConfig_->materialsResolved()) {
+            // RunSummary::Set(double) keeps 12 significant digits; the default
+            // std::to_string would print a small positive mass as 0.
+            summary.Set("parallel_world_total_mass_kg", parallelWorldConfig_->totalMassKg());
+        } else {
+            summary.Set("parallel_world_total_mass_kg", "unknown");
+        }
+        summary.Set("parallel_world_physics_constructor", "G4ParallelWorldPhysics");
+        summary.Set("parallel_world_process", "G4ParallelWorldProcess");
+        summary.Set("parallel_world_step_source", "ghost_step");
+        summary.Set("parallel_world_dose_normalization", "declared_material_reference_mass");
+    }
 
     // Capture the current Manager values at the execution boundary.  These
     // are not a claim that every setting was applied to an initialized G4
@@ -910,6 +978,35 @@ void SimulationManager::Configure()
         biasingManager_->LoadFromConfig(*configManager_);
         if (biasingManager_->IsEnabled()) {
             physicsManager_->EnableBiasingPhysics(true);
+        }
+
+        // Roadmap H3: optional parallel scoring world. Parsed only after every
+        // dependency (materials, geometry, scoring, output format, field, mesh,
+        // biasing) is configured, so Stage A can reject unsupported combinations
+        // before any Geant4 geometry object exists.
+        parallelWorldConfig_ = std::make_shared<parallel_world::ParallelWorldConfig>();
+        parallelWorldConfig_->Load(*configManager_, *geometryManager_, *materialManager_);
+        for (const char* key : {"enabled", "name", "geometry_config"}) {
+            if (configManager_->HasKey("parallel_world", key)) {
+                configManager_->MarkKeyConsumed("parallel_world", key);
+            }
+        }
+        if (parallelWorldConfig_->enabled()) {
+            const auto dependencies = parallelWorldConfig_->ValidateDependencies(
+                *scoringManager_, *outputManager_, biasingManager_->IsEnabled(),
+                !fieldConfig_.Empty(), !scoringMeshCommands_.empty());
+            if (!dependencies.empty()) {
+                throw std::runtime_error("[parallel_world] " + dependencies.front());
+            }
+            const auto containment = parallelWorldConfig_->ValidateDeclaredContainment(*geometryManager_);
+            if (!containment.empty()) {
+                throw std::runtime_error("[parallel_world] " + containment.front());
+            }
+            const auto materialProblems = parallelWorldConfig_->ValidateMaterials(*materialManager_);
+            if (!materialProblems.empty()) {
+                throw std::runtime_error("[parallel_world] " + materialProblems.front());
+            }
+            parallelWorldConfig_->ResolveMaterials(*materialManager_, *geometryManager_);
         }
 
         // These aliases are intentionally accepted for compatibility.  A canonical
@@ -1126,6 +1223,10 @@ std::unique_ptr<DetectorConstruction> SimulationManager::CreateDetectorConstruct
     detector->SetThreadBiasingCallback([this](const GeometryRegistry& registry) {
         if (biasingManager_) biasingManager_->ConstructThreadOperators(registry);
     });
+    if (parallelWorldConfig_ && parallelWorldConfig_->enabled()) {
+        detector->SetParallelWorldOutputManager(outputManager_.get());
+        detector->SetParallelWorldConfig(parallelWorldConfig_);
+    }
     return detector;
 }
 
@@ -1159,6 +1260,10 @@ std::unique_ptr<G4VModularPhysicsList> SimulationManager::CreatePhysicsList() co
             }
         }
 
+        if (parallelWorldConfig_ && parallelWorldConfig_->enabled()) {
+            list->RegisterPhysics(new G4ParallelWorldPhysics(parallelWorldConfig_->name(), false));
+        }
+
         PhysicsFactory::ApplyRegionAndDecaySettings(list.get(), *physicsManager_);
         PhysicsFactory::ApplyCuts(
             list.get(),
@@ -1170,6 +1275,9 @@ std::unique_ptr<G4VModularPhysicsList> SimulationManager::CreatePhysicsList() co
     auto list = std::make_unique<PhysicsList>(physicsManager_.get());
     list->ConfigureNow();
     PhysicsFactory::ApplyRegionAndDecaySettings(list.get(), *physicsManager_);
+    if (parallelWorldConfig_ && parallelWorldConfig_->enabled()) {
+        list->RegisterPhysics(new G4ParallelWorldPhysics(parallelWorldConfig_->name(), false));
+    }
     return list;
 }
 
@@ -1225,6 +1333,223 @@ void SimulationManager::InitializeSourceAfterPhysicsListRegistered()
     if (sourceManager_) {
         sourceManager_->InitializeAfterPhysicsListRegistered();
     }
+}
+
+const parallel_world::ParallelWorldConfig* SimulationManager::GetParallelWorldConfig() const
+{
+    return parallelWorldConfig_.get();
+}
+
+void SimulationManager::RefreshParallelWorldForCurrentGeometry()
+{
+    if (!parallelWorldConfig_ || !parallelWorldConfig_->enabled()) return;
+    parallelWorldConfig_->RebindToCurrentGeometry(*geometryManager_, *materialManager_);
+    RefreshEffectiveConfig();
+}
+
+void SimulationManager::ValidateParallelWorldDependencies()
+{
+    if (!parallelWorldConfig_ || !parallelWorldConfig_->enabled()) return;
+    EnsureOutputManager();
+    // Contract E: a batch macro, csh session or the controlled session can change
+    // the dependent modules after Configure(). Re-check the live dependency state
+    // before the kernel is initialized and before BeamOn, not only at Configure time.
+    const G4ScoringManager* scoringManager = G4ScoringManager::GetScoringManager();
+    const bool nativeMesh = scoringManager != nullptr && scoringManager->GetNumberOfMesh() > 0;
+    const auto dependencyProblems = parallelWorldConfig_->ValidateDependencies(
+        *scoringManager_, *outputManager_, biasingManager_ && biasingManager_->IsEnabled(),
+        !fieldConfig_.Empty(), nativeMesh);
+    if (!dependencyProblems.empty()) {
+        outputManager_->RecordOutputFailure("parallel_world_config", dependencyProblems.front());
+        throw std::runtime_error("[parallel_world] " + dependencyProblems.front());
+    }
+}
+
+void SimulationManager::ValidateParallelWorldForRun()
+{
+    if (!parallelWorldConfig_ || !parallelWorldConfig_->enabled()) return;
+    ValidateParallelWorldDependencies();
+    const auto fail = [this](const std::string& stage, const std::string& message) {
+        outputManager_->RecordOutputFailure(stage, message);
+        throw std::runtime_error("[parallel_world] " + message);
+    };
+    // A PreInit /AIHL/geometry/loadConfig can replace the mass-world tree after
+    // Configure(). Bind the material proof to the tree the kernel has just
+    // built before accepting the run; an unrepeatable proof degrades to
+    // `unknown` and the effective-configuration view is refreshed in place.
+    try {
+        RefreshParallelWorldForCurrentGeometry();
+    } catch (const std::exception& error) {
+        fail("parallel_world_config", error.what());
+    }
+    auto* runManager = G4RunManager::GetRunManager();
+    if (runManager == nullptr) fail("parallel_world_geometry", "no G4RunManager is active");
+    const auto* detector = dynamic_cast<const DetectorConstruction*>(runManager->GetUserDetectorConstruction());
+    if (detector == nullptr) {
+        fail("parallel_world_geometry", "the user detector construction is not a DetectorConstruction");
+    }
+    auto* world = detector->GetScoringParallelWorld();
+    if (world == nullptr) {
+        fail("parallel_world_geometry",
+             "the parallel scoring world was not registered with Geant4; /run/initialize did not build it");
+    }
+    G4VPhysicalVolume* ghost = world->GhostWorld();
+    if (ghost == nullptr || ghost->GetLogicalVolume() == nullptr ||
+        ghost->GetLogicalVolume()->GetSolid() == nullptr) {
+        fail("parallel_world_geometry", "the ghost world has no solid");
+    }
+    const G4VSolid* worldSolid = ghost->GetLogicalVolume()->GetSolid();
+
+    // Internal navigation envelopes (one per declared grid): the envelope is not
+    // a scoring volume, but the kernel must have built it as a real daughter of
+    // the ghost world and every grid cell must be its direct daughter at exactly
+    // the declared global centre. Otherwise the restored owner would come from
+    // an invented hierarchy.
+    {
+        const auto& envelopes = parallelWorldConfig_->envelopes();
+        const auto& envelopePlacements = world->EnvelopePlacements();
+        if (envelopePlacements.size() != envelopes.size()) {
+            fail("parallel_world_geometry",
+                 "the kernel built " + std::to_string(envelopePlacements.size()) +
+                     " navigation envelopes but the configuration declares " +
+                     std::to_string(envelopes.size()));
+        }
+        for (std::size_t index = 0; index < envelopes.size(); ++index) {
+            const auto& envelope = envelopes[index];
+            G4VPhysicalVolume* placement = envelopePlacements[index];
+            if (placement == nullptr || placement->GetLogicalVolume() == nullptr ||
+                placement->GetLogicalVolume()->GetSolid() == nullptr) {
+                fail("parallel_world_geometry", "navigation envelope '" + envelope.name + "' has no solid");
+            }
+            if (placement->GetMotherLogical() != ghost->GetLogicalVolume()) {
+                fail("parallel_world_geometry",
+                     "navigation envelope '" + envelope.name + "' is not a direct daughter of the ghost world");
+            }
+            if (placement->GetCopyNo() != 0) {
+                fail("parallel_world_geometry", "navigation envelope '" + envelope.name + "' has a non-zero copy number");
+            }
+            if (!placement->GetObjectRotationValue().isIdentity()) {
+                fail("parallel_world_geometry", "navigation envelope '" + envelope.name + "' is rotated");
+            }
+            auto* envelopeBox = dynamic_cast<G4Box*>(placement->GetLogicalVolume()->GetSolid());
+            if (envelopeBox == nullptr) {
+                fail("parallel_world_geometry", "navigation envelope '" + envelope.name + "' is not a box");
+            }
+            const double envelopeSizes[3] = {2.0 * envelopeBox->GetXHalfLength() / mm,
+                                             2.0 * envelopeBox->GetYHalfLength() / mm,
+                                             2.0 * envelopeBox->GetZHalfLength() / mm};
+            for (int axis = 0; axis < 3; ++axis) {
+                const double expected = envelope.sizeMm[axis];
+                const double scale = std::max(std::fabs(expected), 1.0);
+                if (std::fabs(envelopeSizes[axis] - expected) / scale > 1e-12) {
+                    std::ostringstream message;
+                    message << "navigation envelope '" << envelope.name << "' has size "
+                            << envelopeSizes[axis] << " mm on axis " << axis
+                            << " but the grid declares " << expected << " mm";
+                    fail("parallel_world_geometry", message.str());
+                }
+            }
+            for (const std::size_t cellIndex : envelope.volumeIndices) {
+                if (cellIndex >= parallelWorldConfig_->volumes().size()) {
+                    fail("parallel_world_geometry",
+                         "navigation envelope '" + envelope.name + "' references an unknown cell index");
+                }
+                const auto& cell = parallelWorldConfig_->volumes()[cellIndex];
+                G4VPhysicalVolume* cellPlacement = world->FindPlacement(cell.name);
+                if (cellPlacement == nullptr) {
+                    fail("parallel_world_geometry",
+                         "grid cell '" + cell.name + "' does not exist in the kernel geometry");
+                }
+                if (cellPlacement->GetMotherLogical() != placement->GetLogicalVolume()) {
+                    fail("parallel_world_geometry",
+                         "grid cell '" + cell.name + "' is not a direct daughter of its navigation envelope '" +
+                             envelope.name + "'");
+                }
+                if (cellPlacement->GetCopyNo() != 0) {
+                    fail("parallel_world_geometry", "grid cell '" + cell.name + "' has a non-zero copy number");
+                }
+                if (!cellPlacement->GetObjectRotationValue().isIdentity()) {
+                    fail("parallel_world_geometry", "grid cell '" + cell.name + "' is rotated");
+                }
+                const G4ThreeVector composed =
+                    placement->GetObjectTranslation() + cellPlacement->GetObjectTranslation();
+                for (int axis = 0; axis < 3; ++axis) {
+                    const double actualMm =
+                        (axis == 0 ? composed.x() : (axis == 1 ? composed.y() : composed.z())) / mm;
+                    const double expected = cell.centreMm[axis];
+                    const double scale = std::max(std::fabs(expected), 1.0);
+                    if (std::fabs(actualMm - expected) / scale > 1e-12) {
+                        std::ostringstream message;
+                        message << "grid cell '" << cell.name << "' has global centre " << actualMm
+                                << " mm on axis " << axis << " but the grid declares " << expected << " mm";
+                        fail("parallel_world_geometry", message.str());
+                    }
+                }
+            }
+        }
+    }
+    parallel_world::KernelObservation observation;
+    observation.worldName = parallelWorldConfig_->name();
+    double totalMassKg = 0.0;
+    double maxRelativeDeviation = 0.0;
+    for (const auto& spec : parallelWorldConfig_->volumes()) {
+        G4LogicalVolume* logical = world->FindLogicalVolume(spec.name);
+        if (logical == nullptr) {
+            fail("parallel_world_geometry",
+                 "ghost volume '" + spec.name + "' does not exist in the kernel geometry");
+        }
+        auto* box = dynamic_cast<G4Box*>(logical->GetSolid());
+        if (box == nullptr) {
+            fail("parallel_world_geometry", "ghost volume '" + spec.name + "' is not a box");
+        }
+        const double actualSizes[3] = {2.0 * box->GetXHalfLength() / mm,
+                                       2.0 * box->GetYHalfLength() / mm,
+                                       2.0 * box->GetZHalfLength() / mm};
+        for (int axis = 0; axis < 3; ++axis) {
+            const double expected = spec.sizeMm[axis];
+            const double scale = std::max(expected, 1.0);
+            if (std::fabs(actualSizes[axis] - expected) / scale > 1e-12) {
+                std::ostringstream message;
+                message << "ghost volume '" << spec.name << "' has size " << actualSizes[axis]
+                        << " mm on axis " << axis << " but the configuration declares " << expected << " mm";
+                fail("parallel_world_geometry", message.str());
+            }
+        }
+        const double actualMassKg = logical->GetMass(true, false) / kg;
+        const double reference = spec.referenceMassKg;
+        if (!(reference > 0.0) || !std::isfinite(actualMassKg)) {
+            fail("parallel_world_geometry", "ghost volume '" + spec.name + "' has no usable reference mass");
+        }
+        const double relative = std::fabs(actualMassKg - reference) / reference;
+        if (relative > 1e-12) {
+            std::ostringstream message;
+            message << "ghost volume '" << spec.name << "' mass " << actualMassKg
+                    << " kg differs from the configured reference " << reference << " kg (relative "
+                    << relative << ")";
+            fail("parallel_world_geometry", message.str());
+        }
+        maxRelativeDeviation = std::max(maxRelativeDeviation, relative);
+        totalMassKg += actualMassKg;
+        ++observation.volumeCount;
+        for (int sx = -1; sx <= 1; ++sx) {
+            for (int sy = -1; sy <= 1; ++sy) {
+                for (int sz = -1; sz <= 1; ++sz) {
+                    const G4ThreeVector point(
+                        (spec.centreMm[0] + 0.5 * sx * spec.sizeMm[0]) * mm,
+                        (spec.centreMm[1] + 0.5 * sy * spec.sizeMm[1]) * mm,
+                        (spec.centreMm[2] + 0.5 * sz * spec.sizeMm[2]) * mm);
+                    if (worldSolid->Inside(point) == kOutside) {
+                        fail("parallel_world_geometry", "ghost volume '" + spec.name +
+                             "' is not fully inside the ghost world solid");
+                    }
+                }
+            }
+        }
+    }
+    observation.totalMassKg = totalMassKg;
+    observation.maxRelativeMassDeviation = maxRelativeDeviation;
+    parallelWorldConfig_->RecordKernelConstruction(-1, observation,
+                                                   parallelWorldConfig_->geometrySha256());
 }
 
 void SimulationManager::ValidateBiasingProcessTargets()

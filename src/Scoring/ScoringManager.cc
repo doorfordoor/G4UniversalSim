@@ -734,6 +734,38 @@ void ScoringManager::ScoreFluenceStep(const HitRecord& hit)
     }
 }
 
+void ScoringManager::ScoreParallelHit(const HitRecord& hit)
+{
+    if (!enabled_) return;
+    if (outputManager_ && outputManager_->HasOutputFailure()) return;
+    // The dedicated H3 routing: no hits collection, no event Edep accumulation,
+    // no LET/displacement/edep scorers. Exactly one dose and one fluence call per
+    // ghost step; the scorers themselves skip zero-edep/zero-length steps.
+    if (doseScoringEnabled_) {
+        ScorerBase* scorer = GetScorer("dose");
+        if (scorer != nullptr && scorer->IsEnabled()) {
+            try {
+                scorer->ScoreHit(hit);
+            } catch (const std::exception& error) {
+                if (outputManager_) outputManager_->RecordOutputFailure("scoring_dose", error.what());
+                if (auto* runManager = G4RunManager::GetRunManager()) runManager->AbortRun(true);
+                return;
+            }
+        }
+    }
+    if (fluenceScoringEnabled_) {
+        ScorerBase* scorer = GetScorer("fluence");
+        if (scorer != nullptr && scorer->IsEnabled()) {
+            try {
+                scorer->ScoreHit(hit);
+            } catch (const std::exception& error) {
+                if (outputManager_) outputManager_->RecordOutputFailure("scoring_fluence", error.what());
+                if (auto* runManager = G4RunManager::GetRunManager()) runManager->AbortRun(true);
+            }
+        }
+    }
+}
+
 void ScoringManager::ScoreLETStep(const HitRecord& hit)
 {
     if (!enabled_ || !letScoringEnabled_) return;
