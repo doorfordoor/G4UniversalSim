@@ -195,7 +195,7 @@ G4bool ParallelScoringDetector::ProcessLeafStep(G4Step* step, ScoringManager* ma
     for (int depth = touchable->GetHistoryDepth(); depth >= 0; --depth) {
         const G4VPhysicalVolume* volume = touchable->GetVolume(depth);
         volumePath += "/";
-        volumePath += volume != nullptr ? volume->GetName() : std::string("unknown");
+        volumePath += volume != nullptr ? std::string(volume->GetName()) : std::string("unknown");
         volumePath += "#";
         volumePath += std::to_string(touchable->GetCopyNumber(depth));
     }
