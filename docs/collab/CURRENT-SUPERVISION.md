@@ -3,7 +3,7 @@
 更新2026-11-07。
 
 ## 当前阶段
-F3性能与资源基线。H3固定范围已独审关闭；F3-1测量合同已独审冻结，F3-2最小测量/只读分析接线正在原会话实现，未运行性能/模拟。
+F3性能与资源基线。H3固定范围已独审关闭；F3-1测量合同已独审冻结，F3-2接线经修订复验可用于冻结矩阵，首批36次基线已执行并完成科学/身份/内存独核；hits/CSV噪声MAD超冻结门，资源不可判定，F3-3阻断，待用户决定新批次。
 
 ## 清单文件
 docs/collab/decisions/20261107-f3-closeout.md
@@ -15,23 +15,23 @@ F3基线代码沿用已验H3代码f812465bbfd58026201b70a23938e6bdc8ea12eb，can
 |项|状态|责任/证据|
 |---|---|---|
 |F3-1测量与比较合同|通过|作者5e2cdd47与docs/collab/decisions/20261107-f3-contract-freeze.md共同构成冻结协议，冲突以主审定稿为准；4输入AST渲染与哈希独审通过|
-|F3-2基线与瓶颈定位|进行中|首版独审失败，4组最小修复round151/turn119已实际运行；正式矩阵尚未启动|
+|F3-2基线与瓶颈定位|限制|36次exit0，32科学比对/536产物SHA/12内存身份独核通过；hits/CSV MAD5.15539%超冻结5%，资源inconclusive，F3-3阻断，非通过|
 |F3-3最小优化与前后比较|未开始|按冻结判据最小变更与独立复核，不改统计/种子/输出契约|
 |F3-4正式验收交班|未开始|按影响正式回归/严格证据/云CI，收尾后F7|
 
 ## 本轮结果
-F3-2首版round150/turn118已交付，但独立复验未通过。主审复现CSV histogram计数1→999和ROOT配套统计被改仍pass；普通自有Python child仍alive时观察器超时exit0；控制first/loop/final读数100/20/200只报20；真实旧ROOT自比较因计数类型失败；+inf与mesh标签/N漏检、稀疏MT局部N及执行顺序错误亦核实。两网页二审均completed并经主审归并为4组最小修复，见docs/collab/reviews/20261107-f3-preflight-r1.md。原最终代码/37项报告/200个自检原件均保留out/collab/f3-preflight-independent/r1。正式矩阵未启动。修复round151/turn119已实际running，不扩工具/清单，不改后端或科学协议。
+固定36次模拟均exit0，4热身丢弃/20计时/12内存；32正式样本科学比对全过，536份登记产物SHA独核，12个PID/创建时间/映像SHA及采样全过。原程序2ff536c5/fc498/f812与所有物理输入不变，32次重复同seed不称32000独立物理历史。资源独算hits/csv median5.538901s、MAD5.155392740346646%严格超冻结5%，其它三点过门；本批inconclusive，不能进入F3-3、圆整或追加数据追过。非依赖证据已全部完成，具体一次新批次方案已准备但authorized=false。首批证据docs/verification/f3-baseline-20261107/README.md，原输出和所有历史失败保留。
 
 ## 运行中任务
-DSH原task/session为g4-j3-desktop-20261103/session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4。修复请求f3-preflight-independent-blockers-minimal-repair-20261107-r1已接受round151且turn119实际running，turn118 completed；连续读取至67519，实际回执out/collab/desktop-bridge/f3-preflight-repair-start-status.json及f3-preflight-repair-start-tail.json。模型保持deepseek-account-vision/deepseek-flash/max。
-网页原thread两项二审已completed/idle，最新cursor11c13ed5-fdaa-43eb-9d5e-eaa8bf73a781:2；observer/science原报告在out/collab/f3-preflight-independent/r1，绑定R1准确SHA，不冒称已审后续修复。主审等待同项最小修复交付；没有Geant4 warmup/正式baseline/profile/优化。
+无运行中的模拟/分析任务。主审session97387（36模拟）与46107（32科学/哈希独算）均exit0；根目录out/collab/20261107-f3-baseline/20261107T024015Z-f39d1262，baseline-independent-final.json记录最终inconclusive，不改旧resource报告。DSH原round151/turn119和网页原R2二审均completed/idle，不派重复任务。
 
 ## 下一轮目标
-先跟进原151/119，按实际修复SHA只复核变更与4组真实反例，验证ROOT实际I/D字段、CSV与ROOT配套科学文件、非有限/零值、稀疏MTglobalN、PID终态/峰值及冻结交错顺序。不得扩框架/补大报告代替修复；通过后同轮实际启动3调用共36次后端的固定基线矩阵，再以实测证据定位单一瓶颈。保留H8、旧失败、基线2ff536c5/fc498身份。
+等待用户对docs/collab/decisions/20261107-f3-noise-decision.md的一次新预注册批次作明确决定。计划out/collab/f3-noise-decision/proposed-batch2-plan.json保持同一程序/参数/36次和5%门、独立目录、不混样本，仅这一批；authorized=false。未批准前不新测量/不优化/不关闭F3，无新增内容时不重复扫描或测试。批准后先冻结新计划并核环境，再执行；若仍超门停止，不自动追加。
 
 ## 待用户决定/限制
 | 项 | 决定 | 影响/动作 |
 | --- | --- | --- |
+| F3基线噪声门 | 待决定；阻断F3-3 | hits/csv MAD5.15539274%严格超冻结5%；原批36次保留，resource=inconclusive。原协议不许加轮/换机追通过；新预注册批次须先明确授权，不能签收为通过。32科学比对、536 SHA、12内存身份已完成；具体新批次见20261107-f3-noise-decision.md，计划authorized=false。 |
 | 带电XS偏置 | 主审已签收适用域限制，不接受原factor10剂量 | r2 .01mm/factor1.2仅本病例独审通过；原factor10失败、未验证域及无效率收益明确保留，不称通用生产算法修复；Q2-5状态为限制而非普遍通过 |
 | LET完整强子混合谱 | 主审已签收适用域限制，v1仍失败 | EM-only两能点已验证；完整强子LET_d未获外部验证，不能据v2外推；统计相关仍归Q2-4 |
 | DDD逐步观测 | 主审已签收受限范围，整体limited | 普通hits不是计分步/事件全集，且缺步平均动能；错误证明已撤回，完整逐步验证未获证明；未确定后端结果缺陷 |
