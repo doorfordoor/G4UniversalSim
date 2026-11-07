@@ -104,3 +104,16 @@ Windows独立区42be候选对原拒绝父目录直接执行分配，立即诚实
 原turn131仍running，73637–74148与后续74149–74233连续增量已核。Windows/Linux r5已有S-A/S-B/P7/P8/受控修改观察，尚无总receipt。主审独立从原始Windows输出复算两次比较，核原始表头完全一致、只剔除run_wall_time_s/fom_per_s两列、科学CSV字节相同；一行CPPdiff与capabilities指纹变化独核，证据r5-native-incremental/windows-science-and-control.json。原25-controlled-diff.json实际为Python字典字面量，主审据原始字面量安全解析，不假称有效JSON或改写原件。
 
 默认LinuxCTest激活SDK后仍失败，真实h2程序在缺argv[2]时取exe三层parent，仅对build/Release层级成立；CMake测试命令漏传现有repository参数。主审round176最小指导仅CMake该行追加${PROJECT_SOURCE_DIR}、原窄专项和模板身份，不改物理源码/断言，不用Ninja Multi-Config遮蔽原配方。原在途Ninja诊断允许正常结束，原host终态不冒称已核。Windows模块捕获exit=null保留unknown；加载路径观察与实际直接运行exit0分开，不继续扩验收启动器。原脚本echo0但内部失败、P7 shell切分失败、运行后verify_export额外成员拒绝均保留。修复交付后冻结再只补受影响configure/build/CTest，原科学证据按实际范围与旧SHA复用。
+
+## 11:58Z r6交付/独审冻结
+
+2026-11-07。最小修复已独审签收，K2-3尚未整项通过。产品b1a7ffbc0519a29cb37b458e2e1542640956976a；模板36324640f5222558eca67919f42829fed8fa68815c128afe07f9ce85dc566e74/309成员，manifest 51d76103…；D/C同产品，旧56b1/1fa4与失败均保留。
+
+作者turn131已completed/停写（74585），r6回执6b312d80…；四文件SHA、14原证据SHA、309模板规范成员全部主审独核。产品唯一行为改动为CMake测试命令追加现有${PROJECT_SOURCE_DIR}参数，无物理源码修改；原测试仅一条窄断言，说明及模板身份同步。D的export_project.py/run_m0_tests.py虽status显示dirty，主审实读规范字节与HEAD完全相等，只是检出换行/元数据差异，未混入r6提交；用户ROADMAP/H8与F3讨论保留未提交。
+
+C真实检出template check exit0；主审固定Git覆盖快照的原静态专项exit0/3552执行断言。原r6默认Unix Makefiles构建job bash-43e1e957150d4ca8已真实completed/exit0（74336），主审核实际CMAKE_HOME_DIRECTORY/SDK/生成器、生成CTest恰好两个测试且h2显式root、新exe/两组件SHA。原CTest两个均通过，log SHA987e21d2…；主审另以相同r6组件/SDK在独立输出目录直接运行两组件均exit0，不覆盖作者原组件输出。详见out/collab/20261107-k2-implementation/independent/r6/。此前默认布局失败保留，Ninja诊断不替代默认配方。
+
+下一步仅完成K2-3剩余有限闭合：Windows对新CMake实际配置/增量构建/精确两CTest，Linux/Windows新基线实际运行、受控一行CPP及产物身份、Linux依赖路径，汇总既有S-A/S-B/确定性/P7/P8/模块加载证据。科学算法与应用链接定义均未改，未受影响旧报告按原SHA及源字节映射复用，不循环整套实验或重写取证脚本。受控修改中不直接依赖SimulationManager的h2组件若SHA不变，必须按真实依赖登记并报主审，不额外改源码造变化，不虚称所有组件变更。主审最终按原限制签收规则处理观察范围，不自动降标签收。
+
+GUI代码/原窗口入口未改，r5原GUI33断言按影响复用，作者r6窄GUI自测保留；正式profile/严格门禁/云CI仍属K2-4，均未由此次专项冒称通过。F3不追加批次，网页模型持续用户暂停。
+
