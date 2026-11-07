@@ -3,20 +3,20 @@
 更新2026-11-07。
 
 ## 当前阶段
-K2独立Geant4工程导出（K2-2完整导出链实现）；K2-1合同已独审冻结。F3既有数据收尾并行，阶段尚未关闭：R3唯一授权新批36次exit0、32科学比对/536产物SHA/12内存身份独核通过，三组合噪声超5%，资源inconclusive。停止追加性能批次和优化；K2按ROADMAP在K1/I2就绪后并行，F7依赖及F3标准不变。
+K2独立Geant4工程导出（K2-3双平台独立构建运行与受控C++修改）；K2-1合同与K2-2实现已独审通过，K2整体未关闭。F3既有数据限制保留，未追加性能批次或进入优化，F7依赖及原5%/科学标准不变。
 
 ## 清单文件
 docs/collab/decisions/20261107-k2-closeout.md；F3仍沿用docs/collab/decisions/20261107-f3-closeout.md。
 
 ## 候选身份
-主仓库提交前HEAD e44fb444c81aa8cd787b8ad23d106bb12344c4ab，分支roadmap/Q2-scientific-baselines。K2冻结合同e27f5a81…，依据docs/collab/decisions/20261107-k2-contract-freeze.md；K2-2产品尚未冻结或验收。F3实际程序仍f812465b，canonical fc498cc7…，exe 2ff536c5…；原D源三份旧H2换行映射保持，不冒称本轮重建。用户H8工作区修改保留，不进本轮提交。
+K2产品冻结42be987e92569918499a638ad17902bbc785521a，D主分支与C独立区同候选；模板b91e34e4…/308成员，manifest ee9e1c88…保持。实现签收docs/collab/decisions/20261107-k2-implementation-freeze.md；独核out/collab/20261107-k2-implementation/independent/k2-2-acceptance.json。旧d999/2c4f失败及4199 GUI报告保留原身份。H8/ROADMAP、F3讨论及本地协作文件未混入产品提交。F3原程序f812465b/工具167ba575保持，不称K2构建已完成。
 
 ## 清单状态表
 |项|状态|责任/证据|
 |---|---|---|
 |K2-1真实消费者及独立工程合同|通过|作者r2 e27f5a81…及主审最终字段定义冻结；314闭包SHA独核通过，网页只读二审；docs/collab/decisions/20261107-k2-contract-freeze.md|
-|K2-2完整导出链实现|进行中|原DeepSeek request k2-export-chain-implementation-20261107-v1，round159已接收，有限产品/测试/文档范围；尚无交付通过|
-|K2-3双平台独立构建运行与二次修改|未开始|冻结支持子集与依赖、源码及产物身份|
+|K2-2完整导出链实现|通过|42be987e；最终Linux独验3538断言exit0、Windows立即R12拒绝及复用4199 GUI33断言/严格门禁，见implementation-freeze决定|
+|K2-3双平台独立构建运行与二次修改|进行中|原round173/turn130已启动；仓库外双平台构建/运行/受控修改，out/collab/20261107-k2-build/|
 |K2-4正式验收交班|未开始|按影响正式回归、严格证据、真实云CI|
 |F3-1测量与比较合同|通过|原合同及20261107-f3-r3-freeze.md；5%及科学门不变|
 |F3-2基线与瓶颈定位|限制|三批资源inconclusive；R3 36执行/32科学/536产物SHA/12内存身份独核通过，证据docs/verification/f3-r3-baseline-20261107/README.md；未定位可验收单一热点|
@@ -24,17 +24,20 @@ docs/collab/decisions/20261107-k2-closeout.md；F3仍沿用docs/collab/decisions
 |F3-4正式验收交班|未开始|仅既有证据与测量工具集成，F3整体未关闭|
 
 ## 本轮结果
-原R3终态及全部32比较核实，预注册28份/结果24份归档成员SHA与Git暂存字节一致；Windows/Linux CLI兼容证据纳入，未重测性能。K2首稿路径/CTest/模板身份/生成来源及统计比较矛盾经真实消费者和网页快照二审定位，r2修正后由主审冻结（generated哈希等最终定义在决定内），直接派K2-2。主审doc_links限定正式1例11执行断言、0失败0跳过，严格证据通过；不等于产品或双平台验收。
+原turn129已completed，r4回执SHA845a370e…与两文件快照/最终Git对象独核一致。Linux原生最终专项exit0、3538执行断言（正例/P3/R1–R12）通过；Windows42be同一拒绝父目录立即R12/write_failed、目标未产生，未改权限，底层原因unknown。GUI按实际影响复用4199原专项1通过/0失败/0跳过、33断言及严格门禁，不冒充新报告。K2-2签收，round173已实际启动K2-3 turn130，有限证据/仓库外导出副本范围，已实查SDK和可写D:/Temp/k2-build-win。定时任务及D盘提示词已更新并读回核验，原30分钟频率/目标不变。详情docs/collab/reviews/20261107-k2-implementation-incremental.md。
 
 ## 运行中任务
-DeepSeek原task g4-j3-desktop-20261103 / session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4，request k2-export-chain-implementation-20261107-v1，round159已接收；deepseek-account-vision / deepseek-flash / max，限K2-2实现自测。交付docs/collab/outbox/20261107-k2-implementation.md及out/collab/20261107-k2-implementation/author/receipt.json；先查原任务，不重复派工。processedCursor=69456，仅来自已返回事件。网页原对话完成K2首稿二审、idle，cursor见context。原F3 job47651终态exit0。
+DSH原task g4-j3-desktop-20261103 / session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4；request k2-independent-build-run-controlled-cxx-20261107-v1，round173/turn130，实际Flash/max，进行中，processedCursor72986。回执目标out/collab/20261107-k2-build/receipt.json及docs/collab/outbox/20261107-k2-build.md。主审本轮最终Linux专项session59330 exit0；旧CLI/诊断进程已终态，不重跑。网页旧stream失败及6d7云终态均已核，不重复启动。
 
 ## 下一轮目标
-跟进K2-2原任务，审查实现/架构/代码质量、正式自测与真实模板/导出身份，冻结候选后独立复验；通过后直接进入K2-3两平台独立构建运行和受控C++修改。F3仅证据/测量工具集成及已触发CI跟进，不再追加性能批次或启动优化。
+先核原turn130实际状态/增量回执，禁止重复派工。跟进Windows/Linux仓库外11.3.2 SDK构建、两个精确component测试、S-A200/S-B1000完成、依赖独立性、P7/P8及一行受控C++修改；纯科学CSV字节比较，统计只排除原两时间列。交付后主审核实际源/产物/摘要/比较证据；不符冻结合同的组件变化只记录并定位，禁止改额外源码造变化或自行降标。通过K2-3后继续K2-4原正式回归/严格门禁/真实云CI与交班。F3不追加测量、不进入优化、不调整标签。
 
 ## 待用户决定/限制
 | 项 | 决定 | 影响/动作 |
 | --- | --- | --- |
+| K2 staging权限拒绝长重试 | 主审已签收最小修复及原失败事实 | 42be仅单点分配有界，Windows同拒绝父目录立即R12、无目标；底层权限原因unknown，不改变权限。原300秒/诊断与失败均保留；实际构建运行另验。 |
+| K2主审Windows独验通道 | 主审已签收失败事实，未签原生通过 | C临时目录不可写、D临时目录rename拒绝、独立D目标mkdir拒绝的原记录保留；WSL GUI33断言已独验。自有探针均退出，无用户程序被关；Windows K2-3仍须实际构建运行，不外推此通道成功。 |
+| 网页早期静态审查传输 | 主审已签收可用报告及失败事实 | 报告已落盘且7快照SHA/4项源码发现经主审核实；会话stream failed原错误保留，不记completed；不影响DS实现，不以网页报告代替主审验收。 |
 | F3基线噪声门 | 主审已签收三批不可判定事实，不签收F3通过 | 原两批保持原身份；R3唯一授权批已执行36次，hits/csv6.89743%、mesh/csv11.08757%、mesh/root5.70326%均超5%。32科学核对已全部通过；禁止混批、追加到通过或启动优化。调整F3验收/排期须用户明确决定，询问必要性不视为同意。 |
 | F3 R3方案自检中间记录 | 主审已签收记录限制 | 曾观测256项/4失败，原默认JSON后被作者覆盖；现场摘要与桥接回执保留，不补造明细。最终257重放/64独立检查通过，非正式科学失败，不称一次性全过。 |
 | 带电XS偏置 | 主审已签收适用域限制，不接受原factor10剂量 | r2 .01mm/factor1.2仅本病例独审通过；原factor10失败、未验证域及无效率收益明确保留，不称通用生产算法修复；Q2-5状态为限制而非普遍通过 |

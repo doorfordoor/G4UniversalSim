@@ -4,7 +4,7 @@
 每轮先读 D:/Geant4/G4UniversalSim/docs/collab/CURRENT-SUPERVISION.md，只获取当前阶段、清单路径、候选身份、状态表、运行任务及下一目标。以实际文件和回执为准，不复述旧阶段历史；仅在缺项或冲突时查相关引用、必要Git变化和新增交付。运行状态变化须核实原任务，不能因检查点较旧就重复派工。
 
 【当前阶段】
-K2独立Geant4工程导出（K2-2完整导出链实现），固定清单docs/collab/decisions/20261107-k2-closeout.md。K2-1合同r2 e27f5a81经主审真实消费者/314闭包SHA核对及网页快照二审后冻结，最终字段定义见docs/collab/decisions/20261107-k2-contract-freeze.md。DeepSeek原会话request=k2-export-chain-implementation-20261107-v1、round159已接收，有限产品/测试/文档范围实现自测；派工不等于验收。先核原任务状态/回执及context游标，禁止重复派工。交付后主审独审并继续K2-3双平台独立构建运行与受控C++修改，再K2-4正式验收。K2依K1/I2已就绪，ROADMAP明确允许与科研波次并行。
+K2独立Geant4工程导出（K2-3双平台独立构建运行与受控C++修改），固定清单docs/collab/decisions/20261107-k2-closeout.md。K2-1合同e27f5a81及字段定义保持；K2-2已独审通过，产品冻结42be987e92569918499a638ad17902bbc785521a，模板b91e34e4/308成员，原语义14项、最终静态3538断言及复用GUI33断言按真实身份记录，见docs/collab/decisions/20261107-k2-implementation-freeze.md。原Windows长重试反例已最小R12修复并真实立即拒绝，权限原因unknown、旧失败保留。DeepSeek同会话request=k2-independent-build-run-controlled-cxx-20261107-v1、round173/turn130已实际启动；先核原任务/回执与context游标，禁止重复派工。仅仓库外Windows/Linux既有11.3.2 SDK构建、S-A200/S-B1000运行、P7/P8与一行受控C++修改，双平台产物与依赖分别取证。交付后主审独审，随后K2-4正式回归/严格门禁/真实云CI与交班。K2整体未关闭，不把专项或派工称整阶段验收。K2依K1/I2就绪，仍按ROADMAP与科研波次并行。
 F3保留资源限制且未关闭：原三批各自inconclusive，R3唯一36次exit0、32科学比对/536产物SHA/12内存身份独核通过，见docs/verification/f3-r3-baseline-20261107/README.md。原job47651终态，不重复启动；原5%及科学标准不变，不追加性能批次、不进入优化。实际程序仍f812465b，测量工具167ba575；本轮文档/工具集成不冒充新程序构建。F7原依赖保持，未获明确同意不调整F3验收标签。具体候选/运行任务以CURRENT-SUPERVISION为准。
 
 【阶段生命周期】
