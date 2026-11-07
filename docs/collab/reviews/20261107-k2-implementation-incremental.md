@@ -98,3 +98,9 @@ Windows独立区42be候选对原拒绝父目录直接执行分配，立即诚实
 
 恢复原K2-3有限矩阵：从新候选原始导出取证，两个component的精确CTest集合、双平台S-A200/S-B1000、确定性、P7/P8、一行C++修改、真实产物/依赖/摘要/比较均须完整。复用SDK和确有不受影响的旧编译/依赖/运行证据，保持旧SHA，逐项说明编译输入/输出数据等价映射；不为换一个导出器提交号盲目重建同一C++。所有新构建先核缓存CMAKE_HOME_DIRECTORY，绝不复用指向另一个树的缓存。修改后科学判据与F3限制保持，不再扩大范围。
 
+
+## 11:28Z 默认Linux组件根路径反例与r6最小修复
+
+原turn131仍running，73637–74148与后续74149–74233连续增量已核。Windows/Linux r5已有S-A/S-B/P7/P8/受控修改观察，尚无总receipt。主审独立从原始Windows输出复算两次比较，核原始表头完全一致、只剔除run_wall_time_s/fom_per_s两列、科学CSV字节相同；一行CPPdiff与capabilities指纹变化独核，证据r5-native-incremental/windows-science-and-control.json。原25-controlled-diff.json实际为Python字典字面量，主审据原始字面量安全解析，不假称有效JSON或改写原件。
+
+默认LinuxCTest激活SDK后仍失败，真实h2程序在缺argv[2]时取exe三层parent，仅对build/Release层级成立；CMake测试命令漏传现有repository参数。主审round176最小指导仅CMake该行追加${PROJECT_SOURCE_DIR}、原窄专项和模板身份，不改物理源码/断言，不用Ninja Multi-Config遮蔽原配方。原在途Ninja诊断允许正常结束，原host终态不冒称已核。Windows模块捕获exit=null保留unknown；加载路径观察与实际直接运行exit0分开，不继续扩验收启动器。原脚本echo0但内部失败、P7 shell切分失败、运行后verify_export额外成员拒绝均保留。修复交付后冻结再只补受影响configure/build/CTest，原科学证据按实际范围与旧SHA复用。

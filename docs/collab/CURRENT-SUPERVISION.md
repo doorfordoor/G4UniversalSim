@@ -9,14 +9,14 @@ K2独立Geant4工程导出（K2-3双平台独立构建运行与受控C++修改�
 docs/collab/decisions/20261107-k2-closeout.md；F3仍沿用docs/collab/decisions/20261107-f3-closeout.md。
 
 ## 候选身份
-K2产品冻结56b1da77704223a8b84e3256c915c8242aad8946，C独立区与D同产品；后续文档集成不冒充新构建。模板1fa4e294…/309成员，manifest 4f512a9d…，全部成员SHA及C实际检出check已独核。决定docs/collab/decisions/20261107-k2-native-runtime-r5-freeze.md；out/collab/20261107-k2-implementation/independent/r5/acceptance.json。原42be/b91及实际运行失败、4199 GUI报告仍按原身份保留。H8/ROADMAP、F3讨论及本地协作文件未混入产品。F3程序f812465b/工具167ba575保持。
+K2产品冻结56b1da77704223a8b84e3256c915c8242aad8946，C独立区与D同产品；后续文档集成不冒充新构建。已冻结模板1fa4e294…/309成员，manifest 4f512a9d…，全部成员SHA及C实际检出check已独核；r6未提交修复的新模板36324640…/309成员仅预核原始导出，尚未验收冻结。决定docs/collab/decisions/20261107-k2-native-runtime-r5-freeze.md；out/collab/20261107-k2-implementation/independent/r5/acceptance.json。原42be/b91及实际运行失败、4199 GUI报告仍按原身份保留。H8/ROADMAP、F3讨论及本地协作文件未混入产品。F3程序f812465b/工具167ba575保持。
 
 ## 清单状态表
 |项|状态|责任/证据|
 |---|---|---|
 |K2-1真实消费者及独立工程合同|通过|作者r2 e27f5a81…及主审最终字段定义冻结；314闭包SHA独核通过，网页只读二审；docs/collab/decisions/20261107-k2-contract-freeze.md|
 |K2-2完整导出链实现|通过|56b1da77/r5补丁独审签收；静态3551、GUI33断言、原始S-A200及H2定向复验，旧失败/原严格报告保留各自身份|
-|K2-3双平台独立构建运行与二次修改|进行中|r5最小修复已独审，round175/turn131恢复双平台原矩阵；未签整项通过|
+|K2-3双平台独立构建运行与二次修改|进行中|Windows科学比较主审已复算；Linux默认CTest根路径失败，round176最小r6中，未签整项通过|
 |K2-4正式验收交班|未开始|按影响正式回归、严格证据、真实云CI|
 |F3-1测量与比较合同|通过|原合同及20261107-f3-r3-freeze.md；5%及科学门不变|
 |F3-2基线与瓶颈定位|限制|三批资源inconclusive；R3 36执行/32科学/536产物SHA/12内存身份独核通过，证据docs/verification/f3-r3-baseline-20261107/README.md；未定位可验收单一热点|
@@ -24,19 +24,18 @@ K2产品冻结56b1da77704223a8b84e3256c915c8242aad8946，C独立区与D同产品
 |F3-4正式验收交班|未开始|仅既有证据与测量工具集成，F3整体未关闭|
 
 ## 本轮结果
-按用户明确要求临时暂停网页模型：AGENTS、模型分配、网页协作约定及context调度开关已设为暂停；既有网页助手只读状态核实为failed/systemError，未派新网页任务或发送后续消息。定时任务的网页协作段落同步停用，保留原频率/目标与项目开发监督；仅用户明确恢复后重启网页协作。K2产品/验收状态不变，原turn131独立构建验收继续，未打断或重派。决定docs/collab/decisions/20261107-web-model-pause.md；r5详细验收证据仍见原freeze决定。
+原turn131仍running。已读取73637–74148连续512事件，随后增量至74233；r5 Windows/Linux的S-A/S-B、确定性、P7/P8和一行C++观察已有进展，但总回执未交付。主审独立复算Windows确定性/受控修改CSV：科学字节相同，统计原表头相同且仅排除两时间列、其余行/列严格相同；单行修改与指纹变化已核，证据out/collab/20261107-k2-build/independent/r5-native-incremental/windows-science-and-control.json。Linux默认CTest在SDK激活后仍失败，主审核h2固定三层parent与CMake漏传现有repository参数；round176已steer原turn131，仅CMake命令加${PROJECT_SOURCE_DIR}/原窄测试/模板身份最小r6，作者已读决定并实施一行命令/窄测试，作者static/GUI自测exit0；r6原始导出318文件身份已主审逐项核实，模板36324640…（待正式交付冻结），默认Linux原生复验正在执行。Ninja Multi-Config在途可结束作诊断，不替代原默认配方。K2-3未通过，原失败不改写；不追加F3批次，网页模型保持暂停。
 
 ## 运行中任务
-网页模型调用已由用户暂停；唯一登记网页助手最新实际状态failed/systemError，无该助手在途生成，不新增或续派网页任务。
-DSH原task g4-j3-desktop-20261103 / session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4，原turn130 completed（73629）；request k2-3-resume-frozen-r5-native-matrix-20261107-v2，round175/turn131已真实turn-start，Flash/max，processedCursor73636。回执out/collab/20261107-k2-build/receipt.json、docs/collab/outbox/20261107-k2-build.md。原Windows受控新配置job bash-fd17488dc34f43d4终态completed/exit0已核73523；旧Linuxjob bash-7cef164cc5804e74作者给构建SHA，原launcher终态仍要求核回执，禁止重复启动。主审本轮static/GUI/定向runtime全部终态已收，无旧本机待轮询会话。
+网页模型按用户暂停，不调用、不新增或续派。DSH原task g4-j3-desktop-20261103 / session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4，原turn131仍运行；round176/request k2-3-linux-single-config-ctest-root-minimal-fix-20261107-r6已steer接受并实际读决定，Flash/max，processedCursor74295。r6原默认single-config配置/构建/CTest job bash-43e1e957150d4ca8正在/home/u123/k2-work/r6/sa执行，不重复启动；r6交付out/collab/20261107-k2-implementation/author-r6/receipt.json及docs/collab/outbox/20261107-k2-linux-ctest-root-r6.md。原Ninja诊断job bash-fd7cfb85db404a26不重启，主审见其CTest100%输出但原launcher终态需查，不中断。旧Windowsjob终态已核；更早Linux7cef仅作者21-prior-job-terminal.json记completed/exit0，未找到原bridge终态，不虚称主审已核、不再启动。
 
 ## 下一轮目标
-网页模型保持暂停，由主审与DeepSeek继续下述工作；不得因阶段切换或旧授权自动恢复。
-先核原turn131状态/增量及原Linux构建launcher回执，不重派。继续修复候选未手改原始导出的Windows/Linux精确2项CTest、S-A200/S-B1000、确定性/P7/P8、单行C++修改与真实编译来源/依赖/产物/摘要/CSV比较。只补受影响观察，复用字节相同编译输入及未受影响旧报告并保留原SHA；绝不以旧缓存指别树的build0算修改通过。交付即独审；通过K2-3再K2-4正式矩阵/严格门禁/真实云CI与交班。F3不追加测量、不进入优化、不调整标签。
+先核原turn131/r6回执及在途Ninja诊断原状态，不重复派工。只审CMake显式传根的一行产品修复、窄专项和新模板SHA；独审冻结后回原K2-3，只补受影响configure/增量构建/默认single-config精确两个CTest。编译fingerprint因CMake身份输入改变须真实记录；原科学输出与依赖/受控修改观察按实际源码影响复用并保留原SHA，不循环全矩阵。K2-3交付后核双平台源/产物/运行/比较/依赖完整性，过后立即K2-4正式矩阵/严格证据/真实云CI。网页模型暂停，F3不追加测量、不进入优化、不调整标签。
 
 ## 待用户决定/限制
 | 项 | 决定 | 影响/动作 |
 | --- | --- | --- |
+| K2 Linux默认CTest根目录 | 主审已签收反例及最小修复范围，未签收通过 | h2固定按exe三层parent推导只适配Windows Release；round176仅CMake测试命令加现有repository参数，不改物理/断言/生成器，修好回原K2-3；决定20261107-k2-linux-ctest-root-minimal-fix.md。 |
 | K2原始导出运行闭包/路径 | 主审已签收r5最小修复及原失败事实 | 56b1改parallel相对INI值/唯一NIEL表；原始新导出S-A200及H2独验通过，原42be失败不改写；K2-3整项仍待验。 |
 | K2原失败索引被覆盖 | 主审已签收记录限制 | 作者r5替换了主审identity.json，原索引字节未留；原日志/能力/产物SHA快照及consumer反例JSON保留，r5/failure-evidence-integrity.json重列实际文件，不伪称旧索引原样。后续作者不得写independent目录，不影响实际反例/修复验证。 |
 | K2 staging权限拒绝长重试 | 主审已签收最小修复及原失败事实 | 42be仅单点分配有界，Windows同拒绝父目录立即R12、无目标；底层权限原因unknown，不改变权限。原300秒/诊断与失败均保留；实际构建运行另验。 |
