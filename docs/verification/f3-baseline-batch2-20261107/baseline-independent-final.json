@@ -1,0 +1,46 @@
+{
+  "schema": "g4usim_f3_batch2_independent_v1",
+  "status": "inconclusive",
+  "frozen_program_commit": "f812465bbfd58026201b70a23938e6bdc8ea12eb",
+  "simulation_invocations": 36,
+  "execution_exit_code": 0,
+  "science_comparisons": 32,
+  "science_status": "pass",
+  "artifact_hashes_verified": 536,
+  "memory_identities_verified": 12,
+  "memory_minimum_query_count": 28,
+  "final_memory_queries_passed": 12,
+  "resources": [
+    {
+      "combo": "hits/csv",
+      "median_s": 6.176614099997096,
+      "relative_MAD": 0.010305872932334632,
+      "pass": true
+    },
+    {
+      "combo": "hits/root",
+      "median_s": 4.071223600069061,
+      "relative_MAD": 0.05526225576474922,
+      "pass": false
+    },
+    {
+      "combo": "mesh/csv",
+      "median_s": 2.828280499903485,
+      "relative_MAD": 0.04189669304471206,
+      "pass": true
+    },
+    {
+      "combo": "mesh/root",
+      "median_s": 2.8133980999700725,
+      "relative_MAD": 0.0019689356870688426,
+      "pass": true
+    }
+  ],
+  "first_batch_status_unchanged": "inconclusive",
+  "batches_combined": false,
+  "further_measurements_authorized": false,
+  "optimization_started": false,
+  "stage_closed": false,
+  "completed_utc": "2026-11-07T03:47:26.046700+00:00",
+  "scope": "F3 engineering measurement and deterministic replay; not unified-test v2, external physics validation, or independent pooled histories"
+}

@@ -1,0 +1,70 @@
+{
+  "status": "inconclusive",
+  "rows": [
+    {
+      "combo": "hits/csv",
+      "elapsed_median_s": 6.176614099997096,
+      "run_wall_median_s": 4.4216554,
+      "relative_MAD": 0.010305872932334632,
+      "noise_pass": true,
+      "sampled_rss_median_bytes": 75833344,
+      "registered_bytes_median": 95411491,
+      "timing_values": [
+        6.217522300081328,
+        6.176614099997096,
+        6.112958699930459,
+        6.305729000014253,
+        5.988171000033617
+      ]
+    },
+    {
+      "combo": "hits/root",
+      "elapsed_median_s": 4.071223600069061,
+      "run_wall_median_s": 2.4694428,
+      "relative_MAD": 0.05526225576474922,
+      "noise_pass": false,
+      "sampled_rss_median_bytes": 85602304,
+      "registered_bytes_median": 50597830,
+      "timing_values": [
+        3.7729914999799803,
+        4.34735100006219,
+        4.071223600069061,
+        4.2962085999315605,
+        3.8721362000796944
+      ]
+    },
+    {
+      "combo": "mesh/csv",
+      "elapsed_median_s": 2.828280499903485,
+      "run_wall_median_s": 1.3276402,
+      "relative_MAD": 0.04189669304471206,
+      "noise_pass": true,
+      "sampled_rss_median_bytes": 78675968,
+      "registered_bytes_median": 1687949,
+      "timing_values": [
+        2.6387857999652624,
+        2.709784899954684,
+        2.828280499903485,
+        2.929337800014764,
+        3.050180900027044
+      ]
+    },
+    {
+      "combo": "mesh/root",
+      "elapsed_median_s": 2.8133980999700725,
+      "run_wall_median_s": 1.3849567,
+      "relative_MAD": 0.0019689356870688426,
+      "noise_pass": true,
+      "sampled_rss_median_bytes": 83705856,
+      "registered_bytes_median": 1413359,
+      "timing_values": [
+        2.8140646000392735,
+        2.8133980999700725,
+        2.8247537999413908,
+        2.8078587000491098,
+        2.6534728000406176
+      ]
+    }
+  ],
+  "scope": "resource observation only,science pending"
+}

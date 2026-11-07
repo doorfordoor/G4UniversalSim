@@ -1,10 +1,10 @@
-## 2026-11-07 F3首批基线执行完成，噪声门待决定
+## 2026-11-07 F3第二批执行完成，资源门仍阻断
 
-36次模拟执行完成，32正式样本科学比对和536产物SHA独核通过；hits/csv MAD5.15539274%超过冻结5%，资源inconclusive、F3-3阻断，阶段未关闭。[首批证据](docs/verification/f3-baseline-20261107/README.md)。[新预注册建议](docs/collab/decisions/20261107-f3-noise-decision.md)待用户决定，未自动重跑或放宽门限。
+用户批准的唯一第二批36次exit0，32科学比对、536份登记产物SHA及12内存身份独核通过；hits/root MAD5.5262255765%超过冻结5%，资源仍inconclusive。首批原失败与全部数据保留，不混样本或择优；按方案停止追加测量与优化，F3未关闭，F7未启动。[第二批证据](docs/verification/f3-baseline-batch2-20261107/README.md)；[原决定及授权](docs/collab/decisions/20261107-f3-noise-decision.md)。
 
 ## 2026-11-07 H3固定范围验收完成，转F3
 
-冻结f812465b，四个真实云工作流成功，12原报告726用例361946断言严格通过；双平台runtime/SDK安装版本1.0.0，原科学与工程证据身份分开、旧失败保留。[最终验收](docs/verification/h3-final-20261107/README.md)。F3当前进度见上方首批基线记录。
+冻结f812465b，四个真实云工作流成功，12原报告726用例361946断言严格通过；双平台runtime/SDK安装版本1.0.0，原科学与工程证据身份分开、旧失败保留。[最终验收](docs/verification/h3-final-20261107/README.md)。F3当前进度见上方第二批结果。
 
 ## 2026-11-06 H2固定范围验收完成，转H3
 
