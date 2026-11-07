@@ -1,5 +1,11 @@
 # G4UniversalSim Agent 开发约束
 
+## 网页模型临时暂停（当前有效）
+
+2026-11-07用户明确要求：暂时暂停使用网页模型。G4UniversalSim暂停调用所有chatgpt-web/*模型（包括GPT6-sol(web)、GPT6 Pro(web)），不新建网页助手对话、不向已有网页助手发送后续指令，也不通过子代理或其它协作入口调用网页模型。恢复必须有用户新的明确指示，定时任务、阶段切换或先前授权不能自动恢复。已产生的报告与失败记录保留，按原身份复用；主审与DeepSeek原开发、自测和验收流程继续。
+
+详见 docs/collab/decisions/20261107-web-model-pause.md。
+
 > **状态与历史的边界（2026-11-04 E4 收尾）**：本文件只记录实现约束与工作规则。阶段完成度以 `docs/ROADMAP.md` 为准，任务级状态以 `docs/collab/CURRENT-SUPERVISION.md` 为准；下方条目中的“作者交付/未验收/未关闭”等文字是历史记录，不构成当前状态。历史全文见 `docs/agent-history.md`，归档快照见 `docs/archive/`。
 
 
