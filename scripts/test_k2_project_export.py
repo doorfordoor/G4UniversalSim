@@ -38,6 +38,17 @@ ROLES = {"source", "header", "cmake", "tool", "schema", "doc", "license",
          "project_macro", "readme_export", "example"}
 REWRITES = {"verbatim", "path_rewrite", "generated"}
 LOCAL_COLLAB_PRESENT = (ROOT / "tools" / "collab").is_dir()
+# Reuse the frozen platform-path fixture policy instead of declaring new
+# drive-letter literals here: test_platform_path_fixture_policy.py pins the
+# policy at four declarations in three files, and adding rows would require
+# changing that frozen test (outside the authorised repair files).  The value
+# below is the existing named "rejected archive member" fixture, used as
+# hostile archive-member data only and never opened.
+PATH_FIXTURE_POLICY = json.loads(
+    (ROOT / "tools" / "platform_path_fixtures.json").read_text(encoding="utf-8"))
+REJECTED_DRIVE_MEMBER = next(
+    row["value"] for row in PATH_FIXTURE_POLICY["fixtures"]
+    if row["constant"] == "ABSOLUTE_ARCHIVE_MEMBER_FIXTURE")
 SELECTIONS = {"opened_project", "generated_package"}
 
 
@@ -478,8 +489,17 @@ def main() -> int:
         )
         assert h2_command in cmake, "the h2 component test must receive the source root"
         readme = (dest_a1 / "README-EXPORT.md").read_text(encoding="utf-8")
+        presets = json.loads((dest_a1 / "CMakePresets.json").read_text(encoding="utf-8"))
+        windows_binary_dir = next(
+            preset["binaryDir"] for preset in presets["configurePresets"]
+            if preset.get("name") == "vs2026-x64")
+        # The exported preset names the build directory relative to the export
+        # root; the README quotes it without the CMake variable prefix.
+        windows_binary_dir = windows_binary_dir.replace("${sourceDir}/", "")
+        windows_ctest = (
+            f'ctest --test-dir {windows_binary_dir} -C Release -L "^component$"')
         for fragment in ("G4USIM_STANDALONE_EXPORT=ON",
-                         'ctest --test-dir build_vs2026 -C Release -L "^component$"',
+                         windows_ctest,
                          'ctest --test-dir build_linux -L "^component$"',
                          "cmake --preset vs2026-x64",
                          "Run from this directory",
@@ -640,11 +660,11 @@ def main() -> int:
         # A self-consistent manifest must not smuggle a Windows drive, UNC,
         # absolute or parent-escaping member into the write path.
         hostile_members = (
-            ("path", "D:/evil.txt"),
+            ("path", REJECTED_DRIVE_MEMBER),
             ("path", "C:\\evil.txt"),
             ("path", "/absolute/evil.txt"),
             ("path", "../evil.txt"),
-            ("source_path", "D:/evil.txt"),
+            ("source_path", REJECTED_DRIVE_MEMBER),
             ("source_path", "../../evil.txt"),
         )
         for index, (key, value) in enumerate(hostile_members):

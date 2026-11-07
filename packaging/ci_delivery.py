@@ -59,7 +59,7 @@ def snapshot_sources(destination):
         source = ROOT / directory
         if source.is_dir():
             shutil.copytree(source, destination / directory, ignore=ignore)
-    for name in ("main.cc", "CMakeLists.txt", "README.md", "CHANGELOG.md"):
+    for name in ("main.cc", "CMakeLists.txt", "CMakePresets.json", "README.md", "CHANGELOG.md"):
         if (ROOT / name).is_file():
             shutil.copy2(ROOT / name, destination / name)
     for file in destination.rglob("*"):

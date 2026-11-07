@@ -21,6 +21,12 @@ def main():
             file = origin / relative
             file.parent.mkdir(parents=True, exist_ok=True)
             file.write_text("# actual fixture module " + relative + "\n", encoding="utf-8")
+        # The export-template identity declares CMakePresets.json as a root
+        # member, so the native snapshot must copy it byte for byte and list it.
+        presets_fixture = origin / "CMakePresets.json"
+        presets_fixture.write_text(
+            '{"version": 3, "configurePresets": [{"name": "fixture"}]}\n',
+            encoding="utf-8")
         other = origin / "packaging/freeze_identity.py"
         other.parent.mkdir(parents=True)
         other.write_text("# fixture packaging source\n", encoding="utf-8")
@@ -35,6 +41,9 @@ def main():
             assert (destination / relative).read_bytes() == (origin / relative).read_bytes()
             assert relative in snapshot["files"]
         assert (destination / "packaging/freeze_identity.py").is_file()
+        assert (destination / "CMakePresets.json").read_bytes() == presets_fixture.read_bytes()
+        assert "CMakePresets.json" in snapshot["files"]
+        assert snapshot["files"]["CMakePresets.json"] == ci_delivery._file_hash(presets_fixture)
         assert not (destination / "gui/.venv").exists()
         assert not (destination / "docs/verification").exists()
         assert not (destination / "test/output").exists()
