@@ -248,7 +248,7 @@ def main() -> int:
         main_ini = (dest_a1 / "project" / "main.ini").read_text(encoding="utf-8")
         for fragment in ("file = project/config/materials.ini",
                          "config = project/config/geometry.ini",
-                         "geometry_config = project/config/parallel.ini",
+                         "geometry_config = config/parallel.ini",
                          "dir = runs/default/output",
                          "format = csv"):
             assert fragment in main_ini, fragment
@@ -268,6 +268,17 @@ def main() -> int:
             listed[entry["path"]] = (dest_a1 / entry["path"]).read_bytes()
         assert manifest_a1["identity"]["digest"] == identity_from_files(listed)["digest"]
         assert "export-manifest.json" not in listed
+        exported_template_manifest = read_json(
+            dest_a1 / exporter.TEMPLATE_MANIFEST_COPY)
+        template_members = {entry["path"]: entry["role"]
+                            for entry in exported_template_manifest["members"]}
+        assert template_members.get(
+            "scenarios/semiconductor/niel/si_proton.csv") == "example"
+        assert not [path for path, role in template_members.items()
+                    if role == "example" and path !=
+                    "scenarios/semiconductor/niel/si_proton.csv"]
+        assert any("si_proton.csv" in item
+                   for item in manifest_a1["not_included"])
         main_input = [entry for entry in manifest_a1["inputs"]
                       if entry["copied_to"] == "project/main.ini"][0]
         assert main_input["source_kind"] == "opened_project"
@@ -523,7 +534,7 @@ def main() -> int:
                 in preserved_text)
         assert "dir = runs/default/output" in preserved_text
         assert "config = project/config/geometry.ini" in preserved_text
-        assert "geometry_config = project/config/parallel.ini" in preserved_text
+        assert "geometry_config = config/parallel.ini" in preserved_text
 
         # --- P7 (static): one initialize followed by one beamOn -------------
         macro_project = work / "macro-project"

@@ -20,7 +20,7 @@
 
 ## 独立 Geant4 工程模板
 
-安装包内 `export-template/` 是由 `packaging/build_export_template.py` 从仓库单一来源生成的独立工程模板（含 `export_template_manifest.json` 身份清单）。GUI/CLI 的“导出 Geant4 工程”只复制该模板并重写项目输入，不从开发树或 Git 读取；打包时生成器校验模板身份与仓库提交清单一致，不一致即失败。模板不含 Geant4 SDK、物理数据、Qt 或 GUI。模板身份按统一换行（CRLF/CR → LF）后的规范字节计算，`tools/` 仅含顶层直接成员（不含本地子目录协作脚本）；详见 `docs\独立工程导出.md`。
+安装包内 `export-template/` 是由 `packaging/build_export_template.py` 从仓库单一来源生成的独立工程模板（含 `export_template_manifest.json` 身份清单）。GUI/CLI 的“导出 Geant4 工程”只复制该模板并重写项目输入，不从开发树或 Git 读取；打包时生成器校验模板身份与仓库提交清单一致，不一致即失败。模板不含 Geant4 SDK、物理数据、Qt 或 GUI。模板身份按统一换行（CRLF/CR → LF）后的规范字节计算，`tools/` 仅含顶层直接成员（不含本地子目录协作脚本）；模板只额外携带一个数据文件 `scenarios/semiconductor/niel/si_proton.csv`（`h2_volume_scoring_check` 的真实输入），其余 `scenarios/` 不进入闭包；详见 `docs\独立工程导出.md`。
 
 ## 许可
 

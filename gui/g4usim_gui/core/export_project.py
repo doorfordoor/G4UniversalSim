@@ -78,6 +78,10 @@ PROJECT_MAIN = "project/main.ini"
 PROJECT_MATERIALS = "project/config/materials.ini"
 PROJECT_GEOMETRY = "project/config/geometry.ini"
 PROJECT_PARALLEL = "project/config/parallel.ini"
+# ParallelWorldConfig resolves this value against the directory of the
+# main INI, so the exported main.ini must say config/parallel.ini even
+# though the copied file itself lives at project/config/parallel.ini.
+PROJECT_PARALLEL_REF = "config/parallel.ini"
 PROJECT_MACRO = "project/macros/run.mac"
 PROJECT_README = "project/README.md"
 EXPORT_README = "README-EXPORT.md"
@@ -491,6 +495,14 @@ def _template_root_files(root: Path) -> list[tuple[str, str, str]]:
             entries.append((relative.as_posix(), relative.as_posix(), role))
     for name in doc_files:
         entries.append((name, name, "doc"))
+    # The h2 volume-scoring component test reads this SR-NIEL table directly.
+    # It is the single non-project data member of the portable template; the
+    # rest of scenarios/ stays out of the closure.
+    scenario_fixture = "scenarios/semiconductor/niel/si_proton.csv"
+    if not (root / scenario_fixture).is_file():
+        raise ExportError("export_template_unavailable",
+                          f"template is missing {scenario_fixture}")
+    entries.append((scenario_fixture, scenario_fixture, "example"))
     licenses = root / license_source
     if licenses.is_dir():
         for path in sorted(licenses.rglob("*")):
@@ -616,7 +628,8 @@ def _validate_manifest(manifest, manifest_path: Path) -> list[TemplateMember]:
             raise ExportError("template_identity_mismatch",
                               f"template manifest SHA is malformed: {member.path}")
         if member.role not in {"source", "header", "cmake", "tool", "schema",
-                               "template_config", "template_macro", "doc", "license"}:
+                               "template_config", "template_macro", "doc", "license",
+                               "example"}:
             raise ExportError("template_identity_mismatch",
                               f"unknown template role: {member.role}")
         members.append(member)
@@ -1429,7 +1442,7 @@ def rewrite_main_ini(text: str) -> tuple[str, list[dict[str, str]]]:
         ("output", "dir"): OUTPUT_DIRECTORY,
         ("materials", "file"): PROJECT_MATERIALS,
         ("geometry", "config"): PROJECT_GEOMETRY,
-        ("parallel_world", "geometry_config"): PROJECT_PARALLEL,
+        ("parallel_world", "geometry_config"): PROJECT_PARALLEL_REF,
         ("run", "macro"): PROJECT_MACRO,
     }
     changes: list[dict[str, str]] = []
@@ -2099,7 +2112,9 @@ def _manifest(layout: TemplateLayout, prepared: dict, files: dict[str, bytes],
             "the Qt runtime and Qt development files",
             "a C++ compiler",
             "the Python and PySide6 GUI",
-            "scenarios/ and examples/ other than the exported project",
+            "scenarios/ and examples/ other than the exported project and the "
+            "single NIEL fixture scenarios/semiconductor/niel/si_proton.csv "
+            "required by the parallel-scoring component test",
             "test framework scripts (scripts/, gui/)",
             "docs/verification and docs/collab evidence trees",
             "the project's own repository license (none is declared)",
