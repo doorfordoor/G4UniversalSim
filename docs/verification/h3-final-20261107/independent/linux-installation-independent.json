@@ -1,0 +1,74 @@
+{
+  "candidate": "f812465bbfd58026201b70a23938e6bdc8ea12eb",
+  "run_id": 42306734551,
+  "job_id": 128197852125,
+  "artifact_id": 13547801494,
+  "platform": "linux",
+  "application_version": "1.0.0",
+  "geant4_version": "11.4.3",
+  "status": "pass_linux_installation_evidence_only",
+  "artifact_sha256": "92959d5655d881eca73c7afa6bac301e394726b55cff8e4a7b06bdf78541cbdf",
+  "API_digest_and_CRC": "pass",
+  "stage_logs": [
+    {
+      "stage": "build-data",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit_code": 0
+    },
+    {
+      "stage": "plan-canonical-data",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit_code": 0
+    },
+    {
+      "stage": "install-canonical-data",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit_code": 0
+    },
+    {
+      "stage": "build-runtime",
+      "sha256": "20c2eacfa957890676d49e9af3e6f1a5c34457a84d64d85b389414feb9c92ff2",
+      "exit_code": 0
+    },
+    {
+      "stage": "uninstall-canonical-data",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit_code": 0
+    },
+    {
+      "stage": "build-sdk",
+      "sha256": "9f4ad1031e0b68b4466620884d38739325a16f7446a3bb2adaa83a49952dc038",
+      "exit_code": 0
+    },
+    {
+      "stage": "dependency-licenses",
+      "sha256": "963aca79166119c47a21611f70b83316d2078cc9cdc4cab6ad3e2b1771d43da4",
+      "exit_code": 0
+    },
+    {
+      "stage": "assemble-offline-release",
+      "sha256": "5b838f892dfa8fd1ac2e9e49e404c0ea090c4949a42272121d520ff049867094",
+      "exit_code": 0
+    },
+    {
+      "stage": "verify-runtime",
+      "sha256": "151d7ade6748bcd6f8b7367a10388e57d1d63bbf05bb13db6266c335d4769bc7",
+      "exit_code": 0
+    },
+    {
+      "stage": "verify-sdk",
+      "sha256": "96507b89a7d85e520432784d8438a013cfeba0fa64454e7daa2235e4576ee73e",
+      "exit_code": 0
+    }
+  ],
+  "indexed_evidence_files_verified": 23,
+  "canonical_runtime_inputs_verified": 230,
+  "source_snapshot_files": 972,
+  "workflow_sha256": "aa74b9ba329545be934f40a9185259eeec0fdc3c199bf71f306cbfe201f29c5e",
+  "runtime_completed_events": 5,
+  "runtime_source_fingerprint": "fc498cc7f261b89d39558218668cb197bcaa3a94ff0c661f0b7f8fd2dab822ec",
+  "sdk_scope": "G4UniversalSim bundled source configure/compile/link/capabilities execution; no simulation or physics validation",
+  "sdk_capabilities_source_fingerprint": "fc498cc7f261b89d39558218668cb197bcaa3a94ff0c661f0b7f8fd2dab822ec",
+  "sdk_build_git_identity": "unknown retained;bundled source has no Git metadata",
+  "whole_workflow": "Windows job not yet independently accepted;parent workflow remains pending"
+}

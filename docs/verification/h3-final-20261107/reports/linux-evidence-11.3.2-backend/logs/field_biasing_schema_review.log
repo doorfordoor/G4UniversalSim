@@ -1,0 +1,24 @@
+{
+  "candidate_sha256": "b411ee2bb3769a0e5f8759dff12f21f6234b1ddee041616e78e7cc059e42eb35",
+  "baseline_sha256": null,
+  "cases": [
+    {
+      "case": "dormant-malformed-grammar",
+      "accepted": true
+    },
+    {
+      "case": "auto-activates-malformed-grammar",
+      "accepted": false
+    },
+    {
+      "case": "disabled-rule-still-parses-number",
+      "accepted": false
+    },
+    {
+      "case": "mixed-case-and-derived-precedence",
+      "accepted": true
+    }
+  ],
+  "scope": "Configure-only parser/schema compatibility; no transport or physics claim"
+}
+G4USIM_ASSERTS=18

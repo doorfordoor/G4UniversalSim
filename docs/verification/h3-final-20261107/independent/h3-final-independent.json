@@ -1,0 +1,80 @@
+{
+  "decision": "H3-5 accepted;H3 fixed scope closed",
+  "candidate": "f812465bbfd58026201b70a23938e6bdc8ea12eb",
+  "source_fingerprint": "fc498cc7f261b89d39558218668cb197bcaa3a94ff0c661f0b7f8fd2dab822ec",
+  "formal_reports": 12,
+  "cases": 726,
+  "assertions": 361946,
+  "fail": 0,
+  "skip": 0,
+  "original_artifacts_API_SHA_CRC_verified": 8,
+  "original_job_logs": [
+    {
+      "run_id": 42306734507,
+      "job_id": 128197852009,
+      "sha256": "ecb608e72579968a49bd86432b6ef4958e4a0a1b895ecab3c912231c5c1af0dd",
+      "bytes": 45061
+    },
+    {
+      "run_id": 42306734507,
+      "job_id": 128197852298,
+      "sha256": "3c74f07f9feb7d1b178cb93ca99ec7535dfa1affc1b034ac44596b07845c5770",
+      "bytes": 75014
+    },
+    {
+      "run_id": 42306734551,
+      "job_id": 128197852125,
+      "sha256": "5f1d6661581ae192664f38fcd3fe906a8c7d99c0878a2e59ea8e38820d97b8ad",
+      "bytes": 138409
+    },
+    {
+      "run_id": 42306734551,
+      "job_id": 128197852278,
+      "sha256": "a043a8d7360cfcf3ef55cef295e558e0ba088d34872e86f7a1ac0cc7af2bbc03",
+      "bytes": 73506
+    },
+    {
+      "run_id": 42306734580,
+      "job_id": 128197852511,
+      "sha256": "702791a9c0d6e968550349b8974c97281e732aaa46d46fb7ad48c881cd238168",
+      "bytes": 128515
+    },
+    {
+      "run_id": 42306734580,
+      "job_id": 128197852793,
+      "sha256": "8f75341ecddf4dc79e18d05772bc28cfa98c668484f01d4ed7e9d25b2e72491f",
+      "bytes": 64470
+    },
+    {
+      "run_id": 42306734582,
+      "job_id": 128197852566,
+      "sha256": "dac498bdc8989318f5ba781f8174bc79264c5151133b3fb962a253e3e6aed473",
+      "bytes": 168154
+    },
+    {
+      "run_id": 42306734582,
+      "job_id": 128197853001,
+      "sha256": "8fd1a5fedb499ba68144a82c797ac5ba4998f06c0ef877b49274e9c3ec05b2d6",
+      "bytes": 169828
+    }
+  ],
+  "installation": {
+    "Windows": {
+      "stages": 9,
+      "indexed_files": 25,
+      "runtime_events": 5
+    },
+    "Linux": {
+      "stages": 10,
+      "indexed_files": 23,
+      "runtime_events": 5
+    },
+    "version": "1.0.0",
+    "geant4": "11.4.3",
+    "SDK_scope": "G4UniversalSim bundled source configure/compile/link/capabilities execution; no simulation or physics validation"
+  },
+  "scientific_acceptance": "docs/collab/reviews/20261107-h3-benchmarks-acceptance.md;old3700 retained;no B/C rerun",
+  "native": "out/collab/h3-final-native/native-observation.json;ec84 GUI unchanged by f812 single-line conversion",
+  "old_failure": "ec84 GCC failures and original science/analysis failures retained",
+  "summary_reconciliation": "ci-final Linux logs field empty;run-specific record.json and disk contain both originals.8 job logs independently hash-verified;raw ci-final unchanged. Source snapshot is972 per platform,not author shorthand46."
+}

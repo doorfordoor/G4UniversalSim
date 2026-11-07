@@ -1,0 +1,69 @@
+{
+  "status": "pass_windows_installation_evidence",
+  "candidate": "f812465bbfd58026201b70a23938e6bdc8ea12eb",
+  "source_fingerprint": "fc498cc7f261b89d39558218668cb197bcaa3a94ff0c661f0b7f8fd2dab822ec",
+  "run_id": 42306734551,
+  "job_id": 128197852278,
+  "artifact_id": 13548703163,
+  "artifact_sha256": "b23b27c377651bbf72517fa5b57d8c64c6abb24437709c0665fd26ef79591fd3",
+  "API_digest_and_CRC": "pass",
+  "platform": "windows",
+  "application_version": "1.0.0",
+  "geant4_version": "11.4.3",
+  "stages_verified": [
+    {
+      "stage": "build-data",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit_code": 0
+    },
+    {
+      "stage": "plan-canonical-data",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit_code": 0
+    },
+    {
+      "stage": "install-canonical-data",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit_code": 0
+    },
+    {
+      "stage": "build-runtime",
+      "sha256": "0635d0e067a9a0d2865eaa9360befbc949fb281cce5f2ea6f904fdf46f39a2fb",
+      "exit_code": 0
+    },
+    {
+      "stage": "uninstall-canonical-data",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit_code": 0
+    },
+    {
+      "stage": "build-sdk",
+      "sha256": "c88b65821d02ef0f10db849916325d84e3c1a88a06c8259c880d2e27a40223f7",
+      "exit_code": 0
+    },
+    {
+      "stage": "assemble-offline-release",
+      "sha256": "b59e547edf54ee4fd01707a95310b863cc8ba5c52b5688d2576e06fb240397aa",
+      "exit_code": 0
+    },
+    {
+      "stage": "verify-runtime",
+      "sha256": "8a672e707547db154d00ffb3e5199ba84b9f322e319293e9cd0ca399eb11cc92",
+      "exit_code": 0
+    },
+    {
+      "stage": "verify-sdk",
+      "sha256": "5ba9e258097ac78849e385c472387130b758a2c61f5efa7a84f3e8253eb75b6a",
+      "exit_code": 0
+    }
+  ],
+  "indexed_evidence_files_verified": 25,
+  "canonical_runtime_inputs_verified": 230,
+  "source_snapshot_files": 972,
+  "workflow_byte_identity": "CRLF text of exact Git workflow;workflow digest stored separately from source snapshot",
+  "runtime_completed_events": 5,
+  "sdk_scope": "G4UniversalSim bundled source configure/compile/link/capabilities execution; no simulation or physics validation",
+  "sdk_capabilities_source_fingerprint": "fc498cc7f261b89d39558218668cb197bcaa3a94ff0c661f0b7f8fd2dab822ec",
+  "sdk_build_git_identity": "unknown retained",
+  "reviewer_lookup_correction": "Evidence index uses Windows separators;normalize only lookup path,not archived bytes or hashes;workflow is separate top-level digest,not snapshot key."
+}

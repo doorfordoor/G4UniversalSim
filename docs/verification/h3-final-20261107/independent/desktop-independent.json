@@ -1,0 +1,56 @@
+{
+  "run_id": 42306734507,
+  "candidate": "f812465bbfd58026201b70a23938e6bdc8ea12eb",
+  "status": "pass_limited_frozen_desktop_scope",
+  "artifacts": [
+    {
+      "artifact_id": 13547030992,
+      "name": "frozen-desktop-Windows",
+      "head_sha": "f812465bbfd58026201b70a23938e6bdc8ea12eb",
+      "sha256": "fbc750e1fa6b6f761b76303ecd023b8baba74a53feb0748fca34e3f7aa23fd4e",
+      "API_digest_match": true,
+      "zip_crc": "pass",
+      "platform": "win32",
+      "GUI_sources_against_clean_candidate": 166,
+      "sources_stable_before_after": true,
+      "command_exit_codes": {
+        "frozen-gui": 0,
+        "existing-gui-report": 1,
+        "frozen-python-root": 0,
+        "frozen-gui-import-failure": 1
+      },
+      "all_command_log_digests": "pass",
+      "GUI_startup_self_test": true,
+      "expected_import_failure_preserved": "ModuleNotFoundError: No module named 'PySide6.QtCore'",
+      "scope": "frozen GUI startup/natural exit and Python ROOT read-write; no Geant4 simulation",
+      "artifact_kind": "evidence ZIP;not retained frozen executables",
+      "existing_report_refusal": "FileExistsError preserved",
+      "ROOT_helper_stdout": "ROOT roundtrip verified"
+    },
+    {
+      "artifact_id": 13545689847,
+      "name": "frozen-desktop-Linux",
+      "head_sha": "f812465bbfd58026201b70a23938e6bdc8ea12eb",
+      "sha256": "d14482c0fc0f458d5a691d726bb6e1f30f5c92b9d32d9217457abc4ffed950c5",
+      "API_digest_match": true,
+      "zip_crc": "pass",
+      "platform": "linux",
+      "GUI_sources_against_clean_candidate": 166,
+      "sources_stable_before_after": true,
+      "command_exit_codes": {
+        "frozen-gui": 0,
+        "existing-gui-report": 1,
+        "frozen-python-root": 0,
+        "frozen-gui-import-failure": 1
+      },
+      "all_command_log_digests": "pass",
+      "GUI_startup_self_test": true,
+      "expected_import_failure_preserved": "ModuleNotFoundError: No module named 'PySide6.QtCore'",
+      "scope": "frozen GUI startup/natural exit and Python ROOT read-write; no Geant4 simulation",
+      "artifact_kind": "evidence ZIP;not retained frozen executables",
+      "existing_report_refusal": "FileExistsError preserved",
+      "ROOT_helper_stdout": "ROOT roundtrip verified"
+    }
+  ],
+  "reviewer_initial_check_correction": "Initial ad hoc assertion incorrectly searched for word ok in ROOT stdout;existing scripts/test_frozen_desktop.py:84 requires ROOT roundtrip verified. Actual producer protocol inspected and retained;no CI rerun or changed acceptance requirement."
+}

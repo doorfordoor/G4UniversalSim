@@ -1,0 +1,10 @@
+ok: existing Scoring tab exposes volume filter and spectrum rows
+ok: widget edits collect into the scoring model
+ok: model repopulates the same widgets
+ok: writer emits the edited optional sections
+ok: bins stay within the backend 1..1000000 integer bound
+ok: invalid configuration is diagnosed through the existing messages panel
+ok: project serialization keeps the volume configuration
+ok: an untouched project adds no optional sections
+PASS: H2-3 Configuration page volume filter/spectrum UI smoke
+G4USIM_ASSERTS=23

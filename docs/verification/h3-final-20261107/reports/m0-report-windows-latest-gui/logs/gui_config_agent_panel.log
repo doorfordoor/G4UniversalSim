@@ -1,0 +1,10 @@
+L1 panel DPR: 1.0 Qt platform: offscreen
+L1 panel signals/authorization/ephemeral credential/evidence/i18n/layout PASS; no provider or backend execution
+G4USIM_ASSERTS=1227
+D:\a\G4UniversalSim\G4UniversalSim\gui\smoke_tests\smoke_config_agent_panel.py:231: DeprecationWarning: Function: 'QApplication.setActiveWindow(QWidget *act)' is marked as deprecated, please check the documentation for more information.
+  QApplication.setActiveWindow(panel)
+D:\a\G4UniversalSim\G4UniversalSim\gui\smoke_tests\smoke_config_agent_panel.py:271: DeprecationWarning: Function: 'QApplication.setActiveWindow(QWidget *act)' is marked as deprecated, please check the documentation for more information.
+  foreign.show();foreign.activateWindow();QApplication.setActiveWindow(foreign);other.setFocus();pump(app)
+Matplotlib is building the font cache; this may take a moment.
+D:\a\G4UniversalSim\G4UniversalSim\gui\smoke_tests\smoke_config_agent_panel.py:338: DeprecationWarning: Function: 'QApplication.setActiveWindow(QWidget *act)' is marked as deprecated, please check the documentation for more information.
+  w.show(); w.activateWindow(); QApplication.setActiveWindow(w); settle()
