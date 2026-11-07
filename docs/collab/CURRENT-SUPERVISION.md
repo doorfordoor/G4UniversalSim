@@ -3,7 +3,7 @@
 更新2026-11-07。
 
 ## 当前阶段
-F3性能与资源基线。H3固定范围已独审关闭；F3清单已冻结，首个测量/比较合同已在原会话启动，未运行性能基线。
+F3性能与资源基线。H3固定范围已独审关闭；F3-1测量合同已独审冻结，F3-2最小测量/只读分析接线正在原会话实现，未运行性能/模拟。
 
 ## 清单文件
 docs/collab/decisions/20261107-f3-closeout.md
@@ -14,19 +14,19 @@ F3基线代码沿用已验H3代码f812465bbfd58026201b70a23938e6bdc8ea12eb，can
 ## 清单状态表
 |项|状态|责任/证据|
 |---|---|---|
-|F3-1测量与比较合同|进行中|先列真实消费者、两负载、时间/内存/输出与科学等价判据，经独审冻结后运行|
-|F3-2基线与瓶颈定位|未开始|冻结后实际测量两负载，定位单一真实瓶颈|
+|F3-1测量与比较合同|通过|作者5e2cdd47与docs/collab/decisions/20261107-f3-contract-freeze.md共同构成冻结协议，冲突以主审定稿为准；4输入AST渲染与哈希独审通过|
+|F3-2基线与瓶颈定位|进行中|round150/turn118已实际启动最小PID内存/只读分析接线；接线独审后运行固定两负载矩阵，尚无测量|
 |F3-3最小优化与前后比较|未开始|按冻结判据最小变更与独立复核，不改统计/种子/输出契约|
 |F3-4正式验收交班|未开始|按影响正式回归/严格证据/云CI，收尾后F7|
 
 ## 本轮结果
-H3最终验收通过，见docs/verification/h3-final-20261107/README.md及independent/h3-final-independent.json。四个原f812工作流均success；12原报告726用例361946断言、0失败/跳过严格通过；8ZIP官方SHA/CRC与8原job日志核验；Windows9/Linux10安装阶段、各Runtime5事件、SDK配置编译链接/capabilities（不称SDK模拟）及必要GUI观察范围完成。原科学3700/c7de、工程802ad/879、ec84失败均留原SHA。14份云/限定本机原报告连同raw日志已归档且严格门禁通过。固定F3清单已写定，tasking仅可选单列实验；网页仅只读预读现有性能入口，未测量/改代码。定时任务当前阶段已通过工具切F3并读回，频率/状态/目标thread不变，D盘副本20261107-f3-automation-prompt.md与旧稳定副本均同步。
+H3收尾/证据与F3开阶段记录已在5d35f188提交推送，H3构建仍绑定f812/fc498；14报告/732引用原日志index字节哈希、1481文档链接核对通过，用户H8字节保留。F3首稿953ff539未通过，作者修订5e2cdd47后，主审直接定稿ROOT合并、mesh关闭事件输出、稀疏键与schema、零值/近零科学规则及PID归属，不再补一轮报告。四份交付SHA/交叉哈希和4种输入的原AST渲染已独立核对，F3-1冻结通过；实际证据out/collab/f3-contract-independent/r2/freeze-independent.json。原稿失败及网页二审保留。F3-2已启动，正式矩阵须接线独审后运行；没有性能/物理模拟结果。定时任务/D盘提示词已切F3，频率/分工不变。
 
 ## 运行中任务
-原DSH task/session绑定保持g4-j3-desktop-20261103/session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4。原请求f3-performance-contract-preregister-20261107-r1已接受round148；turn116 running，observedConfig为deepseek-account-vision/deepseek-flash/max；turn115 completed，连续读取至66384。实际状态/增量见out/collab/desktop-bridge/f3-contract-resume-status.json与f3-contract-resume-tail.json。仅编写F3-1合同，不运行基线或改产品。H3原CI及本机任务均结束，禁止重复启动。网页原thread completed/idle，cursor67，F3只读预读out/collab/f3-preplanning/web-source-pre-read-f812.json，非正式合同/运行证据。
+原DSH task/session绑定g4-j3-desktop-20261103/session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4。round149/turn117 completed/idle已核；新请求f3-baseline-observation-preflight-20261107-r1接受round150且turn118实际running，连续读取至66828。实际状态/新启动见out/collab/desktop-bridge/f3-baseline-preflight-start-status.json及f3-baseline-preflight-start-tail.json。observedConfig保持deepseek-account-vision/deepseek-flash/max。仅限out/collab/20261107-f3-baseline/preflight及必要最小测量脚本接线；禁止Geant4 warmup/正式baseline/profile/优化，ready_for_run_review交主审。网页原thread completed/idle，cursor70，首稿二审out/collab/f3-contract-independent/r1/web-review.md已核，不重复派。
 
 ## 下一轮目标
-完成H3/F3文档收尾提交并保留用户H8工作区修改；跟进原round148合同交付docs/collab/outbox/20261107-f3-contract.md，立即独审输入/真实消费者、全过程elapsed/run wall/峰值RSS/输出、重复种子协议与科学字段不变量。Time_ns等物理字段不能随意忽略；合同冻结后实际启动双负载基线，未冻结不得运行性能/模拟或优化。复用现有measure_output_performance，不扩通用框架；tasking仅可选单列实验。
+先跟进原150/118，不重复派工；读实际preflight实现/身份/自验回执，独审合并ROOT/事件关闭/完整科学元组、零值负控、PID唯一归属和原输入字节；只修足够观察的接线。通过后同轮给出F3-2正式固定矩阵执行指令并实际启动，取得资源基线和单一瓶颈定位证据，再进入优化。保留用户H8，H3不重跑。
 
 ## 待用户决定/限制
 | 项 | 决定 | 影响/动作 |
