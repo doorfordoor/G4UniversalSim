@@ -15,18 +15,19 @@ F3基线代码沿用已验H3代码f812465bbfd58026201b70a23938e6bdc8ea12eb，can
 |项|状态|责任/证据|
 |---|---|---|
 |F3-1测量与比较合同|通过|作者5e2cdd47与docs/collab/decisions/20261107-f3-contract-freeze.md共同构成冻结协议，冲突以主审定稿为准；4输入AST渲染与哈希独审通过|
-|F3-2基线与瓶颈定位|进行中|round150/turn118已实际启动最小PID内存/只读分析接线；接线独审后运行固定两负载矩阵，尚无测量|
+|F3-2基线与瓶颈定位|进行中|首版独审失败，4组最小修复round151/turn119已实际运行；正式矩阵尚未启动|
 |F3-3最小优化与前后比较|未开始|按冻结判据最小变更与独立复核，不改统计/种子/输出契约|
 |F3-4正式验收交班|未开始|按影响正式回归/严格证据/云CI，收尾后F7|
 
 ## 本轮结果
-H3收尾/证据与F3开阶段记录已在5d35f188提交推送，H3构建仍绑定f812/fc498；14报告/732引用原日志index字节哈希、1481文档链接核对通过，用户H8字节保留。F3首稿953ff539未通过，作者修订5e2cdd47后，主审直接定稿ROOT合并、mesh关闭事件输出、稀疏键与schema、零值/近零科学规则及PID归属，不再补一轮报告。四份交付SHA/交叉哈希和4种输入的原AST渲染已独立核对，F3-1冻结通过；实际证据out/collab/f3-contract-independent/r2/freeze-independent.json。原稿失败及网页二审保留。F3-2已启动，正式矩阵须接线独审后运行；没有性能/物理模拟结果。定时任务/D盘提示词已切F3，频率/分工不变。
+F3-2首版round150/turn118已交付，但独立复验未通过。主审复现CSV histogram计数1→999和ROOT配套统计被改仍pass；普通自有Python child仍alive时观察器超时exit0；控制first/loop/final读数100/20/200只报20；真实旧ROOT自比较因计数类型失败；+inf与mesh标签/N漏检、稀疏MT局部N及执行顺序错误亦核实。两网页二审均completed并经主审归并为4组最小修复，见docs/collab/reviews/20261107-f3-preflight-r1.md。原最终代码/37项报告/200个自检原件均保留out/collab/f3-preflight-independent/r1。正式矩阵未启动。修复round151/turn119已实际running，不扩工具/清单，不改后端或科学协议。
 
 ## 运行中任务
-原DSH task/session绑定g4-j3-desktop-20261103/session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4。round149/turn117 completed/idle已核；新请求f3-baseline-observation-preflight-20261107-r1接受round150且turn118实际running，连续读取至66828。实际状态/新启动见out/collab/desktop-bridge/f3-baseline-preflight-start-status.json及f3-baseline-preflight-start-tail.json。observedConfig保持deepseek-account-vision/deepseek-flash/max。仅限out/collab/20261107-f3-baseline/preflight及必要最小测量脚本接线；禁止Geant4 warmup/正式baseline/profile/优化，ready_for_run_review交主审。网页原thread completed/idle，cursor70，首稿二审out/collab/f3-contract-independent/r1/web-review.md已核，不重复派。
+DSH原task/session为g4-j3-desktop-20261103/session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4。修复请求f3-preflight-independent-blockers-minimal-repair-20261107-r1已接受round151且turn119实际running，turn118 completed；连续读取至67519，实际回执out/collab/desktop-bridge/f3-preflight-repair-start-status.json及f3-preflight-repair-start-tail.json。模型保持deepseek-account-vision/deepseek-flash/max。
+网页原thread两项二审已completed/idle，最新cursor11c13ed5-fdaa-43eb-9d5e-eaa8bf73a781:2；observer/science原报告在out/collab/f3-preflight-independent/r1，绑定R1准确SHA，不冒称已审后续修复。主审等待同项最小修复交付；没有Geant4 warmup/正式baseline/profile/优化。
 
 ## 下一轮目标
-先跟进原150/118，不重复派工；读实际preflight实现/身份/自验回执，独审合并ROOT/事件关闭/完整科学元组、零值负控、PID唯一归属和原输入字节；只修足够观察的接线。通过后同轮给出F3-2正式固定矩阵执行指令并实际启动，取得资源基线和单一瓶颈定位证据，再进入优化。保留用户H8，H3不重跑。
+先跟进原151/119，按实际修复SHA只复核变更与4组真实反例，验证ROOT实际I/D字段、CSV与ROOT配套科学文件、非有限/零值、稀疏MTglobalN、PID终态/峰值及冻结交错顺序。不得扩框架/补大报告代替修复；通过后同轮实际启动3调用共36次后端的固定基线矩阵，再以实测证据定位单一瓶颈。保留H8、旧失败、基线2ff536c5/fc498身份。
 
 ## 待用户决定/限制
 | 项 | 决定 | 影响/动作 |
