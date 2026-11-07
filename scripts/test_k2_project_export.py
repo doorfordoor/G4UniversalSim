@@ -18,6 +18,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -36,6 +37,7 @@ ROLES = {"source", "header", "cmake", "tool", "schema", "doc", "license",
          "notice", "template_config", "template_macro", "project_config",
          "project_macro", "readme_export", "example"}
 REWRITES = {"verbatim", "path_rewrite", "generated"}
+LOCAL_COLLAB_PRESENT = (ROOT / "tools" / "collab").is_dir()
 SELECTIONS = {"opened_project", "generated_package"}
 
 
@@ -393,31 +395,49 @@ def main() -> int:
         assert tool_paths, "tools members missing"
         assert not [path for path in tool_paths if path.count("/") > 1], tool_paths
         assert not [path for path in tool_paths if path.startswith("tools/collab/")]
-        assert (ROOT / "tools" / "collab").is_dir(), "local collaboration files must stay"
+        # Local collaboration helpers only exist in a developer checkout; a
+        # clean source archive has none.  Only the state observed at the start of
+        # the test is required here, and the test never creates that directory.
+        if LOCAL_COLLAB_PRESENT:
+            assert (ROOT / "tools" / "collab").is_dir(), "local collaboration files must stay"
+        else:
+            assert not (ROOT / "tools" / "collab").exists(), \
+                "the portable fixture must not create a checkout collaboration directory"
         # A CRLF or LF checkout must produce one canonical template identity.
+        # The developer checkout may be all-LF, so build both spellings inside
+        # this private portable fixture instead of requiring mixed endings in ROOT.
         portable = work / "portable-template"
         portable.mkdir()
-        crlf_member = None
-        lf_member = None
+        header_member = next((entry for entry in template_members
+                              if entry["path"].endswith(".hh")), None)
+        source_member = next((entry for entry in template_members
+                              if entry["path"].endswith(".cc")), None)
+        assert header_member is not None, "template has no header member"
+        assert source_member is not None, "template has no source member"
         for entry in template_members:
-            source = ROOT / entry["source_path"]
-            raw = source.read_bytes()
+            raw = (ROOT / entry["source_path"]).read_bytes()
+            canonical = raw.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
             target = portable / entry["source_path"]
             target.parent.mkdir(parents=True, exist_ok=True)
-            if crlf_member is None and b"\r\n" in raw and entry["path"].endswith(".hh"):
-                crlf_member = entry
-                target.write_bytes(raw.replace(b"\r\n", b"\n"))
-            elif lf_member is None and b"\r\n" not in raw and entry["path"].endswith(".cc"):
-                lf_member = entry
-                target.write_bytes(raw.replace(b"\n", b"\r\n"))
+            if entry["path"] == header_member["path"]:
+                target.write_bytes(canonical.replace(b"\n", b"\r\n"))
+            elif entry["path"] == source_member["path"]:
+                target.write_bytes(canonical)
             else:
                 target.write_bytes(raw)
-        assert crlf_member is not None and lf_member is not None
-        portable_identity = exporter.template_identity(
-            exporter.collect_template_members(portable))
+        # A private nested fixture proves tools/<subdir>/ is excluded: it is
+        # never created in the checkout and never appears in the closure.
+        nested = portable / "tools" / "collab"
+        nested.mkdir(parents=True, exist_ok=True)
+        (nested / "local_helper.py").write_bytes(b"# portable nested fixture only\n")
+        portable_members = exporter.collect_template_members(portable)
+        assert not [member.path for member in portable_members
+                    if member.path.startswith("tools/collab/")]
+        portable_identity = exporter.template_identity(portable_members)
         checkout_identity = exporter.template_identity(
             exporter.collect_template_members(ROOT))
         assert portable_identity == checkout_identity
+        assert portable_identity == template_manifest["identity"]
         # Export writes canonical bytes rather than the checkout spelling.
         filter_path = "include/Scoring/VolumeFilter.hh"
         exported_filter = dest_a1 / filter_path
@@ -593,9 +613,12 @@ def main() -> int:
         # --- R9: destination inside the source project or template tree -----
         expect_error(lambda: exporter.export_project(EXAMPLES / "nested", external),
                      "destination_inside_source")
-        expect_error(lambda: exporter.export_project(
-            ROOT / "out" / "k2-r9-target", external), "destination_inside_source")
-        assert not (ROOT / "out" / "k2-r9-target").exists()
+        # config/ is part of the portable template and therefore exists in a
+        # clean source archive; out/ is gitignored and may be absent.
+        inside_root = ROOT / "config" / "k2-r9-target"
+        expect_error(lambda: exporter.export_project(inside_root, external),
+                     "destination_inside_source")
+        assert not inside_root.exists()
 
         # --- R3: template members are safe relative paths -------------------
         # A self-consistent manifest must not smuggle a Windows drive, UNC,
@@ -702,6 +725,69 @@ def main() -> int:
         assert not (work / "write-failed").exists()
         assert not [path for path in work.iterdir()
                     if path.name.startswith(".write-failed.k2-")]
+
+        # --- R12: a denied staging parent fails fast, not after TMP_MAX -----
+        blocked_parent = work / "blocked-parent"
+        blocked_parent.mkdir()
+        blocked_target = blocked_parent / "denied-export"
+        denied_calls = []
+        original_mkdir = exporter.os.mkdir
+
+        def denied_mkdir(path, mode=0o777, *, dir_fd=None):
+            denied_calls.append(str(path))
+            raise PermissionError(13, "Access is denied", str(path))
+
+        exporter.os.mkdir = denied_mkdir  # type: ignore[assignment]
+        denied_started = time.monotonic()
+        try:
+            denied_error = expect_error(
+                lambda: exporter.export_project(blocked_target, external),
+                "write_failed")
+        finally:
+            exporter.os.mkdir = original_mkdir  # type: ignore[assignment]
+        denied_elapsed = time.monotonic() - denied_started
+        assert len(denied_calls) == 1, denied_calls
+        assert denied_elapsed < 5.0, denied_elapsed
+        assert "staging" in denied_error.message, denied_error.message
+        assert not blocked_target.exists()
+        assert list(blocked_parent.iterdir()) == []
+
+        # Only genuine name collisions are retried, and only a bounded number.
+        collision_calls = {"count": 0}
+        original_mkdir = exporter.os.mkdir
+
+        def colliding_mkdir(path, mode=0o777, *, dir_fd=None):
+            collision_calls["count"] += 1
+            if collision_calls["count"] <= 2:
+                raise FileExistsError(17, "File exists", str(path))
+            return original_mkdir(path, mode)
+
+        exporter.os.mkdir = colliding_mkdir  # type: ignore[assignment]
+        try:
+            collision_staging = exporter._allocate_staging(  # noqa: SLF001
+                work / "collision-target")
+        finally:
+            exporter.os.mkdir = original_mkdir  # type: ignore[assignment]
+        assert collision_calls["count"] == 3, collision_calls
+        assert collision_staging.is_dir() and collision_staging.parent == work
+        shutil.rmtree(collision_staging, ignore_errors=True)
+
+        exhausted_calls = {"count": 0}
+        original_mkdir = exporter.os.mkdir
+
+        def always_colliding(path, mode=0o777, *, dir_fd=None):
+            exhausted_calls["count"] += 1
+            raise FileExistsError(17, "File exists", str(path))
+
+        exporter.os.mkdir = always_colliding  # type: ignore[assignment]
+        try:
+            expect_error(
+                lambda: exporter._allocate_staging(  # noqa: SLF001
+                    work / "always-colliding"),
+                "write_failed")
+        finally:
+            exporter.os.mkdir = original_mkdir  # type: ignore[assignment]
+        assert exhausted_calls["count"] == exporter.STAGING_ALLOCATION_ATTEMPTS
 
         # --- template manifest and checkout round-trip ----------------------
         layout = exporter.load_template_layout(ROOT)

@@ -27,6 +27,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import uuid
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
@@ -1777,6 +1778,42 @@ def _check_destination(destination: Path, selection: ExportSelection,
     return resolved
 
 
+STAGING_ALLOCATION_ATTEMPTS = 5
+
+
+def _allocate_staging(target: Path) -> Path:
+    """Create the private staging directory for one export.
+
+    ``tempfile.mkdtemp`` treats a Windows permission error like a random-name
+    collision and keeps trying up to ``TMP_MAX``; a denied parent then burns
+    minutes without producing a target or a staging directory.  This allocator
+    uses one UUID name per export, retries only genuine name collisions a
+    bounded number of times, and turns every other ``OSError`` into R12
+    immediately.
+    """
+    parent = target.parent
+    for _ in range(STAGING_ALLOCATION_ATTEMPTS):
+        candidate = parent / f".{target.name}.k2-{uuid.uuid4().hex[:16]}"
+        try:
+            os.mkdir(candidate, 0o700)
+        except FileExistsError:
+            continue
+        except OSError as exc:
+            raise ExportError(
+                "write_failed",
+                f"cannot create the export staging directory: {exc}") from exc
+        try:
+            _no_links(candidate, label="export staging")
+        except ExportError:
+            _cleanup(candidate)
+            raise
+        return candidate
+    raise ExportError(
+        "write_failed",
+        "cannot allocate a unique export staging directory: "
+        f"{STAGING_ALLOCATION_ATTEMPTS} name collisions")
+
+
 def export_project(destination: str | Path, selection: ExportSelection, *,
                    template_root: Path | None = None,
                    created_utc: str | None = None) -> dict:
@@ -1787,8 +1824,7 @@ def export_project(destination: str | Path, selection: ExportSelection, *,
     """
     layout = load_template_layout(template_root)
     target = _check_destination(Path(destination), selection, layout)
-    staging = Path(tempfile.mkdtemp(prefix=f".{target.name}.k2-",
-                                    dir=target.parent))
+    staging = _allocate_staging(target)
     try:
         if selection.kind == "external":
             if selection.project_root is None:
