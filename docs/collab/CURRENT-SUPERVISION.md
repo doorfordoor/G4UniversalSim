@@ -9,14 +9,14 @@ K2独立Geant4工程导出（K2-3双平台独立构建运行与受控C++修改�
 docs/collab/decisions/20261107-k2-closeout.md；F3仍沿用docs/collab/decisions/20261107-f3-closeout.md。
 
 ## 候选身份
-K2产品冻结42be987e92569918499a638ad17902bbc785521a，C产品HEAD42be987e；D后续文档集成单列，不冒充新产品构建；模板b91e34e4…/308成员，manifest ee9e1c88…保持。实现签收docs/collab/decisions/20261107-k2-implementation-freeze.md；独核out/collab/20261107-k2-implementation/independent/k2-2-acceptance.json。旧d999/2c4f失败及4199 GUI报告保留原身份。H8/ROADMAP、F3讨论及本地协作文件未混入产品提交。F3原程序f812465b/工具167ba575保持，不称K2构建已完成。
+K2产品冻结56b1da77704223a8b84e3256c915c8242aad8946，C独立区与D同产品；后续文档集成不冒充新构建。模板1fa4e294…/309成员，manifest 4f512a9d…，全部成员SHA及C实际检出check已独核。决定docs/collab/decisions/20261107-k2-native-runtime-r5-freeze.md；out/collab/20261107-k2-implementation/independent/r5/acceptance.json。原42be/b91及实际运行失败、4199 GUI报告仍按原身份保留。H8/ROADMAP、F3讨论及本地协作文件未混入产品。F3程序f812465b/工具167ba575保持。
 
 ## 清单状态表
 |项|状态|责任/证据|
 |---|---|---|
 |K2-1真实消费者及独立工程合同|通过|作者r2 e27f5a81…及主审最终字段定义冻结；314闭包SHA独核通过，网页只读二审；docs/collab/decisions/20261107-k2-contract-freeze.md|
-|K2-2完整导出链实现|通过|42be987e；最终Linux独验3538断言exit0、Windows立即R12拒绝及复用4199 GUI33断言/严格门禁，见implementation-freeze决定|
-|K2-3双平台独立构建运行与二次修改|进行中|原42be未改S-A/CTest真实失败；round174最小前置r5修复中，不签手工补齐副本通过|
+|K2-2完整导出链实现|通过|56b1da77/r5补丁独审签收；静态3551、GUI33断言、原始S-A200及H2定向复验，旧失败/原严格报告保留各自身份|
+|K2-3双平台独立构建运行与二次修改|进行中|r5最小修复已独审，round175/turn131恢复双平台原矩阵；未签整项通过|
 |K2-4正式验收交班|未开始|按影响正式回归、严格证据、真实云CI|
 |F3-1测量与比较合同|通过|原合同及20261107-f3-r3-freeze.md；5%及科学门不变|
 |F3-2基线与瓶颈定位|限制|三批资源inconclusive；R3 36执行/32科学/536产物SHA/12内存身份独核通过，证据docs/verification/f3-r3-baseline-20261107/README.md；未定位可验收单一热点|
@@ -24,18 +24,19 @@ K2产品冻结42be987e92569918499a638ad17902bbc785521a，C产品HEAD42be987e；D
 |F3-4正式验收交班|未开始|仅既有证据与测量工具集成，F3整体未关闭|
 
 ## 本轮结果
-原turn130仍进行中，原Windows三个目标build exit0、317/316导出成员身份已独核；实际运行暴露两项阻断：未改S-A因project/project/config/parallel.ini解析失败exit1；原CTest缺Si proton NIEL夹具exit8。手工main-fixed/补表后的成功只记诊断，不签原包通过；旧拷贝CMake缓存导致受控修改未生效也保留失败。在途Windows重新configure构建与Linux原任务允许完成，不重复启动。主审核真实ParallelWorldConfig消费者与h2VolumeScoringCheck依赖，round174向原turn130发送最小r5修复，已实际读决定及对应代码/原测试/说明，未完成交付；仅导出平行路径值、单CSV模板闭包及原测试/事实文档，新模板必须重算。决定docs/collab/decisions/20261107-k2-native-runtime-minimal-fix.md；旧失败快照out/collab/20261107-k2-build/independent/original-42be-failures/identity.json。
+原turn130已completed/停写，r5六文件SHA与309模板全核、原CSV未改；提交56b1da77并C实际快进check通过。独立静态3551断言exit0；GUI真实C检出33断言exit0。未经手改的新导出主INI用已验证236编译成员相等的旧仓库外Linux二进制完成S-A200/200与H2组件，均exit0；这是修复定向复验，不是新构建或K2-3全通过。主审Windows新目录权限拒绝、受限GUI归档缺既有shielding场景、首个Linux运行未激活SDK数据环境失败均保留；分别转真实检出/现有SDK激活后成功，未改权限/全局环境。r5最小修复签收，round175已实际启动原session turn131恢复原K2-3有限矩阵；定时任务及D提示词已同步核验，频率不变。
 
 ## 运行中任务
-DSH原task g4-j3-desktop-20261103 / session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4，turn130原K2-3 round173；round174/request k2-3-original-runtime-path-fixture-minimal-fix-20261107-r5已steer接受，实际Flash/max，processedCursor73503。r5回执out/collab/20261107-k2-implementation/author-r5/receipt.json及docs/collab/outbox/20261107-k2-native-runtime-r5.md。在途旧Windows受控新配置job bash-fd17488dc34f43d4、Linux原构建job bash-7cef164cc5804e74保持原任务，不中断不重派；其终态仍须原回执核定。
+DSH原task g4-j3-desktop-20261103 / session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4，原turn130 completed（73629）；request k2-3-resume-frozen-r5-native-matrix-20261107-v2，round175/turn131已真实turn-start，Flash/max，processedCursor73636。回执out/collab/20261107-k2-build/receipt.json、docs/collab/outbox/20261107-k2-build.md。原Windows受控新配置job bash-fd17488dc34f43d4终态completed/exit0已核73523；旧Linuxjob bash-7cef164cc5804e74作者给构建SHA，原launcher终态仍要求核回执，禁止重复启动。主审本轮static/GUI/定向runtime全部终态已收，无旧本机待轮询会话。
 
 ## 下一轮目标
-跟进原turn130/r5修复及两项在途构建实际终态，不重复派工。交付后主审独核更正平行世界的INI相对基准、唯一NIEL表及模板身份、原专项和新导出未手改的S-A/两个component真实运行。独审冻结修复候选后回到原K2-3，只补受影响观察；Windows/Linux依赖、S-A200/S-B1000、P7/P8和单行C++前后比较按原合同，不以手工补齐副本降标。然后K2-4正式验收。F3不追加测量、不进入优化、不调整标签。
+先核原turn131状态/增量及原Linux构建launcher回执，不重派。继续修复候选未手改原始导出的Windows/Linux精确2项CTest、S-A200/S-B1000、确定性/P7/P8、单行C++修改与真实编译来源/依赖/产物/摘要/CSV比较。只补受影响观察，复用字节相同编译输入及未受影响旧报告并保留原SHA；绝不以旧缓存指别树的build0算修改通过。交付即独审；通过K2-3再K2-4正式矩阵/严格门禁/真实云CI与交班。F3不追加测量、不进入优化、不调整标签。
 
 ## 待用户决定/限制
 | 项 | 决定 | 影响/动作 |
 | --- | --- | --- |
-| K2原始导出运行闭包/路径 | 主审已签收反例及最小修复范围，未签收通过 | 原42be的S-A/CTest失败阻断K2-3；round174只修平行路径基准和单CSV闭包，修好独审后回原清单。原合同冲突解释由新决定纠正、原字节/门限保留，不以限制关闭。 |
+| K2原始导出运行闭包/路径 | 主审已签收r5最小修复及原失败事实 | 56b1改parallel相对INI值/唯一NIEL表；原始新导出S-A200及H2独验通过，原42be失败不改写；K2-3整项仍待验。 |
+| K2原失败索引被覆盖 | 主审已签收记录限制 | 作者r5替换了主审identity.json，原索引字节未留；原日志/能力/产物SHA快照及consumer反例JSON保留，r5/failure-evidence-integrity.json重列实际文件，不伪称旧索引原样。后续作者不得写independent目录，不影响实际反例/修复验证。 |
 | K2 staging权限拒绝长重试 | 主审已签收最小修复及原失败事实 | 42be仅单点分配有界，Windows同拒绝父目录立即R12、无目标；底层权限原因unknown，不改变权限。原300秒/诊断与失败均保留；实际构建运行另验。 |
 | K2主审Windows独验通道 | 主审已签收失败事实，未签原生通过 | C临时目录不可写、D临时目录rename拒绝、独立D目标mkdir拒绝的原记录保留；WSL GUI33断言已独验。自有探针均退出，无用户程序被关；Windows K2-3仍须实际构建运行，不外推此通道成功。 |
 | 网页早期静态审查传输 | 主审已签收可用报告及失败事实 | 报告已落盘且7快照SHA/4项源码发现经主审核实；会话stream failed原错误保留，不记completed；不影响DS实现，不以网页报告代替主审验收。 |

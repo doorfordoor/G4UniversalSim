@@ -4,7 +4,7 @@
 每轮先读 D:/Geant4/G4UniversalSim/docs/collab/CURRENT-SUPERVISION.md，只获取当前阶段、清单路径、候选身份、状态表、运行任务及下一目标。以实际文件和回执为准，不复述旧阶段历史；仅在缺项或冲突时查相关引用、必要Git变化和新增交付。运行状态变化须核实原任务，不能因检查点较旧就重复派工。
 
 【当前阶段】
-K2独立Geant4工程导出（K2-3双平台独立构建运行与受控C++修改），固定清单docs/collab/decisions/20261107-k2-closeout.md。K2-1合同e27f5a81及字段定义保持；K2-2已独审通过，产品冻结42be987e92569918499a638ad17902bbc785521a，模板b91e34e4/308成员，原语义14项、最终静态3538断言及复用GUI33断言按真实身份记录，见docs/collab/decisions/20261107-k2-implementation-freeze.md。原Windows长重试反例已最小R12修复并真实立即拒绝，权限原因unknown、旧失败保留。DeepSeek同会话request=k2-independent-build-run-controlled-cxx-20261107-v1、round173/turn130已实际启动；先核原任务/回执与context游标，禁止重复派工。仅仓库外Windows/Linux既有11.3.2 SDK构建、S-A200/S-B1000运行、P7/P8与一行受控C++修改，双平台产物与依赖分别取证。交付后主审独审，随后K2-4正式回归/严格门禁/真实云CI与交班。K2整体未关闭，不把专项或派工称整阶段验收。K2依K1/I2就绪，仍按ROADMAP与科研波次并行。
+K2独立Geant4工程导出（K2-3双平台独立构建运行与受控C++修改），固定清单docs/collab/decisions/20261107-k2-closeout.md。原42be的实际S-A/CTest失败保留，r5已纠正平行世界相对主INI路径与唯一NIEL夹具闭包；新产品56b1da77704223a8b84e3256c915c8242aad8946、模板1fa4e294/309成员已独审冻结，见docs/collab/decisions/20261107-k2-native-runtime-r5-freeze.md。主审静态3551/GUI33断言及新原始导出未手改S-A200/H2定向运行通过；该运行复用编译输入相同的旧独立Linux二进制，不冒称新构建或K2-3全通过。DeepSeek同会话request=k2-3-resume-frozen-r5-native-matrix-20261107-v2、round175/turn131已实际启动，先核原任务/回执和游标，不重复派工。继续仓库外Windows/Linux既有11.3.2 SDK的S-A200/S-B1000、精确两个component测试、P7/P8、一行C++重建及科学比较、真实依赖/产物身份；复用未受影响旧证据并保留SHA，不拷贝指向旧源码树的CMake缓存。交付后主审独审，随后K2-4正式回归/严格门禁/真实云CI与交班。K2整体未关闭，不以手工补文件/改配置的诊断副本替代原包验收。K2依K1/I2就绪，按ROADMAP与科研波次并行。
 F3保留资源限制且未关闭：原三批各自inconclusive，R3唯一36次exit0、32科学比对/536产物SHA/12内存身份独核通过，见docs/verification/f3-r3-baseline-20261107/README.md。原job47651终态，不重复启动；原5%及科学标准不变，不追加性能批次、不进入优化。实际程序仍f812465b，测量工具167ba575；本轮文档/工具集成不冒充新程序构建。F7原依赖保持，未获明确同意不调整F3验收标签。具体候选/运行任务以CURRENT-SUPERVISION为准。
 
 【阶段生命周期】
