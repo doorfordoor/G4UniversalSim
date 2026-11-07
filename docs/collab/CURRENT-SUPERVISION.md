@@ -3,13 +3,13 @@
 更新2026-11-07。
 
 ## 当前阶段
-K2独立Geant4工程导出（K2-4正式验收及两处阻断最小修复）。K2-3已独审带限制签收，K2整体未关闭。F3保持原资源限制和未关闭状态；不追加性能批次、不进入优化，不改变F7依赖、5%及科学标准。
+K2独立Geant4工程导出（K2-4正式验收）。两处原CI阻断已最小修复并独审冻结，新工程候选64bacb3e已实际启动云复验。K2-3带非阻断限制签收保持；K2整体未关闭。F3仍未关闭，不追加性能批次、不优化，不改F7依赖、5%及科学标准。
 
 ## 清单文件
 docs/collab/decisions/20261107-k2-closeout.md；F3仍沿用docs/collab/decisions/20261107-f3-closeout.md。
 
 ## 候选身份
-正式工程候选4bc77b5b80a2d3309cb8f972f33d4110ce1986ce，已推送；C保持该正式快照，D后续监督文档提交另列，产品相同。产品b1a7ffbc，模板b2285d117a557614782eb8656593c2a64b9caba4538de91410126d7db35ba878/309成员，支持事实在正式CI前更新。K2-3原生证据保持原r6模板36324640及原产物SHA，不冒称4bc新构建。平台夹具修复尚未冻结，policy属于模板闭包；作者现复用原policy值，实际是否改变模板须独核manifest，不预判变化。D用户ROADMAP/H8/F3讨论和旧dirty受保护。F3程序f812465b/工具167ba575不变。
+工程64bacb3e412ace7bf82fa9cf5969af679112c61b已推送，C实际快进并模板check通过；D后续监督文档提交不冒充新构建。产品b1a7ffbc，模板b2285d117a557614782eb8656593c2a64b9caba4538de91410126d7db35ba878/309成员/3820084规范字节保持。此次仅三个测试/交付快照脚本修改，未改产品GUI/C++、policy或manifest。冻结docs/collab/decisions/20261107-k2-4-formal-repair-freeze.md。原K2-3产物与4bc失败保留各自身份。D用户ROADMAP/H8/F3讨论等旧dirty受保护。
 
 ## 清单状态表
 |项|状态|责任/证据|
@@ -17,24 +17,26 @@ docs/collab/decisions/20261107-k2-closeout.md；F3仍沿用docs/collab/decisions
 |K2-1真实消费者及独立工程合同|通过|作者r2 e27f5a81…及主审最终字段定义冻结；314闭包SHA独核通过，网页只读二审；docs/collab/decisions/20261107-k2-contract-freeze.md|
 |K2-2完整导出链实现|通过|b1a7ffbc/r6最小补丁独审，静态3552/C模板/原生两组件通过；原GUI33及r5运行按影响复用，旧失败保留|
 |K2-3双平台独立构建运行与二次修改|限制|已独审，非阻断限制由主审签收；docs/collab/decisions/20261107-k2-3-native-matrix-acceptance.md|
-|K2-4正式验收交班|进行中|4bc原CI静态平台夹具失败保留；最小修复、实际入口及其余云任务在进行|
+|K2-4正式验收交班|进行中|64bac修复及源码入口独验已签；Ubuntu2报告131/20244严格通过，剩余原云任务待验|
 |F3-1测量与比较合同|通过|原合同及20261107-f3-r3-freeze.md；5%及科学门不变|
 |F3-2基线与瓶颈定位|限制|三批资源inconclusive；R3 36执行/32科学/536产物SHA/12内存身份独核通过，证据docs/verification/f3-r3-baseline-20261107/README.md；未定位可验收单一热点|
 |F3-3最小优化与前后比较|未开始|噪声门阻断，不启动优化、不追加测量|
 |F3-4正式验收交班|未开始|仅既有证据与测量工具集成，F3整体未关闭|
 
 ## 本轮结果
-主审独核作者K2-3总receipt 58af4b22…的59证据及6失败历史SHA；实际双平台源码/产物、两component CTest、S-A200/S-B1000、P7污染/P8真搬移、单行C++差异及科学CSV独立比对完成。K2-3状态限制，非全通过，主审已签收非阻断范围；详见docs/collab/decisions/20261107-k2-3-native-matrix-acceptance.md及docs/verification/k2-build-20261107/README.md。提交4bc并启动四个真实云工作流，desktop双平台成功；M0静态platform_paths失败，原Linux49通过/1失败/0跳过、9217断言保留，归档SHA8859eef4…已下载独核。定位新K2测试中的README固定命令和恶意路径夹具，按现有精确fixture机制最小修复，扫描器不放宽。round178/turn133实际启动K2-4入口观察及交付准备，round179/180/181 steer已接收：平台夹具及安装快照漏CMakePresets.json两处最小修复，见20261107-k2-4-formal-blockers.md。定时任务及D提示词已同步K2-4并读回，原频率和网页暂停保留。
+两处修复已独审：C定向平台3/策略51/快照49/导出3550断言exit0；C文件symlink分支两断言未执行如实保留，junction执行；新Ubuntu正式导出3552。主审真实980文件快照及309模板逐SHA/实际包内构建器输出同身份，已冻结并推送64bac。源码原生GUI正常关闭/实际导出317成员、CLI示例07导出318成员均独立复算实际D:/Temp原目录文件身份；自动对话框/遮挡范围及原关闭失败保留。原session68997已exit0，原desktop两平台167源码/8日志SHA独核。新desktop双平台success且回执独核；新Ubuntu正式static/gui共131用例20244断言全部通过、严格门禁通过。新Windows回归/双版本后端/双平台安装尚待原任务结果。详细索引docs/verification/k2-final-20261107/README.md，阶段未关闭。
 
 ## 运行中任务
-DSH原task g4-j3-desktop-20261103 / session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4；原turn132 completed/idle已核，不再重复派工。新request k2-4-formal-entry-and-delivery-20261107-v1，round178/turn133实际执行Flash/max；steer k2-4-ci-platform-fixtures-minimal-fix-20261107-v1已接收，游标与绑定见out/collab/desktop-bridge/context.json。作者仅写限定测试及ci_delivery快照修复/author证据/outbox；主审负责CI/独审。云候选4bc：42374151355 desktop成功；42374151337 M0失败；42374151367两版本后端已在同一platform_paths处失败，原日志分别核实；42374151336 Linux安装build-runtime失败（缺CMakePresets.json），Windows job128408194651仍待原任务终态。out/collab/20261107-k2-final/cloud-latest-summary.json。网页模型不调用。主审session68997仍核冻结GUI两平台167源文件与Git身份，输出预定out/collab/20261107-k2-final/original-ci-independent-check.json，须先查原会话再判断，不重复启动。
+作者DSH原task g4-j3-desktop-20261103 / session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4，Flash/max；turn133及补充交班turn134均completed，seq75966/idle，三个修复文件停写。最终作者回执out/collab/20261107-k2-final/author/receipt.json（cfbdf107…），主审已接收限定交付，不重复派工。主审所有本机session68997/12317/3553/79474/58510均终态，无待轮询本机命令。新云64bac：42376216450 desktop成功；42376216447 M0待Windows（Ubuntu两原报告已严格通过）；42376216509 Linux后端、42376216446双平台安装运行中。原4bc安装42374151336现已终态failure，双平台缺CMakePresets反例均留存。最新状态out/collab/20261107-k2-final/hb1310-ci-latest.json。网页模型暂停不调用。
 
 ## 下一轮目标
-先核原turn133/steer及原云任务，禁止重复派工。依docs/collab/decisions/20261107-k2-4-formal-blockers.md，对K2测试fixture及ci_delivery快照漏CMakePresets两处最小修复独审、定向复验后更新受影响模板身份并冻结工程候选；保留4bc原失败与已通过旧报告身份。继续K2-4必要实际GUI/CLI导出入口、双平台交付包的模板可达性与正式严格报告/云CI；按实际影响复用K2-3与未受影响安装证据，不循环矩阵，不关闭用户程序。全部固定标准满足后才更新最终验收/STATUS/ROADMAP等集成并前进L2。F3标签/5%/科学标准不改，网页模型继续暂停。
+先跟进64bac三个原云任务与新增工件，不重复派工/启动测试。下载剩余正式原报告、逐报告严格门禁及源/产物身份核验；安装包按Windows/Linux1.0.0各自取证。Ubuntu2报告与desktop新双平台已验不重测，K2-3科学/原生按未受影响原SHA复用。安装版GUI导出动作未直接观察，结合固定合同中的实际包模板、frozen及安装证据裁定验证范围，不能把源码观察冒称安装操作，不扩通用框架。原CI/原GUI关闭失败不改写。正式固定标准满足后再更新验收/STATUS/ROADMAP/矩阵并提交交班、开L2首任务。F3及网页暂停维持。
 
 ## 待用户决定/限制
 | 项 | 决定 | 影响/动作 |
 | --- | --- | --- |
+| K2源码入口原生观察范围 | 主审已签收观察边界，未签安装版动作 | 原4bc源码GUI/CLI实际导出及正常关闭经独核；文件/命名/关闭提示自动应答，02菜单图背景遮挡不称完整窗口。原关闭阻塞/自有进程终止保留，第三次有界Discard后实际exit0/PID清空。直接安装版动作未观察，仍待正式安装组合证据，不冒称已测。 |
+| K2定向链接覆盖 | 主审已签收范围 | C定向3550少两条文件symlink断言，junction实际执行；作者D3552单列。新Ubuntu正式导出3552及整体strict gate已通过，不伪写C3552。 |
 | K2-3受控组件及模块观测 | 主审已签收非阻断限制 | h2未链接修改CPP所以SHA不变；主程序/parallel及指纹确实变化。旧Windows97模块捕获exit=null保持unknown，新44直接依赖核对及新运行exit0分别取证。PE非字节可复现、Linux为WSL2；部分旧argv[0]为SHA身份而非执行命令，原桥接命令另存。不降低核心构建/运行/科学标准。 |
 | K2 Linux默认CTest根目录 | 主审已签收r6修复及原失败事实 | b1a7显式传root，默认Unix Makefiles原两CTest/独立两组件均通过；旧失败/Ninja额外诊断原样保留，不外推K2-3全部通过。 |
 | K2原始导出运行闭包/路径 | 主审已签收r5最小修复及原失败事实 | 56b1改parallel相对INI值/唯一NIEL表；原始新导出S-A200及H2独验通过，原42be失败不改写；K2-3按本轮带限制签收报告登记。 |
