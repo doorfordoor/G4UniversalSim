@@ -472,6 +472,11 @@ def main() -> int:
         assert "option(G4USIM_STANDALONE_EXPORT" in cmake
         assert cmake.index("find_package(Python3", guided) > guided
         assert 'LABELS "h3;component"' in cmake and 'LABELS "h2;component"' in cmake
+        h2_command = (
+            "COMMAND h2VolumeScoringCheck "
+            "${PROJECT_BINARY_DIR}/h2-component-output ${PROJECT_SOURCE_DIR}"
+        )
+        assert h2_command in cmake, "the h2 component test must receive the source root"
         readme = (dest_a1 / "README-EXPORT.md").read_text(encoding="utf-8")
         for fragment in ("G4USIM_STANDALONE_EXPORT=ON",
                          'ctest --test-dir build_vs2026 -C Release -L "^component$"',

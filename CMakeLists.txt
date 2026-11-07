@@ -140,7 +140,7 @@ if(BUILD_TESTING)
     target_link_libraries(h2VolumeScoringCheck ${Geant4_LIBRARIES})
     add_test(
         NAME h2_volume_scoring_check
-        COMMAND h2VolumeScoringCheck ${PROJECT_BINARY_DIR}/h2-component-output
+        COMMAND h2VolumeScoringCheck ${PROJECT_BINARY_DIR}/h2-component-output ${PROJECT_SOURCE_DIR}
     )
     set_tests_properties(h2_volume_scoring_check PROPERTIES
         LABELS "h2;component"
