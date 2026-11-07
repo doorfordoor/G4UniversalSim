@@ -79,3 +79,9 @@ Windows独立区42be候选对原拒绝父目录直接执行分配，立即诚实
 
 允许按原冻结合同§7.2/§8在仓库外实施K2-3，Windows/Linux均复用既有11.3.2 SDK；S-A200、S-B1000事件，P7/P8与一行受控C++修改。原5%和科学门、F3未关闭及F7依赖保持。只写导出副本与本项证据，不改产品或扩大平台框架。构建/组件指纹以实际依赖为准；如不符原冻结观察量，保留并报主审核定，禁止伪造变化或改额外源码强制满足。
 
+
+## 10:28Z K2-3真实运行反例与最小前置修复
+
+原turn130仍running；73027–73387、73388–73419、73420–73451连续增量已收。Windows原build exit0，但原CTest exit8缺si_proton.csv、原S-A exit1解析出project/project/config/parallel.ini。主审直接核ParallelWorldConfig.cc的ResolveRelative与h2VolumeScoringCheck真实读取路径，否定此前统一cwd的含糊合同解释。手工补表/主配置副本成功仅诊断，原失败不追改；摘要/科学比较不能代替原包可运行。旧受控副本复制CMake缓存仍指原sa，首次build0但指纹未变，也不签修改成功；在途新配置构建可完成，不取消。原日志/摘要和原能力/产物SHA快照见out/collab/20261107-k2-build/independent/original-42be-failures/identity.json。
+
+主审最小决定20261107-k2-native-runtime-minimal-fix.md仅更正parallel的INI相对值、唯一Si proton表闭包、对应原专项及必要事实文档；不改后端、K1、writer、CSV数据或CTest要求，不扩整个scenarios，不降科学标准。round174已steer到原turn130，已实际读取；r5交付后独审冻结新候选再回原K2-3。原合同文件/SHA保留，新决定明确消除冲突，不伪造原合同正确。旧原生S-B/依赖与编译证据按真实范围可复用；原两个构建正常等待不计失败尝试。
