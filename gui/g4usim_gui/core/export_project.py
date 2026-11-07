@@ -418,6 +418,25 @@ def _template_ignored(path: Path) -> bool:
     return path.suffix.lower() in _TEMPLATE_IGNORED_SUFFIXES
 
 
+def _canonical_template_bytes(raw: bytes) -> bytes:
+    """Canonical bytes of the controlled template text closure.
+
+    The template is a text-only closure.  A checkout may materialise the same
+    Git blob with CRLF or LF, so the identity and the copied bytes are defined
+    over the CRLF->LF normalised content.  This applies to template members
+    only: project inputs, README copies and exported output are verified as
+    the raw bytes on disk.
+    """
+    # Universal newlines: CRLF and lone CR both become LF so checkout
+    # copies, packaged copies and verify_export agree on the same bytes.
+    return raw.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+
+
+def read_template_member_bytes(path: Path, *, kind: str, label: str) -> bytes:
+    """Read one template member and return the bytes actually copied."""
+    return _canonical_template_bytes(_read_regular(path, kind=kind, label=label))
+
+
 def _template_root_files(root: Path) -> list[tuple[str, str, str]]:
     """(export path, repository-relative source path, role) for the template."""
     entries: list[tuple[str, str, str]] = [
@@ -446,6 +465,11 @@ def _template_root_files(root: Path) -> list[tuple[str, str, str]]:
         base = root / pattern
         if pattern.endswith("*.cmake"):
             files = sorted(base.parent.glob(base.name))
+        elif pattern == "tools":
+            # tools/ contributes its direct members only; the repository may
+            # contain local collaboration helpers under tools/<subdir>/ that
+            # are not part of the portable template.
+            files = sorted(path for path in base.iterdir() if path.is_file())
         else:
             files = sorted(base.rglob("*"))
         for path in files:
@@ -488,8 +512,8 @@ def collect_template_members(template_root: Path) -> list[TemplateMember]:
             raise ExportError("template_identity_mismatch",
                               f"duplicate template member: {export}")
         source = root / source_path
-        raw = _read_regular(source, kind="export_template_unavailable",
-                            label="template file")
+        raw = read_template_member_bytes(source, kind="export_template_unavailable",
+                                         label="template file")
         seen.add(export)
         members.append(TemplateMember(export, source_path, role,
                                       sha256_bytes(raw), len(raw)))
@@ -619,6 +643,7 @@ def _verify_template_files(layout: TemplateLayout) -> None:
             raise ExportError("template_identity_mismatch",
                               f"template file is missing or unreadable: "
                               f"{member.path}: {exc}") from exc
+        raw = _canonical_template_bytes(raw)
         if len(raw) != member.bytes or sha256_bytes(raw) != member.sha256:
             raise ExportError("template_identity_mismatch",
                               f"template file does not match its manifest: {member.path}")
@@ -1633,8 +1658,8 @@ def _write_payload_file(staging: Path, relative: str, raw: bytes) -> None:
 def _copy_template(layout: TemplateLayout, staging: Path) -> None:
     for member in layout.members:
         source = layout.source_path(member)
-        raw = _read_regular(source, kind="export_template_unavailable",
-                            label="template file")
+        raw = read_template_member_bytes(source, kind="export_template_unavailable",
+                                         label="template file")
         if len(raw) != member.bytes or sha256_bytes(raw) != member.sha256:
             raise ExportError("template_identity_mismatch",
                               f"template file changed while exporting: {member.path}")

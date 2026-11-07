@@ -131,7 +131,8 @@ def _copy_declared_template(root: Path, declared: list, manifest_file: Path,
             raise _export.ExportError("export_template_unavailable",
                                       f"template source is missing: {member.path}")
         _check_parents(source, root)
-        raw = source.read_bytes()
+        raw = _export.read_template_member_bytes(
+            source, kind="export_template_unavailable", label="template source")
         if len(raw) != member.bytes or _export.sha256_bytes(raw) != member.sha256:
             raise _export.ExportError("template_identity_mismatch",
                                       f"template source changed: {member.path}")

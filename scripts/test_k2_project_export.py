@@ -385,6 +385,56 @@ def main() -> int:
                      "destination_exists")
         assert file_hashes(packaged_template) == before
 
+        # --- P9: portable template closure (canonical text, direct tools) ---
+        template_manifest = read_json(ROOT / "packaging" / exporter.TEMPLATE_MANIFEST_NAME)
+        template_members = template_manifest["members"]
+        tool_paths = [entry["path"] for entry in template_members
+                      if entry["path"].startswith("tools/")]
+        assert tool_paths, "tools members missing"
+        assert not [path for path in tool_paths if path.count("/") > 1], tool_paths
+        assert not [path for path in tool_paths if path.startswith("tools/collab/")]
+        assert (ROOT / "tools" / "collab").is_dir(), "local collaboration files must stay"
+        # A CRLF or LF checkout must produce one canonical template identity.
+        portable = work / "portable-template"
+        portable.mkdir()
+        crlf_member = None
+        lf_member = None
+        for entry in template_members:
+            source = ROOT / entry["source_path"]
+            raw = source.read_bytes()
+            target = portable / entry["source_path"]
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if crlf_member is None and b"\r\n" in raw and entry["path"].endswith(".hh"):
+                crlf_member = entry
+                target.write_bytes(raw.replace(b"\r\n", b"\n"))
+            elif lf_member is None and b"\r\n" not in raw and entry["path"].endswith(".cc"):
+                lf_member = entry
+                target.write_bytes(raw.replace(b"\n", b"\r\n"))
+            else:
+                target.write_bytes(raw)
+        assert crlf_member is not None and lf_member is not None
+        portable_identity = exporter.template_identity(
+            exporter.collect_template_members(portable))
+        checkout_identity = exporter.template_identity(
+            exporter.collect_template_members(ROOT))
+        assert portable_identity == checkout_identity
+        # Export writes canonical bytes rather than the checkout spelling.
+        filter_path = "include/Scoring/VolumeFilter.hh"
+        exported_filter = dest_a1 / filter_path
+        assert exported_filter.is_file(), filter_path
+        exported_raw = exported_filter.read_bytes()
+        assert b"\r\n" not in exported_raw, "template copy kept CRLF"
+        filter_sha = next(entry["sha256"] for entry in manifest_a1["files"]
+                          if entry["path"] == filter_path)
+        assert hashlib.sha256(exported_raw).hexdigest() == filter_sha
+        # verify_export keeps hashing raw bytes: CRLF tampering is refused.
+        tampered = work / "tampered-text"
+        shutil.copytree(dest_a1, tampered)
+        tamper_file = tampered / filter_path
+        tamper_file.write_bytes(tamper_file.read_bytes().replace(b"\n", b"\r\n"))
+        expect_error(lambda: exporter.verify_export(tampered),
+                     "input_changed_during_export")
+
         # --- P5: standalone CMake layout and single-line commands -----------
         cmake = (dest_a1 / "CMakeLists.txt").read_text(encoding="utf-8")
         guided = cmake.index("if(NOT G4USIM_STANDALONE_EXPORT)")
