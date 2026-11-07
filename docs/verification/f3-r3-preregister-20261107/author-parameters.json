@@ -1,0 +1,208 @@
+{
+  "schema": "g4usim_f3_measurement_plan_r3_v1",
+  "created_utc": "2026-11-07T04:25:00Z",
+  "task": "F3-2 noise revision R3 (conservative N=2000 alternative)",
+  "selected_option": "n2000-frozen-comparator-task-level-EVENTS-binding",
+  "not_selected": "n4000-eventid-partitioned-streaming-comparator",
+  "not_selected_reason": "the design review preferred N=4000 only with a bounded eventID partition comparator; that implementation is not authorized in this revision. N=2000 keeps the unchanged comparison algorithm and needs a task-level EVENTS binding only.",
+  "frozen_basis": {
+    "contract": {
+      "path": "docs/collab/outbox/20261107-f3-contract.md",
+      "sha256": "5e2cdd4796a883798f71c42c883ab52e22ab9bb0fe76cad1041291254c6d2cb7"
+    },
+    "contract_freeze": {
+      "path": "docs/collab/decisions/20261107-f3-contract-freeze.md",
+      "sha256": "7d0049ec9b4f727ca3251e5eebc8cca73046680a5a1abc709945f6d1b3f0b97b"
+    },
+    "design_review": {
+      "path": "out/collab/f3-noise-r3/review/design-review.md",
+      "sha256": "7b38f888d0b67dd026cdef1dec0fc033b7cc81b3ded42c0953d6803b1b705e45"
+    }
+  },
+  "old_batches": [
+    {
+      "label": "batch1",
+      "path": "out/collab/20261107-f3-baseline/20261107T024015Z-f39d1262",
+      "timing_report_sha256": "a870bf31a62e5b0df64fc2f11df970d6ef6e81153648873176b89ae18ed47111",
+      "observed_failures": [
+        "hits/csv MAD 5.15539%"
+      ],
+      "role": "read-only noise diagnosis only"
+    },
+    {
+      "label": "batch2",
+      "path": "out/collab/20261107-f3-baseline/batch2-20261107T033815Z",
+      "timing_report_sha256": "a6796f3ee9a1bdbba23d6c6368c8e99e84f62044da6a217af202eec39aaa345a",
+      "observed_failures": [
+        "hits/root MAD 5.52623%"
+      ],
+      "role": "read-only noise diagnosis only"
+    }
+  ],
+  "run": {
+    "n_events": 2000,
+    "threads": 2,
+    "seed": 4242,
+    "geometry": "config/geometry/hit_smoke_box.ini",
+    "combos": [
+      {
+        "workload": "hits",
+        "format": "csv"
+      },
+      {
+        "workload": "hits",
+        "format": "root"
+      },
+      {
+        "workload": "mesh",
+        "format": "csv"
+      },
+      {
+        "workload": "mesh",
+        "format": "root"
+      }
+    ],
+    "executable": {
+      "label": "baseline",
+      "path": "out/collab/h3-final-independent-windows-r2/bin/G4UniversalSim.exe",
+      "sha256": "2ff536c552c6315eb33737b6c0f926a589f62b57df0a6271e39db0a0b3969a0d"
+    }
+  },
+  "order": {
+    "mode": "blocked",
+    "default_mode": "legacy",
+    "rule": "repeat r starts the combo list rotated left by r; 4 combos times 5 repeats covers every combo at every execution position 0..3 at least once",
+    "report_fields": {
+      "execution_position": "actual position in this repeat's schedule",
+      "base_combo_index": "fixed index in the CLI combo list"
+    },
+    "randomisation": "none; the option is a deterministic rotation, not a pseudo-random permutation"
+  },
+  "phases": {
+    "warmup": {
+      "rounds": 1,
+      "memory_repeats": 0,
+      "launches": 4,
+      "output": "out/collab/f3-noise-r3/measurement/warmup"
+    },
+    "timing": {
+      "rounds": 5,
+      "memory_repeats": 0,
+      "launches": 20,
+      "output": "out/collab/f3-noise-r3/measurement/timing"
+    },
+    "memory": {
+      "rounds": 0,
+      "memory_repeats": 3,
+      "launches": 12,
+      "output": "out/collab/f3-noise-r3/measurement/memory",
+      "observer": {
+        "path": "out/collab/20261107-f3-baseline/preflight/pid_observer.py",
+        "sha256": "dd44e9c8e992073120d6018e3c01a36e2151ca0f9c1aa2a2cb3d8a174a1fe2fe"
+      }
+    }
+  },
+  "total_launches": 36,
+  "commands": [
+    "python -B scripts/measure_output_performance.py --output out/collab/f3-noise-r3/measurement/warmup --events 2000 --rounds 1 --memory-repeats 0 --order blocked --workload hits --workload mesh --format csv --format root --executable baseline=out/collab/h3-final-independent-windows-r2/bin/G4UniversalSim.exe",
+    "python -B scripts/measure_output_performance.py --output out/collab/f3-noise-r3/measurement/timing --events 2000 --rounds 5 --memory-repeats 0 --order blocked --workload hits --workload mesh --format csv --format root --executable baseline=out/collab/h3-final-independent-windows-r2/bin/G4UniversalSim.exe",
+    "python -B scripts/measure_output_performance.py --output out/collab/f3-noise-r3/measurement/memory --events 2000 --rounds 0 --memory-repeats 3 --observer out/collab/20261107-f3-baseline/preflight/pid_observer.py --order blocked --workload hits --workload mesh --format csv --format root --executable baseline=out/collab/h3-final-independent-windows-r2/bin/G4UniversalSim.exe"
+  ],
+  "offline_science_verification": {
+    "driver": "out/collab/f3-noise-r3/author/science_batch.py",
+    "comparator": {
+      "path": "out/collab/20261107-f3-baseline/preflight/science_compare.py",
+      "sha256": "c8195197b9bd7278f74d689edff83dda247af1b4c686f41b3bcd0e7fc982bd82",
+      "file_change": "none; EVENTS is set to 2000 by the task-local wrapper only"
+    },
+    "events": 2000,
+    "formal_samples": 32,
+    "coverage": {
+      "timing_r0_selfcheck": 4,
+      "timing_pair": 16,
+      "memory_sample": 12
+    },
+    "comparison_rule": "every formal sample is compared with the timing repeat 0 of the same combination through the unchanged comparator; the four timing repeat 0 samples are first qualified against themselves (metadata, roles, registered files), then 16 timing repeats 1..4 and 12 independent memory repeats 0..2 are compared with that same repeat 0",
+    "total_comparisons": 32,
+    "independent_subprocess_per_comparison": true,
+    "per_sample_artifact_checks": "every comparison independently verifies the sample metadata, roles, registered files and artifact SHA receipts",
+    "readiness": {
+      "metric": "actual available physical memory at execution time",
+      "min_bytes": 6442450944,
+      "min_gib": 6,
+      "on_unmet": "status=resource_not_ready; no comparison starts; the plan stays incomplete; wait for resources; never close user processes",
+      "is_execution_boundary_only": true
+    },
+    "memory_projection": {
+      "measured_events": 1000,
+      "measured_peak_bytes": 2550013952,
+      "linear_2000_bytes": 5100027904,
+      "evidence": "out/collab/f3-noise-r3/analysis-memory-probe/result.json",
+      "level": "assumption scene only; not causal, not a bound, not a guarantee"
+    }
+  },
+  "acceptance": {
+    "launch_budget": 36,
+    "no_extra_executions": true,
+    "no_sample_truncation": true,
+    "no_old_batch_rewrite": true,
+    "noise_gate_pct": 5.0,
+    "noise_gate_rule": "each of the four combinations must have relative MAD <= 5%; equality passes; this is the only noise criterion for the frozen measurement",
+    "noise_gate_on_exceed": "status=inconclusive (noise/resource), keep every sample; never claim product failure or phase pass",
+    "future_candidate_rule_reserved": "a >=5% gain in at least 4 of 5 pairs with all other combinations <=5% is reserved for comparing a future optimization candidate; it is not applied to the frozen baseline measurement",
+    "science_rule": "frozen comparator semantics unchanged: REL_TOL 1e-9, zero-tolerance for counts, 12 significant digits, full tuple multisets, task-level events binding 2000",
+    "resource_boundary_gib": 6,
+    "resource_boundary_relaxes_science": false
+  },
+  "stop_conditions": [
+    "a timing combination exceeds the 5% relative MAD gate: keep every sample, classify the result as inconclusive, stop, no reruns or outlier removal, do not call it a product failure or a phase pass",
+    "an offline comparison returns status=fail: keep outputs and child logs, stop, do not change templates/seeds/tolerances/N",
+    "available physical memory is below 6 GiB when offline verification would start: report resource_not_ready and wait without closing user processes",
+    "any backend sample exits non-zero or fails registered-file/hash/PID identity checks: stop and preserve evidence",
+    "any temptation to modify the frozen contract, old batches, product code or comparator file: stop and report instead"
+  ],
+  "changed_files": [
+    {
+      "path": "scripts/measure_output_performance.py",
+      "sha256": "167ba575bda73fa68e2a01a3b898a38f77bf8465c89cf5110296c7ef35f4c656",
+      "backup": "out/collab/f3-noise-r3/before/measure_output_performance.py",
+      "backup_sha256": "7210ee1a87ed5450aeea050e15a43c92a4b1318d51323a9fe476302ee30e1bce",
+      "change_scope": "additive only: ordered_combos, order_fields, --order option (default legacy), blocked report fields"
+    },
+    {
+      "path": "out/collab/f3-noise-r3/author/diagnose.py",
+      "change_scope": "read-only diagnosis; measured memory evidence and N=2000 decision"
+    },
+    {
+      "path": "out/collab/f3-noise-r3/author/diagnosis.json",
+      "sha256": "ec71c70001045b70fc35c37a731d90573e24115e4f789716a8d89818e9f292f5",
+      "change_scope": "regenerated by diagnose.py"
+    },
+    {
+      "path": "out/collab/f3-noise-r3/author/compare_n.py",
+      "change_scope": "new task-local wrapper; binds EVENTS=2000 and guards the old module SHA"
+    },
+    {
+      "path": "out/collab/f3-noise-r3/author/science_batch.py",
+      "change_scope": "new driver; one independent Python subprocess per comparison plus the 6 GiB readiness gate"
+    },
+    {
+      "path": "out/collab/f3-noise-r3/author/parameters.json",
+      "change_scope": "new frozen-candidate parameter file (this file)"
+    },
+    {
+      "path": "out/collab/f3-noise-r3/author/selfcheck_plan.py",
+      "change_scope": "new no-Geant4 self-test and negative controls"
+    },
+    {
+      "path": "out/collab/f3-noise-r3/author/proposal.md",
+      "change_scope": "new proposal; design only, no measurement"
+    }
+  ],
+  "not_done": [
+    "no Geant4 process was started for this revision",
+    "no new timing, RSS or science sample exists yet",
+    "no old batch or frozen file was rewritten",
+    "the N=4000 eventID-partitioned comparator was not implemented"
+  ]
+}

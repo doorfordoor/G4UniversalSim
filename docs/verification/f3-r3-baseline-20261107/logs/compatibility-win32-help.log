@@ -1,0 +1,28 @@
+usage: measure_output_performance.py [-h] --executable LABEL=PATH --output
+                                     OUTPUT [--rounds ROUNDS]
+                                     [--memory-repeats MEMORY_REPEATS]
+                                     [--observer OBSERVER] [--events EVENTS]
+                                     [--order {legacy,blocked}]
+                                     [--workload {hits,events,mesh}]
+                                     [--format {csv,root,both}]
+
+Repeatable output-format measurements; engineering timing, not a physical
+benchmark.
+
+options:
+  -h, --help            show this help message and exit
+  --executable LABEL=PATH
+  --output OUTPUT       new measurement directory
+  --rounds ROUNDS
+  --memory-repeats MEMORY_REPEATS
+                        optional independent PID-bound RSS runs (requires
+                        --observer)
+  --observer OBSERVER   path to the preflight PID observer (only with
+                        --memory-repeats)
+  --events EVENTS
+  --order {legacy,blocked}
+                        legacy keeps the old CLI combo order; blocked rotates
+                        the combo list by the repeat index and records the
+                        order
+  --workload {hits,events,mesh}
+  --format {csv,root,both}

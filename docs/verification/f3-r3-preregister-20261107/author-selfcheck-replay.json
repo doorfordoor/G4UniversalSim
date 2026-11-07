@@ -1,0 +1,1296 @@
+{
+  "schema": "g4usim_f3_r3_plan_selfcheck_v1",
+  "checks": 257,
+  "failures": 0,
+  "passed": 257,
+  "formal_science_samples": 32,
+  "geant4_launched": false,
+  "measurement_directory_exists": false,
+  "results": [
+    {
+      "name": "parameters.loaded",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.schema",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.option",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.events",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.threads",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.seed",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.combos",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.executable.sha",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.warmup.launches",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.warmup.product",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.timing.launches",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.timing.product",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.memory.launches",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.memory.product",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.total_launches",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.total_field",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.observer.sha",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.comparator.sha",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.offline.events",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.offline.formal_samples",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.offline.total",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.offline.coverage",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.offline.same_baseline",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.offline.per_sample_checks",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.readiness.bytes",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.readiness.boundary_only",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.readiness.on_unmet",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.memory.measured",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.memory.level",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.acceptance.gate",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.acceptance.rule",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.acceptance.exceed",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.acceptance.future_rule",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.acceptance.science",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.stop_conditions",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "parameters.stop.inconclusive",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "commands.count",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.warmup.python",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.warmup.output",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.warmup.events",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.warmup.rounds",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.warmup.memory",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.warmup.order",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.warmup.workloads",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.warmup.formats",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.warmup.executable",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.warmup.no_observer",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.timing.python",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.timing.output",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.timing.events",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.timing.rounds",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.timing.memory",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.timing.order",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.timing.workloads",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.timing.formats",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.timing.executable",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.timing.no_observer",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.memory.python",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.memory.output",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.memory.events",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.memory.rounds",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.memory.memory",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.memory.order",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.memory.workloads",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.memory.formats",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.memory.executable",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "command.memory.observer",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "commands.no_extra_executions",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.deterministic.0",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.position.0.hits.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.base.0.hits.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.position.0.hits.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.base.0.hits.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.position.0.mesh.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.base.0.mesh.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.position.0.mesh.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.base.0.mesh.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.deterministic.1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.position.1.hits.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.base.1.hits.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.position.1.mesh.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.base.1.mesh.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.position.1.mesh.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.base.1.mesh.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.position.1.hits.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.base.1.hits.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.deterministic.2",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.position.2.mesh.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.base.2.mesh.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.position.2.mesh.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.base.2.mesh.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.position.2.hits.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.base.2.hits.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.position.2.hits.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.base.2.hits.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.deterministic.3",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.position.3.mesh.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.base.3.mesh.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.position.3.hits.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.base.3.hits.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.position.3.hits.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.base.3.hits.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.position.3.mesh.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.base.3.mesh.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.deterministic.4",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.position.4.hits.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.base.4.hits.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.position.4.hits.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.base.4.hits.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.position.4.mesh.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.base.4.mesh.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.position.4.mesh.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.base.4.mesh.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.coverage.hits.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.coverage.hits.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.coverage.mesh.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.coverage.mesh.root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.legacy.0",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.legacy.1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.legacy.2",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.legacy.3",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.legacy.4",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.legacy_fields",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.no_old_field_name",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.default_legacy",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order.report_names",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "render.config_independent_of_n",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "render.macro_line_count",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "render.only_beam_on_changes",
+      "pass": true,
+      "detail": "[('/run/beamOn 2000', '/run/beamOn 4000')]"
+    },
+    {
+      "name": "render.beam_on_2000",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "render.beam_on_4000",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "render.mesh_config_present",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.plan_total",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.plan_coverage",
+      "pass": true,
+      "detail": "{'timing_r0_selfcheck': 4, 'timing_pair': 16, 'memory_sample': 12}"
+    },
+    {
+      "name": "science.plan_unique",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.timing-r0-hits-csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.selfcheck_same.timing-r0-hits-csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.timing-hits-csv-1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.pair_candidate.timing-hits-csv-1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.timing-hits-csv-2",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.pair_candidate.timing-hits-csv-2",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.timing-hits-csv-3",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.pair_candidate.timing-hits-csv-3",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.timing-hits-csv-4",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.pair_candidate.timing-hits-csv-4",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.memory-hits-csv-0",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.memory_candidate.memory-hits-csv-0",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.memory-hits-csv-1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.memory_candidate.memory-hits-csv-1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.memory-hits-csv-2",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.memory_candidate.memory-hits-csv-2",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.timing-r0-hits-root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.selfcheck_same.timing-r0-hits-root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.timing-hits-root-1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.pair_candidate.timing-hits-root-1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.timing-hits-root-2",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.pair_candidate.timing-hits-root-2",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.timing-hits-root-3",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.pair_candidate.timing-hits-root-3",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.timing-hits-root-4",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.pair_candidate.timing-hits-root-4",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.memory-hits-root-0",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.memory_candidate.memory-hits-root-0",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.memory-hits-root-1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.memory_candidate.memory-hits-root-1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.memory-hits-root-2",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.memory_candidate.memory-hits-root-2",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.timing-r0-mesh-csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.selfcheck_same.timing-r0-mesh-csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.timing-mesh-csv-1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.pair_candidate.timing-mesh-csv-1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.timing-mesh-csv-2",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.pair_candidate.timing-mesh-csv-2",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.timing-mesh-csv-3",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.pair_candidate.timing-mesh-csv-3",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.timing-mesh-csv-4",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.pair_candidate.timing-mesh-csv-4",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.memory-mesh-csv-0",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.memory_candidate.memory-mesh-csv-0",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.memory-mesh-csv-1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.memory_candidate.memory-mesh-csv-1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.memory-mesh-csv-2",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.memory_candidate.memory-mesh-csv-2",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.timing-r0-mesh-root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.selfcheck_same.timing-r0-mesh-root",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.timing-mesh-root-1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.pair_candidate.timing-mesh-root-1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.timing-mesh-root-2",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.pair_candidate.timing-mesh-root-2",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.timing-mesh-root-3",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.pair_candidate.timing-mesh-root-3",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.timing-mesh-root-4",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.pair_candidate.timing-mesh-root-4",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.memory-mesh-root-0",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.memory_candidate.memory-mesh-root-0",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.memory-mesh-root-1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.memory_candidate.memory-mesh-root-1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.baseline.memory-mesh-root-2",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.memory_candidate.memory-mesh-root-2",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.defaults_events",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.defaults_readiness",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.defaults_repeats",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.no_backend_launch",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.independent_processes",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.driver_doc",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "science.uses_task_wrapper",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "comparator.file_sha",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "comparator.bound_events",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "comparator.default_untouched",
+      "pass": true,
+      "detail": "1000\n"
+    },
+    {
+      "name": "comparator.positive_2000",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "comparator.negative_1000_rejected",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "comparator.negative_1999_rejected",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "comparator.no_file_edit",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "readiness.at_boundary",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "readiness.below_boundary",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "readiness.unknown_not_ready",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "readiness.reports_real_memory",
+      "pass": true,
+      "detail": "{'status': 'ok', 'available_bytes': 3204661248, 'min_bytes': 1, 'ready': True, 'note': 'actual available physical memory at this instant'}"
+    },
+    {
+      "name": "diff.hunks",
+      "pass": true,
+      "detail": "7"
+    },
+    {
+      "name": "diff.added",
+      "pass": true,
+      "detail": "44"
+    },
+    {
+      "name": "diff.removed",
+      "pass": true,
+      "detail": "['-        for workload in workloads:', '-            for fmt in formats:', '-            for workload in workloads:', '-                for fmt in formats:']"
+    },
+    {
+      "name": "diff.ordered_combos",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "diff.order_fields",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "diff.default_legacy",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "diff.measure_sha",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "diff.backup_sha",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "frozen.contract.exists",
+      "pass": true,
+      "detail": "D:\\Geant4\\G4UniversalSim\\docs\\collab\\outbox\\20261107-f3-contract.md"
+    },
+    {
+      "name": "frozen.contract.sha",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "frozen.freeze.exists",
+      "pass": true,
+      "detail": "D:\\Geant4\\G4UniversalSim\\docs\\collab\\decisions\\20261107-f3-contract-freeze.md"
+    },
+    {
+      "name": "frozen.freeze.sha",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "frozen.design_review.exists",
+      "pass": true,
+      "detail": "D:\\Geant4\\G4UniversalSim\\out\\collab\\f3-noise-r3\\review\\design-review.md"
+    },
+    {
+      "name": "frozen.design_review.sha",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "frozen.comparator.exists",
+      "pass": true,
+      "detail": "D:\\Geant4\\G4UniversalSim\\out\\collab\\20261107-f3-baseline\\preflight\\science_compare.py"
+    },
+    {
+      "name": "frozen.comparator.sha",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "frozen.observer.exists",
+      "pass": true,
+      "detail": "D:\\Geant4\\G4UniversalSim\\out\\collab\\20261107-f3-baseline\\preflight\\pid_observer.py"
+    },
+    {
+      "name": "frozen.observer.sha",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "frozen.exe.exists",
+      "pass": true,
+      "detail": "D:\\Geant4\\G4UniversalSim\\out\\collab\\h3-final-independent-windows-r2\\bin\\G4UniversalSim.exe"
+    },
+    {
+      "name": "frozen.exe.sha",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "frozen.batch1_timing.exists",
+      "pass": true,
+      "detail": "D:\\Geant4\\G4UniversalSim\\out\\collab\\20261107-f3-baseline\\20261107T024015Z-f39d1262\\timing\\report.json"
+    },
+    {
+      "name": "frozen.batch1_timing.sha",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "frozen.batch2_timing.exists",
+      "pass": true,
+      "detail": "D:\\Geant4\\G4UniversalSim\\out\\collab\\20261107-f3-baseline\\batch2-20261107T033815Z\\timing\\report.json"
+    },
+    {
+      "name": "frozen.batch2_timing.sha",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "frozen.diagnosis.exists",
+      "pass": true,
+      "detail": "D:\\Geant4\\G4UniversalSim\\out\\collab\\f3-noise-r3\\author\\diagnosis.json"
+    },
+    {
+      "name": "frozen.diagnosis.sha",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "diagnosis.memory_peak",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "diagnosis.selected_2000",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "diagnosis.projection_levels",
+      "pass": true,
+      "detail": "8"
+    },
+    {
+      "name": "diagnosis.assumption_only",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "diagnosis.not_a_bound",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "diagnosis.no_in_budget_claim",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "proposal.32_samples",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "proposal.coverage",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "proposal.combo_gate",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "proposal.inconclusive",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "proposal.no_16_pairs",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "proposal.no_piid",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "proposal.readiness",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "scope.no_measurement_created",
+      "pass": true,
+      "detail": ""
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "scope": "noise diagnosis from preserved outputs only; no new simulation or acceptance-rule change",
+  "events": 2000,
+  "identical_thread_output_pairs": [
+    {
+      "left_repeat": 0,
+      "right_repeat": 3,
+      "left_total_s": 16.165111600072123,
+      "right_total_s": 11.988072599982843,
+      "left_run_wall": {
+        "values": [
+          13.098451
+        ],
+        "max": 13.098451,
+        "files": 1
+      },
+      "right_run_wall": {
+        "values": [
+          9.727495
+        ],
+        "max": 9.727495,
+        "files": 1
+      },
+      "identical_scientific_files": [
+        "hits_t0.csv",
+        "hits_t1.csv",
+        "event_edep_t0.csv",
+        "event_edep_t1.csv"
+      ],
+      "sha256": {
+        "hits_t0.csv": "0463adf7e223f0ee0811259a361f9d2240dc3a045c33c5a0994d4350e434085d",
+        "hits_t1.csv": "cbd72f801c7eabac55e1b748d072ca63aa96cade2b2da32e52773821e0059ccd",
+        "event_edep_t0.csv": "b6755dc12db14aabb31fbdbcd713d3e263692a0ef17967a92bcfa3bd4a6b4331",
+        "event_edep_t1.csv": "77e1f2e38b8474eba8872c71854ca675b008645ed6c29a55c9c3bab613438cba"
+      }
+    },
+    {
+      "left_repeat": 0,
+      "right_repeat": 4,
+      "left_total_s": 16.165111600072123,
+      "right_total_s": 11.30345269991085,
+      "left_run_wall": {
+        "values": [
+          13.098451
+        ],
+        "max": 13.098451,
+        "files": 1
+      },
+      "right_run_wall": {
+        "values": [
+          9.167125
+        ],
+        "max": 9.167125,
+        "files": 1
+      },
+      "identical_scientific_files": [
+        "hits_t0.csv",
+        "hits_t1.csv",
+        "event_edep_t0.csv",
+        "event_edep_t1.csv"
+      ],
+      "sha256": {
+        "hits_t0.csv": "0463adf7e223f0ee0811259a361f9d2240dc3a045c33c5a0994d4350e434085d",
+        "hits_t1.csv": "cbd72f801c7eabac55e1b748d072ca63aa96cade2b2da32e52773821e0059ccd",
+        "event_edep_t0.csv": "b6755dc12db14aabb31fbdbcd713d3e263692a0ef17967a92bcfa3bd4a6b4331",
+        "event_edep_t1.csv": "77e1f2e38b8474eba8872c71854ca675b008645ed6c29a55c9c3bab613438cba"
+      }
+    },
+    {
+      "left_repeat": 3,
+      "right_repeat": 4,
+      "left_total_s": 11.988072599982843,
+      "right_total_s": 11.30345269991085,
+      "left_run_wall": {
+        "values": [
+          9.727495
+        ],
+        "max": 9.727495,
+        "files": 1
+      },
+      "right_run_wall": {
+        "values": [
+          9.167125
+        ],
+        "max": 9.167125,
+        "files": 1
+      },
+      "identical_scientific_files": [
+        "hits_t0.csv",
+        "hits_t1.csv",
+        "event_edep_t0.csv",
+        "event_edep_t1.csv"
+      ],
+      "sha256": {
+        "hits_t0.csv": "0463adf7e223f0ee0811259a361f9d2240dc3a045c33c5a0994d4350e434085d",
+        "hits_t1.csv": "cbd72f801c7eabac55e1b748d072ca63aa96cade2b2da32e52773821e0059ccd",
+        "event_edep_t0.csv": "b6755dc12db14aabb31fbdbcd713d3e263692a0ef17967a92bcfa3bd4a6b4331",
+        "event_edep_t1.csv": "77e1f2e38b8474eba8872c71854ca675b008645ed6c29a55c9c3bab613438cba"
+      }
+    }
+  ],
+  "supported_conclusion": "observed elapsed differences are not explained by event-count or byte-content differences in these same per-worker hits and event outputs",
+  "not_proven": [
+    "specific process or system component causing runtime variance",
+    "CPU vs I/O vs scheduling vs power attribution",
+    "that longer N or blocked order guarantees <=5% MAD"
+  ],
+  "raw_report_sha256": "ef261c5e40769a42c95e0e444c491a537ac95a0d56532e7962a897f22bcd4392"
+}

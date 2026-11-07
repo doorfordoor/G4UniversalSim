@@ -1,0 +1,39 @@
+{
+  "schema": "g4usim_f3_noise_r3_p1_minimal_timeout_fix_review_v1",
+  "date": "2026-11-07",
+  "status": "pass_for_reported_P1_automatic_timeout_counterexample",
+  "freeze_decision": "may_freeze_then_dispatch_one_predefined_N2000_batch",
+  "p1_cleared": true,
+  "scope": "only revised outer measurement timeout and unchanged inner owned-process timeout path",
+  "change": {
+    "file": "out/collab/f3-noise-r3/run-one-fixed-batch.py",
+    "line": 54,
+    "before": "command([...run-fixed-baseline.py], 'measurement', 3600)",
+    "after": "command([...run-fixed-baseline.py], 'measurement')",
+    "effect": "wait(timeout=None), removing the premature 3600-second kill of the orchestration parent"
+  },
+  "inner_timeouts_unchanged": {
+    "timing_backend_seconds": 600,
+    "memory_backend_seconds": 600,
+    "observer_seconds": 60,
+    "direct_science_compare_seconds": 600,
+    "inner_runner_waits_for_each_measurement_phase": true
+  },
+  "original_review_preserved": ["out/collab/f3-noise-r3/review/final-static-review.md", "out/collab/f3-noise-r3/review/final-static-review.json"],
+  "current_plan_state": "draft_pending_final_independent_review",
+  "phase_counts": {"warmup": 4, "timing": 20, "memory": 12, "events_per_run": 2000},
+  "outer_launcher_logging": {
+    "promised_path": "D:/Geant4/G4UniversalSim/out/collab/20261107-f3-baseline/r3-N2000-20261107T043805Z/job.driver.log",
+    "status": "must_verify_when_launched",
+    "streams": "stdout_and_stderr_full_redirect"
+  },
+  "limitations": ["manual forced interruption", "unknown Python-level hangs", "power loss", "other unforeseen process-tree termination cases", "no new Geant4 or benchmark or driver execution"],
+  "sha256": {
+    "job_driver": "24219117109708416ebcb8ae95a4bfce9f2ab740ee7a2956e4ce8bd559dbd5cd",
+    "minimal_timeout_fix_receipt": "18eda70c2f9e35255559d17a86c1df0a4ef53bb37ccf4c5a05b8bc61cbdb8308",
+    "inner_runner": "85b082885e126a9b4a4087e082c8dc9b33cc14eb287efdd5baf65bebe853fffb",
+    "measurement_script": "167ba575bda73fa68e2a01a3b898a38f77bf8465c89cf5110296c7ef35f4c656",
+    "draft_run_plan": "c60663ad8ff53147aa984d595ac95eda629915ece35e9bdd5a22b2a3b71439e3"
+  },
+  "no_extra_acceptance_requirements": true
+}

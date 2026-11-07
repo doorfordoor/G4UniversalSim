@@ -3,35 +3,40 @@
 更新2026-11-07。
 
 ## 当前阶段
-F3性能与资源基线。H3固定范围已独审关闭；F3-1测量合同已独审冻结，F3-2接线经修订复验可用于冻结矩阵，首批36次基线已执行并完成科学/身份/内存独核；首批hits/CSV噪声MAD超冻结门，原资源inconclusive保留；唯一获批第二批36次已exit0，但hits/root MAD超5%，再次资源inconclusive；32科学/536产物SHA/12内存身份独核通过；按批准停止追加和优化，F3-3仍阻断。
+K2独立Geant4工程导出（K2-2完整导出链实现）；K2-1合同已独审冻结。F3既有数据收尾并行，阶段尚未关闭：R3唯一授权新批36次exit0、32科学比对/536产物SHA/12内存身份独核通过，三组合噪声超5%，资源inconclusive。停止追加性能批次和优化；K2按ROADMAP在K1/I2就绪后并行，F7依赖及F3标准不变。
 
 ## 清单文件
-docs/collab/decisions/20261107-f3-closeout.md
+docs/collab/decisions/20261107-k2-closeout.md；F3仍沿用docs/collab/decisions/20261107-f3-closeout.md。
 
 ## 候选身份
-F3基线代码沿用已验H3代码f812465bbfd58026201b70a23938e6bdc8ea12eb，canonical指纹fc498cc7f261b89d39558218668cb197bcaa3a94ff0c661f0b7f8fd2dab822ec；冻结程序可见out/collab/h3-final-independent-windows-r2/bin及identity.json。D源与canonical的三份旧H2换行差异保留原映射，合同中须明确实际运行身份，不擅自规范化或重建。H8既有工作区修改保留。
+主仓库提交前HEAD e44fb444c81aa8cd787b8ad23d106bb12344c4ab，分支roadmap/Q2-scientific-baselines。K2冻结合同e27f5a81…，依据docs/collab/decisions/20261107-k2-contract-freeze.md；K2-2产品尚未冻结或验收。F3实际程序仍f812465b，canonical fc498cc7…，exe 2ff536c5…；原D源三份旧H2换行映射保持，不冒称本轮重建。用户H8工作区修改保留，不进本轮提交。
 
 ## 清单状态表
 |项|状态|责任/证据|
 |---|---|---|
-|F3-1测量与比较合同|通过|作者5e2cdd47与docs/collab/decisions/20261107-f3-contract-freeze.md共同构成冻结协议，冲突以主审定稿为准；4输入AST渲染与哈希独审通过|
-|F3-2基线与瓶颈定位|限制|首批inconclusive保留；获批第二批36次exit0，但hits/root MAD5.52623%超5%，同样inconclusive；32科学/536产物SHA/12内存身份独核通过，F3-3阻断|
-|F3-3最小优化与前后比较|未开始|按冻结判据最小变更与独立复核，不改统计/种子/输出契约|
-|F3-4正式验收交班|未开始|按影响正式回归/严格证据/云CI，收尾后F7|
+|K2-1真实消费者及独立工程合同|通过|作者r2 e27f5a81…及主审最终字段定义冻结；314闭包SHA独核通过，网页只读二审；docs/collab/decisions/20261107-k2-contract-freeze.md|
+|K2-2完整导出链实现|进行中|原DeepSeek request k2-export-chain-implementation-20261107-v1，round159已接收，有限产品/测试/文档范围；尚无交付通过|
+|K2-3双平台独立构建运行与二次修改|未开始|冻结支持子集与依赖、源码及产物身份|
+|K2-4正式验收交班|未开始|按影响正式回归、严格证据、真实云CI|
+|F3-1测量与比较合同|通过|原合同及20261107-f3-r3-freeze.md；5%及科学门不变|
+|F3-2基线与瓶颈定位|限制|三批资源inconclusive；R3 36执行/32科学/536产物SHA/12内存身份独核通过，证据docs/verification/f3-r3-baseline-20261107/README.md；未定位可验收单一热点|
+|F3-3最小优化与前后比较|未开始|噪声门阻断，不启动优化、不追加测量|
+|F3-4正式验收交班|未开始|仅既有证据与测量工具集成，F3整体未关闭|
 
 ## 本轮结果
-用户明确批准的唯一第二批36次全部exit0；32科学比对、536份登记产物SHA与12内存身份独核通过（最少28次查询，最终查询全成功）。hits/root relative MAD0.05526225576474922严格超5%，本批仍inconclusive；首批hits/csv原失败保持。按批准方案停止追加与优化，不混样本、不按组合择优、不关闭F3。证据docs/verification/f3-baseline-batch2-20261107/README.md。
+原R3终态及全部32比较核实，预注册28份/结果24份归档成员SHA与Git暂存字节一致；Windows/Linux CLI兼容证据纳入，未重测性能。K2首稿路径/CTest/模板身份/生成来源及统计比较矛盾经真实消费者和网页快照二审定位，r2修正后由主审冻结（generated哈希等最终定义在决定内），直接派K2-2。主审doc_links限定正式1例11执行断言、0失败0跳过，严格证据通过；不等于产品或双平台验收。
 
 ## 运行中任务
-无运行中模拟或分析。第二批主审session44544（36模拟）与97052（32科学/产物核对）均exit0。根out/collab/20261107-f3-baseline/batch2-20261107T033815Z；首批根20261107T024015Z-f39d1262保持。DSH原round151/turn119和网页原R2二审completed/idle，不派重复任务。
+DeepSeek原task g4-j3-desktop-20261103 / session-9d7a035a-8a42-4f18-885b-beb4a0ec12f4，request k2-export-chain-implementation-20261107-v1，round159已接收；deepseek-account-vision / deepseek-flash / max，限K2-2实现自测。交付docs/collab/outbox/20261107-k2-implementation.md及out/collab/20261107-k2-implementation/author/receipt.json；先查原任务，不重复派工。processedCursor=69456，仅来自已返回事件。网页原对话完成K2首稿二审、idle，cursor见context。原F3 job47651终态exit0。
 
 ## 下一轮目标
-等待用户对F3测量方法或环境阻断的进一步明确指令；授权的唯一第二批已经用完，没有第三批授权。不重复测量、优化、扫描或派工，不降门限签收；F7依赖F3，不越过该门。定时监督保持，不重复提醒同一限制。
+跟进K2-2原任务，审查实现/架构/代码质量、正式自测与真实模板/导出身份，冻结候选后独立复验；通过后直接进入K2-3两平台独立构建运行和受控C++修改。F3仅证据/测量工具集成及已触发CI跟进，不再追加性能批次或启动优化。
 
 ## 待用户决定/限制
 | 项 | 决定 | 影响/动作 |
 | --- | --- | --- |
-| F3基线噪声门 | 待决定；两批均inconclusive，阻断F3-3 | hits/csv MAD5.15539274%严格超冻结5%；原批36次保留，resource=inconclusive。原协议不许加轮/换机追通过；新预注册批次须先明确授权，不能签收为通过。32科学比对、536 SHA、12内存身份已完成；具体授权及第二批冻结计划见20261107-f3-noise-decision.md；首批inconclusive仍保留，第二批hits/root MAD5.5262255765%同样超门；授权的唯一追加批次已用完，停止追加测量与优化，不自动签收通过。 |
+| F3基线噪声门 | 主审已签收三批不可判定事实，不签收F3通过 | 原两批保持原身份；R3唯一授权批已执行36次，hits/csv6.89743%、mesh/csv11.08757%、mesh/root5.70326%均超5%。32科学核对已全部通过；禁止混批、追加到通过或启动优化。调整F3验收/排期须用户明确决定，询问必要性不视为同意。 |
+| F3 R3方案自检中间记录 | 主审已签收记录限制 | 曾观测256项/4失败，原默认JSON后被作者覆盖；现场摘要与桥接回执保留，不补造明细。最终257重放/64独立检查通过，非正式科学失败，不称一次性全过。 |
 | 带电XS偏置 | 主审已签收适用域限制，不接受原factor10剂量 | r2 .01mm/factor1.2仅本病例独审通过；原factor10失败、未验证域及无效率收益明确保留，不称通用生产算法修复；Q2-5状态为限制而非普遍通过 |
 | LET完整强子混合谱 | 主审已签收适用域限制，v1仍失败 | EM-only两能点已验证；完整强子LET_d未获外部验证，不能据v2外推；统计相关仍归Q2-4 |
 | DDD逐步观测 | 主审已签收受限范围，整体limited | 普通hits不是计分步/事件全集，且缺步平均动能；错误证明已撤回，完整逐步验证未获证明；未确定后端结果缺陷 |
@@ -44,7 +49,7 @@ F3基线代码沿用已验H3代码f812465bbfd58026201b70a23938e6bdc8ea12eb，can
 | H3原生额外Save As | 主审已签收验证范围限制 | helper模态输入缓存未生效，已取消且无项目文件；四临时修改Undo撤回、正常退出。只签收H3外部入口/状态提示的实际观察，不称项目保存交互通过，不重开既有保存验收。证据out/collab/h3-final-native/native-observation.json |
 
 ## 后续待办
-F3→F7及Roadmap其余阶段；最终Windows/Linux统一版本分平台发布验收，等待用户最终确认。H2普通文案与横滚改善留后续。
+K2→L2按依赖推进；F3→F7仍保留原依赖及未通过状态；Roadmap其余阶段；最终Windows/Linux统一版本分平台发布验收，等待用户最终确认。H2普通文案与横滚改善留后续。
 
 人工使用反馈（2026-11-06）：几何体积树显示父子关系；左侧“配置”下直接列源、几何、材料、物理列表、3D预览等子菜单，参考COMSOL导航组织；物理列表选项悬停显示简介。已记录待前端排期，未实施，不扩H3清单。详见[反馈记录](decisions/20261106-manual-ui-feedback.md)。
 

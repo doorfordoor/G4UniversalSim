@@ -1,0 +1,349 @@
+{
+  "schema": "g4usim_k2_contract_parameters",
+  "version": 1,
+  "task": "K2-1",
+  "created_utc": "2026-11-07T05:47:47Z",
+  "scope_file": "docs/collab/outbox/20261107-k2-contract.md",
+  "checklist": "docs/collab/decisions/20261107-k2-closeout.md",
+  "checklist_sha256": "3dbd962980819639714d381a7588329eebd51b507ac1a92e58b497af63014d83",
+  "checklist_items": {
+    "K2-1": "真实消费者及独立工程合同；选定支持子集，冻结源码/资源闭包、依赖/许可、manifest 身份、扩展点、GUI/CLI 入口与两平台验收用例；证明导出后不依赖工具安装目录；独审冻结后实现",
+    "K2-2": "完整导出链实现：复用 K1 可信输入/资源服务，生成可审阅源码+CMake+配置/资源/许可/构建说明+manifest；输入拒绝与输出事务不损坏已有数据；GUI 只暴露已支持子集；自测及独立复验",
+    "K2-3": "双平台独立构建运行与二次修改：独立目录+原生 SDK，仅凭导出工程构建运行；对导出 C++ 做一处受控修改后重建并观察可核证变化；排除暗中使用旧工具；不外推物理验证",
+    "K2-4": "正式验收与交班：冻结候选、正式回归/证据/CI/真实入口观察、文档与支持边界、集成记录"
+  },
+  "identities": {
+    "worktree_head": "e44fb444c81aa8cd787b8ad23d106bb12344c4ab",
+    "worktree_branch": "roadmap/Q2-scientific-baselines",
+    "worktree_dirty_entries": 102,
+    "program_science_baseline": {
+      "git_commit": "f812465bbfd58026201b70a23938e6bdc8ea12eb",
+      "canonical_source_fingerprint": "fc498cc7f261b89d39558218668cb197bcaa3a94ff0c661f0b7f8fd2dab822ec",
+      "windows_exe_sha256": "2ff536c552c6315eb33737b6c0f926a589f62b57df0a6271e39db0a0b3969a0d",
+      "note": "K2-1 未使用该 exe 执行任何构建或运行；K2-3 不得使用它冒充导出工程产物"
+    },
+    "template_identity": {
+      "algorithm": "sha256_sorted_sha256_path_lines_v1",
+      "file_count": 308,
+      "blob_bytes": 30292,
+      "digest": "1862a858a532f0ff9178c77631308cb2c689bc3dd5f4e683faf2217cdc2110c8"
+    },
+    "closure_identity": {
+      "algorithm": "sha256_sorted_sha256_path_lines_v1",
+      "file_count": 314,
+      "blob_bytes": 30941,
+      "digest": "c8e2a0b79cb4164fc6ea43d6cfda65ea2ac52f7c5fbadc9facd9ee2bc2fd9157",
+      "list_file": "out/collab/20261107-k2-contract/author/closure-files.sha256"
+    }
+  },
+  "template_closure": {
+    "paths": [
+      "main.cc",
+      "CMakeLists.txt",
+      "CMakePresets.json",
+      "cmake/",
+      "include/",
+      "src/",
+      "config/",
+      "macros/",
+      "tools/",
+      "schema/",
+      "README.md",
+      "docs/Linux构建与验证.md",
+      "docs/中文使用手册.md",
+      "docs/功能支持矩阵.md",
+      "docs/输出数据契约.md",
+      "packaging/licenses/Geant4-LICENSE.txt",
+      "packaging/licenses/Xerces-C-LICENSE.txt",
+      "packaging/licenses/Xerces-C-NOTICE.txt"
+    ],
+    "counts": {
+      "main.cc": 1,
+      "CMakeLists.txt": 1,
+      "CMakePresets.json": 1,
+      "cmake": 2,
+      "include": 119,
+      "src": 107,
+      "config": 30,
+      "macros": 28,
+      "tools": 9,
+      "schema": 2,
+      "README.md": 1,
+      "docs": 4,
+      "licenses": 3
+    },
+    "excluded_from_export": [
+      "gui/",
+      "scenarios/",
+      "packaging/ (except licenses)",
+      "test/",
+      "scripts/",
+      "examples/ (except the selected project files)",
+      "docs/verification/ (39601 tracked files)",
+      "docs/collab/ (379 tracked files)",
+      "out/",
+      ".github/",
+      "_backup_git_*",
+      ".git"
+    ]
+  },
+  "supported_subset": {
+    "id": "K2-S1",
+    "selection_modes": ["opened_project", "generated_package"],
+    "representatives": {
+      "S-A": {
+        "kind": "opened_project",
+        "path": "examples/07_parallel_world_box",
+        "files": {
+          "main.ini": "3b910234669554b98ef69f2170a793ff1de2d5e3f79419b2cda1cfd231f21ad4",
+          "geometry.ini": "ac7b7488c25c297fe053ee780d7700bdd101720566a4c3b57f9c4c9b342e78aa",
+          "materials.ini": "34b49e7d980fd90ab3758452479f9c0b78aad540e1360cc1b3f9448fe2cd49c6",
+          "parallel.ini": "3350c6c662c872acf660c0ad5a1eafa48478c338b0136be8492dbbb41f4e440c",
+          "run.mac": "9ae3ca2b7ff8a3c51a775be5d03905ba5d6baaeac540a89e116b8ad9c54eb8a2",
+          "README.md": "31f14e2fedd981a3391bd81ba6ca7638708ed74ca5a6448e62c23d318da0c486"
+        },
+        "covers": ["hierarchical geometry", "box shapes", "NIST aliases", "parallel scoring world", "dose", "fluence", "csv output", "point source fixed direction", "single thread determinism"]
+      },
+      "S-B": {
+        "kind": "generated_package",
+        "wizard_scenario": "single_target",
+        "spec": {
+          "target_material": "G4_WATER",
+          "thickness_mm": 10.0,
+          "lateral_mm": 50.0,
+          "particle": "proton",
+          "energy_MeV": 100.0,
+          "physics": "FTFP_BERT_EMZ",
+          "events": 1000,
+          "threads": 2,
+          "seed": 12345,
+          "event_edep": true,
+          "dose": true,
+          "fluence": false
+        },
+        "covers": ["generated main/materials/geometry/macro", "writer relative path rewriting", "two-thread smoke (non-deterministic accepted)"]
+      }
+    },
+    "feature_allowlist": {
+      "geometry_templates": ["hierarchical"],
+      "shapes": ["box"],
+      "materials": ["NIST name", "materials.ini NIST alias"],
+      "physics_references": ["FTFP_BERT", "FTFP_BERT_EMZ"],
+      "sources": ["point fixed direction", "point isotropic", "plane rectangle"],
+      "scoring": ["hits", "event_edep", "edep", "dose", "fluence", "let", "volume filter", "spectrum"],
+      "parallel_world": "single parallel world, box sensitive volumes",
+      "output_formats": ["csv"],
+      "threads": [1, 2]
+    },
+    "feature_rejections": [
+      "geometry template gdml",
+      "STL/tessellated shapes",
+      "boolean ops/assembly/replica/parameterised placement",
+      "mesh scoring / displacement / trajectories",
+      "field maps",
+      "biasing operators",
+      "multiple sources / ion / phase space file",
+      "ROOT output format",
+      "external geometry/material files outside project dir",
+      "symlinks/junctions/8.3 aliases"
+    ]
+  },
+  "export_contract": {
+    "layout": "<name>/{CMakeLists.txt,CMakePresets.json,cmake/,main.cc,include/,src/,tools/,schema/,config/,macros/,docs/,README.md,licenses/,THIRD_PARTY_NOTICES.md,project/,README-EXPORT.md,export-manifest.json}",
+    "project_entry": {
+      "config": "project/main.ini",
+      "macro": "project/macros/run.mac",
+      "output": "runs/default/output"
+    },
+    "manifest_schema": "g4usim_export_project",
+    "manifest_version": 1,
+    "identity_algorithm": "sha256_sorted_sha256_path_lines_v1",
+    "identity_excludes": ["export-manifest.json"],
+    "path_rewrite_rules": {
+      "opened_project": {
+        "mode": "copy_bytes_and_rewrite_whitelisted_keys",
+        "keys": ["[materials] file", "[geometry] config", "[parallel_world] geometry_config", "[output] dir"],
+        "preserve": ["comments", "key order", "BOM"]
+      },
+      "generated_package": {
+        "mode": "regenerate_with_existing_writers_relative_paths",
+        "writers": ["main_ini_writer", "write_materials_ini", "write_geometry_ini", "macro_writer"]
+      }
+    },
+    "absolute_path_scan": {
+      "reject_markers": ["D:/", "D:\\", "/d/Geant4", "build_vs2026", "out/collab", "gui_runs"]
+    },
+    "licenses": {
+      "copied": ["payload=packaging/licenses/Geant4-LICENSE.txt", "Xerces-C-LICENSE.txt", "Xerces-C-NOTICE.txt"],
+      "project_code_status": "not_declared_in_repository",
+      "no_invented_license": true
+    },
+    "third_party_notices": "generated file; states Geant4/Qt/XercesC/datasets/compiler are host dependencies not bundled",
+    "bundled": false,
+    "not_included": ["Geant4 SDK", "Geant4 datasets", "Qt", "compiler", "Python", "GUI", "scenarios", "test harness", "docs/verification", "docs/collab", "other examples"]
+  },
+  "consumers": [
+    {"id": "C1", "file": "gui/g4usim_gui/core/experiment_bundle.py", "sha256": "f11508730846505004bda0117d12747fd8abc4cbe658e13762a9af2fb6296fb2", "symbols": ["export_bundle", "inspect_bundle", "_publish_directory"], "role": "K1 config bundle, staging/atomic publish, roles, manifest", "status": "exists", "k2_gap": "no source/CMake/build docs; replay depends on installed GUI"},
+    {"id": "C1b", "file": "gui/g4usim_gui/core/experiment_workflow.py", "sha256": "4efcf4f0443fce588780e7cee8ee363a6b62be829c723d4259b101b7ebe26325", "symbols": ["export"], "role": "GUI workflow bridge (passed/failed, experiment.bundle_exported)", "status": "exists"},
+    {"id": "C1c", "file": "gui/g4usim_gui/experiment_cli.py", "sha256": "20d7bb876ef91d80d31a4806640730dff011fd65ceb7204b9b323ec7920c74f6", "symbols": ["main"], "role": "headless CLI (export --destination)", "status": "exists", "k2_gap": "needs export-project"},
+    {"id": "C1d", "file": "gui/g4usim_gui/window/experiment.py", "sha256": "404d432487a0d0a1ab017eb3a4e88e230501301ad03f51e4e76979a8854df14d", "symbols": ["_export_bundle"], "role": "GUI dialog entry", "status": "exists", "k2_gap": "needs export Geant4 project action"},
+    {"id": "C2", "file": "gui/g4usim_gui/writers/package_writer.py", "sha256": "a0b79625b19423c64baea0b72b941e9941861e47017f289de2100ac31a49798f", "symbols": ["create_run_package", "_allocate_package", "_copy_or_generate_inputs", "_package_paths_text"], "role": "run package generation & input closure", "status": "exists"},
+    {"id": "C2b", "file": "gui/g4usim_gui/writers/main_ini_writer.py", "sha256": "6390d5edc8d1fa274f5c508ddf5a5e55608edc699abf98bb01fde136ed87aba2", "symbols": ["write_main_ini"], "role": "main.ini writer (absolute paths today)", "status": "exists", "k2_gap": "absolute dir/file/config must become relative in export"},
+    {"id": "C2c", "file": "gui/g4usim_gui/writers/macro_writer.py", "sha256": "984034b3ddd01230d4e7b8ad8183c33aa61e2c5ac56a65b8ba0c8534a78fd80a", "symbols": ["write_macro"], "role": "run.mac writer", "status": "exists"},
+    {"id": "C3", "file": "gui/g4usim_gui/core/run_editor_resources.py", "sha256": "51a5e11c53ff9072b5a07b174d24920cb3931c85338b0407d0316a6ea0609c46", "symbols": ["resource_fields", "materialize_run_resources", "materialize_geometry_file"], "role": "resource materialization + path rewrite", "status": "exists"},
+    {"id": "C4", "file": "gui/g4usim_gui/core/install_layout.py", "sha256": "b7988fc53e6ec1c5d1aae71e5cd75552591b2c87b2a81b80bf08fe36c19b3b71", "symbols": ["application_root", "default_backend_executable", "default_runs_root", "scripts_dir"], "role": "installed/dev resource location", "status": "exists", "k2_gap": "no export-template resource; installed GUI cannot export today"},
+    {"id": "C5", "file": "packaging/build_package.py", "sha256": "12c9e0ae10c4dd677741146ff1d217e3273faa173abde8fe82350e49fd23f3e9", "symbols": ["RESOURCES", "copy_tree"], "role": "Windows package layout (Inno recursive source)", "status": "exists", "k2_gap": "RESOURCES lacks export-template"},
+    {"id": "C5b", "file": "packaging/build_linux_package.py", "sha256": "12b4cea5ff9a04d799c3503fa6026db8fa1acb09a7131710797ec2daa6362cf2", "role": "Linux package built from windows.RESOURCES", "status": "exists"},
+    {"id": "C5c", "file": "packaging/installer.iss", "sha256": "5295d20088ee20a9565df24ec38ae9b64ca29a63f4c7ded3a7120baa39a90738", "role": "Inno Setup source recurses subdirs", "status": "exists"},
+    {"id": "C6", "file": "packaging/build_sdk_package.py", "sha256": "5819b0ce3b037cb8a61405f69312c244d587995284327e5ab63c5bc8f8123667", "symbols": ["build_sdk", "copy_development_tree"], "role": "existing vendored-SDK assembler (source tree + Geant4 SDK + probe)", "status": "exists", "k2_gap": "bundled SDK form, not generic export, not GUI-invoked"},
+    {"id": "C7", "file": "CMakeLists.txt", "sha256": "9fb42be167c22b55e3aa07d0edd46696dd4e95d661f8220a2df75786c055bbb6", "role": "build system; needs G4USIM_STANDALONE_EXPORT guard", "status": "exists", "k2_gap": "m0_* tests and scripts POST_BUILD copy assume GUI/scripts tree"},
+    {"id": "C7b", "file": "cmake/BuildIdentity.cmake", "sha256": "8d9a2d06210225baa884c5c68339a11211c2a30554f9929b75aa84c3826a51c1", "role": "git identity guarded by .git presence at source root", "status": "exists"},
+    {"id": "C7c", "file": "cmake/WindowsRuntime.cmake", "sha256": "48ea39aca32bfd60d1237e8ad05215499ee70735c1a5c86d50bbcc86411c4659", "role": "Windows long path/UTF-8 manifest", "status": "exists"},
+    {"id": "C7d", "file": "include/Core/BuildInfo.hh.in", "sha256": "1886acb1d4731fbe00ebd19b8864878a3faf2eca7449ee41748cb456051bd2a1", "role": "build info template (fingerprint/compiler/git)", "status": "exists"},
+    {"id": "C8", "file": "main.cc", "sha256": "a9dfdbb1a01ab6c77db36bb55aa814a53e98a4607f2b5c0130f5e53147d17a7c", "role": "CLI entry (config/macro/output/threads/seed/dry-run/capabilities/check-geant4-data)", "status": "exists"},
+    {"id": "C8b", "file": "src/Core/SimulationManager.cc", "sha256": "ddc95e5b4da8c16f22da92d17086216d44b88412ea345ff592a5027c9283622b", "role": "capabilities build identity; FinalizeRunSummary summary.Set block; messengers", "status": "exists"},
+    {"id": "C8c", "file": "src/Output/RunSummary.cc", "sha256": "3c6a5bf539a7d9b944eef5e5aa7b37986a9a1bd3aa2c5feb2e9042e045ad48b6", "role": "run_summary [Values]/run_metadata_json_v1", "status": "exists"},
+    {"id": "C8d", "file": "src/Core/Geant4DataLocator.cc", "sha256": "027a444c377b61fbb90ccbfa5d7b4718afb896964b97d41fb05f338b7f049477", "role": "Geant4 data discovery", "status": "exists"},
+    {"id": "C9", "file": "gui/g4usim_gui/core/wizard.py", "sha256": "36d0f4cfb4230907edb2ecc45a1fa1493a1a968f20393941a3b49ead6c3bfcb4", "symbols": ["SCENARIOS", "default_spec"], "role": "generated-mode representative S-B", "status": "exists"},
+    {"id": "C10", "file": "scripts/test_k1_bundle.py", "sha256": "80726fb8eeda65700169416b8a9711967ed15283ed8bbc22bbf20b42d8c216f3", "role": "reusable K1 bundle tests (regression must stay green on refactors)", "status": "exists"}
+  ],
+  "rejection_cases": [
+    {"id": "R1", "code": "destination_exists"},
+    {"id": "R2", "code": "destination_parent_missing"},
+    {"id": "R3", "code": "linked_or_ambiguous_path"},
+    {"id": "R4", "code": "selection_unavailable"},
+    {"id": "R5", "code": "external_or_missing_input"},
+    {"id": "R6", "code": "unsupported_feature"},
+    {"id": "R7", "code": "absolute_path_remaining"},
+    {"id": "R8", "code": "export_template_unavailable"},
+    {"id": "R9", "code": "destination_inside_source"},
+    {"id": "R10", "code": "input_changed_during_export"},
+    {"id": "R11", "code": "template_identity_mismatch"},
+    {"id": "R12", "code": "write_failed"}
+  ],
+  "positive_cases": [
+    {"id": "P1", "case": "S-A export", "checks": "files/manifest/identity; source untouched"},
+    {"id": "P2", "case": "S-B export", "checks": "same; no absolute paths"},
+    {"id": "P3", "case": "two exports same input", "checks": "tree+identity identical except created_utc/audit root"},
+    {"id": "P4", "case": "packaged template vs checkout template", "checks": "template_digest == 1862a858... both"},
+    {"id": "P5", "case": "standalone CMake configure+component tests", "checks": "no m0_*, component tests run"},
+    {"id": "P6", "case": "dry-run + 200 events in exported tree", "checks": "completed 200/200, summary/output present"}
+  ],
+  "controlled_change": {
+    "platforms": ["windows", "linux"],
+    "file": "src/Core/SimulationManager.cc",
+    "anchor": "FinalizeRunSummary summary.Set(...) block (baseline lines 713-731)",
+    "patch": "add one line: summary.Set(\"k2_export_probe\", \"k2-controlled-change-v1\");",
+    "diff_rule": "exactly 1 insertion, same file",
+    "expected": [
+      "rebuild succeeds and exe/component SHA change",
+      "capabilities source_fingerprint changes; build_git_commit unknown (source archive must not inherit tool repo identity)",
+      "run_summary.txt [Values] contains k2_export_probe = k2-controlled-change-v1",
+      "physics outputs byte-identical before/after (same platform/seed/events); mismatch is failure",
+      "no run may read the old tool install/build directories"
+    ]
+  },
+  "build_matrix": {
+    "windows": {
+      "os": "Windows 11 (DESKTOP-PA6LDOC)",
+      "generator": "Visual Studio 18 2026 (preset vs2026-x64)",
+      "cmake": ">=3.21",
+      "geant4": "11.3.2 at D:/ProgramFiles/Geant4 (GDML enabled; XercesC headers inside prefix)",
+      "qt5": "5.15.2 msvc2019_64",
+      "configure": "cmake --preset vs2026-x64 -DG4USIM_STANDALONE_EXPORT=ON -DGeant4_DIR=D:/ProgramFiles/Geant4/lib/cmake/Geant4 -DQt5_DIR=D:/ProgramFiles/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5",
+      "build": "cmake --build build_vs2026 --config Release --target G4UniversalSim parallelScoringCheck h2VolumeScoringCheck",
+      "ctest": "ctest --test-dir build_vs2026 -C Release -R component --output-on-failure",
+      "run": "build_vs2026/Release/G4UniversalSim.exe --config project/main.ini --macro project/macros/run.mac --output runs/k2a",
+      "data_check": "build_vs2026/Release/G4UniversalSim.exe --check-geant4-data"
+    },
+    "linux": {
+      "os": "Ubuntu 24.04 (WSL2) or native runner",
+      "geant4": "conda-forge geant4=11.3.2 with expat/zlib/freetype from same env (Qt/XercesC as conda deps)",
+      "configure": "cmake -S . -B build_linux -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DG4USIM_STANDALONE_EXPORT=ON",
+      "build": "cmake --build build_linux -j$(nproc) --target G4UniversalSim parallelScoringCheck h2VolumeScoringCheck",
+      "ctest": "ctest --test-dir build_linux -R component --output-on-failure",
+      "run": "./build_linux/G4UniversalSim --config project/main.ini --macro project/macros/run.mac --output runs/k2a",
+      "data_check": "./build_linux/G4UniversalSim --check-geant4-data"
+    },
+    "isolation": [
+      "build/run outside D:/Geant4/G4UniversalSim in <workdir>/{windows,linux}",
+      "do not inherit G4USIM_* or tool build dirs on PATH",
+      "explicit GEANT4_DATA_DIR / --check-geant4-data per platform",
+      "record versions, prefixes, capability JSON, exe/component SHA, summary/CSV SHA, dependency evidence (dumpbin/ldd)"
+    ]
+  },
+  "k2_2_files": {
+    "new": [
+      "gui/g4usim_gui/core/export_project.py",
+      "gui/g4usim_gui/core/export_support.py (only if K1 helpers are extracted unchanged)",
+      "packaging/export_template.py",
+      "packaging/build_export_template.py",
+      "scripts/test_k2_project_export.py",
+      "gui/smoke_tests/smoke_export_project.py",
+      "docs/独立工程导出.md"
+    ],
+    "modified": [
+      "gui/g4usim_gui/core/experiment_bundle.py (only re-export if helpers extracted; K1 tests green)",
+      "gui/g4usim_gui/experiment_cli.py (export-project)",
+      "gui/g4usim_gui/window/experiment.py",
+      "gui/g4usim_gui/main_window.py (menu action wiring)",
+      "gui/g4usim_gui/window/project.py (optional button)",
+      "CMakeLists.txt (G4USIM_STANDALONE_EXPORT guard; default OFF unchanged)",
+      "packaging/build_package.py (RESOURCES += export-template; build template)",
+      "packaging/build_linux_package.py (inherits RESOURCES)",
+      "scripts/run_m0_tests.py (register two cases)",
+      "docs/中文使用手册.md",
+      "docs/Linux构建与验证.md",
+      "packaging/README-package.md"
+    ],
+    "must_not_modify": [
+      "src/",
+      "include/",
+      "main.cc",
+      "docs/collab/decisions/*",
+      "docs/ROADMAP.md",
+      "docs/collab/CURRENT-SUPERVISION.md",
+      "STATUS.md",
+      "F3 files/evidence",
+      "H8 user changes",
+      ".gitignore"
+    ]
+  },
+  "k2_3_evidence": {
+    "root": "out/collab/20261107-k2-build",
+    "required": [
+      "windows/ and linux/ build+ctest logs",
+      "capabilities json + exe/component SHA",
+      "run summary + CSV SHA sets (S-A 200, S-B 1000)",
+      "dependency evidence (dumpbin /DEPENDENTS, ldd)",
+      "controlled-change.patch",
+      "before-after-files.sha256 + identity json",
+      "README.md with repro commands and unverified items"
+    ]
+  },
+  "acceptance": {
+    "freeze_gate": "ready_for_contract_review=true; stop writing after receipt",
+    "k2_2": [
+      "P1-P4 pass in static tests; R1-R12 each covered",
+      "GUI smoke covers enable/disable and error surfacing",
+      "template builder output digest == 1862a858...",
+      "standalone CMake configures and component tests pass",
+      "no product regressions: full m0 static/gui profiles green",
+      "docs updated and doc_links pass"
+    ],
+    "k2_3": [
+      "two platforms build/run from exported tree only",
+      "S-A 200/200 and S-B 1000/1000 completed with recorded identity",
+      "no dependency on tool install/build dirs",
+      "controlled change: 1-line diff, rebuild, summary key, physics outputs byte-identical",
+      "failures retained, no tolerance tuning"
+    ],
+    "not_claimed": [
+      "physics benchmark of new phenomena",
+      "cross-platform bitwise identity",
+      "signed/trusted provenance",
+      "bundling Geant4 SDK or datasets",
+      "GUI source export"
+    ]
+  }
+}

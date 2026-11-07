@@ -1,0 +1,283 @@
+{
+ "schema": "g4usim_k2_contract_parameters",
+ "version": 2,
+ "task": "K2-1",
+ "revision": "r2",
+ "created_utc": "2026-11-07T06:06:00Z",
+ "previous_revision": {
+  "revision": "r1",
+  "contract_sha256": "a02b4f8baf7b246caefc85b652c9fe846b3bf21fe629a7747030137159b70f4d",
+  "parameters_sha256": "b0b2bb35b84775f60d351dfa8103a3d1926b40c521692f7211a14f26091f45d7",
+  "receipt_sha256": "a562761e75e9585e8458f6a629face365749b11c1372a15b3d94d51f441051d0",
+  "closure_sha256": "c8e2a0b79cb4164fc6ea43d6cfda65ea2ac52f7c5fbadc9facd9ee2bc2fd9157",
+  "snapshot_path": "out/collab/k2-contract-independent/r1/",
+  "snapshot_note": "reviewer-owned read-only snapshot; identity.json lists 16 mirrored files; all 16 SHA verified by this revision; no file changed"
+ },
+ "worktree": {
+  "root": "D:/Geant4/G4UniversalSim",
+  "head": "e44fb444c81aa8cd787b8ad23d106bb12344c4ab",
+  "branch": "roadmap/Q2-scientific-baselines",
+  "dirty_entries": 102,
+  "preexisting_modifications": [
+   "docs/ROADMAP.md",
+   "docs/collab/CURRENT-SUPERVISION.md",
+   "scripts/measure_output_performance.py"
+  ],
+  "note": "supervisor-owned edits; not touched by K2-1"
+ },
+ "r2_corrections": [
+  {
+   "id": "path-base",
+   "source_evidence": [
+    "src/Config/ConfigManager.cc:165-172 GetString returns GetValue(section,key).AsString() unchanged",
+    "src/Core/SimulationManager.cc:934-940 materialsFile_ = GetStringCompat(...); FileUtils::IsFile(materialsFile_); LoadMaterials(materialsFile_)",
+    "src/Core/SimulationManager.cc:955-960 geometryConfigFile_ = GetStringCompat(...); FileUtils::IsFile; LoadGeometryConfig",
+    "main.cc:642-655 only explicit --working-directory performs std::filesystem::current_path"
+   ],
+   "frozen_rule": "project/ relative paths are resolved against the export root (process cwd); main.ini writes project/config/materials.ini, project/config/geometry.ini, project/config/parallel.ini, runs/default/output; run command must cd to export root; no --working-directory variant accepted"
+  },
+  {
+   "id": "ctest-selection",
+   "source_evidence": [
+    "CMakeLists.txt:135-140 test h2_volume_scoring_check LABELS \"h2;component\"",
+    "CMakeLists.txt:151-156 test parallel_scoring_component LABELS \"h3;component\"",
+    "test names differ: only parallel_scoring_component contains the word component, so -R component matches 1 test"
+   ],
+   "frozen_rule": "use ctest -L component; assert Total Tests: 2 and both names before running; each platform command is a single copyable line"
+  },
+  {
+   "id": "template-identity",
+   "historical_baseline": {
+    "template_files": 308,
+    "template_digest": "1862a858a532f0ff9178c77631308cb2c689bc3dd5f4e683faf2217cdc2110c8",
+    "template_blob_bytes": 30292,
+    "closure_files": 314,
+    "closure_digest": "c8e2a0b79cb4164fc6ea43d6cfda65ea2ac52f7c5fbadc9facd9ee2bc2fd9157",
+    "closure_blob_bytes": 30941,
+    "status": "pre-implementation snapshot only; NOT a frozen export-template identity"
+   },
+   "frozen_rule": "K2-2 commits packaging/export_template_manifest.json (members path/role/sha256/bytes + collection-rule version + algorithm sha256_sorted_sha256_path_lines_v1); its digest is the template identity; development checkout and packaged template must generate the same manifest for the same stable candidate; exporter verifies per-file SHA and records manifest_digest + computed_digest; mismatch is template_identity_mismatch; normal template changes update the manifest and freeze a new identity without reopening the contract; no hardcoded historical digest"
+  },
+  {
+   "id": "physics-output-comparison",
+   "source_evidence": [
+    "src/Output/OutputManager.cc:289-298 scorer_statistics header includes fom_per_s and run_wall_time_s",
+    "src/Output/OutputManager.cc:318-325 writes ToString(HistoryStatistics::FigureOfMerit(relError, wallSeconds)) and ToString(wallSeconds)"
+   ],
+   "frozen_rule": "pure science CSVs (hits, event_edep, hist raw/weighted, dose, fluence, ...) byte-identical; scorer_statistics excludes run_wall_time_s and fom_per_s then all remaining columns, row count, row order and identities strictly equal (no new tolerance; full-file SHA recorded only); run_summary.txt, run_metadata.json, execution_id, absolute output dirs and timing/log fields are recorded only, never required equal"
+  },
+  {
+   "id": "staging-semantics",
+   "frozen_rule": "any failure cleans the staging directory; diagnostics go to a separate evidence directory; no branch keeps staging for diagnosis; no half-written destination"
+  },
+  {
+   "source_evidence": [
+    "gui/g4usim_gui/writers/package_writer.py:158-175 _allocate_package resolves package_dir/config_dir/macro_dir/logs_dir/output_dir/main_ini_path/run_macro_path/materials_ini_path/geometry_ini_path",
+    "gui/g4usim_gui/writers/main_ini_writer.py:129 writes dir = {package.output_dir}",
+    "gui/g4usim_gui/writers/main_ini_writer.py:132 writes file = {package.materials_ini_path}",
+    "gui/g4usim_gui/writers/main_ini_writer.py:136 writes config = {package.geometry_ini_path}"
+   ],
+   "frozen_rule": "existing writers do NOT produce relative paths and must not be changed; exporter generates the complete run package untouched in an isolated staging directory, then rewrites only the whitelisted keys to export-root-relative values ([materials] file, [geometry] config, optional [parallel_world] geometry_config, optional [run] macro, [output] dir); all other bytes preserved; staging paths never enter the manifest",
+   "whitelist_keys": [
+    "[materials]/file",
+    "[geometry]/config",
+    "[parallel_world]/geometry_config",
+    "[run]/macro",
+    "[output]/dir"
+   ],
+   "id": "s-b-writer-absolute-paths"
+  },
+  {
+   "frozen_rule": "login source for generated inputs is a stable logical name generated:<logical-name> (main.ini, materials.ini, geometry.ini, run.mac, optional parallel.ini); random staging absolute paths and per-run temp names are forbidden in original_path or any manifest field; opened_project keeps absolute original project path",
+   "source_kind_enum": [
+    "opened_project",
+    "generated"
+   ],
+   "generated_logical_names": [
+    "generated:main.ini",
+    "generated:materials.ini",
+    "generated:geometry.ini",
+    "generated:run.mac",
+    "generated:parallel.ini"
+   ],
+   "id": "manifest-generated-logical-source"
+  },
+  {
+   "frozen_rule": "two exports of the same input to different destinations: content identity (all files excluding export-manifest.json) must be byte-identical and identity.digest equal; manifest must be equal field-by-field except exactly one field created_utc; no other variable field may be registered; manifest byte-equality is not a criterion",
+   "allowed_manifest_difference": [
+    "created_utc"
+   ],
+   "content_identity_excludes": [
+    "export-manifest.json"
+   ],
+   "id": "p3-exact-difference"
+  },
+  {
+   "frozen_rule": "use ctest -L \"^component$\"; first assert Total Tests: 2 and the discovered test-name set is exactly {h2_volume_scoring_check, parallel_scoring_component}; then run; asserting only the count is a failure",
+   "label_regex": "^component$",
+   "expected_names": [
+    "h2_volume_scoring_check",
+    "parallel_scoring_component"
+   ],
+   "forbidden": [
+    "-R component",
+    "count-only assertion"
+   ],
+   "id": "ctest-exact-names"
+  }
+ ],
+ "frozen_contract": {
+  "path": "docs/collab/outbox/20261107-k2-contract.md",
+  "revision": "r2 (supplemented after web-snapshot review)",
+  "sha256": "e27f5a81c83b7af554a0097e4a96ccc0965cdbe3872ccec7dd5f859697931b4f",
+  "lines": 457,
+  "bytes": 50038
+ },
+ "representative_projects": {
+  "S-A": {
+   "root": "examples/07_parallel_world_box",
+   "files": {
+    "main.ini": "3b910234669554b98ef69f2170a793ff1de2d5e3f79419b2cda1cfd231f21ad4",
+    "geometry.ini": "ac7b7488c25c297fe053ee780d7700bdd101720566a4c3b57f9c4c9b342e78aa",
+    "materials.ini": "34b49e7d980fd90ab3758452479f9c0b78aad540e1360cc1b3f9448fe2cd49c6",
+    "parallel.ini": "3350c6c662c872acf660c0ad5a1eafa48478c338b0136be8492dbbb41f4e440c",
+    "run.mac": "9ae3ca2b7ff8a3c51a775be5d03905ba5d6baaeac540a89e116b8ad9c54eb8a2",
+    "README.md": "31f14e2fedd981a3391bd81ba6ca7638708ed74ca5a6448e62c23d318da0c486"
+   }
+  },
+  "S-B": {
+   "source": "gui/g4usim_gui/core/wizard.py default_spec single_target",
+   "generation": "writers main_ini_writer/write_materials_ini/write_geometry_ini/macro_writer via create_run_package"
+  }
+ },
+ "closure": {
+  "file": "out/collab/20261107-k2-contract/author/closure-files.sha256",
+  "lines": 314,
+  "blob_bytes": 30941,
+  "digest": "c8e2a0b79cb4164fc6ea43d6cfda65ea2ac52f7c5fbadc9facd9ee2bc2fd9157",
+  "algorithm": "sha256_sorted_sha256_path_lines_v1"
+ },
+ "acceptance_changes_r2": {
+  "P4": "development vs packaged template both generate the same export_template_manifest.json; template_identity.computed_digest == manifest_digest; export identity.digest equal; no hardcoded historical digest",
+  "P5": "ctest -L \"^component$\": assert Total Tests: 2 and name set exactly {h2_volume_scoring_check, parallel_scoring_component}, then both pass; count-only assertions rejected",
+  "P6": "dry-run and 200-event run executed from export root",
+  "P7": "poisoned template config/materials.ini; export-root run still succeeds and reads only project/config/*",
+  "P8": "S-B generation instrumentation covered by static tests: staging->rewrite->scan pipeline, generated logical source, P3 independence",
+  "P2": "S-B exported tree: staging generated untouched (writer absolute paths), whitelisted keys rewritten to export-root-relative; no absolute/staging paths in main.ini; inputs[].original_path uses generated:<name> and is identical across two exports",
+  "P3": "two exports of same input to different destinations: content identity (excluding export-manifest.json) byte-identical and equal digest; manifest equal except created_utc only; no other difference registered"
+ },
+ "implementation_scope": {
+  "new": [
+   "gui/g4usim_gui/core/export_project.py",
+   "packaging/export_template.py",
+   "packaging/export_template_manifest.json",
+   "packaging/build_export_template.py",
+   "scripts/test_k2_project_export.py",
+   "gui/smoke_tests/smoke_export_project.py",
+   "docs/独立工程导出.md"
+  ],
+  "modified": [
+   "gui/g4usim_gui/core/experiment_bundle.py (only helper extraction with re-export, K1 tests green)",
+   "gui/g4usim_gui/experiment_cli.py",
+   "gui/g4usim_gui/window/experiment.py",
+   "gui/g4usim_gui/main_window.py",
+   "gui/g4usim_gui/window/project.py (optional)",
+   "CMakeLists.txt (G4USIM_STANDALONE_EXPORT option)",
+   "packaging/build_package.py (RESOURCES + build_export_template)",
+   "packaging/build_linux_package.py (same source list)",
+   "scripts/run_m0_tests.py (two Case registrations)",
+   "docs/中文使用手册.md",
+   "docs/Linux构建与验证.md",
+   "packaging/README-package.md"
+  ],
+  "forbidden": [
+   "src/",
+   "include/",
+   "main.cc",
+   "docs/collab/decisions/*",
+   "docs/ROADMAP.md",
+   "docs/collab/CURRENT-SUPERVISION.md",
+   "STATUS.md",
+   "F3 files/evidence",
+   ".gitignore"
+  ]
+ },
+ "status": {
+  "ready_for_contract_review": true,
+  "build_executed": false,
+  "export_executed": false,
+  "geant4_launched": false,
+  "product_code_changed": false,
+  "git_commit": false
+ },
+ "r2_supplement": {
+  "revision_scope": "r2 supplement after web-snapshot independent review (out/collab/k2-contract-independent/r1/web-review.md)",
+  "web_review": {
+   "path": "out/collab/k2-contract-independent/r1/web-review.md",
+   "agreement": "P0 path/cwd, P0 ctest selector, P0 template identity stage, P1 S-B writer relative-path unsupported; additional P3 vs S-B temporary-audit-path contradiction",
+   "status": "static review only; did not close K2-1"
+  },
+  "s_b_generation": {
+   "source_evidence": [
+    "gui/g4usim_gui/writers/package_writer.py:158-175 _allocate_package resolves package_dir/config_dir/macro_dir/logs_dir/output_dir/main_ini_path/run_macro_path/materials_ini_path/geometry_ini_path",
+    "gui/g4usim_gui/writers/main_ini_writer.py:129 writes dir = {package.output_dir}",
+    "gui/g4usim_gui/writers/main_ini_writer.py:132 writes file = {package.materials_ini_path}",
+    "gui/g4usim_gui/writers/main_ini_writer.py:136 writes config = {package.geometry_ini_path}"
+   ],
+   "frozen_rule": "existing writers do NOT produce relative paths and must not be changed; exporter generates the complete run package untouched in an isolated staging directory, then rewrites only the whitelisted keys to export-root-relative values ([materials] file, [geometry] config, optional [parallel_world] geometry_config, optional [run] macro, [output] dir); all other bytes preserved; staging paths never enter the manifest",
+   "whitelist_keys": [
+    "[materials]/file",
+    "[geometry]/config",
+    "[parallel_world]/geometry_config",
+    "[run]/macro",
+    "[output]/dir"
+   ]
+  },
+  "manifest_inputs": {
+   "frozen_rule": "login source for generated inputs is a stable logical name generated:<logical-name> (main.ini, materials.ini, geometry.ini, run.mac, optional parallel.ini); random staging absolute paths and per-run temp names are forbidden in original_path or any manifest field; opened_project keeps absolute original project path",
+   "source_kind_enum": [
+    "opened_project",
+    "generated"
+   ],
+   "generated_logical_names": [
+    "generated:main.ini",
+    "generated:materials.ini",
+    "generated:geometry.ini",
+    "generated:run.mac",
+    "generated:parallel.ini"
+   ]
+  },
+  "p3_difference": {
+   "frozen_rule": "two exports of the same input to different destinations: content identity (all files excluding export-manifest.json) must be byte-identical and identity.digest equal; manifest must be equal field-by-field except exactly one field created_utc; no other variable field may be registered; manifest byte-equality is not a criterion",
+   "allowed_manifest_difference": [
+    "created_utc"
+   ],
+   "content_identity_excludes": [
+    "export-manifest.json"
+   ]
+  },
+  "ctest_exact_names": {
+   "frozen_rule": "use ctest -L \"^component$\"; first assert Total Tests: 2 and the discovered test-name set is exactly {h2_volume_scoring_check, parallel_scoring_component}; then run; asserting only the count is a failure",
+   "label_regex": "^component$",
+   "expected_names": [
+    "h2_volume_scoring_check",
+    "parallel_scoring_component"
+   ],
+   "forbidden": [
+    "-R component",
+    "count-only assertion"
+   ]
+  },
+  "preserved_evidence": {
+   "prior_revision_contract_sha256": "04fbabd5b420f98539ad716df3420f0f65307dab8205741d05e4bf98211d4212",
+   "r2_pre_supplement_draft_dir": "out/collab/20261107-k2-contract/author/drafts/r2-pre-supplement/",
+   "r2_pre_supplement_files": {
+    "contract.md": "04fbabd5b420f98539ad716df3420f0f65307dab8205741d05e4bf98211d4212",
+    "parameters.json": "fa9a8efaede6b3e55dd16964ffb547224e04f20dde053911da8e0d1a603fa0b3",
+    "receipt.md": "024681e429466d58da70771371b9605bfaa49cf9679a7e65f44a95d3b2bcd278"
+   },
+   "r1_snapshot_note": "reviewer-owned out/collab/k2-contract-independent/r1/ remains untouched (identity.json 16 files verified)"
+  },
+  "appendix_correction": "appendix acceptance table P5 row was still `ctest -L component`; corrected to `-L \"^component$\"` with exact-name assertion (within same r2 supplement, no scope change)"
+ }
+}

@@ -1,3 +1,9 @@
+## 2026-11-07 F3既有数据收尾，K2合同并行
+
+R3唯一预注册新批36次正常退出，32科学比较、536登记产物SHA和12内存身份独核通过；hits/csv 6.89743%、mesh/csv 11.08757%、mesh/root 5.70326%仍超原5%门，资源inconclusive。原三批分别保留，不混批、不追加性能测试、不优化、不称F3关闭。具体CPU/I/O/调度/电源原因未证实。[本批结果](docs/verification/f3-r3-baseline-20261107/README.md)。测量脚本的Windows/Linux CLI顺序与渲染检查通过，不代表Linux资源或物理验证。
+
+K2已按ROADMAP允许的K1/I2依赖与科研波次并行，K2-1真实消费者和独立工程导出合同已独审冻结，K2-2已实际派工实现，尚未验收。[固定清单](docs/collab/decisions/20261107-k2-closeout.md)。F3/F7原验收与依赖保持。
+
 ## 2026-11-07 F3第二批执行完成，资源门仍阻断
 
 用户批准的唯一第二批36次exit0，32科学比对、536份登记产物SHA及12内存身份独核通过；hits/root MAD5.5262255765%超过冻结5%，资源仍inconclusive。首批原失败与全部数据保留，不混样本或择优；按方案停止追加测量与优化，F3未关闭，F7未启动。[第二批证据](docs/verification/f3-baseline-batch2-20261107/README.md)；[原决定及授权](docs/collab/decisions/20261107-f3-noise-decision.md)。

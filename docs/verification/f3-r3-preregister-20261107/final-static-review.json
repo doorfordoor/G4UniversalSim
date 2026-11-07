@@ -1,0 +1,60 @@
+{
+  "schema": "g4usim_f3_noise_r3_final_static_review_v1",
+  "date": "2026-11-07",
+  "status": "one_blocker_before_freeze",
+  "decision": "fix_owned_descendant_cleanup_then_ready_for_one_N2000_batch_with_launcher_log_binding",
+  "blocking_findings": [
+    {
+      "priority": "P1",
+      "title": "outer measurement timeout kills only direct subprocess and may leave owned descendants running",
+      "evidence": ["out/collab/f3-noise-r3/run-one-fixed-batch.py:39-45", "out/collab/f3-noise-r3/run-one-fixed-batch.py:52", "out/collab/f3-preflight-independent/r2/run-fixed-baseline.py:12-14", "scripts/measure_output_performance.py:231-235", "scripts/measure_output_performance.py:279-303"],
+      "trigger": "each backend run remains under its own timeout but total measurement phase exceeds the outer 3600 seconds",
+      "impact": "measurement Python or Geant4 backend can survive the interrupted driver and continue writing outputs",
+      "minimum_fix": "bind the launched measurement process and all its descendants to an owned process-tree termination mechanism; on timeout terminate and reap only that owned tree; refresh driver and plan hashes before freeze"
+    }
+  ],
+  "launch_conditions": [
+    {
+      "priority": "P2",
+      "title": "outer job stdout/stderr persistence depends on launcher",
+      "evidence": ["out/collab/f3-noise-r3/run-one-fixed-batch.py:35-47", "out/collab/f3-noise-r3/run-one-fixed-batch.py:97-99"],
+      "minimum_fix": "launcher redirects both outer streams to a durable file inside this batch; inner phase and all science logs already use files"
+    }
+  ],
+  "verified_scope": {
+    "events": 2000,
+    "threads": 2,
+    "seed": 4242,
+    "blocked_rotation": true,
+    "commands": 3,
+    "warmup": 4,
+    "timing": 20,
+    "memory": 12,
+    "simulation_invocations": 36,
+    "formal_science": {"total": 32, "timing_r0_selfcheck": 4, "timing_pair": 16, "memory": 12, "memory_path": "base/memory/memory", "independent_process_per_comparison": true},
+    "original_comparator_unchanged": true,
+    "science_wrapper_EVENT_override": 2000,
+    "source_and_plan_sha_guard": true,
+    "single_batch_marker": true,
+    "wait_min_available_bytes": 6442450944,
+    "settle_seconds": 30,
+    "resource_wait_max_hours": 12,
+    "all_four_relative_MAD_max": 0.05,
+    "old_batches_not_pooled": true,
+    "future_F3_3_original_acceptance_unchanged": true
+  },
+  "not_verified": ["Geant4 execution", "performance or MAD outcome", "science result", "fresh execution memory availability", "outer launcher stdout/stderr redirection"],
+  "sha256": {
+    "independent_review": "7d70b1cc748e741b0e4ba12b3816b5db3bbb223c3ec823c1fb440038a73574c3",
+    "measure": "167ba575bda73fa68e2a01a3b898a38f77bf8465c89cf5110296c7ef35f4c656",
+    "compare_n": "5fbda942e62f8a8cc51a8f23c4932c073f278a2abf0efee1d573fe0ef1548294",
+    "science_batch": "bf0d0d199665395792ab397879238c39e4c793e509b429c5948734158bf55bf1",
+    "job_driver": "4453faa2ef3099e5a737f3499ce8cc1de336e0d7f0101a1ae55cc49a2a94eb91",
+    "run_plan_draft": "72df74cf9cbf2939bac7e474ab45c51fb6f39bfe72c1e804482fee147ad311aa",
+    "frozen_science_compare": "c8195197b9bd7278f74d689edff83dda247af1b4c686f41b3bcd0e7fc982bd82",
+    "original_contract": "7d0049ec9b4f727ca3251e5eebc8cca73046680a5a1abc709945f6d1b3f0b97b"
+  },
+  "read_only_source_review": true,
+  "no_simulations_or_benchmarks": true,
+  "scope": "fixed N2000 R3 candidates, three commands, 32 science comparisons, driver guards and timeout ownership; did not edit product or original files"
+}
