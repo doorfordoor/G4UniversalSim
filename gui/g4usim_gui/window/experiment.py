@@ -4,8 +4,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from PySide6.QtCore import QTimer
-from PySide6.QtWidgets import QFileDialog, QMessageBox
+from PySide6.QtCore import QProcess, Qt, QTimer
+from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox
 
 from g4usim_gui.core.i18n import ui_format, ui_text
 
@@ -114,6 +114,7 @@ class ExperimentMixin:
         panel.set_state(state)
         panel.set_busy(service.busy or self._experiment_loading or
                        bool(getattr(self, '_workspace_fault', '')))
+        self.refresh_export_project_action()
 
     def _bind_started_run_display(self):
         """Bind at the existing runner's actual Starting signal, not preparation.
@@ -160,6 +161,83 @@ class ExperimentMixin:
             scope = 'unverified'
         self.run_page.set_run_display_scope(scope, binding)
         self._render_run_chip()
+
+    # -- K2-2 standalone project export ----------------------------------
+
+    def export_project_disabled_reason(self) -> str:
+        from g4usim_gui.core.export_project import project_export_problem
+
+        if getattr(self, '_closing', False):
+            return ui_text('The window is closing.')
+        busy = (self.runner.is_running()
+                or self._macro_inspection.state() != QProcess.NotRunning
+                or bool(getattr(getattr(self, 'experiment', None), 'busy', False))
+                or bool(getattr(self, '_experiment_loading', False)))
+        if busy:
+            return ui_text('Export is unavailable while a run or input inspection is active.')
+        if getattr(self, '_workspace_fault', ''):
+            return ui_text('Resolve the editor recovery fault before exporting.')
+        return project_export_problem(getattr(self, 'project', None))
+
+    def refresh_export_project_action(self) -> None:
+        action = getattr(self, 'export_project_action', None)
+        if action is None:
+            return
+        reason = self.export_project_disabled_reason()
+        action.setEnabled(not reason)
+        action.setToolTip(reason or ui_text(
+            'Export the current project as a standalone CMake and Geant4 source package.'))
+
+    def export_geant4_project(self) -> None:
+        self.refresh_export_project_action()
+        if self.export_project_disabled_reason():
+            return
+        directory = QFileDialog.getExistingDirectory(
+            self, ui_text('Select export parent directory'))
+        if not directory:
+            return
+        from PySide6.QtWidgets import QInputDialog
+        name, accepted = QInputDialog.getText(
+            self, ui_text('Export Geant4 project'),
+            ui_text('New project directory name'))
+        if not accepted:
+            return
+        if not name or name in ('.', '..') or any(char in name for char in '/\\:'):
+            QMessageBox.warning(self, ui_text('Export Geant4 project'),
+                                ui_text('Choose a new simple directory name.'))
+            return
+        self._export_project_to(Path(directory) / name)
+
+    def _export_project_to(self, destination: Path, *, interactive: bool = True) -> dict | None:
+        """Headless-callable export used by the menu and the offscreen smoke."""
+        from g4usim_gui.core import export_project as exporter
+
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        try:
+            try:
+                selection = exporter.selection_from_project(getattr(self, 'project', None))
+                result = exporter.export_project(Path(destination), selection)
+            except exporter.ExportError as error:
+                message = f'{error.code} {error.kind}: {error.message}'
+                if error.details:
+                    message += '\n\n' + '\n'.join(error.details[:10])
+                self.run_page.append_status_message(message)
+                if interactive:
+                    QMessageBox.critical(self, ui_text('Export Geant4 project'), message)
+                return None
+            payload_identity = result.get('payload_identity') or {}
+            digest = str(payload_identity.get('digest') or '')
+            self.run_page.append_status_message(
+                ui_text('Geant4 export written: ') + str(result.get('destination'))
+                + ' (' + digest + ')')
+            if interactive:
+                QMessageBox.information(
+                    self, ui_text('Export Geant4 project'),
+                    ui_text('Standalone project exported to ') + str(result.get('destination'))
+                    + '\n\n' + ui_text('Payload identity: ') + digest)
+            return result
+        finally:
+            QApplication.restoreOverrideCursor()
 
     def _experiment_action(self, action):
         if action == 'cancel':

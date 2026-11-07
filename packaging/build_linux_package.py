@@ -171,7 +171,12 @@ def main():
     libraries = collect_libraries(binaries, package, args.patchelf)
     (package / "bin/geant4-data.txt").write_text("# Select matching Geant4 data explicitly; or install the reviewed data artifact.\n", encoding="utf-8")
     for resource in windows.RESOURCES:
+        if resource == windows.EXPORT_TEMPLATE_RESOURCE:
+            # Materialized from packaging/export_template_manifest.json below;
+            # the repository has no export-template/ directory.
+            continue
         windows.copy_tree(ROOT / resource, package / resource)
+    windows.build_export_template(package)
     for name in ("README.md", "CHANGELOG.md"):
         shutil.copy2(ROOT / name, package / name)
     shutil.copytree(ROOT / "packaging/licenses", package / "licenses")

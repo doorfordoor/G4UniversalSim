@@ -173,6 +173,7 @@ class ProjectMixin:
             ui_format("Project: {name}", name=project.projectName or ui_text("untitled"))
         )
         self.build_command_preview(show_errors=False)
+        self.refresh_export_project_action()
 
     def _update_project_from_page(self) -> None:
         if getattr(self, '_workspace_fault', '') and not self._history_restoring:

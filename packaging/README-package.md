@@ -18,6 +18,10 @@
 - 命令行：`bin\G4UniversalSim.exe --config <主配置.ini> --macro <宏.mac>`，详见 `docs\中文使用手册.md`。
 - 场景包（`scenarios\`）的生成与分析脚本、合并与 JSON 导出需要本机安装 Python 3（`python` 在 PATH 中，或设置 `G4USIM_PYTHON` 指向 python.exe）。
 
+## 独立 Geant4 工程模板
+
+安装包内 `export-template/` 是由 `packaging/build_export_template.py` 从仓库单一来源生成的独立工程模板（含 `export_template_manifest.json` 身份清单）。GUI/CLI 的“导出 Geant4 工程”只复制该模板并重写项目输入，不从开发树或 Git 读取；打包时生成器校验模板身份与仓库提交清单一致，不一致即失败。模板不含 Geant4 SDK、物理数据、Qt 或 GUI；详见 `docs\独立工程导出.md`。
+
 ## 许可
 
 第三方组件及其许可见 `THIRD_PARTY_NOTICES.md` 与 `licenses\`。

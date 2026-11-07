@@ -3,6 +3,13 @@
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 project(G4UniversalSim VERSION 1.0.0 LANGUAGES CXX)
 
+# K2-2: the exported standalone project ships a template copy of this file.
+# With G4USIM_STANDALONE_EXPORT=ON the Python-driven m0 regression suite (which
+# needs the GUI/test tree) is not registered, and scripts/ is not copied next to
+# the executable; the C++ application and its component tests build unchanged.
+# The checkout default stays OFF so the developer tree keeps its CTest surface.
+option(G4USIM_STANDALONE_EXPORT "Configure the exported standalone project" OFF)
+
 # CMake 4.x may decode localized MSVC /showIncludes output with the wrong
 # Windows code page. The resulting mojibake prefix prevents Ninja from
 # tracking *any* included headers, so incremental builds can retain stale
@@ -155,23 +162,25 @@ if(BUILD_TESTING)
         LABELS "h3;component"
         TIMEOUT 180
     )
-    find_package(Python3 COMPONENTS Interpreter QUIET)
-    if(Python3_Interpreter_FOUND)
-        foreach(profile static gui backend integration)
-            add_test(
-                NAME m0_${profile}
-                COMMAND ${Python3_EXECUTABLE} -B
-                        ${PROJECT_SOURCE_DIR}/scripts/run_m0_tests.py
-                        --profile ${profile}
-                        --executable $<TARGET_FILE:G4UniversalSim>
-                        --merge-executable $<TARGET_FILE:mergeHistograms>
-            )
-            set_tests_properties(m0_${profile} PROPERTIES
-                LABELS "m0;${profile}"
-                SKIP_RETURN_CODE 2
-                TIMEOUT 2400
-            )
-        endforeach()
+    if(NOT G4USIM_STANDALONE_EXPORT)
+        find_package(Python3 COMPONENTS Interpreter QUIET)
+        if(Python3_Interpreter_FOUND)
+            foreach(profile static gui backend integration)
+                add_test(
+                    NAME m0_${profile}
+                    COMMAND ${Python3_EXECUTABLE} -B
+                            ${PROJECT_SOURCE_DIR}/scripts/run_m0_tests.py
+                            --profile ${profile}
+                            --executable $<TARGET_FILE:G4UniversalSim>
+                            --merge-executable $<TARGET_FILE:mergeHistograms>
+                )
+                set_tests_properties(m0_${profile} PROPERTIES
+                    LABELS "m0;${profile}"
+                    SKIP_RETURN_CODE 2
+                    TIMEOUT 2400
+                )
+            endforeach()
+        endif()
     endif()
 endif()
 
@@ -182,8 +191,11 @@ endif()
 set(G4USIM_RUNTIME_DIRS
     config
     macros
-    scripts
 )
+
+if(NOT G4USIM_STANDALONE_EXPORT)
+    list(APPEND G4USIM_RUNTIME_DIRS scripts)
+endif()
 
 foreach(runtime_dir ${G4USIM_RUNTIME_DIRS})
     if(EXISTS "${PROJECT_SOURCE_DIR}/${runtime_dir}")

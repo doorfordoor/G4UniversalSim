@@ -253,4 +253,9 @@ cmake -S /mnt/d/Geant4/G4UniversalSim -B $HOME/g4build114   -DCMAKE_BUILD_TYPE=R
 - 不证明 Linux 上任何物理结果与 Windows 一致——测试只覆盖配置、生命周期、文件契约与物理量在给定容差内的既有断言；
 - 不证明 GUI 在真实桌面环境（X11/Wayland 非 offscreen）可用；
 - 断言数是"已执行断言的下界"，不是覆盖率；
-- 本文档中的路径是本机 WSL 的实际布局，CI 中由 `${{ runner.temp }}` 生成。
+- 本文档中的路径是本机 WSL 的实际布局，CI 中由 `${{ runner.temp }}` 生成。
+
+## 10. 独立工程导出（K2-2 交叉引用）
+
+K2-2 新增的“导出独立 Geant4 工程”在 Linux 上没有专用构建；导出树在 Linux 用 CMake 构建并使用 `ctest --test-dir build_linux -L "^component$"` 运行两个组件测试。导出/构建的路径语义（cwd=导出根）、模板身份与限制见[独立工程导出](独立工程导出.md)。本节只确认该功能不改变 Linux 既有构建与验证结论。
+

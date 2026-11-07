@@ -252,3 +252,12 @@ F4依赖维护：安装统一走gui/requirements.txt，当前验证线PySide6>=6
   逐位一致，也不得宣称旧 csh/batch 可重放。回归 `gui/smoke_tests/smoke_session_panel.py`、
   `gui/smoke_tests/smoke_session_backend.py`（真实 2 轮源会话 + 按钮重放 2 轮）与
   `scripts/test_session_replay.py`（1/2 worker 正例与拒绝矩阵），注册在 `scripts/run_m0_tests.py`。
+
+## 导出独立 Geant4 工程（K2-2）
+
+- 入口：`main_window` 的 Project 菜单动作只调用 `window/experiment.py` 的 `export_geant4_project()`；真正的数据准备/写入在 `core/export_project.py`（无 Qt），GUI 只做目录/名称选择与消息展示。
+- 启用条件：动作在项目不可导出时禁用，原因来自 `core/export_project.py` 的 `project_export_problem()`；不得在 GUI 里另写一套校验或静默降级。
+- 后端按进程 cwd 解析路径；导出只重写 `project/main.ini` 中已存在的白名单键（`[output] dir`、`[materials] file`、`[geometry] config`、`[parallel_world] geometry_config`、已有 `[run] macro`），不插入新键，不改变物理/计分语义。
+- 模板身份来自 `packaging/export_template_manifest.json` 与安装包 `export-template/`；不得硬编码历史 digest（如 1862a858），checkout 与打包模板必须同身份。
+- 导出的工程不含 GUI、后端可执行文件、Geant4 SDK/数据；GUI 不得声称导出成功即代表工程可构建或物理正确。相关事实与限制同步到 `docs/独立工程导出.md`、`docs/功能支持矩阵.md`。
+

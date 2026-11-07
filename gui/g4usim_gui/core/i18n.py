@@ -1725,6 +1725,19 @@ ZH_CN.update({
     "Geometry layers table": "几何层表",
     "Boolean operations table": "布尔操作表",
     "Open {page}. Shortcut: Ctrl+Alt+{number}.": "打开{page}页。快捷键：Ctrl+Alt+{number}。",
+    "Project": "项目",
+    "Export Geant4 project...": "导出 Geant4 工程…",
+    "Export Geant4 project": "导出 Geant4 工程",
+    "Select export parent directory": "选择导出父目录",
+    "New project directory name": "新工程目录名",
+    "Choose a new simple directory name.": "请选择新的简单目录名。",
+    "Export is unavailable while a run or input inspection is active.": "运行或输入检查进行中，无法导出。",
+    "The window is closing.": "窗口正在关闭。",
+    "Resolve the editor recovery fault before exporting.": "请先处理编辑器恢复故障再导出。",
+    "Export the current project as a standalone CMake and Geant4 source package.": "将当前工程导出为可独立构建的 CMake/Geant4 源码包。",
+    "Geant4 export written: ": "Geant4 工程已导出：",
+    "Standalone project exported to ": "独立工程已导出到 ",
+    "Payload identity: ": "载荷身份：",
     "Restored CURRENT package materials, geometry, source, physics, fields and bias rules, plus snapshot run/scoring settings. Validate and generate a new package. Macro behavior, unsaved drafts and historical run success are not inherited.": "已恢复配置包当前的材料、几何、源、物理、场和偏置规则，以及快照中的运行与计分设置。请重新校验并生成新包；宏的实际行为、未保存草稿和历史运行成功资格不会继承。"
 })
 

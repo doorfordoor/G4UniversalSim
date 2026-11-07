@@ -49,7 +49,9 @@ SYSTEM_DLL = re.compile(r"^(api-ms-|ext-ms-|kernel32|user32|gdi32|advapi32|shell
                         r"comdlg32|comctl32|crypt32|bcrypt|ntdll|rpcrt4|shlwapi|version|winmm|imm32|"
                         r"secur32|netapi32|userenv|dbghelp|psapi|setupapi|cfgmgr32|iphlpapi|mpr|"
                         r"opengl32|glu32|dwmapi|uxtheme|wtsapi32|normaliz|winspool|d3d|dxgi|dwrite)", re.I)
-RESOURCES = ["config", "scenarios", "scripts", "docs", "examples", "test/geometry", "test/macros"]
+RESOURCES = ["config", "scenarios", "scripts", "docs", "examples", "test/geometry",
+             "test/macros", "export-template"]
+EXPORT_TEMPLATE_RESOURCE = "export-template"
 SKIP_DIRS = {"__pycache__", "output", ".pytest_cache"}
 
 
@@ -218,6 +220,28 @@ def build_python_helper(work: Path) -> Path:
     result_path = work / "dist" / "G4USimPython"
     freeze_identity.seal(result_path, kind="python", sources=after)
     return result_path
+
+
+def build_export_template(package: Path) -> dict:
+    """Materialize export-template/ from the committed template manifest."""
+    from build_export_template import build_export_template as build
+
+    result = build(package, repo_root=ROOT)
+    log(f"export template: {result['members']} files, identity "
+        f"{result['identity']['value'][:16]}")
+    if result["identity"]["value"] != _committed_template_identity():
+        raise SystemExit("export template identity differs from the manifest")
+    return result
+
+
+def _committed_template_identity() -> str:
+    gui_root = str(ROOT / "gui")
+    if gui_root not in sys.path:
+        sys.path.insert(0, gui_root)
+    from g4usim_gui.core.export_project import load_template_layout
+
+    layout = load_template_layout(ROOT)
+    return layout.manifest["identity"]["value"]
 
 
 def third_party_notices(package: Path) -> None:
@@ -425,7 +449,12 @@ def main() -> int:
         "# Check with: bin\\G4UniversalSim.exe --check-geant4-data\n", encoding="utf-8")
 
     for resource in RESOURCES:
+        if resource == EXPORT_TEMPLATE_RESOURCE:
+            # Materialized from packaging/export_template_manifest.json below;
+            # the repository has no export-template/ directory.
+            continue
         copy_tree(ROOT / resource, package / resource)
+    build_export_template(package)
     for file in ("README.md", "CHANGELOG.md"):
         shutil.copy2(ROOT / file, package / file)
     shutil.copy2(ROOT / "packaging" / "README-package.md", package / "README-package.md")

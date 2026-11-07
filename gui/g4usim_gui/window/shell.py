@@ -340,6 +340,17 @@ class ShellMixin:
         self._refresh_recent_menu()
         self._create_history_actions()
 
+        project_menu = self.menuBar().addMenu(self.tr("Project"))
+        project_menu.setProperty('i18nSource_menuTitle', 'Project')
+        self.project_menu = project_menu
+        self.export_project_action = project_menu.addAction(
+            self.tr("Export Geant4 project..."))
+        self.export_project_action.setProperty(
+            'i18nSource_actionText', 'Export Geant4 project...')
+        self.export_project_action.triggered.connect(self.export_geant4_project)
+        project_menu.aboutToShow.connect(self.refresh_export_project_action)
+        self.refresh_export_project_action()
+
         view_menu = self.menuBar().addMenu(self.tr("View"))
         self.workspace_layout.add_menu(view_menu)
         theme_menu = view_menu.addMenu(self.tr("Theme"))

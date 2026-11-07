@@ -62,6 +62,9 @@ def parser() -> argparse.ArgumentParser:
     export = commands.add_parser("export", allow_abbrev=False)
     export.add_argument("--destination", type=Path, required=True)
     export.add_argument("--resource-policy", type=Path)
+    export_project = commands.add_parser("export-project", allow_abbrev=False)
+    export_project.add_argument("--destination", type=Path, required=True)
+    export_project.add_argument("--template-root", type=Path)
     return result
 
 
@@ -288,6 +291,29 @@ def load_input(args):
     return snapshot
 
 
+def _export_project_command(args):
+    """Qt-free K2-2 export of a project as a standalone CMake/Geant4 package."""
+    from g4usim_gui.core import export_project as exporter
+
+    if getattr(args, "bundle", None) is not None:
+        raise CliError("arguments",
+                       "export-project needs --project (a project directory or JSON)")
+    try:
+        selection = exporter.selection_from_path(args.project)
+        result = exporter.export_project(args.destination,
+                                         selection,
+                                         template_root=args.template_root)
+    except exporter.ExportError as exc:
+        raise CliError(exc.kind, exc.message) from exc
+    identity = result.get("payload_identity") or {}
+    return ({"status": "passed",
+             "destination": result.get("destination"),
+             "export_manifest_sha256": result.get("export_manifest_sha256"),
+             "payload_identity": identity,
+             "template_identity": result.get("manifest", {}).get("template_identity")},
+            0, None)
+
+
 def execute(args):
     from PySide6.QtCore import QCoreApplication, QProcess
     from g4usim_gui.core.edit_snapshot import project_for_snapshot
@@ -375,7 +401,10 @@ def main(argv=None) -> int:
         command = args.command
         # Dependency and backend diagnostics never share the JSON transport.
         with redirect_stdout(sys.stderr):
-            record, code, reason = execute(args)
+            if command == "export-project":
+                record, code, reason = _export_project_command(args)
+            else:
+                record, code, reason = execute(args)
         emit({"schema": SCHEMA, "command": command, "ok": code == 0,
               "record": record, "error": None if reason is None else {"code": reason,
               "message": record.get("reason", reason) if isinstance(record, dict) else reason}})
