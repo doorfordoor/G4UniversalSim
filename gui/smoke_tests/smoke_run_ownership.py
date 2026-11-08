@@ -171,9 +171,9 @@ class Harness:
         assert predicate(), "timeout: " + label
         assert not self.errors, "Qt callback failures: " + "\n".join(self.errors)
 
-    def project(self, *, valid=True):
+    def project(self, *, valid=True, parent=None):
         self.counter += 1
-        directory = self.root / f"fixture-{self.counter:03d}"
+        directory = (parent or self.root) / f"fixture-{self.counter:03d}"
         directory.mkdir()
         ini, macro = directory / "main.ini", directory / "run.mac"
         ini.write_text("[run]\ninteractive = false\n", encoding="utf-8")
@@ -184,16 +184,19 @@ class Harness:
                             outputDir=str(directory / "output"), threads=1 if valid else 0)
 
     def manifest(self, count=2, *, valid=True):
-        projects = [self.project(valid=valid) for _ in range(count)]
+        # Real scans own a container with distinct child packages. Keep actual
+        # path validation enabled while substituting only the transport child.
+        self.counter += 1
+        scan_root = self.root / f"scan-{self.counter:03d}"
+        scan_root.mkdir()
+        projects = [self.project(valid=valid, parent=scan_root) for _ in range(count)]
         points = [ScanPoint(index=i, value=str(i), package_dir=p.workspaceRoot,
                             output_dir=p.outputDir, main_ini=p.configPath, macro=p.macroPath,
                             seed=i + 10) for i, p in enumerate(projects)]
-        if not valid:
-            for point in points:
-                point.main_ini += ".missing"
         return ScanManifest(name="AUD03", parameter="run.seed", parameter_label="seed",
-                            values=[p.value for p in points], scan_dir=projects[0].workspaceRoot,
-                            created="lifecycle-fixture", points=points)
+                            values=[p.value for p in points], scan_dir=str(scan_root),
+                            created="lifecycle-fixture", points=points,
+                            threads=1 if valid else 0)
 
     def command(self, project):
         return [sys.executable, "-u", str(self.script), str(self.children), "0.18"]
@@ -409,6 +412,16 @@ def rejection_and_failures(h: Harness):
 
 
 def scan_failures_and_cancel(h: Harness):
+    # Missing copied inputs are now rejected before queue admission. Separately
+    # retain per-point validation failures below using invalid thread settings.
+    owner = BackendRunOwnership()
+    scan = h.scan(owner)
+    missing = h.manifest(2)
+    missing.points[0].main_ini += ".missing"
+    rejected_started = []
+    scan.pointStarted.connect(rejected_started.append)
+    assert scan.start(missing, sys.executable, str(h.root), [0, 1]) is False
+    assert not owner.busy and not rejected_started and scan._runner._run_claim is None
     for kind in ("validation", "FailedToStart", "cancel-active", "cancel-starting", "cancel-gap"):
         owner = BackendRunOwnership()
         scan, runner = h.scan(owner), h.runner(owner)

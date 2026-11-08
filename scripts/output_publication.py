@@ -1,5 +1,6 @@
 """Publication facts shared by the CSV merger and output-extension CLI."""
 from dataclasses import dataclass
+import json
 from pathlib import Path
 import sys
 
@@ -29,6 +30,13 @@ def finish_publication(temporary: Path | None, output: Path,
             # A disconnected diagnostic stream must not mask the write/link result.
             try:
                 print(message, file=sys.stderr)
+                # Separate machine facts from the human diagnostic. Consumers
+                # still require a normal successful process and a valid target.
+                print("G4USIM_PUBLICATION_RESULT " + json.dumps({
+                    "schema": "g4usim_publication_v1", "published": published,
+                    "output": str(output), "warnings": [message],
+                    "residual_temporary": str(temporary),
+                }, ensure_ascii=True), file=sys.stderr)
             except (OSError, ValueError):
                 pass
             return PublicationResult(output, published, (message,), temporary)

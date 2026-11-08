@@ -360,13 +360,14 @@ class ScanPage(QWidget):
                                              prefix=target.name + ".", suffix=".tmp", delete=False) as handle:
                 temporary = Path(handle.name)
                 writer = csv.writer(handle)
-                header = ["point", self._manifest.parameter, "state", "completed_events"]
+                header = ["point", self._manifest.parameter, "state", "completed_events", "trust_level", "exit_code"]
                 if metric:
                     header += [f"{metric[0]}/{metric[1]}", "unit", "rel_error", "key",
                                "normalization", "uncertainty_estimator", "uncertainty_status"]
                 writer.writerow(header)
                 for result in self._results:
-                    row = [result.index, result.value, result.state, result.completed_events]
+                    row = [result.index, result.value, result.state, result.completed_events,
+                           result.trust_level, result.exit_code]
                     if metric:
                         value = result.metrics.get(metric)
                         method, status = self._uncertainty(result)
@@ -397,7 +398,7 @@ class ScanPage(QWidget):
             for column, text in enumerate(cells):
                 item = QTableWidgetItem(text)
                 if column == 2 and result.reason:
-                    item.setToolTip(result.reason)
+                    item.setToolTip(f"{result.reason}\n{result.trust_level}")
                 self.table.setItem(row, column, item)
         self.table.resizeColumnsToContents()
         self._draw()

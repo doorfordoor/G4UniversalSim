@@ -28,7 +28,7 @@ import json
 import math
 import re
 import warnings
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 
 import numpy as np
@@ -44,6 +44,7 @@ class Series:
     y: np.ndarray
     yerr: np.ndarray | None = None
     edges: bool = False          # x holds bin edges -> step plot
+    categories: list[str] | None = None  # bar: this series' own sparse volume keys
 
 
 @dataclass
@@ -62,6 +63,7 @@ class Plot:
     value_label: str = ""
     # (message template, values): translated and formatted by the GUI (i18n.ui_format)
     notes: list[tuple[str, dict]] = field(default_factory=list)
+    run_id: int | None = None
 
 
 @dataclass(frozen=True)
@@ -194,7 +196,8 @@ def scorer_plot(output_dir: str | Path, dataset: DataSet) -> Plot:
     unit = rows[0]["unit"] if rows else ""
     plot = Plot(f"{scorer} / {quantity}", "volume", f"{quantity} [{unit}]", "bar",
                 categories=[r["key"] for r in rows])
-    plot.series.append(Series(output.name, np.arange(len(rows)), values, errors))
+    plot.series.append(Series(output.name, np.arange(len(rows)), values, errors,
+                              categories=list(plot.categories)))
     plot.notes.append(("Approximate uncertainty: {methods}; unavailable error bars are hidden ({statuses}).",
                        {"methods": ", ".join(sorted({m for m, _ in evidence})),
                         "statuses": ", ".join(sorted({v for _, v in evidence}))}))
@@ -212,6 +215,7 @@ class MeshData:
     axes: tuple[str, str, str]
     centres: list[np.ndarray]    # cell centres per axis: mm (box meshes) or bin indices
     coordinate_unit: str = "bin" # "mm" when the centres are positions
+    edges: list[np.ndarray] = field(default_factory=list)  # n+1 actual boundaries per axis
 
 
 @verified_operation
@@ -244,18 +248,20 @@ def load_mesh(output_dir: str | Path, dataset: DataSet) -> MeshData:
         bins, unit, value = data.bins, data.unit, data.value
         error = np.ma.array(np.abs(value) * data.rel_error, mask=~data.uncertainty_available)
     axes = tuple(meta.get(prefix + "axes", "i0,i1,i2").split(","))
-    centres = []
+    centres, edges = [], []
     coordinate_unit = "bin"
     if prefix + "size_mm" in meta and prefix + "center_mm" in meta and meta.get(prefix + "shape") == "box":
         half = [float(v) for v in meta[prefix + "size_mm"].split(",")]
         centre = [float(v) for v in meta[prefix + "center_mm"].split(",")]
         for axis in range(3):
-            width = 2 * half[axis] / bins[axis]
-            centres.append(centre[axis] - half[axis] + (np.arange(bins[axis]) + 0.5) * width)
+            edges.append(np.linspace(centre[axis] - half[axis],
+                                     centre[axis] + half[axis], bins[axis] + 1))
+            centres.append((edges[-1][:-1] + edges[-1][1:]) / 2)
         coordinate_unit = "mm"
     else:
         centres = [np.arange(n, dtype=float) for n in bins]
-    return MeshData(mesh, quantity, unit, bins, value, error, axes, centres, coordinate_unit)
+        edges = [np.arange(n + 1, dtype=float) - .5 for n in bins]
+    return MeshData(mesh, quantity, unit, bins, value, error, axes, centres, coordinate_unit, edges)
 
 
 def mesh_profile(data: MeshData, axis: int, label: str = "") -> Plot:
@@ -281,14 +287,18 @@ def mesh_map(data: MeshData, axis_x: int, axis_y: int) -> Plot:
         image, image_error = value.T, None if error is None else error.T
     else:
         image, image_error = value, error
-    cx, cy = data.centres[axis_x], data.centres[axis_y]
-
-    def span(c):
-        step = c[1] - c[0] if len(c) > 1 else 1.0
-        return c[0] - step / 2, c[-1] + step / 2
+    # A single centre cannot determine a physical width. Keep the reader's
+    # boundaries, including for singleton axes, rather than inventing 1 mm.
+    edges = data.edges
+    if not edges:
+        if data.coordinate_unit != "bin":
+            raise ValueError("Physical mesh boundaries are unavailable")
+        edges = [np.arange(n + 1, dtype=float) - .5 for n in data.bins]
+    def span(axis):
+        return float(edges[axis][0]), float(edges[axis][-1])
     unit = f" [{data.coordinate_unit}]"
     plot = Plot(f"{data.mesh} / {data.quantity}", data.axes[axis_x] + unit, data.axes[axis_y] + unit, "image",
-                image=image, image_error=image_error, extent=(*span(cx), *span(cy)),
+                image=image, image_error=image_error, extent=(*span(axis_x), *span(axis_y)),
                 value_label=f"{data.quantity} [{data.unit}]")
     plot.notes.append(("Summed over {axis}; colour = {quantity} [{unit}].",
                        {"axis": data.axes[other], "quantity": data.quantity, "unit": data.unit}))
@@ -412,6 +422,7 @@ def build_plot(output_dir: str | Path, dataset: DataSet, per_primary: bool | Non
     if normalization == "per_event" and dataset.kind == "scorer" and dataset.detail[0] == "let":
         raise ValueError("LET is a ratio estimator; per-event normalization is not defined.")
     plot = _build_plot(output_dir, dataset, **options)
+    plot.run_id = dataset.run_id
     if normalization == "per_event" and dataset.kind != "pulse":
         events = run_events(output_dir, dataset.run_id)
         if events is None or events <= 0:
@@ -463,21 +474,46 @@ def matching(datasets: list[DataSet], key: str) -> DataSet | None:
     return next((d for d in datasets if d.key == key), None)
 
 
+def combine_bars(plots: list[Plot]) -> Plot:
+    """One sparse categorical mapping for both drawing and CSV export.
+
+    Missing volumes have no point; existing zero measurements remain points.
+    Reindex positions only, retaining each series' values and error masks.
+    """
+    categories = []
+    series_keys = []
+    for plot in plots:
+        for series in plot.series:
+            keys = series.categories if series.categories is not None else plot.categories
+            if len(keys) != len(series.y) or len(keys) != len(set(keys)):
+                raise ValueError("Bar series requires unique volume keys for every value")
+            series_keys.append((series, keys))
+            for key in keys:
+                if key not in categories:
+                    categories.append(key)
+    positions = {key: i for i, key in enumerate(categories)}
+    combined = [replace(series, x=np.array([positions[key] for key in keys]),
+                        categories=list(keys)) for series, keys in series_keys]
+    return replace(plots[0], categories=categories, series=combined,
+                   run_id=plots[0].run_id if all(p.run_id == plots[0].run_id for p in plots) else None)
+
+
 def write_plot_csv(plot: Plot, path: str | Path) -> None:
     """The plotted numbers, one row per point/bin (image: one row per cell)."""
     with Path(path).open("w", newline="", encoding="utf-8") as handle:
         writer = csv.writer(handle)
         if plot.kind == "image":
-            writer.writerow(["x_index", "y_index", "value", "error", "normalization", "value_label"])
+            writer.writerow(["x_index", "y_index", "value", "error", "normalization", "value_label", "run_id"])
             for (iy, ix), value in np.ndenumerate(plot.image):
-                writer.writerow([ix, iy, f"{value:.9g}", "" if plot.image_error is None or np.ma.is_masked(plot.image_error[iy, ix]) else f"{plot.image_error[iy, ix]:.9g}", plot.normalization, plot.value_label])
+                writer.writerow([ix, iy, f"{value:.9g}", "" if plot.image_error is None or np.ma.is_masked(plot.image_error[iy, ix]) else f"{plot.image_error[iy, ix]:.9g}", plot.normalization, plot.value_label, plot.run_id])
             return
         writer.writerow(["series", "x_low_or_x", "x_high", "label", "value", "error", "normalization", "value_label"])
         for series in plot.series:
             for i, value in enumerate(series.y):
                 low = series.x[i]
                 high = series.x[i + 1] if series.edges else ""
-                label = plot.categories[i] if plot.categories else ""
+                categories = series.categories if series.categories is not None else plot.categories
+                label = categories[i] if categories else ""
                 error = "" if series.yerr is None or np.ma.is_masked(series.yerr[i]) else f"{series.yerr[i]:.9g}"
                 writer.writerow([series.label, f"{low:.9g}", high if high == "" else f"{high:.9g}", label,
                                  f"{value:.9g}", error, plot.normalization, plot.ylabel])

@@ -232,6 +232,9 @@ class OutputPage(QWidget):
         self._merge_runner.stderrReceived.connect(lambda text: self.merge_log.insertPlainText(text))
         self._merge_runner.taskStarted.connect(lambda name: self.merge_log.insertPlainText(f"\n[start] {name}\n"))
         self._merge_runner.taskFinished.connect(self._on_merge_finished)
+        self._merge_runner.publicationWarning.connect(
+            lambda name, warning: self.merge_log.appendPlainText(
+                ui_format("Published copy cleanup warning: {warning}", warning=warning)))
         self._merge_runner.allFinished.connect(self._on_all_merges_finished)
         self._merge_runner.errorOccurred.connect(
             lambda msg: None if getattr(self.window(), "_closing", False)
@@ -411,6 +414,8 @@ class OutputPage(QWidget):
 
     def _on_extension_finished(self, extension_id: str, path: str, success: bool, message: str) -> None:
         state = "Completed" if success else "Failed"
+        if success and self._extension_runner.publication_warnings:
+            state = "Completed with cleanup warnings"
         self.extension_status.setText(ui_format("{extension}: {state}", extension=extension_id,
                                                 state=ui_text(state)))
         self.extension_log.appendPlainText(message)

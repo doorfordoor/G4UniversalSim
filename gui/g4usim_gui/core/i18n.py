@@ -20,6 +20,7 @@ LanguageCode = Literal["en", "zh_CN"]
 
 
 ZH_CN: dict[str, str] = {
+    "Completed with cleanup warnings": "已完成，临时文件清理有警告",
     "Next": "下一步",
     "Back": "上一步",
     "Finish": "完成",

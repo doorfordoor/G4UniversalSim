@@ -71,11 +71,22 @@ class ScanParameter:
 
 
 def parameters(base: ScanBase) -> list[ScanParameter]:
-    found = [ScanParameter("source.energy", "source energy", "energy"),
-             ScanParameter("source.particle", "source particle", "particle"),
-             ScanParameter("physics.reference", "physics reference list", "physics"),
-             ScanParameter("run.seed", "random seed", "int"),
-             ScanParameter("run.beam_on", "events (beamOn)", "int")]
+    found = []
+    # Match main_ini_writer's active-mode precedence; never mutate an inactive draft.
+    if not base.source.phase_space_file:
+        if base.source.gps_sources:
+            for source in base.source.gps_sources:
+                prefix = f"source.named.{source.editor_id}"
+                found.append(ScanParameter(prefix + ".particle", f"{source.name} particle", "particle"))
+                if source.energy_type in {"mono", "gauss"}:
+                    found.append(ScanParameter(prefix + ".energy", f"{source.name} energy", "energy"))
+        else:
+            found.extend([ScanParameter("source.energy", "source energy", "energy"),
+                          ScanParameter("source.particle", "source particle", "particle")])
+    if base.physics.mode == "reference":
+        found.append(ScanParameter("physics.reference", "physics reference list", "physics"))
+    found.extend([ScanParameter("run.seed", "random seed", "int"),
+                  ScanParameter("run.beam_on", "events (beamOn)", "int")])
     if base.geometry.mode in {"hierarchical", "hierarchical_boolean", "boolean_hierarchical", "boolean"}:
         for volume in base.geometry.volumes:
             if not volume.enabled or not volume.name.strip():
@@ -144,10 +155,17 @@ def _check_value(parameter: ScanParameter, value: str) -> None:
 
 def apply_value(base: ScanBase, parameter: ScanParameter, value: str) -> ScanBase:
     """A deep copy of the base with one setting changed."""
+    matches = [p for p in parameters(base) if p.key == parameter.key and p.kind == parameter.kind]
+    if len(matches) != 1:
+        raise ValueError(f"scan parameter is not supported by the active configuration: {parameter.key}")
     _check_value(parameter, value)
     point = copy.deepcopy(base)
     key = parameter.key
-    if key == "source.energy":
+    if key.startswith("source.named."):
+        identity, setting = key[len("source.named."):].rsplit(".", 1)
+        source = next(row for row in point.source.gps_sources if row.editor_id == identity)
+        setattr(source, setting, value)
+    elif key == "source.energy":
         point.source.energy = value
     elif key == "source.particle":
         point.source.particle = value
@@ -172,8 +190,10 @@ def apply_value(base: ScanBase, parameter: ScanParameter, value: str) -> ScanBas
         point.geometry.is_dirty = True
     else:
         raise ValueError(f"unknown scan parameter {key}")
-    for model in (point.source, point.physics, point.scoring):
-        model.is_dirty = True
+    if key.startswith("source."):
+        point.source.is_dirty = True
+    elif key.startswith("physics."):
+        point.physics.is_dirty = True
     return point
 
 
@@ -212,6 +232,10 @@ def validate_scan(base: ScanBase, parameter: ScanParameter, values: list[str]) -
 
 def validate_scan_report(base: ScanBase, parameter: ScanParameter, values: list[str]) -> ValidationReport:
     problems = ValidationReport()
+    if not values:
+        emit_diagnostic(problems, 'scan.value', 'error', 'no scan values',
+                        origin='scan_validation', editor='scan', field='values')
+        return problems
     for index, value in enumerate(values):
         try:
             point = apply_value(base, parameter, value)
@@ -295,6 +319,7 @@ def load_manifest(path: str | Path) -> ScanManifest:
     manifest = ScanManifest(**data, points=points)
     old_dir = Path(manifest.scan_dir) if manifest.scan_dir else None
     manifest.scan_dir = str(path.parent.resolve())   # the scan directory may have moved
+    manifest._origin_dir = old_dir  # runtime-only relocation context; not a second saved manifest
     for point in points:   # relative paths (bundled examples) and moved scans resolve in the new folder
         for name in ("package_dir", "output_dir", "main_ini", "macro"):
             setattr(point, name, _rebase(getattr(point, name), old_dir, path.parent.resolve()))
@@ -307,7 +332,7 @@ def _rebase(value: str, old_dir: Path | None, new_dir: Path) -> str:
     target = Path(value)
     if not target.is_absolute():
         return str(new_dir / target)
-    if not target.exists() and old_dir is not None:
+    if old_dir is not None:
         # CI hands out short (8.3) temporary paths: the manifest may spell the base
         # one way while resolve() expands it, so accept either spelling.
         for candidate, base in ((target, old_dir), (target.resolve(), old_dir.resolve())):
@@ -326,6 +351,8 @@ class PointResult:
     reason: str = ""
     completed_events: int | None = None
     metrics: dict[tuple[str, str, str], tuple[float, float, str]] = field(default_factory=dict)
+    trust_level: str = "unavailable"
+    exit_code: int | None = None
 
 
 def _summary_values(path: Path) -> dict[str, str]:
@@ -337,30 +364,17 @@ def _summary_values(path: Path) -> dict[str, str]:
 
 def collect(manifest: ScanManifest) -> list[PointResult]:
     """State, completed events and every scorer_statistics quantity of each point."""
-    from g4usim_gui.core.run_result import evaluate_run_result
+    from g4usim_gui.core.persisted_run_evidence import read_persisted_run_evidence
     from g4usim_gui.output.provenance import output_evidence
     results = []
     for point in manifest.points:
         output = Path(point.output_dir)
         status_file = Path(point.package_dir) / "logs" / "run_status.json"
         summary = _summary_values(output / "run_summary.txt")
-        state, reason = "not_run", ""
-        if status_file.is_file():
-            try:
-                status = json.loads(status_file.read_text(encoding="utf-8"))
-                state = str(status.get("state", "unknown"))
-                reason = str(status.get("resultReason", status.get("errorMessage", "")))
-            except ValueError:
-                state, reason = "unknown", "run_status.json is unreadable"
-        elif summary:
-            # run outside the GUI runner: trust only a completed summary with all events
-            result = evaluate_run_result(output / "run_summary.txt", exit_code=0, summary_fresh=True)
-            state = result.state
-            reason = "Summary evidence only (no process record): " + result.reason
-        if state == "success":
-            result = evaluate_run_result(output / "run_summary.txt", exit_code=0, summary_fresh=True)
-            if result.state != "success":
-                state, reason = result.state, result.reason
+        process = read_persisted_run_evidence(output / "run_summary.txt", status_file)
+        state, reason = process.result.state, process.result.reason
+        if not status_file.exists() and not (output / "run_summary.txt").exists():
+            state = "not_run"
         try:
             events = int(summary["actual_completed_event_count"])
         except (KeyError, ValueError):
@@ -369,7 +383,8 @@ def collect(manifest: ScanManifest) -> list[PointResult]:
         try:
             evidence = output_evidence(output)
         except ValueError as error:
-            results.append(PointResult(point.index, point.value, "incomplete", str(error), events, {}))
+            results.append(PointResult(point.index, point.value, state,
+                reason + "; " + str(error), events, {}, process.trust_level, process.exit_code))
             continue
         if evidence.warnings:
             reason += "; " + "; ".join(evidence.warnings)
@@ -381,7 +396,8 @@ def collect(manifest: ScanManifest) -> list[PointResult]:
                         continue
                     metrics[(row["scorer"], row["quantity"], row["key"])] = (
                         float(row["value"]), float(row["rel_error"]), row["unit"])
-        results.append(PointResult(point.index, point.value, state, reason, events, metrics))
+        results.append(PointResult(point.index, point.value, state, reason, events, metrics,
+                                   process.trust_level, process.exit_code))
     return results
 
 
@@ -398,13 +414,13 @@ def write_results_csv(manifest: ScanManifest, results: list[PointResult], path: 
                       metric: tuple[str, str, str] | None) -> None:
     with Path(path).open("w", newline="", encoding="utf-8") as handle:
         writer = csv.writer(handle)
-        header = ["point", manifest.parameter, "state", "completed_events"]
+        header = ["point", manifest.parameter, "state", "completed_events", "trust_level", "exit_code"]
         if metric:
             header += [f"{metric[0]}/{metric[1]}", "unit", "rel_error", "key"]
         writer.writerow(header)
         for result in results:
             row = [result.index, result.value, result.state, "" if result.completed_events is None
-                   else result.completed_events]
+                   else result.completed_events, result.trust_level, result.exit_code]
             if metric:
                 value = result.metrics.get(metric)
                 row += [f"{value[0]:.9g}", value[2], f"{value[1]:.6g}", metric[2]] if value else ["", "", "", metric[2]]

@@ -1099,6 +1099,27 @@ struct SessionServer::Impl {
         }
 
         SessionJson::Json artifacts = SessionJson::Json::array();
+        if (manager) {
+            for (const auto& evidence : manager->CollectRunArtifacts(runId)) {
+                SessionJson::Json item;
+                item["path"] = evidence.path;
+                std::error_code relativeError;
+                const auto relative = std::filesystem::relative(evidence.path, outputRoot, relativeError);
+                item["relative_to_output"] = relativeError ? std::string() : relative.generic_string();
+                item["scope"] = ScopeName(evidence.scope);
+                item["run_id"] = OptionalInt(evidence.run_id);
+                item["thread_id"] = OptionalInt(evidence.thread_id);
+                item["sha256"] = OptionalString(evidence.sha256);
+                item["size_bytes"] = OptionalUInt(evidence.size_bytes);
+                item["integrity_status"] = evidence.integrity_status;
+                item["reason"] = evidence.reason;
+                artifacts.push_back(std::move(item));
+            }
+        }
+
+        // Artifact hashing can latch a new output failure. Determine all terminal
+        // and replay state only after that collection, not from the earlier flag.
+        if (manager) outputFailed = outputFailed || manager->HasOutputFailure();
         std::string receiptStatus = "completed";
         if (cancelled) {
             receiptStatus = "cancelled";
@@ -1121,24 +1142,6 @@ struct SessionServer::Impl {
                 replayInvalidReason = "the source session has a " + receiptStatus + " run";
             }
             replayCurrentRunStep = -1;
-        }
-
-        if (manager) {
-            for (const auto& evidence : manager->CollectRunArtifacts(runId)) {
-                SessionJson::Json item;
-                item["path"] = evidence.path;
-                std::error_code relativeError;
-                const auto relative = std::filesystem::relative(evidence.path, outputRoot, relativeError);
-                item["relative_to_output"] = relativeError ? std::string() : relative.generic_string();
-                item["scope"] = ScopeName(evidence.scope);
-                item["run_id"] = OptionalInt(evidence.run_id);
-                item["thread_id"] = OptionalInt(evidence.thread_id);
-                item["sha256"] = OptionalString(evidence.sha256);
-                item["size_bytes"] = OptionalUInt(evidence.size_bytes);
-                item["integrity_status"] = evidence.integrity_status;
-                item["reason"] = evidence.reason;
-                artifacts.push_back(std::move(item));
-            }
         }
 
         SessionJson::Json receipt;

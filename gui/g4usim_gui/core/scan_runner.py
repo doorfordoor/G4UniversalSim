@@ -15,6 +15,7 @@ from g4usim_gui.core.backend_run_ownership import BackendRunOwnership
 from g4usim_gui.core.i18n import ui_text
 from g4usim_gui.core.runner import G4USimRunner
 from g4usim_gui.core.scan import ScanManifest
+from g4usim_gui.core.scan_paths import prepare_scan_inputs
 
 
 class ScanRunner(QObject):
@@ -51,6 +52,15 @@ class ScanRunner(QObject):
             self.logLine.emit(ui_text("Another run already owns the backend process."))
             return False
         self._ownership_lease = lease
+        try:
+            external = prepare_scan_inputs(manifest)
+            for path in external:
+                self.logLine.emit(f"External scan dependency: {path}")
+        except Exception as error:
+            self._ownership.release(lease)
+            self._ownership_lease = None
+            self.logLine.emit(str(error))
+            return False
         self._manifest = manifest
         self._executable = executable
         self._workspace = workspace_root
@@ -96,7 +106,7 @@ class ScanRunner(QObject):
     def _start_point(self, index: int) -> None:
         point = self._manifest.points[index]
         project = G4USimProject(projectName=self._manifest.name, runInputMode="generated",
-                                executable=self._executable, workspaceRoot=self._workspace,
+                                executable=self._executable, workspaceRoot=point.package_dir,
                                 configPath=point.main_ini, macroPath=point.macro, outputDir=point.output_dir,
                                 threads=self._manifest.threads,
                                 # the point's own seed: a run.seed scan must not be overridden by the base seed

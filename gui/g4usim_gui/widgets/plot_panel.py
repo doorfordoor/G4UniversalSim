@@ -309,8 +309,9 @@ class PlotPanel(QWidget):
         sources = []
         if self.all_runs.isChecked():
             base = dataset.key.rsplit("/r", 1)[0]
+            sources.append((self._output_dir, dataset, ui_format("run {run}", run=dataset.run_id)))
             for other in self._datasets:
-                if other.key.rsplit("/r", 1)[0] == base:
+                if other.key != dataset.key and other.key.rsplit("/r", 1)[0] == base:
                     sources.append((self._output_dir, other, ui_format("run {run}", run=other.run_id)))
         else:
             sources.append((self._output_dir, dataset, Path(self._output_dir).name))
@@ -340,14 +341,16 @@ class PlotPanel(QWidget):
         try:
             plots = []
             sources = self._sources(dataset)
-            for directory, source, prefix in sources:
+            # Maps do not overlay: build only the current selection, so an
+            # unrelated run cannot replace it or fail its data load.
+            for directory, source, prefix in (sources[:1] if options.get("map") else sources):
                 plot = plot_data.build_plot(directory, source, normalization="per_event" if self.per_event.isChecked() else "total", **options)
                 for series in plot.series:
                     series.label = prefix if len(plot.series) == 1 else f"{prefix}: {series.label}"
                 plots.append(plot)
             main = plots[0]
             if main.kind == "image":
-                if len(plots) > 1:
+                if len(sources) > 1:
                     notes.append(ui_text("Maps show the main data set only; comparisons apply to profiles, "
                                          "spectra and totals."))
                 image = axes.imshow(main.image, origin="lower", aspect="auto", extent=main.extent,
@@ -358,18 +361,13 @@ class PlotPanel(QWidget):
                 bar.outline.set_edgecolor(colors.border_strong)
                 bar.set_label(main.value_label, color=colors.text)
             elif main.kind == "bar":
-                categories = []
-                for plot in plots:
-                    for name in plot.categories:
-                        if name not in categories:
-                            categories.append(name)
-                width = 0.8 / len(plots)
-                for n, plot in enumerate(plots):
-                    series = plot.series[0]
-                    lookup = dict(zip(plot.categories, zip(series.y, series.yerr)))
-                    xs = [i + (n - (len(plots) - 1) / 2) * width for i, c in enumerate(categories) if c in lookup]
-                    ys = [lookup[c][0] for c in categories if c in lookup]
-                    es = [lookup[c][1] for c in categories if c in lookup]
+                main = plot_data.combine_bars(plots)
+                categories = main.categories
+                width = 0.8 / len(main.series)
+                for n, series in enumerate(main.series):
+                    xs = series.x + (n - (len(main.series) - 1) / 2) * width
+                    ys = series.y
+                    es = series.yerr if series.yerr is not None else np.ma.masked_all(len(ys))
                     axes.bar(xs, ys, width, label=series.label)
                     available = [(x, y, e) for x, y, e in zip(xs, ys, es) if not np.ma.is_masked(e)]
                     if available:
@@ -382,8 +380,6 @@ class PlotPanel(QWidget):
                 axes.set_xticks(ticks)
                 axes.set_xticklabels([categories[i].rsplit("/", 1)[-1] for i in ticks], rotation=30, ha="right",
                                      fontsize=8)
-                main = plot_data.Plot(main.title, main.xlabel, main.ylabel, "bar", categories=categories,
-                                      series=[s for p in plots for s in p.series], notes=main.notes, normalization=main.normalization, value_label=main.value_label)
             else:
                 for plot in plots:
                     for series in plot.series:

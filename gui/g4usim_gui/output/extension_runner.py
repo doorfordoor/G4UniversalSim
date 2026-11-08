@@ -9,6 +9,7 @@ from pathlib import Path
 from PySide6.QtCore import QObject, QProcess, Signal
 
 from g4usim_gui.core import install_layout
+from g4usim_gui.output.publication_diagnostics import PublicationDiagnostics
 
 
 class OutputExtensionRunner(QObject):
@@ -23,6 +24,7 @@ class OutputExtensionRunner(QObject):
         self._process = QProcess(self)
         self._active: tuple[str, Path] | None = None
         self._cancelled = False
+        self._publication: PublicationDiagnostics | None = None
         self._process.readyReadStandardOutput.connect(self._read_stdout)
         self._process.readyReadStandardError.connect(self._read_stderr)
         self._process.finished.connect(self._on_finished)
@@ -30,6 +32,10 @@ class OutputExtensionRunner(QObject):
 
     def is_running(self) -> bool:
         return self._active is not None
+
+    @property
+    def publication_warnings(self) -> tuple[str, ...]:
+        return self._publication.warnings if self._publication else ()
 
     def _cli_script(self) -> Path:
         return install_layout.scripts_dir() / "run_output_extension.py"
@@ -59,6 +65,7 @@ class OutputExtensionRunner(QObject):
             raise ValueError("JSON export runs a Python script; install Python 3 or set G4USIM_PYTHON.")
         self._active = (extension_id, target)
         self._cancelled = False
+        self._publication = PublicationDiagnostics(target)
         self.stateChanged.emit(True)
         self._process.setProgram(python)
         self._process.setArguments([
@@ -89,6 +96,8 @@ class OutputExtensionRunner(QObject):
     def _read_stderr(self) -> None:
         chunk = bytes(self._process.readAllStandardError()).decode("utf-8", errors="replace")
         if chunk:
+            if self._publication is not None:
+                self._publication.feed(chunk)
             self.outputReceived.emit(chunk)
 
     def _complete(self, success: bool, message: str) -> None:
@@ -138,8 +147,9 @@ class OutputExtensionRunner(QObject):
         except (OSError, ValueError, TypeError, AttributeError) as error:
             self._complete(False, f"Cannot verify extension JSON: {error}")
             return
-        self._complete(True, f"JSON: {target}\nWarnings ({len(warnings)}): " +
-                       ("\n".join(map(str, warnings)) if warnings else "none"))
+        all_warnings = [*map(str, warnings), *self.publication_warnings]
+        self._complete(True, f"JSON: {target}\nWarnings ({len(all_warnings)}): " +
+                       ("\n".join(all_warnings) if all_warnings else "none"))
 
     @staticmethod
     def _reject_nonfinite(value: str) -> None:

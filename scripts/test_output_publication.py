@@ -40,6 +40,11 @@ def main() -> None:
             assert target.read_bytes() == residual.read_bytes() == expected
             assert str(residual) in diagnostics.getvalue()
             assert "[PublicationWarning] published:" in diagnostics.getvalue()
+            records = [json.loads(line.split(" ", 1)[1]) for line in diagnostics.getvalue().splitlines()
+                       if line.startswith("G4USIM_PUBLICATION_RESULT ")]
+            assert records == [{"schema": "g4usim_publication_v1", "published": True,
+                                "output": str(target), "warnings": list(result.warnings),
+                                "residual_temporary": str(residual)}]
             try:
                 publish(target)
             except FileExistsError:

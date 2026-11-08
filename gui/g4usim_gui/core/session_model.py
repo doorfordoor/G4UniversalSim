@@ -159,8 +159,46 @@ class ReceiptCheck:
     receipt: dict[str, Any] | None = field(default=None, compare=False)
 
 
+def _receipt_identity_reason(receipt: dict[str, Any], *, run_id: Any = None,
+                             request_id: Any = None, status: str = "",
+                             require_expected: bool = False) -> str:
+    """One semantic contract for inline and integrity-checked file receipts."""
+    if receipt.get("schema") != "g4usim_session_run_receipt_v1":
+        return "unknown_schema"
+    if type(receipt.get("run_id")) is not int or receipt["run_id"] < 0:
+        return "run_mismatch"
+    if type(receipt.get("run_request_id")) is not str or not receipt["run_request_id"]:
+        return "request_mismatch"
+    terminal_states = ("completed", "failed", "aborted", "cancelled")
+    if type(receipt.get("status")) is not str or receipt["status"] not in terminal_states:
+        return "status_mismatch"
+    if receipt["status"] == "completed":
+        artifacts = receipt.get("artifacts", [])
+        if receipt.get("output_failed") is True or (isinstance(artifacts, list) and any(
+                isinstance(item, dict) and item.get("integrity_status") == "unavailable"
+                for item in artifacts)):
+            return "artifact_unavailable"
+    if require_expected or run_id is not None:
+        if type(run_id) is not int or run_id < 0:
+            return "run_mismatch"
+    if require_expected or request_id is not None:
+        if type(request_id) is not str or not request_id:
+            return "request_mismatch"
+    if require_expected or status:
+        if type(status) is not str or status not in terminal_states:
+            return "status_mismatch"
+    if run_id is not None and receipt.get("run_id") != run_id:
+        return "run_mismatch"
+    if request_id is not None and receipt["run_request_id"] != request_id:
+        return "request_mismatch"
+    if status and receipt["status"] != status:
+        return "status_mismatch"
+    return ""
+
+
 def verify_receipt_reference(reference: Any, *, expected_run_id: Any = None,
-                             expected_run_request_id: Any = None) -> ReceiptCheck:
+                             expected_run_request_id: Any = None,
+                             expected_status: str = "") -> ReceiptCheck:
     """Verify ``{path,size_bytes,sha256}`` and load the closed receipt file.
 
     ``run_finished`` may carry the full receipt inline (``receipt``) or a
@@ -201,15 +239,11 @@ def verify_receipt_reference(reference: Any, *, expected_run_id: Any = None,
     if not isinstance(receipt, dict):
         return ReceiptCheck(False, "invalid_receipt", path=path_text,
                             size_bytes=len(data), sha256=actual)
-    if receipt.get("schema") != "g4usim_session_run_receipt_v1":
-        return ReceiptCheck(False, "unknown_schema", path=path_text,
-                            size_bytes=len(data), sha256=actual)
-    if expected_run_id is not None and receipt.get("run_id") != expected_run_id:
-        return ReceiptCheck(False, "run_mismatch", path=path_text,
-                            size_bytes=len(data), sha256=actual)
-    if (expected_run_request_id is not None
-            and str(receipt.get("run_request_id") or "") != str(expected_run_request_id)):
-        return ReceiptCheck(False, "request_mismatch", path=path_text,
+    reason = _receipt_identity_reason(receipt, run_id=expected_run_id,
+                                      request_id=expected_run_request_id,
+                                      status=expected_status)
+    if reason:
+        return ReceiptCheck(False, reason, path=path_text,
                             size_bytes=len(data), sha256=actual)
     return ReceiptCheck(True, "", path=path_text, size_bytes=len(data),
                         sha256=actual, receipt=receipt)
@@ -231,22 +265,27 @@ def receipt_check_for_event(event: dict[str, Any]) -> ReceiptCheck:
         return ReceiptCheck(False, "receipt_integrity_unknown")
     run_id = event.get("run_id")
     run_request_id = event.get("run_request_id")
-    status = str(event.get("status") or "")
+    status = event.get("status")
     inline = event.get("receipt")
     if isinstance(inline, dict):
-        if inline.get("schema") != "g4usim_session_run_receipt_v1":
-            return ReceiptCheck(False, "unknown_schema")
-        if run_id is not None and inline.get("run_id") != run_id:
-            return ReceiptCheck(False, "run_mismatch")
-        if str(inline.get("run_request_id") or "") != str(run_request_id or ""):
-            return ReceiptCheck(False, "request_mismatch")
-        if status and str(inline.get("status") or "") != status:
-            return ReceiptCheck(False, "status_mismatch")
+        reason = _receipt_identity_reason(inline, run_id=run_id,
+                                          request_id=run_request_id, status=status,
+                                          require_expected=True)
+        if reason:
+            return ReceiptCheck(False, reason)
         return ReceiptCheck(True, "", receipt=inline)
     reference = event.get("receipt_ref")
     if isinstance(reference, dict):
-        return verify_receipt_reference(reference, expected_run_id=run_id,
-                                        expected_run_request_id=run_request_id)
+        check = verify_receipt_reference(reference)
+        if not check.ok:
+            return check
+        reason = _receipt_identity_reason(check.receipt, run_id=run_id,
+                                          request_id=run_request_id, status=status,
+                                          require_expected=True)
+        if reason:
+            return ReceiptCheck(False, reason, path=check.path, size_bytes=check.size_bytes,
+                                sha256=check.sha256)
+        return check
     return ReceiptCheck(False, "missing_receipt")
 
 
@@ -283,6 +322,9 @@ def summarize_round(event: dict[str, Any], particle: str, energy_mev: Any) -> di
         "seed": (receipts.get("source") or {}).get("seed") if isinstance(receipts.get("source"), dict) else None,
         "receipt_ok": check.ok,
         "receipt_reason": check.reason,
+        "receipt_reference": ({"path": check.path, "size_bytes": check.size_bytes,
+                               "sha256": check.sha256}
+                              if check.ok and not isinstance(receipt, dict) and check.path else None),
         "receipt_path": check.path or str(event.get("receipt_path") or ""),
         "receipt_sha256": check.sha256 or str(event.get("receipt_sha256") or ""),
         "artifacts_truncated": bool(event.get("artifacts_truncated")),

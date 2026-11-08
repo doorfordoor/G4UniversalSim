@@ -11,9 +11,12 @@ executable that fails every point (the scan must finish, not hang).
 from __future__ import annotations
 
 import csv
+from contextlib import nullcontext
 from copy import deepcopy
 import json
+import hashlib
 import os
+import shutil
 import sys
 import tempfile
 from pathlib import Path
@@ -69,7 +72,10 @@ def main() -> None:
     expect_error(lambda: scan.expand_values("lin(1, 2, 1) MeV"), "at least 2")
     expect_error(lambda: scan.expand_values("lin(1, 2, 500) MeV"), "at most")
 
-    with tempfile.TemporaryDirectory(prefix="g4usim-scans-") as temp:
+    retained = os.environ.get("G4USIM_SCAN_SMOKE_ROOT")
+    if retained:
+        Path(retained).mkdir(parents=True, exist_ok=False)
+    with (nullcontext(retained) if retained else tempfile.TemporaryDirectory(prefix="g4usim-scans-")) as temp:
         runs = Path(temp)
         base = make_base(runs)
         keys = {p.key: p for p in scan.parameters(base)}
@@ -127,9 +133,10 @@ def main() -> None:
                                  "total", 10, 10, 2.0 * (i + 1), 0, 0, 0.1, 0, 0, 0, 0])
         (Path(manifest.points[1].package_dir) / "logs").mkdir(exist_ok=True)
         (Path(manifest.points[1].package_dir) / "logs/run_status.json").write_text(
-            json.dumps({"state": "failed", "resultReason": "Process exited with nonzero code."}), encoding="utf-8")
+            json.dumps({"state": "failed", "exitCode": 1, "exitStatus": "normal"}), encoding="utf-8")
         results = scan.collect(manifest)
-        assert [r.state for r in results] == ["success", "failed", "not_run"], [r.state for r in results]
+        assert [r.state for r in results] == ["incomplete", "failed", "not_run"], [r.state for r in results]
+        assert results[0].trust_level == "summary_only" and results[0].exit_code is None
         metric = ("dose", "weighted_dose", "/world_PV#0/Detector_PV#0")
         assert scan.metric_keys(results) == [metric]
         assert results[1].metrics[metric] == (4.0, 0.1, "Gy") and results[1].reason.startswith("Process exited")
@@ -174,7 +181,12 @@ def main() -> None:
         print("runner")
         page.set_base_provider(lambda: (make_base(runs), str(runs), sys.executable, str(ROOT)))
         page.refresh_base()
-        page.load_scan(seeds.scan_dir)
+        seed_root = Path(seeds.scan_dir)
+        seed_before = {str(p.relative_to(seed_root)): hashlib.sha256(p.read_bytes()).hexdigest()
+                       for p in seed_root.rglob("*") if p.is_file()}
+        seed_copy = runs / "seed-copy"
+        shutil.copytree(seed_root, seed_copy)
+        page.load_scan(seed_copy)
         finished: list[tuple[int, str]] = []
         page.runner.pointFinished.connect(lambda index, state: finished.append((index, state)))
         loop = QEventLoop()
@@ -190,8 +202,17 @@ def main() -> None:
         # python.exe is not the backend: every point fails, and the scan still finishes
         assert [i for i, _ in finished] == [0, 1] and all(state != "success" for _, state in finished), finished
         assert not page.runner.is_running() and page.run_button.isEnabled()
-        states = [r.state for r in scan.collect(seeds)]
+        copied_seeds = page.manifest()
+        states = [r.state for r in scan.collect(copied_seeds)]
         assert all(state in {"failed", "incomplete"} for state in states), states
+        for point in copied_seeds.points:
+            status_path = Path(point.package_dir) / "logs/run_status.json"
+            receipt = json.loads(status_path.read_text(encoding="utf-8"))
+            assert receipt["workingDirectory"] == point.package_dir
+            assert point.main_ini in receipt["arguments"] and point.output_dir in receipt["arguments"]
+            assert receipt["exitCode"] != 0
+        assert seed_before == {str(p.relative_to(seed_root)): hashlib.sha256(p.read_bytes()).hexdigest()
+                               for p in seed_root.rglob("*") if p.is_file()}, "B process must not touch A"
         # Destroy the page (and its QProcess) while the QApplication still exists.
         page.close()
         page.deleteLater()

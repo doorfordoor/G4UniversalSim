@@ -6,6 +6,7 @@ from PySide6.QtCore import QObject, QProcess, Signal
 
 from g4usim_gui.output.merge_plan import MergeTask
 from g4usim_gui.output.provenance import output_evidence
+from g4usim_gui.output.publication_diagnostics import PublicationDiagnostics
 
 
 class MergeRunner(QObject):
@@ -16,6 +17,7 @@ class MergeRunner(QObject):
     taskFinished = Signal(str, int)
     allFinished = Signal()
     errorOccurred = Signal(str)
+    publicationWarning = Signal(str, str)
 
     def __init__(self, parent: QObject | None = None) -> None:
         super().__init__(parent)
@@ -25,6 +27,7 @@ class MergeRunner(QObject):
         self._stdout_file = None
         self._stderr_file = None
         self._logs_dir = Path.cwd()
+        self._publication: PublicationDiagnostics | None = None
 
         self._process.readyReadStandardOutput.connect(self._read_stdout)
         self._process.readyReadStandardError.connect(self._read_stderr)
@@ -66,6 +69,7 @@ class MergeRunner(QObject):
             self.allFinished.emit()
             return
         self._current = self._queue.pop(0)
+        self._publication = PublicationDiagnostics(self._current.output_file)
         if self._current.automatic_inputs:
             try:
                 evidence = output_evidence(self._current.input_dir, fresh=True)
@@ -98,6 +102,8 @@ class MergeRunner(QObject):
 
     def _read_stderr(self) -> None:
         text = bytes(self._process.readAllStandardError()).decode("utf-8", errors="replace")
+        if self._publication is not None:
+            self._publication.feed(text)
         if self._stderr_file:
             self._stderr_file.write(text)
             self._stderr_file.flush()
@@ -105,7 +111,12 @@ class MergeRunner(QObject):
 
     def _on_finished(self, exit_code: int, _exit_status: QProcess.ExitStatus) -> None:
         name = self._current.name if self._current else "<none>"
+        self._read_stdout()
+        self._read_stderr()
         self._close_logs()
+        if exit_code == 0 and _exit_status == QProcess.NormalExit and self._publication is not None:
+            for warning in self._publication.warnings:
+                self.publicationWarning.emit(name, warning)
         self.taskFinished.emit(name, exit_code)
         if exit_code != 0:
             self._queue.clear()

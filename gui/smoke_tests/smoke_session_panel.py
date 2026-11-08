@@ -273,6 +273,71 @@ def model_checks(directory: Path) -> None:
     })
     assert thin.ok, thin
 
+    # Encoding a valid receipt by reference must not change status admission.
+    paired_path = directory / "paired-receipt.json"
+    for receipt_status in ("completed", "failed", "aborted", "cancelled"):
+        payload = {"schema": "g4usim_session_run_receipt_v1", "run_id": 0,
+                   "run_request_id": "0" * 32, "status": receipt_status}
+        raw = json.dumps(payload).encode("utf-8")
+        paired_path.write_bytes(raw)
+        reference = {"path": str(paired_path), "size_bytes": len(raw),
+                     "sha256": hashlib.sha256(raw).hexdigest()}
+        for event_status in ("completed", "failed", "aborted", "cancelled"):
+            envelope = {"receipt_integrity": "written", "run_id": 0,
+                        "run_request_id": "0" * 32, "status": event_status}
+            inline = receipt_check_for_event({**envelope, "receipt": payload})
+            referenced = receipt_check_for_event({**envelope, "receipt_ref": reference})
+            assert (inline.ok, inline.reason) == (referenced.ok, referenced.reason)
+            assert inline.ok == (event_status == receipt_status)
+            if not inline.ok:
+                assert inline.reason == "status_mismatch"
+        for key, value, reason in (("run_id", 1, "run_mismatch"),
+                                   ("run_request_id", "different", "request_mismatch"),
+                                   ("run_request_id", None, "request_mismatch")):
+            envelope = {"receipt_integrity": "written", "run_id": 0,
+                        "run_request_id": "0" * 32, "status": receipt_status, key: value}
+            for representation in ({"receipt": payload}, {"receipt_ref": reference}):
+                check = receipt_check_for_event({**envelope, **representation})
+                assert not check.ok and check.reason == reason, check
+        # File integrity precedes semantics, including a status conflict.
+        broken = receipt_check_for_event({"run_id": 0, "run_request_id": "0" * 32,
+            "status": "conflict", "receipt_ref": {**reference, "sha256": "0" * 64}})
+        assert not broken.ok and broken.reason == "sha_mismatch", broken
+
+    valid = {"schema": "g4usim_session_run_receipt_v1", "run_id": 0,
+             "run_request_id": "request", "status": "completed"}
+    for evidence in ({"output_failed": True},
+                     {"artifacts": [{"integrity_status": "unavailable", "reason": "read failed"}]}):
+        payload = {**valid, **evidence}
+        raw = json.dumps(payload).encode("utf-8")
+        paired_path.write_bytes(raw)
+        reference = {"path": str(paired_path), "size_bytes": len(raw),
+                     "sha256": hashlib.sha256(raw).hexdigest()}
+        for representation in ({"receipt": payload}, {"receipt_ref": reference}):
+            check = receipt_check_for_event({**valid, **representation})
+            assert not check.ok and check.reason == "artifact_unavailable", check
+    absent = object()
+    for key, values in (("run_id", [absent, None, False, 0.0, -1]),
+                        ("run_request_id", [absent, None, "", 1, False]),
+                        ("status", [absent, None, "", "unknown", 1])):
+        for value in values:
+            for malformed_side in ("envelope", "receipt", "both"):
+                envelope = {k: valid[k] for k in ("run_id", "run_request_id", "status")}
+                payload = dict(valid)
+                for obj in ([envelope] if malformed_side == "envelope" else
+                            [payload] if malformed_side == "receipt" else [envelope, payload]):
+                    if value is absent:
+                        obj.pop(key)
+                    else:
+                        obj[key] = value
+                raw = json.dumps(payload).encode("utf-8")
+                paired_path.write_bytes(raw)
+                reference = {"path": str(paired_path), "size_bytes": len(raw),
+                             "sha256": hashlib.sha256(raw).hexdigest()}
+                for representation in ({"receipt": payload}, {"receipt_ref": reference}):
+                    check = receipt_check_for_event({**envelope, **representation})
+                    assert not check.ok, (key, value, malformed_side, check)
+
 
 def find_ancestor(widget, predicate) -> bool:
     parent = widget.parentWidget()
@@ -431,6 +496,39 @@ def panel_checks(app: QApplication, directory: Path) -> None:
     assert panel.is_expanded() is False
     panel.set_expanded(True)
     assert panel.is_expanded() is True
+
+    # Exercise the real stdout -> client -> window -> panel path. A path alone
+    # does not qualify a reference, and inline receipt precedence is retained.
+    for index, variant in enumerate(("reference", "inline", "bad_sha", "path_only", "both"), 20):
+        request_id = f"{index:032x}"
+        path, digest = write_receipt(directory, run_id=index, request_id=request_id)
+        reference = {"path": str(path), "size_bytes": path.stat().st_size, "sha256": digest}
+        frame = {"kind": "event", "event": "run_finished", "run_id": index,
+                 "run_request_id": request_id, "status": "completed",
+                 "planned_events": 5, "completed_events": 5, "aborted_events": 0,
+                 "receipt_integrity": "written"}
+        if variant in {"reference", "bad_sha", "both"}:
+            frame["receipt_ref"] = {**reference, "sha256": "0" * 64} if variant == "bad_sha" else reference
+        if variant in {"inline", "both"}:
+            frame["receipt"] = json.loads(path.read_text(encoding="utf-8"))
+        if variant == "path_only":
+            frame["receipt_path"] = str(path)
+        window.session_client._handle_stdout_line(json.dumps(frame))
+        app.processEvents()
+        record = next(item for item in panel.rounds() if item["run_request_id"] == request_id)
+        row = next(i for i, item in enumerate(panel.rounds()) if item["run_request_id"] == request_id)
+        cell = panel.rounds_table.item(row, 6)
+        if variant == "reference":
+            assert record["receipt_reference"] == reference
+            assert cell.text() == "Record verified", cell.text()
+            assert str(path) in cell.toolTip() and digest in cell.toolTip()
+        elif variant in {"inline", "both"}:
+            assert record["receipt_ok"] and record["receipt_reference"] is None
+            assert cell.text() == "Inline record verified", cell.text()
+        else:
+            assert not record["receipt_ok"] and record["receipt_reference"] is None
+            assert cell.text().startswith("Record unusable: "), cell.text()
+            assert record["receipt_reason"] == ("sha_mismatch" if variant == "bad_sha" else "missing_receipt")
     window.close()
     app.processEvents()
 
