@@ -6,9 +6,8 @@ from pathlib import Path
 from typing import Any
 
 from g4usim_gui.history.run_history_model import RunHistoryEntry
-from g4usim_gui.core.run_result import evaluate_run_result, summary_fingerprint
+from g4usim_gui.core.persisted_run_evidence import read_persisted_run_evidence
 from g4usim_gui.output.file_classifier import OutputFileType, classify_files
-from g4usim_gui.output.run_summary_parser import parse_run_summary
 
 
 def scan_runs_root(runs_root: str) -> list[RunHistoryEntry]:
@@ -46,7 +45,7 @@ def scan_package(package_dir: str | Path) -> RunHistoryEntry:
         entry.output_dir = str(output_dir)
 
         _apply_snapshot(entry, snapshot)
-        _apply_status(entry, status)
+        _apply_status(entry, status if isinstance(status, dict) else {})
         _apply_output_counts(entry, package)
         _infer_status(entry, package, status)
         _apply_identity(entry, package)
@@ -132,24 +131,13 @@ def _apply_output_counts(entry: RunHistoryEntry, package: Path) -> None:
 
 def _infer_status(entry: RunHistoryEntry, package: Path, status: dict[str, Any]) -> None:
     summary_path = package / "output" / "run_summary.txt"
-    stored_fingerprint = status.get("summaryFingerprint")
-    fresh = (
-        status.get("resultVersion") == 1
-        and status.get("summaryFresh") is True
-        and isinstance(stored_fingerprint, list)
-        and tuple(stored_fingerprint) == summary_fingerprint(summary_path)
-    )
-    result = evaluate_run_result(
-        summary_path,
-        exit_code=entry.exit_code,
-        crashed=status.get("exitStatus") == "crashed" or status.get("state") == "error",
-        requested_state=status.get("state") if status.get("state") in {"stopped", "killed"} else "",
-        summary_fresh=fresh,
-    )
+    evidence = read_persisted_run_evidence(summary_path, package / "logs" / "run_status.json")
+    result = evidence.result
     entry.status = result.state
     entry.result_reason = result.reason
-    if entry.has_run_summary:
-        entry.warnings.extend(parse_run_summary(summary_path).warnings)
+    entry.exit_code = evidence.exit_code
+    entry.result_trust_level = evidence.trust_level
+    entry.warnings.extend(evidence.summary_warnings)
 
 
 def _int_or_none(value) -> int | None:

@@ -1,4 +1,8 @@
 #include "Actions/SteppingAction.hh"
+#include "Source/PhaseSpaceReplayState.hh"
+#include "Output/OutputManager.hh"
+#include "G4RunManager.hh"
+#include "G4Run.hh"
 
 #include "Actions/WorkerRunContext.hh"
 #include "G4ParticleDefinition.hh"
@@ -36,6 +40,18 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
     auto* track = step->GetTrack();
     if (!track) return;
+    try { phase_space_replay::ObserveFirstStep(*step); }
+    catch (const std::exception& error) {
+        auto* output=context_?context_->GetOutputManager():nullptr;
+        if(!output)throw;
+        auto* manager=G4RunManager::GetRunManager();
+        output->RecordOutputFailure("phase_space_first_step",error.what(),manager&&manager->GetCurrentRun()?manager->GetCurrentRun()->GetRunID():-1);
+        track->SetTrackStatus(fStopAndKill);if(manager&&manager->GetCurrentRun())manager->AbortRun(false);return;
+    } catch (...) {
+        auto* output=context_?context_->GetOutputManager():nullptr;if(!output)throw;
+        auto* manager=G4RunManager::GetRunManager();output->RecordOutputFailure("phase_space_first_step","unknown exception",manager&&manager->GetCurrentRun()?manager->GetCurrentRun()->GetRunID():-1);
+        track->SetTrackStatus(fStopAndKill);if(manager&&manager->GetCurrentRun())manager->AbortRun(false);return;
+    }
 
     const auto* pre = step->GetPreStepPoint();
     const auto* post = step->GetPostStepPoint();
@@ -78,7 +94,27 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
             entry.kineticEnergy = post->GetKineticEnergy();
             entry.time = post->GetGlobalTime();
             entry.weight = post->GetWeight();
-            scoringManager->RecordPhaseSpace(entry);
+            entry.charge = post->GetCharge();
+            const auto failCapture = [&](const std::string& message) {
+                auto* output = context_ ? context_->GetOutputManager() : nullptr;
+                if (!output) throw std::runtime_error("PhaseSpace capture failure without output context: " + message);
+                auto* manager = G4RunManager::GetRunManager();
+                output->RecordOutputFailure("phase_space_capture", "track " + std::to_string(entry.trackID) +
+                    " entering " + next->GetName() + ": " + message,
+                    manager && manager->GetCurrentRun() ? manager->GetCurrentRun()->GetRunID() : -1);
+                track->SetTrackStatus(fStopAndKill);
+                if (manager && manager->GetCurrentRun()) manager->AbortRun(false);
+            };
+            try {
+                entry.dynamicState = phase_space_replay::CaptureDynamicState(*track,*post);
+                scoringManager->RecordPhaseSpace(entry);
+            } catch (const std::exception& error) {
+                failCapture(error.what());
+                return;
+            } catch (...) {
+                failCapture("unknown exception");
+                return;
+            }
             if (scoringManager->KillsPhaseSpaceParticles()) {
                 track->SetTrackStatus(fStopAndKill);
                 return;

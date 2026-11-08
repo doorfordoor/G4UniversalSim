@@ -10,6 +10,7 @@ class RunHistoryEntry:
     timestamp: str = ""
     status: str = "unknown"
     result_reason: str = ""
+    result_trust_level: str = "unavailable"
     identity_status: str = "unavailable"
     identity_details: str = ""
     exit_code: int | None = None

@@ -7,6 +7,7 @@ from pathlib import Path
 from g4usim_gui.core.fonts import configure_numeric_display
 from g4usim_gui.core.i18n import current_language, ui_text
 from g4usim_gui.core.runner import G4USimRunner
+from g4usim_gui.core.backend_run_ownership import BackendRunOwnership
 from g4usim_gui.history.run_history_store import load_state, save_state
 from g4usim_gui.preview3d.backend_geometry_controller import BackendGeometryController
 from g4usim_gui.widgets.config_builder_page import ConfigBuilderPage
@@ -44,7 +45,8 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMi
         self.project_file: Path | None = None
         self._generated_package_stale = True
         self._generated_package_dir = ""
-        self.runner = G4USimRunner(self)
+        self._backend_run_ownership = BackendRunOwnership()
+        self.runner = G4USimRunner(self, ownership=self._backend_run_ownership)
         self._macro_inspection = QProcess(self)
         self.geometry_controller = BackendGeometryController(self)
         self._geometry_export = self.geometry_controller.process   # the export's QProcess (tests wait on it)
@@ -62,7 +64,7 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMi
         self.run_history_page = RunHistoryPage()
         self.scenario_page = ScenarioPage()
         self.effective_config_page = EffectiveConfigPage()
-        self.scan_page = ScanPage()
+        self.scan_page = ScanPage(ownership=self._backend_run_ownership)
         self.scan_page.set_base_provider(self.scan_base)
 
         self._build_workspace_shell()

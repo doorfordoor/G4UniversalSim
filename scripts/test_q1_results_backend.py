@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+from phase_space_test_fixture import synthetic_default_fixture
 import subprocess
 import shutil
 import sys
@@ -24,7 +25,7 @@ def rows(path):
         return list(csv.DictReader(handle))
 
 
-def run(exe, work, counts, *, threads=1, event_edep=True, particle="proton", weights=None, sparse=False):
+def run(exe, work, counts, *, threads=1, event_edep=True, particle="proton", weights=None, sparse=False, baseline=False):
     work.mkdir(parents=True, exist_ok=False)
     phase = HEADER
     for event, count in enumerate(counts):
@@ -32,6 +33,9 @@ def run(exe, work, counts, *, threads=1, event_edep=True, particle="proton", wei
             x = 20 if sparse == "all" or sparse and event != 0 else 0
             weight = weights[event] if weights else 1
             phase += f"0,{event},{track+1},0,{particle},{2212 if particle == 'proton' else 0},{x},0,-2,0,0,1,100,0,{weight}\n"
+    if not baseline:
+        phase = synthetic_default_fixture(phase, purpose="q1-results",
+                 evidence=work / "fixture-evidence", backend=exe)
     (work / "source.csv").write_text(phase, encoding="utf-8")
     (work / "geometry.ini").write_text("""[world]
 size = 10 cm,10 cm,10 cm
@@ -94,6 +98,8 @@ def main():
     parser.add_argument("--baseline", action="store_true")
     parser.add_argument("--work-dir", type=Path)
     args = parser.parse_args()
+    from functools import partial
+    execute = partial(run, baseline=args.baseline)
     executable = os.environ.get("G4USIM_EXE")
     assert executable, "Set G4USIM_EXE to the backend under test"
     exe = Path(executable).resolve()
@@ -105,7 +111,7 @@ def main():
               "backend_scope": "baseline binary; Python candidate only" if args.baseline else "candidate binary",
               "checks": []}
     for label, counts in (("single", [1,1,1,1]), ("double", [2,2,2,2]), ("variable", [1,2,3,1])):
-        output = run(exe, work / label, counts)
+        output = execute(exe, work / label, counts)
         primary = set()
         for path in output.glob("hits_t*.csv"):
             for row in rows(path):
@@ -135,7 +141,7 @@ def main():
             assert False, "LET ratio was divided by N"
         report.setdefault("R10_ratio_rejected", []).append({"case":label,"backend_ratio":float(raw.series[0].y[0])})
     for enabled in (True, False):
-        output = run(exe, work / f"sparse-{enabled}", [1]*32, threads=2, event_edep=enabled, sparse=True)
+        output = execute(exe, work / f"sparse-{enabled}", [1]*32, threads=2, event_edep=enabled, sparse=True)
         with uproot.open(output / "g4usim.root") as root:
             data = root["edep_volume"].arrays(library="np")
             assert "events" in root
@@ -174,10 +180,10 @@ def main():
             "offline_root_without_metadata_rejected":True, "event_ntuple_rows":event_rows,
             "sparse_gap_numeric_counterexample":"deterministic test_q1_postprocessing fixture; no worker scheduling guarantee"})
     for enabled in (True, False):
-        zero = run(exe, work / f"zero-{enabled}", [1]*8, threads=2, event_edep=enabled, sparse="all")
+        zero = execute(exe, work / f"zero-{enabled}", [1]*8, threads=2, event_edep=enabled, sparse="all")
         assert g4usim_io.load_scorer_statistics(zero / "g4usim.root") == []
         report["checks"].append({"all_workers_zero":True,"event_edep":enabled,"events":8})
-    output = run(exe, work / "covariance", [1]*4, particle="proton", weights=[1,2,3,4])
+    output = execute(exe, work / "covariance", [1]*4, particle="proton", weights=[1,2,3,4])
     meshset = next(d for d in plot_data.discover(output) if d.kind == "mesh")
     mesh = plot_data.load_mesh(output, meshset)
     profile = plot_data.mesh_profile(mesh, 0)

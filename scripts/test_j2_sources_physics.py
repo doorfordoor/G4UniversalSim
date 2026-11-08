@@ -13,6 +13,7 @@ import json
 import math
 import os
 from pathlib import Path
+from phase_space_test_fixture import synthetic_default_fixture
 import subprocess
 import sys
 from uuid import uuid4
@@ -176,7 +177,8 @@ def sources(c: Cases):
     header = "runID,eventID,trackID,parentID,particle,pdg,x_mm,y_mm,z_mm,u,v,w,kineticEnergy_MeV,time_ns,weight\n"
     histories = "".join(f"0,{e},1,0,proton,2212,0,0,0,1,0,0,{e+1},0,0.5\n0,{e},2,0,gamma,22,5,0,0,0,0,1,7,0,0.25\n" for e in range(3))
     _, replay, _ = c.run("phase-space-reuse", "[source]\nphase_space_file=history.csv\nphase_space_recycle=true\n",
-                         events=6, files={"history.csv": header+histories})
+                         events=6, files={"history.csv": synthetic_default_fixture(header+histories,
+                             purpose="j2-sources-physics", evidence=c.root / "fixture-evidence", backend=c.exe)})
     assert len(replay) == 12
     assert all(r["vertex_count"] == 2 for r in replay)
     for r in replay:

@@ -40,7 +40,7 @@ def _make_package(root: Path, name: str, status: dict | None = None, summary: bo
             encoding="utf-8",
         )
         if status:
-            status.update({"resultVersion": 1, "summaryFresh": True,
+            status.update({"resultVersion": 1, "summaryFresh": True, "exitStatus": "normal",
                            "summaryFingerprint": list(summary_fingerprint(summary_path))})
             (package / "logs" / "run_status.json").write_text(json.dumps(status), encoding="utf-8")
     (package / "project_snapshot.json").write_text(json.dumps({"schema": "G4UniversalSimProject", "version": 1}), encoding="utf-8")

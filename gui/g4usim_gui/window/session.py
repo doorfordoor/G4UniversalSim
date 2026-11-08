@@ -1,11 +1,10 @@
 """Continuous-run session wiring: generation, protocol client and panel lifecycle.
 
-The session entry reuses the window's single ``G4USimRunner`` process owner: the
-client speaks the versioned JSON-lines protocol through the runner's session
-signals, so K1, scans, plain runs and the configuration agent can never be
-silently displaced by a second process owner.  When a session holds the owner
-the plain run entry is refused; when a plain run or the experiment workflow is
-busy the session entry is refused with a visible message.
+The session client reuses the window's existing ``G4USimRunner`` process owner
+and speaks the JSON-lines protocol through its session signals. A window-scoped
+admission object also covers the scan runner's existing process owner, including
+its queue gaps. Workflow state and process ownership stay with their original
+objects; neither runner can start while the other holds admission.
 """
 
 from __future__ import annotations
@@ -24,6 +23,7 @@ class SessionMixin:
     # ------------------------------------------------------------------ setup
     def _setup_session(self) -> None:
         self.session_client = SessionClient(self.runner, parent=self)
+        self.runner.sessionStartFailed.connect(self._session_start_failed)
         self.session_panel = self.run_page.session_panel
         self.session_panel.startSessionRequested.connect(self.start_session)
         self.session_panel.closeSessionRequested.connect(self.close_session)
@@ -42,6 +42,9 @@ class SessionMixin:
 
     # -------------------------------------------------------------- ownership
     def _session_owner(self) -> tuple[bool, str]:
+        ownership = getattr(self, "_backend_run_ownership", None)
+        if ownership is not None and ownership.busy:
+            return False, ui_text("Another run already owns the backend process.")
         if self.runner.is_running():
             return False, ui_text("Another run already owns the backend process.")
         experiment = getattr(self, "experiment", None)
@@ -86,9 +89,7 @@ class SessionMixin:
         self.session_panel.set_session_active(True)
         self.session_panel.append_log(ui_text("Starting the controlled session process."))
         self.session_panel.append_log("command: " + " ".join(command))
-        client.start(self.project, command)
-        self._session_started = True
-        self._set_session_owner_controls(True)
+        self._launch_session_client(command)
 
     def close_session(self) -> None:
         client = getattr(self, "session_client", None)
@@ -141,9 +142,32 @@ class SessionMixin:
         self.session_panel.set_session_active(True)
         self.session_panel.append_log(ui_text("Starting the replay process."))
         self.session_panel.append_log("command: " + " ".join(command))
-        client.start_replay(self.project, command)
-        self._session_started = True
-        self._set_session_owner_controls(True)
+        self._launch_session_client(command, replay=True)
+
+    def _launch_session_client(self, command: list[str], *, replay: bool = False) -> None:
+        # Client.start emits view signals before it calls runner.start_session.
+        # Reserve across those slots, including any nested Qt event processing.
+        with self.runner.session_start_admission() as allowed:
+            if not allowed:
+                self.session_panel.set_session_active(False)
+                self.session_panel.set_message(
+                    ui_text("Another run already owns the backend process."), "failed")
+                return
+            self._session_started = True
+            try:
+                if replay:
+                    self.session_client.start_replay(self.project, command)
+                else:
+                    self.session_client.start(self.project, command)
+            finally:
+                self._session_started = self.session_client.is_active()
+                self.session_panel.set_session_active(self._session_started)
+                self._set_session_owner_controls(self._session_started)
+
+    def _session_start_failed(self) -> None:
+        # FailedToStart/start refusal has no QProcess.finished. Reuse the client's
+        # terminal transition to stop its timers and retire its protocol state.
+        self.session_client._on_runner_finished(-1)
 
     def submit_session_round(self) -> None:
         client = getattr(self, "session_client", None)

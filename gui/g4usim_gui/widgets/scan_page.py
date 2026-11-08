@@ -40,6 +40,7 @@ from g4usim_gui.core import scan
 from g4usim_gui.output import plot_data
 from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.core.scan_runner import ScanRunner
+from g4usim_gui.core.backend_run_ownership import BackendRunOwnership
 from g4usim_gui.core.theme import current_colors
 from g4usim_gui.widgets.plot_panel import draw_empty, style_axes
 from g4usim_gui.widgets.qt_data import combo_data
@@ -53,7 +54,8 @@ BaseProvider = Callable[[], tuple[scan.ScanBase, str, str, str]]
 
 
 class ScanPage(QWidget):
-    def __init__(self, parent: QWidget | None = None) -> None:
+    def __init__(self, parent: QWidget | None = None, *,
+                 ownership: BackendRunOwnership | None = None) -> None:
         super().__init__(parent)
         self._provider: BaseProvider | None = None
         self._base: scan.ScanBase | None = None
@@ -63,7 +65,7 @@ class ScanPage(QWidget):
         self._executable = ""
         self._workspace = ""
         self._runs_root = ""
-        self.runner = ScanRunner(self)
+        self.runner = ScanRunner(self, ownership=ownership)
 
         self.parameter = QComboBox()
         self.refresh_button = QPushButton("Use current configuration")

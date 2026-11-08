@@ -104,6 +104,11 @@ public:
     const std::vector<std::string>& GetPhaseSpaceFiles() const;
     bool IsPhaseSpaceRecycled() const;
 
+    // Main-thread Messenger diagnostics, independent of source/GPS reset.
+    std::size_t GetCommandFailureCount() const;
+    const std::string& GetLastCommandFailure() const;
+    void RecordCommandFailure(const std::string& message);
+
     void ResetGPS();
     void LoadFromConfig(const ConfigManager& config);
     void ApplyPreset(const std::string& presetName);
@@ -162,6 +167,8 @@ public:
     void ConfirmEffectiveConfigMutation(const std::string& command, const effective_config::Origin& origin);
 
 private:
+    std::size_t commandFailureCount_ = 0;
+    std::string lastCommandFailure_;
     void LoadFromConfigImpl(const ConfigManager& config);
     std::vector<effective_config::Field> ProjectEffectiveConfigFields() const;
     void ObserveGPS(std::size_t index, const G4SingleParticleSource& source, const std::string& stage) const;

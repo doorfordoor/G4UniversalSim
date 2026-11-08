@@ -4,6 +4,7 @@
 #include "Actions/RunAction.hh"
 #include "Actions/SteppingAction.hh"
 #include "Actions/TrackingAction.hh"
+#include "Actions/PhaseSpaceStackingAction.hh"
 #include "Actions/WorkerRunContext.hh"
 #include "Output/OutputManager.hh"
 #include "Scoring/ScoringManager.hh"
@@ -129,6 +130,7 @@ void ActionInitialization::Build() const
     auto* trackingAction = new TrackingAction();
     trackingAction->SetVerboseLevel(verboseLevel_);
     SetUserAction(trackingAction);
+    SetUserAction(new PhaseSpaceStackingAction(context));
 }
 
 void ActionInitialization::SetVerboseLevel(int level)

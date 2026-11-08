@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from g4usim_gui.output.run_summary_parser import parse_run_summary
+from g4usim_gui.output.run_summary_parser import RunSummary, parse_run_summary
 
 
 @dataclass(frozen=True)
@@ -48,6 +48,7 @@ def evaluate_run_result(
     crashed: bool = False,
     requested_state: str = "",
     summary_fresh: bool = False,
+    summary: RunSummary | None = None,
 ) -> RunResult:
     if requested_state in {"stopped", "killed"}:
         return RunResult(requested_state, "User requested process termination.")
@@ -60,7 +61,7 @@ def evaluate_run_result(
     if not summary_fresh:
         return RunResult("incomplete", "No fresh run summary was produced by this process.")
 
-    summary = parse_run_summary(summary_path)
+    summary = summary if summary is not None else parse_run_summary(summary_path)
     if not summary.exists or summary.warnings:
         return RunResult("incomplete", "Run summary is missing or unreadable.")
     facts = summary.key_values

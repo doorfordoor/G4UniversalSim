@@ -111,12 +111,27 @@ def worker_rows(output: Path, stem: str):
                 yield from csv.DictReader(handle)
 
 
-def verdict(simulated: float, sigma: float, expected: float, tolerance: float) -> dict:
+def verdict(simulated: float | None, sigma: float | None, expected: float, tolerance: float,
+            reason: str = "") -> dict:
+    if reason or simulated is None or sigma is None or not all(
+            math.isfinite(v) for v in (simulated, sigma, expected, tolerance)) or sigma < 0:
+        return {"simulated": simulated if simulated is not None and math.isfinite(simulated) else None,
+                "sigma": sigma if sigma is not None and math.isfinite(sigma) else None,
+                "reference": expected, "deviation": None, "relative_deviation": None,
+                "tolerance": tolerance, "allowed": None, "passed": False,
+                "status": "not_evaluable", "reason": reason or "measurement_or_uncertainty_unavailable"}
     allowed = tolerance * abs(expected) + 3.0 * sigma
     deviation = simulated - expected
     return {"simulated": simulated, "sigma": sigma, "reference": expected, "deviation": deviation,
             "relative_deviation": deviation / expected if expected else 0.0, "tolerance": tolerance,
-            "allowed": allowed, "passed": abs(deviation) <= allowed}
+            "allowed": allowed, "passed": abs(deviation) <= allowed, "status": "evaluated"}
+
+
+def comparison_text(result: dict) -> str:
+    if result.get("status") == "not_evaluable":
+        return "not_evaluable: " + result["reason"]
+    return (f"{result['simulated']:.5g} +- {result['sigma']:.2g}; ref {result['reference']:.5g}; "
+            f"deviation {100 * result['relative_deviation']:+.2f} %, allowed +-{result['allowed']:.3g}")
 
 
 WORLD = "[world]\nshape = box\nsize = 3 m, 3 m, 3 m\nmaterial = G4_Galactic\n"
@@ -306,10 +321,42 @@ def device_dose(backend: Backend, quick: bool) -> list[dict]:
     return results
 
 
+def detector_feature(report: dict, kind: str, pulse_file: Path):
+    """Consume schema2 nullable measurements without inventing a zero or error bar."""
+    quantity = "most probable deposit [MeV]" if kind == "landau_mpv" else (
+        "Compton edge [MeV]" if kind == "compton_edge" else "escape peak [MeV]")
+    if (report.get("analysis_schema_version") != 2 or report.get("analysis_status") != "completed"
+            or report.get("run_status") != "completed"):
+        return None, None, 0.0, quantity, "analysis_not_completed_or_unsupported"
+    states = report.get("quantities", {})
+    if kind == "landau_mpv":
+        field, error = "mpv_MeV", "mpv_error_MeV"
+        reason = next((states.get(k, {}).get("reason") or "quantity_unavailable"
+                       for k in (field, error) if report.get(k) is None), "")
+        return report.get(field), report.get(error), 0.03, quantity, reason
+    sigma = 0.001 / math.sqrt(12)
+    if kind == "compton_edge":
+        field = "compton_edge_MeV"
+        return report.get(field), sigma, 0.01, quantity, (
+            states.get(field, {}).get("reason") or "quantity_unavailable") if report.get(field) is None else ""
+    line = report.get(f"{kind}_MeV")
+    fraction = report.get(f"{kind}_per_primary")
+    if line is None or fraction is None or fraction <= 0:
+        return None, sigma, 0.0, quantity, "no_escape_peak_counts"
+    with pulse_file.open(newline="", encoding="utf-8") as handle:
+        bins = [(float(r["e_low_MeV"]), float(r["deposit_per_primary"])) for r in csv.DictReader(handle)
+                if abs(float(r["e_low_MeV"]) + 0.0005 - line) <= 0.010]
+    if not bins or not all(math.isfinite(x) and math.isfinite(n) and n >= 0 for x, n in bins):
+        return None, sigma, 0.0, quantity, "escape_peak_histogram_unavailable"
+    if not any(n > 0 for _, n in bins):
+        return None, sigma, 0.0, quantity, "no_escape_peak_counts"
+    return max(bins, key=lambda b: b[1])[0] + 0.0005, sigma, 0.0, quantity, ""
+
+
 def detector_response(backend: Backend, quick: bool) -> list[dict]:
     """Pulse-height features against analytic references (detector response pack)."""
     pack = ROOT / "scenarios" / "detector_response"
-    runs: dict[tuple, dict] = {}
+    runs: dict[tuple, tuple[dict, Path]] = {}
     results = []
     for row in reference("detector_response"):
         kind, detector, particle = row["kind"], row["detector"].split(), row["particle"]
@@ -338,31 +385,12 @@ def detector_response(backend: Backend, quick: bool) -> list[dict]:
             subprocess.run([sys.executable, str(pack / "analyze_detector.py"), str(out / "output")],
                            check=True, capture_output=True, text=True)
             report = json.loads((out / "output" / "detector_report.json").read_text(encoding="utf-8"))
-            report["events"] = events
-            runs[key] = report
-        report = runs[key]
-        if kind == "landau_mpv":
-            simulated, sigma, tolerance = report["mpv_MeV"], report["mpv_error_MeV"], 0.03
-            quantity = "most probable deposit [MeV]"
-        else:
-            # positions from 1 keV bins: sigma = bin / sqrt(12); edges also carry the smoothing
-            field = "compton_edge_MeV" if kind == "compton_edge" else None
-            if field:
-                simulated, tolerance = report[field], 0.01
-            else:
-                line = report[f"{kind}_MeV"]
-                if report[f"{kind}_per_primary"] <= 0:
-                    raise RuntimeError(f"detector_response: no {kind} counts")
-                simulated, tolerance = line, 0.0
-                # the line itself: verify the deposit histogram peaks there (within 1 keV)
-                with (backend.work / f"run{backend.count:02d}" / "output" / "pulse_height.csv").open(
-                        newline="", encoding="utf-8") as handle:
-                    bins = [(float(r["e_low_MeV"]), float(r["deposit_per_primary"])) for r in csv.DictReader(handle)
-                            if abs(float(r["e_low_MeV"]) + 0.0005 - line) <= 0.010]
-                simulated = max(bins, key=lambda b: b[1])[0] + 0.0005
-            sigma = 0.001 / math.sqrt(12)
-            quantity = "Compton edge [MeV]" if field else "escape peak [MeV]"
-        result = verdict(simulated, sigma, expected, tolerance)
+            if report.get("events") != events:
+                raise RuntimeError("detector_response: analyzed event count does not match this run")
+            runs[key] = (report, out / "output")
+        report, run_output = runs[key]
+        simulated, sigma, tolerance, quantity, reason = detector_feature(report, kind, run_output / "pulse_height.csv")
+        result = verdict(simulated, sigma, expected, tolerance, reason)
         result.update(case=f"{particle} {energy:g} MeV, {' '.join(detector)}", quantity=quantity, source=row["source"],
                       events=report["events"])
         results.append(result)
@@ -383,9 +411,14 @@ def write_report(output: Path, report: dict) -> None:
              "| --- | --- | --- | --- | --- | --- | --- | --- |"]
     for name, results in report["benchmarks"].items():
         for r in results:
-            lines.append(f"| {name} | {r['case']} | {r['quantity']} | {r['simulated']:.5g} ± {r['sigma']:.2g} | "
-                         f"{r['reference']:.5g} ({r['source']}) | {100 * r['relative_deviation']:+.2f} % | "
-                         f"± {r['allowed']:.3g} | {'pass' if r['passed'] else 'FAIL'} |")
+            if r.get("status") == "not_evaluable":
+                lines.append(f"| {name} | {r['case']} | {r['quantity']} | n/a | {r['reference']:.5g} "
+                             f"({r['source']}) | n/a | n/a | not_evaluable: {r['reason']} |")
+            else:
+                lines.append(f"| {name} | {r['case']} | {r['quantity']} | {r['simulated']:.5g} ± {r['sigma']:.2g} | "
+                             f"{r['reference']:.5g} ({r['source']}) | {100 * r['relative_deviation']:+.2f} % | "
+                             f"± {r['allowed']:.3g} | {'pass' if r['passed'] else 'FAIL'} |")
+
     (output / "benchmark_report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -415,8 +448,7 @@ def main() -> int:
             report["benchmarks"][name] = results
             for r in results:
                 print(f"{'pass' if r['passed'] else 'FAIL'}  {name:18s} {r['case']:45s} {r['quantity']:20s} "
-                      f"{r['simulated']:.5g} +- {r['sigma']:.2g}  ref {r['reference']:.5g}  "
-                      f"({100 * r['relative_deviation']:+.2f} %, allowed +-{r['allowed']:.3g})")
+                      + comparison_text(r))
             print(f"      {name}: {time.time() - start:.0f} s")
         everything = [r for results in report["benchmarks"].values() for r in results]
         report["passed"] = sum(r["passed"] for r in everything)
@@ -425,9 +457,7 @@ def main() -> int:
         print(f"report: {output / 'benchmark_report.md'}")
         failed = [(name, r) for name, results in report["benchmarks"].items() for r in results if not r["passed"]]
         assert not failed, "benchmark failures: " + "; ".join(
-            f"{name} {r['case']} {r['quantity']} = {r['simulated']:.5g} +- {r['sigma']:.2g}, "
-            f"reference {r['reference']:.5g}, deviation {100 * r['relative_deviation']:+.2f} %, "
-            f"allowed +-{r['allowed']:.3g}" for name, r in failed)
+            f"{name} {r['case']} {r['quantity']} = {comparison_text(r)}" for name, r in failed)
     finally:
         if not args.output:
             print("(temporary report removed; pass --output to keep it)")

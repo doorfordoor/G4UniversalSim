@@ -58,8 +58,12 @@ def landau_mpv(particle: str, kinetic: float, thickness_mm: float, m: dict = SIL
     return mpv, xi
 
 
-def half_sample_mode(values: list[float]) -> float:
+def half_sample_mode(values: list[float]) -> float | None:
     """Robust mode estimator (Bickel and Fruehwirth 2006): repeatedly keep the shortest half."""
+    if not values:
+        return None
+    if not all(math.isfinite(v) for v in values):
+        raise ValueError("half-sample mode requires finite values")
     data = sorted(values)
     while len(data) > 3:
         half = (len(data) + 1) // 2
@@ -72,10 +76,15 @@ def half_sample_mode(values: list[float]) -> float:
     return sum(data) / len(data)
 
 
-def mode_with_error(values: list[float], batches: int = 20) -> tuple[float, float]:
+def mode_with_error(values: list[float], batches: int = 20) -> tuple[float | None, float | None]:
     """Half-sample mode of all values and its standard error from independent batches."""
+    if isinstance(batches, bool) or not isinstance(batches, int) or batches < 2:
+        raise ValueError("mode error requires at least two fixed batches")
+    point = half_sample_mode(values)
     size = len(values) // batches
+    if size == 0:
+        return point, None
     modes = [half_sample_mode(values[i * size:(i + 1) * size]) for i in range(batches)]
     mean = sum(modes) / batches
     error = math.sqrt(sum((x - mean) ** 2 for x in modes) / (batches - 1) / batches)
-    return half_sample_mode(values), error
+    return point, error

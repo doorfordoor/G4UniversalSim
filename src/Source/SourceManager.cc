@@ -1,6 +1,7 @@
 #include "Config/EffectiveRuntime.hh"
 #include "Config/ConfigSchemaTable.hh"
 #include "Source/SourceManager.hh"
+#include "Source/PhaseSpaceReplayState.hh"
 
 #include "Config/ConfigManager.hh"
 #include "Utils/StringUtils.hh"
@@ -295,6 +296,14 @@ std::string SourceManager::SourceSpec::Describe() const
     return out.str();
 }
 
+std::size_t SourceManager::GetCommandFailureCount() const { return commandFailureCount_; }
+const std::string& SourceManager::GetLastCommandFailure() const { return lastCommandFailure_; }
+void SourceManager::RecordCommandFailure(const std::string& message)
+{
+    ++commandFailureCount_;
+    lastCommandFailure_ = message;
+}
+
 SourceManager::SourceManager()
 {
 }
@@ -354,17 +363,39 @@ void SourceManager::PrepareForRun(long long plannedEvents)
                                      " or set [source]/phase_space_recycle = true.");
         }
         // Resolve every particle once on the master; workers only read the map.
+        bool legacyDefinitionCharge = false;
+        bool legacyDynamicState = false;
         for (const auto& history : *phaseSpace_) {
             for (const PhaseSpaceParticle& p : history) {
-                if (phaseSpaceDefinitions_.count(p.pdg)) continue;
-                G4ParticleDefinition* definition = G4ParticleTable::GetParticleTable()->FindParticle(p.pdg);
+                const auto found = phaseSpaceDefinitions_.find(p.pdg);
+                G4ParticleDefinition* definition = found != phaseSpaceDefinitions_.end()
+                    ? found->second : G4ParticleTable::GetParticleTable()->FindParticle(p.pdg);
                 if (!definition && p.pdg > 1000000000) definition = G4IonTable::GetIonTable()->GetIon(p.pdg);
                 if (!definition) {
                     throw std::runtime_error("SourceManager phase-space particle '" + p.particle + "' (pdg " +
                                              std::to_string(p.pdg) + ") is unknown to the physics list");
                 }
+                if (!p.charge) {
+                    if (G4IonTable::IsIon(definition) || G4IonTable::IsAntiIon(definition)) {
+                        throw std::runtime_error("SourceManager phase-space '" + phaseSpaceFiles_.at(p.inputFileIndex) +
+                            "' line " + std::to_string(p.inputLine) +
+                            ": legacy v1 ion has no actual charge; record a new phase_space_csv_v3 file with charge_eplus and actual dynamic state");
+                    }
+                    legacyDefinitionCharge = true;
+                }
+                if (p.charge) {
+                    phase_space_replay::ValidateForDefinition(p,*definition,phaseSpaceFiles_.at(p.inputFileIndex));
+                    if (!p.dynamicState) legacyDynamicState = true;
+                }
                 phaseSpaceDefinitions_[p.pdg] = definition;
             }
+        }
+        if (legacyDynamicState) {
+            G4cerr << "[PhaseSpaceWarning] legacy v2 non-ion replay restores charge only; dynamic mass, occupancy, magnetic moment and polarization use SDK defaults. Record v3 for actual dynamic state." << G4endl;
+        }
+        if (legacyDefinitionCharge) {
+            G4cerr << "[PhaseSpaceWarning] legacy v1 non-ion replay assumes particle-definition charge; "
+                      "historical actual charge is unavailable. Record v3 to preserve actual dynamic state." << G4endl;
         }
         effective_->Record(effective_config::Receipt(effective_config::FieldPath("source","phase_space_histories"),
             static_cast<std::int64_t>(phaseSpace_->size()), "source_prepare", "SourceManager::PrepareForRun particle table resolution"));
@@ -592,6 +623,9 @@ void SourceManager::GeneratePhaseSpaceEvent(G4Event* event) const
         primary->SetKineticEnergy(p.kineticEnergy);
         primary->SetMomentumDirection(G4ThreeVector(p.u, p.v, p.w).unit());
         primary->SetWeight(p.weight);
+        if (p.charge) primary->SetCharge(*p.charge);
+        try { phase_space_replay::AttachPrimaryState(*primary,p,phaseSpaceFiles_.at(p.inputFileIndex)); }
+        catch (...) { delete primary; delete vertex; throw; }
         vertex->SetPrimary(primary);
         event->AddPrimaryVertex(vertex);
     }

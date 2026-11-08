@@ -7,16 +7,16 @@
   },
   "identity": {
     "algorithm": "sha256_sorted_sha256_path_lines_v1",
-    "bytes_total": 3933771,
-    "file_count": 323,
-    "value": "48b0a0009faea469dc8a465138511ba876a3b9408c99ce61da4434d732111f7e"
+    "bytes_total": 4032081,
+    "file_count": 338,
+    "value": "718fca17ac62b1ff8bdd25afbb21ae3b6a055106d569fdf1527a822697d54421"
   },
   "members": [
     {
-      "bytes": 14914,
+      "bytes": 18315,
       "path": "CMakeLists.txt",
       "role": "cmake",
-      "sha256": "afca64fa654cac789fa489cec46a18a848e6d3ea952cca682f7111361f261e12",
+      "sha256": "a7544d2a450df413663208734e37492d50c9de55f85cbb5bf733b15fe75f7554",
       "source_path": "CMakeLists.txt"
     },
     {
@@ -265,24 +265,24 @@
       "source_path": "docs/Linux构建与验证.md"
     },
     {
-      "bytes": 59330,
+      "bytes": 59987,
       "path": "docs/中文使用手册.md",
       "role": "doc",
-      "sha256": "c63d0bb16491929b341cd98757fc87339ba9669f9a7c816a934e29dd6d5b99c5",
+      "sha256": "f304df19b1090c4c75334aa9b4f0a1b7319d1d7602d99988dfa9b31d50611b8a",
       "source_path": "docs/中文使用手册.md"
     },
     {
-      "bytes": 214054,
+      "bytes": 214245,
       "path": "docs/功能支持矩阵.md",
       "role": "doc",
-      "sha256": "44338acdffb731792df7c9cdece7bb6b20dc6eb51581ba6c2e5b84241cdbb7a4",
+      "sha256": "ce536cb28543950d47b4f2e63a1e995637ef61e30ab3b0dc93d51c98097dca0b",
       "source_path": "docs/功能支持矩阵.md"
     },
     {
-      "bytes": 48178,
+      "bytes": 50341,
       "path": "docs/输出数据契约.md",
       "role": "doc",
-      "sha256": "d8bd0296f2e9ab9ea18fb119d361cc78cda9b801f334718934f665c78668c9bb",
+      "sha256": "407b83766577c83fa99977b60d812332137721b32f9e11b65ab216674d8b18c1",
       "source_path": "docs/输出数据契约.md"
     },
     {
@@ -298,6 +298,13 @@
       "role": "header",
       "sha256": "222d5b41f57e94d99e951ebc3c763bb53c819286eb352414094f546d5d949397",
       "source_path": "include/Actions/EventAction.hh"
+    },
+    {
+      "bytes": 416,
+      "path": "include/Actions/PhaseSpaceStackingAction.hh",
+      "role": "header",
+      "sha256": "3f8cd527429fe741f8e92881988bc9a0904cf308815f8180a93f3c2be89638eb",
+      "source_path": "include/Actions/PhaseSpaceStackingAction.hh"
     },
     {
       "bytes": 2327,
@@ -510,6 +517,27 @@
       "source_path": "include/Core/RandomCommandGuard.hh"
     },
     {
+      "bytes": 1365,
+      "path": "include/Core/RunFinalization.hh",
+      "role": "header",
+      "sha256": "009da6609b194a1a78552926c007d403bb739757b86da29d1de449ba51296ea5",
+      "source_path": "include/Core/RunFinalization.hh"
+    },
+    {
+      "bytes": 990,
+      "path": "include/Core/RuntimeExecution.hh",
+      "role": "header",
+      "sha256": "82471a17548236d96bce9991e969bbac0657e828aabaa0ae913be303adee37c6",
+      "source_path": "include/Core/RuntimeExecution.hh"
+    },
+    {
+      "bytes": 935,
+      "path": "include/Core/RuntimeSession.hh",
+      "role": "header",
+      "sha256": "12cf1d019c3588a37fc0caac4079e0f1a85be4b6302a714a62d7db616a693467",
+      "source_path": "include/Core/RuntimeSession.hh"
+    },
+    {
       "bytes": 1503,
       "path": "include/Core/SessionJson.hh",
       "role": "header",
@@ -517,10 +545,10 @@
       "source_path": "include/Core/SessionJson.hh"
     },
     {
-      "bytes": 2577,
+      "bytes": 2867,
       "path": "include/Core/SessionServer.hh",
       "role": "header",
-      "sha256": "a1892152fdbf6800f55f70e8751a91353aa309ce0f4951cb84c24cceeed975bd",
+      "sha256": "ff3377dd265f590275ace365d44a763a79f320a382056308cadb1feca8edc79a",
       "source_path": "include/Core/SessionServer.hh"
     },
     {
@@ -755,10 +783,10 @@
       "source_path": "include/Materials/MaterialMessenger.hh"
     },
     {
-      "bytes": 3842,
+      "bytes": 4002,
       "path": "include/Output/AnalysisOutput.hh",
       "role": "header",
-      "sha256": "b2beae48a0162215d5b911ef8162e4c98693e62faec9cee69893d4e4b28d44a6",
+      "sha256": "0f0bdf69e3dc5c7498a7a3d38d898bd3adea2622550c3d42ed89ec94150076e4",
       "source_path": "include/Output/AnalysisOutput.hh"
     },
     {
@@ -802,6 +830,13 @@
       "role": "header",
       "sha256": "a36eaff4d48988eaf90f5eaa9f6618f9f3cfc2d3d2135faacdd58b79861bfc1d",
       "source_path": "include/Output/OutputRecord.hh"
+    },
+    {
+      "bytes": 1581,
+      "path": "include/Output/RootFileFinalization.hh",
+      "role": "header",
+      "sha256": "3e0d2e2b728f2dde79c170b002f411cc9c85bc3268ee09847b7ad809d961b919",
+      "source_path": "include/Output/RootFileFinalization.hh"
     },
     {
       "bytes": 2571,
@@ -958,10 +993,10 @@
       "source_path": "include/Scoring/ParticleAggregator.hh"
     },
     {
-      "bytes": 1553,
+      "bytes": 2472,
       "path": "include/Scoring/PhaseSpace.hh",
       "role": "header",
-      "sha256": "093aea036eb3f609ce869e5a14e0591aff390301d54a661dc5ca03cc49c50fc3",
+      "sha256": "0d7d47d22c909dc8fac108351cdbb4cc33643aeea89305ad2a5ed274c00dea46",
       "source_path": "include/Scoring/PhaseSpace.hh"
     },
     {
@@ -1035,6 +1070,13 @@
       "source_path": "include/Scoring/VolumeSpectrum.hh"
     },
     {
+      "bytes": 618,
+      "path": "include/Source/PhaseSpaceReplayState.hh",
+      "role": "header",
+      "sha256": "b3b0d063eb0494bd2230e83c4583fec3fa38b372de5bd8494cce2945fe387bfc",
+      "source_path": "include/Source/PhaseSpaceReplayState.hh"
+    },
+    {
       "bytes": 769,
       "path": "include/Source/PrimaryGeneratorAction.hh",
       "role": "header",
@@ -1042,10 +1084,10 @@
       "source_path": "include/Source/PrimaryGeneratorAction.hh"
     },
     {
-      "bytes": 9723,
+      "bytes": 10039,
       "path": "include/Source/SourceManager.hh",
       "role": "header",
-      "sha256": "5ddb2a51f0ab88c0c5fa5f26159efa7e2aa20b97b73d34c3423a40cf71b53f40",
+      "sha256": "0ff0260140f18a4cd59d0c4f06055735674ba8ff2fc6e7835a0c4522ab87c8a5",
       "source_path": "include/Source/SourceManager.hh"
     },
     {
@@ -1371,10 +1413,10 @@
       "source_path": "macros/vis.mac"
     },
     {
-      "bytes": 65839,
+      "bytes": 35850,
       "path": "main.cc",
       "role": "source",
-      "sha256": "c023bf3688ef2ea0229657246ccaca1cc8e350ff1a7a39238d41037474a379d2",
+      "sha256": "fe3cc1867b8bc0e3c230af41aca43cc41bd076ecf92bc742d06cd2260caa91a9",
       "source_path": "main.cc"
     },
     {
@@ -1399,10 +1441,10 @@
       "source_path": "schema/config_schema_coverage.json"
     },
     {
-      "bytes": 4678,
+      "bytes": 4783,
       "path": "src/Actions/ActionInitialization.cc",
       "role": "source",
-      "sha256": "560a15b7deebfa8f853f8fa381b08b6e0e7aef4a41def8d98356812ace2ef00a",
+      "sha256": "356a04327c037788bdd7aad7ab75fd19ad5d2ce7bc9ea1bd15016375d7abec9f",
       "source_path": "src/Actions/ActionInitialization.cc"
     },
     {
@@ -1413,10 +1455,17 @@
       "source_path": "src/Actions/EventAction.cc"
     },
     {
-      "bytes": 13417,
+      "bytes": 1834,
+      "path": "src/Actions/PhaseSpaceStackingAction.cc",
+      "role": "source",
+      "sha256": "2e5f92b3a3dd8345bfad60a5f3ab6a6821c1f235f68713644787e47d0aa23994",
+      "source_path": "src/Actions/PhaseSpaceStackingAction.cc"
+    },
+    {
+      "bytes": 14010,
       "path": "src/Actions/RunAction.cc",
       "role": "source",
-      "sha256": "8c6ae75ac94841b46532f7b567dacf63bb0dce60dbb37c981cb13066e6161872",
+      "sha256": "3869c7af1d0e7ea99b9b0697c90e3bbadad35697a46217805d85c6bbcc714ed2",
       "source_path": "src/Actions/RunAction.cc"
     },
     {
@@ -1434,10 +1483,10 @@
       "source_path": "src/Actions/RunProgress.cc"
     },
     {
-      "bytes": 6080,
+      "bytes": 8304,
       "path": "src/Actions/SteppingAction.cc",
       "role": "source",
-      "sha256": "2ff451f32e0aba6722ac3977f1c02c0d98b132929cce9bfabdce6eba61e97ebd",
+      "sha256": "aaa1cf87b898ae420156a8ac4f8899b065e195940936c01af311d3486b2b526c",
       "source_path": "src/Actions/SteppingAction.cc"
     },
     {
@@ -1581,6 +1630,27 @@
       "source_path": "src/Core/RandomCommandGuard.cc"
     },
     {
+      "bytes": 4833,
+      "path": "src/Core/RunFinalization.cc",
+      "role": "source",
+      "sha256": "cc16cbf9b380b4dcac7364b2ccba205d61d9922c88650657e47dec321baf9b16",
+      "source_path": "src/Core/RunFinalization.cc"
+    },
+    {
+      "bytes": 1194,
+      "path": "src/Core/RuntimeExecution.cc",
+      "role": "source",
+      "sha256": "be2e12046a84234442586bc94188146a75c2fd37ab4dad204b05beab792c5dbc",
+      "source_path": "src/Core/RuntimeExecution.cc"
+    },
+    {
+      "bytes": 33617,
+      "path": "src/Core/RuntimeSession.cc",
+      "role": "source",
+      "sha256": "a3daa1bb0a7975e318c77bdd26eed3cce7a5640e4cd6c987356b7627567222a3",
+      "source_path": "src/Core/RuntimeSession.cc"
+    },
+    {
       "bytes": 4933,
       "path": "src/Core/SessionJson.cc",
       "role": "source",
@@ -1588,10 +1658,10 @@
       "source_path": "src/Core/SessionJson.cc"
     },
     {
-      "bytes": 127613,
+      "bytes": 128220,
       "path": "src/Core/SessionServer.cc",
       "role": "source",
-      "sha256": "c1bca2ca23f49edcee6485361762d0ea104a51781d94a1d168e82b3eb35ea130",
+      "sha256": "6b671b7b1b5c949a21ba981d2b67fc14f10c3a0662e2216537e9260e8135b1dd",
       "source_path": "src/Core/SessionServer.cc"
     },
     {
@@ -1602,10 +1672,10 @@
       "source_path": "src/Core/SimulationContext.cc"
     },
     {
-      "bytes": 85368,
+      "bytes": 81093,
       "path": "src/Core/SimulationManager.cc",
       "role": "source",
-      "sha256": "13f1d2e94f0873cd114bf03f16b8e50b96acb42d94707f8b55c6c96ca46b7b1d",
+      "sha256": "57b2e031c6b75524b7da64c0233230befbd1dd8dc52a36d504ce0c8d3512f56c",
       "source_path": "src/Core/SimulationManager.cc"
     },
     {
@@ -1805,10 +1875,10 @@
       "source_path": "src/Materials/MaterialMessenger.cc"
     },
     {
-      "bytes": 11585,
+      "bytes": 11849,
       "path": "src/Output/AnalysisOutput.cc",
       "role": "source",
-      "sha256": "bcc96058fb0e05da188e33b51781883eae86f86f994a9b12d0668fd79ea6ef31",
+      "sha256": "2235539be4d39c4ebf29cfe509f1c4cbc835c4a5cb055d3ec66591d7a57b4e74",
       "source_path": "src/Output/AnalysisOutput.cc"
     },
     {
@@ -1854,10 +1924,10 @@
       "source_path": "src/Output/OutputMessenger.cc"
     },
     {
-      "bytes": 24888,
+      "bytes": 25400,
       "path": "src/Output/RunSummary.cc",
       "role": "source",
-      "sha256": "3c6a5bf539a7d9b944eef5e5aa7b37986a9a1bd3aa2c5feb2e9042e045ad48b6",
+      "sha256": "cff2c5dd99d56fed0ee3da169dd3caf902fbe81d42753fb2f9c4df06644381bd",
       "source_path": "src/Output/RunSummary.cc"
     },
     {
@@ -1994,10 +2064,10 @@
       "source_path": "src/Scoring/ParticleAggregator.cc"
     },
     {
-      "bytes": 5796,
+      "bytes": 10090,
       "path": "src/Scoring/PhaseSpace.cc",
       "role": "source",
-      "sha256": "6f518a5eea257f62cdfd7b0ad86d81d80525852495884367845ca7444d5192c2",
+      "sha256": "7ac5f3cf745f385c6d9733da58bb34342dcb22ecb06172efe56c1bb24cef05cb",
       "source_path": "src/Scoring/PhaseSpace.cc"
     },
     {
@@ -2064,6 +2134,13 @@
       "source_path": "src/Scoring/VolumeSpectrum.cc"
     },
     {
+      "bytes": 12889,
+      "path": "src/Source/PhaseSpaceReplayState.cc",
+      "role": "source",
+      "sha256": "f4ce15304a3e1ff428d34e07fac5ef6139bbcab6b59f9650d6b90ade7c81e489",
+      "source_path": "src/Source/PhaseSpaceReplayState.cc"
+    },
+    {
       "bytes": 4381,
       "path": "src/Source/PrimaryGeneratorAction.cc",
       "role": "source",
@@ -2071,17 +2148,17 @@
       "source_path": "src/Source/PrimaryGeneratorAction.cc"
     },
     {
-      "bytes": 92115,
+      "bytes": 94194,
       "path": "src/Source/SourceManager.cc",
       "role": "source",
-      "sha256": "5d16f18b57f2368c3a7247d7bf36d8fc80e49ffc05731143dd92bbde8939da3c",
+      "sha256": "b16db45e3ecab3f4fe41113224b1748f77e8a43b0f951c79c55aa1d05c68eb80",
       "source_path": "src/Source/SourceManager.cc"
     },
     {
-      "bytes": 8860,
+      "bytes": 9068,
       "path": "src/Source/SourceMessenger.cc",
       "role": "source",
-      "sha256": "f2dc206165bb5873682bcb2c11ebd553babdecdc9a4e3137a527ca0e8e9b327a",
+      "sha256": "145055e2ec12066e08c8e7893b64073c5ca260131d24ce3021719f69d7229229",
       "source_path": "src/Source/SourceMessenger.cc"
     },
     {
@@ -2225,6 +2302,13 @@
       "source_path": "tools/parallelScoringCheck.cc"
     },
     {
+      "bytes": 26701,
+      "path": "tools/phaseSpaceStateCheck.cc",
+      "role": "tool",
+      "sha256": "a6760995d5ce5c70e49a9a4f5ec902b4126a422292078f2db695269f0af80718",
+      "source_path": "tools/phaseSpaceStateCheck.cc"
+    },
+    {
       "bytes": 898,
       "path": "tools/platform_path_fixtures.json",
       "role": "tool",
@@ -2237,6 +2321,27 @@
       "role": "tool",
       "sha256": "d77f1f0b4957e8ec32d9e87af0f643538e0a12aa1987080869d9b659c9560f8a",
       "source_path": "tools/randomCommandGuardCheck.cc"
+    },
+    {
+      "bytes": 5044,
+      "path": "tools/rootFileFinalizationCheck.cc",
+      "role": "tool",
+      "sha256": "4d76a01ac71605dd4002f07a2afc4c120d4225b3256b4e28c9e1bbffe6f3119c",
+      "source_path": "tools/rootFileFinalizationCheck.cc"
+    },
+    {
+      "bytes": 12926,
+      "path": "tools/rootLifecycleCheck.cc",
+      "role": "tool",
+      "sha256": "9ef3a07ac1795fa148b51738a60445a9096a34c3954de29cdf869e28d9858330",
+      "source_path": "tools/rootLifecycleCheck.cc"
+    },
+    {
+      "bytes": 8648,
+      "path": "tools/runtimeSessionCheck.cc",
+      "role": "tool",
+      "sha256": "caf48f116c71b5a88afa8189ab308adfa20049e13e96a7c0d1c6ae5985ab0cfa",
+      "source_path": "tools/runtimeSessionCheck.cc"
     },
     {
       "bytes": 16165,

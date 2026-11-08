@@ -90,6 +90,11 @@ std::string GeneratedFileSchema(const std::string& path)
     }
     if (matches("phase_space")) {
         if (header == "runID,eventID,trackID,parentID,particle,pdg,x_mm,y_mm,z_mm,u,v,w,"
+                      "kineticEnergy_MeV,time_ns,weight,charge_eplus,dynamic_mass_MeV,electron_occupancy,"
+                      "magnetic_moment_MeV_per_T,polarization_x,polarization_y,polarization_z") return "phase_space_csv_v3";
+        if (header == "runID,eventID,trackID,parentID,particle,pdg,x_mm,y_mm,z_mm,u,v,w,"
+                      "kineticEnergy_MeV,time_ns,weight,charge_eplus") return "phase_space_csv_v2";
+        if (header == "runID,eventID,trackID,parentID,particle,pdg,x_mm,y_mm,z_mm,u,v,w,"
                       "kineticEnergy_MeV,time_ns,weight") return "phase_space_csv_v1";
     }
     if (matches("let_volume_summary")) {

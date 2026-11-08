@@ -5,6 +5,7 @@
 // loop; it never touches Geant4 or the session state without the state mutex.
 
 #include "Core/SessionServer.hh"
+#include "Core/RuntimeExecution.hh"
 
 #include "Config/InputProvenance.hh"
 #include "Core/SessionJson.hh"
@@ -294,6 +295,8 @@ void OnRunEnd(int runId, int plannedEvents, int completedEvents, long long abort
 struct SessionServer::Impl {
     SessionServer* owner = nullptr;
     SimulationManager& simulation;
+    runtime::Geant4Execution defaultExecution;
+    runtime::NativeExecutionPort& execution;
     std::string recordRoot;
     std::string sessionRoot;
     std::string outputRoot;
@@ -380,8 +383,10 @@ struct SessionServer::Impl {
     bool recordFailed = false;
     std::string recordError;
 
-    Impl(SimulationManager& manager, std::string root, std::string replay)
-        : simulation(manager), recordRoot(std::move(root)), replaySource(std::move(replay))
+    Impl(SimulationManager& manager, std::string root, std::string replay,
+         runtime::NativeExecutionPort* port = nullptr)
+        : simulation(manager), execution(port ? *port : defaultExecution),
+          recordRoot(std::move(root)), replaySource(std::move(replay))
     {
         replayMode = !replaySource.empty();
         output = manager.GetOutputManager();
@@ -1546,7 +1551,7 @@ struct SessionServer::Impl {
                 return false;
             }
             if (kernelInitialized) return Reject(frame, op, "already_initialized", "the kernel is already initialized");
-            const int status = G4UImanager::GetUIpointer()->ApplyCommand("/run/initialize");
+            const int status = execution.ApplyCommand("/run/initialize");
             if (status != 0) {
                 {
                     std::lock_guard<std::mutex> guard(stateMutex);
@@ -1721,7 +1726,7 @@ struct SessionServer::Impl {
                 return false;
             }
             try {
-                runManager->BeamOn(static_cast<int>(events));
+                execution.BeamOn(static_cast<int>(events));
             } catch (const std::exception& error) {
                 {
                     std::lock_guard<std::mutex> guard(stateMutex);
@@ -2894,6 +2899,14 @@ SessionServer::SessionServer(SimulationManager& simulation, std::string recordRo
     : simulation_(simulation), recordRoot_(std::move(recordRoot)), replaySource_(std::move(replaySource))
 {
     impl_ = new Impl(simulation_, recordRoot_, replaySource_);
+    impl_->owner = this;
+}
+
+SessionServer::SessionServer(SimulationManager& simulation, runtime::NativeExecutionPort& execution,
+                             std::string recordRoot, std::string replaySource)
+    : simulation_(simulation), recordRoot_(std::move(recordRoot)), replaySource_(std::move(replaySource))
+{
+    impl_ = new Impl(simulation_, recordRoot_, replaySource_, &execution);
     impl_->owner = this;
 }
 

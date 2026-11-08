@@ -27,6 +27,8 @@ Tolerances are 5 standard errors of the sample statistic (seeds fixed).
 from __future__ import annotations
 
 import csv
+import hashlib
+import json
 import math
 import os
 import re
@@ -82,6 +84,53 @@ class Case:
     def __init__(self, work: Path):
         self.work = work
         self.count = 0
+        self.binary_sha256 = hashlib.sha256(EXE.read_bytes()).hexdigest()
+        from run_m0_tests import workspace_source_fingerprint
+        self.source_fingerprint = workspace_source_fingerprint()
+
+    def run_ui(self, argv, *, input=None, env=None):
+        output = Path(argv[argv.index("--output") + 1])
+        evidence = self.work / (output.name + "-process")
+        evidence.mkdir()
+        stdin = evidence / "stdin.txt"
+        stdin.write_text(input or "", encoding="utf-8")
+        inputs = [Path(argv[argv.index("--config") + 1]), self.work / "deferred_ui_geometry.ini",
+                  ROOT / "config/materials/material.ini", stdin]
+        frozen = {}
+        for index, path in enumerate(inputs):
+            data = path.read_bytes()
+            snapshot = evidence / f"input-{index:03d}.bin"
+            snapshot.write_bytes(data)
+            frozen[str(path.resolve())] = {"sha256": hashlib.sha256(data).hexdigest(), "snapshot": snapshot.name}
+        receipt = {"argv": argv, "cwd": str(self.work), "pid": None, "exit_code": None,
+                   "binary_sha256": self.binary_sha256, "source_fingerprint": self.source_fingerprint,
+                   "inputs": frozen, "Q1_GPS_COMMAND": (env or {}).get("Q1_GPS_COMMAND"), "status": "starting"}
+        assert hashlib.sha256(EXE.read_bytes()).hexdigest() == self.binary_sha256
+        try:
+            with stdin.open("rb") as source, (evidence / "stdout.log").open("wb") as stdout, (evidence / "stderr.log").open("wb") as stderr:
+                process = subprocess.Popen(argv, cwd=self.work, env=env, stdin=source if input is not None else subprocess.DEVNULL,
+                                           stdout=stdout, stderr=stderr)
+                receipt["pid"] = process.pid
+                (evidence / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
+                try:
+                    process.wait(timeout=120)
+                except subprocess.TimeoutExpired:
+                    receipt["status"] = "timeout"
+                    process.kill()
+                    process.wait()
+                    raise
+                finally:
+                    receipt["exit_code"] = process.returncode
+            receipt["status"] = "exited"
+        finally:
+            receipt["binary_sha256_after"] = hashlib.sha256(EXE.read_bytes()).hexdigest()
+            receipt["artifacts_sha256"] = {str(f.relative_to(self.work)): hashlib.sha256(f.read_bytes()).hexdigest()
+                for folder in (evidence, output) for f in sorted(folder.rglob("*")) if f.is_file() and f.name != "receipt.json"}
+            (evidence / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
+        assert receipt["binary_sha256_after"] == self.binary_sha256
+        return subprocess.CompletedProcess(argv, process.returncode,
+            (evidence / "stdout.log").read_bytes().decode("utf-8", errors="replace"),
+            (evidence / "stderr.log").read_bytes().decode("utf-8", errors="replace"))
 
     def run(self, source: str, events: int = 3000, size: str = "40 cm", physics: str = "",
             macro_extra: str = "", expect_ok: bool = True, files: dict[str, str] | None = None,
@@ -99,13 +148,58 @@ class Case:
         macro.write_text(macro_text if macro_text is not None else
                          f"/run/initialize\n{macro_extra}/run/beamOn {events}\n", encoding="utf-8")
         output = self.work / name
-        result = subprocess.run([str(EXE), "--config", str(ini), "--macro", str(macro), "--output", str(output)],
-                                cwd=self.work, capture_output=True, text=True, errors="replace", timeout=1200)
+        argv = [str(EXE), "--config", str(ini), "--macro", str(macro), "--output", str(output)]
+        evidence = self.work / (name + "-process")
+        evidence.mkdir()
+        inputs = {ini, geometry, macro, ROOT / "config/materials/material.ini", *(self.work / f for f in (files or {}))}
+        # Preserve referenced replay/spectrum bytes at invocation, including Stage B's actual Stage A files.
+        for line in source.splitlines():
+            if "=" in line:
+                key, value = (x.strip() for x in line.split("=", 1))
+                if key.endswith("file") or key.endswith("files"):
+                    for token in value.split(","):
+                        path = Path(token.strip())
+                        path = path if path.is_absolute() else self.work / path
+                        if path.is_file(): inputs.add(path)
+        frozen = {}
+        for index, path in enumerate(sorted(inputs)):
+            data = path.read_bytes()
+            snapshot = evidence / f"input-{index:03d}.bin"
+            snapshot.write_bytes(data)
+            frozen[str(path.resolve())] = {"sha256": hashlib.sha256(data).hexdigest(), "snapshot": snapshot.name}
+        receipt = {"argv": argv, "cwd": str(self.work), "pid": None, "exit_code": None,
+                   "binary_sha256": self.binary_sha256, "source_fingerprint": self.source_fingerprint,
+                   "inputs": frozen, "status": "starting"}
+        assert hashlib.sha256(EXE.read_bytes()).hexdigest() == self.binary_sha256
+        try:
+            with (evidence / "stdout.log").open("wb") as stdout, (evidence / "stderr.log").open("wb") as stderr:
+                process = subprocess.Popen(argv, cwd=self.work, stdout=stdout, stderr=stderr)
+                receipt["pid"] = process.pid
+                (evidence / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
+                try:
+                    process.wait(timeout=1200)
+                except subprocess.TimeoutExpired:
+                    receipt["status"] = "timeout"
+                    process.kill()
+                    process.wait()
+                    raise
+                finally:
+                    receipt["exit_code"] = process.returncode
+            receipt["status"] = "exited"
+        finally:
+            receipt["binary_sha256_after"] = hashlib.sha256(EXE.read_bytes()).hexdigest()
+            receipt["artifacts_sha256"] = {str(f.relative_to(self.work)): hashlib.sha256(f.read_bytes()).hexdigest()
+                for folder in (evidence, output) for f in sorted(folder.rglob("*")) if f.is_file() and f.name != "receipt.json"}
+            (evidence / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
+        assert receipt["binary_sha256_after"] == self.binary_sha256
+        result = subprocess.CompletedProcess(argv, process.returncode,
+            (evidence / "stdout.log").read_bytes().decode("utf-8", errors="replace"),
+            (evidence / "stderr.log").read_bytes().decode("utf-8", errors="replace"))
         log = result.stdout + result.stderr
         if expect_ok:
             assert result.returncode == 0, f"{name} failed:\n{source}\n{log[-3000:]}"
         else:
-            assert result.returncode != 0, f"{name} unexpectedly succeeded:\n{source}"
+            assert result.returncode == 1, f"{name} unexpectedly succeeded:\n{source}"
         return output, log
 
 
@@ -334,7 +428,21 @@ def multi_source_case(case: Case) -> None:
     summary = (output / "run_summary.txt").read_text(encoding="utf-8")
     assert "source_count = 2" in summary and "name=high intensity=3" in summary, summary[-3000:]
 
-    _, log = case.run(text, 1, macro_extra="/AIHL/source/energy 2 MeV\n", expect_ok=False)
+    rejected, log = case.run(text, 1, macro_extra="/AIHL/source/energy 2 MeV\n", expect_ok=False)
+    failure = dict((k.strip(), v.strip()) for k, v in
+                   (line.split("=", 1) for line in (rejected / "run_summary.txt").read_text(encoding="utf-8").splitlines() if "=" in line))
+    assert failure["status"] == "failed" and failure["program_exit_code"] == "1"
+    assert failure["run_count"] == "0" and failure["actual_completed_event_count"] == "0"
+    assert failure["macro_execution_status"] == "failed"
+    assert Path(failure["macro_failure_file"]).resolve() == (case.work / f"case{case.count:02d}.mac").resolve()
+    assert failure["macro_failure_line"] == "2" and failure["macro_failure_command"] == "/AIHL/source/energy 2 MeV"
+    assert failure["macro_failure_code"] == "0" and failure["macro_failure_code_available"] == "false"
+    assert "FatalException" not in log and "core dump" not in log.lower()
+    sys.path.insert(0, str(ROOT / "gui"))
+    from g4usim_gui.output.provenance import output_evidence
+    registered = output_evidence(rejected)
+    assert registered.status == "verified"
+    assert registered.require("run_summary.txt").read_bytes() == (rejected / "run_summary.txt").read_bytes()
     assert "several [source.<name>] sources" in log, log[-2000:]
     print("  /AIHL/source/energy rejected with several sources")
 
@@ -443,6 +551,13 @@ def phase_space_cases(case: Case) -> None:
     header = "runID,eventID,trackID,parentID,particle,pdg,x_mm,y_mm,z_mm,u,v,w,kineticEnergy_MeV,time_ns,weight\n"
     rows = "".join(f"0,{e},1,0,proton,2212,0,0,0,0,0,1,{10 + e},0,0.5\n0,{e},2,0,proton,2212,5,0,0,1,0,0,7,0,0.5\n"
                    for e in range(3))
+    # Preserve the former proton bytes as a migration rejection, not a silently rewritten positive.
+    _, legacy_log = case.run("[source]\nphase_space_file = hand-proton-v1.csv\n", 1, expect_ok=False,
+                             files={"hand-proton-v1.csv": header + rows})
+    assert "legacy v1 ion has no actual charge" in legacy_log and "phase_space_csv_v3" in legacy_log
+    assert "hand-proton-v1.csv" in legacy_log and "line 2" in legacy_log
+    # The independent multi-history/weight/recycle contract uses an actual v1 non-ion.
+    rows = rows.replace("proton,2212", "e-,11")
     output, _ = case.run("[source]\nphase_space_file = hand.csv\nphase_space_recycle = true\n", 6,
                          files={"hand.csv": header + rows})
     starts = first_steps(output, lambda r: r["parentID"] == "0")
@@ -576,9 +691,8 @@ def source_interleave_cases(case: Case) -> None:
         output = case.work / f"deferred_ui_{label}"
         environment = os.environ.copy()
         environment["Q1_GPS_COMMAND"] = "/gps/particle"
-        result = subprocess.run([str(EXE), "--config", str(ini), "--ui", "--ui-session", "csh",
-                                 "--output", str(output)], input=commands, cwd=case.work,
-                                capture_output=True, text=True, errors="replace", timeout=120, env=environment)
+        result = case.run_ui([str(EXE), "--config", str(ini), "--ui", "--ui-session", "csh",
+                                 "--output", str(output)], input=commands, env=environment)
         log = result.stdout + result.stderr
         if ok:
             assert result.returncode == 0, log[-3000:]
@@ -587,9 +701,8 @@ def source_interleave_cases(case: Case) -> None:
         else:
             assert result.returncode != 0 and "pending ion/confinement" in log, log[-3000:]
             assert "MUST_NOT_CONTINUE" not in log
-    result = subprocess.run([str(EXE), "--config", str(ini), "--ui", "--output",
-                             str(case.work / "deferred_ui_unaudited")], cwd=case.work,
-                            capture_output=True, text=True, errors="replace", timeout=120)
+    result = case.run_ui([str(EXE), "--config", str(ini), "--ui", "--output",
+                             str(case.work / "deferred_ui_unaudited")])
     assert result.returncode != 0 and "requires --ui-session csh" in result.stdout + result.stderr
     # The native NULL confinement command must also override the delayed INI
     # confinement. Inspect initial trajectory vertices, including misses of SD.
@@ -614,7 +727,9 @@ def source_interleave_cases(case: Case) -> None:
 
 def main() -> int:
     assert EXE.is_file(), f"backend executable missing: {EXE}"
-    work = Path(tempfile.mkdtemp(prefix="g4usim_gps_"))
+    formal = os.environ.get("G4USIM_TEST_EVIDENCE_DIR")
+    if formal: Path(formal).mkdir(parents=True, exist_ok=True)
+    work = Path(tempfile.mkdtemp(prefix="g4usim_gps_", dir=formal)).resolve()
     try:
         case = Case(work)
         energy_cases(case)
@@ -626,7 +741,10 @@ def main() -> int:
         failure_cases(case)
         source_interleave_cases(case)
     finally:
-        shutil.rmtree(work, ignore_errors=True)
+        if not formal:
+            shutil.rmtree(work, ignore_errors=True)
+        else:
+            print(f"GPS raw evidence retained: {work}")
     print("test_gps_sources: OK")
     return 0
 

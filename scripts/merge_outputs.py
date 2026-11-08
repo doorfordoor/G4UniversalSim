@@ -6,6 +6,9 @@ import tempfile
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from scripts.output_publication import finish_publication
+
 
 def resolve_files(input_dir, pattern, files):
     resolved = [Path(item) for item in files]
@@ -57,6 +60,7 @@ def merge(files, output):
 
     output.parent.mkdir(parents=True, exist_ok=True)
     temporary = None
+    published = False
     try:
         with tempfile.NamedTemporaryFile(
             mode="w", newline="", encoding="utf-8", dir=output.parent,
@@ -77,9 +81,10 @@ def merge(files, output):
         # Hard-link publishing refuses an existing target on both Windows and POSIX.
         # The temporary file is complete before it becomes visible as the result.
         os.link(temporary, output)
+        published = True
     finally:
-        if temporary is not None:
-            temporary.unlink(missing_ok=True)
+        result = finish_publication(temporary, output, published)
+    return result
 
 
 def main():

@@ -163,6 +163,52 @@ if(BUILD_TESTING)
         TIMEOUT 180
     )
     if(NOT G4USIM_STANDALONE_EXPORT)
+        add_executable(rootLifecycleCheck tools/rootLifecycleCheck.cc ${SOURCES})
+        target_include_directories(rootLifecycleCheck PRIVATE ${PROJECT_BINARY_DIR}/generated)
+        target_compile_definitions(rootLifecycleCheck PRIVATE
+            G4USIM_BUILD_CONFIGURATION="$<IF:$<BOOL:$<CONFIG>>,$<CONFIG>,unknown>")
+        if(Geant4_gdml_FOUND)
+            target_compile_definitions(rootLifecycleCheck PRIVATE G4USIM_HAVE_GDML=1)
+        endif()
+        target_link_libraries(rootLifecycleCheck ${Geant4_LIBRARIES})
+        g4usim_configure_windows_runtime(rootLifecycleCheck)
+        set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+            ${PROJECT_SOURCE_DIR}/tools/rootLifecycleCheck.cc)
+        file(SHA256 ${PROJECT_SOURCE_DIR}/tools/rootLifecycleCheck.cc G4USIM_ROOT_LIFECYCLE_PROBE_SHA256)
+        set_source_files_properties(tools/rootLifecycleCheck.cc PROPERTIES
+            COMPILE_DEFINITIONS G4USIM_ROOT_LIFECYCLE_PROBE_SHA256="${G4USIM_ROOT_LIFECYCLE_PROBE_SHA256}")
+        add_executable(phaseSpaceStateCheck tools/phaseSpaceStateCheck.cc ${SOURCES})
+        target_include_directories(phaseSpaceStateCheck PRIVATE ${PROJECT_BINARY_DIR}/generated)
+        target_compile_definitions(phaseSpaceStateCheck PRIVATE
+            G4USIM_BUILD_CONFIGURATION="$<IF:$<BOOL:$<CONFIG>>,$<CONFIG>,unknown>")
+        if(Geant4_gdml_FOUND)
+            target_compile_definitions(phaseSpaceStateCheck PRIVATE G4USIM_HAVE_GDML=1)
+        endif()
+        target_link_libraries(phaseSpaceStateCheck ${Geant4_LIBRARIES})
+        g4usim_configure_windows_runtime(phaseSpaceStateCheck)
+        set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+            ${PROJECT_SOURCE_DIR}/tools/phaseSpaceStateCheck.cc)
+        file(SHA256 ${PROJECT_SOURCE_DIR}/tools/phaseSpaceStateCheck.cc G4USIM_PHASE_STATE_PROBE_SHA256)
+        set_source_files_properties(tools/phaseSpaceStateCheck.cc PROPERTIES
+            COMPILE_DEFINITIONS G4USIM_PHASE_STATE_PROBE_SHA256="${G4USIM_PHASE_STATE_PROBE_SHA256}")
+        add_executable(runtimeSessionCheck tools/runtimeSessionCheck.cc ${SOURCES})
+        target_include_directories(runtimeSessionCheck PRIVATE ${PROJECT_BINARY_DIR}/generated)
+        target_compile_definitions(runtimeSessionCheck PRIVATE
+            G4USIM_BUILD_CONFIGURATION="$<IF:$<BOOL:$<CONFIG>>,$<CONFIG>,unknown>")
+        if(Geant4_gdml_FOUND)
+            target_compile_definitions(runtimeSessionCheck PRIVATE G4USIM_HAVE_GDML=1)
+        endif()
+        target_link_libraries(runtimeSessionCheck ${Geant4_LIBRARIES})
+        g4usim_configure_windows_runtime(runtimeSessionCheck)
+        set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+            ${PROJECT_SOURCE_DIR}/tools/runtimeSessionCheck.cc)
+        file(SHA256 ${PROJECT_SOURCE_DIR}/tools/runtimeSessionCheck.cc G4USIM_RUNTIME_SESSION_PROBE_SHA256)
+        set_source_files_properties(tools/runtimeSessionCheck.cc PROPERTIES
+            COMPILE_DEFINITIONS G4USIM_RUNTIME_SESSION_PROBE_SHA256="${G4USIM_RUNTIME_SESSION_PROBE_SHA256}")
+        add_executable(rootFileFinalizationCheck tools/rootFileFinalizationCheck.cc)
+        target_compile_features(rootFileFinalizationCheck PRIVATE cxx_std_17)
+        add_test(NAME root_file_finalization_component COMMAND rootFileFinalizationCheck)
+        set_tests_properties(root_file_finalization_component PROPERTIES LABELS "ar3;component")
         # Repository-only real Manager transaction probe (not exported).
         add_executable(geometryTransactionCheck tools/geometryTransactionCheck.cc ${SOURCES})
         target_include_directories(geometryTransactionCheck PRIVATE ${PROJECT_BINARY_DIR}/generated)

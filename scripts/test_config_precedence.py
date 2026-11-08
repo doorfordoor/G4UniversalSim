@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import ctypes
+import json
 import hashlib
 import os
 import subprocess
@@ -493,7 +495,20 @@ def main() -> int:
 
         # Empty values, missing paths, and parser errors must fail clearly.
         run(executable, ["--threads", "0"], expected=1)
-        run(executable, ["--seed", "-1"], expected=1)
+        # stoul accepts leading whitespace before a minus and wraps it. Reject
+        # that spelling before conversion without narrowing the public ulong range.
+        for invalid_seed in ("-1", " -1", "\t-1", "\r\n-1", "\f-1", "\v-1", " \t\r\n\f\v-1",
+                             "", " \t\r\n\f\v", "+", "1x", "1 ", "-0"):
+            text = run(executable, ["--seed", invalid_seed, "--capabilities"], expected=1)
+            if not invalid_seed.strip() or invalid_seed.lstrip().startswith('-'):
+                require(text, "Invalid value for --seed")
+        ulong_max = 2 ** (8 * ctypes.sizeof(ctypes.c_ulong)) - 1
+        run(executable, ["--seed", str(ulong_max + 1), "--capabilities"], expected=1)
+        for valid_seed in ("0", " +123", "\t123", str(ulong_max)):
+            # Capabilities is an early read-only path after command-line parsing;
+            # the existing real-run cases below separately check seed receipts.
+            capabilities = json.loads(run(executable, ["--seed", valid_seed, "--capabilities"]))
+            assert isinstance(capabilities, dict) and capabilities
         run(executable, ["--output"], expected=1)
         run(executable, ["--output", ""], expected=1)
         run(executable, ["--run-name", ""], expected=1)

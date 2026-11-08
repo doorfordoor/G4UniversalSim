@@ -73,7 +73,17 @@ void RunAction::BeginOfRunAction(const G4Run* run)
         try {
             biasingManager_->ValidateActiveProcessRules();
         } catch (const std::exception& error) {
+            if (auto* output = ActiveOutputManager()) {
+                output->RecordOutputFailure("biasing_validate_active", error.what(), run->GetRunID());
+            }
             G4Exception("RunAction::BeginOfRunAction", "AIHLBiasingTarget001", RunMustBeAborted, error.what());
+            return;
+        } catch (...) {
+            if (auto* output = ActiveOutputManager()) {
+                output->RecordOutputFailure("biasing_validate_active", "unknown exception", run->GetRunID());
+            }
+            G4Exception("RunAction::BeginOfRunAction", "AIHLBiasingTarget001", RunMustBeAborted,
+                        "unknown exception during active biasing validation");
             return;
         }
     }
@@ -248,7 +258,7 @@ void RunAction::EndOfRunAction(const G4Run* run)
         // finishes every worker run before this master callback.
         if (role_ != Role::Worker) {
             if (runTimerStarted_) runTimer_.Stop();
-            if (!outputManager->HasOutputFailure()) {
+            if (runTimerStarted_ && !outputManager->HasOutputFailure()) {
                 attempt("scorer_statistics_csv", [&]() {
                     outputManager->WriteScorerStatisticsCsv(runID, run->GetNumberOfEvent(),
                                                             runTimer_.GetRealElapsed());

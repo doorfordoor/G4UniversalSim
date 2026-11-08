@@ -13,6 +13,7 @@ import queue
 import threading
 import time
 from pathlib import Path
+from phase_space_test_fixture import synthetic_default_fixture
 import shutil
 import subprocess
 import sys
@@ -260,6 +261,9 @@ copies_file=copies.csv
             assert output_evidence(moved).status == "verified"
         header = "runID,eventID,trackID,parentID,particle,pdg,x_mm,y_mm,z_mm,u,v,w,kineticEnergy_MeV,time_ns,weight\n"
         phase = {f"phase{i}.csv": header + f"0,{i},1,0,proton,2212,0,0,-20,0,0,1,1,0,1\n" for i in (0,1)}
+        # Generate before Cases.run writes inputs and freezes expected/versions.
+        phase = {name: synthetic_default_fixture(text, purpose="f1-input-resources",
+                 evidence=work / "fixture-evidence", backend=cases.exe) for name, text in phase.items()}
         _, _, _, inputs = cases.run("phase-space", "[source]\nphase_space_file=phase0.csv,phase1.csv\n", files=phase, threads=2)
         assert len([r for r in inputs if r["kind"] == "phase_space"]) == 2
         _, _, _, inputs = cases.run("native-spectrum", files={"native-spectrum.dat": "0 0\n1 1\n2 1\n"},

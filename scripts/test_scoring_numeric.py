@@ -6,6 +6,7 @@ import json
 import math
 import os
 from pathlib import Path
+from phase_space_test_fixture import synthetic_default_fixture
 import subprocess
 import tempfile
 
@@ -74,10 +75,11 @@ sensitive = true
 """, encoding="utf-8")
     phase = folder / "phase.csv"
     counts = particles_per_event or (1,) * events
-    phase.write_text(
+    phase.write_text(synthetic_default_fixture(
         "runID,eventID,trackID,parentID,particle,pdg,x_mm,y_mm,z_mm,u,v,w,kineticEnergy_MeV,time_ns,weight\n" +
         "".join(f"0,{i},{track+1},0,proton,2212,0,0,0,0,0,1,2,0,{weight/count}\n"
-                for i, count in enumerate(counts) for track in range(count)), encoding="utf-8")
+                for i, count in enumerate(counts) for track in range(count)), purpose="scoring-numeric",
+        evidence=folder / "fixture-evidence", backend=EXE), encoding="utf-8")
     config = folder / "main.ini"
     niel = folder / "niel.csv"
     niel.write_text(f"# Numerical stress fixture, not physical reference data\nenergy_MeV,niel_MeV_cm2_g\n0.000001,{niel_value}\n10,{niel_value}\n",

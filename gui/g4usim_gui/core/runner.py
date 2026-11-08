@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import json
 import codecs
+from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 
 from PySide6.QtCore import QObject, QProcess, Signal
 
 from g4usim_gui.core.backend_launch import BackendLaunchError, prepare_backend_launch, unsupported_working_directory
+from g4usim_gui.core.backend_run_ownership import BackendRunOwnership
 from g4usim_gui.core.run_progress import ProgressParser
 from g4usim_gui.core.log_parser import parse_log_line
 from g4usim_gui.core.paths import ensure_directory
@@ -30,9 +32,23 @@ class G4USimRunner(QObject):
     # the runner stays the single owner of the backend process.
     sessionData = Signal(bytes, bool)
     processStarted = Signal()
+    # No process exists for a rejected/failed session launch. The window routes
+    # this to the session client's existing terminal transition (not run result).
+    sessionStartFailed = Signal()
 
-    def __init__(self, parent: QObject | None = None) -> None:
+    def __init__(self, parent: QObject | None = None, *,
+                 ownership: BackendRunOwnership | None = None) -> None:
         super().__init__(parent)
+        self._ownership = ownership if ownership is not None else BackendRunOwnership()
+        self._ownership_lease: object | None = None
+        self._run_claim: object | None = None
+        self._owns_lease = False
+        self._terminal_callback = False
+        self._in_error_callback = False
+        self._pending_finished = None
+        self._reporting_refusal = False
+        self._completion_slots = None
+        self._session_start_lease: object | None = None
         self._process = QProcess(self)
         self._stdout_file = None
         self._stderr_file = None
@@ -57,9 +73,7 @@ class G4USimRunner(QObject):
 
         self._process.readyReadStandardOutput.connect(self._read_stdout)
         self._process.readyReadStandardError.connect(self._read_stderr)
-        self._process.finished.connect(self._on_finished)
         self._process.started.connect(self.processStarted)
-        self._process.errorOccurred.connect(self._on_error)
         self._process.stateChanged.connect(self._on_state_changed)
 
     @staticmethod
@@ -90,16 +104,37 @@ class G4USimRunner(QObject):
     def is_running(self) -> bool:
         return self._process.state() != QProcess.NotRunning
 
-    def start(self, project: G4USimProject, command: list[str] | None = None) -> None:
-        self._start(project, command, session=False)
+    def start(self, project: G4USimProject, command: list[str] | None = None, *,
+              ownership_lease: object | None = None) -> bool:
+        return self._start(project, command, session=False, ownership_lease=ownership_lease)
 
-    def start_session(self, project: G4USimProject, command: list[str] | None = None) -> None:
+    def start_session(self, project: G4USimProject, command: list[str] | None = None) -> bool:
         """Start the same owned process for a controlled session.
 
         The session client speaks the JSON-lines protocol through ``sessionData``
         and never creates another process owner.
         """
-        self._start(project, command, session=True)
+        return self._start(project, command, session=True,
+                           ownership_lease=self._session_start_lease,
+                           release_lease=True)
+
+    @contextmanager
+    def session_start_admission(self):
+        """Reserve across SessionClient's synchronous pre-start signals.
+
+        A successful start transfers release to the process claim. A refused or
+        abandoned start releases on scope exit. There is no new process owner.
+        """
+        lease = self._ownership.acquire()
+        if lease is None:
+            yield False
+            return
+        self._session_start_lease = lease
+        try:
+            yield True
+        finally:
+            self._session_start_lease = None
+            self._ownership.release(lease)  # refuses while a process claim lives
 
     def write_session_data(self, payload: bytes) -> int:
         """Write one protocol frame to the owned session process."""
@@ -108,15 +143,122 @@ class G4USimRunner(QObject):
         return int(self._process.write(payload))
 
     def _start(self, project: G4USimProject, command: list[str] | None,
-               *, session: bool) -> None:
-        if self.is_running():
-            self.errorOccurred.emit("A run is already active.")
+               *, session: bool, ownership_lease: object | None = None,
+               release_lease: bool = False) -> bool:
+        # Claim before validation, file writes or any public signal. In particular,
+        # a cached scan executable cannot bypass this admission boundary.
+        if self.is_running() or self._run_claim is not None:
+            self._refuse_start("A run is already active.")
+            return False
+        lease = ownership_lease if ownership_lease is not None else self._ownership.acquire()
+        claim = self._ownership.claim(lease) if lease is not None else None
+        if claim is None:
+            self._refuse_start("Another run already owns the backend process.")
+            return False
+        self._ownership_lease, self._run_claim = lease, claim
+        self._owns_lease = ownership_lease is None or release_lease
+        started = False
+        try:
+            if self._completion_slots is not None:
+                done, error = self._completion_slots
+                self._process.finished.disconnect(done)
+                self._process.errorOccurred.disconnect(error)
+            done = lambda code, status: self._dispatch_finished(claim, code, status)
+            error = lambda value: self._dispatch_error(claim, value)
+            self._completion_slots = (done, error)
+            self._process.finished.connect(done)
+            self._process.errorOccurred.connect(error)
+            started = bool(self._start_owned(project, command, session=session))
+            return started
+        except Exception as error:
+            self.errorOccurred.emit(str(error))
+            return False
+        finally:
+            if not started and not self.is_running():
+                try:
+                    self._close_start_logs()
+                finally:
+                    try:
+                        if session:
+                            self.sessionStartFailed.emit()
+                    finally:
+                        self._release_run_claim(claim)
+
+    def _refuse_start(self, message: str) -> None:
+        # A refusal slot may itself try another entry. Report once on this stack
+        # while every nested attempt still receives False.
+        if not self._reporting_refusal:
+            self._reporting_refusal = True
+            try:
+                self.errorOccurred.emit(ui_text(message))
+            finally:
+                self._reporting_refusal = False
+
+    def _release_run_claim(self, claim: object) -> None:
+        if claim is None or claim is not self._run_claim:
             return
+        lease = self._ownership_lease
+        self._ownership.release_claim(lease, claim)
+        if self._owns_lease:
+            self._ownership.release(lease)
+        self._run_claim = self._ownership_lease = None
+        self._owns_lease = False
+
+    def _close_start_logs(self) -> None:
+        first_error = None
+        for name in ("_stdout_file", "_stderr_file"):
+            handle = getattr(self, name)
+            if handle is not None:
+                try:
+                    handle.close()
+                except OSError as error:
+                    first_error = first_error or error
+                finally:
+                    setattr(self, name, None)
+        if first_error is not None:
+            raise first_error
+
+    def _dispatch_finished(self, claim: object, code: int, status: QProcess.ExitStatus) -> None:
+        if claim is None or claim is not self._run_claim or self.is_running():
+            return
+        if self._terminal_callback:
+            if self._in_error_callback:
+                self._pending_finished = (claim, code, status)
+            return
+        self._terminal_callback = True
+        try:
+            self._on_finished(code, status)
+        finally:
+            # Keep admission closed throughout synchronous finished slots. Scan
+            # continuation is queued, after this stack has unwound.
+            self._release_run_claim(claim)
+            self._terminal_callback = False
+
+    def _dispatch_error(self, claim: object, error: QProcess.ProcessError) -> None:
+        if claim is None or claim is not self._run_claim or self._terminal_callback:
+            return
+        self._terminal_callback = True
+        self._in_error_callback = True
+        try:
+            self._on_error(error)
+            if error == QProcess.FailedToStart and self._session_mode:
+                self.sessionStartFailed.emit()
+        finally:
+            if error == QProcess.FailedToStart and not self.is_running():
+                self._release_run_claim(claim)
+            self._in_error_callback = False
+            self._terminal_callback = False
+            pending, self._pending_finished = self._pending_finished, None
+            if pending is not None:
+                self._dispatch_finished(*pending)
+
+    def _start_owned(self, project: G4USimProject, command: list[str] | None,
+                     *, session: bool) -> bool:
 
         errors = self.validate_project(project, ready_to_run=True)
         if errors:
             self.errorOccurred.emit("\n".join(errors))
-            return
+            return False
 
         requested_command = list(command) if command is not None else self.build_command(project)
         try:
@@ -127,7 +269,7 @@ class G4USimRunner(QObject):
             self._progress_frozen = True
             self.progressStateChanged.emit("failed")
             self.errorOccurred.emit(str(error))
-            return
+            return False
         self.last_launch = launch
         self._stderr_diagnostic_tail = ""
         self._output_dir = ensure_directory(project.outputDir)
@@ -148,7 +290,6 @@ class G4USimRunner(QObject):
         self._progress_frozen = False
         self._session_mode = bool(session)
         self._log_tails = {"stdout": "", "stderr": ""}
-        self.progressStateChanged.emit("starting")
         self._requested_state = ""
         self._status_data = {
             "state": "running",
@@ -163,15 +304,22 @@ class G4USimRunner(QObject):
             "requestedCommand": requested_command,
         }
         self._write_run_status()
+        self.progressStateChanged.emit("starting")
         program = command[0]
         arguments = command[1:]
         self._process.setProgram(program)
         self._process.setArguments(arguments)
         self._process.setWorkingDirectory(launch.launch_cwd)
+        if self._requested_state in {"stopped", "killed"}:
+            self._status_data["state"] = self._requested_state
+            self._status_data["finishedAt"] = _now_iso()
+            self._write_run_status()
+            return False
         self._process.start()
+        return True
 
     def terminate(self) -> None:
-        if self.is_running():
+        if self.is_running() or (self._run_claim is not None and not self._terminal_callback):
             self._requested_state = "stopped"
             self._progress_frozen = True
             self.progressStateChanged.emit("stopped")
@@ -181,7 +329,7 @@ class G4USimRunner(QObject):
             self._process.terminate()
 
     def kill(self) -> None:
-        if self.is_running():
+        if self.is_running() or (self._run_claim is not None and not self._terminal_callback):
             self._requested_state = "killed"
             self._progress_frozen = True
             self.progressStateChanged.emit("killed")

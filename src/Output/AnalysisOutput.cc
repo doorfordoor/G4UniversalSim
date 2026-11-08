@@ -1,6 +1,7 @@
 #include "Output/AnalysisOutput.hh"
 
 #include "Output/OutputRecord.hh"
+#include "Output/RootFileFinalization.hh"
 
 #include "G4AnalysisManager.hh"
 #include "G4Threading.hh"
@@ -12,6 +13,7 @@ namespace {
 
 thread_local bool booked = false;
 thread_local bool fileOpen = false;
+thread_local bool finalizationPending = false;
 
 class NtupleBuilder {
 public:
@@ -127,6 +129,9 @@ namespace AnalysisOutput {
 
 void BeginRun(const std::string& filePath, const H1Binning& raw, const H1Binning& weighted)
 {
+    if (fileOpen) {
+        throw std::runtime_error("AnalysisOutput: previous ROOT file is still open");
+    }
     if (raw.bins <= 0 || !(raw.max > raw.min) || weighted.bins <= 0 || !(weighted.max > weighted.min)) {
         throw std::runtime_error("AnalysisOutput: invalid edep histogram binning");
     }
@@ -142,19 +147,14 @@ void BeginRun(const std::string& filePath, const H1Binning& raw, const H1Binning
         throw std::runtime_error("AnalysisOutput: cannot open ROOT file '" + filePath + "'");
     }
     fileOpen = true;
+    finalizationPending = true;
 }
 
 bool EndRun()
 {
-    if (!fileOpen) return false;
-    fileOpen = false;
+    if (!finalizationPending) return false;
     auto* manager = G4AnalysisManager::Instance();
-    const bool written = manager->Write();
-    const bool closed = manager->CloseFile();
-    if (!written || !closed) {
-        throw std::runtime_error("AnalysisOutput: failed to write/close ROOT file");
-    }
-    return true;
+    return detail::FinalizeRootFile(*manager, finalizationPending, fileOpen);
 }
 
 bool IsOpen()
@@ -164,7 +164,7 @@ bool IsOpen()
 
 void FillHit(const HitRecord& r, int threadId)
 {
-    if (!fileOpen) return;
+    if (!fileOpen || !finalizationPending) return;
     RowFiller(G4AnalysisManager::Instance(), kHitsNtuple)
         .I(r.runID).I(r.eventID).I(r.trackID).I(r.parentID).S(r.particleName)
         .D(r.edep).D(r.ndep).D(r.stepLength)
@@ -176,7 +176,7 @@ void FillHit(const HitRecord& r, int threadId)
 
 void FillEvent(const EventEdepRecord& r, int threadId)
 {
-    if (!fileOpen) return;
+    if (!fileOpen || !finalizationPending) return;
     RowFiller(G4AnalysisManager::Instance(), kEventsNtuple)
         .I(r.runID).I(r.eventID).D(r.rawEdep).D(r.weightedEdep).I(threadId)
         .Add();
@@ -184,7 +184,7 @@ void FillEvent(const EventEdepRecord& r, int threadId)
 
 void FillEdepHistograms(bool fillRaw, double rawMeV, bool fillWeighted, double weightedMeV)
 {
-    if (!fileOpen) return;
+    if (!fileOpen || !finalizationPending) return;
     auto* manager = G4AnalysisManager::Instance();
     if (fillRaw) manager->FillH1(kEdepRawH1, rawMeV);
     if (fillWeighted) manager->FillH1(kEdepWeightedH1, weightedMeV);
@@ -194,7 +194,7 @@ void FillEdepSummary(bool byVolume, int runId, int threadId, const std::string& 
                      double rawMeV, double weightedMeV, double rawSumSqMeV2, double weightedSumSqMeV2,
                      long long events)
 {
-    if (!fileOpen) return;
+    if (!fileOpen || !finalizationPending) return;
     RowFiller(G4AnalysisManager::Instance(), byVolume ? kEdepVolumeNtuple : kEdepParticleNtuple)
         .I(runId).I(threadId).S(name).D(rawMeV).D(weightedMeV)
         .D(rawSumSqMeV2).D(weightedSumSqMeV2).D(static_cast<double>(events))
@@ -206,7 +206,7 @@ void FillDose(int runId, int threadId, const std::string& volumePath, const std:
               double rawDoseGy, double weightedDoseGy, double rawEdepSumSqMeV2,
               double weightedEdepSumSqMeV2, long long events)
 {
-    if (!fileOpen) return;
+    if (!fileOpen || !finalizationPending) return;
     RowFiller(G4AnalysisManager::Instance(), kDoseNtuple)
         .I(runId).I(threadId).S(volumePath).S(volumeName).D(massKg)
         .D(rawEdepMeV).D(weightedEdepMeV).D(rawDoseGy).D(weightedDoseGy)
@@ -219,7 +219,7 @@ void FillFluence(int runId, int threadId, const std::string& volumePath, const s
                  double rawFluencePerMm2, double weightedFluencePerMm2, double rawLengthSumSqMm2,
                  double weightedLengthSumSqMm2, long long events)
 {
-    if (!fileOpen) return;
+    if (!fileOpen || !finalizationPending) return;
     RowFiller(G4AnalysisManager::Instance(), kFluenceNtuple)
         .I(runId).I(threadId).S(volumePath).S(volumeName).D(volumeMm3)
         .D(rawTrackLengthMm).D(weightedTrackLengthMm)
@@ -232,7 +232,7 @@ void FillMeshCell(int runId, int threadId, const std::string& mesh, const std::s
                   const std::string& unit, int i0, int i1, int i2, double sum, double sumSquares,
                   int entries, long long events)
 {
-    if (!fileOpen) return;
+    if (!fileOpen || !finalizationPending) return;
     RowFiller(G4AnalysisManager::Instance(), kMeshNtuple)
         .I(runId).I(threadId).S(mesh).S(quantity).S(unit).I(i0).I(i1).I(i2)
         .D(sum).D(sumSquares).I(entries).D(static_cast<double>(events))
@@ -245,7 +245,7 @@ void FillLET(int runId, int threadId, const std::string& volumePath, const std::
              double sumSqWLmm2, double sumSqWSlMeV2, double sumSqWS2l, double sumWLxWSl,
              double sumWSlxWS2l, long long events)
 {
-    if (!fileOpen) return;
+    if (!fileOpen || !finalizationPending) return;
     RowFiller(G4AnalysisManager::Instance(), kLetNtuple)
         .I(runId).I(threadId).S(volumePath).S(volumeName).S(particles).D(static_cast<double>(steps))
         .D(sumWLmm).D(sumWSlMeV).D(sumWS2lMeV2PerMm).D(letTkeVPerUm).D(letDkeVPerUm)

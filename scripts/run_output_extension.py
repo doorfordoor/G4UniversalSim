@@ -15,6 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from scripts.output_extension_registry import OutputExtensionRegistry  # noqa: E402
+from scripts.output_publication import PublicationResult, finish_publication  # noqa: E402
 
 BUILTINS = (
     ROOT / "scripts" / "extensions" / "dose_json_extension.py",
@@ -22,22 +23,24 @@ BUILTINS = (
 )
 
 
-def write_exclusive(output: Path, payload: dict) -> None:
+def write_exclusive(output: Path, payload: dict) -> PublicationResult:
     """Publish a complete JSON file, without replacing an existing result."""
     directory = output.parent.resolve()
     if not directory.is_dir():
         raise ValueError(f"Output directory does not exist: {directory}")
     content = (json.dumps(payload, ensure_ascii=False, indent=2, allow_nan=False) + "\n").encode("utf-8")
     temporary: Path | None = None
+    published = False
     try:
         handle, name = tempfile.mkstemp(prefix=".g4usim-extension-", suffix=".tmp", dir=directory)
         temporary = Path(name)
         with os.fdopen(handle, "wb") as stream:
             stream.write(content)
         os.link(temporary, output)  # atomic no-overwrite publication on supported filesystems
+        published = True
     finally:
-        if temporary is not None:
-            temporary.unlink(missing_ok=True)
+        result = finish_publication(temporary, output, published)
+    return result
 
 
 def main() -> int:
@@ -69,7 +72,10 @@ def main() -> int:
         print(args.output.resolve())
         return 0
     except (OSError, ValueError, TypeError) as error:
-        print(f"Output extension failed: {error}", file=sys.stderr)
+        try:
+            print(f"Output extension failed: {error}", file=sys.stderr)
+        except (OSError, ValueError):
+            pass  # a closed diagnostic stream must not replace the operation result
         return 1
 
 

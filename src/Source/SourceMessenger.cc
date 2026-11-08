@@ -5,7 +5,6 @@
 #include "Utils/StringUtils.hh"
 #include "Utils/UnitParser.hh"
 
-#include "G4Exception.hh"
 #include "G4UIcmdWithAString.hh"
 #include "G4UIcmdWithoutParameter.hh"
 #include "G4UIdirectory.hh"
@@ -97,14 +96,15 @@ std::vector<double> ParseDirectionVec3(const std::string& text)
     return values;
 }
 
-void ReportCommandFailure(const std::string& command,
+void ReportCommandFailure(SourceManager* manager, const std::string& command,
                           const std::string& raw,
-                          const std::exception& error)
+                          const std::string& error)
 {
     const auto message = "Source command " + command + " failed for input '" +
-                         raw + "': " + error.what();
-    G4Exception("SourceMessenger::SetNewValue", "AIHL_SOURCE_001",
-                FatalException, message.c_str());
+                         raw + "': " + error;
+    if (!manager) throw std::runtime_error(message);
+    manager->RecordCommandFailure(message);
+    G4cerr << "[AIHL_SOURCE_001] " << message << G4endl;
 }
 
 } // namespace
@@ -218,7 +218,10 @@ void SourceMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
             RequireManager(manager_, "/AIHL/source/reset")->ResetGPS();
         }
     } catch (const std::exception& error) {
-        ReportCommandFailure(command ? command->GetCommandPath() : "<unknown>",
-                             raw, error);
+        ReportCommandFailure(manager_, command ? command->GetCommandPath() : "<unknown>",
+                             raw, error.what());
+    } catch (...) {
+        ReportCommandFailure(manager_, command ? command->GetCommandPath() : "<unknown>",
+                             raw, "unknown exception");
     }
 }

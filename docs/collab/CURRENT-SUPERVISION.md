@@ -1,19 +1,22 @@
-# 当前监督接续索引
+# 当前监督：AR3/MR1已签收，连续推进AR4
 
-## 当前阶段与授权
-AR0 r3、AR-V、AR1约定范围已签收，接续AR2设计/实施。用户要求连续AR1–6，MR1在AR1–3后、MR2在AR4–5后、MR3为AR6最终，由当前对话整体复查，不逐项等确认。AR2–6与MR1/2/3尚未完成；完成度以ROADMAP为准。
-合同：decisions/20261108-ar0-r3-expanded-contract.md及r3-freeze.md；新增源码依赖/扩展证据采纳20261108-architecture-principles-adoption.md。按MODEL-POLICY分任务选型；难题Astra继承，常规Sol；不因型号确认停工。DS/web暂停、F3不追加。定时入口CONTINUOUS-EXECUTION.md；最近只读实查ACTIVE/30分钟，未改调度。
+## 授权与边界
+用户授权本对话连续完成AR-V/AR1–6，不逐项等确认。MR1已由当前主审完成，MR2在AR4–5独验后，MR3在AR6最终成果上由当前对话复查。DeepSeek/web模型暂停；F3不追加测量。MODEL-POLICY/CONTINUOUS-EXECUTION现行，监督30分钟ACTIVE。不进入J4/L2等新范围。
 
-## AR1签收与身份
-reviews/20261108-ar1-acceptance.md已签，关闭R1-AUD-11/R2-02/R2-03；加AR-V三项共关6/27，其余21项及3风险仍须完成。事务原签收保持。
-验证r5 source382027858d36a1f6c72c18e8bd09760fc77e8ce1413c57801f6c9abe0735a751，tests b19dce0a7533bd897b34e1ec5e7f9e651850b8e21484a2ebc02ca721ea4651ad。15项独立成功记录6+9合计11485断言、四旧生成负控通过。原失败及仅完整性门禁不改写；主审primary-cross-check.json重核原日志/20文件/完整覆盖通过。
-H3工程4进程A/R-SAME/A2/A2f pass、science=false；K2 Windows独立双导出/两套构建/每套两组件/S-A200/S-B1000 pass；region8进程有限输运+180独审检查pass，新cuts修正，本样本无所核输运差异不外推科学结论。各原始路径及限制详见签收。
-验证后的文档更新仅改变模板315成员中docs/功能支持矩阵.md；新模板identity035b50f57da65b62a8c369f192f127abc7ce42ff0f70e384042f303be1a0d74d，测试指纹5b7df0993cedb4af71eb7f789e8558fd465d866379a2cc1d581c21028c559948，产品/probe不变。原测试模板54ac9af5及b19d测试身份保留；映射ar1-integrated-r5/docs-only-mapping.json、模板check通过。未因此重跑原生矩阵。
+## 已完成
+AR-V、AR1(776ac64c)、AR2(4efaf983)、AR3配置首片(d3b5e078)及AR3整体/MR1均按限定合同签收。正式报告docs/collab/reviews/20261109-ar3-acceptance.md、20261109-mr1-primary-review.md。27正式审计问题已关12项，余15项；三风险中R1-R-02-B4有界防御验证完成，余两项按AR4继续。
+AR3 r4 source afe7518fc93ed2bb7a44b67f2bfea630f6c8d543b2e035c7206d10b0c9944ee6；tests dc72245baac3694c0e8e9e5395beb4fd3da16b39dbd6f92c888a269535a781f2；backend72a061c99eb19553c23632edc4ee29bb6e03a94810267dfcc68114abe9051481；模板338成员718fca17ac62b1ff8bdd25afbb21ae3b6a055106d569fdf1527a822697d54421。
+D r4构建0，四专项1773assert、22兼容55954assert、strict stable；C独立三项487assert、GPS58进程/879产物/600原CSV；fixture三原pass+scoring补pass共5996，原缺组件失败保留。固定场36进程/411产物原门限通过。所有r4 D/C会话已结束，所属进程末查0，不再轮询或重跑。
+旧Linux v3源8ab910…两case64assert/full组件347/严格门与58镜像原件独核通过，非r4/Linux；main/seed脚本随后全字节不变。B3/B4旧105b有限11例153事件按原身份引用。C三文档模板差异仍在，不覆盖用户内容、不冒C导出通过。
 
-## 会话与写者
-AR1全部主审构建/runner/K2/region会话已结束，无运行中进程会话。A5零线程对象清理边界仍按原报告保留，不称全部自然exit0。
-主审持产品写权限，正在明确范围回退提交（不吞并其它脏树/已暂存tools/collab两文件）。Newton 01a1bb50-adfa-7ec0-acd1-339d2d7ed3ec只在ar2-preparation准备独立生命周期设计评估，重点factory clone及worker异常如何锁存0事件/非零，不实施产品。Jason/Franklin完成AR1独审，暂无产品写权。
+## MR1补证与证据复用
+主审逐字节比较AR-V九文件不变，runner除CASES外模块AST不变；AR1 Geometry及AR2核心计分/event字节不变。正常无phase路径无payload、不改状态/随机数/计分公式，原H2/H3科学按原身份复用，不声称r4科学执行；新增共享失败门可能改变MT时序与失败部分输出，有限原生/兼容证明与性能/科学结论分开。主审比较证据mr1-primary-preparation，子审导航mr1-preparation。
+R1-R-02-B4原生补证在ar3-b4-postrun-command：两例各32/32，负宏第三行code400/正常exit1，正分析0、负分析因failed状态拒绝1，不发布成功。原run_bounded执行failed因额外断言actual_threads=1；实际unknown是旧catch前RunManager析构语义，原测试允许，未改产品/原PLAN/失败收据。仅continue_analysis续一次剩余分析，不重跑输运；最终94文件及两CSV一致经Newton独核FINAL-REVIEW，进程0。禁止重启任何旧execute/continuation。
+
+## 当前工作及写者
+主审将已验证AR3及MR1按精确归属提交后进入AR4。用户原暂存tools/collab/deepseek_dispatch.py和test_deepseek_dispatch.py、总体判断.md及其它历史变更必须保护，不全仓add/reset，不push。归属清单ar3-closeout-preparation/ownership-inventory.json及COMMIT-OWNERSHIP.md；最终提交需含工作树而非四个落后AM索引版本。
+AR4首片按ar4-preparation/run-path-contract.md/json，19有效binding+3raw；复用EditSession/WorkspaceSnapshot，模型持有领域值/无效raw，Qt只动作/投影；不改schema或J4布局。随后source/physics/scoring、material/geometry依次迁移，扫描/历史/图表/发布消费者按原审计同步修复。新正式回归前汇合写者、冻结身份，不在并行编辑期间宣称正式稳定验收。
+尚未给AR4产品写权；可用子代理：Jason(01a1bb5b-29c1-7412-9eff-db4443ba6523)作者，Newton(01a1bb50-adfa-7ec0-acd1-339d2d7ed3ec)独立原生/关键复验，McClintock(01a1bc0a-905f-7773-b275-f0ff16cd0649)run/path精确准备/独审，Cicero(01a1bbfc-d9b5-7ec3-b35d-159a4463cc65)累计索引/图表任务，Franklin(01a1bb5b-34fa-7852-b658-6099f59ebba2)独立校核。按当前MODEL-POLICY复用实际模型，不调用web。
 
 ## 下一步
-确认AR1明确范围提交和身份映射；读取ar2-preparation/independent-lifecycle-review.md（若尚未产出勿重复派工），冻结AR2有限接口/文件清单及负控，实施不可变scorer描述、登记工厂/每线程实例及AUD-08粒子选择器验证。复用确定性测试scorer，1/2/4worker、两run、Sequential、故障；触发既定H2/H3科学比较，不改种子/阈值追通过。之后按AR3→MR1→AR4→AR5→MR2→AR6/MR3连续推进。
-本轮详细旧CURRENT备份在ar1-integrated-r5/supervision-before-transport.md；全部AR1证据根out/collab/20261108-ar0-ar6。当前不需用户再次确认。
+精确提交AR3/MR1→派AR4唯一写者/受影响测试→各组独验与真实窗口/无QWidget模型证据→AR5真实target/安装导出→本对话MR2→AR6最终矩阵/扩展示例/交付→本对话MR3。MR1不代最终架构签收。详细旧监督备份ar3-closeout-preparation/supervision-before-ar4.md及各阶段原报告，保留所有失败/未知/限制。

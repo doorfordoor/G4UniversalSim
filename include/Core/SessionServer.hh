@@ -20,6 +20,7 @@
 
 class OutputManager;
 class SimulationManager;
+namespace runtime { class NativeExecutionPort; }
 
 namespace SessionControl {
 
@@ -41,6 +42,9 @@ public:
     // recorded accepted operations instead of serving a fresh session.
     SessionServer(SimulationManager& simulation, std::string recordRoot,
                   std::string replaySource = std::string());
+    // Borrowed synchronous execution; must outlive this session.
+    SessionServer(SimulationManager& simulation, runtime::NativeExecutionPort& execution,
+                  std::string recordRoot, std::string replaySource = std::string());
     ~SessionServer();
 
     SessionServer(const SessionServer&) = delete;
