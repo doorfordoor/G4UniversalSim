@@ -23,6 +23,7 @@ from PySide6.QtWidgets import (
 from g4usim_gui.core import install_layout, parallel_world_scope
 from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.core.project import G4USimProject
+from g4usim_gui.window.transactions import edit_operation
 from g4usim_gui.widgets.diagnostic_panel import DiagnosticPanel
 from g4usim_gui.widgets.qt_data import combo_data
 from g4usim_gui.widgets.ui_helpers import create_hint_label, make_path_row
@@ -167,6 +168,16 @@ class ProjectPage(QWidget):
         self._update_status_summary()
 
     def apply_to_project(self, project: G4USimProject) -> G4USimProject:
+        owner = getattr(self, '_history_owner', None)
+        if owner is not None:
+            from g4usim_gui.core.run_path_model import copy_run_path
+            # This legacy method remains a read adapter, not a control capture.
+            display = {name: getattr(project, name) for name in ('configPath', 'macroPath', 'outputDir')}
+            copy_run_path(project, owner.run_path_snapshot().project)
+            if project is owner.project and project.runInputMode == 'generated' and getattr(owner, '_generated_edit_binding', None):
+                for name, value in display.items():
+                    setattr(project, name, value)
+            return project
         project.projectName = self.project_name.text().strip() or "demo"
         project.runInputMode = str(self.run_input_mode.currentData() or "generated")
         project.executable = self.executable.text().strip()
@@ -243,6 +254,7 @@ class ProjectPage(QWidget):
         layout.addWidget(button)
         return container
 
+    @edit_operation('Choose executable')
     def _browse_executable(self) -> None:
         path, _ = QFileDialog.getOpenFileName(self, "Select G4UniversalSim executable")
         if path:
@@ -250,26 +262,31 @@ class ProjectPage(QWidget):
             if not self.workspace_root.text().strip():
                 self.workspace_root.setText(str(install_layout.workspace_for_executable(path)))
 
+    @edit_operation('Choose workspace')
     def _browse_workspace(self) -> None:
         path = QFileDialog.getExistingDirectory(self, "Select workspace root")
         if path:
             self.workspace_root.setText(path)
 
+    @edit_operation('Choose config')
     def _browse_config(self) -> None:
         path, _ = QFileDialog.getOpenFileName(self, "Select main config", filter="INI files (*.ini);;All files (*)")
         if path:
             self.config_path.setText(path)
 
+    @edit_operation('Choose macro')
     def _browse_macro(self) -> None:
         path, _ = QFileDialog.getOpenFileName(self, "Select macro", filter="Macro files (*.mac);;All files (*)")
         if path:
             self.macro_path.setText(path)
 
+    @edit_operation('Choose output')
     def _browse_output(self) -> None:
         path = QFileDialog.getExistingDirectory(self, "Select output directory")
         if path:
             self.output_dir.setText(path)
 
+    @edit_operation('Choose runs root')
     def _browse_runs_root(self) -> None:
         path = QFileDialog.getExistingDirectory(self, "Select runs root")
         if path:
@@ -277,6 +294,9 @@ class ProjectPage(QWidget):
 
     def _emit_changed(self) -> None:
         if not self._building:
+            owner = getattr(self, '_history_owner', None)
+            if owner is not None:
+                owner.dispatch_run_path_control(self, self.sender())
             self._update_status_summary()
             self.projectChanged.emit()
 

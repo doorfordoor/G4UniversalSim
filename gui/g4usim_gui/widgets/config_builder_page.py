@@ -300,10 +300,14 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
             self._update_workspace_summary()
 
     def update_project(self, project: G4USimProject) -> None:
-        project.runSettings = self.run_settings()
-        project.pathSettings.materials_config = self.materials_config.text().strip()
-        project.pathSettings.geometry_config = self.geometry_config.text().strip()
-        project.geometrySettings = self.geometry_settings()
+        if getattr(self, '_history_owner', None) is None:
+            project.runSettings = self.run_settings()
+            project.pathSettings.materials_config = self.materials_config.text().strip()
+            project.pathSettings.geometry_config = self.geometry_config.text().strip()
+            project.geometrySettings = self.geometry_settings()
+        else:
+            # Template is outside AR4 run/path; config_path is model-owned.
+            project.geometrySettings.template = self._geometry_template_token()
         project.geometryEditor = self.geometry_document
         project.sourceEditor = self.source_editor
         project.physicsEditor = self.physics_editor
@@ -495,6 +499,9 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
 
     def _emit_changed(self) -> None:
         if not self._building:
+            owner = getattr(self, '_history_owner', None)
+            if owner is not None:
+                owner.dispatch_run_path_control(self, self.sender())
             self.invalidate_diagnostics()
             self._mark_preview_stale()
             self.schedule_backend_geometry()

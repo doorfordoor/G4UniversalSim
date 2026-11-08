@@ -59,6 +59,10 @@ def action(app, window, received, name):
     return received[-1]
 
 
+from g4usim_gui.core.run_path_model import run_path_projection
+from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot
+
+
 def assert_paths(window, root):
     snapshot = window.capture_workspace()
     for control, value, draft in (
@@ -68,8 +72,8 @@ def assert_paths(window, root):
         assert Path(control.text().strip()).is_absolute(), control.text()
         assert Path(value).is_relative_to(root), value
         assert Path(value).is_file(), value
-        assert snapshot.state['drafts'][draft] == control.text()
-        assert Path(snapshot.state['drafts'][draft].strip()) == Path(value)
+        assert run_path_projection(snapshot)[draft] == control.text()
+        assert Path(run_path_projection(snapshot)[draft].strip()) == Path(value)
     assert snapshot.project.pathSettings.geometry_config == snapshot.project.geometrySettings.config_path
     for source in snapshot.state['sources'].values():
         assert Path(source['path']).is_relative_to(root), source['path']
@@ -169,11 +173,11 @@ def exercise(args):
             assert window._save_project_to(saved)
             persisted = load_project(saved)
             assert Path(persisted.pathSettings.materials_config).is_relative_to(moved)
-            assert persisted.editingState['drafts']['config.materials_config'] == normalized.state['drafts']['config.materials_config']
+            assert run_path_projection(WorkspaceSnapshot(persisted))['config.materials_config'] == run_path_projection(normalized)['config.materials_config']
             assert window._load_project_path(str(saved))
             assert_paths(window, moved)
             restored = snapshot_from_json(snapshot_to_json(window.capture_workspace()))
-            assert restored.state['drafts']['config.geometry_config'] == window.config_builder_page.geometry_config.text()
+            assert run_path_projection(restored)['config.geometry_config'] == window.config_builder_page.geometry_config.text()
             assert action(app, window, received, 'validate')['status'] == 'passed'
             if args.mode == 'backend':
                 rerun = action(app, window, received, 'run')
@@ -186,7 +190,7 @@ def exercise(args):
             # drafts must survive loading and remain rejected by the real UI.
             variant = load_bundle(moved, executable=str(executable))
             for binding in ('config.materials_config', 'config.geometry_config'):
-                variant.state['drafts'][binding] = ' \t' + variant.state['drafts'][binding] + '  '
+                variant.state['drafts'][binding] = ' \t' + run_path_projection(variant)[binding] + '  '
             variant.state['drafts']['config.seed'] = 'not-a-seed'
             invalid_bundle = root / 'invalid-seed-bundle'
             export_bundle(variant, invalid_bundle)

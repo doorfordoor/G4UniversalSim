@@ -140,7 +140,12 @@ class ProjectMixin:
                     self._history_restoring = previous
             # Legacy projection and GUI normalization can change encoded size;
             # a late capture/reset rejection must still roll back the view.
-            self._reset_edit_history()
+            from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot
+            self._run_path_projection_snapshot = snapshot or WorkspaceSnapshot(project)
+            try:
+                self._reset_edit_history()
+            finally:
+                self.__dict__.pop('_run_path_projection_snapshot', None)
         except Exception as original:
             if revision is not None and self._edit_session.revision != revision:
                 # reset has published the new history. A subsequent UI/recovery
@@ -158,6 +163,11 @@ class ProjectMixin:
 
     def _project_initial_projection(self, project: G4USimProject) -> None:
         self._check_project_projection(project)
+        if getattr(self, '_history_depth', 0):
+            # Wizard/import supplies data, not widget capture. Compose it with
+            # the enclosing transaction using the same snapshot owner.
+            from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot
+            self._run_path_transaction_candidate = WorkspaceSnapshot(project)
         self._clear_project_diagnostics()
         self.project = project
         self.scenario_page.set_executable(project.executable)
@@ -181,15 +191,17 @@ class ProjectMixin:
         before = self._project_page_stale_signature(self.project)
         macro_before = self._macro_inspection_inputs()
         self.project_page.apply_to_project(self.project)
-        self.project.seed = self.project_page.seed.text()
+        if not hasattr(self, '_edit_session'):
+            self.project.seed = self.project_page.seed.text()
         after = self._project_page_stale_signature(self.project)
         if macro_before != self._macro_inspection_inputs():
             self.run_page.set_macro_plan(ui_text("Run plan is stale; inputs changed."))
         self.project_context.setText(
             ui_format("Project: {name}", name=self.project.projectName or ui_text("untitled"))
         )
-        self._sync_flat_project_to_nested_paths()
-        self.config_builder_page.set_run_defaults(self.project)
+        if not hasattr(self, '_edit_session'):
+            self._sync_flat_project_to_nested_paths()
+            self.config_builder_page.set_run_defaults(self.project)
         self.output_page.set_workspace_root(self.project.workspaceRoot, self.project.executable)
         self.output_page.set_output_dir(self.project.outputDir)
         self.run_history_page.set_runs_root(self.project.runsRoot)
@@ -203,25 +215,18 @@ class ProjectMixin:
             return
         self._invalidate_project_diagnostics(force=True)
         self.config_builder_page.update_project(self.project)
-        run = self.project.runSettings
-        self.project.runName = run.run_name
-        self.project.threads = run.threads
-        # The parsed setting is None for both empty and invalid input. Preserve
-        # the raw mirror so Generate cannot erase an invalid seed before validation.
-        self.project.seed = self.config_builder_page.seed.text()
-        self.project_page.set_project(self.project)
+        if not hasattr(self, '_edit_session'):
+            run = self.project.runSettings
+            self.project.runName = run.run_name
+            self.project.threads = run.threads
+            self.project.seed = self.config_builder_page.seed.text()
+            self.project_page.set_project(self.project)
         self._mark_generated_package_stale()
 
     def _update_project_from_page_without_preview(self) -> None:
-        if getattr(self, '_workspace_fault', '') and not self._history_restoring:
-            return
-        self.project_page.apply_to_project(self.project)
-        self.project.seed = self.project_page.seed.text()
-        self._sync_flat_project_to_nested_paths()
-        self.config_builder_page.set_run_defaults(self.project)
-        self.output_page.set_workspace_root(self.project.workspaceRoot, self.project.executable)
-        self.output_page.set_output_dir(self.project.outputDir)
-        self.run_history_page.set_runs_root(self.project.runsRoot)
+        # Compatibility hook used by Run/preview callers. Run/path actions have
+        # already published their data; preview must never capture controls.
+        return
 
     def _sync_flat_project_to_nested_paths(self) -> None:
         self.project.pathSettings.executable = self.project.executable

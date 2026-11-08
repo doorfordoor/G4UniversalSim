@@ -249,6 +249,10 @@ class SetupMixin:
         self._building = False
 
     def path_settings(self, project: G4USimProject) -> PathSettings:
+        owner = getattr(self, '_history_owner', None)
+        if owner is not None:
+            from g4usim_gui.core.run_path_model import path_settings
+            return path_settings(owner.run_path_snapshot().project)
         paths = PathSettings(
             executable=project.executable,
             workspace_root=project.workspaceRoot,
@@ -261,6 +265,10 @@ class SetupMixin:
         return paths
 
     def run_settings(self) -> RunSettings:
+        owner = getattr(self, '_history_owner', None)
+        if owner is not None:
+            import copy
+            return copy.deepcopy(owner.run_path_snapshot().project.runSettings)
         seed_text = self.seed.text().strip()
         seed_value: int | None
         try:
@@ -279,7 +287,9 @@ class SetupMixin:
     def geometry_settings(self) -> GeometrySettings:
         return GeometrySettings(
             template=self._geometry_template_token(),
-            config_path=self.geometry_config.text().strip(),
+            config_path=(self._history_owner.run_path_snapshot().project.geometrySettings.config_path
+                         if getattr(self, '_history_owner', None) is not None
+                         else self.geometry_config.text().strip()),
         )
 
     def source_settings(self) -> SourceSettings:

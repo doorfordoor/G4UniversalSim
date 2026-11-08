@@ -198,13 +198,20 @@ class TransactionsMixin:
         self._history_merge_timer.timeout.connect(self._finish_history_merge)
         self._edit_session = EditSession(self.capture_workspace())
         self.config_builder_page._history_owner = self
+        self.project_page._history_owner = self
         self._history_filter = EditorHistoryFilter(self)
         QApplication.instance().installEventFilter(self._history_filter)
         self.project_page.projectChanged.connect(self._queue_history_change)
         self.config_builder_page.settingsChanged.connect(self._queue_history_change)
         # Raw drafts can change without a valid model update (notably seed and
         # programmatic line edits); captures still use the same transaction API.
-        for widget in {**self._editable_controls(), **self._extended_interaction_controls()}.values():
+        from g4usim_gui.core.run_path_model import BINDINGS
+        for key, widget in {**self._editable_controls(), **self._extended_interaction_controls()}.items():
+            if key in BINDINGS:
+                if isinstance(widget, QAbstractSpinBox):
+                    widget.lineEdit().textEdited.connect(
+                        lambda text, key=key: self.edit_run_path(key + '.raw', text))
+                continue
             if isinstance(widget, (QLineEdit, QPlainTextEdit)):
                 widget.textChanged.connect(self._queue_history_change)
             elif isinstance(widget, QAbstractSpinBox):
@@ -215,6 +222,122 @@ class TransactionsMixin:
             hint.setWordWrap(True)
             (page.input_scroll.widget().layout() if page is self.scenario_page else page.layout()).insertWidget(0, hint)
             page._project_recovery_scope_hint = hint
+
+    def run_path_snapshot(self):
+        """Authoritative data, including a synchronous unpublished transaction."""
+        from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot, clone_snapshot
+        for name in ('_run_path_projection_snapshot', '_run_path_transaction_candidate'):
+            candidate = getattr(self, name, None)
+            if candidate is not None:
+                return clone_snapshot(candidate)
+        if hasattr(self, '_edit_session'):
+            return self._edit_session.current()
+        return WorkspaceSnapshot(self.project)
+
+    def dispatch_run_path_control(self, page, widget):
+        from g4usim_gui.core.run_path_model import BINDINGS
+        if self._history_restoring or page._building:
+            return
+        for key, control in self._editable_controls().items():
+            if key in BINDINGS and widget is control:
+                raw = control.lineEdit().text() if isinstance(control, QAbstractSpinBox) else None
+                self.edit_run_path(key, _read_control(control), active=control, raw=raw)
+                return
+
+    def _project_run_path(self, snapshot, active=None):
+        from g4usim_gui.core.run_path_model import copy_run_path, run_path_projection, BINDINGS
+        copy_run_path(self.project, snapshot.project)
+        values = run_path_projection(snapshot)
+        display = getattr(self, '_generated_edit_binding', None)
+        if snapshot.project.runInputMode == 'generated' and display:
+            # Preserve the existing package display (also when stale), without
+            # inserting any of these paths into the edit snapshot or drafts.
+            for field, control in (('configPath', 'config_path'), ('macroPath', 'macro_path'),
+                                   ('outputDir', 'output_dir')):
+                setattr(self.project, field, display[field][1])
+                values['project.' + control] = display[field][1]
+        controls = self._editable_controls()
+        blocked = [QSignalBlocker(controls[key]) for key in BINDINGS]
+        blocked += [QSignalBlocker(controls[key].lineEdit()) for key in BINDINGS
+                    if isinstance(controls[key], QAbstractSpinBox)]
+        try:
+            for key in BINDINGS:
+                widget = controls[key]
+                if (_read_control(widget) != values[key] or
+                        (isinstance(widget, QAbstractSpinBox) and key + '.raw' not in values)):
+                    _write_control(widget, values[key])
+                if key + '.raw' in values and widget.lineEdit().text() != values[key + '.raw']:
+                    widget.lineEdit().setText(values[key + '.raw'])
+            self.project_page._update_mode_controls()
+            self.project_page._update_status_summary()
+        finally:
+            del blocked
+
+    def _capture_generated_view(self):
+        # Transaction-local view data, never serialized or put into EditSession.
+        return (copy.deepcopy(getattr(self, '_generated_edit_binding', None)),
+                self._generated_package_dir, self._generated_package_stale)
+
+    def _restore_generated_view(self, snapshot, view):
+        binding, directory, stale = view
+        self._generated_edit_binding = copy.deepcopy(binding)
+        self._project_run_path(snapshot)
+        self._generated_package_dir = directory
+        self._generated_package_stale = stale
+        self.config_builder_page.set_package_path('<stale>' if stale else directory)
+
+    def edit_run_path(self, binding, value, *, active=None, raw=None):
+        """UI action adapter; the reducer owns interpretation and mirrors."""
+        from g4usim_gui.core.run_path_model import reduce_run_path
+        if self._history_restoring or not self.can_mutate_workspace('edit'):
+            return
+        if active is None and binding.endswith('.raw'):
+            active = self._editable_controls()[binding[:-4]]
+        generated_view = self._capture_generated_view()
+        candidate = reduce_run_path(self.run_path_snapshot(), binding, value)
+        if raw is not None:
+            candidate = reduce_run_path(candidate, binding + '.raw', raw)
+        clears_display = binding in ('project.config_path', 'project.macro_path', 'project.output_dir')
+        if self._history_depth:
+            if clears_display:
+                self._generated_edit_binding = None
+            self._project_run_path(candidate, active)
+            self._run_path_transaction_candidate = candidate
+            # The outer transaction owns acceptance and stale notifications.
+            return
+        else:
+            try:
+                # Retain unmigrated synchronous changes without reading run/path controls.
+                captured = self.capture_workspace()
+                from g4usim_gui.core.run_path_model import copy_run_path, OWNED_BINDINGS
+                copy_run_path(captured.project, candidate.project)
+                for key in OWNED_BINDINGS:
+                    captured.state['drafts'].pop(key, None)
+                captured.state['drafts'].update({k: v for k, v in candidate.state['drafts'].items()
+                                                if k in OWNED_BINDINGS})
+                merge = f'{self._history_merge_epoch}:{self._history_field or binding}'
+                # Candidate preparation and publication share one rejection boundary.
+                if clears_display:
+                    self._generated_edit_binding = None
+                self._edit_session.replace('Edit configuration', captured, merge_key=merge,
+                    apply=lambda state: self._project_run_path(state, active))
+            except Exception as exc:
+                from g4usim_gui.core.edit_transactions import TransactionApplyError
+                verified = self._edit_session.current()
+                if isinstance(exc, TransactionApplyError) and exc.rollback is not None:
+                    self._freeze_workspace(exc, verified)
+                else:
+                    try:
+                        self._restore_generated_view(verified, generated_view)
+                    except Exception as rollback:
+                        failure = TransactionApplyError(exc, rollback)
+                        self._freeze_workspace(failure, verified)
+                        raise failure from exc
+                raise
+            self.history_changed()
+        self._mark_generated_package_stale()
+        self.run_page.set_macro_plan(ui_text('Run plan is stale; inputs changed.'))
+        self._queue_history_change()
 
     def _editable_controls(self):
         return {**{f'project.{name}': getattr(self.project_page, name) for name in PROJECT_CONTROLS},
@@ -264,9 +387,10 @@ class TransactionsMixin:
         return None
 
     def _capture_drafts(self):
-        drafts = {key: _read_control(widget) for key, widget in self._editable_controls().items()}
+        from g4usim_gui.core.run_path_model import BINDINGS
+        drafts = {key: _read_control(widget) for key, widget in self._editable_controls().items() if key not in BINDINGS}
         for key, widget in self._editable_controls().items():
-            if isinstance(widget, QAbstractSpinBox):
+            if key not in BINDINGS and isinstance(widget, QAbstractSpinBox):
                 drafts[key + '.raw'] = widget.lineEdit().text()
         page = self.config_builder_page
         for kind, rows in (('material', page.material_document.rows), ('layer', page.geometry_document.layered_device.layers)):
@@ -280,31 +404,17 @@ class TransactionsMixin:
         from g4usim_gui.core.edit_state import empty_editing_state
         page = self.config_builder_page
         project = copy.deepcopy(self.project)
-        self.project_page.apply_to_project(project)
+        from g4usim_gui.core.run_path_model import copy_run_path, OWNED_BINDINGS
+        authority = self.run_path_snapshot()
         self._collect_extended_drafts()
         page.update_project(project)
-        project.pathSettings.executable = project.executable
-        project.pathSettings.workspace_root = project.workspaceRoot
-        project.pathSettings.runs_root = project.runsRoot
-        binding = getattr(self, '_generated_edit_binding', None)
-        if project.runInputMode == 'generated' and binding is not None:
-            for name, view in binding.items():
-                original, generated = view[:2]
-                if getattr(project, name) == generated:
-                    setattr(project, name, original)
+        copy_run_path(project, authority.project)
         project.materialEditor = copy.deepcopy(page.material_document)
         project.geometryEditor = copy.deepcopy(page.geometry_document)
         state = empty_editing_state()
         state['drafts'] = self._capture_drafts()
         state['selections'].update(page.j2_run_editors.selection_state())
-        if project.runInputMode == 'generated' and binding is not None:
-            for name, control in (('configPath', 'config_path'), ('macroPath', 'macro_path'), ('outputDir', 'output_dir')):
-                view = binding[name]
-                original, generated = view[:2]
-                if state['drafts'][f'project.{control}'] == generated:
-                    # New K1 display bindings retain the original raw spelling;
-                    # older/legacy two-value bindings keep their existing rule.
-                    state['drafts'][f'project.{control}'] = view[2] if len(view) == 3 else original
+        state['drafts'].update({k: v for k, v in authority.state['drafts'].items() if k in OWNED_BINDINGS})
         for name in ('geometry_table', 'boolean_table'):
             table = getattr(page, name)
             state['tables'][name] = [[table.item(row, col).text() if table.item(row, col) else ''
@@ -395,7 +505,7 @@ class TransactionsMixin:
         if set(snapshot.state['selections']) - allowed_selections:
             raise ValueError('Unknown editor selection binding.')
 
-    def apply_workspace(self, snapshot, *, reason='restore'):
+    def apply_workspace(self, snapshot, *, reason='restore', _rejected_generated_view=None):
         """Publish an already decoded snapshot without reading its source files."""
         from g4usim_gui.core.edit_snapshot import snapshot_fingerprint
         fault_snapshot = getattr(self, '_workspace_fault_snapshot', None)
@@ -404,8 +514,10 @@ class TransactionsMixin:
         self._check_workspace_projection(snapshot)
         verified = self._edit_session.current() if hasattr(self, '_edit_session') else None
         self._history_restoring = True
+        self._run_path_projection_snapshot = snapshot
         try:
-            self._cancel_edit_observers()
+            if _rejected_generated_view is None:
+                self._cancel_edit_observers()
             self.project = copy.deepcopy(snapshot.project)
             page = self.config_builder_page
             # The guarded projection path is deliberately separate from Open.
@@ -472,22 +584,25 @@ class TransactionsMixin:
             page.invalidate_diagnostics()
             self._invalidate_project_diagnostics(force=True)
             page._mark_preview_stale()
-            self._generated_package_dir = ''
-            self._generated_edit_binding = None
-            self._generated_package_stale = True
-            page.set_package_path('<stale>')
-            self.run_page.set_macro_plan(ui_text('Run plan is stale; inputs changed.'))
-            self.run_page.set_command([ui_text('Configuration changed; the run package will be regenerated at run time.')])
-            if self.run_page._result_state or self.run_page._progress_data is not None:
-                self.run_page.append_status_message(ui_text('Configuration restored. Previous logs and results remain associated with their original run.'))
-            self.run_page.set_state('Not running')
-            self.run_page.set_result('Not run yet')
-            self.run_page._progress_data = None
-            self.run_page._exit_code = None
-            self.run_page._elapsed.invalidate()
-            self.run_page.set_progress_state('idle')
-            self.run_page.refresh_language()
-            self._set_run_chip('Needs validation', 'warning')
+            if _rejected_generated_view is not None:
+                self._restore_generated_view(snapshot, _rejected_generated_view)
+            else:
+                self._generated_package_dir = ''
+                self._generated_edit_binding = None
+                self._generated_package_stale = True
+                page.set_package_path('<stale>')
+                self.run_page.set_macro_plan(ui_text('Run plan is stale; inputs changed.'))
+                self.run_page.set_command([ui_text('Configuration changed; the run package will be regenerated at run time.')])
+                if self.run_page._result_state or self.run_page._progress_data is not None:
+                    self.run_page.append_status_message(ui_text('Configuration restored. Previous logs and results remain associated with their original run.'))
+                self.run_page.set_state('Not running')
+                self.run_page.set_result('Not run yet')
+                self.run_page._progress_data = None
+                self.run_page._exit_code = None
+                self.run_page._elapsed.invalidate()
+                self.run_page.set_progress_state('idle')
+                self.run_page.refresh_language()
+                self._set_run_chip('Needs validation', 'warning')
             self.project_context.setText(ui_format('Project: {name}', name=self.project.projectName or ui_text('untitled')))
             self.scenario_page.set_executable(self.project.executable)
             if fault_snapshot is not None:
@@ -499,6 +614,7 @@ class TransactionsMixin:
             raise
         finally:
             self._history_restoring = False
+            self.__dict__.pop('_run_path_projection_snapshot', None)
         if fault_snapshot is not None:
             self._workspace_fault = ''
             self._workspace_fault_snapshot = None
@@ -616,18 +732,34 @@ class TransactionsMixin:
                 self._history_field = None
                 self._edit_session.break_merge()
             before = self._edit_session.current()
+            generated_view = self._capture_generated_view()
+            self._run_path_transaction_candidate = before
         self._history_depth += 1
         try:
             yield
             if outer:
                 self._edit_session.replace(label, self.capture_workspace())
-        except Exception:
+        except Exception as original:
             if outer:
-                self.apply_workspace(before, reason='rollback')
+                try:
+                    self.apply_workspace(before, reason='rejected-transaction',
+                                         _rejected_generated_view=generated_view)
+                except Exception as rollback:
+                    from g4usim_gui.core.edit_transactions import TransactionApplyError
+                    failure = TransactionApplyError(original, rollback)
+                    self._freeze_workspace(failure, before)
+                    raise failure from original
             raise
+        else:
+            if outer:
+                from g4usim_gui.core.edit_snapshot import snapshot_fingerprint
+                if snapshot_fingerprint(self._edit_session.current()) != snapshot_fingerprint(before):
+                    self._mark_generated_package_stale()
+                    self.run_page.set_macro_plan(ui_text('Run plan is stale; inputs changed.'))
         finally:
             self._history_depth -= 1
             if outer:
+                self.__dict__.pop('_run_path_transaction_candidate', None)
                 self.history_changed()
 
     def can_mutate_workspace(self, reason='edit'):

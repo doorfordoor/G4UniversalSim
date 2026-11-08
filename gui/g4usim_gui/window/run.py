@@ -305,7 +305,7 @@ class RunMixin:
             name: (getattr(original_paths, name), getattr(self.project, name))
             for name in ('configPath', 'macroPath', 'outputDir')
         }
-        self.project_page.set_project(self.project)
+        self.project_page.show_generated_paths(self.project)
         self._generated_package_dir = package.package_dir
         self._generated_package_stale = False
         self.config_builder_page.set_package_path(package.package_dir)
