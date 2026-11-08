@@ -17,6 +17,8 @@ public:
     bool IsEnabled() const;
 
     virtual void BeginRun(int runID);
+    // May follow an entered BeginRun that threw after partial initialization.
+    // Release resources acquired by this instance; never assumes BeginRun finished.
     virtual void EndRun(int runID);
 
     virtual void BeginEvent(int eventID);

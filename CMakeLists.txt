@@ -192,6 +192,34 @@ if(BUILD_TESTING)
         file(SHA256 ${PROJECT_SOURCE_DIR}/tools/geometryShapesCheck.cc G4USIM_SHAPES_PROBE_SHA256)
         set_source_files_properties(tools/geometryShapesCheck.cc PROPERTIES
             COMPILE_DEFINITIONS G4USIM_SHAPES_PROBE_SHA256="${G4USIM_SHAPES_PROBE_SHA256}")
+        add_executable(scorerFactoryCheck tools/scorerFactoryCheck.cc ${SOURCES})
+        target_include_directories(scorerFactoryCheck PRIVATE ${PROJECT_BINARY_DIR}/generated)
+        target_compile_definitions(scorerFactoryCheck PRIVATE
+            G4USIM_BUILD_CONFIGURATION="$<IF:$<BOOL:$<CONFIG>>,$<CONFIG>,unknown>")
+        if(Geant4_gdml_FOUND)
+            target_compile_definitions(scorerFactoryCheck PRIVATE G4USIM_HAVE_GDML=1)
+        endif()
+        target_link_libraries(scorerFactoryCheck ${Geant4_LIBRARIES})
+        g4usim_configure_windows_runtime(scorerFactoryCheck)
+        set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+            ${PROJECT_SOURCE_DIR}/tools/scorerFactoryCheck.cc)
+        file(SHA256 ${PROJECT_SOURCE_DIR}/tools/scorerFactoryCheck.cc G4USIM_SCORER_FACTORY_PROBE_SHA256)
+        set_source_files_properties(tools/scorerFactoryCheck.cc PROPERTIES
+            COMPILE_DEFINITIONS G4USIM_SCORER_FACTORY_PROBE_SHA256="${G4USIM_SCORER_FACTORY_PROBE_SHA256}")
+        add_executable(scoringLifecycleCheck tools/scoringLifecycleCheck.cc ${SOURCES})
+        target_include_directories(scoringLifecycleCheck PRIVATE ${PROJECT_BINARY_DIR}/generated)
+        target_compile_definitions(scoringLifecycleCheck PRIVATE
+            G4USIM_BUILD_CONFIGURATION="$<IF:$<BOOL:$<CONFIG>>,$<CONFIG>,unknown>")
+        if(Geant4_gdml_FOUND)
+            target_compile_definitions(scoringLifecycleCheck PRIVATE G4USIM_HAVE_GDML=1)
+        endif()
+        target_link_libraries(scoringLifecycleCheck ${Geant4_LIBRARIES})
+        g4usim_configure_windows_runtime(scoringLifecycleCheck)
+        set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+            ${PROJECT_SOURCE_DIR}/tools/scoringLifecycleCheck.cc)
+        file(SHA256 ${PROJECT_SOURCE_DIR}/tools/scoringLifecycleCheck.cc G4USIM_SCORING_LIFECYCLE_PROBE_SHA256)
+        set_source_files_properties(tools/scoringLifecycleCheck.cc PROPERTIES
+            COMPILE_DEFINITIONS G4USIM_SCORING_LIFECYCLE_PROBE_SHA256="${G4USIM_SCORING_LIFECYCLE_PROBE_SHA256}")
         find_package(Python3 COMPONENTS Interpreter QUIET)
         if(Python3_Interpreter_FOUND)
             foreach(profile static gui backend integration)

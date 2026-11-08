@@ -61,6 +61,9 @@ private:
     SourceManager* sourceManager_ = nullptr;   // non-owning
     Role role_ = Role::Sequential;
     int verboseLevel_ = 0;
+    bool scoringRunEntered_ = false;
+    bool biasingRunEntered_ = false;
+    bool runTimerStarted_ = false;
     G4Timer runTimer_;  // master/sequential wall time of the current run (FOM)
     EffectiveCallback effectiveBegin_, effectiveEnd_;
 };

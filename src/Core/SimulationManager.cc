@@ -617,12 +617,14 @@ bool SimulationManager::FinalizeRunSummary(const std::string& status,
     finalizeOutput("final_flush", [this, &injectedFault]() {
         outputManager_->Flush();
         if (injectedFault == "final_flush_master") {
+            std::cerr << "[TestOutputFault] final_flush_master triggered\n";
             throw std::runtime_error("Injected main-thread final flush failure");
         }
     });
     finalizeOutput("final_close", [this, &injectedFault]() {
         outputManager_->Close();
         if (injectedFault == "final_close_master") {
+            std::cerr << "[TestOutputFault] final_close_master triggered\n";
             throw std::runtime_error("Injected main-thread final close failure");
         }
     });
@@ -1561,7 +1563,9 @@ void SimulationManager::ValidateBiasingProcessTargets()
 
 void SimulationManager::ValidateScoringVolumeConfigsBeforeRun()
 {
-    if (!scoringManager_ || !scoringManager_->HasVolumeConfig()) {
+    // Legacy LET and phase-space selectors also need the initialized particle
+    // table. Absence of H2 filters/spectra must not bypass their pre-run check.
+    if (!scoringManager_) {
         return;
     }
     try {

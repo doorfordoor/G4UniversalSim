@@ -52,10 +52,21 @@ void RunAction::BeginOfRunAction(const G4Run* run)
     if (!run) {
         throw std::runtime_error("RunAction::BeginOfRunAction failed: G4Run is null");
     }
+    scoringRunEntered_ = false;
+    biasingRunEntered_ = false;
+    runTimerStarted_ = false;
 
     if (role_ != Role::Worker) {
         RunProgress::Begin(run->GetRunID(), run->GetNumberOfEventToBeProcessed());
         SessionControl::OnRunBegin(run->GetRunID(), run->GetNumberOfEventToBeProcessed());
+    }
+
+    // Construction failure is already recorded by the worker that observed it.
+    // Preserve that first cause and avoid starting source/output/scorer work.
+    // The event-loop admission guard must also check after worker synchronization.
+    if (auto* output = ActiveOutputManager(); output && output->HasOutputFailure()) {
+        if (auto* manager = G4RunManager::GetRunManager()) manager->AbortRun(true);
+        return;
     }
 
     if (role_ != Role::Worker && biasingManager_ && biasingManager_->IsEnabled()) {
@@ -86,7 +97,10 @@ void RunAction::BeginOfRunAction(const G4Run* run)
     if (verboseLevel_ > 0) {
         G4cout << "[RunAction] Begin run " << runID << G4endl;
     }
-    if (role_ != Role::Worker) runTimer_.Start();
+    if (role_ != Role::Worker) {
+        runTimer_.Start();
+        runTimerStarted_ = true;
+    }
 
     OutputManager* outputManager = ActiveOutputManager();
     ScoringManager* scoringManager = ActiveScoringManager();
@@ -95,6 +109,7 @@ void RunAction::BeginOfRunAction(const G4Run* run)
     try {
         if (role_ != Role::Master && biasingManager_ && biasingManager_->IsEnabled()) {
             stage = "biasing_thread_begin";
+            biasingRunEntered_ = true;
             biasingManager_->BeginThreadRun(runID);
         }
         stage = "run_begin_validate_targets";
@@ -130,6 +145,7 @@ void RunAction::BeginOfRunAction(const G4Run* run)
         }
         if (role_ != Role::Master && scoringManager) {
             stage = "scoring_begin_run";
+            scoringRunEntered_ = true;
             scoringManager->BeginRun(runID);
             scoringManager->RecordEffectiveConfigApplied(runID, G4Threading::G4GetThreadId());
         }
@@ -184,11 +200,11 @@ void RunAction::EndOfRunAction(const G4Run* run)
         }
     };
 
-    if (role_ != Role::Master && biasingManager_ && biasingManager_->IsEnabled()) {
+    if (biasingRunEntered_ && role_ != Role::Master && biasingManager_ && biasingManager_->IsEnabled()) {
         attempt("biasing_thread_end", [&]() { biasingManager_->EndThreadRun(runID); });
     }
 
-    if (role_ != Role::Master && scoringManager) {
+    if (scoringRunEntered_ && role_ != Role::Master && scoringManager) {
         attempt("scoring_end_run", [&]() { scoringManager->EndRun(runID); });
         if (!outputManager || !outputManager->HasOutputFailure()) {
             attempt("scoring_write_all", [&]() { scoringManager->WriteAll(); });
@@ -231,7 +247,7 @@ void RunAction::EndOfRunAction(const G4Run* run)
         // Workers submitted their per-event statistics in WriteAll(); Geant4
         // finishes every worker run before this master callback.
         if (role_ != Role::Worker) {
-            runTimer_.Stop();
+            if (runTimerStarted_) runTimer_.Stop();
             if (!outputManager->HasOutputFailure()) {
                 attempt("scorer_statistics_csv", [&]() {
                     outputManager->WriteScorerStatisticsCsv(runID, run->GetNumberOfEvent(),

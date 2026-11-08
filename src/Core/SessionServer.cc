@@ -1555,6 +1555,17 @@ struct SessionServer::Impl {
                 }
                 return Reject(frame, op, "kernel_init_failed", "Geant4 /run/initialize returned a non-zero status");
             }
+            if (const auto* outputManager = simulation.GetOutputManager();
+                outputManager && outputManager->HasOutputFailure()) {
+                const auto failure = outputManager->GetOutputFailure();
+                {
+                    std::lock_guard<std::mutex> guard(stateMutex);
+                    exitCode = 2;
+                    phase = Phase::ShuttingDown;
+                }
+                return Reject(frame, op, "kernel_init_failed",
+                              failure.stage + ": " + failure.message);
+            }
             {
                 std::lock_guard<std::mutex> guard(stateMutex);
                 kernelInitialized = true;

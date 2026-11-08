@@ -125,6 +125,9 @@ public:
     std::vector<std::string> GetGeneratedFiles() const;
     void RecordOutputFailure(const std::string& stage, const std::string& message,
                              int attemptedRunId = -1);
+    // Construction has no run association, even if a clone inherited the
+    // master's already-started run ID. Preserve the explicit unknown (-1).
+    void RecordStartupFailure(const std::string& stage, const std::string& message);
     bool HasOutputFailure() const;
     OutputFailure GetOutputFailure() const;
     // Messenger command failures are separate from worker/file write failures.

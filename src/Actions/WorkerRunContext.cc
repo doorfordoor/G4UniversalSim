@@ -5,7 +5,7 @@
 
 OutputManager* WorkerRunContext::GetOutputManager() const
 {
-    return output.get();
+    return sequentialOutput ? sequentialOutput : output.get();
 }
 
 ScoringManager* WorkerRunContext::GetScoringManager() const

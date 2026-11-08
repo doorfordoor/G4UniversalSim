@@ -112,7 +112,7 @@ public:
     std::function<void(const GeometryRegistry&)> CreateGeometryPostBuildCallback() const;
     void InitializeSourceAfterPhysicsListRegistered();
     void ValidateBiasingProcessTargets();
-    // Roadmap H2-4: rejects configured scoring filters before the event loop
+    // Rejects H2 filters and legacy LET/phase-space selectors before the event loop
     // starts; the failure is recorded through the shared output failure latch.
     void ValidateScoringVolumeConfigsBeforeRun();
     // Roadmap H3: verifies the kernel-built parallel scoring world before

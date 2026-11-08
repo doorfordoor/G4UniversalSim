@@ -7,16 +7,16 @@
   },
   "identity": {
     "algorithm": "sha256_sorted_sha256_path_lines_v1",
-    "bytes_total": 3858094,
-    "file_count": 315,
-    "value": "035b50f57da65b62a8c369f192f127abc7ce42ff0f70e384042f303be1a0d74d"
+    "bytes_total": 3931871,
+    "file_count": 321,
+    "value": "4303a97d217d5946d8bfc7bcbe36143d7fb61ebf68d00171ae026747423793d3"
   },
   "members": [
     {
-      "bytes": 12857,
+      "bytes": 14914,
       "path": "CMakeLists.txt",
       "role": "cmake",
-      "sha256": "b6115dfd991e776a5c4c8ab24a586db5f6371a3d65163bbf119f559ec0783bd8",
+      "sha256": "afca64fa654cac789fa489cec46a18a848e6d3ea952cca682f7111361f261e12",
       "source_path": "CMakeLists.txt"
     },
     {
@@ -272,10 +272,10 @@
       "source_path": "docs/中文使用手册.md"
     },
     {
-      "bytes": 213498,
+      "bytes": 214054,
       "path": "docs/功能支持矩阵.md",
       "role": "doc",
-      "sha256": "a14e7958aa90c5d68b700df11bbb8f86871c396a575fd3011e4e526476902245",
+      "sha256": "44338acdffb731792df7c9cdece7bb6b20dc6eb51581ba6c2e5b84241cdbb7a4",
       "source_path": "docs/功能支持矩阵.md"
     },
     {
@@ -300,11 +300,18 @@
       "source_path": "include/Actions/EventAction.hh"
     },
     {
-      "bytes": 2218,
+      "bytes": 2327,
       "path": "include/Actions/RunAction.hh",
       "role": "header",
-      "sha256": "344d162133c97b07a8ab6fa1d7a147fe2799b89fbc7650f5068a8058b5351c49",
+      "sha256": "ef147a2fd8f2d98b96ae26d1ddae7ff512f4e2e7b4ffb9843517ad5e9f2fe028",
       "source_path": "include/Actions/RunAction.hh"
+    },
+    {
+      "bytes": 360,
+      "path": "include/Actions/RunManagerFactory.hh",
+      "role": "header",
+      "sha256": "3d524e5cd609527bfcc0cadb8d723ef2559674c6652b79c95a8f2463e8c79ee4",
+      "source_path": "include/Actions/RunManagerFactory.hh"
     },
     {
       "bytes": 515,
@@ -328,10 +335,10 @@
       "source_path": "include/Actions/TrackingAction.hh"
     },
     {
-      "bytes": 287,
+      "bytes": 487,
       "path": "include/Actions/WorkerRunContext.hh",
       "role": "header",
-      "sha256": "a7ba7753d7f6ade96008c0d49cc46c34408237833bfc5db854ccdc60077a7739",
+      "sha256": "371de262866dacc6ed31031745dd73a97b65e9923e391a2b86a6cd9901f9ad3d",
       "source_path": "include/Actions/WorkerRunContext.hh"
     },
     {
@@ -517,10 +524,10 @@
       "source_path": "include/Core/SimulationContext.hh"
     },
     {
-      "bytes": 10620,
+      "bytes": 10627,
       "path": "include/Core/SimulationManager.hh",
       "role": "header",
-      "sha256": "ec6f423606108d4d48cb190b3b1700acf57662326f2ec0d663ef3979c555e1ff",
+      "sha256": "44c9fed1e9352ee6176839f8e2a36b23ac97bbf3b0392193c2f6ca835da8024b",
       "source_path": "include/Core/SimulationManager.hh"
     },
     {
@@ -769,10 +776,10 @@
       "source_path": "include/Output/Histogram2D.hh"
     },
     {
-      "bytes": 7176,
+      "bytes": 7411,
       "path": "include/Output/OutputManager.hh",
       "role": "header",
-      "sha256": "daf188a4f6dd2bb195164d5b12b778219f7d11333c409a27178a884846ff4e44",
+      "sha256": "077b3edbba0c6e969d817efce0d57a49eec10fe5fed185827d4224c1faf956bf",
       "source_path": "include/Output/OutputManager.hh"
     },
     {
@@ -951,17 +958,24 @@
       "source_path": "include/Scoring/PhaseSpace.hh"
     },
     {
-      "bytes": 637,
+      "bytes": 801,
       "path": "include/Scoring/ScorerBase.hh",
       "role": "header",
-      "sha256": "0b853e1c9c31fb942d30585a2ed3d5bda7de88167b59c607a63b3c6df8ac90b4",
+      "sha256": "59ed10c8ec79a2a7a666c626066000364ff4ac648a62c46822942593980f4d9a",
       "source_path": "include/Scoring/ScorerBase.hh"
     },
     {
-      "bytes": 9375,
+      "bytes": 1798,
+      "path": "include/Scoring/ScorerFactory.hh",
+      "role": "header",
+      "sha256": "1c9afaeb9a5e1904662bfd24e6fd483e0e44d7098cb12c2a0dce973a41339d2e",
+      "source_path": "include/Scoring/ScorerFactory.hh"
+    },
+    {
+      "bytes": 10825,
       "path": "include/Scoring/ScoringManager.hh",
       "role": "header",
-      "sha256": "65f4c85418ff7efd6731645a4bb1ccb0b3e75224173bf168e2ef55315f4b528b",
+      "sha256": "b691a454ae0a4eeb4a70785d7379b88bb335707db22a3fa8f59430ec3b66ed49",
       "source_path": "include/Scoring/ScoringManager.hh"
     },
     {
@@ -1350,10 +1364,10 @@
       "source_path": "macros/vis.mac"
     },
     {
-      "bytes": 65813,
+      "bytes": 65839,
       "path": "main.cc",
       "role": "source",
-      "sha256": "a9dfdbb1a01ab6c77db36bb55aa814a53e98a4607f2b5c0130f5e53147d17a7c",
+      "sha256": "c023bf3688ef2ea0229657246ccaca1cc8e350ff1a7a39238d41037474a379d2",
       "source_path": "main.cc"
     },
     {
@@ -1378,10 +1392,10 @@
       "source_path": "schema/config_schema_coverage.json"
     },
     {
-      "bytes": 3933,
+      "bytes": 4678,
       "path": "src/Actions/ActionInitialization.cc",
       "role": "source",
-      "sha256": "699d63b15ba9fe5a55535ba9ce426cc602ce2c48b8dd9cf117cf43d465dd9b33",
+      "sha256": "560a15b7deebfa8f853f8fa381b08b6e0e7aef4a41def8d98356812ace2ef00a",
       "source_path": "src/Actions/ActionInitialization.cc"
     },
     {
@@ -1392,11 +1406,18 @@
       "source_path": "src/Actions/EventAction.cc"
     },
     {
-      "bytes": 12694,
+      "bytes": 13417,
       "path": "src/Actions/RunAction.cc",
       "role": "source",
-      "sha256": "2051143c4cabc1f6c9f1c973e7a9c85274eaa7020e7857ac894345742622788c",
+      "sha256": "8c6ae75ac94841b46532f7b567dacf63bb0dce60dbb37c981cb13066e6161872",
       "source_path": "src/Actions/RunAction.cc"
+    },
+    {
+      "bytes": 3536,
+      "path": "src/Actions/RunManagerFactory.cc",
+      "role": "source",
+      "sha256": "881c98295d6b297e674aab33e91b9832e1438a3aaf841099a335ceba680848f6",
+      "source_path": "src/Actions/RunManagerFactory.cc"
     },
     {
       "bytes": 5126,
@@ -1420,10 +1441,10 @@
       "source_path": "src/Actions/TrackingAction.cc"
     },
     {
-      "bytes": 291,
+      "bytes": 329,
       "path": "src/Actions/WorkerRunContext.cc",
       "role": "source",
-      "sha256": "884670bbe0a3a134e689e8cf334505d4a76a97f2734b3817c80ee6d224a6cc41",
+      "sha256": "184f5a125741809b3487ed6ffdf2135b50b4d6444d22b66facfd9634db22ecf6",
       "source_path": "src/Actions/WorkerRunContext.cc"
     },
     {
@@ -1553,10 +1574,10 @@
       "source_path": "src/Core/SessionJson.cc"
     },
     {
-      "bytes": 127062,
+      "bytes": 127613,
       "path": "src/Core/SessionServer.cc",
       "role": "source",
-      "sha256": "eae9da84d4dbf30ab52b6387a08b4ca1bb20b6123920d67fc02d9f8ade127ec4",
+      "sha256": "c1bca2ca23f49edcee6485361762d0ea104a51781d94a1d168e82b3eb35ea130",
       "source_path": "src/Core/SessionServer.cc"
     },
     {
@@ -1567,10 +1588,10 @@
       "source_path": "src/Core/SimulationContext.cc"
     },
     {
-      "bytes": 94307,
+      "bytes": 94582,
       "path": "src/Core/SimulationManager.cc",
       "role": "source",
-      "sha256": "ddc95e5b4da8c16f22da92d17086216d44b88412ea345ff592a5027c9283622b",
+      "sha256": "b295a4bd1f3c4b6deba2da4931dc45ef5ad3ca00cbb84ab59fe94fdcdee543a9",
       "source_path": "src/Core/SimulationManager.cc"
     },
     {
@@ -1805,10 +1826,10 @@
       "source_path": "src/Output/Histogram2D.cc"
     },
     {
-      "bytes": 31549,
+      "bytes": 31875,
       "path": "src/Output/OutputManager.cc",
       "role": "source",
-      "sha256": "7c924d795f5e36318cb67a73a6df43ef1aa31221e14bb8e7dab32ff5614ff88a",
+      "sha256": "bb7ab49d19e1902aaf20e60fb9a95135013184c079214dc09c9c89cd5b45e9cc",
       "source_path": "src/Output/OutputManager.cc"
     },
     {
@@ -1973,10 +1994,17 @@
       "source_path": "src/Scoring/ScorerBase.cc"
     },
     {
-      "bytes": 63096,
+      "bytes": 4323,
+      "path": "src/Scoring/ScorerFactory.cc",
+      "role": "source",
+      "sha256": "1a8828d0cfc68738fa3eecf83180b7f8001288707474e02027353f40c852bf22",
+      "source_path": "src/Scoring/ScorerFactory.cc"
+    },
+    {
+      "bytes": 69971,
       "path": "src/Scoring/ScoringManager.cc",
       "role": "source",
-      "sha256": "711d23dd813cde80456a8738a3813e5c6368e13f814cfd1f65b552e90b9ce05b",
+      "sha256": "8295247407a91cfc7f950202ebb8143ce00cd1142453e1eeb8246d78ca243f7e",
       "source_path": "src/Scoring/ScoringManager.cc"
     },
     {
@@ -2195,6 +2223,20 @@
       "role": "tool",
       "sha256": "d77f1f0b4957e8ec32d9e87af0f643538e0a12aa1987080869d9b659c9560f8a",
       "source_path": "tools/randomCommandGuardCheck.cc"
+    },
+    {
+      "bytes": 16165,
+      "path": "tools/scorerFactoryCheck.cc",
+      "role": "tool",
+      "sha256": "b2b7f1853febc0ea05bb26451e4629038d4c2b7ceec5e462937dd32abee25476",
+      "source_path": "tools/scorerFactoryCheck.cc"
+    },
+    {
+      "bytes": 33258,
+      "path": "tools/scoringLifecycleCheck.cc",
+      "role": "tool",
+      "sha256": "75954164cfc325bd4dde195664f5959c9c5b342c3c2781e032dbeb7973c6ddf9",
+      "source_path": "tools/scoringLifecycleCheck.cc"
     },
     {
       "bytes": 6041,

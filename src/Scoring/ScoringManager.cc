@@ -21,6 +21,7 @@
 #include "G4RunManager.hh"
 
 #include <algorithm>
+#include <exception>
 #include <cmath>
 #include <filesystem>
 #include <limits>
@@ -235,9 +236,14 @@ ScoringManager::~ScoringManager() = default;
 std::unique_ptr<ScoringManager> ScoringManager::CloneForThread(OutputManager* outputManager,
                                                                int threadId) const
 {
-    (void)threadId;
+    // Validate the entire collection before invoking any factory (also sequential).
+    const auto descriptions = GetScorerDescriptions();
     auto clone = std::make_unique<ScoringManager>();
     clone->outputManager_ = outputManager;
+    clone->scorerFactories_ = scorerFactories_;
+    clone->scorerFactories_.Freeze();
+    clone->letParticleLocation_ = letParticleLocation_;
+    clone->phaseParticleLocation_ = phaseParticleLocation_;
     clone->effectiveState_ = effectiveState_->Clone();
     clone->enabled_ = enabled_;
     clone->hitOutputEnabled_ = hitOutputEnabled_;
@@ -265,6 +271,9 @@ std::unique_ptr<ScoringManager> ScoringManager::CloneForThread(OutputManager* ou
     clone->phaseSpaceParticles_ = phaseSpaceParticles_;
     clone->phaseSpaceKill_ = phaseSpaceKill_;
     clone->trajectories_ = TrajectoryRecorder(trajectories_.GetSettings());
+    for (const auto& description : descriptions) {
+        clone->RegisterDescription(description, threadId, builtinScorerIds_.count(description.Id()) != 0);
+    }
     if (clone->autoCreateDefaultScorers_) {
         clone->EnsureDefaultScorers();
     }
@@ -341,6 +350,7 @@ bool ScoringManager::IsLETScoringEnabled() const
 void ScoringManager::SetLETParticles(const std::set<std::string>& particles)
 {
     letParticles_ = particles;
+    letParticleLocation_ = "C++ SetLETParticles";
     if (auto* scorer = dynamic_cast<LETScorer*>(GetScorer("let"))) scorer->SetParticles(particles);
 }
 
@@ -466,7 +476,12 @@ int ScoringManager::GetVerboseLevel() const
 
 void ScoringManager::Clear()
 {
+    enteredScorers_.clear();
+    enteredScorerRun_ = -1;
+    scorerRunReady_ = false;
     scorers_.clear();
+    builtinScorerIds_.clear();
+    scorerDescriptions_.clear();
     nielTables_.clear();
     nielNamesPending_ = false;
     nielPendingLocations_.clear();
@@ -490,40 +505,98 @@ void ScoringManager::RegisterScorer(std::unique_ptr<ScorerBase> scorer)
     scorers_.push_back(std::move(scorer));
 }
 
+void ScoringManager::RegisterScorerFactory(const std::string& type, ScorerFactoryRegistry::Factory factory)
+{
+    scorerFactories_.Register(type, factory);
+}
+
+void ScoringManager::RegisterScorer(const ScorerDescription& description)
+{
+    // These five IDs retain the existing Manager setters as their sole authority.
+    // Extensions may use other IDs, including with an explicitly chosen builtin type.
+    for (const auto* id : {"edep", "let", "dose", "fluence", "displacement"})
+        if (description.Id() == id)
+            throw std::runtime_error("Reserved builtin scorer id: " + description.Id() + "; use the Manager settings");
+    // Registration is not worker construction, even in a sequential process.
+    RegisterDescription(description, -1, false);
+}
+
+void ScoringManager::RegisterDescription(const ScorerDescription& description, int threadId, bool builtin)
+{
+    if (HasScorer(description.Id())) throw std::runtime_error("Duplicate scorer id: " + description.Id());
+    // Prepare all allocations before publishing either the descriptor or instance.
+    auto descriptions = scorerDescriptions_;
+    auto builtinIds = builtinScorerIds_;
+    if (builtin) builtinIds.insert(description.Id());
+    else descriptions.emplace(description.Id(), description);
+    scorers_.reserve(scorers_.size() + 1);
+    auto instance = scorerFactories_.Create(description, threadId);
+    scorers_.push_back(std::move(instance));
+    scorerDescriptions_.swap(descriptions);
+    builtinScorerIds_.swap(builtinIds);
+}
+
+ScorerDescription ScoringManager::DescribeBuiltin(const std::string& id) const
+{
+    ScorerSettings settings;
+    bool enabled = false;
+    if (id == "edep") {
+        enabled = edepScoringEnabled_;
+        settings.rawEnabled = edepRawHistogramEnabled_;
+        settings.weightedEnabled = edepWeightedHistogramEnabled_;
+        settings.volumeSummary = edepVolumeSummaryEnabled_;
+        settings.particleSummary = edepParticleSummaryEnabled_;
+        settings.rawHistogram = {rawEdepHistogram_.bins, rawEdepHistogram_.min, rawEdepHistogram_.max, rawEdepHistogram_.configured};
+        settings.weightedHistogram = {weightedEdepHistogram_.bins, weightedEdepHistogram_.min, weightedEdepHistogram_.max, weightedEdepHistogram_.configured};
+    } else if (id == "let") {
+        enabled = letScoringEnabled_;
+        settings.particles = letParticles_;
+    } else if (id == "dose") enabled = doseScoringEnabled_;
+    else if (id == "fluence") enabled = fluenceScoringEnabled_;
+    else if (id == "displacement") {
+        enabled = displacementScoringEnabled_;
+        settings.nielTables = nielTables_;
+    } else throw std::runtime_error("Unknown builtin scorer identity: " + id);
+    return ScorerDescription(id, id, enabled, std::move(settings));
+}
+
+std::vector<ScorerDescription> ScoringManager::GetScorerDescriptions() const
+{
+    std::vector<ScorerDescription> result;
+    for (const auto& scorer : scorers_) {
+        const auto id = NormalizeName(scorer->GetName());
+        if (builtinScorerIds_.count(id)) result.push_back(DescribeBuiltin(id));
+        else {
+            const auto found = scorerDescriptions_.find(id);
+            if (found == scorerDescriptions_.end())
+                throw std::runtime_error("Cannot clone legacy scorer '" + id +
+                    "': RegisterScorer(unique_ptr) has no rebuild description; register a type factory and description");
+            if (found->second.Enabled() != scorer->IsEnabled())
+                throw std::runtime_error("Cannot clone scorer '" + id +
+                    "': instance enabled state differs from its immutable description; "
+                    "register the intended configuration instead of modifying the runtime instance");
+            result.push_back(found->second);
+        }
+    }
+    return result;
+}
+
 void ScoringManager::EnsureDefaultScorers()
 {
-    if (edepScoringEnabled_ && !HasScorer("edep")) {
-        auto scorer = std::make_unique<EdepScorer>("edep");
-        ApplyEdepSettings(*scorer);
-        RegisterScorer(std::move(scorer));
-    } else if (auto* scorer = GetEdepScorer()) {
-        ApplyEdepSettings(*scorer);
+    // Build the complete missing default set locally before publishing any member.
+    auto builtinIds = builtinScorerIds_;
+    std::vector<std::unique_ptr<ScorerBase>> pending;
+    for (const auto* id : {"edep", "let", "dose", "fluence", "displacement"}) {
+        const auto description = DescribeBuiltin(id);
+        if (description.Enabled() && !HasScorer(id)) {
+            builtinIds.insert(id);
+            pending.push_back(scorerFactories_.Create(description, G4Threading::G4GetThreadId()));
+        }
     }
-
-    if (letScoringEnabled_ && !HasScorer("let")) {
-        auto scorer = std::make_unique<LETScorer>("let");
-        scorer->SetEnabled(true);
-        scorer->SetParticles(letParticles_);
-        RegisterScorer(std::move(scorer));
-    }
-    if (doseScoringEnabled_ && !HasScorer("dose")) {
-        auto scorer = std::make_unique<DoseScorer>("dose");
-        scorer->SetEnabled(true);
-        RegisterScorer(std::move(scorer));
-    }
-    if (fluenceScoringEnabled_ && !HasScorer("fluence")) {
-        auto scorer = std::make_unique<FluenceScorer>("fluence");
-        scorer->SetEnabled(true);
-        RegisterScorer(std::move(scorer));
-    }
-
-    if (displacementScoringEnabled_ && !HasScorer("displacement")) {
-        auto scorer = std::make_unique<DisplacementScorer>("displacement");
-        scorer->SetEnabled(true);
-        scorer->SetTables(nielTables_);
-        RegisterScorer(std::move(scorer));
-    }
-
+    scorers_.reserve(scorers_.size() + pending.size());
+    for (auto& scorer : pending) scorers_.push_back(std::move(scorer));
+    builtinScorerIds_.swap(builtinIds);
+    if (auto* scorer = GetEdepScorer()) ApplyEdepSettings(*scorer);
     SetScorerEnabledIfExists("edep", edepScoringEnabled_);
     SetScorerEnabledIfExists("let", letScoringEnabled_);
     SetScorerEnabledIfExists("dose", doseScoringEnabled_);
@@ -565,13 +638,18 @@ std::vector<std::string> ScoringManager::GetScorerNames() const
 
 void ScoringManager::BeginRun(int runID)
 {
+    enteredScorers_.clear();
+    enteredScorerRun_ = runID;
+    scorerRunReady_ = false;
     // Test-only deterministic fault in the real Geant4 worker run callback.
     if (InjectBeginScoringFailure(runID, outputManager_)) {
         throw std::runtime_error("Injected ScoringManager::BeginRun failure");
     }
     // The particle table exists by now, so an unresolvable [scoring.displacement] key can be
     // rejected before the first event instead of leaving the DDD silently at zero.
+    ValidateLegacyParticleSelectors();
     ResolvePendingNielNames();
+    scorerFactories_.Freeze();
     currentRunID_ = runID;
     BeginPhaseSpaceRun();
     if (trajectories_.IsEnabled() && outputManager_) {
@@ -592,19 +670,42 @@ void ScoringManager::BeginRun(int runID)
         }
         throw;
     }
-    for (ScorerBase* scorer : EnabledScorers()) scorer->BeginRun(runID);
+    const auto enabledScorers = EnabledScorers();
+    enteredScorers_.reserve(enabledScorers.size());
+    for (ScorerBase* scorer : enabledScorers) {
+        // Include a callback that throws after acquiring resources, but never
+        // send EndRun to an instance whose BeginRun was not entered.
+        enteredScorers_.push_back(scorer);
+        scorer->BeginRun(runID);
+    }
     RecordVolumeFilterAttachReceipts(runID);
+    scorerRunReady_ = true;
 }
 
 void ScoringManager::EndRun(int runID)
 {
-    EndPhaseSpaceRun();
-    const std::string trajectoryFile = trajectories_.EndRun();
-    if (!trajectoryFile.empty() && outputManager_) outputManager_->RegisterGeneratedFile(trajectoryFile, OutputManager::ArtifactScope::Thread,
-        outputManager_->GetRunId(), outputManager_->GetThreadId());
-    if (!enabled_) return;
-    for (ScorerBase* scorer : EnabledScorers()) scorer->EndRun(runID);
-    RecordVolumeFilterRunReceipts(runID);
+    if (enteredScorerRun_ != runID) return;
+    auto entered = std::move(enteredScorers_);
+    enteredScorers_.clear();
+    const bool ready = scorerRunReady_;
+    enteredScorerRun_ = -1;
+    scorerRunReady_ = false;
+    std::exception_ptr firstFailure;
+    const auto attempt = [&firstFailure](const auto& operation) {
+        try { operation(); }
+        catch (...) { if (!firstFailure) firstFailure = std::current_exception(); }
+    };
+    attempt([&]() { EndPhaseSpaceRun(); });
+    attempt([&]() {
+        const std::string trajectoryFile = trajectories_.EndRun();
+        if (!trajectoryFile.empty() && outputManager_)
+            outputManager_->RegisterGeneratedFile(trajectoryFile, OutputManager::ArtifactScope::Thread,
+                                                  outputManager_->GetRunId(), outputManager_->GetThreadId());
+    });
+    for (ScorerBase* scorer : entered) attempt([&]() { scorer->EndRun(runID); });
+    // A partial BeginRun is not evidence that every filter was applied.
+    if (ready) attempt([&]() { RecordVolumeFilterRunReceipts(runID); });
+    if (firstFailure) std::rethrow_exception(firstFailure);
 }
 
 void ScoringManager::BeginEvent(int eventID)
@@ -849,6 +950,10 @@ void ScoringManager::LoadFromConfig(const ConfigManager& config)
         if (phaseSpaceVolume_.empty()) {
             throw std::runtime_error("[phase_space]/volume must name the physical volume whose entering particles are recorded");
         }
+        phaseParticleLocation_ = config.GetMainConfigPath();
+        for (const auto& field : config.GetFields())
+            if (field.normalizedSection == "phase_space" && field.normalizedKey == "particles")
+                phaseParticleLocation_ += " line " + std::to_string(field.lineNumber);
         phaseSpaceParticles_.clear();
         const std::string particles = StringUtils::Trim(config.GetString("phase_space", "particles", "all"));
         if (StringUtils::ToLower(particles) != "all") {
@@ -962,6 +1067,10 @@ void ScoringManager::LoadFromConfig(const ConfigManager& config)
             if (particles.empty()) throw std::runtime_error("[scoring.let] particles must be 'all' or a particle list");
         }
         SetLETParticles(particles);
+        letParticleLocation_ = config.GetMainConfigPath();
+        for (const auto& field : config.GetFields())
+            if (field.normalizedSection == "scoring.let" && field.normalizedKey == "particles")
+                letParticleLocation_ += " line " + std::to_string(field.lineNumber);
     }
     effectiveState_->reader = config.GetMainReader();
     effectiveState_->Accept(config.GetMainReader(), ExportEffectiveConfigFields());
@@ -1315,8 +1424,28 @@ void ScoringManager::ApplyVolumeConfigsToScorers()
     }
 }
 
+void ScoringManager::ValidateLegacyParticleSelectors() const
+{
+    const auto validate = [](const std::set<std::string>& particles, const std::string& section,
+                             const std::string& location) {
+        if (particles.empty()) return; // existing all semantics
+        auto* table = G4ParticleTable::GetParticleTable();
+        for (const auto& token : particles) {
+            if (table->entries() == 0)
+                throw std::runtime_error("[" + section + "]/particles at " + location +
+                    " cannot validate token '" + token + "': Geant4 particle table is not ready");
+            if (!table->FindParticle(token))
+                throw std::runtime_error("[" + section + "]/particles at " + location +
+                    " lists unknown Geant4 particle '" + token + "'");
+        }
+    };
+    validate(letParticles_, "scoring.let", letParticleLocation_);
+    validate(phaseSpaceParticles_, "phase_space", phaseParticleLocation_);
+}
+
 void ScoringManager::ValidateVolumeConfigsForRun()
 {
+    ValidateLegacyParticleSelectors();
     if (spectrumSpecs_.empty() && filterSpecs_.empty()) return;
     // This runs before the event loop, so default scorers may not be created
     // yet (BeginRun calls EnsureDefaultScorers). The parsed enable flags are

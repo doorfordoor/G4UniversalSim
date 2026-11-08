@@ -1,4 +1,5 @@
 ﻿#include "Actions/ActionInitialization.hh"
+#include "Actions/RunManagerFactory.hh"
 #include "Biasing/BiasingManager.hh"
 #include "Core/MacroPreflight.hh"
 #include "Core/RandomCommandGuard.hh"
@@ -25,9 +26,6 @@
 #include "G4VModularPhysicsList.hh"
 #include "G4VisExecutive.hh"
 #include "Output/OutputManager.hh"
-#ifdef G4MULTITHREADED
-#include "G4MTRunManager.hh"
-#endif
 
 #include <cstdlib>
 #include <cctype>
@@ -624,14 +622,7 @@ void WriteRunPlan(const SimulationManager& sim, const CommandLineOptions& option
 }
 
 std::unique_ptr<G4RunManager> CreateRunManager(const SimulationManager& sim) {
-#ifdef G4MULTITHREADED
-  auto runManager = std::make_unique<G4MTRunManager>();
-  runManager->SetNumberOfThreads(sim.GetContext().GetNumThreads());
-  return runManager;
-#else
-  (void)sim;
-  return std::make_unique<G4RunManager>();
-#endif
+  return CreateSimulationRunManager(sim.GetOutputManager(), sim.GetContext().GetNumThreads());
 }
 
 }  // namespace
@@ -1049,7 +1040,10 @@ int main(int argc, char** argv) {
           macroStatus = "failed";
           throw std::runtime_error(sim.GetBiasingManager()->GetLastCommandFailure());
         }
-        if (commandName == "/run/beamon" && sim.GetOutputManager()->HasOutputFailure()) {
+        // Worker construction can fail during initialization as well as BeamOn.
+        // Do not consume a later macro command after a latched failure, even
+        // when the kernel command itself returned success.
+        if (sim.GetOutputManager()->HasOutputFailure()) {
           const auto failure = sim.GetOutputManager()->GetOutputFailure();
           macroFailure = MacroFailureInfo{
               command.sourceFile.string(), static_cast<int>(command.lineNumber),

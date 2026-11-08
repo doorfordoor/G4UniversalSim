@@ -1,0 +1,36 @@
+# AR2首片实施边界
+
+前置AR1约定范围已签收，回退776ac64c；r3总合同及依赖/扩展判据不变。
+
+## 接口与写者
+Jason独占ScoringManager.hh/.cc、至多一组新增Scoring规格/工厂头源、tools/scorerFactoryCheck.cc。值描述持规范instance/type及值配置，创建器接受const描述，每线程独立实例；内置五类复用登记机制，保持原设置和算法。旧unique_ptr登记保留直接使用，无重建规格在任何clone工厂调用前明确拒绝。拒绝原子，不发布半套状态。实际有限设计及SHA另见author-ar2-scoring。
+
+AUD08同时覆盖旧LET与phase_space粒子选择器，在粒子表就绪、事件前检查；不受空filter/spectrum早退影响。all、合法无贡献、混合拼错及全拼错分别取证。
+
+主审独占Actions/WorkerRunContext、ActionInitialization、RunAction相关头源与main命令后失败守卫；仅在真实Geant4启动顺序核实后接线工厂失败。构造失败保留首因，TLS不发布半套，原生动作能够正常到达引擎屏障与清理。不得将0完成冒称0分发，不自行增加通用屏障框架。条件扩展到引擎适配/PrimaryGenerator/EventAction前须在本文件记录具体必要性。
+
+Newton只读核启动次序及设计。Franklin只在输出目录准备测试驱动，接口未定默认plan-only。主审最终登记CMake/runner，独审由非作者执行。现阶段不得并行写同文件，不启动全构建或科学批次。
+
+## 验收与边界
+实际1/2/4workers两run、Sequential单列；null/unknown/duplicate/name mismatch/std及非std异常；延迟最后worker失败、首因和叠加收尾错误、后续命令拒绝。使用一个确定性扩展scorer证明无需改中央类型分支。默认输出/统计/parallel路由不变。
+
+触及默认构造与生命周期必须新候选H2及H3原冻结科学协议，工程先行；18输入72项、种子/批数/阈值不变。AR1工程四项不得替代AR2科学签收。F3不追加。原始失败和身份分别保留。当前本文件是实施范围，不是结果签收。
+
+## 主审接线进展（未验证）
+
+main命令后共享失败检查不再限beamOn；csh原已逐条检查保持。实际SessionServer initialize只核内核返回码，已将其纳入有限文件表：src/Core/SessionServer.cc，仅在返回0但已锁存失败时沿原kernel_init_failed/关闭路径拒绝，不发布applied。Action Build捕获工厂异常、保持空TLS且安装可收尾动作；RunAction记录真正进入的scoring/biasing阶段，失败前不误调用EndRun。事件入口的同步后检查仍待时序核实，现有改动未构建/未签收，不能执行科学批次。
+
+条件文件正式纳入：include/Actions/RunManagerFactory.hh、src/Actions/RunManagerFactory.cc。官方v11.3.2 WorkerRunManager RunInitialization在ThisWorkerReady之后调用BeginRun但随后重置runAborted；DoEventLoop首先无条件ProcessOneEvent，故BeginRun AbortRun不足。候选在DoEventLoop入口检查共享失败，保留InitializeEventLoop/TerminateEventLoop与BeamOn后续RunTermination屏障；成功路径原样调用内核。Sequential使用零迭代DoEventLoop且不改planned事件数。此为必要Geant4装配适配，无新同步机制/随机派发改动；具体版本来源和原生负控仍待独审，当前不签零事件。
+
+另纳入OutputManager.hh/.cc的窄RecordStartupFailure入口：明确run=-1，与原共享mutex/首因锁存相同；原RecordOutputFailure负值默认继承当前run语义不变。理由：worker clone可继承master的runId，构造尚无实际worker run不能把未开始写成run0。当前仅RunManagerFactory单源码真实SDK /Zs exit0，原生验证未开始；证据ar2-preparation/runtime-syntax.log。
+
+## 部分初始化收尾补修
+Newton独审确认新扩展合同下EndRun全遍历会调用未进入BeginRun的实例；主审已增加本轮entered指针列表/身份（不新增所有权），Begin首步清旧轮，逐调用前登记，End一次消费并分别尝试phase/trajectory/已进入scorer清理，最后重抛首异常。只有完整Begin成功才写完整filter run收据；ScorerBase.hh只补部分Begin清理合同注释，不加纯虚。Jason补probe反例，独审待实际运行。相邻旧ROOT Write抛异常跳过Close与早bias校验timer路径纳入AR3收尾复查，不在AR2泛称已解决全部异常。
+
+## 独审SRC-01/02与应用层校验补修
+五内置type只允许规范id，别名会共用旧固定输出/统计命名空间，现各内置工厂构造前明确拒绝；不实现多实例输出协议。扩展实例enabled与描述不同在clone前明确拒绝，配置只能由登记的不可变描述决定，实例setter不作为另一配置权威；其它扩展配置setter同样不得代替描述。旧legacy直接使用保持。Jason补五别名及enabled双向漂移负控，Newton复核。
+已纳入SimulationManager.hh/.cc窄改动：ValidateScoringVolumeConfigsBeforeRun不再因无H2 filter/spectrum跳过旧LET/phase校验，在粒子表初始化后沿原batch/csh/session调用点提前拒绝；BeginRun仍保留防线。即使scoring禁用，显式非空错误selector也必须通过合法性检查，合法零贡献仍允许；无[scoring]不消费孤立scoring.let的旧规则不变。
+主审原生wrapper scripts/test_scoring_lifecycle.py固定40病例，scorer_factory与legacy_particle_selectors/scoring_lifecycle已登记；新probe均仅仓库target，standalone仍两组件，不增加导出测试数。尚未全构建或执行该矩阵。
+
+## r1原生反例与r2修正
+真实Sequential事件执行落于clone output摘要，主审将Sequential上下文改为借用SimulationManager唯一输出所有者；scorer仍独立，MT所有权保持。r1全部原始报告保留，修正待新鲜构建。判据同时补逐实例生命周期配对、命令集合/参数、全部输出登记及SHA、真实ROOT逐run事件核验。强化后离线旧40中37满足，3个Sequential缺metadata；这不是新候选签收。selector仅修正未获事件worker无需惰性CSV的错误假设，不改事件数、种子或接受标准。

@@ -759,6 +759,15 @@ void OutputManager::RecordOutputFailure(const std::string& stage, const std::str
     }
 }
 
+void OutputManager::RecordStartupFailure(const std::string& stage, const std::string& message)
+{
+    std::lock_guard<std::mutex> guard(generatedFiles_->mutex);
+    if (!generatedFiles_->hasFailure) {
+        generatedFiles_->firstFailure = {-1, threadId_, stage, message};
+        generatedFiles_->hasFailure = true;
+    }
+}
+
 bool OutputManager::HasOutputFailure() const
 {
     std::lock_guard<std::mutex> guard(generatedFiles_->mutex);

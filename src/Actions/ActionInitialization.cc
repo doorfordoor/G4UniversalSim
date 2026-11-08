@@ -79,27 +79,42 @@ void ActionInitialization::Build() const
 
     auto context = std::make_shared<WorkerRunContext>();
     const int threadId = CurrentThreadIdOrZero();
-    if (masterOutputManager_) {
+    const auto role = CurrentRunActionRole();
+    if (role == RunAction::Role::Sequential && masterOutputManager_) {
+        context->sequentialOutput = masterOutputManager_;
+    } else if (masterOutputManager_) {
         context->output = masterOutputManager_->CloneForThread(threadId);
     } else {
         context->output = std::make_unique<OutputManager>();
         context->output->SetThreadId(threadId);
     }
-    context->output->EnableThreadSuffix(true);
+    auto* output = context->GetOutputManager();
+    output->SetThreadId(threadId);
+    output->EnableThreadSuffix(true);
 
-    if (masterScoringManager_) {
-        context->scoring = masterScoringManager_->CloneForThread(
-            context->output.get(),
-            threadId);
-    } else {
-        context->scoring = std::make_unique<ScoringManager>();
-        context->scoring->SetOutputManager(context->output.get());
+    // Publish TLS only after the complete local scorer set has been rebuilt.
+    // A failed worker must still install its actions and reach the kernel's
+    // normal synchronization/cleanup path; exceptions cannot escape Build.
+    AIHL::SetCurrentThreadScoringManager(nullptr);
+    try {
+        if (masterScoringManager_) {
+            context->scoring = masterScoringManager_->CloneForThread(
+                output,
+                threadId);
+        } else {
+            context->scoring = std::make_unique<ScoringManager>();
+            context->scoring->SetOutputManager(output);
+        }
+    } catch (const std::exception& error) {
+        output->RecordStartupFailure("scoring_factory_build", error.what());
+    } catch (...) {
+        output->RecordStartupFailure("scoring_factory_build", "unknown exception");
     }
     AIHL::SetCurrentThreadScoringManager(context->scoring.get());
 
-    auto* runAction = new RunAction(context, CurrentRunActionRole(), biasingManager_);
+    auto* runAction = new RunAction(context, role, biasingManager_);
     runAction->SetEffectiveCallbacks(effectiveBegin_, effectiveEnd_);
-    if (CurrentRunActionRole() != RunAction::Role::Worker) runAction->SetSourceManager(sourceManager_);
+    if (role != RunAction::Role::Worker) runAction->SetSourceManager(sourceManager_);
     runAction->SetVerboseLevel(verboseLevel_);
     SetUserAction(runAction);
 

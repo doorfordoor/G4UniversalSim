@@ -4,6 +4,7 @@
 #include "Config/EffectiveConfigSupport.hh"
 #include "Scoring/PhaseSpace.hh"
 #include "Scoring/ScorerBase.hh"
+#include "Scoring/ScorerFactory.hh"
 #include "Scoring/TrajectoryRecorder.hh"
 #include "Scoring/VolumeFilter.hh"
 #include "Scoring/VolumeSpectrum.hh"
@@ -82,6 +83,14 @@ public:
     void Clear();
 
     void RegisterScorer(std::unique_ptr<ScorerBase> scorer);
+    // Configuration-time extension API. Descriptions, not instances, rebuild workers.
+    // RegisterScorer(description) calls the factory with -1; CloneForThread forwards
+    // its supplied threadId unchanged (real worker IDs are 0+).
+    void RegisterScorerFactory(const std::string& type, ScorerFactoryRegistry::Factory factory);
+    void RegisterScorer(const ScorerDescription& description);
+    // Runtime instances are not configuration editors. A changed enabled state
+    // is rejected at clone; other extension setters must not replace the spec.
+    std::vector<ScorerDescription> GetScorerDescriptions() const;
     void EnsureDefaultScorers();
 
     bool HasScorer(const std::string& name) const;
@@ -187,6 +196,9 @@ private:
     // The particle table is empty during Configure(), so this runs at the start of a run
     // (before the first event) and throws with the configuration file and line.
     void ResolvePendingNielNames();
+    void ValidateLegacyParticleSelectors() const;
+    ScorerDescription DescribeBuiltin(const std::string& id) const;
+    void RegisterDescription(const ScorerDescription& description, int threadId, bool builtin);
 
     std::shared_ptr<effective_config::ConsumerState> effectiveState_ = std::make_shared<effective_config::ConsumerState>();
     OutputManager* outputManager_ = nullptr;
@@ -221,6 +233,16 @@ private:
     double currentEventRawEdep_ = 0.0;
     double currentEventWeightedEdep_ = 0.0;
     std::vector<std::unique_ptr<ScorerBase>> scorers_;
+    // Non-owning, per-run attempted BeginRun callbacks, consumed once by EndRun.
+    std::vector<ScorerBase*> enteredScorers_;
+    int enteredScorerRun_ = -1;
+    bool scorerRunReady_ = false;
+    ScorerFactoryRegistry scorerFactories_ = BuiltinScorerFactories();
+    // Only identity is cached for builtins; settings come from the fields above.
+    std::set<std::string> builtinScorerIds_;
+    std::map<std::string, ScorerDescription> scorerDescriptions_;
+    std::string letParticleLocation_ = "C++ SetLETParticles";
+    std::string phaseParticleLocation_ = "main config";
 
     TrajectoryRecorder trajectories_;       // [output] trajectories (roadmap H1)
     std::string phaseSpaceVolume_;          // empty = disabled
