@@ -105,6 +105,51 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
     }
     SOURCE_PRESETS = ["proton_beam", "mono_proton", "neutron_beam", "gamma_beam", "isotropic_neutron", "plane_proton_beam"]
 
+    @property
+    def source_editor(self):
+        context = getattr(self, '_sps_projection_editors', None)
+        if context is not None:
+            return context['sourceEditor']
+        owner = getattr(self, '_history_owner', None)
+        if owner is not None:
+            return getattr(owner.run_path_snapshot().project, 'sourceEditor')
+        return self._source_editor
+
+    @source_editor.setter
+    def source_editor(self, value):
+        if getattr(self, '_history_owner', None) is None:
+            self._source_editor = value
+
+    @property
+    def physics_editor(self):
+        context = getattr(self, '_sps_projection_editors', None)
+        if context is not None:
+            return context['physicsEditor']
+        owner = getattr(self, '_history_owner', None)
+        if owner is not None:
+            return getattr(owner.run_path_snapshot().project, 'physicsEditor')
+        return self._physics_editor
+
+    @physics_editor.setter
+    def physics_editor(self, value):
+        if getattr(self, '_history_owner', None) is None:
+            self._physics_editor = value
+
+    @property
+    def scoring_editor(self):
+        context = getattr(self, '_sps_projection_editors', None)
+        if context is not None:
+            return context['scoringEditor']
+        owner = getattr(self, '_history_owner', None)
+        if owner is not None:
+            return getattr(owner.run_path_snapshot().project, 'scoringEditor')
+        return self._scoring_editor
+
+    @scoring_editor.setter
+    def scoring_editor(self, value):
+        if getattr(self, '_history_owner', None) is None:
+            self._scoring_editor = value
+
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self._building = False
@@ -227,6 +272,24 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
         self._connect_sps_summary_signals()
 
     def set_from_project(self, project: G4USimProject, *, reload_sources: bool = True) -> None:
+        owner = getattr(self, '_history_owner', None)
+        if owner is None:
+            return self._set_from_project_projection(project, reload_sources=reload_sources)
+        from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot
+        previous = getattr(owner, '_sps_projection_snapshot', None)
+        # Legacy Open projects before EditSession.reset. Read this explicit input,
+        # not the old session, for this synchronous projection only.
+        owner._sps_projection_snapshot = WorkspaceSnapshot(project)
+        try:
+            with self._sps_private_projection(project):
+                return self._set_from_project_projection(project, reload_sources=reload_sources)
+        finally:
+            if previous is None:
+                owner.__dict__.pop('_sps_projection_snapshot', None)
+            else:
+                owner._sps_projection_snapshot = previous
+
+    def _set_from_project_projection(self, project: G4USimProject, *, reload_sources: bool = True) -> None:
         self.invalidate_diagnostics()
         self._building = True
         run = project.runSettings
@@ -309,12 +372,17 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
             # Template is outside AR4 run/path; config_path is model-owned.
             project.geometrySettings.template = self._geometry_template_token()
         project.geometryEditor = self.geometry_document
-        project.sourceEditor = self.source_editor
-        project.physicsEditor = self.physics_editor
-        project.scoringEditor = self.scoring_editor
-        project.sourceSettings = self.source_settings()
-        project.physicsSettings = self.physics_settings()
-        project.scoringSettings = self.scoring_settings()
+        owner = getattr(self, '_history_owner', None)
+        if owner is not None:
+            from g4usim_gui.core.sps_edit_model import copy_sps
+            copy_sps(project, owner.run_path_snapshot().project)
+        else:
+            project.sourceEditor = self.source_editor
+            project.physicsEditor = self.physics_editor
+            project.scoringEditor = self.scoring_editor
+            project.sourceSettings = self.source_settings()
+            project.physicsSettings = self.physics_settings()
+            project.scoringSettings = self.scoring_settings()
         project.materialEditor = self.material_document
 
     def validate_current(self, project: G4USimProject) -> ValidationReport:

@@ -123,6 +123,128 @@ class RunPathContract(unittest.TestCase):
         assert session.revision == 0
 
 
+    def test_sps_scalar_and_raw_actions(self):
+        from g4usim_gui.core import sps_edit_model as sps
+        from g4usim_gui.core.edit_snapshot import snapshot_from_json
+        from PySide6.QtWidgets import QApplication
+        assert QApplication.instance() is None
+        initial = WorkspaceSnapshot(G4USimProject())
+        initial.project.sourceSettings.energy = '77 MeV'
+        initial.project.sourceEditor.energy = '11 MeV'
+        initial.project.sourceEditor.position_mode = 'plane'
+        initial.project.sourceEditor.position_type = 'plane'
+        initial.project.sourceEditor.source_shape = 'rectangle'
+        initial.project.sourceEditor.angular_mode = 'isotropic'
+        unchanged = snapshot_to_json(initial)
+        assert len(sps.BINDINGS) == 76 and len(sps.RAW_BINDINGS) == 7
+        for key, (_, _, kind, _) in sps.SCALARS.items():
+            value = True if kind == 'bool' else sps.RANGES[key][0] if kind == 'int' else '  new raw  '
+            changed = sps.reduce_sps(initial, key, value)
+            assert changed.state['drafts'][key] == value
+            assert snapshot_to_json(initial) == unchanged
+            restored = snapshot_from_json(snapshot_to_json(changed))
+            assert snapshot_to_json(restored) == snapshot_to_json(changed)
+            session = EditSession(initial)
+            session.replace('SPS field', changed)
+            session.undo()
+            assert snapshot_to_json(session.current()) == unchanged
+            session.redo()
+            assert snapshot_to_json(session.current()) == snapshot_to_json(changed)
+        for key in sps.RAW_BINDINGS:
+            changed = sps.reduce_sps(initial, key, '-')
+            assert changed.state['drafts'][key] == '-'
+            assert changed.project.sourceSettings.energy == '77 MeV'
+        quick = sps.reduce_sps(initial, 'config.source_energy', ' 2 MeV ')
+        assert quick.project.sourceEditor.energy == '2 MeV'
+        assert quick.project.sourceSettings.energy == '2 MeV'
+        assert quick.project.sourceEditor.position_mode == 'plane'
+        assert quick.project.sourceEditor.source_shape == 'rectangle'
+        assert quick.project.sourceEditor.angular_mode == 'isotropic'
+        assert quick.state['drafts']['config.source_energy'] == ' 2 MeV '
+        advanced = sps.reduce_sps(initial, 'config.scoring_editor_bins', 0)
+        assert advanced.project.scoringEditor.hist_bins == 0
+        assert sps.sps_projection(advanced)['config.hist_bins'] == 1
+        with self.assertRaises(ValueError): sps.reduce_sps(initial, 'config.hist_bins', 0)
+        with self.assertRaises(TypeError): sps.reduce_sps(initial, 'config.source_energy', None)
+        assert snapshot_to_json(initial) == unchanged
+
+    def test_sps_rows_modules_and_stale_actions(self):
+        from dataclasses import fields
+        from g4usim_gui.core import sps_edit_model as sps
+        from g4usim_gui.core.edit_snapshot import snapshot_from_json
+        initial = WorkspaceSnapshot(G4USimProject())
+        for collection, (owner, cls) in sps.COLLECTIONS.items():
+            first = sps.reduce_sps_structure(initial, {'kind':'row','key':collection,'op':'add',
+                'new_id':'caller-supplied-1','revision':0}, revision=0)
+            ref = sps.row_reference(first, collection, 0, 1)
+            row = getattr(getattr(first.project, owner), collection)[0]
+            for field in fields(cls):
+                if field.name == 'editor_id': continue
+                value = not getattr(row,field.name) if type(getattr(row,field.name)) is bool else ' invalid hidden draft '
+                action = {'kind':'row','key':collection,'op':'set','index':0,'reference':ref,
+                          'field':field.name,'value':value,'revision':1}
+                edited = sps.reduce_sps_structure(first,action,revision=1)
+                assert getattr(getattr(getattr(edited.project,owner),collection)[0],field.name) == value
+                assert snapshot_to_json(snapshot_from_json(snapshot_to_json(edited))) == snapshot_to_json(edited)
+                with self.assertRaises(TransactionConflict): sps.reduce_sps_structure(first,action,revision=2)
+                bad = dict(action, reference=dict(ref,digest='wrong'))
+                with self.assertRaises(TransactionConflict): sps.reduce_sps_structure(first,bad,revision=1)
+            duplicate = sps.reduce_sps_structure(first, {'kind':'row','key':collection,'op':'duplicate',
+                'index':0,'reference':ref,'new_id':'caller-supplied-2','revision':1},revision=1)
+            rows = getattr(getattr(duplicate.project,owner),collection)
+            assert len(rows)==2
+            if collection == 'gps_sources': assert rows[0].editor_id != rows[1].editor_id
+            moved = sps.reduce_sps_structure(duplicate, {'kind':'row','key':collection,'op':'move','index':1,
+                'target':0,'reference':sps.row_reference(duplicate,collection,1,2),'revision':2},revision=2)
+            assert sps.row_digest(getattr(getattr(moved.project,owner),collection)[0]) == sps.row_digest(rows[1])
+            removed = sps.reduce_sps_structure(moved, {'kind':'row','key':collection,'op':'remove','index':0,
+                'reference':sps.row_reference(moved,collection,0,3),'revision':3},revision=3)
+            assert len(getattr(getattr(removed.project,owner),collection))==1
+        for key in sps.MODULES:
+            value = initial
+            for revision in (0,1):
+                value=sps.reduce_sps_structure(value,{'kind':'module','key':key,'op':'add','value':'UnknownConstructor','revision':revision},revision=revision)
+            assert getattr(value.project.physicsEditor,key)==['UnknownConstructor','UnknownConstructor']
+            value=sps.reduce_sps_structure(value,{'kind':'module','key':key,'op':'remove','index':0,'revision':2},revision=2)
+            assert getattr(value.project.physicsEditor,key)==['UnknownConstructor']
+        for key in ('gamma','e-','e+','proton'):
+            a=sps.reduce_sps_structure(initial,{'kind':'cut','key':key,'value':' ','revision':0},revision=0)
+            assert a.project.physicsEditor.particle_cuts[key]==' '
+            b=sps.reduce_sps_structure(a,{'kind':'cut','key':key,'value':'','revision':1},revision=1)
+            assert key not in b.project.physicsEditor.particle_cuts
+        for key,value in [('source.multiple_vertex',True),('source.phase_space_file',' relative, path.csv '),('source.phase_space_recycle',True)]:
+            a=sps.reduce_sps_structure(initial,{'kind':'top','key':key,'value':value,'revision':0},revision=0)
+            assert getattr(a.project.sourceEditor,key.split('.')[1])==value
+
+
+    def test_sps_dynamic_accepted_raw_gate(self):
+        from g4usim_gui.core import sps_edit_model as sps
+        from g4usim_gui.core.experiment_workflow import _draft_value, _raw_diagnostics, _field_report
+        from g4usim_gui.validators.config_validator import ValidationReport
+        initial=WorkspaceSnapshot(G4USimProject())
+        dynamic=[key for key in sps.BINDINGS if key.count('.')>1]
+        assert len(dynamic)==20
+        for key in dynamic:
+            accepted=_draft_value(initial.project,key)
+            snapshot=WorkspaceSnapshot(initial.project)
+            snapshot.state['drafts'][key]=accepted
+            report=ValidationReport();_raw_diagnostics(snapshot,report)
+            assert report.can_run, (key,report.errors)
+            snapshot.state['drafts'][key] = not accepted if type(accepted) is bool else accepted+1 if type(accepted) is int else 'definitely invalid raw'
+            report=ValidationReport();_raw_diagnostics(snapshot,report)
+            assert not report.can_run, key
+        for key in ('config.scoring_filter.dose.unknown','config.scoring_spectrum.unknown.bins','config.scoring_filter.dose.enabled.extra'):
+            with self.assertRaises(KeyError):_draft_value(initial.project,key)
+            initial.state['drafts'][key]='bad'
+        report=ValidationReport();_raw_diagnostics(initial,report)
+        assert not report.can_run
+        for key in sps.RAW_BINDINGS:
+            snapshot=sps.reduce_sps(WorkspaceSnapshot(G4USimProject()),key,'-')
+            assert snapshot.state['drafts'][key[:-4]] is not None
+            report=_field_report(snapshot)
+            assert any(d.code=='experiment.raw_spin.unaccepted' for d in report.diagnostics), key
+
+
 if __name__ == '__main__':
     # Explicit suite also works under the formal assertion probe's runpy path;
     # unittest.main() would discover the probe's __main__, not this module.

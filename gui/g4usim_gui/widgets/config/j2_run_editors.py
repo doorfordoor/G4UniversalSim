@@ -81,7 +81,7 @@ class StructuredRowsEditor(QWidget):
             else:
                 control = QLineEdit()
                 if f.name == "editor_id": control.setReadOnly(True)
-                control.textEdited.connect(lambda text, name=f.name: self._edit(name,text))
+                control.textChanged.connect(lambda text, name=f.name: self._edit(name,text))
             control.setObjectName(f"j2.{key}.{f.name}")
             label = QLabel(ui_text(FIELD_LABELS[f.name]))
             label.setBuddy(control)
@@ -94,6 +94,28 @@ class StructuredRowsEditor(QWidget):
         layout.addWidget(scroll,1)
         self.list.currentRowChanged.connect(self._select)
         self._select(-1)
+
+    @property
+    def rows(self):
+        owner = getattr(self, '_history_owner', None)
+        if owner is None:
+            return self._rows
+        snapshot = owner.run_path_snapshot()
+        model = snapshot.project.sourceEditor if self.key=='gps_sources' else snapshot.project.physicsEditor
+        return getattr(model,self.key)
+
+    @rows.setter
+    def rows(self, value):
+        if getattr(self, '_history_owner', None) is None:
+            self._rows = value
+
+    def refresh_reference(self):
+        owner = getattr(self, '_history_owner', None)
+        index = self.list.currentRow()
+        self._row_reference = None
+        if owner is not None and 0 <= index < len(self.rows):
+            from g4usim_gui.core.sps_edit_model import row_reference
+            self._row_reference = row_reference(owner.run_path_snapshot(),self.key,index,owner._edit_session.revision)
 
     def set_rows(self, rows):
         selected = self.list.currentRow()
@@ -130,6 +152,7 @@ class StructuredRowsEditor(QWidget):
                     control.setCurrentText(value)
                 else: control.setText(value)
             self._active_fields(index)
+            self.refresh_reference()
         finally:
             self._projecting = False
 
@@ -148,6 +171,16 @@ class StructuredRowsEditor(QWidget):
     def _edit(self,name,value):
         index = self.list.currentRow()
         if self._projecting or index < 0: return
+        if name == 'editor_id':
+            return
+        owner = getattr(self, '_history_owner', None)
+        if owner is not None:
+            ref = self._row_reference
+            if ref is None:
+                return
+            owner.edit_sps(action={'kind':'row','key':self.key,'op':'set','index':ref['index'],
+                'field':name,'value':value,'reference':deepcopy(ref),'revision':ref['revision']})
+            return
         setattr(self.rows[index],name,value)
         self.list.item(index).setText(self._title(self.rows[index]))
         self._active_fields(index)
@@ -155,6 +188,24 @@ class StructuredRowsEditor(QWidget):
 
     def _structure(self,action):
         index = self.list.currentRow()
+        owner = getattr(self, '_history_owner', None)
+        if owner is not None:
+            op = {'Add':'add','Duplicate':'duplicate','Remove':'remove','Move up':'move','Move down':'move'}[action]
+            if index < 0 and op in ('remove','move'):
+                return
+            if op=='duplicate' and index < 0:
+                op='add'
+            target=index+(-1 if action=='Move up' else 1)
+            if op=='move' and not 0<=target<len(self.rows):
+                return
+            ref = deepcopy(getattr(self,'_row_reference',None))
+            request={'kind':'row','key':self.key,'op':op,'index':index,
+                'revision':owner._edit_session.revision if op=='add' else ref['revision'],
+                'reference':ref,'target':target}
+            if self.key=='gps_sources' and op in ('add','duplicate'):
+                request['new_id']=uuid4().hex
+            owner.edit_sps(action=request)
+            return
         if action == "Remove":
             if index < 0: return
             del self.rows[index]
@@ -180,6 +231,8 @@ class StructuredRowsEditor(QWidget):
 
     def collect_current_row(self):
         """Capture controls even when a caller used setText without textEdited."""
+        if getattr(self, '_history_owner', None) is not None:
+            return
         index = self.list.currentRow()
         if index < 0: return
         row = self.rows[index]
@@ -196,6 +249,7 @@ class ModuleListEditor(QWidget):
 
     def __init__(self,key,parent=None):
         super().__init__(parent)
+        self.key = key
         self.values = []
         layout = QVBoxLayout(self)
         self.list = QListWidget()
@@ -215,12 +269,29 @@ class ModuleListEditor(QWidget):
             buttons.addWidget(button)
         layout.addLayout(buttons)
 
+    @property
+    def values(self):
+        owner = getattr(self,'_history_owner',None)
+        return getattr(owner.run_path_snapshot().project.physicsEditor,self.key) if owner is not None else self._values
+
+    @values.setter
+    def values(self,value):
+        if getattr(self,'_history_owner',None) is None:
+            self._values=value
+
     def set_values(self,values):
         self.values = list(values)
         self.list.clear()
         self.list.addItems(values)
 
     def _change(self,action):
+        owner=getattr(self,'_history_owner',None)
+        if owner is not None:
+            if action=='Remove' and self.list.currentRow()<0:
+                return
+            owner.edit_sps(action={'kind':'module','key':self.key,'op':action.lower(),
+                'value':self.choice.currentText(),'index':self.list.currentRow(),'revision':owner._edit_session.revision})
+            return
         values = list(self.values)
         if action == "Add": values.append(self.choice.currentText())
         elif self.list.currentRow() >= 0: del values[self.list.currentRow()]
@@ -241,7 +312,7 @@ class J2RunEditors(QWidget):
         layout.addWidget(self.hint)
         self.multiple_vertex = QCheckBox(ui_text("Emit all named sources in each event (otherwise select by intensity)"))
         self.multiple_vertex.setObjectName("j2.source.multiple_vertex")
-        self.multiple_vertex.toggled.connect(self._changed)
+        self.multiple_vertex.toggled.connect(lambda value: self._top('source.multiple_vertex',value))
         layout.addWidget(self.multiple_vertex)
         self.intensity_hint = QLabel(ui_text("Simultaneous mode emits one vertex per source with primary weight 1. Intensity is retained only for switching back to random source selection."))
         self.intensity_hint.setWordWrap(True)
@@ -249,10 +320,10 @@ class J2RunEditors(QWidget):
         replay = QFormLayout()
         self.phase_space_file = QLineEdit()
         self.phase_space_file.setObjectName("j2.source.phase_space_file")
-        self.phase_space_file.textEdited.connect(self._changed)
+        self.phase_space_file.textChanged.connect(lambda value: self._top('source.phase_space_file',value))
         self.phase_space_recycle = QCheckBox(ui_text("Recycle phase-space histories"))
         self.phase_space_recycle.setObjectName("j2.source.phase_space_recycle")
-        self.phase_space_recycle.toggled.connect(self._changed)
+        self.phase_space_recycle.toggled.connect(lambda value: self._top('source.phase_space_recycle',value))
         replay.addRow(ui_text("Phase-space replay files (comma separated)"),self.phase_space_file)
         replay.addRow(self.phase_space_recycle)
         layout.addLayout(replay)
@@ -289,10 +360,29 @@ class J2RunEditors(QWidget):
         for particle in ("gamma","e-","e+","proton"):
             control = QLineEdit()
             control.setObjectName("j2.cuts."+{"e-":"electron","e+":"positron"}.get(particle,particle))
-            control.textEdited.connect(self._changed)
+            control.textChanged.connect(lambda value, particle=particle: self._top(particle,value,kind='cut'))
             self.cuts[particle] = control
             cuts_form.addRow(ui_text("Production cut")+" / "+particle,control)
         self.tabs.addTab(cuts_page,ui_text("Production cuts"))
+
+    def bind_owner(self, owner):
+        self._history_owner=owner
+        for editor in (*self.row_editors.values(),*self.modules.values()):
+            editor._history_owner=owner
+        self.refresh_references()
+
+    def refresh_references(self):
+        for editor in self.row_editors.values():
+            editor.refresh_reference()
+
+    def _top(self,key,value,kind='top'):
+        if self._projecting:
+            return
+        owner=getattr(self,'_history_owner',None)
+        if owner is not None:
+            owner.edit_sps(action={'kind':kind,'key':key,'value':value,'revision':owner._edit_session.revision})
+        else:
+            self._changed()
 
     def _changed(self,*args):
         if not self._projecting: self.changed.emit()
@@ -312,6 +402,14 @@ class J2RunEditors(QWidget):
             self._projecting = False
 
     def collect_into(self,source,physics):
+        owner=getattr(self,'_history_owner',None)
+        if owner is not None:
+            # Compatibility read adapter; no widget/row-list capture.
+            snapshot=owner.run_path_snapshot()
+            for target,model in ((source,snapshot.project.sourceEditor),(physics,snapshot.project.physicsEditor)):
+                for field in fields(model):
+                    setattr(target,field.name,deepcopy(getattr(model,field.name)))
+            return
         # Model strings are the sole raw-draft storage. Capture even an invalid
         # programmatic setText before page.update_project; never replay a second
         # draft map over paths rebased during package relocation.

@@ -293,12 +293,18 @@ class SetupMixin:
         )
 
     def source_settings(self) -> SourceSettings:
+        # Bound editor attributes are private projections of the one EditSession.
+        # to_settings preserves the existing finite legacy consumer contract.
         return self.source_editor.to_settings()
 
     def physics_settings(self) -> PhysicsSettings:
+        # Bound editor attributes are private projections of the one EditSession.
+        # to_settings preserves the existing finite legacy consumer contract.
         return self.physics_editor.to_settings()
 
     def scoring_settings(self) -> ScoringSettings:
+        # Bound editor attributes are private projections of the one EditSession.
+        # to_settings preserves the existing finite legacy consumer contract.
         return self.scoring_editor.to_settings()
 
     @edit_operation('Choose materials source')

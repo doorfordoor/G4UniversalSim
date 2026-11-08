@@ -2,7 +2,7 @@
 
 ## 2026-11-08 当前进度与架构后接续排期（当前入口）
 
-K2固定快照25487eb1保持。AR0 r3、AR-V、AR1–AR3及当前主审MR1已按各自合同签收；AR4 run/path首片及七项关联修复已签收，继续SPS和material/geometry迁移，之后连续AR5→MR2→AR6/MR3。详见[AR4首片签收](collab/reviews/20261109-ar4-first-slice-acceptance.md)。AR3 r4原生/兼容/独审及B4 run后命令失败风险补证已完成，原失败和有限证据边界保留。监督30分钟ACTIVE；DeepSeek/web暂停至完整架构验收，F3不追加测量。详见[AR3签收](collab/reviews/20261109-ar3-acceptance.md)、[MR1主审复查](collab/reviews/20261109-mr1-primary-review.md)及[后续总规划](后续开发总规划.md)。
+K2固定快照25487eb1保持。AR0 r3、AR-V、AR1–AR3及当前主审MR1已按各自合同签收；AR4 run/path首片及七项关联修复、[SPS编辑迁移](collab/reviews/20261109-ar4-sps-acceptance.md)已签收，继续material/geometry迁移，之后连续AR5→MR2→AR6/MR3。详见[AR4首片签收](collab/reviews/20261109-ar4-first-slice-acceptance.md)。AR3 r4原生/兼容/独审及B4 run后命令失败风险补证已完成，原失败和有限证据边界保留。监督30分钟ACTIVE；DeepSeek/web暂停至完整架构验收，F3不追加测量。详见[AR3签收](collab/reviews/20261109-ar3-acceptance.md)、[MR1主审复查](collab/reviews/20261109-mr1-primary-review.md)及[后续总规划](后续开发总规划.md)。
 
 本节是当前阶段快照；下方带旧日期的“当前”“下一项”及旧波次按历史读取。阶段结果保留原验收证据；J4是本次新增的后续交互阶段，不重开J1/J2/J3/F8或K2。W编号仅为排期段，不重复作为开发阶段计数。
 
@@ -20,7 +20,7 @@ K2固定快照25487eb1保持。AR0 r3、AR-V、AR1–AR3及当前主审MR1已按
 | Q2 | 限制 | 本轮限定范围已关闭，LET/DDD/NIEL/XS限制保留 | W4按量/适用域专项补证，W6公开边界 |
 | H1/H2/H3 | 通过 | 原固定范围已交付；H3有限病例和GUI范围不外推 | W1迁移对照；更广科学能力按新任务 |
 | K2 | 限制 | 固定范围已关闭；K2-3为限制、K2-4通过 | AR5/AR6保证导出并补新验收所需实装观察；L2复用 |
-| AR0–AR6 | 进行中 | AR0 r3、AR1、AR2、AR3已签收；AR3 r4 D四项1773断言、22兼容55954、C独立三项487及风险补证通过；原科学与临时产物边界保持。AR4首片已签收，SPS/文档域继续；AR5/6待 | [AR1](collab/reviews/20261108-ar1-acceptance.md)；[AR2](collab/reviews/20261108-ar2-acceptance.md)；[AR3](collab/reviews/20261109-ar3-acceptance.md) |
+| AR0–AR6 | 进行中 | AR0 r3、AR1、AR2、AR3已签收；AR3 r4 D四项1773断言、22兼容55954、C独立三项487及风险补证通过；原科学与临时产物边界保持。AR4首片/SPS已签收，SPS正式11case2794及独验通过；材料/几何继续，AR5/6待 | [AR1](collab/reviews/20261108-ar1-acceptance.md)；[AR2](collab/reviews/20261108-ar2-acceptance.md)；[AR3](collab/reviews/20261109-ar3-acceptance.md)；[SPS](collab/reviews/20261109-ar4-sps-acceptance.md) |
 | AR-V审计验收工具工作包 | 已完成（本轮约定范围） | R2-05/06/07关闭；身份门禁/CI接线、6专项1623断言、独立390次CLI均通过 | [主审签收](collab/reviews/20261108-ar-v-acceptance.md)；后续新候选必须使用严格身份门禁，旧报告原身份保留 |
 | 两轮审计关联修复 | 部分关闭 | 19/27正式问题关闭，余8项；R1-R-02-B4及R2-R01有限防御验证完成，SDK后代收尾风险待 | [唯一映射](后续开发总规划.md#joint-audit-plan)；AR6前逐项闭环 |
 | MR1–MR3主审累计复查 | MR1通过，MR2/3待 | 当前对话已核累计源码/所有权/AR-V/原始正反例，允许进入AR4；科学证据按原身份复用，不声称r4新科学执行 | [MR1](collab/reviews/20261109-mr1-primary-review.md)；MR2在AR4/5后，MR3在AR6 |

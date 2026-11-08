@@ -220,6 +220,7 @@ CASES = (
     Case("gui_export_project", "gui/smoke_tests/smoke_export_project.py", "gui", ("qt",)),
     Case("gui_scans", "gui/smoke_tests/smoke_scans.py", "gui", ("qt",)),
     Case("gui_ar4_run_path", "gui/smoke_tests/smoke_ar4_run_path.py", "gui", ("qt",)),
+    Case("gui_ar4_sps", "gui/smoke_tests/smoke_ar4_sps.py", "gui", ("qt",)),
     Case("gui_scan_contract", "gui/smoke_tests/smoke_scan_contract.py", "gui", ("qt",)),
     Case("gui_start_page", "gui/smoke_tests/smoke_start_page.py", "gui", ("qt",)),
     Case("gui_fluence_results", "gui/smoke_tests/smoke_fluence_results.py", "gui", ("qt",)),

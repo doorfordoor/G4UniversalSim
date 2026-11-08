@@ -188,6 +188,15 @@ def _draft_value(project, binding):
         return getattr(project, aliases.get(name, name))
     if domain != "config":
         raise KeyError(binding)
+    if name.startswith(('scoring_filter.', 'scoring_spectrum.')):
+        from g4usim_gui.core.sps_edit_model import SCALARS
+        # Only the finite registered dynamic bindings; unknown paths still fail.
+        try:
+            owner, field, _, _ = SCALARS[binding]
+            scorer, field = field.split('.')
+            return getattr(project.scoringEditor, owner)[scorer][field]
+        except (KeyError, AttributeError, ValueError) as error:
+            raise KeyError(binding) from error
     for prefix, owner, aliases in (
         ("source_editor_", project.sourceEditor, {"shape": "source_shape", "position_type": "position_mode", "preview_rays": "preview_ray_count", "preview_seed": "random_seed_preview"}),
         ("physics_editor_", project.physicsEditor, {"reference": "reference_list", "biasing": "enable_biasing_physics"}),

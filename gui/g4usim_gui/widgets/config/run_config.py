@@ -1,6 +1,7 @@
 """Source, Physics and Scoring editors: their widget (the Run Config tab) and logic."""
 
 from __future__ import annotations
+from contextlib import contextmanager
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
@@ -306,6 +307,36 @@ class RunConfigEditor(QWidget):
 class RunConfigMixin:
     """Source/Physics/Scoring logic; mixed into ConfigBuilderPage, which holds the models."""
 
+    @contextmanager
+    def _sps_private_projection(self, project=None):
+        from copy import deepcopy
+        previous = getattr(self, '_sps_projection_editors', None)
+        if project is None:
+            owner = getattr(self, '_history_owner', None)
+            project = owner.run_path_snapshot().project if owner is not None else None
+        models = ({key: deepcopy(getattr(project,key)) for key in ('sourceEditor','physicsEditor','scoringEditor')}
+                  if project is not None else {'sourceEditor':deepcopy(self.source_editor),
+                    'physicsEditor':deepcopy(self.physics_editor),'scoringEditor':deepcopy(self.scoring_editor)})
+        self._sps_projection_editors = models
+        try:
+            yield
+        finally:
+            if previous is None:
+                self.__dict__.pop('_sps_projection_editors', None)
+            else:
+                self._sps_projection_editors = previous
+
+    def sps_controls(self):
+        from g4usim_gui.core.sps_edit_model import SCALARS
+        controls = {key: getattr(self,key.split('.',1)[1]) for key in SCALARS if key.count('.')==1}
+        for scorer, widgets in self.scoring_editor_filter_widgets.items():
+            controls.update({f'config.scoring_filter.{scorer}.{key}':widget
+                for key,widget in zip(('enabled','particles','energy_min','energy_max'),widgets)})
+        for scorer, widgets in self.scoring_editor_spectrum_widgets.items():
+            controls.update({f'config.scoring_spectrum.{scorer}.{key}':widget
+                for key,widget in zip(('enabled','bins','min','max'),widgets)})
+        return controls
+
     def _connect_sps_editor_signals(self) -> None:
         """Source, Physics and Scoring editor fields."""
         self.j2_run_editors.changed.connect(self._update_j2_run_editors)
@@ -330,7 +361,7 @@ class RunConfigMixin:
             self.scoring_editor_min,
             self.scoring_editor_max,
         ]:
-            widget.textEdited.connect(self._update_sps_from_widgets)
+            widget.textChanged.connect(self._update_sps_from_widgets)
         for combo in [
             self.source_editor_preset,
             self.source_editor_position_type,
@@ -359,13 +390,13 @@ class RunConfigMixin:
             enabled, particles, energy_min, energy_max = widgets
             enabled.stateChanged.connect(self._update_sps_from_widgets)
             for edit in (particles, energy_min, energy_max):
-                edit.textEdited.connect(self._update_sps_from_widgets)
+                edit.textChanged.connect(self._update_sps_from_widgets)
         for scorer, widgets in self.scoring_editor_spectrum_widgets.items():
             enabled, bins, low, high = widgets
             enabled.stateChanged.connect(self._update_sps_from_widgets)
             bins.valueChanged.connect(self._update_sps_from_widgets)
             for edit in (low, high):
-                edit.textEdited.connect(self._update_sps_from_widgets)
+                edit.textChanged.connect(self._update_sps_from_widgets)
         self.scoring_editor_bins.valueChanged.connect(self._update_sps_from_widgets)
         self.scoring_editor_trajectories.valueChanged.connect(self._update_sps_from_widgets)
         self.source_editor_preview_rays.valueChanged.connect(self._update_sps_from_widgets)
@@ -383,7 +414,7 @@ class RunConfigMixin:
             self.hist_min,
             self.hist_max,
         ]:
-            widget.textEdited.connect(self._update_sps_from_summary_widgets)
+            widget.textChanged.connect(self._update_sps_from_summary_widgets)
         self.source_preset.currentTextChanged.connect(self._update_sps_from_summary_widgets)
         self.enable_biasing.stateChanged.connect(self._update_sps_from_summary_widgets)
         for widget in [
@@ -468,6 +499,11 @@ class RunConfigMixin:
         self._emit_changed()
 
     def _update_sps_from_widgets(self) -> None:
+        owner = getattr(self, '_history_owner', None)
+        if owner is not None:
+            if not self._building:
+                owner.dispatch_sps_control(self.sender())
+            return
         if self._building:
             return
         self.source_editor.preset = self.source_editor_preset.currentText().strip()
@@ -554,6 +590,11 @@ class RunConfigMixin:
         "succeeded", with the wrong physics). Only fields that a setup control actually
         mirrors may be written here; a forced reset would need an explicit condition.
         """
+        owner = getattr(self, '_history_owner', None)
+        if owner is not None:
+            if not self._building:
+                owner.dispatch_sps_control(self.sender())
+            return
         if self._building:
             return
         # Keep the exact in-progress input while model fields use their existing
@@ -625,6 +666,12 @@ class RunConfigMixin:
         self.physics_editor_reference.setEnabled(self.physics_editor.mode == "reference")
 
     def _validate_sps_editors(self) -> None:
+        if getattr(self, '_history_owner', None) is None or getattr(self, '_sps_projection_editors', None) is not None:
+            return self._validate_sps_editors_private()
+        with self._sps_private_projection():
+            return self._validate_sps_editors_private()
+
+    def _validate_sps_editors_private(self) -> None:
         validate_source_model(self.source_editor)
         validate_physics_model(self.physics_editor)
         validate_scoring_model(self.scoring_editor)

@@ -538,7 +538,9 @@ def main():
         before_revision = w._edit_session.revision
         before_saved = w._edit_session.saved_fingerprint
         before_project_id = id(w.project)
-        before_editor_ids = (id(page.geometry_document), id(page.source_editor), id(page.material_document))
+        before_editor_ids = (id(page.geometry_document), id(page.material_document))
+        from dataclasses import asdict
+        before_source_projection = asdict(page.source_editor)
         before_diagnostics = page._diagnostic_generation
         before_package = (w._generated_package_dir, w._generated_package_stale)
         before_inspect = (w._macro_inspection_snapshot, w._pending_inspection_run)
@@ -556,7 +558,9 @@ def main():
             assert not w._load_project_path(str(candidate_path))
         assert boxes and 'capacity' in boxes[-1]
         assert id(w.project) == before_project_id
-        assert (id(page.geometry_document), id(page.source_editor), id(page.material_document)) == before_editor_ids
+        assert (id(page.geometry_document), id(page.material_document)) == before_editor_ids
+        assert asdict(page.source_editor) == before_source_projection
+        assert asdict(w._edit_session.current().project.sourceEditor) == asdict(before.project.sourceEditor)
         assert page._diagnostic_generation == before_diagnostics
         assert (w._generated_package_dir, w._generated_package_stale) == before_package
         assert (w._macro_inspection_snapshot, w._pending_inspection_run) == before_inspect

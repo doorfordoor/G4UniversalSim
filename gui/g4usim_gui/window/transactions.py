@@ -199,6 +199,7 @@ class TransactionsMixin:
         self._edit_session = EditSession(self.capture_workspace())
         self.config_builder_page._history_owner = self
         self.project_page._history_owner = self
+        self.config_builder_page.j2_run_editors.bind_owner(self)
         self._history_filter = EditorHistoryFilter(self)
         QApplication.instance().installEventFilter(self._history_filter)
         self.project_page.projectChanged.connect(self._queue_history_change)
@@ -206,7 +207,15 @@ class TransactionsMixin:
         # Raw drafts can change without a valid model update (notably seed and
         # programmatic line edits); captures still use the same transaction API.
         from g4usim_gui.core.run_path_model import BINDINGS
+        from g4usim_gui.core.sps_edit_model import BINDINGS as SPS_BINDINGS
         for key, widget in {**self._editable_controls(), **self._extended_interaction_controls()}.items():
+            if key in SPS_BINDINGS:
+                if isinstance(widget, QAbstractSpinBox):
+                    widget.lineEdit().textEdited.connect(
+                        lambda text, key=key: self.edit_sps(key + '.raw', text))
+                continue
+            if key.startswith('j2.'):
+                continue
             if key in BINDINGS:
                 if isinstance(widget, QAbstractSpinBox):
                     widget.lineEdit().textEdited.connect(
@@ -226,7 +235,7 @@ class TransactionsMixin:
     def run_path_snapshot(self):
         """Authoritative data, including a synchronous unpublished transaction."""
         from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot, clone_snapshot
-        for name in ('_run_path_projection_snapshot', '_run_path_transaction_candidate'):
+        for name in ('_sps_projection_snapshot', '_run_path_projection_snapshot', '_run_path_transaction_candidate'):
             candidate = getattr(self, name, None)
             if candidate is not None:
                 return clone_snapshot(candidate)
@@ -339,9 +348,91 @@ class TransactionsMixin:
         self.run_page.set_macro_plan(ui_text('Run plan is stale; inputs changed.'))
         self._queue_history_change()
 
+    def dispatch_sps_control(self, widget):
+        if self._history_restoring or self.config_builder_page._building:
+            return
+        for key, control in self.config_builder_page.sps_controls().items():
+            if control is widget:
+                raw = control.lineEdit().text() if isinstance(control, QAbstractSpinBox) else None
+                self.edit_sps(key, _read_control(control), raw=raw)
+                return
+
+    def _project_sps(self, snapshot):
+        from g4usim_gui.core.sps_edit_model import copy_sps, sps_projection
+        page = self.config_builder_page
+        previous = page._building
+        self._sps_projection_snapshot = snapshot
+        controls = page.sps_controls()
+        focused = QApplication.focusWidget()
+        cursor = focused.cursorPosition() if isinstance(focused,QLineEdit) and focused in controls.values() else None
+        blocked = [QSignalBlocker(w) for w in controls.values()]
+        blocked += [QSignalBlocker(w.lineEdit()) for w in controls.values() if isinstance(w,QAbstractSpinBox)]
+        try:
+            copy_sps(self.project, snapshot.project)
+            with page._sps_private_projection(snapshot.project):
+                page._populate_sps_editors()
+                selections = {key:value for key,value in snapshot.state['selections'].items() if key.startswith('j2.')}
+                page.j2_run_editors.restore_selection(selections)
+                page._building = True
+                values = sps_projection(snapshot)
+                for key, control in controls.items():
+                    if _read_control(control) != values[key] or (isinstance(control,QAbstractSpinBox) and key+'.raw' not in values):
+                        _write_control(control, values[key])
+                    if key+'.raw' in values:
+                        control.lineEdit().setText(values[key+'.raw'])
+            if cursor is not None:
+                focused.setCursorPosition(min(cursor,len(focused.text())))
+        finally:
+            page._building = previous
+            del blocked
+            self.__dict__.pop('_sps_projection_snapshot', None)
+
+    def edit_sps(self, binding=None, value=None, *, raw=None, action=None):
+        from g4usim_gui.core.sps_edit_model import reduce_sps, reduce_sps_structure, copy_sps, OWNED_BINDINGS
+        from g4usim_gui.core.edit_transactions import TransactionApplyError
+        if self._history_restoring or not self.can_mutate_workspace('edit'):
+            return
+        try:
+            before = self.run_path_snapshot()
+            before.state['selections'].update(self.config_builder_page.j2_run_editors.selection_state())
+            candidate = (reduce_sps_structure(before, action, revision=self._edit_session.revision)
+                         if action is not None else reduce_sps(before, binding, value))
+            if raw is not None:
+                candidate = reduce_sps(candidate, binding+'.raw',raw)
+            if self._history_depth:
+                self._project_sps(candidate)
+                self._run_path_transaction_candidate = candidate
+                return
+            captured = self.capture_workspace()
+            copy_sps(captured.project,candidate.project)
+            for key in OWNED_BINDINGS: captured.state['drafts'].pop(key,None)
+            captured.state['drafts'].update({k:v for k,v in candidate.state['drafts'].items() if k in OWNED_BINDINGS})
+            if action is not None:
+                captured.state['selections'].update(candidate.state['selections'])
+            self._edit_session.replace('Edit source/physics/scoring', captured,
+                merge_key=None if action is not None else f'{self._history_merge_epoch}:{self._history_field or binding}',
+                expected_revision=action['revision'] if action is not None else None, apply=self._project_sps)
+        except Exception as exc:
+            if self._history_depth:
+                # The outer transaction owns full rollback and its generated view.
+                raise
+            if isinstance(exc,TransactionApplyError) and exc.rollback is not None:
+                self._freeze_workspace(exc,self._edit_session.current())
+            elif not isinstance(exc,TransactionApplyError):
+                try: self._project_sps(self._edit_session.current())
+                except Exception as rollback:
+                    failure=TransactionApplyError(exc,rollback)
+                    self._freeze_workspace(failure,self._edit_session.current())
+                    raise failure from exc
+            raise
+        self.history_changed()
+        self._mark_generated_package_stale()
+        self._queue_history_change()
+
     def _editable_controls(self):
         return {**{f'project.{name}': getattr(self.project_page, name) for name in PROJECT_CONTROLS},
-                **{f'config.{name}': getattr(self.config_builder_page, name) for name in CONFIG_CONTROLS}}
+                **{f'config.{name}': getattr(self.config_builder_page, name) for name in CONFIG_CONTROLS},
+                **self.config_builder_page.sps_controls()}
 
     def _extended_interaction_controls(self):
         page = self.config_builder_page
@@ -353,7 +444,8 @@ class TransactionsMixin:
     def _collect_extended_drafts(self):
         from dataclasses import asdict
         page = self.config_builder_page
-        page.j2_run_editors.collect_into(page.source_editor, page.physics_editor)
+        if getattr(page, '_history_owner', None) is None:
+            page.j2_run_editors.collect_into(page.source_editor, page.physics_editor)
         for name, rows, index, boolean in (
                 ('volume_details', page.geometry_document.volumes, page.geometry_table.currentRow(), False),
                 ('boolean_details', page.geometry_document.boolean_ops, page.boolean_table.currentRow(), True),
@@ -388,6 +480,8 @@ class TransactionsMixin:
 
     def _capture_drafts(self):
         from g4usim_gui.core.run_path_model import BINDINGS
+        from g4usim_gui.core.sps_edit_model import BINDINGS as SPS_BINDINGS
+        BINDINGS = BINDINGS | SPS_BINDINGS
         drafts = {key: _read_control(widget) for key, widget in self._editable_controls().items() if key not in BINDINGS}
         for key, widget in self._editable_controls().items():
             if key not in BINDINGS and isinstance(widget, QAbstractSpinBox):
@@ -405,10 +499,14 @@ class TransactionsMixin:
         page = self.config_builder_page
         project = copy.deepcopy(self.project)
         from g4usim_gui.core.run_path_model import copy_run_path, OWNED_BINDINGS
+        from g4usim_gui.core.sps_edit_model import OWNED_BINDINGS as SPS_OWNED, copy_sps
+        OWNED_BINDINGS = OWNED_BINDINGS | SPS_OWNED
         authority = self.run_path_snapshot()
         self._collect_extended_drafts()
         page.update_project(project)
         copy_run_path(project, authority.project)
+        if getattr(page, "_history_owner", None) is not None:
+            copy_sps(project, authority.project)
         project.materialEditor = copy.deepcopy(page.material_document)
         project.geometryEditor = copy.deepcopy(page.geometry_document)
         state = empty_editing_state()
@@ -865,6 +963,7 @@ class TransactionsMixin:
         if not hasattr(self, '_edit_session') or self._history_restoring:
             return
         session = self._edit_session
+        self.config_builder_page.j2_run_editors.refresh_references()
         fault = bool(self._workspace_fault)
         busy = (fault or self.runner.is_running() or self._macro_inspection.state() != QProcess.NotRunning
                 or bool(getattr(getattr(self, 'experiment', None), 'busy', False))
