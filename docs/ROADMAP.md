@@ -20,7 +20,7 @@ K2已按固定范围带限制关闭，固定快照标签为 `k2-closed-pre-archi
 | Q2 | 限制 | 本轮限定范围已关闭，LET/DDD/NIEL/XS限制保留 | W4按量/适用域专项补证，W6公开边界 |
 | H1/H2/H3 | 通过 | 原固定范围已交付；H3有限病例和GUI范围不外推 | W1迁移对照；更广科学能力按新任务 |
 | K2 | 限制 | 固定范围已关闭；K2-3为限制、K2-4通过 | AR5/AR6保证导出并补新验收所需实装观察；L2复用 |
-| AR0–AR6 | 进行中 | AR0 r3、AR1本轮约定范围已签收；15项独立原生、H3工程、K2有限Windows回归及region有限输运均通过；AR2已签收：D/C三项原生、17兼容、H2及固定H3科学协议独核通过；AR3准备接续，AR3–AR6未关闭 | [AR1签收](collab/reviews/20261108-ar1-acceptance.md)；[AR2签收](collab/reviews/20261108-ar2-acceptance.md)；依赖/扩展判据见[采纳决定](collab/decisions/20261108-architecture-principles-adoption.md) |
+| AR0–AR6 | 进行中 | AR0 r3、AR1本轮约定范围已签收；15项独立原生、H3工程、K2有限Windows回归及region有限输运均通过；AR2已签收：D/C三项原生、17兼容、H2及固定H3科学协议独核通过；AR3配置协调首片验证中，AR3–AR6未关闭 | [AR1签收](collab/reviews/20261108-ar1-acceptance.md)；[AR2签收](collab/reviews/20261108-ar2-acceptance.md)；依赖/扩展判据见[采纳决定](collab/decisions/20261108-architecture-principles-adoption.md) |
 | AR-V审计验收工具工作包 | 已完成（本轮约定范围） | R2-05/06/07关闭；身份门禁/CI接线、6专项1623断言、独立390次CLI均通过 | [主审签收](collab/reviews/20261108-ar-v-acceptance.md)；后续新候选必须使用严格身份门禁，旧报告原身份保留 |
 | 两轮审计关联修复 | 部分关闭 | 27正式问题中AR-V三项、AR1三项及AR2 AUD-08已关闭；其余20项及3风险继续按原来源/判据处置 | 附属AR2–AR5切片，AR6前逐项闭环；[唯一映射](后续开发总规划.md#joint-audit-plan) |
 | MR1–MR3主审累计复查 | 未开始 | 当前对话负责：AR1–3后、AR4–5后、AR6签收；当前少量切片/计划更新不满足触发 | 复核跨阶段成果及修复，不以外部审计或子审摘要替代 |

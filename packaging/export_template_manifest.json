@@ -7,9 +7,9 @@
   },
   "identity": {
     "algorithm": "sha256_sorted_sha256_path_lines_v1",
-    "bytes_total": 3931871,
-    "file_count": 321,
-    "value": "4303a97d217d5946d8bfc7bcbe36143d7fb61ebf68d00171ae026747423793d3"
+    "bytes_total": 3933771,
+    "file_count": 323,
+    "value": "48b0a0009faea469dc8a465138511ba876a3b9408c99ce61da4434d732111f7e"
   },
   "members": [
     {
@@ -480,6 +480,13 @@
       "role": "header",
       "sha256": "1886acb1d4731fbe00ebd19b8864878a3faf2eca7449ee41748cb456051bd2a1",
       "source_path": "include/Core/BuildInfo.hh.in"
+    },
+    {
+      "bytes": 1466,
+      "path": "include/Core/ConfigurationCoordinator.hh",
+      "role": "header",
+      "sha256": "19c3ada00c3de2f554d3382ff00ca36c8e0713a7b058df9332dd1bd69e134060",
+      "source_path": "include/Core/ConfigurationCoordinator.hh"
     },
     {
       "bytes": 1480,
@@ -1539,6 +1546,13 @@
       "source_path": "src/Core/AppMessenger.cc"
     },
     {
+      "bytes": 9648,
+      "path": "src/Core/ConfigurationCoordinator.cc",
+      "role": "source",
+      "sha256": "d77309610684a21fe25a16db9ed4e2a00fe6bcb3a1f1bff16379bc2f03f0a26c",
+      "source_path": "src/Core/ConfigurationCoordinator.cc"
+    },
+    {
       "bytes": 30350,
       "path": "src/Core/EffectiveSimulation.cc",
       "role": "source",
@@ -1588,10 +1602,10 @@
       "source_path": "src/Core/SimulationContext.cc"
     },
     {
-      "bytes": 94582,
+      "bytes": 85368,
       "path": "src/Core/SimulationManager.cc",
       "role": "source",
-      "sha256": "b295a4bd1f3c4b6deba2da4931dc45ef5ad3ca00cbb84ab59fe94fdcdee543a9",
+      "sha256": "13f1d2e94f0873cd114bf03f16b8e50b96acb42d94707f8b55c6c96ca46b7b1d",
       "source_path": "src/Core/SimulationManager.cc"
     },
     {

@@ -1,4 +1,5 @@
 #include "Core/SimulationManager.hh"
+#include "Core/ConfigurationCoordinator.hh"
 
 #include "Actions/ActionInitialization.hh"
 #include "Config/ConfigManager.hh"
@@ -133,66 +134,6 @@ std::string FirstCommandToken(const std::string& command)
     const std::string trimmed = StringUtils::Trim(command);
     const std::size_t separator = trimmed.find_first_of(" \t\r\n");
     return StringUtils::ToLower(trimmed.substr(0, separator));
-}
-
-bool HasNonEmptyKey(const ConfigManager& config, const std::string& section, const std::string& key)
-{
-    return config.HasKey(section, key) && !StringUtils::Trim(config.GetString(section, key, "")).empty();
-}
-
-bool HasNonEmptyKeyCompat(const ConfigManager& config,
-                          const std::string& section,
-                          const std::vector<std::string>& keys)
-{
-    for (const auto& key : keys) {
-        if (HasNonEmptyKey(config, section, key)) return true;
-    }
-    return false;
-}
-
-std::string GetStringCompat(const ConfigManager& config,
-                            const std::string& section,
-                            const std::vector<std::string>& keys,
-                            const std::string& defaultValue = "")
-{
-    for (const auto& key : keys) {
-        if (HasNonEmptyKey(config, section, key)) {
-            return config.GetString(section, key);
-        }
-    }
-    return defaultValue;
-}
-
-bool HasKeyCompat(const ConfigManager& config,
-                  const std::string& section,
-                  const std::vector<std::string>& keys)
-{
-    for (const auto& key : keys) {
-        if (config.HasKey(section, key)) return true;
-    }
-    return false;
-}
-
-int GetIntCompat(const ConfigManager& config,
-                 const std::string& section,
-                 const std::vector<std::string>& keys,
-                 int defaultValue)
-{
-    for (const auto& key : keys) {
-        if (config.HasKey(section, key)) return config.GetInt(section, key);
-    }
-    return defaultValue;
-}
-
-bool GetBoolCompat(const ConfigManager& config,
-                   const std::string& section,
-                   const std::vector<std::string>& keys,
-                   bool defaultValue)
-{
-    for (const auto& key : keys) {
-        if (config.HasKey(section, key)) return config.GetBool(section, key);
-    }
-    return defaultValue;
 }
 
 std::map<std::string, std::vector<std::string>> BuildBiasParticleProcessMap(
@@ -906,133 +847,10 @@ void SimulationManager::Configure()
     }
 
     if (configLoaded_) {
-        const int threads = configManager_->GetInt("run", "threads", context_.GetNumThreads());
-        context_.SetNumThreads(threads);
-
-        if (HasKeyCompat(*configManager_, "run", {"seed", "randomSeed"}) ||
-            HasKeyCompat(*configManager_, "general", {"seed", "randomSeed"})) {
-            const int seed = HasKeyCompat(*configManager_, "run", {"seed", "randomSeed"})
-                ? GetIntCompat(*configManager_, "run", {"seed", "randomSeed"}, 0)
-                : GetIntCompat(*configManager_, "general", {"seed", "randomSeed"}, 0);
-            if (seed < 0) throw std::runtime_error("Invalid config value run/seed: seed must be >= 0");
-            context_.SetSeed(static_cast<unsigned long>(seed));
-        }
-
-        context_.SetInteractive(configManager_->GetBool("run", "interactive", context_.IsInteractive()));
-        context_.SetMacroFile(configManager_->GetString("run", "macro", context_.GetMacroFile()));
-        context_.SetDryRun(GetBoolCompat(*configManager_, "run", {"dry_run", "dryRun"}, context_.IsDryRun()));
-        context_.SetVerboseLevel(HasKeyCompat(*configManager_, "run", {"verbose"})
-            ? configManager_->GetInt("run", "verbose", context_.GetVerboseLevel())
-            : configManager_->GetInt("general", "verbose", context_.GetVerboseLevel()));
-        context_.SetCheckOverlaps(GetBoolCompat(*configManager_, "run", {"check_overlaps", "checkOverlaps"}, context_.GetCheckOverlaps()));
-        context_.SetRunName(GetStringCompat(*configManager_, "run", {"name", "run_name", "runName"}, context_.GetRunName()));
-        context_.SetOutputDir(GetStringCompat(*configManager_, "output", {"dir", "outputDir"}, context_.GetOutputDir()));
-        if (HasKeyCompat(*configManager_, "output", {"format"})) {
-            outputManager_->SetFormat(OutputManager::ParseFormat(
-                GetStringCompat(*configManager_, "output", {"format"}, "csv")));
-        }
-
-        if (HasNonEmptyKeyCompat(*configManager_, "materials", {"file", "materialFile", "config", "configFile"})) {
-            materialsFile_ = GetStringCompat(*configManager_, "materials", {"file", "materialFile", "config", "configFile"});
-            if (!FileUtils::IsFile(materialsFile_)) {
-                throw std::runtime_error("Materials config file does not exist: '" + materialsFile_ + "'");
-            }
-            materialManager_->LoadMaterials(materialsFile_);
-        }
-
-        if (HasNonEmptyKeyCompat(*configManager_, "geometry", {"template", "templateName"})) {
-            geometryTemplate_ = GetStringCompat(*configManager_, "geometry", {"template", "templateName"});
-            geometryManager_->SetTemplate(geometryTemplate_);
-        }
-
-        if (HasKeyCompat(*configManager_, "geometry", {"check_overlaps", "checkOverlaps"})) {
-            context_.SetCheckOverlaps(GetBoolCompat(*configManager_, "geometry", {"check_overlaps", "checkOverlaps"}, context_.GetCheckOverlaps()));
-        }
-
-        if (HasNonEmptyKeyCompat(*configManager_, "geometry", {"default_world_material", "defaultWorldMaterial"})) {
-            defaultWorldMaterial_ = GetStringCompat(*configManager_, "geometry", {"default_world_material", "defaultWorldMaterial"});
-            geometryManager_->SetDefaultWorldMaterial(defaultWorldMaterial_);
-        }
-
-        if (HasNonEmptyKeyCompat(*configManager_, "geometry", {"config", "configFile"})) {
-            geometryConfigFile_ = GetStringCompat(*configManager_, "geometry", {"config", "configFile"});
-            if (!FileUtils::IsFile(geometryConfigFile_)) {
-                throw std::runtime_error("Geometry config file does not exist: '" + geometryConfigFile_ + "'");
-            }
-            geometryManager_->LoadGeometryConfig(geometryConfigFile_);
-        }
-
-        physicsManager_->SetBiasingManager(biasingManager_.get());
-        physicsManager_->LoadFromConfig(*configManager_);
-        geometryManager_->ValidateRegionPhysicsNames();
-        fieldConfig_.LoadFromConfig(*configManager_);
-        for (const FieldSpec& field : fieldConfig_.GetFields()) {
-            for (const std::string& volume : field.volumes) {
-                if (!geometryManager_->HasConfiguredVolume(volume)) {
-                    throw std::runtime_error("[field." + field.name + "]/volumes names '" + volume +
-                                             "', which is not a volume of the geometry");
-                }
-            }
-        }
-        sourceManager_->LoadFromConfig(*configManager_);
-        scoringManager_->LoadFromConfig(*configManager_);
-        scoringMeshCommands_ = ScoringMeshConfig::BuildCommands(*configManager_);
-        biasingManager_->LoadFromConfig(*configManager_);
-        if (biasingManager_->IsEnabled()) {
-            physicsManager_->EnableBiasingPhysics(true);
-        }
-
-        // Roadmap H3: optional parallel scoring world. Parsed only after every
-        // dependency (materials, geometry, scoring, output format, field, mesh,
-        // biasing) is configured, so Stage A can reject unsupported combinations
-        // before any Geant4 geometry object exists.
-        parallelWorldConfig_ = std::make_shared<parallel_world::ParallelWorldConfig>();
-        parallelWorldConfig_->Load(*configManager_, *geometryManager_, *materialManager_);
-        for (const char* key : {"enabled", "name", "geometry_config"}) {
-            if (configManager_->HasKey("parallel_world", key)) {
-                configManager_->MarkKeyConsumed("parallel_world", key);
-            }
-        }
-        if (parallelWorldConfig_->enabled()) {
-            const auto dependencies = parallelWorldConfig_->ValidateDependencies(
-                *scoringManager_, *outputManager_, biasingManager_->IsEnabled(),
-                !fieldConfig_.Empty(), !scoringMeshCommands_.empty());
-            if (!dependencies.empty()) {
-                throw std::runtime_error("[parallel_world] " + dependencies.front());
-            }
-            const auto containment = parallelWorldConfig_->ValidateDeclaredContainment(*geometryManager_);
-            if (!containment.empty()) {
-                throw std::runtime_error("[parallel_world] " + containment.front());
-            }
-            const auto materialProblems = parallelWorldConfig_->ValidateMaterials(*materialManager_);
-            if (!materialProblems.empty()) {
-                throw std::runtime_error("[parallel_world] " + materialProblems.front());
-            }
-            parallelWorldConfig_->ResolveMaterials(*materialManager_, *geometryManager_);
-        }
-
-        // These aliases are intentionally accepted for compatibility.  A canonical
-        // spelling may win, but a shadowed legacy spelling is still a consumed field.
-        for (const auto& alias : {"seed", "randomSeed", "dry_run", "dryRun",
-                                  "check_overlaps", "checkOverlaps", "name",
-                                  "run_name", "runName"}) {
-            configManager_->MarkKeyConsumed("run", alias);
-        }
-        for (const auto& alias : {"seed", "randomSeed", "verbose"}) {
-            configManager_->MarkKeyConsumed("general", alias);
-        }
-        for (const auto& alias : {"dir", "outputDir", "format"}) {
-            configManager_->MarkKeyConsumed("output", alias);
-        }
-        for (const auto& alias : {"file", "materialFile", "config", "configFile"}) {
-            configManager_->MarkKeyConsumed("materials", alias);
-            configManager_->MarkKeyConsumed("geometry", alias);
-        }
-        for (const auto& alias : {"template", "templateName", "check_overlaps",
-                                  "checkOverlaps", "default_world_material",
-                                  "defaultWorldMaterial"}) {
-            configManager_->MarkKeyConsumed("geometry", alias);
-        }
+        configuration::ConfigureLoadedInputs(*configManager_, context_, {
+            *materialManager_, *geometryManager_, *physicsManager_, *sourceManager_, *scoringManager_, *biasingManager_, *outputManager_,
+            fieldConfig_, materialsFile_, geometryTemplate_, geometryConfigFile_, defaultWorldMaterial_, scoringMeshCommands_, parallelWorldConfig_
+        });
     }
 
     outputManager_->SetOutputDir(context_.GetOutputDir());
