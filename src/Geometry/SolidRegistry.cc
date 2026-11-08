@@ -1,3 +1,4 @@
+#include "Geometry/ShapeParameters.hh"
 #include "Geometry/SolidRegistry.hh"
 
 #include "Geometry/VolumeBuilder.hh"
@@ -31,12 +32,11 @@ void ValidateBooleanTool(const VolumeNode& node)
 {
     switch (node.shape) {
         case VolumeShape::Box:
-            if (node.size.x <= 0.0 || node.size.y <= 0.0 || node.size.z <= 0.0)
-                throw std::runtime_error("box requires positive size x,y,z");
+            (void)ShapeParameters::NormalizeBox(node.size);
             break;
         case VolumeShape::Tubs:
-            if (node.parameters.size() < 5)
-                throw std::runtime_error("tubs requires 5 parameters: rMin,rMax,halfZ,startPhi,deltaPhi");
+            (void)ShapeParameters::ResolveTubs(node.size, node.parameters,
+                                              ShapeParameters::TubsInput::CppBooleanTool);
             break;
         case VolumeShape::Sphere:
             if (node.parameters.size() < 6)

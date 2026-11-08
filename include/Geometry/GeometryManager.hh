@@ -119,7 +119,13 @@ public:
     void RecordEffectiveConfigConstruction() const;
 
 private:
+    // Read-only component probe; no state mutation or Geant4 construction.
+    friend class GeometryTransactionProbe;
     std::vector<effective_config::Field> ProjectEffectiveConfigFields() const;
+    std::vector<effective_config::Field> ProjectEffectiveConfigFields(
+        const VolumeNode* root, const std::string& filename,
+        const std::vector<input_provenance::InputFile>& inputs,
+        const effective_config::ConsumerState& state) const;
     std::shared_ptr<effective_config::ConsumerState> effective_ = std::make_shared<effective_config::ConsumerState>();
     std::vector<input_provenance::InputFile> inputFiles_;
     IniReader mainInputReader_;

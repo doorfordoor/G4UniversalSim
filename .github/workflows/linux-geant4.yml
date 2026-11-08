@@ -145,7 +145,7 @@ jobs:
           python -B scripts/run_m0_tests.py --profile static --require-tracked-sources --fail-on-skip --report-root "$REPORT_ROOT/linux-static"
 
       - name: Validate the Linux static report
-        run: python -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-static"
+        run: python -B scripts/check_report_evidence.py --require-candidate-identity --report-root "$REPORT_ROOT/linux-static"
 
       - name: Annotate failing static cases
         if: failure()
@@ -156,7 +156,7 @@ jobs:
           python -B scripts/run_m0_tests.py --profile gui --require-tracked-sources --fail-on-skip --report-root "$REPORT_ROOT/linux-gui"
 
       - name: Validate the Linux GUI report
-        run: python -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-gui"
+        run: python -B scripts/check_report_evidence.py --require-candidate-identity --report-root "$REPORT_ROOT/linux-gui"
 
       - name: Annotate failing GUI cases
         if: failure()
@@ -172,7 +172,7 @@ jobs:
             --report-root "$REPORT_ROOT/linux-backend"
 
       - name: Validate the Linux backend report
-        run: python -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-backend"
+        run: python -B scripts/check_report_evidence.py --require-candidate-identity --report-root "$REPORT_ROOT/linux-backend"
 
       # The job log needs authentication on a public repository; surface the
       # failing cases in the (public) annotations instead so the run stays
@@ -189,7 +189,7 @@ jobs:
             --report-root "$REPORT_ROOT/linux-integration"
 
       - name: Validate the Linux integration report
-        run: python -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-integration"
+        run: python -B scripts/check_report_evidence.py --require-candidate-identity --report-root "$REPORT_ROOT/linux-integration"
 
       - name: Annotate failing integration cases
         if: failure()
@@ -219,7 +219,7 @@ jobs:
           log.write_bytes(log.read_bytes() + b"\n# tampered\n")
           print("tampered", log)
           PY
-          if python -B scripts/check_report_evidence.py --report-root "$RUNNER_TEMP/tampered"; then
+          if python -B scripts/check_report_evidence.py --require-candidate-identity --report-root "$RUNNER_TEMP/tampered"; then
             echo "evidence gate accepted a tampered log digest"; exit 1
           fi
           echo "evidence gate rejected the tampered log digest"

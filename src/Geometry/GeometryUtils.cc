@@ -1,3 +1,4 @@
+#include "Geometry/ShapeParameters.hh"
 #include "Geometry/GeometryUtils.hh"
 
 #include "Utils/G4NameUtils.hh"
@@ -198,17 +199,12 @@ void ValidateVolumeName(const std::string& name)
 
 void ValidateBoxSize(const Vec3& size)
 {
-    if (size.x <= 0.0 || size.y <= 0.0 || size.z <= 0.0) {
-        throw std::runtime_error("Box size must be positive in x/y/z");
-    }
+    (void)ShapeParameters::NormalizeBox(size);
 }
 
-void ValidateTubsParameters(double rMin, double rMax, double halfZ, double, double deltaPhi)
+void ValidateTubsParameters(double rMin, double rMax, double halfZ, double startPhi, double deltaPhi)
 {
-    if (rMin < 0.0) throw std::runtime_error("Tubs rMin must be >= 0");
-    if (rMax <= rMin) throw std::runtime_error("Tubs rMax must be > rMin");
-    if (halfZ <= 0.0) throw std::runtime_error("Tubs halfZ must be > 0");
-    if (deltaPhi <= 0.0) throw std::runtime_error("Tubs deltaPhi must be > 0");
+    (void)ShapeParameters::NormalizeTubs(rMin, rMax, halfZ, startPhi, deltaPhi);
 }
 
 std::string MakePath(const std::string& parentPath, const std::string& childName)

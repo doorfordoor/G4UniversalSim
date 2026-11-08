@@ -1,3 +1,5 @@
+#include "Geometry/ShapeParameters.hh"
+#include "Geometry/RegionCutPlan.hh"
 #include "G4SystemOfUnits.hh"
 #include "Geometry/VolumeBuilder.hh"
 
@@ -259,6 +261,9 @@ G4VPhysicalVolume* VolumeBuilder::BuildWorld(const VolumeNode& rootNode)
         throw std::runtime_error("BuildWorld requires a world root node, got volume '" + rootNode.name + "' with parent '" + rootNode.parentName + "'");
     }
 
+    // Validate every declaration before constructing even the world solid.
+    // The plan is temporary; VolumeNode remains the editable source of truth.
+    (void)PlanRegionCuts(rootNode);
     G4LogicalVolume* worldLogical = BuildLogicalVolume(rootNode);
     G4VPhysicalVolume* worldPhysical = new G4PVPlacement(
         nullptr,
@@ -353,6 +358,22 @@ G4VPhysicalVolume* VolumeBuilder::BuildVolume(const VolumeNode& node, G4LogicalV
 
 G4VSolid* VolumeBuilder::CreateSolid(const VolumeNode& node)
 {
+    // Validate this slice's tools before allocating the base solid. INI input
+    // already has source-aware checks; direct C++ callers need the same numeric
+    // boundary. Other shapes retain their existing compatibility path.
+    for (std::size_t i = 0; i < node.booleanOperations.size(); ++i) {
+        const auto& tool = node.booleanOperations[i].tool;
+        try {
+            if (tool.shape == VolumeShape::Box) {
+                (void)ShapeParameters::NormalizeBox(tool.size);
+            } else if (tool.shape == VolumeShape::Tubs) {
+                (void)ShapeParameters::ResolveTubs(tool.size, tool.parameters,
+                                                  ShapeParameters::TubsInput::CppBooleanTool);
+            }
+        } catch (const std::exception& error) {
+            throw std::runtime_error(BooleanToolContext(node.name, i, tool) + error.what());
+        }
+    }
     G4VSolid* baseSolid = CreatePrimitiveSolid(node);
     if (!node.HasBooleanOperations()) return baseSolid;
     return ApplyBooleanOperations(node, baseSolid);
@@ -495,12 +516,10 @@ G4Transform3D VolumeBuilder::MakeBooleanToolTransform(const BooleanOperand& oper
 
 G4VSolid* VolumeBuilder::CreateBoxSolid(const VolumeNode& node)
 {
-    GeometryUtils::ValidateBoxSize(node.size);
+    const auto parameters = ShapeParameters::NormalizeBox(node.size);
     auto* solid = new G4Box(
         G4NameUtils::SolidName(node.name),
-        node.size.x * 0.5,
-        node.size.y * 0.5,
-        node.size.z * 0.5
+        parameters.halfX, parameters.halfY, parameters.halfZ
     );
     RecordCreatedGeometryObject();
     return solid;
@@ -508,30 +527,11 @@ G4VSolid* VolumeBuilder::CreateBoxSolid(const VolumeNode& node)
 
 G4VSolid* VolumeBuilder::CreateTubsSolid(const VolumeNode& node)
 {
-    double rMin = 0.0;
-    double rMax = 0.0;
-    double halfZ = 0.0;
-    double startPhi = 0.0;
-    double deltaPhi = 0.0;
-
-    if (node.parameters.size() >= 5) {
-        rMin = node.parameters[0];
-        rMax = node.parameters[1];
-        halfZ = node.parameters[2];
-        startPhi = node.parameters[3];
-        deltaPhi = node.parameters[4];
-    } else if (node.size.x > 0.0 && node.size.y > 0.0 && node.size.z > 0.0) {
-        rMin = 0.0;
-        rMax = node.size.x * 0.5;
-        halfZ = node.size.z * 0.5;
-        startPhi = 0.0;
-        deltaPhi = CLHEP::twopi;
-    } else {
-        throw std::runtime_error("Volume '" + node.name + "' requires 5 tubs parameters or positive size shorthand");
-    }
-
-    GeometryUtils::ValidateTubsParameters(rMin, rMax, halfZ, startPhi, deltaPhi);
-    auto* solid = new G4Tubs(G4NameUtils::SolidName(node.name), rMin, rMax, halfZ, startPhi, deltaPhi);
+    const auto parameters = ShapeParameters::ResolveTubs(
+        node.size, node.parameters, ShapeParameters::TubsInput::CppVolume);
+    auto* solid = new G4Tubs(G4NameUtils::SolidName(node.name),
+                            parameters.rMin, parameters.rMax, parameters.halfZ,
+                            parameters.startPhi, parameters.deltaPhi);
     RecordCreatedGeometryObject();
     return solid;
 }
@@ -842,7 +842,22 @@ void VolumeBuilder::CreateRegion(const VolumeNode& node, G4LogicalVolume* logica
         throw std::runtime_error("Volume '" + node.name + "' has empty regionName");
     }
 
+    RegionCutPlan declaration;
+    AccumulateRegionCuts(declaration, node);
     G4Region* region = G4RegionStore::GetInstance()->GetRegion(regionName, false);
+    auto* existingCuts = region ? region->GetProductionCuts() : nullptr;
+    if (existingCuts && node.hasProductionCuts) {
+        const auto check = [&](double value, const char* particle) {
+            const double previous = existingCuts->GetProductionCut(particle);
+            if (value >= 0.0 && previous > 0.0 && previous != value)
+                throw std::runtime_error("Region '" + regionName + "' has conflicting production cuts for " +
+                                         particle + " at volume '" + node.name + "'");
+        };
+        check(node.productionCuts.gamma, "gamma");
+        check(node.productionCuts.electron, "e-");
+        check(node.productionCuts.positron, "e+");
+        check(node.productionCuts.proton, "proton");
+    }
     if (!region) {
         region = new G4Region(regionName);
         RecordCreatedGeometryObject();
@@ -852,8 +867,14 @@ void VolumeBuilder::CreateRegion(const VolumeNode& node, G4LogicalVolume* logica
 
     if (!node.hasProductionCuts) return;
 
-    auto* cuts = new G4ProductionCuts();
-    RecordCreatedGeometryObject();
+    // A region owns one cut object. Complementary declarations set only their
+    // explicit fields; never replace another volume's accepted particle cuts.
+    auto* cuts = existingCuts;
+    if (!cuts) {
+        cuts = new G4ProductionCuts();
+        RecordCreatedGeometryObject();
+        region->SetProductionCuts(cuts);
+    }
     const auto setCut = [&](double value, const char* particleName) {
         if (value < 0.0) return;
         if (value <= 0.0) {
@@ -868,7 +889,6 @@ void VolumeBuilder::CreateRegion(const VolumeNode& node, G4LogicalVolume* logica
     setCut(node.productionCuts.electron, "e-");
     setCut(node.productionCuts.positron, "e+");
     setCut(node.productionCuts.proton, "proton");
-    region->SetProductionCuts(cuts);
 }
 
 void VolumeBuilder::ApplyVisualAttributes(const VolumeNode& node, G4LogicalVolume* logicalVolume)

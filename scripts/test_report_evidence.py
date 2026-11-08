@@ -68,7 +68,7 @@ def sample_report() -> dict:
 def write_logs(report: dict, directory: Path) -> None:
     """Create log files whose bytes match the digests in ``report``."""
     for index, record in enumerate(report["results"]):
-        text = f"{record['name']} log\nassertions executed {record['assertions_executed']}\n"
+        text = f"{record['name']} log\nG4USIM_ASSERTS={record['assertions_executed']}\n"
         data = text.encode("utf-8")
         target = directory / (
             Path(f"{record['name']}.log") if index % 2 == 0 else Path("logs") / f"{record['name']}.log"
@@ -196,7 +196,8 @@ def main() -> int:
         legacy.pop("log_digest_algorithm")
         for record in legacy["results"]:
             target = report_path.parent / f"{record['name']}.log"
-            raw = f"legacy log for {record['name']}\n".encode("utf-8")
+            raw = (f"legacy log for {record['name']}\n"
+                   f"G4USIM_ASSERTS={record['assertions_executed']}\n").encode("utf-8")
             target.write_bytes(raw.replace(b"\n", b"\r\n"))
             record["log"] = str(target)
             record["log_sha256"] = hashlib.sha256(raw).hexdigest()
@@ -308,6 +309,7 @@ def main() -> int:
         write_logs(regressed_total, report_path.parent)
         regressed_total["results"][0]["assertions_executed"] = 4
         regressed_total["assertions_executed_total"] = 9
+        write_logs(regressed_total, report_path.parent)
         expect_rejected(regressed_total, "assertion evidence regressed", report_path=report_path,
                         baseline=baseline)
 
@@ -317,6 +319,7 @@ def main() -> int:
         regressed_case["results"][0]["assertions_executed"] = 1
         regressed_case["results"][1]["assertions_executed"] = 20
         regressed_case["assertions_executed_total"] = 21
+        write_logs(regressed_case, report_path.parent)
         expect_rejected(regressed_case, "per-case assertion counts regressed", report_path=report_path,
                         baseline=baseline)
 

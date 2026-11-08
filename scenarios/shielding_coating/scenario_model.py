@@ -273,6 +273,7 @@ class ShieldingSpec:
                         f"position = 0 mm, 0 mm, {z_centre:.6g} mm", *extra])
 
         pores: list[tuple[float, float, float]] = []
+        realised_pore_fraction = 0.0
         for index, (material, thickness) in enumerate(layers):
             tag = material.replace("G4_", "")
             if self.junction_density and index > 0:
@@ -288,10 +289,14 @@ class ShieldingSpec:
             if index == self.pores_layer:
                 radius = length_mm(self.pore_radius)
                 pores = list(pore_centres(random.Random(self.seed), half, thickness, radius, self.pore_fraction))
-                files["pores.csv"] = ("# pore centres in the layer frame\nx_mm,y_mm,z_mm\n" +
-                                      "".join(f"{x:.6f},{y:.6f},{zz:.6f}\n" for x, y, zz in pores))
-                geo.extend(["", "[volume.Pore]", f"parent = {name}", "shape = orb", f"parameters = {radius:g} mm",
-                            "material = G4_Galactic", "placement = parameterised", "copies_file = pores.csv"])
+                # A selected layer can round to zero copies. The backend rejects
+                # empty parameterisations, so emit neither the volume nor its table.
+                if pores:
+                    realised_pore_fraction = len(pores) * (4.0 / 3.0 * math.pi * radius ** 3) / ((2 * half) ** 2 * thickness)
+                    files["pores.csv"] = ("# pore centres in the layer frame\nx_mm,y_mm,z_mm\n" +
+                                          "".join(f"{x:.6f},{y:.6f},{zz:.6f}\n" for x, y, zz in pores))
+                    geo.extend(["", "[volume.Pore]", f"parent = {name}", "shape = orb", f"parameters = {radius:g} mm",
+                                "material = G4_Galactic", "placement = parameterised", "copies_file = pores.csv"])
             z += thickness
         stack_end = z
         device = length_mm(self.device_thickness)
@@ -380,6 +385,7 @@ class ShieldingSpec:
                 "sampled_integral_flux_cm2_s": {k: (v[0] if v else None) for k, v in sampled.items()},
                 "unsampled_flux_above_last_energy_cm2_s": {k: (v[1] if v else None) for k, v in sampled.items()},
                 "layers": [{"material": m, "thickness_mm": t} for m, t in layers], "pores": len(pores),
+                "pore_fraction_requested": self.pore_fraction, "pore_fraction_realised": realised_pore_fraction,
                 "junction_density": self.junction_density, "device_thickness_mm": device,
                 "displacement": bool(tables), "coating_volumes": len(coating_volumes),
                 "niel": niel_meta}

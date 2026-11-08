@@ -252,18 +252,45 @@ void GeometryManager::LoadGeometryConfig(const std::string& filename)
             + std::to_string(VolumeBuilder::GetCreatedGeometryObjectCount())
         );
     }
-    templateRootNode_ = std::make_unique<VolumeNode>(root);
-    rootNode_ = std::make_unique<VolumeNode>(root);
-    if (!preserveUserVolumesOnLoad_) {
-        userAddedVolumes_.clear();
-    } else {
-        ApplyUserAddedVolumes();
+    // Prepare the complete accepted state without touching the current model.
+    // In particular, overlays, projection and ConsumerState::Accept can allocate
+    // or throw. Nothing below the publication boundary may do either.
+    auto candidateTemplate = std::make_unique<VolumeNode>(root);
+    auto candidateRoot = std::make_unique<VolumeNode>(root);
+    std::vector<VolumeNode> candidateUsers;
+    if (preserveUserVolumesOnLoad_) {
+        candidateUsers = userAddedVolumes_;
+        for (const VolumeNode& node : candidateUsers) {
+            ValidateUserVolume(node);
+            if (TreeContainsName(*candidateRoot, node.name)) {
+                throw std::runtime_error(UserVolumeContext("GeometryManager::ApplyUserAddedVolumes", node)
+                                         + "volume name already exists in current tree");
+            }
+            AppendChildToParent(*candidateRoot, node);
+        }
     }
-    geometryConfigFile_ = filename;
-    effective_->reader=geometryTemplate->GetInputReader();
-    inputFiles_=geometryTemplate->GetInputs();
-    effective_->Accept(effective_->reader,ProjectEffectiveConfigFields());
-    MarkDirty();
+    std::string candidateFilename = filename;
+    auto candidateInputs = geometryTemplate->GetInputs();
+    auto candidateEffective = effective_->Clone();
+    // Clone intentionally omits runtime receipts for worker consumers; a load
+    // transaction must retain this Manager's existing evidence history instead.
+    {
+        std::lock_guard<std::mutex> lock(effective_->mutex);
+        candidateEffective->evidence = effective_->evidence;
+    }
+    candidateEffective->reader = geometryTemplate->GetInputReader();
+    auto fields = ProjectEffectiveConfigFields(candidateRoot.get(), candidateFilename,
+                                               candidateInputs, *candidateEffective);
+    candidateEffective->Accept(candidateEffective->reader, std::move(fields));
+
+    // Publication: default-allocator swaps and a bool store cannot throw.
+    templateRootNode_.swap(candidateTemplate);
+    rootNode_.swap(candidateRoot);
+    userAddedVolumes_.swap(candidateUsers);
+    geometryConfigFile_.swap(candidateFilename);
+    inputFiles_.swap(candidateInputs);
+    effective_.swap(candidateEffective);
+    dirty_ = true;
 }
 
 const std::string& GeometryManager::GetGeometryConfigFile() const
@@ -914,6 +941,14 @@ void GeometryManager::PrintReinitializeHint() const
 
 std::vector<effective_config::Field> GeometryManager::ProjectEffectiveConfigFields() const
 {
+ return ProjectEffectiveConfigFields(rootNode_.get(), geometryConfigFile_, inputFiles_, *effective_);
+}
+
+std::vector<effective_config::Field> GeometryManager::ProjectEffectiveConfigFields(
+    const VolumeNode* root, const std::string& filename,
+    const std::vector<input_provenance::InputFile>& inputs,
+    const effective_config::ConsumerState& state) const
+{
  using namespace effective_config;std::vector<Field> result;
  const auto scalar=[&](const char* key,Value value){
   ConsumerState source;source.reader=mainInputReader_;
@@ -935,10 +970,10 @@ std::vector<effective_config::Field> GeometryManager::ProjectEffectiveConfigFiel
   if(selected){f.requested=selected->value;f.requested_known=true;f.origins.front().disposition="shadowed";}
   result.push_back(std::move(f));
  };
- scalar("template",templateName_);scalar("config_file",geometryConfigFile_);scalar("check_overlaps",checkOverlaps_);scalar("default_world_material",defaultWorldMaterial_);
+ scalar("template",templateName_);scalar("config_file",filename);scalar("check_overlaps",checkOverlaps_);scalar("default_world_material",defaultWorldMaterial_);
  scalar("preserve_user_volumes_on_load",preserveUserVolumesOnLoad_);
- Value::Array inputs;for(const auto& file:inputFiles_)inputs.emplace_back(Value::Object{{"path",file.path},{"sha256",file.sha256}});scalar("input_files",inputs);
- if(!rootNode_)return result;
+ Value::Array inputValues;for(const auto& file:inputs)inputValues.emplace_back(Value::Object{{"path",file.path},{"sha256",file.sha256}});scalar("input_files",inputValues);
+ if(!root)return result;
  const auto vector=[](const Vec3& v,double unit){return Value::Array{v.x/unit,v.y/unit,v.z/unit};};
  const auto rotation=[](const Rotation3& v){return Value::Array{v.x/deg,v.y/deg,v.z/deg};};
  std::function<void(const VolumeNode&)> visit;
@@ -949,12 +984,12 @@ std::vector<effective_config::Field> GeometryManager::ProjectEffectiveConfigFiel
   if(!node.IsWorld() && templateName_=="array")section="array";
   if(!node.IsWorld() && templateName_=="simple_box")section="target";
   const auto add=[&](const std::string& key,Value value,const char* unit,std::initializer_list<const char*> keys){
-   auto f=effective_->Make(ObjectFieldPath("geometry",node.name,key),std::move(value),unit,section,keys);
+   auto f=state.Make(ObjectFieldPath("geometry",node.name,key),std::move(value),unit,section,keys);
    if(key=="boolean_operations" || (key=="visual" && templateName_=="simple_box") || (!node.IsWorld() && (templateName_=="array" || templateName_=="layered_device" || templateName_=="shielding"))) {
     std::set<std::pair<std::string,std::string>> dependencies;
     const auto depend=[&](const std::string& source,const std::string& input){dependencies.insert({source,input});};
-    if(key=="visual" && templateName_=="simple_box")for(const auto& d:effective_->reader.GetDeclarations())if(d.normalizedSection==(node.IsWorld()?"visual.world":"visual.target"))depend(d.normalizedSection,d.normalizedKey);
-    if(key=="boolean_operations")for(const auto& d:effective_->reader.GetDeclarations())if(d.normalizedSection.rfind(section+".boolean.",0)==0)depend(d.normalizedSection,d.normalizedKey);
+    if(key=="visual" && templateName_=="simple_box")for(const auto& d:state.reader.GetDeclarations())if(d.normalizedSection==(node.IsWorld()?"visual.world":"visual.target"))depend(d.normalizedSection,d.normalizedKey);
+    if(key=="boolean_operations")for(const auto& d:state.reader.GetDeclarations())if(d.normalizedSection.rfind(section+".boolean.",0)==0)depend(d.normalizedSection,d.normalizedKey);
     if(templateName_=="array") {
      if(key=="size")depend("array","element_size");
      else if(key=="position")for(const char* input:{"center","pitch","counts"})depend("array",input);
@@ -962,28 +997,28 @@ std::vector<effective_config::Field> GeometryManager::ProjectEffectiveConfigFiel
     }
     if(templateName_=="layered_device") {
      if(key=="size"){depend(section,"xy");depend(section,"thickness");}
-     else if(key=="position") {depend(section,"position");for(const auto& d:effective_->reader.GetDeclarations())if(d.normalizedSection=="layers" || d.normalizedKey=="thickness")depend(d.normalizedSection,d.normalizedKey);}
+     else if(key=="position") {depend(section,"position");for(const auto& d:state.reader.GetDeclarations())if(d.normalizedSection=="layers" || d.normalizedKey=="thickness")depend(d.normalizedSection,d.normalizedKey);}
      else for(const char* input:keys)depend(section,input);
     }
     if(templateName_=="shielding") {
      if(key=="size"){depend(section,"size");depend(section,"thickness");depend("shielding","area");}
-     else if(key=="position"){depend(section,"position");for(const auto& d:effective_->reader.GetDeclarations())if(d.normalizedSection=="shielding" || d.normalizedKey=="thickness")depend(d.normalizedSection,d.normalizedKey);}
+     else if(key=="position"){depend(section,"position");for(const auto& d:state.reader.GetDeclarations())if(d.normalizedSection=="shielding" || d.normalizedKey=="thickness")depend(d.normalizedSection,d.normalizedKey);}
      else for(const char* input:keys)depend(section,input);
     }
     if(!dependencies.empty()){
      f.origins.resize(1);f.origins.front().disposition="shadowed";Value::Object requested;
-     const auto winners=effective_->reader.GetFields();
-     for(const auto& d:effective_->reader.GetDeclarations())if(dependencies.count({d.normalizedSection,d.normalizedKey})){
-      Origin origin;origin.kind="main_ini";origin.file=effective_->reader.GetFilename();origin.line=d.lineNumber;origin.section=d.originalSection;
-      origin.key=d.originalKey;origin.alias=d.originalKey;origin.raw=d.value;origin.input_sha256=effective_->reader.GetInputSha256();origin.disposition="shadowed";
+     const auto winners=state.reader.GetFields();
+     for(const auto& d:state.reader.GetDeclarations())if(dependencies.count({d.normalizedSection,d.normalizedKey})){
+      Origin origin;origin.kind="main_ini";origin.file=state.reader.GetFilename();origin.line=d.lineNumber;origin.section=d.originalSection;
+      origin.key=d.originalKey;origin.alias=d.originalKey;origin.raw=d.value;origin.input_sha256=state.reader.GetInputSha256();origin.disposition="shadowed";
       for(const auto& winner:winners)if(winner.normalizedSection==d.normalizedSection && winner.normalizedKey==d.normalizedKey && winner.lineNumber==d.lineNumber)origin.disposition="derived";
       f.origins.push_back(origin);requested[d.originalSection+"/"+d.originalKey]=d.value;
      }
      if(!requested.empty()){f.requested=requested;f.requested_known=true;f.reason="Typed VolumeNode derived from the listed template inputs; earlier duplicate declarations are shadowed";}
     }
    }
-   if(f.origins.size()==1 && !geometryConfigFile_.empty()) {
-    Origin origin;origin.kind="derived";origin.file=geometryConfigFile_;origin.input_sha256=effective_->reader.GetInputSha256();origin.disposition="derived";
+   if(f.origins.size()==1 && !filename.empty()) {
+    Origin origin;origin.kind="derived";origin.file=filename;origin.input_sha256=state.reader.GetInputSha256();origin.disposition="derived";
     f.origins.push_back(origin);f.reason="Typed VolumeNode accepted from template '"+templateName_+"'; field may combine template inputs/defaults";
    }
    result.push_back(std::move(f));
@@ -1035,7 +1070,7 @@ std::vector<effective_config::Field> GeometryManager::ProjectEffectiveConfigFiel
   if(!booleans.empty())add("boolean_operations",booleans,"Geant4_internal_shape_specific",{});
   for(const auto& child:node.children)visit(child);
  };
- visit(*rootNode_);return result;
+ visit(*root);return result;
 }
 void GeometryManager::AcceptEffectiveConfig(const IniReader& reader)
 {

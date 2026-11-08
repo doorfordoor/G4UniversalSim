@@ -1,3 +1,5 @@
+#include "Geometry/ShapeParameters.hh"
+#include "Geometry/RegionCutPlan.hh"
 #include "Config/ConfigSchemaTable.hh"
 #include "Geometry/GeometryConfig.hh"
 
@@ -306,8 +308,10 @@ void GeometryConfig::AddVolume(const VolumeNode& node)
 void GeometryConfig::Validate() const
 {
     int worldCount = 0;
+    RegionCutPlan regionCuts;
     for (const VolumeNode& volume : flatVolumes_) {
         volume.ValidateBasic();
+        AccumulateRegionCuts(regionCuts, volume);
         if (volume.IsWorld()) {
             ++worldCount;
         } else if (!HasVolume(volume.parentName)) {
@@ -586,7 +590,7 @@ void GeometryConfig::ValidateShapeContract(
 
     if (shape == VolumeShape::Box) {
         if (FindField(section, "parameters")) fail("parameters", "box does not accept parameters; use size with exactly three positive lengths.");
-        try { GeometryUtils::ValidateBoxSize(size); }
+        try { (void)ShapeParameters::NormalizeBox(size); }
         catch (const std::exception& error) { fail("size", error.what()); }
         return;
     }
@@ -595,8 +599,11 @@ void GeometryConfig::ValidateShapeContract(
     }
     try {
         if (shape == VolumeShape::Tubs) {
-            exactParameters(5, "tubs");
-            GeometryUtils::ValidateTubsParameters(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]);
+            try {
+                (void)ShapeParameters::ResolveTubs(size, parameters, ShapeParameters::TubsInput::Ini);
+            } catch (const std::exception& error) {
+                fail("parameters", error.what());
+            }
         } else if (shape == VolumeShape::Sphere) {
             exactParameters(6, "sphere");
             if (parameters[0] < 0.0 || parameters[1] <= parameters[0]

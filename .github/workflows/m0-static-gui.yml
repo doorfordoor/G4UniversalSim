@@ -88,7 +88,7 @@ jobs:
       # and fingerprints are self-consistent; validate each profile's own report
       # immediately, while it is still the newest one.
       - name: Validate static report evidence
-        run: python -B scripts/check_report_evidence.py
+        run: python -B scripts/check_report_evidence.py --require-candidate-identity
       # Public repositories hide job logs behind a login, so a failing run must
       # carry the failing case and its log tail in the public annotations instead.
       - name: Annotate failing static cases
@@ -97,7 +97,7 @@ jobs:
       - name: Run offscreen GUI tests
         run: python -B scripts/run_m0_tests.py --profile gui --require-tracked-sources --fail-on-skip
       - name: Validate GUI report evidence
-        run: python -B scripts/check_report_evidence.py
+        run: python -B scripts/check_report_evidence.py --require-candidate-identity
       - name: Annotate failing GUI cases
         if: failure()
         run: python -B scripts/ci_annotate_failures.py --report-root out/verification

@@ -44,6 +44,12 @@ def component() -> dict:
     with tempfile.TemporaryDirectory(prefix="g4usim-solid-registry-") as temp:
         folder = Path(temp)
         (folder / "Geometry").mkdir()
+        # This is a dispatch-only component with solid doubles, not a kernel
+        # geometry test. Supply the sole physical constant used by the shared
+        # parameter normalizer; actual dimensions are checked by the native probe.
+        (folder / "G4PhysicalConstants.hh").write_text(
+            "#pragma once\nnamespace CLHEP { constexpr double twopi = 6.28318530717958647692; }\n",
+            encoding="utf-8")
         (folder / "G4VSolid.hh").write_text('''#pragma once
 class G4VSolid { public: int volumeCalls=0; virtual ~G4VSolid()=default;
 virtual double GetCubicVolume() { ++volumeCalls; return 123.0; } };
@@ -191,7 +197,7 @@ int main() {
         else:
             assert tool["calls"] == 0 and tool["error"] == "unsupported or missing boolean tool shape"
     expected_errors = [
-        "box requires positive size x,y,z",
+        "Box size must be positive in x/y/z",
         "tubs requires 5 parameters: rMin,rMax,halfZ,startPhi,deltaPhi",
         "sphere requires 6 parameters: rMin,rMax,startPhi,deltaPhi,startTheta,deltaTheta",
         "orb requires parameters=radius or positive size.x shorthand",
@@ -200,7 +206,7 @@ int main() {
     ]
     assert len(result["invalid"]) == len(expected_errors)
     for invalid, error in zip(result["invalid"], expected_errors):
-        assert invalid["calls"] == 0 and invalid["error"] == error
+        assert invalid["calls"] == 0 and invalid["error"] == error, (invalid, error)
     for alias in result["aliases"]:
         assert alias["match"], alias
     assert result["unknown_lookup"]

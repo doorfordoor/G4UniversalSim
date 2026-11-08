@@ -103,8 +103,10 @@ def main() -> int:
 
     def box(name, material, half, thickness, z_centre, parent="world", extra=()):
         geo.extend(["", f"[volume.{name}]", f"parent = {parent}", "shape = box",
-                    f"size = {2 * half:g} mm, {2 * half:g} mm, {thickness:.6g} mm", f"material = {material}",
-                    f"position = 0 mm, 0 mm, {z_centre:.6g} mm", *extra])
+                    # Round-trip every computed geometry length, including placement;
+                    # independently rounded parent/replica widths must still partition.
+                    f"size = {2 * half:.17g} mm, {2 * half:.17g} mm, {thickness:.17g} mm", f"material = {material}",
+                    f"position = 0 mm, 0 mm, {z_centre:.17g} mm", *extra])
 
     z = 0.0
     if lid:
@@ -125,9 +127,9 @@ def main() -> int:
     box("Substrate", "G4_Si", die_half, substrate, z + substrate / 2, extra=["region = Device"])
     width = substrate / args.slices
     geo.extend(["", "[volume.Slice]", "parent = Substrate", "shape = box",
-                f"size = {2 * die_half:g} mm, {2 * die_half:g} mm, {width:.6g} mm", "material = G4_Si",
+                f"size = {2 * die_half:.17g} mm, {2 * die_half:.17g} mm, {width:.17g} mm", "material = G4_Si",
                 "placement = replica", "replica_axis = z", f"replica_count = {args.slices}",
-                f"replica_width = {width:.6g} mm", "sensitive = true"])
+                f"replica_width = {width:.17g} mm", "sensitive = true"])
     slices = [{"copy": i, "depth_mm": z + i * width, "thickness_mm": width} for i in range(args.slices)]
     (out / "geometry.ini").write_text("\n".join(geo) + "\n", encoding="utf-8")
 
@@ -145,7 +147,7 @@ def main() -> int:
             target = out / f"spectrum_{'proton' if particle == 'proton' else 'electron'}.csv"
             sampled = spectrum_from_integral_flux(spectrum, target)
             block += ["energy_type = histogram", f"spectrum_file = {target.name}"]
-        block += ["position_type = plane", "shape = square", f"halfx = {die_half:g} mm",
+        block += ["position_type = plane", "shape = square", f"halfx = {die_half:.17g} mm",
                   "center = 0 mm, 0 mm, -1 mm", "direction = 0, 0, 1"]
         return block, sampled
 

@@ -133,6 +133,14 @@ CASES = (
     Case("platform_path_fixture_policy", "scripts/test_platform_path_fixture_policy.py", "static"),
     Case("ci_annotations", "scripts/test_ci_annotations.py", "static"),
     Case("report_evidence", "scripts/test_report_evidence.py", "static"),
+    Case("report_evidence_gate", "scripts/test_report_evidence_gate.py", "static"),
+    Case("validation_identity", "scripts/test_validation_identity.py", "static", requirements=("cxx",)),
+    Case("validation_identity_contract", "scripts/test_validation_identity_contract.py", "static"),
+    Case("validation_gate_integration", "scripts/test_validation_gate_integration.py", "static"),
+    Case("ar1_generators", "scripts/test_ar1_generator_pipeline.py", "static"),
+    Case("ar1_generator_native", "scripts/test_ar1_generator_pipeline.py", "backend", ("exe",), args=("--native",)),
+    Case("geometry_shapes", "scripts/test_geometry_shapes.py", "backend", ("exe",)),
+    Case("shared_region_cuts", "scripts/test_shared_region_cuts.py", "backend", ("exe",)),
     Case("writer_boundary", "scripts/test_writer_boundary.py", "static"),
     Case("shielding_scenario_model", "scripts/test_shielding_scenario_model.py", "static"),
     Case("shielding_analysis", "scripts/test_shielding_analysis.py", "static"),
@@ -271,6 +279,7 @@ CASES = (
     Case("unconsumed_config", "scripts/test_unconsumed_config.py", "backend", ("exe",)),
     Case("material_schema", "scripts/test_material_config_schema.py", "backend", ("exe",)),
     Case("geometry_safety", "scripts/test_geometry_safety_contract.py", "backend", ("exe",), args=("--layer", "backend")),
+    Case("geometry_transaction", "scripts/test_geometry_transaction.py", "backend", ("exe",)),
     Case("geometry_diagnostics", "scripts/test_geometry_config_diagnostics.py", "backend", ("exe",), args=("--layer", "backend")),
     Case("macro_plan", "scripts/test_macro_plan.py", "backend", ("exe",)),
     Case("default_geometry", "scripts/test_default_geometry_batch.py", "backend", ("exe",)),
@@ -383,10 +392,55 @@ def parse_assert_marker(log: str) -> int | None:
     return count
 
 
-def executable_freshness(executable: Path) -> str:
+def capture_candidate_identity(executable: Path, merge_executable: Path, phase: str) -> tuple[dict, list[dict]]:
+    """Capture inputs, not Git dirtiness or generated outputs.
+
+    These are content snapshots, not a lock or an executable copy. A change that
+    is restored between observations cannot be detected by this protocol. Missing
+    optional binaries are representable; unreadable inputs make identity unknown.
+    """
+    snapshot: dict = {}
+    errors: list[dict] = []
+
+    def capture(field, reader):
+        try:
+            snapshot[field] = reader()
+        except (OSError, RuntimeError, subprocess.SubprocessError) as error:
+            snapshot[field] = None
+            errors.append({"phase": phase, "field": field,
+                           "error": f"{type(error).__name__}: {error}"})
+
+    def head():
+        value = git_value("rev-parse", "HEAD")
+        if value == "unavailable":
+            raise RuntimeError("cannot read Git HEAD")
+        return value
+
+    def binary(path):
+        resolved = path.resolve()
+        try:
+            digest = hashlib.sha256()
+            with resolved.open("rb") as stream:
+                for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                    digest.update(chunk)
+        except FileNotFoundError:
+            return {"path": str(resolved), "state": "missing", "sha256": None}
+        return {"path": str(resolved), "state": "file", "sha256": digest.hexdigest()}
+
+    capture("git_head", head)
+    capture("source_fingerprint", workspace_source_fingerprint)
+    capture("tests_content_fingerprint", tests_content_fingerprint)
+    capture("merge_source_fingerprint", lambda: hashlib.sha256(
+        (ROOT / "tools/mergeHistograms.cc").read_bytes()).hexdigest())
+    capture("backend_executable", lambda: binary(executable))
+    capture("merge_executable", lambda: binary(merge_executable))
+    return snapshot, errors
+
+
+def executable_freshness(executable: Path, expected_fingerprint: str | None = None) -> str:
     if not executable.is_file():
         return "backend executable is missing"
-    current_fingerprint = workspace_source_fingerprint()
+    current_fingerprint = expected_fingerprint if expected_fingerprint is not None else workspace_source_fingerprint()
     try:
         result = subprocess.run(
             [str(executable), "--capabilities"], cwd=executable.parent,
@@ -401,11 +455,11 @@ def executable_freshness(executable: Path) -> str:
     return ""
 
 
-def merge_executable_freshness(executable: Path) -> str:
+def merge_executable_freshness(executable: Path, expected_fingerprint: str | None = None) -> str:
     if not executable.is_file():
         return "mergeHistograms executable is missing"
     source = ROOT / "tools" / "mergeHistograms.cc"
-    expected = hashlib.sha256(source.read_bytes()).hexdigest()
+    expected = expected_fingerprint if expected_fingerprint is not None else hashlib.sha256(source.read_bytes()).hexdigest()
     try:
         result = subprocess.run(
             [str(executable), "--source-fingerprint"], cwd=executable.parent,
@@ -444,6 +498,10 @@ def main() -> int:
                              "assertion counts are then recorded as unknown.")
     args = parser.parse_args()
 
+    # Freeze before prerequisite subprocesses and tests. Legacy top-level fields
+    # below describe this candidate, never a fresh candidate read after execution.
+    identity_start, identity_errors = capture_candidate_identity(args.executable, args.merge_executable, "start")
+
     report_dir = args.report_root / f"{time.strftime('%Y%m%d-%H%M%S')}-{uuid.uuid4().hex[:8]}"
     report_dir.mkdir(parents=True, exist_ok=True)
     # Match the standalone tests' compiler selection. Missing tools remain explicit
@@ -464,22 +522,32 @@ def main() -> int:
                         (importlib.util.find_spec("vtkmodules") or
                          importlib.util.find_spec("vtk")))
                  else "PyVista/VTK is unavailable (pip install -r gui/requirements-3d.txt)",
-        "exe": executable_freshness(args.executable.resolve()),
-        "merge": merge_executable_freshness(args.merge_executable.resolve()),
+        "exe": (executable_freshness(args.executable.resolve(), identity_start["source_fingerprint"])
+                if identity_start["source_fingerprint"] is not None else "candidate source fingerprint is unavailable"),
+        "merge": (merge_executable_freshness(args.merge_executable.resolve(), identity_start["merge_source_fingerprint"])
+                  if identity_start["merge_source_fingerprint"] is not None else "merge source fingerprint is unavailable"),
     }
     backend_build_identity = None
     if not requirements["exe"]:
-        capabilities_result = subprocess.run(
-            [str(args.executable.resolve()), "--capabilities"],
-            cwd=args.executable.resolve().parent, capture_output=True, text=True,
-            encoding="utf-8", errors="replace", timeout=30, check=False,
-        )
-        capabilities = json.loads(capabilities_result.stdout)
-        backend_build_identity = {
-            key: capabilities.get(key) for key in
-            ("build_configuration", "compiler_id", "compiler_version",
-             "geant4_version_number", "multithreaded")
-        }
+        try:
+            capabilities_result = subprocess.run(
+                [str(args.executable.resolve()), "--capabilities"],
+                cwd=args.executable.resolve().parent, capture_output=True, text=True,
+                encoding="utf-8", errors="replace", timeout=30, check=False,
+            )
+            capabilities = json.loads(capabilities_result.stdout)
+            if (capabilities_result.returncode != 0 or
+                    capabilities.get("source_fingerprint") != identity_start["source_fingerprint"]):
+                raise ValueError("backend capabilities no longer match the starting candidate")
+            backend_build_identity = {
+                key: capabilities.get(key) for key in
+                ("build_configuration", "compiler_id", "compiler_version",
+                 "geant4_version_number", "multithreaded")
+            }
+        except (OSError, ValueError, subprocess.SubprocessError) as error:
+            requirements["exe"] = f"backend identity query failed: {error}"
+            identity_errors.append({"phase": "preflight", "field": "backend_executable",
+                                    "error": requirements["exe"]})
     selected = [case for case in CASES if (args.profile == "all" or case.layer == args.profile)
                 and (not args.case or case.name in args.case)]
     if not selected:
@@ -565,19 +633,32 @@ def main() -> int:
     # dirty flag alone cannot distinguish generated files from changed sources.
     git_status_porcelain = (git_status_result.stdout.rstrip("\n")
                             if git_status_result.returncode == 0 else "unavailable")
+    identity_end, end_errors = capture_candidate_identity(args.executable, args.merge_executable, "end")
+    identity_errors.extend(end_errors)
+    drift_fields = sorted(key for key in identity_start if identity_start[key] != identity_end[key])
+    # Optional v1 extension to report v2. Old reports without it have no evidence
+    # of this gate. Keep successful case facts/logs even when the candidate fails.
+    candidate_identity = {
+        "version": 1,
+        "binding_strategy": "start_end_content_snapshots",
+        "start": identity_start, "end": identity_end,
+        "status": "unverifiable" if identity_errors else "drifted" if drift_fields else "stable",
+        "drift_fields": drift_fields, "errors": identity_errors,
+    }
     report = {
         "schema": "G4UniversalSimM0TestReport", "version": 2,
         "profile": args.profile, "platform": platform.platform(),
-        "python": sys.version.split()[0], "git_head": git_value("rev-parse", "HEAD"),
-        "source_fingerprint": workspace_source_fingerprint(),
-        "tests_content_fingerprint": tests_content_fingerprint(),
+        "python": sys.version.split()[0], "git_head": identity_start["git_head"],
+        "source_fingerprint": identity_start["source_fingerprint"],
+        "tests_content_fingerprint": identity_start["tests_content_fingerprint"],
+        "candidate_identity": candidate_identity,
         "git_dirty": bool(git_status_porcelain),
         "git_status_porcelain": git_status_porcelain,
-        "backend_executable": str(args.executable.resolve()),
+        "backend_executable": (identity_start["backend_executable"] or {}).get("path"),
         "backend_provenance": requirements["exe"] or "source_sha256_manifest_matches_executable",
         "backend_build_identity": backend_build_identity,
-        "merge_executable": str(args.merge_executable.resolve()),
-        "merge_source_fingerprint": hashlib.sha256((ROOT / "tools/mergeHistograms.cc").read_bytes()).hexdigest(),
+        "merge_executable": (identity_start["merge_executable"] or {}).get("path"),
+        "merge_source_fingerprint": identity_start["merge_source_fingerprint"],
         "merge_provenance": requirements["merge"] or "source_sha256_matches_executable",
         "optional_pyvista_coverage": (
             "object_mode_case_registered: gui_vtk_axes_theme; registration alone does not "
@@ -610,6 +691,11 @@ def main() -> int:
         f"({report['cases_with_assertion_counts']} cases reported counts, "
         f"{len(zero_assert_cases)} cases asserted nothing)"
     )
+    if candidate_identity["status"] != "stable":
+        print(f"FAIL candidate identity: {candidate_identity['status']}; drift_fields={drift_fields}")
+        for error in identity_errors:
+            print(f"  {error['phase']}/{error['field']}: {error['error']}")
+        return 1
     if any(record["status"] == "fail" for record in results):
         return 1
     if args.require_tracked_sources and missing_tracked_sources:

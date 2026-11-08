@@ -7,16 +7,16 @@
   },
   "identity": {
     "algorithm": "sha256_sorted_sha256_path_lines_v1",
-    "bytes_total": 3820084,
-    "file_count": 309,
-    "value": "b2285d117a557614782eb8656593c2a64b9caba4538de91410126d7db35ba878"
+    "bytes_total": 3858094,
+    "file_count": 315,
+    "value": "035b50f57da65b62a8c369f192f127abc7ce42ff0f70e384042f303be1a0d74d"
   },
   "members": [
     {
-      "bytes": 10729,
+      "bytes": 12857,
       "path": "CMakeLists.txt",
       "role": "cmake",
-      "sha256": "9eb08cd64bc8b28bd4e98e399959f9a6b6bbce89ad0191f18e615be815c07a76",
+      "sha256": "b6115dfd991e776a5c4c8ab24a586db5f6371a3d65163bbf119f559ec0783bd8",
       "source_path": "CMakeLists.txt"
     },
     {
@@ -272,10 +272,10 @@
       "source_path": "docs/中文使用手册.md"
     },
     {
-      "bytes": 212947,
+      "bytes": 213498,
       "path": "docs/功能支持矩阵.md",
       "role": "doc",
-      "sha256": "372dea8cf6ef06a9e760137dbc6ac82b9042a71c21b6464e1dcc44afaab66d3a",
+      "sha256": "a14e7958aa90c5d68b700df11bbb8f86871c396a575fd3011e4e526476902245",
       "source_path": "docs/功能支持矩阵.md"
     },
     {
@@ -587,10 +587,10 @@
       "source_path": "include/Geometry/GeometryExport.hh"
     },
     {
-      "bytes": 5840,
+      "bytes": 6216,
       "path": "include/Geometry/GeometryManager.hh",
       "role": "header",
-      "sha256": "a19a9e4e9ff78a6cd0ad308ab6213caaee2454bf5631578e8775a3225aa7c262",
+      "sha256": "d2c4a9cda767db8ff5db287a2153625075ce24c90a7cd20b0be4eb94c23a5b6c",
       "source_path": "include/Geometry/GeometryManager.hh"
     },
     {
@@ -627,6 +627,20 @@
       "role": "header",
       "sha256": "047ce7d6d3ac55f3c46a3e3f232d36827a097808559fae804496bf2eff8cb434",
       "source_path": "include/Geometry/GeometryUtils.hh"
+    },
+    {
+      "bytes": 370,
+      "path": "include/Geometry/RegionCutPlan.hh",
+      "role": "header",
+      "sha256": "334b16398edac149d1bd8f54776d4796eff8a4b36fb81d7b50eb424387610247",
+      "source_path": "include/Geometry/RegionCutPlan.hh"
+    },
+    {
+      "bytes": 2785,
+      "path": "include/Geometry/ShapeParameters.hh",
+      "role": "header",
+      "sha256": "fbe676aa055159f6bb5165b056c26711a2a9d01e94db8f7d4468cddbcf34d940",
+      "source_path": "include/Geometry/ShapeParameters.hh"
     },
     {
       "bytes": 2240,
@@ -1602,10 +1616,10 @@
       "source_path": "src/Geometry/GdmlInputCapture.cc"
     },
     {
-      "bytes": 46269,
+      "bytes": 46501,
       "path": "src/Geometry/GeometryConfig.cc",
       "role": "source",
-      "sha256": "8093aba6fabca6e1105285629f5b1348277352093c03a98feedadbbb8089b742",
+      "sha256": "c49cdb38a608fe3f802f5334f586fe099be1e3da18038e1f014a818a1de49c0e",
       "source_path": "src/Geometry/GeometryConfig.cc"
     },
     {
@@ -1623,10 +1637,10 @@
       "source_path": "src/Geometry/GeometryExport.cc"
     },
     {
-      "bytes": 52660,
+      "bytes": 54502,
       "path": "src/Geometry/GeometryManager.cc",
       "role": "source",
-      "sha256": "cd5ded2deeb0da71e5be00e09f6112dcd318e6a5e2c37e9dcbae00ea4380016a",
+      "sha256": "bc1e39eb7de31a5e8e208bf564b66c2e8df44fdf19d2eb049eeb14b22affd937",
       "source_path": "src/Geometry/GeometryManager.cc"
     },
     {
@@ -1651,17 +1665,24 @@
       "source_path": "src/Geometry/GeometrySafety.cc"
     },
     {
-      "bytes": 8169,
+      "bytes": 7906,
       "path": "src/Geometry/GeometryUtils.cc",
       "role": "source",
-      "sha256": "21f7b89511814d051021168ae5aebc8ab8901e0cdb3f61ec9613f7eeb116dc91",
+      "sha256": "955c17ffae0aa45fa2bb4db05299ba668d9b2d0419c18fcaae87dcf3834ca2cf",
       "source_path": "src/Geometry/GeometryUtils.cc"
     },
     {
-      "bytes": 10719,
+      "bytes": 1830,
+      "path": "src/Geometry/RegionCutPlan.cc",
+      "role": "source",
+      "sha256": "b3e9fdf8ba04fbae8a52c03cd4a88b7a6e93f35c8fe43a04ad8a0f25b983dde7",
+      "source_path": "src/Geometry/RegionCutPlan.cc"
+    },
+    {
+      "bytes": 10675,
       "path": "src/Geometry/SolidRegistry.cc",
       "role": "source",
-      "sha256": "31d2b348be3e1c27926ae35379862b3a41be0fad173bc4b51f0ca9da6b782188",
+      "sha256": "edc1b2f1bbcffb206fa916a7fcf27055888d47ccbf742d46783410dccb794796",
       "source_path": "src/Geometry/SolidRegistry.cc"
     },
     {
@@ -1672,10 +1693,10 @@
       "source_path": "src/Geometry/StlReader.cc"
     },
     {
-      "bytes": 37222,
+      "bytes": 38891,
       "path": "src/Geometry/VolumeBuilder.cc",
       "role": "source",
-      "sha256": "acdbadfda0bb1e809db32171612fb6136934f494356d545f87cf99aac1582822",
+      "sha256": "b7498ec8d307aafd0b018a01da4c84a1b66bebf53039f565b018d355b2655e76",
       "source_path": "src/Geometry/VolumeBuilder.cc"
     },
     {
@@ -2127,6 +2148,20 @@
       "source_path": "tools/gdmlInputCaptureCheck.cc"
     },
     {
+      "bytes": 10149,
+      "path": "tools/geometryShapesCheck.cc",
+      "role": "tool",
+      "sha256": "9bdf2a19c28f2abdb29b8f8cb44b7c082a51d0052aa5e0fd9ddbc5523446d7ee",
+      "source_path": "tools/geometryShapesCheck.cc"
+    },
+    {
+      "bytes": 12484,
+      "path": "tools/geometryTransactionCheck.cc",
+      "role": "tool",
+      "sha256": "c103b883a5ab2c4fd990ecd571af95db3efa19fd7b568729c0a84e62c07842fa",
+      "source_path": "tools/geometryTransactionCheck.cc"
+    },
+    {
       "bytes": 36031,
       "path": "tools/h2VolumeScoringCheck.cc",
       "role": "tool",
@@ -2167,6 +2202,13 @@
       "role": "tool",
       "sha256": "c54f479beb91f461a3997e87a0c4f2b57aeb6c3ecd68d6a0564e5435cfd92076",
       "source_path": "tools/scoringNumericCheck.cc"
+    },
+    {
+      "bytes": 3901,
+      "path": "tools/shapeParametersCheck.cc",
+      "role": "tool",
+      "sha256": "57c46d4bd08f2243cc2182ac83cb26a0d234667803c778f512401bf5eac1b2e5",
+      "source_path": "tools/shapeParametersCheck.cc"
     },
     {
       "bytes": 6890,

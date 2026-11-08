@@ -163,6 +163,35 @@ if(BUILD_TESTING)
         TIMEOUT 180
     )
     if(NOT G4USIM_STANDALONE_EXPORT)
+        # Repository-only real Manager transaction probe (not exported).
+        add_executable(geometryTransactionCheck tools/geometryTransactionCheck.cc ${SOURCES})
+        target_include_directories(geometryTransactionCheck PRIVATE ${PROJECT_BINARY_DIR}/generated)
+        target_compile_definitions(geometryTransactionCheck PRIVATE
+            G4USIM_BUILD_CONFIGURATION="$<IF:$<BOOL:$<CONFIG>>,$<CONFIG>,unknown>")
+        if(Geant4_gdml_FOUND)
+            target_compile_definitions(geometryTransactionCheck PRIVATE G4USIM_HAVE_GDML=1)
+        endif()
+        target_link_libraries(geometryTransactionCheck ${Geant4_LIBRARIES})
+        g4usim_configure_windows_runtime(geometryTransactionCheck)
+        set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+            ${PROJECT_SOURCE_DIR}/tools/geometryTransactionCheck.cc)
+        file(SHA256 ${PROJECT_SOURCE_DIR}/tools/geometryTransactionCheck.cc G4USIM_TRANSACTION_PROBE_SHA256)
+        set_source_files_properties(tools/geometryTransactionCheck.cc PROPERTIES
+            COMPILE_DEFINITIONS G4USIM_TRANSACTION_PROBE_SHA256="${G4USIM_TRANSACTION_PROBE_SHA256}")
+        add_executable(geometryShapesCheck tools/geometryShapesCheck.cc ${SOURCES})
+        target_include_directories(geometryShapesCheck PRIVATE ${PROJECT_BINARY_DIR}/generated)
+        target_compile_definitions(geometryShapesCheck PRIVATE
+            G4USIM_BUILD_CONFIGURATION="$<IF:$<BOOL:$<CONFIG>>,$<CONFIG>,unknown>")
+        if(Geant4_gdml_FOUND)
+            target_compile_definitions(geometryShapesCheck PRIVATE G4USIM_HAVE_GDML=1)
+        endif()
+        target_link_libraries(geometryShapesCheck ${Geant4_LIBRARIES})
+        g4usim_configure_windows_runtime(geometryShapesCheck)
+        set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+            ${PROJECT_SOURCE_DIR}/tools/geometryShapesCheck.cc)
+        file(SHA256 ${PROJECT_SOURCE_DIR}/tools/geometryShapesCheck.cc G4USIM_SHAPES_PROBE_SHA256)
+        set_source_files_properties(tools/geometryShapesCheck.cc PROPERTIES
+            COMPILE_DEFINITIONS G4USIM_SHAPES_PROBE_SHA256="${G4USIM_SHAPES_PROBE_SHA256}")
         find_package(Python3 COMPONENTS Interpreter QUIET)
         if(Python3_Interpreter_FOUND)
             foreach(profile static gui backend integration)
