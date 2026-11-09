@@ -11,6 +11,9 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 18
     steps:
+    - name: Enable long Git paths on this runner
+      shell: pwsh
+      run: git config --global core.longpaths true
     - uses: actions/checkout@v7
     - uses: actions/setup-python@v7
       with:
