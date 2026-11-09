@@ -16,6 +16,7 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "gui"))
 from g4usim_gui.core import environment_install as service
+assert Path(service.__file__).resolve() == ROOT / "gui/g4usim_gui/core/environment_install.py", service.__file__
 
 spec = importlib.util.spec_from_file_location("g4usim_catalog_builder", ROOT / "packaging/build_install_catalog.py")
 builder = importlib.util.module_from_spec(spec)
@@ -52,11 +53,108 @@ def rejected(catalog, args, code):
     return result
 
 
+def ar5_plan_contract(catalog, args):
+    legacy = copy.deepcopy(catalog)
+    for file in legacy["releases"][0]["artifacts"][0]["files"]:
+        file.pop("executable", None)
+    original = copy.deepcopy(legacy)
+    plan = service.create_plan(legacy, **args)
+    assert plan["status"] == "planned", plan
+    assert legacy == original and plan["catalog_sha256"] == service._digest(original)
+    assert plan["artifacts"] == plan["release"]["artifacts"]
+    assert all(file["executable"] is False for artifact in plan["artifacts"] for file in artifact["files"])
+    assert plan["plan_sha256"] == service._digest({k: v for k, v in plan.items() if k not in ("space", "plan_sha256")})
+    for value in (None, 0, "false"):
+        bad = copy.deepcopy(legacy)
+        bad["releases"][0]["artifacts"][0]["files"][0]["executable"] = value
+        rejected(bad, args, "file_mode")
+    explicit = copy.deepcopy(legacy)
+    for file in explicit["releases"][0]["artifacts"][0]["files"]:
+        file["executable"] = False
+    assert service.create_plan(explicit, **args)["artifacts"] == plan["artifacts"]
+
+    # Planning-only inventories; no fake archive is executed as a real SDK.
+    def with_paths(paths, target="windows"):
+        value = copy.deepcopy(catalog)
+        release = value["releases"][0]
+        release["platform"] = target
+        artifact = release["artifacts"][0]
+        artifact["files"] += [{"path": p, "size_bytes": 0, "sha256": service.hashlib.sha256(b"").hexdigest()}
+                              for p in paths]
+        return value, args | {"platform": target}
+
+    for target in ("windows", "linux"):
+        value, selected = with_paths(["Foo/a", "foo/b"], target)
+        if target == "windows":
+            rejected(value, selected, "catalog_path_ambiguity")
+        else:
+            value["releases"][0]["entrypoints"] = {"one": "Foo/a", "two": "foo/b"}
+            assert service.create_plan(value, **selected)["status"] == "planned"
+            value["releases"][0]["entrypoints"]["one"] = "foo/a"
+            rejected(value, selected, "entrypoint_missing")
+        value, selected = with_paths(["A", "a"], target)
+        rejected(value, selected, "duplicate_path")
+        value, selected = with_paths(["Thing", "thing/child"], target)
+        rejected(value, selected, "artifact_collision")
+
+    value, selected = with_paths(["Deps/Inc/a.h", "Deps/Lib/a.lib", "Deps/Bin/a.dll",
+                                  "Headers/include/a.h", "foobar/a", "Data/Set/a", "Pointer.txt"])
+    release = value["releases"][0]
+    release.update(profile="sdk", dependencies=[{"id": "compiler"}, {"id": "cmake"}],
+                   configuration={"data_root": "DATA", "data_pointer": "POINTER.TXT"},
+                   sdk={"geant4_dir": "SDK/GEANT4", "probe_source": "SDK/PROBE",
+                        "application_source": "Sdk/Probe", "dependency_prefixes": ["DEPS", "headers"],
+                        "cmake_paths": {"EXPAT_INCLUDE_DIR": "deps/inc", "EXPAT_LIBRARY": "deps/lib/a.lib",
+                                        "ZLIB_INCLUDE_DIR": "deps/inc", "ZLIB_LIBRARY": "deps/lib/a.lib",
+                                        "FREETYPE_INCLUDE_DIRS": "deps/inc", "FREETYPE_LIBRARY": "deps/lib/a.lib",
+                                        "CustomFile": "deps/lib/a.lib", "CustomDirectory": "deps/inc"}})
+    release["entrypoints"]["backend"] = "BIN/BACKEND"
+    selected["profile"] = "sdk"
+    original = copy.deepcopy(value)
+    plan = service.create_plan(value, **selected)
+    assert plan["status"] == "planned", plan
+    assert value == original
+    r = plan["release"]
+    assert r["entrypoints"]["backend"] == "bin/backend"
+    assert r["configuration"] == {"data_root": "Data", "data_pointer": "Pointer.txt"}
+    assert r["sdk"]["geant4_dir"] == "sdk/geant4" and r["sdk"]["application_source"] == "sdk/probe"
+    assert r["sdk"]["dependency_prefixes"] == ["Deps", "Headers"]
+    facts = plan["path_validation"]
+    for key in ("EXPAT_INCLUDE_DIR", "ZLIB_INCLUDE_DIR", "FREETYPE_INCLUDE_DIRS", "CustomDirectory"):
+        assert facts["cmake_paths"][key] == {"path": "Deps/Inc", "kind": "directory"}
+    for key in ("EXPAT_LIBRARY", "ZLIB_LIBRARY", "FREETYPE_LIBRARY", "CustomFile"):
+        assert facts["cmake_paths"][key] == {"path": "Deps/Lib/a.lib", "kind": "file"}
+    assert {x["path"] for x in facts["search_paths"] if x["status"] == "inventory_directory"} == {"bin", "Deps/Bin", "Deps/Lib"}
+    assert {x["path"] for x in facts["search_paths"] if x["status"] == "absent_search_path"} == {"Headers/bin", "Headers/lib"}
+    # Linux is exact, including a differently spelled Lib search candidate.
+    linux = copy.deepcopy(value)
+    linux["releases"][0] = copy.deepcopy(r)
+    linux["releases"][0]["platform"] = "linux"
+    lp = service.create_plan(linux, **(selected | {"platform": "linux"}))
+    assert lp["status"] == "planned", lp
+    assert {x["path"] for x in lp["path_validation"]["search_paths"] if x["status"] == "absent_search_path"} == {
+        "Deps/bin", "Deps/lib", "Headers/bin", "Headers/lib"}
+    for mutate, code in (
+        (lambda r: r["sdk"].update(dependency_prefixes=["foo"]), "sdk_configuration"),
+        (lambda r: r["sdk"].update(dependency_prefixes=["empty"]), "sdk_configuration"),
+        (lambda r: r["sdk"]["cmake_paths"].update(CustomFile="missing"), "sdk_configuration"),
+        (lambda r: r["sdk"]["cmake_paths"].update(CustomFile="../outside"), "archive_path"),
+        (lambda r: r["artifacts"][0]["files"][2].update(path="sdk/geant4/geant4config.cmake"), "sdk_probe_missing"),
+    ):
+        bad = copy.deepcopy(value)
+        mutate(bad["releases"][0])
+        rejected(bad, selected, code)
+    linux["releases"][0]["sdk"]["cmake_paths"]["CustomFile"] = "deps/lib/a.lib"
+    rejected(linux, selected | {"platform": "linux"}, "sdk_configuration")
+    print("AR5 A plan contracts passed (Windows/Linux target planning; not Linux filesystem execution)")
+
+
 def main():
     with tempfile.TemporaryDirectory(prefix="g4usim-install-plan-") as temp:
         root = Path(temp)
         catalog = fixture(root)
         args = arguments(catalog, root)
+        ar5_plan_contract(catalog, args)
         before = sorted(str(path.relative_to(root)) for path in root.rglob("*"))
         with patch("urllib.request.OpenerDirector.open", side_effect=AssertionError("planning network")), \
                 patch("subprocess.run", side_effect=AssertionError("planning subprocess")), \

@@ -23,9 +23,9 @@ from g4usim_gui.core.paths import open_directory
 from g4usim_gui.core.i18n import ui_text
 from g4usim_gui.core.accessibility import _buddy
 from g4usim_gui.history.run_history_model import RunHistoryEntry
-from g4usim_gui.history.run_history_scanner import scan_runs_root, publish_identity
+from g4usim_gui.history.run_history_scanner import scan_package, scan_runs_root, publish_identity
 from g4usim_gui.core.evidence_job import EvidenceJob, verify_roots
-from g4usim_gui.output.provenance import evidence_key
+from g4usim_gui.output.provenance import evidence_key, evidence_operation, output_evidence
 
 
 from .output_identity_panel import OutputIdentityPanel
@@ -147,7 +147,7 @@ class RunHistoryPage(QWidget):
         self.load_snapshot_button.clicked.connect(self._emit_load_snapshot)
         self.open_package_button.clicked.connect(lambda: self._open_dir(self._selected().package_dir if self._selected() else ""))
         self.open_output_button.clicked.connect(self._emit_open_output)
-        self.open_logs_button.clicked.connect(lambda: self._open_dir(str(Path(self._selected().package_dir) / "logs") if self._selected() else ""))
+        self.open_logs_button.clicked.connect(self._emit_open_logs)
         self.open_config_button.clicked.connect(lambda: self._open_dir(str(Path(self._selected().package_dir) / "config") if self._selected() else ""))
         self.open_macro_button.clicked.connect(lambda: self._open_dir(str(Path(self._selected().package_dir) / "macros") if self._selected() else ""))
         self.duplicate_button.clicked.connect(self._emit_duplicate)
@@ -225,10 +225,13 @@ class RunHistoryPage(QWidget):
             self._update_action_buttons()
             return
         self._selection_job.cancel()
+        if entry.copy_linked:
+            self._refresh_execution_selection(entry)
+            return
         entry.identity_status="unavailable";entry.identity_details=ui_text("Checking output hashes...")
         self.identity_panel.clear(entry.status,ui_text("Checking output hashes..."))
         self._render_selected(entry)
-        directory=Path(entry.package_dir)/"output"
+        directory = Path(entry.package_dir) / "output"
         def complete(seeds,error):
             if self._selected() is not entry:return
             result=error if error else seeds[evidence_key(directory)]
@@ -238,6 +241,60 @@ class RunHistoryPage(QWidget):
                 publish_identity(entry,result);self.identity_panel.run_title="Run state";self.identity_panel.set_evidence(result,entry.status)
             self._render_selected(entry)
         self._selection_job.submit(lambda:verify_roots([directory]),complete)
+
+    def _refresh_execution_selection(self, entry, action=None):
+        package, was_linked, record_id = entry.package_dir, entry.copy_linked, entry.copy_record_id
+
+        def read():
+            with evidence_operation():
+                current = scan_package(package)
+                if ((was_linked and not current.copy_linked)
+                        or (record_id and current.copy_record_id not in ("", record_id))):
+                    raise ValueError("Copy execution association changed; refresh History.")
+                # A malformed locator must not erase an already selected execution ID.
+                current.copy_record_id = current.copy_record_id or record_id
+                evidence = None
+                if current.output_dir:
+                    try:
+                        evidence = output_evidence(current.output_dir)
+                    except (OSError, ValueError):
+                        if current.copy_linked:
+                            raise
+                        # Ordinary History can still open the folder to show its diagnostic.
+                return current, evidence
+
+        def complete(result, error):
+            if self._selected() is not entry:
+                return
+            if error is not None:
+                entry.status = "incomplete"
+                entry.result_reason = str(error)
+                entry.result_dir = entry.output_dir = entry.logs_dir = ""
+                entry.has_run_summary = False
+                publish_identity(entry, error=error)
+                evidence = None
+            else:
+                current, evidence = result
+                entry.__dict__.update(vars(current))
+            if evidence is None:
+                diagnostic = entry.result_reason if entry.copy_linked else entry.identity_details
+                self.identity_panel.clear(entry.status, diagnostic)
+            else:
+                self.identity_panel.set_evidence(evidence, entry.status)
+            row = self.table.currentRow()
+            for column, value in ((2, ui_text(entry.status)),
+                                  (3, "" if entry.exit_code is None else str(entry.exit_code)),
+                                  (8, "yes" if entry.has_run_summary else "no")):
+                self.table.item(row, column).setText(value)
+            self._render_selected(entry)
+            if action == "output" and entry.output_dir:
+                self.openOutputRequested.emit(entry.result_dir, entry.output_dir)
+            elif action == "logs" and entry.logs_dir:
+                if not entry.copy_linked or Path(entry.logs_dir).is_dir():
+                    self._open_dir(entry.logs_dir)
+
+        self.identity_panel.clear(entry.status, ui_text("Checking output hashes..."))
+        self._selection_job.submit(read, complete)
 
     def _render_selected(self,entry):
         lines = [
@@ -276,6 +333,10 @@ class RunHistoryPage(QWidget):
             f"merged_hist_raw = {entry.merged_hist_raw}",
             f"merged_hist_weighted = {entry.merged_hist_weighted}",
         ]
+        if entry.copy_linked:
+            lines[1:1] = [f"execution = {entry.copy_record_id or '-'}",
+                          f"result root = {entry.result_dir or '-'}",
+                          f"logs = {entry.logs_dir or '-'}"]
         if entry.warnings:
             lines.extend(["", "[warnings]", *entry.warnings])
         if entry.errors:
@@ -307,7 +368,12 @@ class RunHistoryPage(QWidget):
     def _emit_open_output(self) -> None:
         entry = self._selected()
         if entry:
-            self.openOutputRequested.emit(entry.package_dir, str(Path(entry.package_dir) / "output"))
+            self._refresh_execution_selection(entry, "output")
+
+    def _emit_open_logs(self) -> None:
+        entry = self._selected()
+        if entry:
+            self._refresh_execution_selection(entry, "logs")
 
     def _emit_duplicate(self) -> None:
         entry = self._selected()
@@ -341,3 +407,7 @@ class RunHistoryPage(QWidget):
             self.duplicate_run_button,
         ]:
             button.setEnabled(has_selection)
+        entry = self._selected()
+        if entry is not None and entry.copy_linked:
+            self.open_output_button.setEnabled(bool(entry.output_dir))
+            self.open_logs_button.setEnabled(bool(entry.logs_dir and Path(entry.logs_dir).is_dir()))

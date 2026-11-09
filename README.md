@@ -1,12 +1,12 @@
 # G4UniversalSim
 
-中文完整使用手册：[docs/中文使用手册.md](docs/中文使用手册.md)
+中文入口：[完整使用手册](docs/中文使用手册.md) · [文档导航](docs/README.md)
 
 ## Project status
 
 This repository is a research and engineering workbench (C++17 backend + PySide6 GUI), not a 1.0 release.
-Stage completion is maintained only in [docs/ROADMAP.md](docs/ROADMAP.md); the current snapshot entry
-point is [STATUS.md](STATUS.md); feature coverage and limits live in the
+Stage completion is maintained in [the roadmap](docs/ROADMAP.md#current-roadmap).
+For active work and handoff, start at [STATUS.md](STATUS.md). Feature coverage and limits live in the
 [support matrix](docs/功能支持矩阵.md).
 
 - Backend: Geant4 11.3.2/11.4.3 compatible builds. Validated scope (F2 controlled session and replay,

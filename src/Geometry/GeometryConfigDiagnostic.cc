@@ -87,7 +87,11 @@ void RejectDuplicateGeometryVersion(const std::string& filename,const std::strin
     bool seen = false;
     while (std::getline(input, line)) {
         ++lineNumber;
-        const std::string clean = StringUtils::Trim(StringUtils::RemoveComment(line));
+        // BOM affects only the first physical line parse view; retain raw bytes.
+        std::string parseLine = line;
+        if (lineNumber == 1 && parseLine.compare(0, 3, "\xEF\xBB\xBF") == 0)
+            parseLine.erase(0, 3);
+        const std::string clean = StringUtils::Trim(StringUtils::RemoveComment(parseLine));
         if (clean.empty()) continue;
         if (clean.front() == '[' && clean.back() == ']') {
             section = Normalize(clean.substr(1, clean.size() - 2));
@@ -120,7 +124,11 @@ void RejectStrictDuplicateGeometryDeclarations(const std::string& filename,const
     std::size_t lineNumber = 0;
     while (std::getline(input, line)) {
         ++lineNumber;
-        const std::string clean = StringUtils::Trim(StringUtils::RemoveComment(line));
+        // BOM affects only the first physical line parse view; retain raw bytes.
+        std::string parseLine = line;
+        if (lineNumber == 1 && parseLine.compare(0, 3, "\xEF\xBB\xBF") == 0)
+            parseLine.erase(0, 3);
+        const std::string clean = StringUtils::Trim(StringUtils::RemoveComment(parseLine));
         if (clean.empty()) continue;
         if (clean.front() == '[' && clean.back() == ']') {
             originalSection = StringUtils::Trim(clean.substr(1, clean.size() - 2));

@@ -23,6 +23,7 @@ from PySide6.QtCore import QFileSystemWatcher, QLocale, QObject, QProcess, QThre
 
 from g4usim_gui.core.backend_launch import prepare_backend_launch, unsupported_working_directory
 from g4usim_gui.core.config_migration import load_json_strict
+from g4usim_gui.core.copy_execution_link import capture_copy_origin, publish_copy_execution
 from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot, clone_snapshot, snapshot_fingerprint
 from g4usim_gui.core.evidence_job import EvidenceJob
 from g4usim_gui.core.experiment_identity import canonical_digest, capture_identity, file_identity, safe_environment
@@ -341,6 +342,10 @@ def _field_report(snapshot):
     """Use producer diagnostics; validate captured raw drafts as well as models."""
     project = snapshot.project
     if project.runInputMode == "generated":
+        # Validator diagnostics and normalization belong to this report.
+        # Keep the accepted snapshot intact for identity and package preparation.
+        snapshot = copy.copy(snapshot)
+        project = snapshot.project = copy.deepcopy(project)
         report = validate_config_builder(**_builder_kwargs(project))
     else:
         candidate = copy.deepcopy(project)
@@ -569,7 +574,7 @@ class ExperimentWorkflow(QObject):
             record.update(stale=True, stale_reason=reason)
         # Deliberately no expensive hashes, IO or recursive changed emission.
 
-    def _begin(self, action, level, expected_revision=None):
+    def _begin(self, action, level, expected_revision=None, *, copy_package=None):
         self._owner()
         if self._closing:
             raise WorkflowBusyError("experiment.closed")
@@ -585,6 +590,8 @@ class ExperimentWorkflow(QObject):
                   "reason": "experiment.preparing", "revision": revision,
                   "session_id": self._session_id, "created_at": _now(), "stale": False,
                   "record_dir": str(self.records_root / identifier)}
+        if copy_package is not None:
+            record["copy_origin"] = capture_copy_origin(copy_package, self.records_root, snapshot.project)
         self._records.append(record)
         self._active = {"record": record, "snapshot": snapshot, "revision": revision,
                         "epoch": self._epoch, "cancelled": False, "phase": "preparing"}
@@ -634,10 +641,20 @@ class ExperimentWorkflow(QObject):
         if status == "stale":
             record.update(stale=True, stale_reason=reason)
         persisted = _json_record(record)
+        def complete(diagnostic=""):
+            self._active = None
+            self._notify(record)
+            receipt = copy.deepcopy(record)
+            if diagnostic:
+                receipt["_copy_link_diagnostic"] = diagnostic
+            self.completed.emit(receipt)
+
         def published(result, error):
             if self._active is not context:
                 return
             if error is not None:
+                if "copy_origin" in record:
+                    record["_copy_attempt_reason"] = record["reason"]
                 record.update(status="failed", reason="experiment.record_persistence_failed: " + str(error))
             elif context["cancelled"]:
                 record["status"] = "cancelled"
@@ -650,9 +667,21 @@ class ExperimentWorkflow(QObject):
                 persisted.update(_json_record(record))
                 self._job.submit(lambda: _persist(copy.deepcopy(persisted)), published)
                 return
-            self._active = None
-            self._notify(record)
-            self.completed.emit(copy.deepcopy(record))
+            if error is None and "copy_origin" in persisted:
+                # The same terminal fence has settled cancellation and edits.
+                # From here only publish an index; execution is already sealed.
+                context["publication_sealed"] = True
+                final = copy.deepcopy(persisted)
+                package = Path(final["record_dir"]).parent.parent / final["copy_origin"]["package"]
+
+                def linked(warning, link_error):
+                    if link_error is not None:
+                        complete("experiment.copy_execution_link_failed: " + str(link_error))
+                    else:
+                        complete(warning or "")
+                self._job.submit(lambda: publish_copy_execution(package, final), linked)
+                return
+            complete()
         self._job.submit(lambda: _persist(persisted), published)
 
     def _environment(self, snapshot, *, cwd=None):
@@ -815,8 +844,9 @@ class ExperimentWorkflow(QObject):
             self.runner.start(project, result["command"])
         self._notify(record)
 
-    def _start_action(self, action, level, expected_revision=None, prepared_package=None):
-        record = self._begin("validate" if action in {"fields", "initialization"} else action, level, expected_revision)
+    def _start_action(self, action, level, expected_revision=None, prepared_package=None, *, copy_package=None):
+        record = self._begin("validate" if action in {"fields", "initialization"} else action, level,
+                             expected_revision, copy_package=copy_package)
         snapshot = self._active["snapshot"]
         frozen_record = _json_record(record)
         self._work(lambda: self._prepare(snapshot, frozen_record, action, prepared_package),
@@ -834,8 +864,8 @@ class ExperimentWorkflow(QObject):
     def generate(self, *, expected_revision=None, prepared_package=None):
         return self._start_action("generate", "generation", expected_revision, prepared_package)
 
-    def run(self, *, expected_revision=None, prepared_package=None):
-        return self._start_action("run", "execution", expected_revision, prepared_package)
+    def run(self, *, expected_revision=None, prepared_package=None, copy_package=None):
+        return self._start_action("run", "execution", expected_revision, prepared_package, copy_package=copy_package)
 
     def apply(self, candidate: WorkspaceSnapshot, *, label="Apply configuration", expected_revision=None, apply_snapshot=None):
         self._owner()
@@ -1048,7 +1078,7 @@ class ExperimentWorkflow(QObject):
 
     def cancel(self, force=False):
         self._owner()
-        if self._active is None:
+        if self._active is None or self._active.get("publication_sealed"):
             return
         self._active["cancelled"] = True
         if self._inspect.state() != QProcess.NotRunning:
@@ -1152,6 +1182,7 @@ class ExperimentWorkflow(QObject):
             for wrapper in imported:
                 item = copy.deepcopy(wrapper.get("record", wrapper))
                 item.pop("report", None)
+                item.pop("copy_origin", None)
                 item.update(record_id=uuid4().hex, status="stale", stale=True,
                     stale_reason="imported_history_requires_revalidation", session_id="historical",
                     schema="g4usim_experiment_record_v1")

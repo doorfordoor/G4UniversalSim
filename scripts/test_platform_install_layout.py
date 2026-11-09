@@ -23,6 +23,7 @@ def main():
         foreign = binary.with_name(other_name)
         foreign.write_bytes(b"foreign platform placeholder")
         with patch.object(install_layout, "application_root", return_value=root):
+            assert install_layout.scripts_dir() == root / "scripts"
             assert install_layout.default_backend_executable() == ""
             binary.write_bytes(b"native path fixture, not a compatibility probe")
             assert install_layout.default_backend_executable() == str(binary)
@@ -33,6 +34,30 @@ def main():
                     patch.dict(install_layout.os.environ, {"G4USIM_PYTHON": ""}), \
                     patch.object(install_layout.shutil, "which", side_effect=AssertionError("PATH must not be needed")):
                 assert install_layout.script_python() == str(helper)
+            override = root / "configured Python"
+            override.write_bytes(b"configured interpreter path fixture")
+            with patch.object(install_layout, "is_frozen", return_value=False), \
+                    patch.dict(install_layout.os.environ, {"G4USIM_PYTHON": str(override)}):
+                assert install_layout.script_python() == sys.executable
+            with patch.object(install_layout, "is_frozen", return_value=True), \
+                    patch.dict(install_layout.os.environ, {"G4USIM_PYTHON": str(override)}), \
+                    patch.object(install_layout.shutil, "which", side_effect=AssertionError("PATH must not be needed")):
+                assert install_layout.script_python() == str(override)
+                override.unlink()
+                assert install_layout.script_python() == str(helper)
+            helper.unlink()
+            store_stub = str(root / "WindowsApps" / "python.exe")
+            fallback = str(root / "PATH Python" / "python3")
+            with patch.object(install_layout, "is_frozen", return_value=True), \
+                    patch.dict(install_layout.os.environ, {"G4USIM_PYTHON": str(override)}), \
+                    patch.object(install_layout.shutil, "which", side_effect=[store_stub, fallback]) as which:
+                assert install_layout.script_python() == fallback
+                assert [call.args for call in which.call_args_list] == [("python",), ("python3",)]
+            with patch.object(install_layout, "is_frozen", return_value=True), \
+                    patch.dict(install_layout.os.environ, {"G4USIM_PYTHON": ""}), \
+                    patch.object(install_layout.shutil, "which", return_value=None) as which:
+                assert install_layout.script_python() is None
+                assert [call.args for call in which.call_args_list] == [("python",), ("python3",), ("py",)]
         assert install_layout.workspace_for_executable(binary) == root
         repo = root / "repository"
         (repo / "config").mkdir(parents=True)

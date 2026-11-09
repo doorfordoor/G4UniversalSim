@@ -60,7 +60,9 @@ def snapshot(window, widgets):
         "file": window.project_file, "stale": window._generated_package_stale,
         "package": window._generated_package_dir, "widgets": widget_state(widgets),
         "building": (window.project_page._building, page._building),
-        "editor_ids": tuple(id(obj) for obj in (page.geometry_document, page.source_editor, page.physics_editor, page.scoring_editor)),
+        "geometry_identity": id(page.geometry_document),
+        # S/P/S getters return defensive copies; check their authority and commit revision.
+        "edit_authority": (id(page._history_owner), id(window._edit_session), window._edit_session.revision),
         "geometry": asdict(page.geometry_document), "source": asdict(page.source_editor),
         "physics": asdict(page.physics_editor), "scoring": asdict(page.scoring_editor),
         "output_dir": window.output_page._output_dir,

@@ -7,16 +7,16 @@
   },
   "identity": {
     "algorithm": "sha256_sorted_sha256_path_lines_v1",
-    "bytes_total": 4032969,
-    "file_count": 338,
-    "value": "71d1a623637a2c0ca1c52b7b2baf49ec463547b8cfeeb54e4ba73a5d3aa87d9c"
+    "bytes_total": 4056499,
+    "file_count": 340,
+    "value": "a7c474aaff090420a1e3de873db4e2b90adeaef3575e2ff64160b4c0bdc72013"
   },
   "members": [
     {
-      "bytes": 18315,
+      "bytes": 16977,
       "path": "CMakeLists.txt",
       "role": "cmake",
-      "sha256": "a7544d2a450df413663208734e37492d50c9de55f85cbb5bf733b15fe75f7554",
+      "sha256": "ea6ec80fb38e706c42b9001434942cc08bb0aececebd7e75db1ce8d0d5ba6196",
       "source_path": "CMakeLists.txt"
     },
     {
@@ -27,17 +27,24 @@
       "source_path": "CMakePresets.json"
     },
     {
-      "bytes": 12085,
+      "bytes": 12108,
       "path": "README.md",
       "role": "doc",
-      "sha256": "f8a7ade256b721c7f844a62426afe67d9273a68f0bc9347301cdc433ee74c4b2",
+      "sha256": "4f96f9c3f61defc16b9186c06883e9843737ac34e25cac31abee2e4f38193df6",
       "source_path": "README.md"
     },
     {
-      "bytes": 5074,
+      "bytes": 8778,
+      "path": "cmake/BackendTargets.cmake",
+      "role": "cmake",
+      "sha256": "fa420e639440f6f1aa84f364691396f4100a9a4aed2fa3315f2561b988bc7246",
+      "source_path": "cmake/BackendTargets.cmake"
+    },
+    {
+      "bytes": 5661,
       "path": "cmake/BuildIdentity.cmake",
       "role": "cmake",
-      "sha256": "8d9a2d06210225baa884c5c68339a11211c2a30554f9929b75aa84c3826a51c1",
+      "sha256": "33c0699ff28286aff4c9809adc540573de2194d9859afc2c3e4cee0104c27010",
       "source_path": "cmake/BuildIdentity.cmake"
     },
     {
@@ -272,10 +279,10 @@
       "source_path": "docs/中文使用手册.md"
     },
     {
-      "bytes": 214245,
+      "bytes": 214757,
       "path": "docs/功能支持矩阵.md",
       "role": "doc",
-      "sha256": "ce536cb28543950d47b4f2e63a1e995637ef61e30ab3b0dc93d51c98097dca0b",
+      "sha256": "f34a2ec8d9fc592b620fa1957b3eb6540df5bd7fd1eabb66eae740e7e282e44d",
       "source_path": "docs/功能支持矩阵.md"
     },
     {
@@ -475,17 +482,17 @@
       "source_path": "include/Core/AppMessenger.hh"
     },
     {
-      "bytes": 7747,
+      "bytes": 7826,
       "path": "include/Core/BackendCapabilities.hh",
       "role": "header",
-      "sha256": "18af2ea6129a356462ab48ab8e9b0c3c9fdd5640cd183de005bf5b3fabbb63cc",
+      "sha256": "c625225e6683b198fb604249948bd3dfdd2754dbc5a8e9a6461b41febff78ebe",
       "source_path": "include/Core/BackendCapabilities.hh"
     },
     {
-      "bytes": 500,
+      "bytes": 627,
       "path": "include/Core/BuildInfo.hh.in",
       "role": "header",
-      "sha256": "1886acb1d4731fbe00ebd19b8864878a3faf2eca7449ee41748cb456051bd2a1",
+      "sha256": "9c16bcdd9bcf687d47c4967a2690fabf29c1d5cfce62f1b6c94ff3a154ec4102",
       "source_path": "include/Core/BuildInfo.hh.in"
     },
     {
@@ -1574,10 +1581,10 @@
       "source_path": "src/Config/EffectiveConfig.cc"
     },
     {
-      "bytes": 8331,
+      "bytes": 8568,
       "path": "src/Config/IniReader.cc",
       "role": "source",
-      "sha256": "b32018dc026e15881e5243125406d1c654101fbe31c50b8f5ef5a2d85bb9684a",
+      "sha256": "2f1b83645a9b51e9813fa47e45da3bec7fe51ae8aab1aaf5b5e9dacd0ac0eb90",
       "source_path": "src/Config/IniReader.cc"
     },
     {
@@ -1721,17 +1728,17 @@
       "source_path": "src/Geometry/GdmlInputCapture.cc"
     },
     {
-      "bytes": 46501,
+      "bytes": 46738,
       "path": "src/Geometry/GeometryConfig.cc",
       "role": "source",
-      "sha256": "c49cdb38a608fe3f802f5334f586fe099be1e3da18038e1f014a818a1de49c0e",
+      "sha256": "c8c946d6bf2bc2cd5aa01bf73fba37d8ba3761db1afdde7f201890b351596bb6",
       "source_path": "src/Geometry/GeometryConfig.cc"
     },
     {
-      "bytes": 15371,
+      "bytes": 15845,
       "path": "src/Geometry/GeometryConfigDiagnostic.cc",
       "role": "source",
-      "sha256": "24d7d61b22abd5d9b572d64429a0792bfbbb058288003feb3203a01ea931edf2",
+      "sha256": "58143cfb25c324e33f9864a9200ef62b8e9baeb93d0a6e1f8fdda459a6e38db2",
       "source_path": "src/Geometry/GeometryConfigDiagnostic.cc"
     },
     {
@@ -1854,10 +1861,10 @@
       "source_path": "src/Materials/MaterialFactory.cc"
     },
     {
-      "bytes": 19720,
+      "bytes": 21069,
       "path": "src/Materials/MaterialIniReader.cc",
       "role": "source",
-      "sha256": "fb4e956bbdbcf1d0d2130c1bdab9557925bd57168c043fb043d7cf289ca28b42",
+      "sha256": "525235743d4f3d5beb4c8d53f9219afa3d2ec49a38f1b206b52ff4b4a1ec0e97",
       "source_path": "src/Materials/MaterialIniReader.cc"
     },
     {
@@ -2286,6 +2293,13 @@
       "role": "tool",
       "sha256": "29c7eeb6ed155de3feab23093aa7b3e7cd4444aa45a8a28074cd896fd6859538",
       "source_path": "tools/h2VolumeScoringCheck.cc"
+    },
+    {
+      "bytes": 12465,
+      "path": "tools/iniReaderContractCheck.cc",
+      "role": "tool",
+      "sha256": "e00e285356bb23d9d35c8acb531aabdd5ce28b19a75bd1614646973ecb4d1014",
+      "source_path": "tools/iniReaderContractCheck.cc"
     },
     {
       "bytes": 11461,

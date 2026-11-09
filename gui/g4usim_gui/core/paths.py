@@ -25,7 +25,15 @@ def open_directory(path: str) -> None:
     directory = Path(path).expanduser()
     if not directory.exists():
         raise FileNotFoundError(f"Directory does not exist: {directory}")
-    os.startfile(str(directory))  # type: ignore[attr-defined]
+    if os.name == "nt":
+        os.startfile(str(directory))  # type: ignore[attr-defined]
+        return
+
+    from PySide6.QtCore import QUrl
+    from PySide6.QtGui import QDesktopServices
+
+    if not QDesktopServices.openUrl(QUrl.fromLocalFile(str(directory.absolute()))):
+        raise OSError(f"Desktop service could not open the path: {directory}")
 
 
 def format_size(num_bytes: int) -> str:

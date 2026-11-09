@@ -239,7 +239,7 @@ class ExperimentMixin:
         finally:
             QApplication.restoreOverrideCursor()
 
-    def _experiment_action(self, action):
+    def _experiment_action(self, action, *, copy_package=None):
         if action == 'cancel':
             if self._experiment_loading:
                 self._bundle_job.cancel()
@@ -289,7 +289,10 @@ class ExperimentMixin:
                 if action == 'run':
                     self.run_page.clear_logs()
                     self.run_page.set_result('')
-                record = getattr(self.experiment, action)()
+                if action == 'run' and copy_package is not None:
+                    record = self.experiment.run(copy_package=copy_package)
+                else:
+                    record = getattr(self.experiment, action)()
             else:
                 raise ValueError(f'Unknown experiment action: {action}')
             self._refresh_experiment()
@@ -325,6 +328,12 @@ class ExperimentMixin:
             self.run_page.set_macro_plan(text)
             self._present_raw_run_diagnostic('backend.inspect_protocol', str(error), raw_message=text)
         self.run_page.append_status_message(experiment_reason(record))
+        if record.get('copy_origin'):
+            self.run_history_page.refresh()
+            if record.get('_copy_attempt_reason'):
+                self.run_page.append_status_message(record['_copy_attempt_reason'])
+            if record.get('_copy_link_diagnostic'):
+                self.run_page.append_status_message(record['_copy_link_diagnostic'])
         if record.get('status') == 'failed':
             reason = record.get('reason', text)
             if action == 'inspect':

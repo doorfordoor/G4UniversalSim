@@ -1,3 +1,9 @@
+# 当前监督：AR5 / MR2 已签，进入 AR6
+
+当前主审连续推进。AR-V、AR1–AR5、MR1/MR2已签；27/27 正式问题关闭，三风险有界处置。见 [AR5](reviews/20261109-ar5-acceptance.md)、[MR2](reviews/20261109-mr2-primary-review.md)。AR6 最终冻结、8 jobs/12 profiles 真云、双平台新包和实际安装→导出→独立消费→卸载、科学迁移和 MR3 尚待。现有 30 分钟监督保持 ACTIVE，不另建；现态与实际会话见本机 out/collab/20261108-ar0-ar6/ACTIVE-CHECKPOINT.md。未通过 MR3 前不派 DS/web，不追加 F3。
+
+以下为历史接续记录，阶段状态以上文为准。
+
 # 当前监督：AR4整体已签收，接续AR5实施
 
 当前主审对话01a1ba89-9372-73d2-8bdb-f253dd9d401f连续推进AR1–AR6；MR1已签，MR2在AR4/5后由当前对话复查，MR3在AR6最终签收。AR-V、AR1–3、AR4首片/SPS/文档域及AR4整体均已签。见reviews/20261109-ar4-acceptance.md。27正式问题19关闭/8待AR5；SDK风险R2-R02待有界实证。科学旧证据按原身份，F3不追加测量，不进入J4/L2。DeepSeek/web暂停；长期规则CONTINUOUS-EXECUTION.md与MODEL-POLICY.md；30分钟ACTIVE监督只引用本入口。

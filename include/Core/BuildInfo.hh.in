@@ -1,5 +1,8 @@
 #pragma once
 
+// Application release version, independent of the Geant4 SDK version.
+#define G4USIM_APPLICATION_VERSION "@PROJECT_VERSION@"
+
 // SHA-256 of sorted C++ source/header paths and contents, the build-info
 // template, CMakeLists.txt and cmake modules.
 // Includes uncommitted worktree edits; not a physics-validation identifier.

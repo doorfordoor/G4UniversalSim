@@ -238,11 +238,28 @@ def source_capture_scope():
 
 
 
+def generated_validation_preserves_identity(folder, executable):
+    from g4usim_gui.core import wizard
+    from g4usim_gui.core.project import G4USimProject
+
+    project = G4USimProject()
+    wizard.apply_to_project(project, wizard.build(wizard.default_spec("single_target")))
+    project.executable = project.pathSettings.executable = str(executable)
+    project.workspaceRoot = project.pathSettings.workspace_root = str(folder)
+    project.runsRoot = project.pathSettings.runs_root = str(folder / "generated-validation-runs")
+    snapshot = WorkspaceSnapshot(project)
+    before = capture_identity(snapshot, 0)
+    report = _field_report(snapshot)
+    assert report.can_run and report.to_dict()["warnings"]
+    assert capture_identity(snapshot, 0) == before, "Validation changed generated execution identity"
+
+
 def synthetic(folder):
     source_capture_scope()
     folder.mkdir()
     component_executable = folder / "G4UniversalSim-component.exe"
     shutil.copyfile(sys.executable, component_executable)
+    generated_validation_preserves_identity(folder, component_executable)
     snapshot, _ = initial_state(folder, component_executable)
     session = EditSession(snapshot)
     runner = ComponentRunner()

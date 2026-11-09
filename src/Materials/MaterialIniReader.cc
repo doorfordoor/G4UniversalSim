@@ -6,6 +6,7 @@
 #include "Utils/FileUtils.hh"
 #include "Utils/StringUtils.hh"
 
+#include <set>
 #include <cmath>
 #include <cstdlib>
 #include <fstream>
@@ -119,7 +120,11 @@ void MaterialIniReader::LoadBytes(const std::string& filename,const std::string&
     std::size_t lineNumber = 0;
     while (std::getline(input, line)) {
         ++lineNumber;
-        const std::string clean = StringUtils::Trim(StringUtils::RemoveComment(line));
+        // BOM affects only the first physical line parse view; retain raw bytes.
+        std::string parseLine = line;
+        if (lineNumber == 1 && parseLine.compare(0, 3, "\xEF\xBB\xBF") == 0)
+            parseLine.erase(0, 3);
+        const std::string clean = StringUtils::Trim(StringUtils::RemoveComment(parseLine));
         if (clean.empty()) continue;
 
         if (clean.front() == '[') {
@@ -293,6 +298,7 @@ void MaterialIniReader::ParseSections(
     const auto elementKeys = ConfigSchema::Keys("materials_ini", "element.<name>");
     const auto materialKeys = ConfigSchema::Keys("materials_ini", "material.<name>");
     const auto aliasKeys = ConfigSchema::Keys("materials_ini", "<alias>");
+    std::set<std::string> legacySections;
 
     for (const auto& sectionPair : sections) {
         const std::string& section = sectionPair.first;
@@ -331,6 +337,7 @@ void MaterialIniReader::ParseSections(
         } else if (sectionPair.second.find("material") != sectionPair.second.end()) {
             known = true;
             legacy = true;
+            legacySections.insert(section);
             allowed = aliasKeys;
         }
 
@@ -367,6 +374,22 @@ void MaterialIniReader::ParseSections(
                 throw SchemaError(filename, source.lineNumber, source.section, source.key, source.value,
                                   "deprecated compatibility field 'type' only accepts 'material'");
             }
+        }
+    }
+
+    // Schema validation above retains priority. The map has merged exact repeated
+    // headers, so inspect the physical declarations, not its surviving entries.
+    std::map<std::string, IniSectionInfo> firstLegacyDeclarations;
+    for (const auto& declaration : inputReader_.GetSectionDeclarations()) {
+        if (legacySections.count(declaration.originalSection) == 0) continue;
+        const auto key = Normalize(declaration.originalSection);
+        const auto inserted = firstLegacyDeclarations.emplace(key, declaration);
+        if (!inserted.second) {
+            const auto& first = inserted.first->second;
+            throw SchemaError(filename, declaration.lineNumber, declaration.originalSection,
+                "<section>", key, "duplicate legacy material alias; first declaration '"
+                + first.originalSection + "' at line " + std::to_string(first.lineNumber)
+                + "; keep one declaration per file or rename distinct aliases and update references");
         }
     }
 

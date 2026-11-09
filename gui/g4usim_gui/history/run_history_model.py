@@ -18,6 +18,10 @@ class RunHistoryEntry:
     config_path: str = ""
     macro_path: str = ""
     output_dir: str = ""
+    result_dir: str = ""
+    logs_dir: str = ""
+    copy_linked: bool = False
+    copy_record_id: str = ""
     recorded_output_dir: str = ""
     recorded_config_path: str = ""
     recorded_macro_path: str = ""

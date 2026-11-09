@@ -233,7 +233,117 @@ def check_manifest_schema(manifest: dict, selection: str, *, name: str) -> None:
     assert isinstance(manifest["not_included"], list) and manifest["not_included"]
 
 
+def ar5_contract_checks() -> None:
+    """Bounded validators/read guards; no template refresh or standalone build."""
+    from unittest.mock import patch
+    base = (EXAMPLES / "main.ini").read_text(encoding="utf-8")
+    rectangle = base.replace("position_type = point\nposition = 0, 0, -20 mm",
+                             "position_type = plane\nshape = rectangle\ncenter = 0, 0, -20 mm\nhalfx = 2 mm\nhalfy = 3 mm")
+    def validate(text):
+        return exporter._validate_main_text(text, mode="opened_project", events=10)
+    validate(base)
+    validate(rectangle)
+    for field, original in (("halfx", "2 mm"), ("halfy", "3 mm")):
+        for unit in ("nm", "um", "mm", "cm", "m"):
+            validate(rectangle.replace(f"{field} = {original}", f"{field} = 2 {unit}"))
+        for value in ("2 km", "2 MM", "0 mm", "-1 mm", "NaN mm", "Inf mm", "1e309 mm", "1e308 m", "2", "2 mm junk"):
+            expect_error(lambda: validate(rectangle.replace(f"{field} = {original}", f"{field} = {value}")), "unsupported_feature")
+    for shape in ("", "point", "rectangle", "circle", "POINT"):
+        expect_error(lambda: validate(base.replace("position_type = point", "position_type = point\nshape = " + shape)), "unsupported_feature")
+    for bad in (rectangle.replace("shape = rectangle\n", ""), rectangle.replace("rectangle", "circle"),
+                rectangle.replace("shape = rectangle", "shape = rectangle\nradius = 1 mm"),
+                base.replace("position_type = point", "position_type = point\nhalfx = 2 mm")):
+        expect_error(lambda: validate(bad), "unsupported_feature")
+    # Raw RHS/key/header checks must precede Unicode strip and splitlines.
+    unicode_spaces = ("\u0085", "\u00a0", "\u1680",
+                      *(chr(n) for n in range(0x2000, 0x200B)),
+                      "\u2028", "\u2029", "\u202f", "\u205f", "\u3000")
+    for whitespace in unicode_spaces:
+        for field, original in (("halfx", "2 mm"), ("halfy", "3 mm"),
+                                ("shape", "rectangle"), ("position_type", "plane")):
+            for value in (whitespace + original, original + whitespace,
+                          original[:1] + whitespace + original[1:]):
+                bad = rectangle.replace(f"{field} = {original}", f"{field} = {value}")
+                error = expect_error(lambda: validate(bad), "unsupported_feature")
+                assert f"[source] {field}" in error.message
+                assert f"U+{ord(whitespace):04X}" in error.message
+            for key in (whitespace + field, field + whitespace):
+                bad = rectangle.replace(f"{field} =", f"{key} =")
+                expect_error(lambda: validate(bad), "unsupported_feature")
+        for header in (f"{whitespace}[source]", f"[source]{whitespace}",
+                       f"[{whitespace}source]", f"[source{whitespace}]"):
+            expect_error(lambda: validate(rectangle.replace("[source]", header)), "unsupported_feature")
+    # Include the exact independently reproduced internal quantity spelling.
+    expect_error(lambda: validate(rectangle.replace("halfx = 2 mm", "halfx = 2\u00a0mm")), "unsupported_feature")
+    for whitespace in (" ", "\t", " \t "):
+        good = rectangle
+        for field, value in (("halfx", "+2.0e0" + whitespace + "mm"),
+                             ("halfy", ".3" + whitespace + "cm"),
+                             ("shape", "ReCtAnGlE"), ("position_type", "plane")):
+            original = {"halfx": "2 mm", "halfy": "3 mm", "shape": "rectangle", "position_type": "plane"}[field]
+            good = good.replace(f"{field} = {original}", f"{whitespace}{field}{whitespace}={whitespace}{value}{whitespace}")
+        validate(good)
+        validate("\ufeff" + good.replace("\n", "\r\n"))
+    # Comments and unrelated string values are not globally ASCII-restricted.
+    validate(rectangle.replace("shape = rectangle", "shape = rectangle ; 中文\u00a0注释"))
+    paths = exporter.parse_ini("[run]\nname = 中文项目\noutput_dir = 中文目录/结果\n", label="unicode paths")
+    assert paths.get("run", "name") == "中文项目"
+    assert paths.get("run", "output_dir") == "中文目录/结果"
+    for name in ("Water", "water", "WATER"):
+        aliases = exporter._validate_materials(f"[{name}]\nmaterial=G4_WATER\n")
+        assert aliases == {"water": "G4_WATER"}
+        for reference in ("water", "WATER", "Water"):
+            assert exporter._materials_used([reference], aliases) == [reference]
+    for second in ("Water", "water", " Water "):
+        for target in ("G4_WATER", "G4_AIR"):
+            expect_error(lambda: exporter._validate_materials(f"[Water]\nmaterial=G4_WATER\n[{second}]\nmaterial={target}\n"), "unsupported_feature")
+    for bom in ("", "\ufeff"):
+        for comment in ("", "; first comment\n"):
+            for newline in ("\n", "\r\n"):
+                text = bom + (comment + "[Water]\nmaterial=G4_WATER\n").replace("\n", newline)
+                assert exporter._validate_materials(text) == {"water": "G4_WATER"}
+    # Observe guard order at both public read surfaces without bypassing actual
+    # ordinary-file reading. Invalid JSON proves that the regular file was read.
+    with tempfile.TemporaryDirectory(prefix="ar5-manifest-guards-") as temp:
+        root = Path(temp)
+        for kind, filename, call in (
+            ("selection_unavailable", exporter.MANIFEST_NAME, exporter.verify_export),
+            ("export_template_unavailable", exporter.TEMPLATE_MANIFEST_NAME, exporter.load_template_layout),
+        ):
+            folder = root / filename; folder.mkdir()
+            manifest = folder / filename
+            manifest.write_bytes(b"not json")
+            expect_error(lambda: call(folder), kind)
+            original_guard = exporter._no_links
+            def guard(path, *, label):
+                if Path(path) == manifest:
+                    raise exporter.ExportError("linked_or_ambiguous_path", "synthetic guard refusal")
+                return original_guard(path, label=label)
+            with patch.object(exporter, "_no_links", side_effect=guard), patch.object(exporter, "_read_regular", side_effect=AssertionError("read before guard")):
+                expect_error(lambda: call(folder), "linked_or_ambiguous_path")
+            # Actual file links where supported; never substitute directory links.
+            manifest.unlink()
+            outside = root / (filename + ".outside"); outside.write_bytes(b"not json")
+            try:
+                manifest.symlink_to(outside)
+            except OSError as error:
+                print(f"AR5 file symlink unavailable: {error}; native POSIX coverage pending")
+            else:
+                with patch.object(exporter, "_read_regular", side_effect=AssertionError("linked manifest read")):
+                    expect_error(lambda: call(folder), "linked_or_ambiguous_path")
+                manifest.unlink()
+            # Hardlinks are ordinary-looking files but the shared read guard
+            # must reject their multiple links before consuming JSON.
+            os.link(outside, manifest)
+            expect_error(lambda: call(folder), "linked_or_ambiguous_path")
+            manifest.unlink()
+            manifest.mkdir()
+            expect_error(lambda: call(folder), "linked_or_ambiguous_path")
+    print("AR5 bounded exporter contract checks passed (no template refresh/build)")
+
+
 def main() -> int:
+    ar5_contract_checks()
     work = Path(tempfile.mkdtemp(prefix="g4usim-k2-test-"))
     originals_before = example_hashes()
     links_supported = False
@@ -846,4 +956,7 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    if "--ar5-only" in sys.argv:
+        ar5_contract_checks()
+    else:
+        sys.exit(main())

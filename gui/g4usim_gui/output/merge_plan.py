@@ -35,7 +35,7 @@ def build_merge_plan(output_dir: str, workspace_root: str = "", merge_histograms
                      *, backend_executable: str = "") -> MergePlan:
     output = Path(output_dir)
     workspace = Path(workspace_root) if workspace_root else Path.cwd()
-    script = workspace / "scripts" / "merge_outputs.py"
+    script = install_layout.scripts_dir() / "merge_outputs.py"
     hist_tool = Path(merge_histograms_exe) if merge_histograms_exe else find_merge_histograms(workspace, backend_executable)
 
     specs = [

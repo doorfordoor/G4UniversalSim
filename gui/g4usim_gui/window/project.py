@@ -440,7 +440,10 @@ class ProjectMixin:
         self.run_history_page.refresh()
         self.tabs.setCurrentWidget(self.run_page)
         if run_after:
-            self.start_run()
+            if hasattr(self, "experiment"):
+                self._experiment_action("run", copy_package=package)
+            else:
+                self.start_run()
 
     def _restore_app_state(self) -> None:
         state = load_state()

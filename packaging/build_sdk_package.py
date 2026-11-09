@@ -78,6 +78,14 @@ def build_sdk(*, geant4_prefix, platform, architecture, version, output_name, ru
     _no_links(geant4_prefix)
     if not (geant4_prefix / "lib/cmake/Geant4/Geant4Config.cmake").is_file():
         raise ValueError("The selected prefix is not an actual Geant4 development installation")
+    # The standalone H2 component opens this exact path. Capture only its
+    # required fixture, before replacing any existing SDK staging/publication.
+    niel_relative = Path("scenarios/semiconductor/niel/si_proton.csv")
+    niel_source = ROOT / niel_relative
+    _no_links(niel_source)
+    if not stat.S_ISREG(niel_source.lstat().st_mode):
+        raise ValueError(f"SDK H2 component fixture is not a regular file: {niel_source}")
+    niel_bytes = niel_source.read_bytes()
     staging_root = (Path.home() / ".cache/g4usim-sdk-package") if platform == "linux" else OUT / "sdk-package"
     _no_links(staging_root)
     staging_root.mkdir(parents=True, exist_ok=True)
@@ -120,6 +128,9 @@ def build_sdk(*, geant4_prefix, platform, architecture, version, output_name, ru
             build_package.copy_tree(source, source_root / directory)
     for name in ("main.cc", "CMakeLists.txt"):
         shutil.copy2(ROOT / name, source_root / name)
+    niel_target = source_root / niel_relative
+    niel_target.parent.mkdir(parents=True)
+    niel_target.write_bytes(niel_bytes)
     probe = work / "sdk/probe"
     probe.mkdir(parents=True)
     (probe / "CMakeLists.txt").write_text(PROBE_CMAKE, encoding="utf-8")

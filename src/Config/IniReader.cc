@@ -48,9 +48,13 @@ void IniReader::ParseBytes(const std::string& filename, const std::string& bytes
     std::size_t lineNumber = 0;
     while (std::getline(input, line)) {
         ++lineNumber;
+        // BOM affects only the first physical line parse view; retain raw bytes.
+        std::string parseLine = line;
+        if (lineNumber == 1 && parseLine.compare(0, 3, "\xEF\xBB\xBF") == 0)
+            parseLine.erase(0, 3);
 
         const std::string withoutComment =
-            StringUtils::Trim(StringUtils::RemoveComment(line));
+            StringUtils::Trim(StringUtils::RemoveComment(parseLine));
         if (withoutComment.empty()) {
             continue;
         }

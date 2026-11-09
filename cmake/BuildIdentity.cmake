@@ -1,3 +1,17 @@
+# Keep the path:raw-byte-SHA256 recipe shared with the Python consumer.
+function(g4usim_capture_source_fingerprint source_root input_files fingerprint_var)
+    set(inputs ${input_files})
+    list(SORT inputs)
+    set(manifest "")
+    foreach(input_file IN LISTS inputs)
+        file(RELATIVE_PATH input_name "${source_root}" "${input_file}")
+        file(SHA256 "${input_file}" input_sha)
+        string(APPEND manifest "${input_name}:${input_sha}\n")
+    endforeach()
+    string(SHA256 fingerprint "${manifest}")
+    set(${fingerprint_var} "${fingerprint}" PARENT_SCOPE)
+endfunction()
+
 # Capture the source repository at configure time. A source archive must not
 # inherit the identity of an unrelated enclosing checkout.
 function(g4usim_capture_build_identity source_root input_files commit_var state_var)

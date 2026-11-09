@@ -14,6 +14,7 @@
 inline void WriteBackendCapabilities(std::ostream& out)
 {
     out << "{\"schema\":\"G4UniversalSimCapabilities\",\"version\":1,"
+        << "\"application_version\":\"" << G4USIM_APPLICATION_VERSION << "\","
         << "\"launch\":{\"working_directory\":true},"
         << "\"source_fingerprint\":\"" << G4USIM_SOURCE_FINGERPRINT << "\","
         << "\"build_git_commit\":\"" << G4USIM_GIT_COMMIT << "\","

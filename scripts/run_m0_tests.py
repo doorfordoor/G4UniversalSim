@@ -68,6 +68,7 @@ CASES = (
     Case("frozen_startup", "scripts/test_frozen_startup.py", "static"),
     Case("install_plan", "scripts/test_install_plan.py", "static"),
     Case("install_service", "scripts/test_install_service.py", "static"),
+    Case("install_sdk_lifecycle", "scripts/test_install_sdk_lifecycle.py", "static"),
     Case("run_summary_mt_observation", "scripts/test_run_summary_mt_observation.py", "static"),
     Case("ci_geant4_data", "scripts/test_ci_fetch_geant4_data.py", "static"),
     Case("install_ci_delivery", "scripts/test_install_ci_delivery.py", "static"),
@@ -154,6 +155,7 @@ CASES = (
     Case("ar1_generators", "scripts/test_ar1_generator_pipeline.py", "static"),
     Case("ar1_generator_native", "scripts/test_ar1_generator_pipeline.py", "backend", ("exe",), args=("--native",)),
     Case("geometry_shapes", "scripts/test_geometry_shapes.py", "backend", ("exe",)),
+    Case("ar5_export_readers", "scripts/test_ar5_export_readers.py", "backend", ("exe",), args=("--execute",)),
     Case("scorer_factory", "scripts/test_scorer_factory.py", "backend", ("exe",)),
     Case("legacy_particle_selectors", "scripts/test_legacy_particle_selectors.py", "backend", ("exe",)),
     Case("scoring_lifecycle", "scripts/test_scoring_lifecycle.py", "backend", ("exe", "uproot")),
@@ -232,6 +234,7 @@ CASES = (
     Case("gui_output", "gui/smoke_tests/smoke_output_tools.py", "gui", ("qt",)),
     Case("gui_history", "gui/smoke_tests/smoke_history.py", "gui", ("qt",)),
     Case("gui_duplicate_history_cli", "gui/smoke_tests/smoke_duplicate_history_cli.py", "gui", ("qt",)),
+    Case("gui_copy_execution_history", "gui/smoke_tests/smoke_copy_execution_history.py", "gui", ("qt",)),
     Case("gui_run_result", "gui/smoke_tests/smoke_run_result.py", "gui", ("qt",)),
     Case("gui_live_progress", "gui/smoke_tests/smoke_live_progress.py", "gui", ("qt",)),
     Case("gui_live_progress_backend", "gui/smoke_tests/smoke_live_progress_backend.py", "integration", ("qt", "exe")),
@@ -602,6 +605,12 @@ def main() -> int:
             case_environment = environment.copy()
             case_evidence_dir = report_dir / f"{case.name}-evidence"
             case_environment["G4USIM_TEST_EVIDENCE_DIR"] = str(case_evidence_dir.resolve())
+            if case.name == "install_sdk_lifecycle":
+                command.append(str(case_evidence_dir.resolve()))
+            if case.name == "ar5_export_readers":
+                case_environment["G4USIM_INI_READER_PROBE"] = str(args.executable.resolve().with_name(
+                    "iniReaderContractCheck" + args.executable.suffix))
+                case_environment["G4USIM_EXPECTED_SOURCE_FINGERPRINT"] = workspace_source_fingerprint()
             start = time.monotonic()
             try:
                 process = subprocess.run(

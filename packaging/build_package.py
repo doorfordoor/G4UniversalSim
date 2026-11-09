@@ -87,6 +87,47 @@ def qt5_prefix() -> Path | None:
     return Path(match.group(1).strip()).parents[2] if match else None   # <qt>/lib/cmake/Qt5Core
 
 
+
+def release_binary_directory(build_dir: Path) -> Path:
+    """Select only the Release layout declared by this build tree's cache."""
+    build_dir = build_dir.absolute()
+    cache_path = build_dir / "CMakeCache.txt"
+    try:
+        raw = cache_path.read_text(encoding="utf-8-sig")
+    except (OSError, UnicodeError) as exc:
+        raise SystemExit(f"Cannot read actual build cache {cache_path}: {exc}") from exc
+    keys = {"CMAKE_GENERATOR", "CMAKE_CONFIGURATION_TYPES", "CMAKE_BUILD_TYPE", "CMAKE_CACHEFILE_DIR"}
+    values = {}
+    for line in raw.splitlines():
+        match = re.fullmatch(r"([^:#=]+):[^=]+=(.*)", line)
+        if match and match[1] in keys:
+            if match[1] in values:
+                raise SystemExit(f"Duplicate {match[1]} in {cache_path}")
+            values[match[1]] = match[2]
+    owner = values.get("CMAKE_CACHEFILE_DIR", "")
+    if not owner or not Path(owner).is_absolute() or Path(owner).resolve() != build_dir.resolve():
+        raise SystemExit(f"CMAKE_CACHEFILE_DIR does not identify the selected build tree: {cache_path}")
+    generator = values.get("CMAKE_GENERATOR", "")
+    multi = generator.startswith("Visual Studio ") or generator in {"Ninja Multi-Config", "Xcode"}
+    single = generator in {"Ninja", "NMake Makefiles", "NMake Makefiles JOM", "Unix Makefiles",
+                           "MinGW Makefiles", "MSYS Makefiles"}
+    if not multi and not single:
+        raise SystemExit(f"Missing or unsupported CMAKE_GENERATOR in {cache_path}: {generator!r}")
+    configs = values.get("CMAKE_CONFIGURATION_TYPES", "")
+    build_type = values.get("CMAKE_BUILD_TYPE", "")
+    if multi:
+        if "Release" not in configs.split(";") or build_type not in ("", "Release"):
+            raise SystemExit(f"Multi-config cache must declare Release without conflicting CMAKE_BUILD_TYPE: {cache_path}")
+        binary_dir = build_dir / "Release"
+    else:
+        if configs or build_type != "Release":
+            raise SystemExit(f"Single-config cache requires CMAKE_BUILD_TYPE=Release and no configuration types: {cache_path}")
+        binary_dir = build_dir
+    for name in ("G4UniversalSim.exe", "mergeHistograms.exe"):
+        if not (binary_dir / name).is_file():
+            raise SystemExit(f"Missing Release build artifact {(binary_dir / name)}; rebuild the selected tree")
+    return binary_dir
+
 def check_fingerprint(exe: Path, runtime_paths: list[Path] | None = None) -> None:
     sys.path.insert(0, str(ROOT / "scripts"))
     import run_m0_tests   # noqa: E402  (source fingerprint of the C++ working tree)
@@ -161,7 +202,7 @@ def clean_output_directory(path: Path) -> None:
         shutil.rmtree(path)
 
 
-def build_gui(work: Path, with_3d: bool) -> Path:
+def build_gui(work: Path, with_3d: bool, *, prepare_payload=None) -> Path:
     """PyInstaller onedir build of gui/main.py; returns the folder holding G4UniversalSimGUI.exe."""
     work.mkdir(parents=True, exist_ok=True)
     before = freeze_identity.source_identity(ROOT, "gui")
@@ -191,6 +232,8 @@ def build_gui(work: Path, with_3d: bool) -> Path:
     if before != after:
         raise RuntimeError(f"GUI source changed while freezing; rebuild the stable candidate: {work}")
     result_path = work / "dist" / "G4UniversalSimGUI"
+    if prepare_payload is not None:
+        prepare_payload(result_path)
     freeze_identity.seal(result_path, kind="gui", sources=after, with_3d=with_3d)
     return result_path
 
@@ -391,7 +434,7 @@ def main() -> int:
     parser.add_argument("--reuse-python-helper", type=Path, help="Explicit previously frozen scientific helper; reverified")
     args = parser.parse_args()
     CACHE = args.build_dir.absolute() / "CMakeCache.txt"
-    BUILD = args.build_dir.absolute() / "Release"
+    BUILD = release_binary_directory(args.build_dir)
 
     name = args.package_name or f"G4UniversalSim-{version()}-win64"
     if name in {".", ".."} or not re.fullmatch(r"[A-Za-z0-9_.-]+", name):

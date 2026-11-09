@@ -1,5 +1,7 @@
 2026-11-08最新授权：AR0–AR6由新主审及本地非web子代理全权接续，先重审优化AR0，AR2不再暂停；整体架构完成后恢复DS/web协作，F3不追加测量。决定：docs/collab/decisions/20261108-ar0-ar6-primary-ownership.md（路径相对仓库根）。
 
+2026-11-09：[AR5 已签收](collab/reviews/20261109-ar5-acceptance.md)，[MR2 当前对话复查通过](collab/reviews/20261109-mr2-primary-review.md)。进入 AR6 最终候选、实际云矩阵、双平台交付及 MR3；不提前关闭。
+
 ## 2026-11-08 当前进度与架构后接续排期（当前入口）
 
 K2固定快照25487eb1保持。AR0 r3、AR-V、AR1–AR3及当前主审MR1已按各自合同签收；AR4 run/path首片及七项关联修复、[SPS编辑迁移](collab/reviews/20261109-ar4-sps-acceptance.md)已签收，继续material/geometry迁移，之后连续AR5→MR2→AR6/MR3。详见[AR4首片签收](collab/reviews/20261109-ar4-first-slice-acceptance.md)。AR3 r4原生/兼容/独审及B4 run后命令失败风险补证已完成，原失败和有限证据边界保留。监督30分钟ACTIVE；DeepSeek/web暂停至完整架构验收，F3不追加测量。详见[AR3签收](collab/reviews/20261109-ar3-acceptance.md)、[MR1主审复查](collab/reviews/20261109-mr1-primary-review.md)及[后续总规划](后续开发总规划.md)。
@@ -8,7 +10,7 @@ K2固定快照25487eb1保持。AR0 r3、AR-V、AR1–AR3及当前主审MR1已按
 
 本次新增[泛用性与易用性评审](collab/reviews/20261108-generality-usability-gap-review.md)：四维长期目标、七类任务/14张卡、任务级L0–L4和初始15/5分钟、80%门限已纳入；GU0–GU4分阶段完成。当前交付差距评审与达到目标的方法，实际用户耗时/完成率、真实SiP和完整SEU能力均未验证，不提高支持等级。
 
-两轮联合审计27项正式问题中19项已关闭，余8项按AR5继续；R1-R-02-B4及R2-R01已完成限定防御验证，R2-R02待AR5处置。原ID/原判据见[修复映射](后续开发总规划.md#joint-audit-plan)。MR1已由当前对话完成，MR2在AR4/5独验后、MR3在AR6签收时执行。
+两轮联合审计 27 项正式问题均已关闭，三项风险完成限定验证与处置；原 ID 和关闭标准见[映射](后续开发总规划.md#joint-audit-plan)。MR1/MR2 均由当前对话执行通过，MR3 随 AR6 最终签收。
 
 | 阶段/范围 | 状态 | 生命周期与范围 | 新规划位置/下一动作 |
 | --- | --- | --- | --- |
@@ -20,10 +22,10 @@ K2固定快照25487eb1保持。AR0 r3、AR-V、AR1–AR3及当前主审MR1已按
 | Q2 | 限制 | 本轮限定范围已关闭，LET/DDD/NIEL/XS限制保留 | W4按量/适用域专项补证，W6公开边界 |
 | H1/H2/H3 | 通过 | 原固定范围已交付；H3有限病例和GUI范围不外推 | W1迁移对照；更广科学能力按新任务 |
 | K2 | 限制 | 固定范围已关闭；K2-3为限制、K2-4通过 | AR5/AR6保证导出并补新验收所需实装观察；L2复用 |
-| AR0–AR6 | 进行中 | AR0 r3、AR1、AR2、AR3已签收；AR3 r4 D四项1773断言、22兼容55954、C独立三项487及风险补证通过；原科学与临时产物边界保持。AR4首片/SPS已签收，SPS正式11case2794及独验通过；材料/几何继续，AR5/6待 | [AR1](collab/reviews/20261108-ar1-acceptance.md)；[AR2](collab/reviews/20261108-ar2-acceptance.md)；[AR3](collab/reviews/20261109-ar3-acceptance.md)；[SPS](collab/reviews/20261109-ar4-sps-acceptance.md) |
+| AR0–AR6 | AR6 进行中 | AR0、AR-V、AR1–AR5 及 MR1/MR2 已签；两平台新安装版真实导出、独立 200/1000 及各两 CTest 通过；原限制保留 | [AR5](collab/reviews/20261109-ar5-acceptance.md)；[MR2](collab/reviews/20261109-mr2-primary-review.md)；AR6 最终矩阵与交付后 MR3 |
 | AR-V审计验收工具工作包 | 已完成（本轮约定范围） | R2-05/06/07关闭；身份门禁/CI接线、6专项1623断言、独立390次CLI均通过 | [主审签收](collab/reviews/20261108-ar-v-acceptance.md)；后续新候选必须使用严格身份门禁，旧报告原身份保留 |
-| 两轮审计关联修复 | 部分关闭 | 19/27正式问题关闭，余8项；R1-R-02-B4及R2-R01有限防御验证完成，SDK后代收尾风险待 | [唯一映射](后续开发总规划.md#joint-audit-plan)；AR6前逐项闭环 |
-| MR1–MR3主审累计复查 | MR1通过，MR2/3待 | 当前对话已核累计源码/所有权/AR-V/原始正反例，允许进入AR4；科学证据按原身份复用，不声称r4新科学执行 | [MR1](collab/reviews/20261109-mr1-primary-review.md)；MR2在AR4/5后，MR3在AR6 |
+| 两轮审计关联修复 | 正式问题关闭 | 27/27；三风险完成限定处置，无法证明 SDK 后代排空时保阻断 | [映射](后续开发总规划.md#joint-audit-plan)；[AR5](collab/reviews/20261109-ar5-acceptance.md) |
+| MR1–MR3主审累计复查 | MR1/MR2 通过，MR3 待 | 当前对话已核源码、原始正反例和编辑至独立交付；科学证据按各自身份 | [MR1](collab/reviews/20261109-mr1-primary-review.md)、[MR2](collab/reviews/20261109-mr2-primary-review.md)；MR3 在 AR6 |
 | J4 | 未开始 | 工程化模拟流程与可用性；新增J4-5任务模板/结果解释/现有扫描走查 | W2：J4-0～5，承接GU2产品改进 |
 | GU0 | 设计评审通过 | 七类有限源码核查、差距/采纳矩阵、14卡候选与测量方法；独审0阻断，3条澄清已纳入；无真实用户成绩 | 只签方法设计；详细输入/参与者仍须执行前冻结 |
 | GU1 | 未开始 | 14卡基线登记与8/10常见卡达标分两出口；失败/缺输入不得删卡 | AR6候选后基线即可启动J4修复，之后复验达标 |

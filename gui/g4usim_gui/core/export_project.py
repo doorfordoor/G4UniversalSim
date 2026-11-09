@@ -105,7 +105,7 @@ _MAIN_KEYS = {
     "physics": {"reference", "default_cut", "biasing", "verbose"},
     "biasing": {"enabled"},
     "source": {"preset", "particle", "energy", "position_type", "position",
-               "direction", "isotropic", "center", "halfx", "halfy", "radius"},
+               "direction", "isotropic", "center", "halfx", "halfy", "radius", "shape"},
     "scoring": {"enabled", "hits", "event_edep", "edep", "let", "dose",
                 "fluence", "auto_create_default_scorers", "verbose"},
     "scoring.edep": {"raw_histogram", "weighted_histogram", "bins", "min",
@@ -574,10 +574,12 @@ def load_template_layout(template_root: Path | None = None) -> TemplateLayout:
             ("packaged", candidate / TEMPLATE_MANIFEST_NAME),
             ("checkout", candidate / "packaging" / TEMPLATE_MANIFEST_NAME),
         ):
-            if not manifest_path.is_file():
+            _no_links(manifest_path, label="template manifest")
+            if not manifest_path.exists():
                 continue
             try:
-                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                manifest = json.loads(_read_regular(manifest_path, kind="export_template_unavailable",
+                                                    label="template manifest").decode("utf-8"))
             except (OSError, ValueError) as exc:
                 raise ExportError("export_template_unavailable",
                                   f"template manifest is unreadable: {manifest_path}: {exc}") from exc
@@ -1116,7 +1118,7 @@ def _validate_materials(text: str) -> dict[str, str]:
             raise ExportError("unsupported_feature",
                               f"materials.ini [{section.name}] must alias a G4_ material: "
                               f"{target!r}")
-        aliases[section.name] = target.strip()
+        aliases[section.name.strip().lower()] = target.strip()
     return aliases
 
 
@@ -1213,7 +1215,7 @@ def _materials_used(values: Iterable[str], aliases: dict[str, str]) -> list[str]
         name = value.strip()
         if not name:
             raise ExportError("unsupported_feature", "empty material reference")
-        if name in aliases:
+        if name.lower() in aliases:
             used.append(name)
             continue
         if re.fullmatch(r"G4_[A-Za-z0-9_]+", name):
@@ -1269,7 +1271,40 @@ def _validate_macro(text: str) -> int:
     return events
 
 
+def _validate_source_token_whitespace(text: str) -> None:
+    """Check the new source grammar before Unicode strip/splitlines can hide bytes.
+
+    This is a raw-token guard, not a second INI schema. Other values, names,
+    paths and comments retain their existing policy. No input is rewritten.
+    """
+    section = ""
+    fields = {"position_type", "shape", "halfx", "halfy"}
+    # Backend getline uses LF, unlike Python splitlines (NEL/LS/PS also split).
+    for index, physical in enumerate(text.split("\n")):
+        if index == 0 and physical.startswith("\ufeff"):
+            physical = physical[1:]
+        content = re.split(r"[#;]", physical, maxsplit=1)[0]
+        stripped = content.strip()
+        target = None
+        if stripped.startswith("[") and stripped.endswith("]"):
+            section = stripped[1:-1].strip().lower()
+            if section == "source":
+                target = "section header"
+        elif section == "source" and "=" in content:
+            key = content.split("=", 1)[0].strip().lower()
+            if key in fields:
+                target = key
+        if target is not None:
+            invalid = next((c for c in content if ord(c) > 127 and c.isspace()), None)
+            if invalid is not None:
+                raise ExportError(
+                    "unsupported_feature",
+                    f"project/main.ini: [source] {target} contains non-ASCII "
+                    f"whitespace U+{ord(invalid):04X} on physical line {index + 1}")
+
+
 def _validate_main_text(text: str, *, mode: str, events: int) -> ProjectSummary:
+    _validate_source_token_whitespace(text)
     document = parse_ini(text, label="project/main.ini")
     for section_name, section in document.sections.items():
         allowed = _MAIN_KEYS.get(section_name)
@@ -1348,14 +1383,29 @@ def _validate_main_text(text: str, *, mode: str, events: int) -> ProjectSummary:
     if position_type not in {"point", "plane"}:
         raise ExportError("unsupported_feature",
                           "main.ini position_type must be point or plane")
-    if position_type == "point" and document.get("source", "position") is None:
-        raise ExportError("unsupported_feature",
-                          "a point source needs [source] position")
+    if position_type == "point":
+        if document.get("source", "position") is None:
+            raise ExportError("unsupported_feature", "a point source needs [source] position")
+        for key in ("shape", "center", "radius", "halfx", "halfy"):
+            if document.get("source", key) is not None:
+                raise ExportError("unsupported_feature", f"a point source conflicts with [source] {key}")
     if position_type == "plane":
+        if (document.get("source", "shape") or "").strip().lower() != "rectangle":
+            raise ExportError("unsupported_feature", "a plane source requires explicit shape=rectangle")
+        for key in ("position", "radius"):
+            if document.get("source", key) is not None:
+                raise ExportError("unsupported_feature", f"a rectangle source conflicts with [source] {key}")
         for key in ("center", "halfx", "halfy"):
             if document.get("source", key) is None:
-                raise ExportError("unsupported_feature",
-                                  f"a plane source needs [source] {key}")
+                raise ExportError("unsupported_feature", f"a plane source needs [source] {key}")
+        for key in ("halfx", "halfy"):
+            raw = document.require("source", key)
+            # Deliberately narrower than general exporter lengths: UnitParser's
+            # case-sensitive units, with explicit units required in this subset.
+            match = re.fullmatch(r"\s*([+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?)\s*(nm|um|mm|cm|m)\s*", raw, flags=re.ASCII)
+            value = float(match[1]) * {"nm": 1e-6, "um": 1e-3, "mm": 1., "cm": 10., "m": 1000.}[match[2]] if match else float("nan")
+            if not math.isfinite(value) or value <= 0:
+                raise ExportError("unsupported_feature", f"[source] {key} needs a positive finite length with lowercase nm/um/mm/cm/m")
     for key in ("position", "center"):
         if document.get("source", key) is not None:
             _length_triplet(str(document.get("source", key)),
@@ -1593,6 +1643,10 @@ def _standalone_readme(summary: ProjectSummary, *, identity: str | None = None) 
         "source, CSV output, reference physics, dose/fluence scoring and optional "
         "box parallel-world scoring. Field, biasing, LET, displacement damage, "
         "phase-space input, non-box shapes and mesh scoring are refused.",
+        "Sources are points without shape keys or explicit plane rectangles. Rectangle "
+        "halfx/halfy require positive finite values with lowercase nm/um/mm/cm/m. "
+        "Legacy NIST aliases are case-insensitive; duplicate normalized section "
+        "declarations are refused even with identical targets.",
     ]
     if identity:
         lines.extend(["", f"Payload identity: `{identity}`"])
@@ -2102,6 +2156,8 @@ def _manifest(layout: TemplateLayout, prepared: dict, files: dict[str, bytes],
             "geometry_shapes": ["box"],
             "reference_physics": list(GEANT4_REFERENCES),
             "source_particle": "proton",
+            "source_positions": ["point without shape", "plane with explicit shape=rectangle"],
+            "rectangle_halfwidth_units": ["nm", "um", "mm", "cm", "m"],
             "scoring": ["dose", "fluence", "event_edep", "edep_histograms"],
             "parallel_world": "optional box geometry with dose/fluence scoring",
             "external_inputs": ["main.ini", "materials", "geometry", "parallel geometry",
@@ -2146,11 +2202,13 @@ def verify_export(destination: Path) -> dict:
     root = _no_links(Path(destination), label="export root")
     root = Path(root)
     manifest_path = root / MANIFEST_NAME
-    if not manifest_path.is_file():
+    _no_links(manifest_path, label="export manifest")
+    if not manifest_path.exists():
         raise ExportError("selection_unavailable",
                           f"not an export: no {MANIFEST_NAME} in {root}")
     try:
-        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest = json.loads(_read_regular(manifest_path, kind="selection_unavailable",
+                                            label="export manifest").decode("utf-8"))
     except (OSError, ValueError) as exc:
         raise ExportError("selection_unavailable",
                           f"manifest is unreadable: {exc}") from exc

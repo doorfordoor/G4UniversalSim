@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import json
+from dataclasses import asdict
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 from g4usim_gui.history.run_history_model import RunHistoryEntry
+from g4usim_gui.core.copy_execution_link import read_copy_execution
 from g4usim_gui.core.persisted_run_evidence import read_persisted_run_evidence
+from g4usim_gui.output.provenance import output_evidence
 from g4usim_gui.output.file_classifier import OutputFileType, classify_files
 
 
@@ -29,25 +32,30 @@ def scan_package(package_dir: str | Path) -> RunHistoryEntry:
         entry.timestamp, entry.run_name = _parse_package_name(package.name)
         entry.last_modified = datetime.fromtimestamp(package.stat().st_mtime).isoformat(timespec="seconds")
         snapshot_path = package / "project_snapshot.json"
-        status_path = package / "logs" / "run_status.json"
-        validation_path = package / "validation_report.txt"
-        output_dir = package / "output"
-        logs_dir = package / "logs"
-
-        snapshot = _read_json(snapshot_path)
-        status = _read_json(status_path)
         entry.has_project_snapshot = snapshot_path.is_file()
-        entry.has_validation_report = validation_path.is_file()
-        entry.has_stdout_log = (logs_dir / "stdout.log").is_file()
-        entry.has_stderr_log = (logs_dir / "stderr.log").is_file()
+        entry.has_validation_report = (package / "validation_report.txt").is_file()
         entry.config_path = str(package / "config" / "main.ini")
         entry.macro_path = str(package / "macros" / "run.mac")
-        entry.output_dir = str(output_dir)
+        _apply_snapshot(entry, _read_json(snapshot_path))
 
-        _apply_snapshot(entry, snapshot)
+        try:
+            linked = read_copy_execution(package)
+        except (OSError, TypeError, ValueError) as error:
+            entry.copy_linked = True
+            _unproven_link(entry, error)
+            return entry
+        if linked is not None:
+            entry.copy_linked = True
+            _apply_copy_execution(entry, *linked)
+            return entry
+
+        entry.result_dir = str(package)
+        entry.output_dir = str(package / "output")
+        _set_logs(entry, package / "logs")
+        status = _read_json(package / "logs/run_status.json")
         _apply_status(entry, status if isinstance(status, dict) else {})
-        _apply_output_counts(entry, package)
-        _infer_status(entry, package, status)
+        _apply_output_counts(entry, Path(entry.output_dir))
+        _infer_status(entry, Path(entry.output_dir), Path(entry.logs_dir))
         _apply_identity(entry, package)
     except Exception as exc:  # noqa: BLE001
         entry.status = "unknown"
@@ -107,8 +115,54 @@ def _apply_status(entry: RunHistoryEntry, status: dict[str, Any]) -> None:
     entry.executable = status.get("program", entry.executable)
 
 
-def _apply_output_counts(entry: RunHistoryEntry, package: Path) -> None:
-    output = package / "output"
+def _set_logs(entry: RunHistoryEntry, logs: Path) -> None:
+    entry.logs_dir = str(logs)
+    entry.has_stdout_log = (logs / "stdout.log").is_file()
+    entry.has_stderr_log = (logs / "stderr.log").is_file()
+
+
+def _unproven_link(entry: RunHistoryEntry, error) -> None:
+    entry.status = "incomplete"
+    entry.result_reason = str(error)
+    publish_identity(entry, error=error)
+
+
+def _apply_copy_execution(entry: RunHistoryEntry, root: Path, record: dict) -> None:
+    entry.copy_record_id = record["record_id"]
+    entry.result_dir = str(root)
+    _set_logs(entry, root / "logs")
+    entry.exit_code = record.get("exit_code") if type(record.get("exit_code")) is int else None
+    entry.result_reason = str(record.get("reason", ""))
+    result = record.get("result")
+    if record["status"] != "passed" or record.get("stale") is not False:
+        state = result.get("state") if isinstance(result, dict) else None
+        entry.status = (state if record["status"] == "cancelled" and state in {"stopped", "killed"}
+                        else "failed" if record["status"] == "failed" else "incomplete")
+        return
+    output = root / "output"
+    try:
+        process = read_persisted_run_evidence(output / "run_summary.txt", root / "logs/run_status.json")
+        if (process.result.state != "success" or process.exit_code != 0 or entry.exit_code != 0
+                or result != asdict(process.result)):
+            raise ValueError(f"Copy execution process evidence is not confirmed: {process.result.reason}")
+        evidence = output_evidence(output)
+        if (evidence.status != "verified" or not record.get("execution_id")
+                or record["execution_id"] != evidence.document["provenance"]["execution_id"]
+                or record.get("metadata_sha256") != evidence.manifest_digest):
+            raise ValueError("Copy execution output identity does not match the final record.")
+        _apply_output_counts(entry, output)
+    except (OSError, ValueError) as error:
+        _unproven_link(entry, error)
+        return
+    entry.output_dir = str(output)
+    entry.status = process.result.state
+    entry.result_reason = process.result.reason
+    entry.result_trust_level = process.trust_level
+    entry.warnings.extend(process.summary_warnings)
+    publish_identity(entry, evidence)
+
+
+def _apply_output_counts(entry: RunHistoryEntry, output: Path) -> None:
     entry.has_run_summary = (output / "run_summary.txt").is_file()
     for info in classify_files(output) if output.exists() else []:
         if info.file_type == OutputFileType.HITS_THREAD_CSV:
@@ -129,9 +183,8 @@ def _apply_output_counts(entry: RunHistoryEntry, package: Path) -> None:
             entry.merged_hist_weighted = True
 
 
-def _infer_status(entry: RunHistoryEntry, package: Path, status: dict[str, Any]) -> None:
-    summary_path = package / "output" / "run_summary.txt"
-    evidence = read_persisted_run_evidence(summary_path, package / "logs" / "run_status.json")
+def _infer_status(entry: RunHistoryEntry, output: Path, logs: Path) -> None:
+    evidence = read_persisted_run_evidence(output / "run_summary.txt", logs / "run_status.json")
     result = evidence.result
     entry.status = result.state
     entry.result_reason = result.reason
@@ -164,7 +217,6 @@ def publish_identity(entry, evidence=None, error=None):
 
 
 def _apply_identity(entry, package):
-    from g4usim_gui.output.provenance import output_evidence
     try:
         publish_identity(entry, output_evidence(package / "output"))
     except (ValueError, OSError) as error:
