@@ -3,7 +3,7 @@
 from __future__ import annotations
 import json
 
-SOURCE_SHA256 = {'include/Geometry/SolidRegistry.hh': '245107c43ce261f5801d88a6a125647a02615183759eeda97ef0a8ebb75e95b9', 'src/Geometry/SolidRegistry.cc': '31d2b348be3e1c27926ae35379862b3a41be0fad173bc4b51f0ca9da6b782188', 'include/Geometry/GeometryTypes.hh': '158a17672e115d319a2033c9f2b42bd66ed32de033d816e24408ed8d2e7d0c4d'}
+SOURCE_SHA256 = {'include/Geometry/SolidRegistry.hh': '245107c43ce261f5801d88a6a125647a02615183759eeda97ef0a8ebb75e95b9', 'src/Geometry/SolidRegistry.cc': 'edc1b2f1bbcffb206fa916a7fcf27055888d47ccbf742d46783410dccb794796', 'include/Geometry/GeometryTypes.hh': '158a17672e115d319a2033c9f2b42bd66ed32de033d816e24408ed8d2e7d0c4d'}
 REGISTRY = json.loads(r'''{
   "internal_units": {
     "angle": "rad",

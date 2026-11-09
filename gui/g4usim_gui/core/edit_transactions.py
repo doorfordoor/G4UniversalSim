@@ -6,6 +6,7 @@ the separately retained transient parser context.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import copy
 from typing import Callable
 
 from g4usim_gui.core.edit_snapshot import (
@@ -138,6 +139,33 @@ class EditSession:
         fingerprint = self._current_fingerprint if snapshot is None else snapshot_fingerprint(snapshot)
         self._saved_fingerprint = fingerprint
         self._merge_generation += 1
+
+    def update_interaction(self, selections: dict[str, int], *, expected_revision: int,
+                           expected_selections: dict[str, int],
+                           apply: ApplySnapshot | None = None) -> WorkspaceSnapshot:
+        """Publish only interaction hints, without rewriting semantic history."""
+        if type(expected_revision) is not int:
+            raise TransactionConflict("Interaction publication requires an integer revision")
+        self._check(expected_revision)
+        for value in (selections, expected_selections):
+            if type(value) is not dict or any(type(k) is not str or type(v) is not int
+                                             for k, v in value.items()):
+                raise ValueError("Interaction selections must map text keys to integers")
+        if expected_selections != self._current.state['selections']:
+            raise TransactionConflict("Workspace interaction changed before publication")
+        candidate = self.current()
+        candidate.state['selections'] = copy.deepcopy(selections)
+        candidate.project.editingState = copy.deepcopy(candidate.state)
+        if snapshot_size(candidate) > self.max_bytes:
+            raise TransactionCapacityError("Workspace interaction exceeds history capacity")
+        if snapshot_fingerprint(candidate) != self._current_fingerprint:
+            raise TransactionError("Interaction publication changed semantic content")
+        result = clone_snapshot(candidate)
+        if selections == self._current.state['selections']:
+            return result
+        self._apply(candidate, apply)
+        self._current = candidate
+        return result
 
     def replace(self, label: str, after: WorkspaceSnapshot, *, merge_key: str | None = None,
                 expected_revision: int | None = None, apply: ApplySnapshot | None = None) -> WorkspaceSnapshot:

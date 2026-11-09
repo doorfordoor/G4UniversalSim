@@ -37,13 +37,14 @@ class ContentMixin:
                           if record.code in capture_codes and record.severity in ('error', 'blocker')]
         if capture_errors:
             raise ValueError('\n'.join(capture_errors))
+        document_input = self._require_document_input().project
         paths = page.path_settings(self.project)
         base = parameter_scan.ScanBase(
             project=copy.deepcopy(self.project), paths=paths, run=page.run_settings(),
-            geometry_settings=page.geometry_settings(), geometry=copy.deepcopy(page.geometry_document),
+            geometry_settings=copy.deepcopy(document_input.geometrySettings), geometry=copy.deepcopy(document_input.geometryEditor),
             source=copy.deepcopy(page.source_editor), physics=copy.deepcopy(page.physics_editor),
             scoring=copy.deepcopy(page.scoring_editor),
-            materials=copy.deepcopy(page.material_document) if page.material_document.is_dirty else None)
+            materials=copy.deepcopy(document_input.materialEditor) if document_input.materialEditor is not None and document_input.materialEditor.is_dirty else None)
         return base, paths.runs_root, self.project.executable or paths.executable, self.project.workspaceRoot
 
     def open_new_simulation_wizard(self) -> None:
@@ -133,11 +134,12 @@ class ContentMixin:
             if project.runInputMode == "external":
                 inputs = external_inputs(project.configPath, executable)
             else:
+                document_input = self._require_document_input().project
                 inputs = generated_inputs(
-                    template=page.geometry_settings().template, geometry_config=page.geometry_config.text().strip(),
-                    geometry=copy.deepcopy(page.geometry_document) if auto else page.geometry_document,
-                    materials_config=page.materials_config.text().strip(),
-                    materials=copy.deepcopy(page.material_document) if auto else page.material_document,
+                    template=document_input.geometrySettings.template, geometry_config=document_input.geometrySettings.config_path,
+                    geometry=copy.deepcopy(document_input.geometryEditor),
+                    materials_config=document_input.pathSettings.materials_config,
+                    materials=copy.deepcopy(document_input.materialEditor),
                     executable=executable)
         except (ValueError, OSError) as exc:
             if auto:
@@ -185,3 +187,14 @@ class ContentMixin:
         self.config_builder_page.set_backend_geometry_busy(False)
         self.config_builder_page.show_backend_geometry_message(
             ui_format("Geant4 could not build this geometry: {reason}", reason=reason))
+
+    def _require_document_input(self):
+        from g4usim_gui.core.experiment_workflow import document_raw_diagnostics, document_source_diagnostics
+        from g4usim_gui.validators.config_validator import ValidationReport
+        snapshot = self.run_path_snapshot()
+        report = ValidationReport()
+        document_raw_diagnostics(snapshot, report)
+        document_source_diagnostics(snapshot, report)
+        errors = [d.message for d in report.diagnostics if d.severity in ('error','blocker')]
+        if errors: raise ValueError('\n'.join(errors))
+        return snapshot

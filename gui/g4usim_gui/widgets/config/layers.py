@@ -43,7 +43,11 @@ class LayersMixin:
     def _on_layer_selection_changed(self) -> None:
         if self._building:
             return
-        self._select_layer_row(self.layer_table.currentRow())
+        owner=getattr(self,'_history_owner',None)
+        if owner is not None:
+            owner.select_document_row('layer_table',self.layer_table.currentRow())
+        else:
+            self._select_layer_row(self.layer_table.currentRow())
 
     def _select_layer_row(self, row: int) -> None:
         self._building = True
@@ -79,6 +83,9 @@ class LayersMixin:
         self._building = False
 
     def _update_selected_layer_from_detail(self) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._layer_detail_action()
         row = self._selected_layer_row
         layers = self.geometry_document.layered_device.layers
         if row < 0 or row >= len(layers):
@@ -102,6 +109,9 @@ class LayersMixin:
 
     @edit_operation('Add layer')
     def _add_layer(self) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._document_action({'kind':'geometry_structure','collection':'layer','operation':'add'})
         layer = LayerRow(name=f"Layer{len(self.geometry_document.layered_device.layers) + 1}", material="G4_Si", thickness="1 um", xy="10 mm, 10 mm")
         self.geometry_document.layered_device.layers.append(layer)
         self.geometry_document.is_dirty = True
@@ -113,6 +123,9 @@ class LayersMixin:
 
     @edit_operation('Duplicate layer')
     def _duplicate_layer(self) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._geometry_structure_action('layer','duplicate')
         row = self._selected_layer_row
         layers = self.geometry_document.layered_device.layers
         if row < 0 or row >= len(layers):
@@ -130,6 +143,9 @@ class LayersMixin:
 
     @edit_operation('Delete layer')
     def _delete_layer(self) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._geometry_structure_action('layer','delete')
         row = self._selected_layer_row
         layers = self.geometry_document.layered_device.layers
         if row < 0 or row >= len(layers):
@@ -144,6 +160,9 @@ class LayersMixin:
 
     @edit_operation('Move layer')
     def _move_layer(self, direction: int) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._geometry_structure_action('layer','move',direction=direction)
         row = self._selected_layer_row
         layers = self.geometry_document.layered_device.layers
         target = row + direction
@@ -155,3 +174,10 @@ class LayersMixin:
         self._populate_layers_table()
         self._update_generated_geometry_preview()
         self._emit_changed()
+
+    def _layer_detail_action(self):
+        from g4usim_gui.window.transactions import _read_control
+        if self._selected_layer_row < 0: return
+        fields=('enabled','name','material','thickness','xy','sensitive','bias','region','copy_no','position','rotation')
+        return self._document_action({'kind':'layer_detail','values':{k:_read_control(getattr(self,'layer_'+k)) for k in fields}},
+                                     collection='layer',index=self._selected_layer_row)

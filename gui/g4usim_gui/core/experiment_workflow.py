@@ -258,7 +258,10 @@ def _draft_equivalent(raw, accepted, binding):
 
 def _raw_diagnostics(snapshot, report):
     project = snapshot.project
+    from g4usim_gui.core.document_edit_model import is_document_draft
     for binding, value in snapshot.state["drafts"].items():
+        if is_document_draft(binding):
+            continue
         if binding.startswith("detail.") or binding.endswith(".raw"):
             continue
         try:
@@ -269,18 +272,64 @@ def _raw_diagnostics(snapshot, report):
         if not matched:
             report.add("experiment.raw_draft.unaccepted", "error", binding, origin="experiment",
                        unavailable_reason="unaccepted_raw_draft", identity_parameters={"binding": binding})
+    document_raw_diagnostics(snapshot, report)
+
+
+def document_source_diagnostics(snapshot, report, *, recovered=False):
+    """Explicit request-time IO gate, never called by a document reducer."""
+    project = snapshot.project
+    for kind, source in snapshot.state["sources"].items():
+        # Captured editor sources belong to generated input selection. External
+        # Inspect observes the actual main/macro through its original-input
+        # identity and backend preflight; dormant editor history is not an input.
+        if project.runInputMode != "generated":
+            continue
+        document = project.materialEditor if kind == "materials" else project.geometryEditor
+        if document is None or not document.source_path:
+            continue
+        selected = project.pathSettings.materials_config if kind == "materials" else project.geometrySettings.config_path
+        base = Path.cwd() if recovered else Path(project.workspaceRoot or project.pathSettings.workspace_root or Path.cwd())
+        selected_path = Path(selected)
+        selected_path = selected_path if selected_path.is_absolute() else base / selected_path
+        try:
+            same = (source["read_success"] and selected_path.resolve() == Path(source["path"]).resolve()
+                    and selected_path.read_text(encoding="utf-8", errors="replace") == source["text"])
+        except OSError:
+            same = False
+        if not same:
+            code = f'config.source.{kind}.recovered_changed' if recovered else 'experiment.captured_source.changed'
+            message = (f'{kind.title()} source changed since the editor was loaded; reload {kind} before generating a package.'
+                       if recovered else kind)
+            if not any(d.code == code and d.message == message for d in report.diagnostics):
+                report.add(code, "error", message, origin="experiment",
+                           editor="setup", field=kind + "_config", unavailable_reason="source_changed")
+
+
+def document_raw_diagnostics(snapshot, report):
+    """Reuse K1 equivalence at the finite document-to-input boundary."""
+    project = snapshot.project
+    if project.runInputMode == 'external': return
+    from g4usim_gui.core.document_edit_model import is_document_draft
+    for binding, value in snapshot.state['drafts'].items():
+        if not is_document_draft(binding): continue
+        try:
+            if binding.startswith('detail.'):
+                _, collection, index, field = binding.split('.')
+                rows = project.materialEditor.rows if collection == 'material' else project.geometryEditor.layered_device.layers
+                accepted = getattr(rows[int(index)], field)
+            else:
+                accepted = _draft_value(project, binding)
+            matched = _draft_equivalent(value, accepted, binding)
+        except (AttributeError, KeyError, IndexError, ValueError, TypeError):
+            matched = False
+        if not matched:
+            code = 'experiment.raw_detail.unaccepted' if binding.startswith('detail.') else 'experiment.raw_draft.unaccepted'
+            report.add(code, 'error', binding, origin='experiment', unavailable_reason='unaccepted_raw_draft',
+                       identity_parameters={'binding':binding})
     for name, raw_rows in snapshot.state["tables"].items():
-        if name == "geometry_table":
-            expected = [[v.enabled, v.name, v.parent, v.shape, v.material, v.position,
-                v.parameters if v.shape.strip().lower() != "box" and v.parameters else v.size,
-                v.rotation, v.sensitive, v.bias, v.region,
-                *(v.shape_properties.get(key, "") for key in ("dx1", "dx2", "dy1", "dy2", "dz"))]
-                for v in project.geometryEditor.volumes]
-        elif name == "boolean_table":
-            expected = [[v.enabled, v.target_volume, v.index, v.operation, v.tool_shape, v.tool_size,
-                         v.tool_parameters, v.position, v.rotation] for v in project.geometryEditor.boolean_ops]
-        else:
-            expected = None
+        from g4usim_gui.core.document_edit_model import table_values
+        collection = {'geometry_table':'volume', 'boolean_table':'boolean'}.get(name)
+        expected = table_values(snapshot, collection) if collection is not None else None
         if expected is None or len(expected) != len(raw_rows) or any(len(raw) != len(typed) or
             any(not _draft_equivalent(value, accepted, name + "." + str(column)) for column, (value, accepted)
                 in enumerate(zip(raw, typed))) for raw, typed in zip(raw_rows, expected)):
@@ -303,27 +352,7 @@ def _field_report(snapshot):
         candidate.outputDir = candidate.outputDir or str(Path(candidate.workspaceRoot or Path.cwd()) / "output")
         report = validate_project_report(candidate)
     from g4usim_gui.core.config_schema import check_value
-    for kind, source in snapshot.state["sources"].items():
-        # Captured editor sources belong to generated input selection. External
-        # Inspect observes the actual main/macro through its original-input
-        # identity and backend preflight; dormant editor history is not an input.
-        if project.runInputMode != "generated":
-            continue
-        document = project.materialEditor if kind == "materials" else project.geometryEditor
-        if document is None or not document.source_path:
-            continue
-        selected = project.pathSettings.materials_config if kind == "materials" else project.geometrySettings.config_path
-        base = Path(project.workspaceRoot or project.pathSettings.workspace_root or Path.cwd())
-        selected_path = Path(selected)
-        selected_path = selected_path if selected_path.is_absolute() else base / selected_path
-        try:
-            same = (source["read_success"] and selected_path.resolve() == Path(source["path"]).resolve()
-                    and selected_path.read_text(encoding="utf-8", errors="replace") == source["text"])
-        except OSError:
-            same = False
-        if not same:
-            report.add("experiment.captured_source.changed", "error", kind, origin="experiment",
-                       editor="setup", field=kind + "_config", unavailable_reason="source_changed")
+    document_source_diagnostics(snapshot, report)
     drafts = snapshot.state["drafts"]
     for binding in ("config.seed", "project.seed"):
         if binding in drafts and str(drafts[binding]).strip():
@@ -336,6 +365,8 @@ def _field_report(snapshot):
     # retain their last accepted values. Refuse that discrepancy, never erase it.
     for binding, value in drafts.items():
         if binding.startswith("detail."):
+            from g4usim_gui.core.document_edit_model import is_document_draft
+            if is_document_draft(binding): continue
             parts = binding.split(".")
             try:
                 rows = project.materialEditor.rows if parts[1] == "material" else project.geometryEditor.layered_device.layers

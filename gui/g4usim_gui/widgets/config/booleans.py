@@ -14,6 +14,9 @@ class BooleansMixin:
     """Boolean operations table (hierarchical geometry). Mixed into ConfigBuilderPage."""
 
     def _on_boolean_table_changed(self, item: QTableWidgetItem) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._document_action({'kind':'geometry_cell','column':item.column(),'raw':item.text()},collection='boolean',index=item.row())
         if self._building:
             return
         row = item.row()
@@ -38,6 +41,9 @@ class BooleansMixin:
 
     @edit_operation('Add boolean operation')
     def _add_boolean_op(self) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._document_action({'kind':'geometry_structure','collection':'boolean','operation':'add'})
         target = self._first_non_world_volume_name()
         index = sum(1 for op in self.geometry_document.boolean_ops if op.target_volume == target)
         self.geometry_document.boolean_ops.append(
@@ -59,6 +65,9 @@ class BooleansMixin:
 
     @edit_operation('Duplicate boolean operation')
     def _duplicate_boolean_op(self) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._geometry_structure_action('boolean','duplicate')
         row = self.boolean_table.currentRow()
         if row < 0 or row >= len(self.geometry_document.boolean_ops):
             return
@@ -76,6 +85,9 @@ class BooleansMixin:
 
     @edit_operation('Delete boolean operation')
     def _delete_boolean_op(self) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._geometry_structure_action('boolean','delete')
         row = self.boolean_table.currentRow()
         if row < 0 or row >= len(self.geometry_document.boolean_ops):
             return
@@ -86,6 +98,9 @@ class BooleansMixin:
 
     @edit_operation('Move boolean operation')
     def _move_boolean_op(self, direction: int) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._geometry_structure_action('boolean','move',direction=direction)
         row = self.boolean_table.currentRow()
         target = row + direction
         rows = self.geometry_document.boolean_ops

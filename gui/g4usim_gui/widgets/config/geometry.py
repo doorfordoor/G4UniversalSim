@@ -99,7 +99,7 @@ class GeometryDetailsWidget(QWidget):
                 edit.setMaximumHeight(80)
                 edit.textChanged.connect(self._changed)
             else:
-                edit.textEdited.connect(self._changed)
+                edit.textChanged.connect(self._changed)
         if kind != 'layer':
             names = [name for name, entry in SOLIDS.items() if kind != 'boolean' or entry['boolean_tool']]
             field('shape', 'Shape parameters', choices=names)
@@ -454,7 +454,7 @@ class GeometryMixin:
             self.layer_position,
             self.layer_rotation,
         ]:
-            widget.textEdited.connect(self._update_geometry_from_widgets)
+            widget.textChanged.connect(self._update_geometry_from_widgets)
         for combo in [
             self.simple_world_material,
             self.simple_target_shape,
@@ -548,6 +548,9 @@ class GeometryMixin:
 
     @edit_operation('Change geometry mode')
     def _on_geometry_template_changed(self) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._document_action({'kind':'geometry_scalar','binding':'config.geometry_template','value':self._geometry_template_token()})
         if self._building:
             return
         set_geometry_mode(self.geometry_document, self._geometry_template_token())
@@ -584,6 +587,9 @@ class GeometryMixin:
 
     @edit_operation('Change source-copy mode')
     def _on_geometry_source_copy_toggled(self, checked: bool) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._document_action({'kind':'geometry_scalar','binding':'config.geometry_source_copy','value':checked})
         if self._building:
             return
         self.geometry_document.source_copy_mode = checked
@@ -687,6 +693,9 @@ class GeometryMixin:
         self._select_boolean_details()
 
     def _update_geometry_from_widgets(self) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._geometry_scalar_action()
         if self._building:
             return
         simple = self.geometry_document.simple_box
@@ -717,6 +726,9 @@ class GeometryMixin:
         self._emit_changed()
 
     def _on_hierarchical_table_changed(self, item: QTableWidgetItem) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._document_action({'kind':'geometry_cell','column':item.column(),'raw':item.text()},collection='volume',index=item.row())
         if self._building:
             return
         row = item.row()
@@ -756,6 +768,9 @@ class GeometryMixin:
 
     @edit_operation('Add volume')
     def _add_hierarchical_volume(self) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._document_action({'kind':'geometry_structure','collection':'volume','operation':'add'})
         existing = {volume.name for volume in self.geometry_document.volumes}
         name = self._unique_name("Volume", existing)
         parent = "world" if any(volume.name.lower() == "world" for volume in self.geometry_document.volumes) else ""
@@ -767,6 +782,9 @@ class GeometryMixin:
 
     @edit_operation('Duplicate volume')
     def _duplicate_hierarchical_volume(self) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._geometry_structure_action('volume','duplicate')
         row = self.geometry_table.currentRow()
         if row < 0 or row >= len(self.geometry_document.volumes):
             return
@@ -782,6 +800,9 @@ class GeometryMixin:
 
     @edit_operation('Delete volume')
     def _delete_hierarchical_volume(self) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._geometry_structure_action('volume','delete')
         row = self.geometry_table.currentRow()
         if row < 0 or row >= len(self.geometry_document.volumes):
             return
@@ -795,6 +816,9 @@ class GeometryMixin:
 
     @edit_operation('Move volume')
     def _move_hierarchical_volume(self, direction: int) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._geometry_structure_action('volume','move',direction=direction)
         row = self.geometry_table.currentRow()
         target = row + direction
         rows = self.geometry_document.volumes
@@ -886,6 +910,8 @@ class GeometryMixin:
         self._select_geometry_details()
 
     def _on_geometry_row_selected(self) -> None:
+        owner=getattr(self,'_history_owner',None)
+        if owner is not None: owner.select_document_row('geometry_table',self.geometry_table.currentRow())
         rows = {index.row() for index in self.geometry_table.selectedIndexes()}
         item = self.geometry_table.item(min(rows), 1) if rows else None
         self.preview3d_widget.select_volume(item.text().strip() if item is not None else "")
@@ -898,12 +924,17 @@ class GeometryMixin:
 
     def _select_boolean_details(self) -> None:
         if self._building: return
+        owner=getattr(self,'_history_owner',None)
+        if owner is not None: owner.select_document_row('boolean_table',self.boolean_table.currentRow())
         index = self.boolean_table.currentRow()
         rows = self.geometry_document.boolean_ops
         self.boolean_details.set_row(rows[index] if 0 <= index < len(rows) else None)
 
     @edit_operation('Edit volume details')
     def _on_volume_details_changed(self) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._geometry_backend_action('volume',self.volume_details,self.geometry_table.currentRow())
         if self._building: return
         index = self.geometry_table.currentRow()
         if not 0 <= index < len(self.geometry_document.volumes): return
@@ -913,6 +944,9 @@ class GeometryMixin:
 
     @edit_operation('Edit boolean tool details')
     def _on_boolean_details_changed(self) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._geometry_backend_action('boolean',self.boolean_details,self.boolean_table.currentRow())
         if self._building: return
         index = self.boolean_table.currentRow()
         if not 0 <= index < len(self.geometry_document.boolean_ops): return
@@ -922,6 +956,9 @@ class GeometryMixin:
 
     @edit_operation('Edit layer backend details')
     def _on_layer_backend_details_changed(self) -> None:
+        if hasattr(self, '_document_action'):
+            if self._building or getattr(self, '_document_projecting', False): return
+            return self._geometry_backend_action('layer',self.layer_backend_details,self._selected_layer_row)
         if self._building: return
         index = self._selected_layer_row
         rows = self.geometry_document.layered_device.layers
@@ -948,3 +985,27 @@ class GeometryMixin:
                 if item is not None: item.setText(value)
         finally:
             self._building = previous
+
+    def _geometry_structure_action(self, collection, operation, **values):
+        from g4usim_gui.core.document_edit_model import TABLES, document_rows
+        index = self._selected_layer_row if collection == 'layer' else getattr(self,TABLES[collection]).currentRow()
+        if not 0 <= index < len(document_rows(self._document_snapshot(),collection)): return
+        return self._document_action(dict(kind='geometry_structure',collection=collection,operation=operation,**values),
+                                     collection=collection,index=index)
+
+    def _geometry_backend_action(self, collection, details, index):
+        if index < 0: return
+        return self._document_action({'kind':'geometry_detail','values':{k:details._text(w) for k,w in details.fields.items()}},
+                                     collection=collection,index=index)
+
+    def _geometry_scalar_action(self):
+        from g4usim_gui.core.document_edit_model import DOCUMENT_BINDINGS
+        from g4usim_gui.window.transactions import _read_control
+        sender=self.sender()
+        for binding in DOCUMENT_BINDINGS:
+            if binding in ('config.geometry_template','config.geometry_source_copy'): continue
+            control=getattr(self,binding[7:])
+            if sender is control:
+                return self._document_action({'kind':'geometry_scalar','binding':binding,'value':_read_control(control)})
+        # Layer details share this legacy aggregate signal; do not collect inactive scalars.
+        self._update_selected_layer_from_detail()

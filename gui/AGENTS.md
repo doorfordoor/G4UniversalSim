@@ -86,6 +86,13 @@ external batch/csh 的随机恢复须经过后端守卫，仅支持当前 MixMax
 - 源 materials.ini、geometry.ini 不得被编辑器直接覆盖。编辑结果写入独立 run package，并在报告中记录 copied 或 generated 来源。
 - 项目 JSON schema 当前为 G4UniversalSimProject version 7，完整材料/几何与raw编辑草稿一并持久保存，已知1–6版本兼容。`runInputMode` 只保存 `generated`/`external` 机器值；旧项目缺少该字段时，有 config/macro 路径迁移为 `external`，否则迁移为 `generated`。修改字段必须增加读取兼容或迁移测试，不能静默丢弃旧项目状态。
 
+### 材料/几何编辑的事务边界
+
+- 绑定工作区中的材料/几何文档、raw/pending 草稿、来源和选择沿用 `WorkspaceSnapshot` / `EditSession` 单一权威；控件通过有限数据动作发布，capture/save 不再从控件反写文档，也不另设状态 owner。
+- 数据动作不读取 QWidget、不执行文件 IO；显式源读取和 Qt 输入/投影适配留在边界。D07 仅支持“不创建界面对象完成已迁移数据编辑/序列化”：既有导入链仍可能加载 Qt，不宣称可在未安装 PySide6 的环境独立使用。
+- 键入与兼容的程序化输入走同一动作通道；投影使用现有守卫抑制输入副作用，不放宽 revision、重入或回滚检查。概要和表格投影同一候选，拒绝时恢复旧显示；不以定时刷新或模拟编辑补一致性。
+- reload 失败仅报告本次操作失败，不改写旧文档/raw/来源/概要；所选坏路径仍保留并参与 generated 准入。成功 reload 的来源和概要随文档接受，不在 Undo/Redo 或投影时重新读取源文件。
+
 ## 2. 后端能力边界
 
 - 每个 GUI 控件必须有明确的后端映射：配置 section/key 或 macro 命令、单位、默认值、校验、writer 输出和至少一个 smoke 断言。

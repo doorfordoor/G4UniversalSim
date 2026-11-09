@@ -140,9 +140,9 @@ class MaterialsMixin:
 
     def _connect_material_detail(self) -> None:
         """The selected material's fields."""
-        self.material_name.textEdited.connect(self._update_selected_material_from_detail)
+        self.material_name.textChanged.connect(self._update_selected_material_from_detail)
         self.material_mode.currentTextChanged.connect(self._update_selected_material_from_detail)
-        self.material_density.textEdited.connect(self._update_selected_material_from_detail)
+        self.material_density.textChanged.connect(self._update_selected_material_from_detail)
         self.material_components.textChanged.connect(self._update_selected_material_from_detail)
         self.material_enabled.stateChanged.connect(self._update_selected_material_from_detail)
         self.element_search.textChanged.connect(self._refresh_element_choices)
@@ -276,6 +276,10 @@ class MaterialsMixin:
         self.material_notes.setPlainText("\n".join(notes))
 
     def _on_material_selection_changed(self) -> None:
+        owner = getattr(self, '_history_owner', None)
+        if owner is not None and not self._building and not owner._history_restoring:
+            owner.select_document_row('materials_table', self.materials_table.currentRow())
+            return
         self._select_material_row(self.materials_table.currentRow())
 
     def _update_selected_material_from_detail(self) -> None:
@@ -284,6 +288,11 @@ class MaterialsMixin:
         row = self._selected_material_row
         if row < 0 or row >= len(self.material_document.rows):
             return
+        if hasattr(self, '_document_action'):
+            return self._material_action('material_detail', row, values={
+                'name': self.material_name.text(), 'mode': self.material_mode.currentText(),
+                'density': self.material_density.text(), 'enabled': self.material_enabled.isChecked(),
+                'components_text': self.material_components.toPlainText()})
         item = self.material_document.rows[row]
         capture_detail_raw(self, "material", item)
         item.name = self.material_name.text().strip()
@@ -301,6 +310,8 @@ class MaterialsMixin:
 
     @edit_operation('Add material')
     def _add_material(self, mode: str) -> None:
+        if hasattr(self, '_document_action'):
+            return self._material_action('material_add', mode=mode)
         row = add_default_row(self.material_document, mode)
         self._selected_material_row = self.material_document.rows.index(row)
         self._populate_material_editor()
@@ -310,6 +321,10 @@ class MaterialsMixin:
     @edit_operation('Duplicate material')
     def _duplicate_material(self) -> None:
         row = self.materials_table.currentRow()
+        if hasattr(self, '_document_action'):
+            if row >= 0:
+                return self._material_action('material_duplicate', row)
+            return
         duplicated = duplicate_row(self.material_document, row)
         if duplicated is None:
             return
@@ -321,6 +336,15 @@ class MaterialsMixin:
     @edit_operation('Delete material')
     def _delete_material(self) -> None:
         row = self.materials_table.currentRow()
+        if hasattr(self, '_document_action'):
+            if row >= 0:
+                name = self._document_snapshot().project.materialEditor.rows[row].name
+                referenced = self.geometry_summary and name in self.geometry_summary.material_refs
+                result = self._material_action('material_delete', row)
+                if referenced:
+                    self.materials_messages.appendPlainText(f"[WARN] Deleted material '{name}' is referenced by geometry; validation will report this.")
+                return result
+            return
         if self.geometry_summary and 0 <= row < len(self.material_document.rows):
             name = self.material_document.rows[row].name
             if name in self.geometry_summary.material_refs:
@@ -338,6 +362,9 @@ class MaterialsMixin:
     def _validate_materials_editor(self) -> None:
         validate_material_document(self.material_document, geometry_material_refs=self._geometry_refs())
         self._populate_material_editor()
+
+    def _material_action(self, kind, index=None, **values):
+        return self._document_action(dict(kind=kind, **values), collection='material', index=index)
 
     def _component_source_text(self, name, source) -> str:
         labels = {

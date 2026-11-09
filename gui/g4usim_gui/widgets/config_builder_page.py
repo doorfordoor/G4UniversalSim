@@ -1,12 +1,17 @@
 from __future__ import annotations
 
 from dataclasses import replace
+import copy
 from pathlib import Path
 
-from PySide6.QtCore import QTimer, Signal
+from PySide6.QtCore import QTimer, Signal, QSignalBlocker
 from PySide6.QtWidgets import (
     QFrame,
+    QAbstractButton,
+    QAbstractSpinBox,
     QLineEdit,
+    QApplication,
+    QPlainTextEdit,
     QScrollArea,
     QComboBox,
     QLabel,
@@ -61,9 +66,43 @@ class LiveDraftDelegate(DiagnosticDraftDelegate):
                 page = page.parentWidget()
             if page is not None:
                 owner = getattr(page, '_history_owner', None)
-                if owner is not None:
-                    editor.textEdited.connect(owner._queue_history_change)
+                from g4usim_gui.core.document_edit_model import row_ref
+                collection = 'volume' if self.parent() is page.geometry_table else 'boolean'
+                editor._document_collection = collection
+                editor._document_owner = owner
+                editor._document_page = page
+                editor._document_ref = row_ref(page._document_snapshot(), collection, index.row(),
+                                               owner._edit_session.revision if owner else 0)
+                def buffer(text):
+                    page._document_action({'kind':'geometry_buffer','ref':editor._document_ref,
+                                           'column':index.column(),'raw':text})
+                    editor._document_ref = row_ref(page._document_snapshot(), collection, index.row(),
+                                                   owner._edit_session.revision if owner else 0)
+                editor.textEdited.connect(buffer)
         return editor
+
+    def setModelData(self, editor, model, index):  # noqa: N802
+        page = getattr(editor, '_document_page', None)
+        if page is None:
+            return super().setModelData(editor, model, index)
+        page._document_action({'kind':'geometry_cell','ref':editor._document_ref,
+                               'column':index.column(),'raw':editor.text()})
+        editor._document_committed = True
+
+    def destroyEditor(self, editor, index):  # noqa: N802
+        owner = getattr(editor, '_document_owner', None)
+        if owner is not None and not getattr(editor, '_document_retired', False) and not owner._history_restoring and not getattr(owner.config_builder_page, '_document_projecting', False):
+            owner.finish_document_pending(editor._document_collection, editor._document_ref, index.column())
+        elif owner is None and hasattr(editor, '_document_page') and not getattr(editor, '_document_retired', False):
+            page = editor._document_page
+            if not getattr(page, '_document_projecting', False):
+                from g4usim_gui.core.document_edit_model import TABLES
+                table = TABLES[editor._document_collection]
+                state = getattr(page, '_document_local_state', None)
+                if state is not None:
+                    state['selections'].pop(f'pending_{table}_row', None)
+                    state['selections'].pop(f'pending_{table}_column', None)
+        return super().destroyEditor(editor, index)
 
 
 class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, BooleansMixin,
@@ -282,7 +321,23 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
         owner._sps_projection_snapshot = WorkspaceSnapshot(project)
         try:
             with self._sps_private_projection(project):
-                return self._set_from_project_projection(project, reload_sources=reload_sources)
+                result = self._set_from_project_projection(project, reload_sources=reload_sources)
+            if reload_sources:
+                # Legacy input normalization is explicit data, consumed by the
+                # caller's reset/outer transaction; it is not a later capture.
+                project.materialEditor = copy.deepcopy(self.material_document)
+                project.geometryEditor = copy.deepcopy(self.geometry_document)
+                state = copy.deepcopy(owner._sps_projection_snapshot.state)
+                project.editingState = state
+                if owner._history_depth:
+                    candidate = owner.run_path_snapshot()
+                    candidate.project.materialEditor = copy.deepcopy(project.materialEditor)
+                    candidate.project.geometryEditor = copy.deepcopy(project.geometryEditor)
+                    candidate.state['sources'] = copy.deepcopy(state['sources'])
+                    candidate.state['tables'] = copy.deepcopy(state['tables'])
+                    candidate.project.editingState = copy.deepcopy(candidate.state)
+                    owner._run_path_transaction_candidate = candidate
+            return result
         finally:
             if previous is None:
                 owner.__dict__.pop('_sps_projection_snapshot', None)
@@ -290,6 +345,8 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
                 owner._sps_projection_snapshot = previous
 
     def _set_from_project_projection(self, project: G4USimProject, *, reload_sources: bool = True) -> None:
+        self._document_input_project = copy.deepcopy(project)
+        self._document_local_state = copy.deepcopy(project.editingState)
         self.invalidate_diagnostics()
         self._building = True
         run = project.runSettings
@@ -334,33 +391,23 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
         self._populate_sps_editors()
         if not reload_sources:
             return
-        # A new in-memory identity must replace the old source view before the
-        # no-source Reload guard preserves its current document.
+        # Explicit legacy input normalization. An existing empty document is
+        # still a document; only absent material input selects the file loader.
         saved_materials = getattr(project, 'materialEditor', None)
         saved_geometry = getattr(project, 'geometryEditor', None)
-        if (isinstance(saved_materials, MaterialDocument) and saved_materials.is_dirty
-                and not paths.materials_config and not saved_materials.source_path and not saved_materials.raw_source_text):
-            self.material_document = saved_materials
-            self.materials_summary = None
-            self.materials_raw.clear()
-        if (isinstance(saved_geometry, GeometryDocument) and saved_geometry.is_dirty
-                and not self.geometry_config.text().strip() and not saved_geometry.source_path and not saved_geometry.raw_source_text):
-            self.geometry_document = saved_geometry
-            self.geometry_summary = None
-            self.geometry_raw.clear()
-        self.reload_materials()
-        self.reload_geometry()
-        if isinstance(saved_materials, MaterialDocument):
-            self.material_document = saved_materials
-            self._populate_material_editor()
-        if isinstance(saved_geometry, GeometryDocument) and (
-            saved_geometry.is_dirty or saved_geometry.source_copy_mode
-        ):
-            self.geometry_document = saved_geometry
-            self._populate_geometry_editor()
-            # revalidate materials against the restored (edited) geometry, not the source file
-            self._populate_material_editor()
-            self._update_workspace_summary()
+        self.material_document = copy.deepcopy(saved_materials) if saved_materials is not None else MaterialDocument()
+        self.geometry_document = copy.deepcopy(saved_geometry) if saved_geometry is not None else GeometryDocument()
+        self.materials_summary = self.geometry_summary = None
+        self.materials_raw.setPlainText(self._preview_text(self.material_document.raw_source_text))
+        self.geometry_raw.setPlainText(self._preview_text(self.geometry_document.raw_source_text))
+        if saved_materials is None:
+            self.reload_materials()
+        if not (saved_geometry is not None and (saved_geometry.is_dirty or saved_geometry.source_copy_mode
+                or saved_geometry.raw_source_text or project.editingState is not None)):
+            self.reload_geometry()
+        self._populate_geometry_editor()
+        self._populate_material_editor()
+        self._update_workspace_summary()
 
     def update_project(self, project: G4USimProject) -> None:
         if getattr(self, '_history_owner', None) is None:
@@ -370,8 +417,9 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
             project.geometrySettings = self.geometry_settings()
         else:
             # Template is outside AR4 run/path; config_path is model-owned.
-            project.geometrySettings.template = self._geometry_template_token()
-        project.geometryEditor = self.geometry_document
+            project.geometrySettings.template = self._history_owner.run_path_snapshot().project.geometrySettings.template
+        project.geometryEditor = (copy.deepcopy(self._history_owner.run_path_snapshot().project.geometryEditor)
+                                  if getattr(self, '_history_owner', None) is not None else self.geometry_document)
         owner = getattr(self, '_history_owner', None)
         if owner is not None:
             from g4usim_gui.core.sps_edit_model import copy_sps
@@ -383,42 +431,167 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
             project.sourceSettings = self.source_settings()
             project.physicsSettings = self.physics_settings()
             project.scoringSettings = self.scoring_settings()
-        project.materialEditor = self.material_document
+        project.materialEditor = (copy.deepcopy(owner.run_path_snapshot().project.materialEditor)
+                                  if owner is not None else self.material_document)
+
+    def _document_snapshot(self):
+        from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot
+        owner = getattr(self, '_history_owner', None)
+        if owner is not None:
+            return owner.run_path_snapshot()
+        project = copy.deepcopy(getattr(self, '_document_input_project', G4USimProject()))
+        project.materialEditor = copy.deepcopy(self.material_document)
+        project.geometryEditor = copy.deepcopy(self.geometry_document)
+        # An unbound page is an explicit input adapter, not a second session.
+        project.pathSettings = self.path_settings(project)
+        project.geometrySettings = self.geometry_settings()
+        return WorkspaceSnapshot(project, getattr(self, '_document_local_state', project.editingState))
+
+    def _document_action(self, action, *, collection=None, index=None):
+        from g4usim_gui.core.document_edit_model import row_ref, reduce_documents
+        if self._building or getattr(self, '_document_projecting', False):
+            return
+        owner = getattr(self, '_history_owner', None)
+        snapshot = self._document_snapshot()
+        revision = owner._edit_session.revision if owner is not None else 0
+        if index is not None:
+            action = dict(action, ref=row_ref(snapshot, collection, index, revision))
+        if owner is not None:
+            return owner.edit_document(action)
+        candidate = reduce_documents(snapshot, action, revision=revision)
+        if action['kind'] in ('geometry_buffer','geometry_cell'):
+            self._project_document_buffer(candidate)
+        else:
+            self._project_document_candidate(candidate, material_only=action['kind'].startswith('material_'))
+        self._document_input_project = copy.deepcopy(candidate.project)
+        self._document_local_state = copy.deepcopy(candidate.state)
+        if action['kind'] == 'geometry_cell': self._refresh_document_cell_view()
+        self._emit_changed()
+
+    def _refresh_document_cell_view(self):
+        self._validate_geometry_editor()
+        self._select_geometry_details()
+        self._select_boolean_details()
+        self._update_generated_geometry_preview()
+        self._update_workspace_summary()
+
+    def _project_document_buffer(self, snapshot):
+        self.geometry_document = copy.deepcopy(snapshot.project.geometryEditor)
+        for name in ('geometry_table', 'boolean_table'):
+            table = getattr(self, name)
+            blocker = QSignalBlocker(table)
+            for row, values in enumerate(snapshot.state['tables'].get(name, [])):
+                for column, text in enumerate(values):
+                    if (snapshot.state['selections'].get(f'pending_{name}_row') == row
+                            and snapshot.state['selections'].get(f'pending_{name}_column') == column):
+                        continue
+                    item = table.item(row,column)
+                    if item is not None and item.text() != text:
+                        item.setText(text)
+            for editor in table.findChildren(QLineEdit):
+                if not editor.isHidden() and hasattr(editor,'_f5_cell_row'):
+                    row,column=editor._f5_cell_row,editor._f5_cell_column
+                    values=snapshot.state['tables'].get(name,[])
+                    if 0 <= row < len(values) and editor.text()!=values[row][column]:
+                        position=editor.cursorPosition()
+                        editor.setText(values[row][column])
+                        editor.setCursorPosition(min(position,len(editor.text())))
+            del blocker
+
+
+    def _project_document_candidate(self, snapshot, *, material_only=False):
+        """Disposable view objects; validators never mutate the published document."""
+        previous = self._building
+        from shiboken6 import isValid
+        focused = QApplication.focusWidget()
+        cursor = focused.cursorPosition() if isinstance(focused, QLineEdit) else None
+        text_cursor = focused.textCursor() if isinstance(focused, QPlainTextEdit) else None
+        blocked = [QSignalBlocker(w) for w in self.findChildren(QWidget)
+                   if isinstance(w, (QLineEdit, QPlainTextEdit, QComboBox, QAbstractButton, QAbstractSpinBox, QTableWidget))
+                   and not hasattr(w, "_f5_cell_row")]
+        self._document_projecting = True
+        if not material_only:
+            for name in ('geometry_table', 'boolean_table'):
+                for editor in getattr(self, name).findChildren(QLineEdit):
+                    if hasattr(editor, '_document_ref'): editor._document_retired = True
+        try:
+            self.material_document = copy.deepcopy(snapshot.project.materialEditor)
+            if not material_only:
+                self.geometry_document = copy.deepcopy(snapshot.project.geometryEditor)
+                self._set_geometry_template_token(snapshot.project.geometrySettings.template)
+            for key, text in snapshot.state['drafts'].items():
+                if key.startswith(('detail.material.', 'detail.layer.')):
+                    if material_only and key.startswith('detail.layer.'): continue
+                    _, kind, index, field = key.split('.')
+                    rows = self.material_document.rows if kind == 'material' else self.geometry_document.layered_device.layers
+                    row = rows[int(index)]
+                    if not hasattr(row, '_f5_raw_drafts'): row._f5_raw_drafts = {}
+                    row._f5_raw_drafts[field] = text
+            self._selected_material_row = snapshot.state['selections'].get('materials_table', -1)
+            self._selected_layer_row = snapshot.state['selections'].get('layer_table', -1)
+            if not material_only:
+                self._populate_geometry_editor()
+            self._populate_material_editor()
+            for name in ('materials_table',) if material_only else ('materials_table','layer_table','geometry_table','boolean_table'):
+                table = getattr(self,name)
+                index = snapshot.state['selections'].get(name,-1)
+                if index >= 0: table.selectRow(index)
+                else:
+                    table.setCurrentCell(-1,-1)
+                    table.clearSelection()
+            self._select_material_row(self._selected_material_row)
+            if not material_only:
+                self._select_layer_row(self._selected_layer_row)
+                self._select_geometry_details()
+                self._select_boolean_details()
+                from g4usim_gui.window.transactions import _write_control
+                from g4usim_gui.core.document_edit_model import DOCUMENT_BINDINGS
+                for binding in DOCUMENT_BINDINGS:
+                    if binding in snapshot.state['drafts']:
+                        _write_control(getattr(self,binding[7:]),snapshot.state['drafts'][binding])
+                for name in ('geometry_table','boolean_table'):
+                    table=getattr(self,name)
+                    for i, row in enumerate(snapshot.state['tables'].get(name,[])):
+                        for j, text in enumerate(row):
+                            table.item(i,j).setText(text)
+            if focused is not None and isValid(focused) and not hasattr(focused, "_f5_cell_row") and self.isAncestorOf(focused):
+                focused.setFocus()
+                if cursor is not None: focused.setCursorPosition(min(cursor,len(focused.text())))
+                if text_cursor is not None:
+                    text_cursor.setPosition(min(text_cursor.position(),len(focused.toPlainText())))
+                    focused.setTextCursor(text_cursor)
+        finally:
+            self._document_projecting = False
+            self._building = previous
+            del blocked
+        if not material_only:
+            for name in ('geometry_table', 'boolean_table'):
+                row = snapshot.state['selections'].get(f'pending_{name}_row')
+                column = snapshot.state['selections'].get(f'pending_{name}_column')
+                if row is not None and column is not None:
+                    table = getattr(self, name)
+                    blocker = QSignalBlocker(table)
+                    table.setCurrentCell(row, column)
+                    table.editItem(table.item(row, column))
+                    del blocker
 
     def validate_current(self, project: G4USimProject) -> ValidationReport:
-        if not self.material_document.is_dirty and 'materials' not in self._f5_frozen_sources:
-            self.reload_materials()
-        if not self.geometry_document.is_dirty and not self.geometry_document.source_copy_mode and 'geometry' not in self._f5_frozen_sources:
-            self.reload_geometry()
+        snapshot = self._document_snapshot()
+        materials = copy.deepcopy(snapshot.project.materialEditor)
+        geometry = copy.deepcopy(snapshot.project.geometryEditor)
         report = validate_config_builder(
             paths=self.path_settings(project),
             run=self.run_settings(),
-            geometry=self.geometry_settings(),
+            geometry=copy.deepcopy(snapshot.project.geometrySettings),
             source=self.source_settings(),
             physics=self.physics_settings(),
             scoring=self.scoring_settings(),
-            material_document=self.material_document if self.material_document.is_dirty else None,
-            geometry_document=self.geometry_document,
+            material_document=materials if materials is not None and materials.is_dirty else None,
+            geometry_document=geometry,
             source_model=self.source_editor,
             physics_model=self.physics_editor,
             scoring_model=self.scoring_editor,
         )
-        for kind, document, control in (
-            ('materials', self.material_document, self.materials_config),
-            ('geometry', self.geometry_document, self.geometry_config),
-        ):
-            if kind not in self._f5_frozen_sources or not document.source_path:
-                continue
-            try:
-                current = Path(control.text().strip()).expanduser().resolve()
-                same = current == Path(document.source_path).resolve() and current.read_text(encoding='utf-8', errors='replace') == document.raw_source_text
-            except OSError:
-                same = False
-            if not same:
-                message = ('Materials source changed since the editor was loaded; reload materials before generating a package.'
-                           if kind == 'materials' else 'Geometry source changed since the editor was loaded; reload geometry before generating a package.')
-                report.add(f'config.source.{kind}.recovered_changed', 'error', ui_text(message),
-                           editor='setup', field=f'{kind}_config')
         seed_text = self.seed.text().strip()
         if seed_text:
             problem = check_value("run", "seed", seed_text)   # as the backend reads it: 0..2147483647
@@ -427,6 +600,9 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
                 report.add("run.seed.invalid", "error", ui_format(template, problem=problem),
                            origin="run", editor="run", field="seed", message_key=template,
                            params={"problem": problem}, identity_parameters={"value": seed_text})
+        from g4usim_gui.core.experiment_workflow import document_raw_diagnostics, document_source_diagnostics
+        document_raw_diagnostics(snapshot,report)
+        document_source_diagnostics(snapshot,report,recovered=True)
         report._f4_editor_snapshot = self._current_diagnostic_snapshot()
         return report
 
@@ -536,21 +712,71 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
                                           message=result.message)
         return result
 
-    @edit_operation('Reload materials')
-    def reload_materials(self) -> None:
-        self.invalidate_diagnostics()
-        MaterialsMixin.reload_materials(self)
-        self._f5_frozen_sources.discard('materials')
-        if getattr(self, '_history_owner', None) is not None and not self._history_owner._history_restoring:
-            self._emit_changed()
+    def reload_materials(self):
+        return self._reload_document('materials')
 
-    @edit_operation('Reload geometry')
-    def reload_geometry(self) -> None:
+    def reload_geometry(self):
+        return self._reload_document('geometry')
+
+    def _reload_document(self, domain):
+        from g4usim_gui.core.edit_transactions import TransactionConflict
+        from g4usim_gui.core.document_edit_model import reduce_documents
+        from g4usim_gui.parsers.materials_parser import parse_materials_text
+        from g4usim_gui.parsers.geometry_parser import parse_geometry_text
+        from g4usim_gui.editors.material_editor_model import material_document_from_summary
+        from g4usim_gui.editors.geometry_editor_model import geometry_document_from_summary
+        owner=getattr(self,'_history_owner',None)
+        before=self._document_snapshot()
+        session=owner._edit_session if owner is not None else None
+        revision=session.revision if session is not None else 0
+        selected=(before.project.pathSettings.materials_config if domain=='materials'
+                  else before.project.geometrySettings.config_path or before.project.pathSettings.geometry_config)
+        message=getattr(self,domain+'_messages')
+        if not selected.strip():
+            document = before.project.materialEditor if domain == 'materials' else before.project.geometryEditor
+            notice = ('This material document is in memory; Reload/Revert needs a source file. Your edits are retained.'
+                      if domain == 'materials' else
+                      'This geometry document is in memory; Reload/Revert needs a source file. Your edits are retained.'
+                      if not document.source_path else
+                      'The imported geometry still requires its source path. Your edits are retained.')
+            message.setPlainText(ui_text(notice))
+            return {'kind':domain,'status':'no_source','attempted_path':'','error':''}
+        # Preserve the existing explicit Reload cwd-relative input rule; freeze
+        # its absolute anchor at this read, never reinterpret it during replay.
+        path=Path(selected).expanduser()
+        try:
+            path=path.resolve()
+            text=path.read_text(encoding='utf-8',errors='replace')
+        except OSError as error:
+            message.setPlainText(str(error))
+            return {'kind':domain,'status':'read_failed','attempted_path':str(path),'error':str(error)}
+        template=before.project.geometrySettings.template if domain=='geometry' else ''
+        summary=(parse_materials_text(text,source_path=path) if domain=='materials' else
+                 parse_geometry_text(text,source_path=path,template_name=template))
+        summary._f5_source_anchor=str(path)
+        document=(material_document_from_summary(summary) if domain=='materials' else
+                  geometry_document_from_summary(summary,template))
+        document.source_path=str(path)
+        source={'path':str(path),'text':summary.raw_text,'read_success':True,'template':template}
+        action={'kind':'replace_document','domain':domain,'document':document,'source':source,'summary':summary}
+        if owner is not None and not owner._history_restoring:
+            if owner._edit_session is not session or session.revision != revision or self._document_snapshot().project != before.project:
+                raise TransactionConflict('Document source request is no longer current')
+            owner.edit_document(action)
+        else:
+            # Explicit legacy Open/standalone input normalization, not a widget capture.
+            candidate=reduce_documents(before,action,revision=revision)
+            self._project_document_candidate(candidate,material_only=domain=='materials')
+            self._document_input_project=copy.deepcopy(candidate.project)
+            self._document_local_state=copy.deepcopy(candidate.state)
+            if owner is not None:
+                owner._sps_projection_snapshot=candidate
+        setattr(self,domain+'_summary',summary)
+        getattr(self,domain+'_raw').setPlainText(self._preview_text(summary.raw_text))
+        self._f5_frozen_sources.add(domain)
         self.invalidate_diagnostics()
-        GeometryMixin.reload_geometry(self)
-        self._f5_frozen_sources.discard('geometry')
-        if getattr(self, '_history_owner', None) is not None and not self._history_owner._history_restoring:
-            self._emit_changed()
+        self._update_workspace_summary()
+        return {'kind':domain,'status':'read_success','attempted_path':str(path),'error':''}
 
     def set_package_path(self, path: str) -> None:
         self.package_label.setText(f"Generated package: {path or '<none>'}")

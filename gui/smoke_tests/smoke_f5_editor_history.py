@@ -269,12 +269,22 @@ def main():
             report = page.validate_current(w.project)
             assert any(item.code == 'config.source.materials.recovered_changed' for item in report.diagnostics)
             page.materials_config.setText(str(root / 'missing-materials.ini'))
-            page.reload_materials()
-            missing = snapshot_from_json(snapshot_to_json(w.capture_workspace()))
-            assert not missing.state['sources']['materials']['read_success']
-            w.apply_workspace(missing)
-            assert not page.materials_summary._f4_read_success
-            assert page.material_document.source_errors
+            before_failed_reload = snapshot_to_json(w.capture_workspace())
+            before_summary = copy.deepcopy(vars(page.materials_summary))
+            before_revision = w._edit_session.revision
+            operation = page.reload_materials()
+            assert operation['status'] == 'read_failed' and operation['error']
+            assert operation['attempted_path'] == str((root / 'missing-materials.ini').resolve())
+            assert snapshot_to_json(w.capture_workspace()) == before_failed_reload
+            assert vars(page.materials_summary) == before_summary
+            assert w._edit_session.revision == before_revision
+            assert page.materials_config.text() == str(root / 'missing-materials.ini')
+            try:
+                w._require_document_input()
+            except ValueError:
+                pass
+            else:
+                raise AssertionError('failed reload admitted mismatched generated source')
         finally:
             os.chdir(old_cwd)
             w.apply_workspace(saved_workspace)

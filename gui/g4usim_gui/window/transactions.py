@@ -139,7 +139,9 @@ class EditorHistoryFilter(QObject):
 
     def eventFilter(self, watched, event):  # noqa: N802
         window = self.window
-        if window._history_restoring or not window._is_project_editor(watched):
+        if (window._history_restoring or getattr(getattr(window, '_edit_session', None), '_applying', False)
+                or getattr(window, '_document_projection_snapshot', None) is not None
+                or not window._is_project_editor(watched)):
             return False
         kind = event.type()
         if kind in (QEvent.ShortcutOverride, QEvent.KeyPress):
@@ -235,7 +237,7 @@ class TransactionsMixin:
     def run_path_snapshot(self):
         """Authoritative data, including a synchronous unpublished transaction."""
         from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot, clone_snapshot
-        for name in ('_sps_projection_snapshot', '_run_path_projection_snapshot', '_run_path_transaction_candidate'):
+        for name in ('_document_projection_snapshot', '_sps_projection_snapshot', '_run_path_projection_snapshot', '_run_path_transaction_candidate'):
             candidate = getattr(self, name, None)
             if candidate is not None:
                 return clone_snapshot(candidate)
@@ -434,6 +436,127 @@ class TransactionsMixin:
                 **{f'config.{name}': getattr(self.config_builder_page, name) for name in CONFIG_CONTROLS},
                 **self.config_builder_page.sps_controls()}
 
+    def _project_materials(self, snapshot):
+        self._project_documents(snapshot, material_only=True)
+
+    def _project_documents(self, snapshot, *, material_only=False):
+        self._document_projection_snapshot = snapshot
+        try:
+            self.project.materialEditor = copy.deepcopy(snapshot.project.materialEditor)
+            if not material_only:
+                self.project.geometryEditor = copy.deepcopy(snapshot.project.geometryEditor)
+                self.project.geometrySettings.template = snapshot.project.geometrySettings.template
+            # Parser presentation belongs to the same candidate as the tables.
+            # Replay only captured data; _apply restores both on rejection.
+            self._restore_source_summaries(snapshot)
+            self.config_builder_page._project_document_candidate(snapshot, material_only=material_only)
+        finally:
+            self.__dict__.pop('_document_projection_snapshot', None)
+
+    def edit_document(self, action):
+        from g4usim_gui.core.document_edit_model import reduce_documents
+        from g4usim_gui.core.edit_transactions import TransactionApplyError
+        if self._history_restoring or not self.can_mutate_workspace('edit'):
+            return
+        before = self.run_path_snapshot()
+        generated = self._capture_generated_view()
+        project = self._project_materials if action['kind'].startswith('material_') else self._project_documents
+        if action['kind'] == 'replace_document' and action['domain'] == 'materials':
+            project = self._project_materials
+        if action['kind'] in ('geometry_buffer', 'geometry_cell'):
+            project = self._project_document_buffer
+        try:
+            candidate = reduce_documents(before, action, revision=self._edit_session.revision)
+            if self._history_depth:
+                project(candidate)
+                self._run_path_transaction_candidate = candidate
+                return
+            from g4usim_gui.core.edit_snapshot import snapshot_fingerprint
+            if snapshot_fingerprint(candidate) == snapshot_fingerprint(before):
+                if candidate.state['selections'] != before.state['selections']:
+                    self._publish_document_interaction(before, candidate.state['selections'], self._project_document_buffer)
+                return
+            self._edit_session.replace('Edit document', candidate,
+                expected_revision=self._edit_session.revision,
+                merge_key=f'{self._history_merge_epoch}:material-detail:{action["ref"].index}' if action['kind'] == 'material_detail' else None,
+                apply=project)
+        except Exception as exc:
+            if self._history_depth:
+                raise
+            if isinstance(exc, TransactionApplyError) and exc.rollback is not None:
+                self._freeze_workspace(exc, before)
+            else:
+                try:
+                    if not isinstance(exc, TransactionApplyError):
+                        project(before)
+                    self._restore_generated_view(before, generated)
+                except Exception as rollback:
+                    failure = TransactionApplyError(exc, rollback)
+                    self._freeze_workspace(failure, before)
+                    raise failure from exc
+            raise
+        self.history_changed()
+        self._mark_generated_package_stale()
+        page = self.config_builder_page
+        if action['kind'] == 'geometry_cell': page._refresh_document_cell_view()
+        page.invalidate_diagnostics()
+        page._mark_preview_stale()
+        page.schedule_backend_geometry()
+        page.settingsChanged.emit()
+
+    def _publish_document_interaction(self, before, selections, project):
+        from g4usim_gui.core.edit_transactions import TransactionApplyError
+        try:
+            return self._edit_session.update_interaction(selections,
+                expected_revision=self._edit_session.revision,
+                expected_selections=before.state['selections'], apply=project)
+        except TransactionApplyError as error:
+            if error.rollback is not None:
+                self._freeze_workspace(error, before)
+            raise
+
+    def _project_document_buffer(self, snapshot):
+        """Update cell mirrors without destroying the active delegate editor."""
+        self.project.geometryEditor = copy.deepcopy(snapshot.project.geometryEditor)
+        self.config_builder_page._project_document_buffer(snapshot)
+
+    def finish_document_pending(self, collection, ref, column):
+        from g4usim_gui.core.document_edit_model import TABLES
+        if (self._history_restoring or self._workspace_fault or self._edit_session._applying
+                or getattr(self.config_builder_page,'_document_projecting',False)): return
+        before=self._edit_session.current()
+        table=TABLES[collection]
+        selections=before.state['selections']
+        if (selections.get(f'pending_{table}_row') != ref.index
+                or selections.get(f'pending_{table}_column') != column): return
+        if ref.revision != self._edit_session.revision: return
+        after=dict(selections)
+        after.pop(f'pending_{table}_row',None)
+        after.pop(f'pending_{table}_column',None)
+        self._publish_document_interaction(before, after, None)
+
+    def select_document_row(self, table_name, index):
+        if self._history_restoring or self.config_builder_page._building or getattr(self.config_builder_page,'_document_projecting',False) or not self.can_mutate_workspace('select'):
+            return
+        from g4usim_gui.core.document_edit_model import document_rows
+        before = self._edit_session.current()
+        collection = {'materials_table': 'material','layer_table':'layer','geometry_table':'volume','boolean_table':'boolean'}[table_name]
+        if type(index) is not int or not -1 <= index < len(document_rows(before, collection)):
+            raise ValueError('Invalid document selection')
+        after = dict(before.state['selections'])
+        after[table_name] = index
+        def project(state):
+            page = self.config_builder_page
+            table = getattr(page,table_name)
+            block = QSignalBlocker(table)
+            value = state.state['selections'].get(table_name, -1)
+            if table_name == 'materials_table': page._select_material_row(value)
+            elif table_name == 'layer_table': page._select_layer_row(value)
+            if value >= 0: table.selectRow(value)
+            else: table.clearSelection()
+            del block
+        self._publish_document_interaction(before, after, project)
+
     def _extended_interaction_controls(self):
         page = self.config_builder_page
         controls = page.j2_run_editors.interaction_controls()
@@ -442,6 +565,8 @@ class TransactionsMixin:
         return controls
 
     def _collect_extended_drafts(self):
+        if getattr(self.config_builder_page, '_history_owner', None) is not None:
+            return
         from dataclasses import asdict
         page = self.config_builder_page
         if getattr(page, '_history_owner', None) is None:
@@ -481,13 +606,14 @@ class TransactionsMixin:
     def _capture_drafts(self):
         from g4usim_gui.core.run_path_model import BINDINGS
         from g4usim_gui.core.sps_edit_model import BINDINGS as SPS_BINDINGS
-        BINDINGS = BINDINGS | SPS_BINDINGS
+        from g4usim_gui.core.document_edit_model import DOCUMENT_BINDINGS
+        BINDINGS = BINDINGS | SPS_BINDINGS | DOCUMENT_BINDINGS
         drafts = {key: _read_control(widget) for key, widget in self._editable_controls().items() if key not in BINDINGS}
         for key, widget in self._editable_controls().items():
             if key not in BINDINGS and isinstance(widget, QAbstractSpinBox):
                 drafts[key + '.raw'] = widget.lineEdit().text()
         page = self.config_builder_page
-        for kind, rows in (('material', page.material_document.rows), ('layer', page.geometry_document.layered_device.layers)):
+        for kind, rows in (() if getattr(page, '_history_owner', None) is not None else (('material', page.material_document.rows), ('layer', page.geometry_document.layered_device.layers))):
             for index, row in enumerate(rows):
                 for field, text in getattr(row, '_f5_raw_drafts', {}).items():
                     drafts[f'detail.{kind}.{index}.{field}'] = text
@@ -513,7 +639,7 @@ class TransactionsMixin:
         state['drafts'] = self._capture_drafts()
         state['selections'].update(page.j2_run_editors.selection_state())
         state['drafts'].update({k: v for k, v in authority.state['drafts'].items() if k in OWNED_BINDINGS})
-        for name in ('geometry_table', 'boolean_table'):
+        for name in (() if getattr(page, '_history_owner', None) is not None else ('geometry_table', 'boolean_table')):
             table = getattr(page, name)
             state['tables'][name] = [[table.item(row, col).text() if table.item(row, col) else ''
                                      for col in range(table.columnCount() - 1)] for row in range(table.rowCount())]
@@ -524,7 +650,7 @@ class TransactionsMixin:
                         state['tables'][name][row][column] = editor.text()
                         state['selections'][f'pending_{name}_row'] = row
                         state['selections'][f'pending_{name}_column'] = column
-        for name in ('materials_table', 'layer_table', 'geometry_table', 'boolean_table'):
+        for name in (() if getattr(page, '_history_owner', None) is not None else ('materials_table', 'layer_table', 'geometry_table', 'boolean_table')):
             table = getattr(page, name, None)
             if table is not None:
                 state['selections'][name] = table.currentRow()
@@ -535,6 +661,20 @@ class TransactionsMixin:
                     'read_success': bool(getattr(summary, '_f4_read_success', False)),
                     'template': getattr(summary, 'template_hint', ''),
                 }
+        if getattr(page, '_history_owner', None) is not None:
+            from g4usim_gui.core.document_edit_model import is_document_draft, TABLES
+            project.materialEditor = copy.deepcopy(authority.project.materialEditor)
+            project.geometryEditor = copy.deepcopy(authority.project.geometryEditor)
+            project.geometrySettings.template = authority.project.geometrySettings.template
+            for key in list(state['drafts']):
+                if is_document_draft(key): del state['drafts'][key]
+            state['drafts'].update({k:v for k,v in authority.state['drafts'].items() if is_document_draft(k)})
+            state['tables'] = copy.deepcopy(authority.state['tables'])
+            for key in list(state['selections']):
+                if key in TABLES.values() or key.startswith('pending_'): del state['selections'][key]
+            state['selections'].update({k:v for k,v in authority.state['selections'].items()
+                                       if k in TABLES.values() or k.startswith('pending_')})
+            state['sources'] = copy.deepcopy(authority.state['sources'])
         return WorkspaceSnapshot(project, state,
                                  {'materials': copy.deepcopy(page.materials_summary),
                                   'geometry': copy.deepcopy(page.geometry_summary)})
@@ -962,6 +1102,14 @@ class TransactionsMixin:
     def history_changed(self):
         if not hasattr(self, '_edit_session') or self._history_restoring:
             return
+        # Delegates created during projection precede the session's publication.
+        from g4usim_gui.core.document_edit_model import row_ref
+        current = self._edit_session.current()
+        for name in ('geometry_table', 'boolean_table'):
+            for editor in getattr(self.config_builder_page, name).findChildren(QLineEdit):
+                if not editor.isHidden() and hasattr(editor, '_document_ref'):
+                    editor._document_ref = row_ref(current, editor._document_collection,
+                        editor._f5_cell_row, self._edit_session.revision)
         session = self._edit_session
         self.config_builder_page.j2_run_editors.refresh_references()
         fault = bool(self._workspace_fault)

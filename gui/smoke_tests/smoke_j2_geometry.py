@@ -248,17 +248,28 @@ def run():
         # A missing imported source remains an error and preserves current rows/drafts.
         page.geometry_document.source_path=str(source)
         page.geometry_config.setText(str(folder/'missing.ini'))
-        before_names=[r.name for r in page.geometry_document.volumes]
-        page.reload_geometry()
-        assert [r.name for r in page.geometry_document.volumes]==before_names
+        from g4usim_gui.core.edit_snapshot import snapshot_to_json
+        from g4usim_gui.core.project import G4USimProject
+        before_document=copy.deepcopy(page.geometry_document)
+        before_snapshot=snapshot_to_json(page._document_snapshot())
+        before_summary=copy.deepcopy(page.geometry_summary)
+        before_raw=page.geometry_raw.toPlainText()
+        operation=page.reload_geometry()
+        assert operation['status']=='read_failed' and operation['error']
+        assert operation['attempted_path']==str((folder/'missing.ini').resolve())
+        assert page.geometry_document==before_document
+        assert snapshot_to_json(page._document_snapshot())==before_snapshot
+        assert page.geometry_summary==before_summary
+        assert page.geometry_raw.toPlainText()==before_raw
+        assert page.geometry_config.text()==str(folder/'missing.ini')
         assert page.geometry_document.source_path==str(source)
-        assert page.geometry_document.source_errors
-        assert not getattr(page.geometry_summary,'_f4_read_success',True)
         assert page.seed.text()=='  invalid-seed  '
         assert page.volume_details.fields['parameters'].text()=='  invalid-parameters  '
-        try: generate_geometry_ini_text(page.geometry_document)
-        except ValueError: pass
-        else: assert False,'failed source read was treated as an empty valid source'
+        # The actual page admission observes missing selected input; the typed
+        # writer cannot claim to observe an IO failure absent from its arguments.
+        admission=page.validate_current(G4USimProject())
+        assert any(d.code=='config.path.geometry.missing' and d.severity=='error'
+                   and str(folder/'missing.ini') in d.message for d in admission.diagnostics)
         # Explicit import records the canonical source anchor (including Windows 8.3 aliases).
         page.geometry_config.setText(str(source)); page.reload_geometry()
         reloaded_source=Path(page.geometry_document.source_path)
@@ -272,26 +283,53 @@ def run():
         page._populate_geometry_editor()
         page.geometry_table.selectRow(2)
         selected_index=page.geometry_table.currentRow()
-        current=page.geometry_document.volumes[selected_index]
+        from dataclasses import asdict
+        retained=[]
+        def retain_rows():
+            rows=list(page.geometry_document.volumes)
+            payload=copy.deepcopy([asdict(r) for r in rows])
+            retained.append((rows,payload))
+            return copy.deepcopy(payload)
+        def assert_published(expected):
+            assert [asdict(r) for r in page.geometry_document.volumes]==expected
+            for rows,payload in retained:
+                assert [asdict(r) for r in rows]==payload, 'new action mutated retained rows'
+        expected=retain_rows()
+        expected[selected_index]['visual']['vis.alpha']=' 0.7 '
         page.volume_details.fields['vis.alpha'].setText(' 0.7 ')
         page._on_volume_details_changed()
-        assert current.visual['vis.alpha']==' 0.7 '
+        assert_published(expected)
+        assert page.geometry_document.volumes[selected_index].visual['vis.alpha']==' 0.7 '
         assert page.geometry_table.currentRow()==selected_index
         # Existing table editing remains the sensitivity/parent authority.
         from PySide6.QtWidgets import QTableWidgetItem
         before_sensitive=sum(r.sensitive for r in page.geometry_document.volumes)
+        expected=retain_rows();expected[selected_index]['sensitive']=False
         page.geometry_table.setItem(selected_index,8,QTableWidgetItem('false'))
-        assert not current.sensitive
+        assert_published(expected)
         assert sum(r.sensitive for r in page.geometry_document.volumes)==before_sensitive-1
+        expected=retain_rows();expected[selected_index]['parent']='box'
         page.geometry_table.setItem(selected_index,2,QTableWidgetItem('box'))
-        assert current.parent=='box'
+        assert_published(expected)
         assert next(r for r in page.geometry_document.volumes if r.name=='box').parent=='world'
+        expected=retain_rows()
+        expected[selected_index],expected[selected_index+1]=expected[selected_index+1],expected[selected_index]
         page._move_hierarchical_volume(1)
-        assert page.geometry_document.volumes[selected_index+1] is current
-        assert current.parent=='box' and not current.sensitive
-        original=len(page.geometry_document.volumes)
+        assert_published(expected)
+        assert page.geometry_table.currentRow()==selected_index+1
+        moved=page.geometry_document.volumes[selected_index+1]
+        assert moved.parent=='box' and not moved.sensitive
+        expected=retain_rows()
+        duplicate=copy.deepcopy(expected[selected_index+1])
+        base=duplicate['name']+'_copy';name=base;suffix=2
+        names={r['name'] for r in expected}
+        while name in names:
+            name=f'{base}_{suffix}';suffix+=1
+        duplicate['name']=name
+        expected.insert(selected_index+2,duplicate)
         page._duplicate_hierarchical_volume()
-        assert len(page.geometry_document.volumes)==original+1
+        assert_published(expected)
+        assert page.geometry_table.currentRow()==selected_index+2
         # Layer properties use their own selected-row owner, no cross-volume state.
         layer=LayerRow(name='L',visual={'vis.color':'green'},region='R')
         ldetails=GeometryDetailsWidget('layer'); ldetails.set_row(layer)
