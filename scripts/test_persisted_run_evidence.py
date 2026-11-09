@@ -9,8 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "gui"))
 from g4usim_gui.core.persisted_run_evidence import read_persisted_run_evidence
 from g4usim_gui.core.run_result import summary_fingerprint
-from g4usim_gui.history.run_history_model import RunHistoryEntry
-from g4usim_gui.history.run_history_scanner import _infer_status, scan_package
+from g4usim_gui.history.run_history_scanner import scan_package
 
 
 TEXT = ("[Values]\nstatus = completed\nprogram_exit_code = 0\nsummary_write_status = completed\n"
@@ -42,8 +41,7 @@ def main():
             with patch("g4usim_gui.core.run_result.parse_run_summary", side_effect=AssertionError("second summary read")):
                 evidence = read_persisted_run_evidence(summary, status)
             assert evidence.result.state == expected, (changes, evidence)
-            entry = RunHistoryEntry(str(root))
-            _infer_status(entry, root, record)
+            entry = scan_package(root)
             assert entry.status == evidence.result.state
             assert entry.result_trust_level == evidence.trust_level
         for bad in ('{"exitCode":0,"exitCode":1}', '{broken', '[]', '[1]', '1', 'true', '"text"'):

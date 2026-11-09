@@ -282,9 +282,12 @@ class RunHistoryPage(QWidget):
             else:
                 self.identity_panel.set_evidence(evidence, entry.status)
             row = self.table.currentRow()
+            merge_flags = (entry.merged_hits, entry.merged_event_edep,
+                           entry.merged_hist_raw, entry.merged_hist_weighted)
             for column, value in ((2, ui_text(entry.status)),
                                   (3, "" if entry.exit_code is None else str(entry.exit_code)),
-                                  (8, "yes" if entry.has_run_summary else "no")):
+                                  (7, "yes" if entry.has_run_summary else "no"),
+                                  (8, "yes" if all(merge_flags) else "partial" if any(merge_flags) else "no")):
                 self.table.item(row, column).setText(value)
             self._render_selected(entry)
             if action == "output" and entry.output_dir:

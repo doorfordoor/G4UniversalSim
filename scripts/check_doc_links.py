@@ -23,6 +23,7 @@ import sys
 LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)\s]+)\)")
 SKIP_PREFIXES = ("http://", "https://", "mailto:", "data:", "#", "www.")
 LINE_SUFFIX_RE = re.compile(r":\d+(-\d+)?$")
+HISTORICAL_REPOSITORY_NAME = "G4UniversalSim"
 
 
 def tracked_markdown() -> list[str]:
@@ -58,8 +59,9 @@ def repo_relative(target: str, root: str) -> str | None:
     root_slash = root.replace("\\", "/").rstrip("/")
     if len(normalized) > len(root_slash) and normalized.lower().startswith(root_slash.lower() + "/"):
         return normalized[len(root_slash) + 1 :]
-    name = root_slash.rsplit("/", 1)[-1]
-    marker = f"/{name}/"
+    # A fresh checkout can have any directory name. The historical path
+    # marker describes the old repository, not the current checkout's name.
+    marker = f"/{HISTORICAL_REPOSITORY_NAME}/"
     if marker in normalized:
         return normalized.split(marker, 1)[1]
     return None
@@ -68,6 +70,9 @@ def repo_relative(target: str, root: str) -> str | None:
 def main() -> int:
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     os.chdir(root)
+    # A narrow Windows pipe encoding must still show a diagnosable broken link.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(errors="backslashreplace")
     files = tracked_markdown()
     assert files, "doc_links: no tracked Markdown files"
     # Behavioural self-checks: a silent regex or fence-handling regression must fail here

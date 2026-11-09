@@ -129,7 +129,9 @@ jobs:
           python -B tools/test_assert_probe.py packaging/ci_delivery.py --build-dir $env:G4_BUILD --geant4-prefix $env:G4_PREFIX --discovery-json "$env:DELIVERY_ROOT/discovery.json" --work-root "$env:DELIVERY_ROOT/acceptance" --cmake (Get-Command cmake).Source --application-build
           if ($LASTEXITCODE -ne 0) { throw 'Full installation lifecycle verification failed' }
       - name: Retain actual runner and installation evidence
+        id: upload-evidence
         if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v6
         with:
           name: full-installation-${{ runner.os }}
@@ -144,3 +146,12 @@ jobs:
             ${{ runner.temp }}/g4usim-delivery/bootstrap/datasets/fetch-report.json
             ${{ runner.temp }}/g4usim-delivery/discovery.json
           if-no-files-found: error
+      - name: Retain installation evidence in job log if artifact upload fails
+        if: always() && steps.upload-evidence.outcome == 'failure'
+        shell: bash
+        run: >-
+          python -B .github/scripts/ci_log_evidence.py emit --root "$RUNNER_TEMP/g4usim-delivery" --name "full-installation-${{ runner.os }}"
+          --include 'acceptance/evidence/**/*' --include 'acceptance/runtime-evidence/**/*'
+          --include 'acceptance/sdk-evidence/**/*' --include 'acceptance/logs/**/*'
+          --include 'acceptance/*.json' --include 'acceptance/*.log' --include 'bootstrap/datasets/fetch-report.json'
+          --include 'discovery.json'

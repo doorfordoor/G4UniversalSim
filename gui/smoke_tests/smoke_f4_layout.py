@@ -68,20 +68,28 @@ def target_visible_through_ancestors(widget, local_rect, *, full_cell=True):
         assert clipped == target, (target, clipped)
 
 
-def check_config_targets(app, window):
-    page = window.config_builder_page
-    page.preview3d_auto_backend.setChecked(False)
-    window.page_stack.setCurrentWidget(page)
-    page.geometry_document = GeometryDocument(mode="hierarchical", is_dirty=True, volumes=[
+def seed_config_targets(window):
+    project = window._edit_session.current().project
+    project.editingState = None
+    project.geometryEditor = GeometryDocument(mode="hierarchical", is_dirty=True, volumes=[
         HierarchicalVolumeRow(name="World", shape="box", size="10 cm,10 cm,10 cm", material="G4_AIR"),
         HierarchicalVolumeRow(name="Sensor", parent="World", shape="box", size="1 mm,1 mm,1 mm", material="G4_Si"),
         HierarchicalVolumeRow(name="Sensor", parent="World", shape="box", size="bad", material="G4_Si"),
     ], boolean_ops=[BooleanOperationRow(target_volume="Sensor", index=2, operation="invalid-operation",
                                        tool_shape="box", tool_size="0.1 mm,0.1 mm,0.1 mm")])
     # A distant row also exercises the table's internal scrollbar.
-    page.geometry_document.volumes.extend(HierarchicalVolumeRow(
+    project.geometryEditor.volumes.extend(HierarchicalVolumeRow(
         name=f"Far{i}", parent="World", shape="box", size="bad", material="G4_Si") for i in range(60))
-    page._populate_geometry_editor()
+    project.materialEditor = MaterialDocument(is_dirty=True, rows=[
+        MaterialRow(name="Same", density="1 g/cm3", components_text="Si:1"),
+        MaterialRow(name="Same", density="bad", components_text="Si:1")])
+    window._set_project(project)
+
+
+def check_config_targets(app, window):
+    page = window.config_builder_page
+    page.preview3d_auto_backend.setChecked(False)
+    window.page_stack.setCurrentWidget(page)
     validate_geometry_document(page.geometry_document)
     report = ValidationReport()
     extend_diagnostics(report, collect_diagnostics(page.geometry_document))
@@ -106,10 +114,6 @@ def check_config_targets(app, window):
         assert page._current_diagnostic_snapshot() == snapshot
         assert changed.count() == 0
 
-    page.material_document = MaterialDocument(is_dirty=True, rows=[
-        MaterialRow(name="Same", density="1 g/cm3", components_text="Si:1"),
-        MaterialRow(name="Same", density="bad", components_text="Si:1")])
-    page._populate_material_editor()
     validate_material_document(page.material_document)
     report = ValidationReport()
     extend_diagnostics(report, collect_diagnostics(page.material_document))
@@ -138,6 +142,7 @@ def main():
     QSettings().clear()
     set_application_language(app, "en")
     window = MainWindow()
+    seed_config_targets(window)
     window.show()
     app.processEvents()
     project = window.project_page

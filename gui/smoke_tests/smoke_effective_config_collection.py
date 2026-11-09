@@ -97,7 +97,8 @@ def main():
         leaf = page.tree.topLevelItem(0).child(0).child(0).child(0)
         assert leaf.toolTip(0) == field['path']
         page.tree.setCurrentItem(leaf)
-        out = Path('out/collab/full2c-frontend-review')
+        evidence_dir = os.environ.get('G4USIM_TEST_EVIDENCE_DIR')
+        out = Path(evidence_dir) if evidence_dir else root / 'screenshots'
         out.mkdir(parents=True, exist_ok=True)
         for lang in ('zh_CN','en'):
             set_application_language(app,lang)

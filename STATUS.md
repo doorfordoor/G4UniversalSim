@@ -28,7 +28,7 @@ AR0有限差异合同及独立复审0阻断，[r3冻结](docs/collab/decisions/2
 
 ## 2026-11-08 AR0独审通过，主审交接（历史）
 
-AR0最终r2及主审附注已冻结；AR1–AR2待接续实施，仅本批授权，完成后汇报暂停。产品代码未改，K2固定标签保留。见[AR0冻结](docs/collab/decisions/20261108-ar0-contract-freeze.md)和[主审交接](docs/collab/handoffs/20261108-ar0-primary-handoff.md)。
+AR0最终r2及主审附注已冻结；AR1–AR2待接续实施，仅本批授权，完成后汇报暂停。产品代码未改，K2固定标签保留。见[AR0冻结](docs/collab/decisions/20261108-ar0-contract-freeze.md)和主审交接（本机原件：`docs/collab/handoffs/20261108-ar0-primary-handoff.md`）。
 
 ## 2026-11-08 当前停点：K2已闭合，架构与后续阶段总规划已整理
 

@@ -100,8 +100,14 @@ def main() -> None:
                 leftovers = list(root.glob(".*.tmp"))
                 assert bool(leftovers) == cleanup_fails
                 if cleanup_fails:
-                    assert "not published:" in diagnostics.getvalue()
-                    assert str(leftovers[0]) in diagnostics.getvalue()
+                    assert len(leftovers) == 1
+                    diagnostic = diagnostics.getvalue()
+                    records = [json.loads(line.split(" ", 1)[1]) for line in diagnostic.splitlines()
+                               if line.startswith("G4USIM_PUBLICATION_RESULT ")]
+                    assert len(records) == 1 and records[0]["published"] is False
+                    assert Path(records[0]["output"]).resolve() == failed.resolve()
+                    assert Path(records[0]["residual_temporary"]).samefile(leftovers[0])
+                    assert "not published:" in diagnostic and records[0]["residual_temporary"] in diagnostic
                 for path in leftovers:
                     path.unlink()
 

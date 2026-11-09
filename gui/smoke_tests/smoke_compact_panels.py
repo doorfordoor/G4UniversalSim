@@ -4,6 +4,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 import sys
+import tempfile
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -13,6 +14,7 @@ from PySide6.QtCore import QCoreApplication, QEvent, QSettings
 from PySide6.QtWidgets import QApplication, QPushButton
 
 from g4usim_gui.core.theme import apply_theme
+from g4usim_gui.window.workspace_layout import STATE_KEY
 from gui_test_window import MainWindow
 
 
@@ -32,8 +34,25 @@ def main():
     app = QApplication.instance() or QApplication([])
     app.setOrganizationName("G4UniversalSimSmoke")
     app.setApplicationName("CompactOptionalPanels")
+    # Never share the Windows registry or organization/system fallbacks with
+    # other runs. Keep persistence real for the save/restore cases below.
+    with tempfile.TemporaryDirectory(prefix="g4usim-smoke-compact-settings-") as directory:
+        QSettings.setDefaultFormat(QSettings.IniFormat)
+        QSettings.setPath(QSettings.IniFormat, QSettings.UserScope, directory)
+        QSettings.setPath(QSettings.IniFormat, QSettings.SystemScope, directory)
+        run_cases(app)
+
+
+def reset_settings():
     settings = QSettings()
     settings.clear()
+    settings.sync()
+    assert settings.status() == QSettings.NoError
+    assert not QSettings().contains(STATE_KEY), "fixture must start without a saved workspace layout"
+
+
+def run_cases(app):
+    reset_settings()
     apply_theme(app, "light")
 
     # 1. A panel opened inside the compact band survives every width step
@@ -84,7 +103,7 @@ def main():
         settle(app)
 
     # 2. Auto-hidden docks come back when the wide layout returns.
-    settings.clear()  # closing a window saves its layout; start from the default here
+    reset_settings()  # closing a window saves its layout; start from the default here
     window = MainWindow()
     try:
         window.resize(1500, 900)
@@ -109,7 +128,7 @@ def main():
     # 3. The configuration page button is an explicit choice too: the
     #    independent retest clicked "Show 3D view" at 1200 wide and lost the
     #    dock on 1200 -> 1205.
-    settings.clear()
+    reset_settings()
     window = MainWindow()
     try:
         window.resize(1500, 900)
@@ -148,7 +167,7 @@ def main():
 
     # 4. A saved layout that shows the AI panel restores the user's choice for
     #    the whole band; 1205 -> 1211 must not hide it again.
-    settings.clear()
+    reset_settings()
     window = MainWindow()
     try:
         window.resize(1500, 900)
@@ -178,7 +197,7 @@ def main():
 
     # 5. The other direction: a layout that saves the AI panel hidden must not
     #    make it appear when the band is resized.
-    settings.clear()
+    reset_settings()
     window = MainWindow()
     try:
         window.resize(1500, 900)

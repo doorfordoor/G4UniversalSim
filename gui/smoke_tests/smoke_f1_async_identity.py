@@ -4,7 +4,7 @@ import sys,os,json,shutil,tempfile,time,threading
 from unittest.mock import patch
 os.environ.setdefault('QT_QPA_PLATFORM','offscreen')
 ROOT=Path(__file__).resolve().parents[2];sys.path[:0]=[str(ROOT/'gui'),str(ROOT/'gui/smoke_tests')]
-from PySide6.QtWidgets import QApplication,QTableWidgetItem
+from PySide6.QtWidgets import QApplication
 from PySide6.QtCore import QTimer
 from async_wait import wait_for_idle
 from smoke_f1_output_identity import upgrade,publish,reject
@@ -39,9 +39,11 @@ def main():
         assert entry.identity_status=='verified' and Path(entry.output_dir)==b/'output'
         assert entry.recorded_output_dir==str(a/'output')
         assert Path(entry.config_path)==b/'config/main.ini' and Path(entry.macro_path)==b/'macros/run.mac'
-        history=RunHistoryPage();history._entries=history._filtered=[entry];history.table.setRowCount(1);history.table.setItem(0,0,QTableWidgetItem('B'));history.table.setCurrentCell(0,0);history._show_selected();wait_for_idle(history)
+        history=RunHistoryPage();history._entries=history._filtered=[entry];history._populate_table();history.table.setCurrentCell(0,0);history._show_selected();wait_for_idle(history)
         opened=[];history.openOutputRequested.connect(lambda package,output:opened.append((package,output)));history._emit_open_output()
+        wait_for_idle(history)
         assert opened==[(str(b),str(b/'output'))]
+        assert (history.table.item(0,7).text(),history.table.item(0,8).text())==('yes','no')
         assert json.loads(history.identity_panel.raw.toPlainText())['provenance']['execution_id']=='a'*32
         target=b/'output/event_edep_t0.csv';before=target.read_bytes();oldstat=target.stat();target.write_bytes(before.replace(b'0',b'1',1));os.utime(target,ns=(oldstat.st_atime_ns,oldstat.st_mtime_ns))
         prior_run=entry.status;history._show_selected()

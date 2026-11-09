@@ -719,6 +719,9 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
         return self._reload_document('geometry')
 
     def _reload_document(self, domain):
+        # A reload attempt retires the old navigation evidence even when the
+        # source is missing or cannot be read. The editor state stays intact.
+        self.invalidate_diagnostics()
         from g4usim_gui.core.edit_transactions import TransactionConflict
         from g4usim_gui.core.document_edit_model import reduce_documents
         from g4usim_gui.parsers.materials_parser import parse_materials_text
@@ -774,7 +777,6 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
         setattr(self,domain+'_summary',summary)
         getattr(self,domain+'_raw').setPlainText(self._preview_text(summary.raw_text))
         self._f5_frozen_sources.add(domain)
-        self.invalidate_diagnostics()
         self._update_workspace_summary()
         return {'kind':domain,'status':'read_success','attempted_path':str(path),'error':''}
 

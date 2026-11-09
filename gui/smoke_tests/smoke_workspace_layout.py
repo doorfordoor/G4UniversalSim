@@ -207,7 +207,7 @@ ANALYSIS_LOGS_MAX_HEIGHT = 300
 MAX_DOCK_HEIGHT = 16777215
 
 
-def _isolated_child_settings(directory):
+def _isolated_settings(directory):
     directory = str(directory)
     QSettings.setDefaultFormat(QSettings.IniFormat)
     QSettings.setPath(QSettings.IniFormat, QSettings.UserScope, directory)
@@ -245,7 +245,7 @@ def _dock_facts(window):
 
 def layout_restore_child(phase, mode, settings_dir, out_path, width, height):
     """One isolated process of the save/restore regression."""
-    _isolated_child_settings(settings_dir)
+    _isolated_settings(settings_dir)
     state_root = Path(settings_dir).parent
     os.environ["G4USIM_RECOVERY_DIR"] = str(state_root / "recovery")
     from g4usim_gui.history import run_history_store
@@ -663,7 +663,10 @@ if __name__ == "__main__":
         phase, mode, settings_dir, out_path, width, height = sys.argv[index + 1: index + 7]
         raise SystemExit(layout_restore_child(phase, mode, Path(settings_dir),
                                               Path(out_path), int(width), int(height)))
-    if '--default-start-lifecycle' in sys.argv:
-        default_start_lifecycle()
-    else:
-        main()
+    # Keep native layout persistence real, but never use the host settings store.
+    with tempfile.TemporaryDirectory(prefix="g4usim-workspace-settings-") as directory:
+        _isolated_settings(directory)
+        if '--default-start-lifecycle' in sys.argv:
+            default_start_lifecycle()
+        else:
+            main()

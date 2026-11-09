@@ -16,6 +16,6 @@ r1正式13pass/3fail、r2作者9pass/1fail、原Qt退出0但回调异常、r1原
 
 ## 最终正式证据
 
-[报告](../../../out/collab/20261108-ar0-ar6/ar4-document-r3/formal/20261109-080453-663be3a1/report.json)为17pass、3419断言、0fail/0skip；session84223自然exit0，compileall0。[严格检查](../../../out/collab/20261108-ar0-ar6/ar4-document-r3/strict-evidence.log)通过且candidate stable。测试指纹`e7e43894455804fc684d36520ebdc0289b70e50a0fdce5ae9656777363858b20`。16源码尾核一致，文档同步发生于验证之后，不更改已验产品/测试字节。
+报告（`out/collab/20261108-ar0-ar6/ar4-document-r3/formal/20261109-080453-663be3a1/report.json`）为17pass、3419断言、0fail/0skip；session84223自然exit0，compileall0。严格检查（`out/collab/20261108-ar0-ar6/ar4-document-r3/strict-evidence.log`）通过且candidate stable。测试指纹`e7e43894455804fc684d36520ebdc0289b70e50a0fdce5ae9656777363858b20`。16源码尾核一致，文档同步发生于验证之后，不更改已验产品/测试字节。
 
-[独验](../../../out/collab/20261108-ar0-ar6/independent/ar4-document-review/candidate-r3/REPORT.md) · [原生补验](../../../out/collab/20261108-ar0-ar6/independent/ar4-document-native/candidate-r3-attempt1/REVIEW.md) · [主审SHA回读](../../../out/collab/20261108-ar0-ar6/ar4-document-primary-preparation/r3-primary-readback.json) · [D07裁定](../../../out/collab/20261108-ar0-ar6/ar4-document-primary-preparation/D07-DISPOSITION.md) · [候选16路径](../../../out/collab/20261108-ar0-ar6/ar4-document-primary-preparation/candidate-r3.json)。
+独验（`out/collab/20261108-ar0-ar6/independent/ar4-document-review/candidate-r3/REPORT.md`） · 原生补验（`out/collab/20261108-ar0-ar6/independent/ar4-document-native/candidate-r3-attempt1/REVIEW.md`） · 主审SHA回读（`out/collab/20261108-ar0-ar6/ar4-document-primary-preparation/r3-primary-readback.json`） · D07裁定（`out/collab/20261108-ar0-ar6/ar4-document-primary-preparation/D07-DISPOSITION.md`） · 候选16路径（`out/collab/20261108-ar0-ar6/ar4-document-primary-preparation/candidate-r3.json`）。

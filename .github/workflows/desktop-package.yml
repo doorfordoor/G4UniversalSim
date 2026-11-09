@@ -60,7 +60,9 @@ jobs:
           LIBGL_ALWAYS_SOFTWARE: '1'
         run: xvfb-run -a python -B tools/test_assert_probe.py gui/smoke_tests/smoke_j1_appearance.py --renderer
       - name: Retain delivery receipts and build failure diagnostics
+        id: upload-evidence
         if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v6
         with:
           name: frozen-desktop-${{ runner.os }}
@@ -72,3 +74,11 @@ jobs:
             out/frozen-desktop-ci/*-build/binary-sources.json
             out/frozen-desktop-ci/*-build/source-identity.json
           if-no-files-found: error
+      - name: Retain desktop evidence in job log if artifact upload fails
+        if: always() && steps.upload-evidence.outcome == 'failure'
+        shell: bash
+        run: >-
+          python -B .github/scripts/ci_log_evidence.py emit --root out --name "frozen-desktop-${{ runner.os }}"
+          --include 'xcb-runtime-dependencies.log' --include 'frozen-desktop-ci/*.json'
+          --include 'frozen-desktop-ci/*.log' --include 'frozen-desktop-ci/*-build/freeze.log'
+          --include 'frozen-desktop-ci/*-build/binary-sources.json' --include 'frozen-desktop-ci/*-build/source-identity.json'

@@ -102,9 +102,15 @@ jobs:
         if: failure()
         run: python -B scripts/ci_annotate_failures.py --report-root out/verification
       - name: Upload M0 reports
+        id: upload-evidence
         if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: m0-report-${{ matrix.os }}
           path: out/verification
-          if-no-files-found: warn
+          if-no-files-found: error
+      - name: Retain M0 reports in job log if artifact upload fails
+        if: always() && steps.upload-evidence.outcome == 'failure'
+        shell: bash
+        run: python -B .github/scripts/ci_log_evidence.py emit --root out/verification --name "m0-report-${{ matrix.os }}" --include '**/*'

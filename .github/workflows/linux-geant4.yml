@@ -225,7 +225,9 @@ jobs:
           echo "evidence gate rejected the tampered log digest"
 
       - name: Upload Linux evidence
+        id: upload-evidence
         if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: linux-evidence-${{ matrix.geant4 }}
@@ -234,4 +236,10 @@ jobs:
             out/verification/geant4-${{ matrix.geant4 }}/linux-gui
             out/verification/geant4-${{ matrix.geant4 }}/linux-backend
             out/verification/geant4-${{ matrix.geant4 }}/linux-integration
-          if-no-files-found: warn
+          if-no-files-found: error
+      - name: Retain Linux evidence in job log if artifact upload fails
+        if: always() && steps.upload-evidence.outcome == 'failure'
+        shell: bash
+        run: >-
+          python -B .github/scripts/ci_log_evidence.py emit --root "$REPORT_ROOT" --name "linux-evidence-${{ matrix.geant4 }}"
+          --include 'linux-static/**/*' --include 'linux-gui/**/*' --include 'linux-backend/**/*' --include 'linux-integration/**/*'
