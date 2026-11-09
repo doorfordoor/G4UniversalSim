@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import sys
+import tempfile
 from pathlib import Path
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
@@ -20,8 +21,18 @@ def main() -> None:
     app = QApplication.instance() or QApplication([])
     app.setOrganizationName("G4UniversalSimSmoke")
     app.setApplicationName("MainWindowUI")
-    QSettings().clear()
+    with tempfile.TemporaryDirectory(prefix="g4usim-main-window-settings-") as directory:
+        QSettings.setDefaultFormat(QSettings.IniFormat)
+        QSettings.setPath(QSettings.IniFormat, QSettings.UserScope, directory)
+        QSettings.setPath(QSettings.IniFormat, QSettings.SystemScope, directory)
+        settings = QSettings()
+        settings.clear()
+        settings.sync()
+        assert settings.status() == QSettings.NoError
+        run_cases(app)
 
+
+def run_cases(app) -> None:
     apply_theme(app, "light")
     original_locale = QLocale()
     try:

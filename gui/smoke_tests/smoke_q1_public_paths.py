@@ -1,5 +1,6 @@
 """Regression for Q1 project, results, asynchronous preview and owned process shutdown."""
 from async_wait import wait_for_idle
+from copy import deepcopy
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -150,8 +151,14 @@ def main():
                 assert child.waitForStarted(5000)
             window.scan_page.runner._queue = [123]
             window.output_page._merge_runner._queue = [object()]
-            window.scan_page.runner._runner.start(project, [sys.executable, "-c", "import time; time.sleep(30)"])
-            assert window.scan_page.runner._runner._process.waitForStarted(5000)
+            scan_project = deepcopy(project)
+            # Each live process must own its own QProcess log files, including on Windows.
+            scan_project.outputDir = str(work / "scan-output")
+            command = [sys.executable, "-c", "import time; time.sleep(30)"]
+            # The window's main and scan entries now share one backend lease.
+            facts["concurrent_scan_refused"] = not window.scan_page.runner._runner.start(scan_project, command)
+            assert facts["concurrent_scan_refused"]
+            assert window.scan_page.runner._runner._process.state() == QProcess.NotRunning
             outsider = QProcess()
             outsider.start(sys.executable, ["-c", "import time; time.sleep(30)"])
             assert outsider.waitForStarted(5000)
@@ -171,9 +178,27 @@ def main():
             close_window(app, window)
             window.deleteLater()
             app.processEvents()
-    destination = ROOT / "out/verification/q1-public-paths-regression.json"
-    destination.parent.mkdir(parents=True,exist_ok=True)
-    destination.write_text(json.dumps(facts,ensure_ascii=False,indent=2),encoding="utf-8")
+            # Independently observe the scan-specific shutdown with an actual
+            # scan process, after the first window released its main lease.
+            scan_window = MainWindow()
+            scan_window.project = scan_project
+            scan_window.show()
+            scan_runner = scan_window.scan_page.runner
+            scan_runner._queue = [456]
+            assert scan_runner._runner.start(scan_project, command)
+            assert scan_runner._runner._process.waitForStarted(5000)
+            scan_window.close()
+            app.processEvents()
+            facts["scan_child_alive_after_window_close"] = scan_runner._runner.is_running()
+            assert not facts["scan_child_alive_after_window_close"] and not scan_runner._queue
+            close_window(app, scan_window)
+            scan_window.deleteLater()
+            app.processEvents()
+    evidence_dir = os.environ.get("G4USIM_TEST_EVIDENCE_DIR")
+    if evidence_dir:
+        destination = Path(evidence_dir) / "q1-public-paths-regression.json"
+        destination.parent.mkdir(parents=True,exist_ok=True)
+        destination.write_text(json.dumps(facts,ensure_ascii=False,indent=2),encoding="utf-8")
     print(json.dumps(facts,ensure_ascii=False,indent=2))
     print("PASS Q1 public path regressions")
 

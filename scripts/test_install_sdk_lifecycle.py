@@ -157,6 +157,72 @@ def host_death_fixture(root):
     bounded_probe(folder, prefix, helper, "normal", hooks=[patch.object(service, "_guard_update", side_effect=exit_after_owned)])
 
 
+def handle_whitelist_control(root):
+    import ctypes
+    from ctypes import wintypes as w
+    import _winapi
+
+    folder, prefix, helper, _ = setup(root, "handle-whitelist")
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.CreateEventW.argtypes = [ctypes.c_void_p, w.BOOL, w.BOOL, w.LPCWSTR]
+    kernel32.CreateEventW.restype = w.HANDLE
+    compare = ctypes.WinDLL("KernelBase.dll", use_last_error=True).CompareObjectHandles
+    compare.argtypes = [w.HANDLE, w.HANDLE]
+    compare.restype = w.BOOL
+    event = kernel32.CreateEventW(None, True, False, None)
+    assert event
+    current = _winapi.GetCurrentProcess()
+    create = _winapi.CreateProcess
+    samples = []
+
+    def observe_create(*args, **kwargs):
+        spawned = create(*args, **kwargs)
+        process, _, pid, _ = spawned
+        sample = {"pid": pid, "handle_value": event, "created_suspended": bool(args[5] & 0x4)}
+        samples.append(sample)
+        try:
+            if sample["created_suspended"]:
+                # Sample before ResumeThread, while the actual CreateProcess handle is held.
+                # The later child-side numeric query may see a slot reused by startup.
+                try:
+                    duplicate = _winapi.DuplicateHandle(
+                        process, event, current, 0, False, _winapi.DUPLICATE_SAME_ACCESS)
+                except OSError as exc:
+                    sample["duplicate_error"] = exc.winerror
+                else:
+                    try:
+                        ctypes.set_last_error(0)
+                        sample["same_object"] = bool(compare(duplicate, event))
+                        sample["compare_error"] = ctypes.get_last_error()
+                    finally:
+                        _winapi.CloseHandle(duplicate)
+        except BaseException as exc:
+            # Return the handles to the adapter so it still owns and settles the child.
+            # An observation error is rejected below, never treated as absence.
+            sample["observation_error"] = repr(exc)
+        return spawned
+
+    try:
+        os.set_handle_inheritable(event, True)
+        with patch.dict(os.environ, {"AR5_UNRELATED_HANDLE": str(event)}):
+            report = bounded_probe(folder, prefix, helper, "handle",
+                                   hooks=[patch.object(_winapi, "CreateProcess", observe_create)])
+        (folder / "handle-at-create.json").write_text(json.dumps(samples, indent=2))
+        assert report["status"] == "verified", report
+        assert_stopped(folder, report)
+        assert len(samples) == 1, samples
+        sample = samples[0]
+        assert sample["pid"] == report["commands"][0]["root_child"]["pid"], sample
+        assert sample["created_suspended"] and "observation_error" not in sample, sample
+        # Only ERROR_INVALID_HANDLE or a positively identified different object is safe.
+        assert (sample.get("duplicate_error") == 6 or
+                (sample.get("same_object") is False and sample.get("compare_error") == 1656)), sample
+        assert _winapi.WaitForSingleObject(event, 0) == _winapi.WAIT_TIMEOUT
+        return "unrelated inheritable event object absent from actual suspended child"
+    finally:
+        _winapi.CloseHandle(event)
+
+
 def main(root):
     root.mkdir(parents=True, exist_ok=False)
     results = []
@@ -320,26 +386,7 @@ def main(root):
     save("close-once", "one close attempt; returned descriptor state unknown, disk not rewritten")
 
     if os.name == "nt":
-        import ctypes
-        from ctypes import wintypes as w
-        import _winapi
-        folder, prefix, helper, plan = setup(root, "handle-whitelist")
-        k = ctypes.WinDLL("kernel32", use_last_error=True)
-        k.CreateEventW.argtypes = [ctypes.c_void_p, w.BOOL, w.BOOL, w.LPCWSTR]
-        k.CreateEventW.restype = w.HANDLE
-        event = k.CreateEventW(None, True, False, None)
-        assert event
-        try:
-            os.set_handle_inheritable(event, True)
-            with patch.dict(os.environ, {"AR5_UNRELATED_HANDLE": str(event)}):
-                report = bounded_probe(folder, prefix, helper, "handle")
-            assert report["status"] == "verified", report
-            observation = json.loads((folder / "handle-observation.json").read_text())
-            assert observation["valid"] is False and observation["error"] == 6, observation
-            assert _winapi.WaitForSingleObject(event, 0) == _winapi.WAIT_TIMEOUT
-        finally:
-            _winapi.CloseHandle(event)
-        save("handle-whitelist", "unrelated inheritable handle absent from actual child")
+        save("handle-whitelist", handle_whitelist_control(root))
 
         folder, prefix, helper, plan = setup(root, "cancel-suspended")
         def cancel_owned(path, guard, state, record):
