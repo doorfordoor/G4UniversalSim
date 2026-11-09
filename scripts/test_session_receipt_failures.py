@@ -92,6 +92,53 @@ def _finish_global_evidence(work, executable, binary, source, primary_error):
         raise errors[0][1]
 
 
+def _check_terminal_transport(session, welcome, terminal, receipt):
+    limit = welcome["limits"]["max_frame_bytes"]
+    assert limit == 65536
+    # Use the actual line, not the pretty-printed terminal.json in evidence.
+    frames = [line for line in session.raw_lines
+              if line.startswith("{") and '"event":"run_finished"' in line]
+    assert len(frames) == 1 and json.loads(frames[0]) == terminal
+    wire_size = len(frames[0].encode("utf-8"))
+    assert 0 < wire_size <= limit
+
+    record = Path(welcome["state"]["session_root"]) / f"run-{terminal['run_id']:04d}.json"
+    record_bytes = record.read_bytes()
+    assert record_bytes.endswith(b"\n") and json.loads(record_bytes) == receipt
+
+    reference = "receipt_ref" in terminal
+    assert reference != ("receipt" in terminal), "exactly one receipt form is required"
+    if not reference:
+        assert terminal["receipt_integrity"] == "written"
+        assert Path(terminal["receipt_path"]) == record
+        assert terminal["artifacts"] == receipt["artifacts"]
+        assert "artifacts_truncated" not in terminal and "artifact_count" not in terminal
+        return dict(reference=False, wire_bytes=wire_size, inline_bytes=wire_size, frame_limit=limit)
+
+    ref = terminal["receipt_ref"]
+    assert terminal["artifacts_truncated"] is True and "artifacts" not in terminal
+    assert terminal["artifact_count"] == len(receipt["artifacts"])
+    assert Path(ref["path"]) == record and ref["schema"] == receipt["schema"]
+    # Reconstruct the omitted inline payload. Its receipt is the exact on-disk
+    # JSON (without the final LF); the envelope and artifact fields contain
+    # only strings, integers, booleans and nulls. Worker count is irrelevant.
+    expanded = {key: value for key, value in terminal.items()
+                if key not in {"artifacts_truncated", "artifact_count", "receipt_ref"}}
+    expanded.update(artifacts=receipt["artifacts"], receipt_path=ref["path"],
+                    receipt_integrity="written")
+    envelope = json.dumps(expanded, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    inline_size = len(envelope) + len(b',"receipt":') + len(record_bytes) - 1
+    assert inline_size > limit, "compact receipt emitted for a frame that fits inline"
+
+    for change, reason in (
+        ({"size_bytes": ref["size_bytes"] + 1}, "size_mismatch"),
+        ({"sha256": ("1" if ref["sha256"][0] == "0" else "0") + ref["sha256"][1:]}, "sha_mismatch"),
+    ):
+        bad = receipt_check_for_event(dict(terminal, receipt_ref=dict(ref, **change)))
+        assert not bad.ok and bad.reason == reason, bad
+    return dict(reference=True, wire_bytes=wire_size, inline_bytes=inline_size, frame_limit=limit)
+
+
 def main():
     executable = Path(os.environ["G4USIM_EXE"]).resolve()
     root = Path(os.environ["G4USIM_TEST_EVIDENCE_DIR"]).resolve()
@@ -120,7 +167,7 @@ def main():
                 session = protocol.Session(executable, case / "output", case / "records", threads=threads)
             result = dict(pid=session.process.pid, argv=session.process.args, cwd=str(ROOT), fault=fault)
             try:
-                protocol.open_session(session)
+                welcome = protocol.open_session(session)
                 terminal = protocol.run_round(session, events, timeout=240)
                 save(case / "terminal.json", terminal)
                 session.request("shutdown", revision=session.state()["state_revision"], wait=False)
@@ -137,7 +184,12 @@ def main():
                 assert terminal["completed_events"] == receipt["completed_events"]
                 assert terminal["aborted_events"] == receipt["aborted_events"]
                 assert 0 <= receipt["aborted_events"] <= receipt["completed_events"] <= events
-                assert ("receipt_ref" in terminal) is (threads == 16)
+                transport = _check_terminal_transport(session, welcome, terminal, receipt)
+                result.update(transport)
+                if name == "normal":
+                    assert transport["reference"], "oversized normal fixture must exercise a real receipt reference"
+                if name == "inline_hash":
+                    assert not transport["reference"], "small fault fixture must exercise an inline receipt"
                 summary = read_summary(case / "output")
                 assert summary["actual_threads"] == str(threads)
                 assert summary["run_count"] == "1" and summary["run_0_id"] == "0"
@@ -192,7 +244,7 @@ def main():
                 if fault:
                     assert replay["replayable"] is False
                 result.update(status="passed", terminal_status=terminal["status"],
-                              artifact_count=len(artifacts), reference="receipt_ref" in terminal)
+                              artifact_count=len(artifacts))
             except BaseException as error:
                 result.update(status="failed", error=repr(error))
                 raise

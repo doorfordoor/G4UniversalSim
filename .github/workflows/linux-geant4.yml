@@ -240,6 +240,8 @@ jobs:
       - name: Retain Linux evidence in job log if artifact upload fails
         if: always() && steps.upload-evidence.outcome == 'failure'
         shell: bash
+        # Retain every strict report and the original per-case logs. Large
+        # supplementary run output remains part of the standard artifact only.
         run: >-
           python -B .github/scripts/ci_log_evidence.py emit --root "$REPORT_ROOT" --name "linux-evidence-${{ matrix.geant4 }}"
-          --include 'linux-static/**/*' --include 'linux-gui/**/*' --include 'linux-backend/**/*' --include 'linux-integration/**/*'
+          --include 'linux-*/*/report.json' --include 'linux-*/*/*.log'

@@ -15,12 +15,16 @@
 #include "Scoring/NumericChecks.hh"
 #include "Utils/StringUtils.hh"
 #include "Utils/UnitParser.hh"
+#include "G4IonTable.hh"
+#include "G4NistManager.hh"
+#include "G4NucleiProperties.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4PhysicalVolumeStore.hh"
 #include "G4RunManager.hh"
 
 #include <algorithm>
+#include <charconv>
 #include <exception>
 #include <cmath>
 #include <filesystem>
@@ -35,6 +39,33 @@
 #include <stdexcept>
 
 namespace {
+// A phase-space selector is a name filter, not a request to construct a
+// particle. A ground-state ion may be known to Geant4 but absent from the
+// particle dictionary until GPS/replay (or transport) first needs it.
+bool IsKnownPhaseSpaceGroundStateIon(const std::string& name)
+{
+    const auto massStart = name.find_first_of("0123456789");
+    if (massStart == std::string::npos || massStart == 0 || name.size() - massStart > 3) return false;
+
+    int mass = 0;
+    const auto end = name.data() + name.size();
+    const auto parsed = std::from_chars(name.data() + massStart, end, mass);
+    if (parsed.ec != std::errc{} || parsed.ptr != end) return false;
+
+    const int atomicNumber = G4NistManager::Instance()->GetZ(name.substr(0, massStart));
+    // Despite the SDK method name, this is membership in its AME mass table.
+    // Do not use a mass estimate as evidence that a name is known.
+    if (atomicNumber <= 0 || mass < atomicNumber || !G4NucleiProperties::IsInStableTable(mass, atomicNumber))
+        return false;
+
+    auto* ions = G4IonTable::GetIonTable();
+    // The existing definition takes precedence, including light nuclei whose
+    // actual names are proton, deuteron, triton, He3 and alpha.
+    if (const auto* existing = ions->FindIon(atomicNumber, mass, 0.0))
+        return existing->GetParticleName() == name;
+    return ions->GetIonName(atomicNumber, mass, 0) == name;
+}
+
 bool InjectBeginScoringFailure(int runID, const OutputManager* output)
 {
     if (runID != 1 || !output || output->GetThreadId() != 0) return false;
@@ -1427,20 +1458,20 @@ void ScoringManager::ApplyVolumeConfigsToScorers()
 void ScoringManager::ValidateLegacyParticleSelectors() const
 {
     const auto validate = [](const std::set<std::string>& particles, const std::string& section,
-                             const std::string& location) {
+                             const std::string& location, bool phaseSpace) {
         if (particles.empty()) return; // existing all semantics
         auto* table = G4ParticleTable::GetParticleTable();
         for (const auto& token : particles) {
             if (table->entries() == 0)
                 throw std::runtime_error("[" + section + "]/particles at " + location +
                     " cannot validate token '" + token + "': Geant4 particle table is not ready");
-            if (!table->FindParticle(token))
+            if (!table->FindParticle(token) && !(phaseSpace && IsKnownPhaseSpaceGroundStateIon(token)))
                 throw std::runtime_error("[" + section + "]/particles at " + location +
                     " lists unknown Geant4 particle '" + token + "'");
         }
     };
-    validate(letParticles_, "scoring.let", letParticleLocation_);
-    validate(phaseSpaceParticles_, "phase_space", phaseParticleLocation_);
+    validate(letParticles_, "scoring.let", letParticleLocation_, false);
+    validate(phaseSpaceParticles_, "phase_space", phaseParticleLocation_, true);
 }
 
 void ScoringManager::ValidateVolumeConfigsForRun()

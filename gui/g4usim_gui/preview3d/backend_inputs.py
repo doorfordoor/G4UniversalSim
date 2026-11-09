@@ -15,12 +15,14 @@ cache instead of running Geant4 again.
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from g4usim_gui.editors.geometry_editor_model import EDITABLE_GEOMETRY_MODES, GeometryDocument
+from g4usim_gui.editors.geometry_editor_model import (
+    EDITABLE_GEOMETRY_MODES, GeometryDocument, validate_geometry_document)
 from g4usim_gui.editors.material_editor_model import MaterialDocument, generate_materials_ini_text
 from g4usim_gui.writers.geometry_ini_writer import generate_geometry_ini_text
 
@@ -80,7 +82,12 @@ def generated_inputs(*, template: str, geometry_config: str, geometry: GeometryD
     """Inputs for generated mode; raises ValueError (with the editor's messages) when they cannot be built."""
     geometry_text = None
     if geometry.is_dirty and geometry.mode in EDITABLE_GEOMETRY_MODES and not geometry.source_copy_mode:
-        blocking = [e for e in geometry.errors]
+        # The transaction snapshot contains accepted values; the visible
+        # editor's diagnostics may have been refreshed on a different copy.
+        geometry = copy.deepcopy(geometry)
+        validate_geometry_document(geometry, material_names={
+            row.name for row in materials.rows if row.enabled and row.name})
+        blocking = geometry.errors
         if blocking:
             raise ValueError("\n".join(["The edited geometry has errors; fix them to see the Geant4 geometry:",
                                         *blocking[:8]]))

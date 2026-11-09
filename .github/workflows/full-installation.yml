@@ -149,9 +149,14 @@ jobs:
       - name: Retain installation evidence in job log if artifact upload fails
         if: always() && steps.upload-evidence.outcome == 'failure'
         shell: bash
+        # The log fallback keeps lifecycle receipts and the real consumer and
+        # runtime logs. Full file inventories remain in the standard artifact.
         run: >-
           python -B .github/scripts/ci_log_evidence.py emit --root "$RUNNER_TEMP/g4usim-delivery" --name "full-installation-${{ runner.os }}"
-          --include 'acceptance/evidence/**/*' --include 'acceptance/runtime-evidence/**/*'
-          --include 'acceptance/sdk-evidence/**/*' --include 'acceptance/logs/**/*'
-          --include 'acceptance/*.json' --include 'acceptance/*.log' --include 'bootstrap/datasets/fetch-report.json'
+          --include 'acceptance/delivery-report.json' --include 'acceptance/*.log' --include 'acceptance/logs/**/*.log'
+          --include 'acceptance/evidence/sdk/**/*'
+          --include 'acceptance/*-evidence/flow-report.json' --include 'acceptance/*-evidence/uninstall-receipt.json'
+          --include 'acceptance/sdk-evidence/sdk-consumer.json' --include 'acceptance/sdk-evidence/sdk-application.json'
+          --include 'acceptance/runtime-evidence/*.log' --include 'acceptance/runtime-evidence/gui-self-test.json'
+          --include 'acceptance/runtime-evidence/result/run_summary.txt' --include 'bootstrap/datasets/fetch-report.json'
           --include 'discovery.json'

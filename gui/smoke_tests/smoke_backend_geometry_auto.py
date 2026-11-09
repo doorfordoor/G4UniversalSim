@@ -31,7 +31,7 @@ GUI = Path(__file__).resolve().parents[1]
 ROOT = GUI.parent
 sys.path.insert(0, str(GUI))
 
-from PySide6.QtCore import QProcess, QSettings   # noqa: E402
+from PySide6.QtCore import QCoreApplication, QEvent, QProcess, QSettings   # noqa: E402
 from PySide6.QtWidgets import QApplication, QMessageBox   # noqa: E402
 
 from g4usim_gui.editors.geometry_editor_model import (   # noqa: E402
@@ -123,6 +123,17 @@ def check_window(app: QApplication, temp: Path) -> None:
     QMessageBox.information = staticmethod(lambda *args, **kwargs: QMessageBox.Ok)
     from gui_test_window import MainWindow   # noqa: PLC0415
     window = MainWindow()
+    try:
+        check_live_window(app, temp, window)
+    finally:
+        if not window.close():
+            assert wait_until(app, lambda: not window.isVisible(), 10), "window did not close"
+        window.deleteLater()
+        QCoreApplication.sendPostedEvents(None, QEvent.DeferredDelete)
+        app.processEvents()
+
+
+def check_live_window(app: QApplication, temp: Path, window) -> None:
     window.resize(1300, 850)
     window.show()
     window.project_page.executable.setText(str(EXE))
@@ -150,9 +161,11 @@ def check_window(app: QApplication, temp: Path) -> None:
     print("unchanged inputs: shown from the cache without running Geant4")
 
     def edit(material: str) -> None:
-        volume = next(v for v in page.geometry_document.volumes if v.name == "target_sphere")
-        volume.material = material
-        page._mark_geometry_dirty()
+        table = page.geometry_table
+        row = next(i for i in range(table.rowCount()) if table.item(i, 1).text() == "target_sphere")
+        # Emit the same itemChanged signal as a table edit, so the document
+        # transaction updates the authoritative preview inputs.
+        table.item(row, 4).setText(material)
 
     edit("lead")
     assert wait_until(app, lambda: controller.exports == 2), "an edit did not start a new export"
@@ -206,9 +219,6 @@ def check_window(app: QApplication, temp: Path) -> None:
     assert wait_until(app, lambda: "nothing_here" in page.preview3d_messages.toPlainText(), 30), \
         page.preview3d_messages.toPlainText()
     print("backend error: " + page.preview3d_messages.toPlainText().splitlines()[0][:150])
-    window.close()
-    window.deleteLater()
-    app.processEvents()
 
 
 def main() -> int:

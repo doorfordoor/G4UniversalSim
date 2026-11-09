@@ -94,6 +94,20 @@ jobs:
       - name: Annotate failing static cases
         if: failure()
         run: python -B scripts/ci_annotate_failures.py --report-root out/verification
+      # Windows can supply a DOS alias such as RUNNER~1 in the inherited TEMP.
+      # Use a real scratch directory for positive fixtures; the product's
+      # ambiguous-path rejection tests still supply their own invalid inputs.
+      - name: Select a canonical Windows GUI scratch directory
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $scratch = python -B -c 'import os, tempfile; from pathlib import Path; root = Path(os.environ["RUNNER_TEMP"]).resolve(strict=True); print(Path(tempfile.mkdtemp(prefix="g4usim-gui-", dir=root)).resolve(strict=True))'
+          if ($LASTEXITCODE -ne 0 -or -not $scratch -or -not (Test-Path -LiteralPath $scratch -PathType Container)) {
+            throw 'Failed to create the Windows GUI scratch directory'
+          }
+          foreach ($key in @('TMPDIR', 'TEMP', 'TMP')) {
+            "$key=$scratch" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          }
       - name: Run offscreen GUI tests
         run: python -B scripts/run_m0_tests.py --profile gui --require-tracked-sources --fail-on-skip
       - name: Validate GUI report evidence
