@@ -95,6 +95,57 @@ def _wait_windows_root_with_job_sample(process, deadline, accounting):
             return state, before_root, None
 
 
+def _diagnostic_job_members(k, job, root, root_pid, accounting):
+    """Scratch hosted diagnostic only. Read-only handles; preserve the original decision."""
+    import _winapi
+    from ctypes import wintypes as w
+    from . import _install_msvc_auxiliary as auxiliary
+    result = {"root_pid": root_pid, "members": []}
+    try:
+        for name, types, restype in (
+            ("OpenProcess", [w.DWORD, w.BOOL, w.DWORD], w.HANDLE),
+            ("IsProcessInJob", [w.HANDLE, w.HANDLE, ctypes.POINTER(w.BOOL)], w.BOOL),
+            ("QueryFullProcessImageNameW", [w.HANDLE, w.DWORD, w.LPWSTR, ctypes.POINTER(w.DWORD)], w.BOOL),
+        ):
+            function = getattr(k, name)
+            function.argtypes, function.restype = types, restype
+        root_creation, root_exit, *_ = auxiliary._times(k, root)
+        result["root_creation_filetime"], result["root_exit_filetime"] = str(root_creation), str(root_exit)
+        before = accounting()
+        pids = auxiliary._pid_array(k, job)
+        result["accounting_before"], result["pids_before"] = list(before), sorted(pids)
+        for pid in sorted(pids):
+            row = {"pid": pid}
+            result["members"].append(row)
+            try:
+                handle = _win_check(k.OpenProcess(0x1000 | 0x00100000, False, pid))  # query + synchronize only
+                try:
+                    member = w.BOOL()
+                    _win_check(k.IsProcessInJob(handle, job, ctypes.byref(member)))
+                    if not member.value:
+                        raise RuntimeError("Retained process is not in the held Job")
+                    times = auxiliary._times(k, handle)
+                    buffer = ctypes.create_unicode_buffer(32768)
+                    size = w.DWORD(len(buffer))
+                    _win_check(k.QueryFullProcessImageNameW(handle, 0, buffer, ctypes.byref(size)))
+                    row.update(image=buffer[:size.value], creation_filetime=str(times[0]),
+                               exit_filetime=str(times[1]), member_of_held_job=True,
+                               created_before_root_exit=0 < times[0] < root_exit,
+                               still_active=_winapi.WaitForSingleObject(handle, 0) == _winapi.WAIT_TIMEOUT)
+                finally:
+                    _winapi.CloseHandle(handle)
+            except Exception as exc:
+                row["observation_error"] = {"type": type(exc).__name__, "message": str(exc)}
+        after = accounting()
+        after_pids = auxiliary._pid_array(k, job)
+        result["accounting_after"], result["pids_after"] = list(after), sorted(after_pids)
+        result["stable_complete"] = (before == after and pids == after_pids and len(pids) == after[1]
+                                     and all(r.get("member_of_held_job") for r in result["members"]))
+    except Exception as exc:
+        result["observation_error"] = {"type": type(exc).__name__, "message": str(exc)}
+    return result
+
+
 def _windows_command(argv, cwd, env, output, timeout, record, owned, running, settling, *, msvc_auxiliary=None):
     import _winapi
     import msvcrt
@@ -253,6 +304,8 @@ def _windows_command(argv, cwd, env, output, timeout, record, owned, running, se
         except BaseException as exc:
             _cleanup_error(record, "guard_settling", exc)
             error = error or exc
+        if residual is not None and job is not None and process is not None:
+            record["diagnostic_residual_members"] = _diagnostic_job_members(k, job, process, pid, accounting)
         if (pinned is not None and residual is not None and error is residual and settling_persisted
                 and record["root_waited"] and record["exit_code"] == 0):
             try:

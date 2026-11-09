@@ -1,0 +1,273 @@
+name: AR6 Windows SDK installed/full process census (diagnostic only)
+'on':
+  push:
+    branches:
+    - codex-ar6-win-sdk-diagnostic-20261109
+permissions:
+  contents: read
+jobs:
+  installed_sdk:
+    name: Windows real installed SDK consumer with passive census
+    runs-on: windows-latest
+    timeout-minutes: 35
+    steps:
+    - name: Enable long Git paths on this runner
+      shell: pwsh
+      run: git config --global core.longpaths true
+    - uses: actions/checkout@v7
+    - uses: actions/setup-python@v7
+      with:
+        python-version: '3.11'
+    - name: Install the official SDK and observe its real configure
+      shell: pwsh
+      run: "$d=Join-Path $env:RUNNER_TEMP 'ar6-sdk-diag'\n$baseline=Join-Path $d 'baseline-source'\n[void](New-Item -Path\
+        \ $baseline -ItemType Directory)\n@('cmake_minimum_required(VERSION 3.21)','project(Ar6Diagnostic LANGUAGES CXX)','add_executable(abi_probe\
+        \ main.cc)') |\n  Set-Content -LiteralPath \"$baseline/CMakeLists.txt\" -Encoding utf8\n'int main() { return 0; }'\
+        \ | Set-Content -LiteralPath \"$baseline/main.cc\" -Encoding utf8\n$env:G4_BUILD=Join-Path $d 'baseline-build'\ncmake\
+        \ -S $baseline -B $env:G4_BUILD *> \"$d/baseline-configure.log\"\nif($LASTEXITCODE -ne 0){ Get-Content -LiteralPath\
+        \ \"$d/baseline-configure.log\" -Tail 30; throw 'Actual backend toolchain discovery failed' }\n$archive=Join-Path\
+        \ $d 'geant4-official.zip'\nInvoke-WebRequest 'https://geant4-data.web.cern.ch/releases/lib4.11.4.p03/WIN64-VC17.14.41-11.zip'\
+        \ -OutFile $archive\nif ((Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant() -ne 'b0725c4e34d4714c5ccf0f575b4bccfb06c021fc19f3696f347bb7ea464e4d9c')\
+        \ {\n  throw 'Unexpected official Windows SDK archive'\n}\nExpand-Archive -LiteralPath $archive -DestinationPath \"\
+        $d/sdk\"\n$configs=@(Get-ChildItem -LiteralPath \"$d/sdk\" -Recurse -Filter Geant4Config.cmake -File)\nif($configs.Count\
+        \ -ne 1){throw 'Ambiguous official SDK configure entry'}\n$geant=$configs[0].Directory.Parent.Parent.Parent.FullName\n\
+        $records = @(Get-ChildItem -LiteralPath \"$env:G4_BUILD/CMakeFiles\" -Filter CMakeCXXCompiler.cmake -Recurse -File)\n\
+        if ($records.Count -ne 1) { throw 'Expected one compiled backend C++ toolchain record' }\n$compilerRecord = [regex]::Matches([IO.File]::ReadAllText($records[0].FullName),\
+        \ '(?m)^set\\(CMAKE_CXX_COMPILER \"([^\"\\r\\n]+)\"\\)\\r?$')\n$cache = [IO.File]::ReadAllText(\"$env:G4_BUILD/CMakeCache.txt\"\
+        )\n$instanceRecord = [regex]::Matches($cache, '(?m)^CMAKE_GENERATOR_INSTANCE:INTERNAL=([^\\r\\n]+)\\r?$')\n$cmakeRecord\
+        \ = [regex]::Matches($cache, '(?m)^CMAKE_COMMAND:INTERNAL=([^\\r\\n]+)\\r?$')\nif ($compilerRecord.Count -ne 1 -or\
+        \ $instanceRecord.Count -ne 1 -or $cmakeRecord.Count -ne 1) {\n  throw 'Backend compiler, Visual Studio instance,\
+        \ or CMake is ambiguous'\n}\n$compiler = (Get-Item -LiteralPath $compilerRecord[0].Groups[1].Value -ErrorAction Stop).FullName\n\
+        $instance = (Get-Item -LiteralPath $instanceRecord[0].Groups[1].Value -ErrorAction Stop).FullName\n$cmake = (Get-Item\
+        \ -LiteralPath $cmakeRecord[0].Groups[1].Value -ErrorAction Stop).FullName\n$relative = [IO.Path]::GetRelativePath($instance,\
+        \ $compiler)\n$toolsetRecord = [regex]::Match($relative, '^VC[\\\\/]Tools[\\\\/]MSVC[\\\\/](\\d+\\.\\d+\\.\\d+)[\\\
+        \\/]bin[\\\\/]Hostx64[\\\\/]x64[\\\\/]cl\\.exe$', 'IgnoreCase')\nif (-not $toolsetRecord.Success) {\n  throw 'Backend\
+        \ compiler is not the x64 MSVC toolset of the configured Visual Studio instance'\n}\n$toolset = $toolsetRecord.Groups[1].Value\n\
+        $devCmd = (Get-Item -LiteralPath (Join-Path $instance 'Common7/Tools/VsDevCmd.bat') -ErrorAction Stop).FullName\n\
+        $environment = & $env:ComSpec /d /c ('call \"' + $devCmd + '\" -no_logo -arch=x64 -host_arch=x64 -vcvars_ver=' + $toolset\
+        \ + ' >nul && set')\nif ($LASTEXITCODE -ne 0) { throw 'The backend MSVC toolset could not be activated' }\n$values\
+        \ = @{}\nforeach ($line in $environment) {\n  if ($line -match '^(PATH|INCLUDE|LIB|LIBPATH)=(.+)$') { $values[$Matches[1]]\
+        \ = $Matches[2] }\n}\nforeach ($name in @('PATH', 'INCLUDE', 'LIB', 'LIBPATH')) {\n  if (-not $values.ContainsKey($name))\
+        \ { throw \"MSVC activation did not supply $name\" }\n  [Environment]::SetEnvironmentVariable($name, $values[$name],\
+        \ 'Process')\n}\nif ((Get-Command cl.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source\
+        \ -ine $compiler) {\n  throw 'Activated compiler differs from the one used to build the backend'\n}\nif (-not (Get-Command\
+        \ ninja.exe -CommandType Application -ErrorAction SilentlyContinue)) {\n  $ninja = (Get-Item -LiteralPath (Join-Path\
+        \ $instance 'Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe') -ErrorAction Stop).FullName\n  $env:PATH\
+        \ = (Split-Path $ninja -Parent) + [IO.Path]::PathSeparator + $env:PATH\n}\n[void](Get-Command ninja.exe -CommandType\
+        \ Application -ErrorAction Stop)\n# Keep the same compiler ABI while avoiding the default Visual Studio build processes.\n\
+        \n\npython -B packaging/build_sdk_package.py --geant4-prefix $geant --platform windows --architecture x86_64 --output-name\
+        \ ar6sdkdiag --version 1.1.0 --remove-staging\nif($LASTEXITCODE -ne 0){throw 'Standalone official SDK build failed'}\n\
+        python -I -B .github/scripts/ar6-launch-installed-sdk-observer.py $env:GITHUB_WORKSPACE $d $cmake $compiler\nif($LASTEXITCODE\
+        \ -ne 0){throw 'Real standalone SDK flow failed; preserve its diagnostics'}\n"
+    - name: Retain installed SDK diagnostic evidence
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v6
+      with:
+        name: ar6-installed-sdk-census
+        retention-days: 7
+        path: '${{ runner.temp }}/ar6-sdk-diag/installed-sdk-flow.log
+
+          ${{ runner.temp }}/ar6-sdk-diag/sdk-evidence/*.json
+
+          ${{ runner.temp }}/ar6-sdk-diag/environments/sdk-consumer-build/configure.log
+
+          ${{ runner.temp }}/ar6-sdk-diag/environments/sdk-consumer-build/sdk-probe-receipt.json
+
+          ${{ runner.temp }}/ar6-sdk-diag/baseline-configure.log'
+        if-no-files-found: error
+  full_observation:
+    name: Windows full installation with passive SDK census
+    runs-on: windows-latest
+    timeout-minutes: 120
+    env:
+      QT_QPA_PLATFORM: offscreen
+    steps:
+    - name: Enable long paths in the Windows checkout
+      if: runner.os == 'Windows'
+      run: git config --global core.longpaths true
+    - uses: actions/checkout@v7
+    - uses: actions/setup-python@v7
+      with:
+        python-version: '3.11'
+    - name: Linux desktop and build prerequisites
+      if: runner.os == 'Linux'
+      run: 'sudo apt-get update
+
+        sudo apt-get install --yes --no-install-recommends libegl1 libgl1 libopengl0 libxkbcommon0 libdbus-1-3 libfontconfig1
+        libxcb-cursor0 libxcb-icccm4 libxcb-keysyms1 libxcb-shape0 libxcb-xkb1 libxkbcommon-x11-0 patchelf fonts-noto-cjk
+
+        '
+    - name: Free unused hosted Android SDK before installation acceptance
+      if: runner.os == 'Linux' && runner.environment == 'github-hosted'
+      run: "set -euo pipefail\nsdk_root=/usr/local/lib/android/sdk\nremoved=false\n# $RUNNER_TEMP is the filesystem that holds\
+        \ the installation workspace.\nbefore_bytes=$(df -B1 --output=avail \"$RUNNER_TEMP\" | tail -n 1 | tr -d ' ')\necho\
+        \ \"disk-before-available-bytes: ${before_bytes}\"\nif [ -d \"${sdk_root}\" ] && [ ! -L \"${sdk_root}\" ]; then\n\
+        \  sudo rm -rf \"${sdk_root}\"\n  removed=true\n  echo \"Removed the GitHub-hosted Linux preinstalled Android SDK\
+        \ at ${sdk_root}; no other tools are enumerated or removed.\"\nelse\n  echo \"No GitHub-hosted Linux preinstalled\
+        \ Android SDK at ${sdk_root}; nothing removed.\"\nfi\nafter_bytes=$(df -B1 --output=avail \"$RUNNER_TEMP\" | tail\
+        \ -n 1 | tr -d ' ')\necho \"disk-after-available-bytes: ${after_bytes}\"\nfreed_bytes=$((after_bytes - before_bytes))\n\
+        echo \"disk-freed-bytes: ${freed_bytes}\"\n# Step summary is the durable record for this cleanup step.\n{\n  echo\
+        \ '### Hosted Linux disk space before installation acceptance'\n  echo \"- filesystem_probe_path: ${RUNNER_TEMP} (installation\
+        \ workspace)\"\n  echo \"- before_available_bytes: ${before_bytes}\"\n  echo \"- after_available_bytes: ${after_bytes}\"\
+        \n  echo \"- freed_bytes: ${freed_bytes}\"\n  echo \"- removed_fixed_directory: ${sdk_root}\"\n  echo \"- removed:\
+        \ ${removed}\"\n} >> \"$GITHUB_STEP_SUMMARY\"\n"
+    - name: Install isolated packaging dependencies
+      run: python -m pip install -r gui/requirements.txt -r gui/requirements-3d.txt pyinstaller
+    - name: Prepare Linux Geant4 SDK and its actual datasets
+      if: runner.os == 'Linux'
+      run: 'set -euo pipefail
+
+        delivery="$RUNNER_TEMP/g4usim-delivery"
+
+        mkdir -p "$delivery/bootstrap"
+
+        curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xj -C "$delivery/bootstrap" bin/micromamba
+
+        prefix="$delivery/bootstrap/geant4"
+
+        "$delivery/bootstrap/bin/micromamba" create -y -p "$prefix" -c conda-forge ''geant4=11.4.3'' ''python=3.11'' expat
+        zlib freetype
+
+        "$delivery/bootstrap/bin/micromamba" run -p "$prefix" -- printenv | grep -E ''^(G4[A-Z0-9_]*DATA|GEANT4[A-Z0-9_]*)=''
+        >> "$GITHUB_ENV"
+
+        echo "G4_PREFIX=$prefix" >> "$GITHUB_ENV"
+
+        echo "G4_BUILD=$delivery/backend" >> "$GITHUB_ENV"
+
+        echo "DELIVERY_ROOT=$delivery" >> "$GITHUB_ENV"
+
+        '
+    - name: Configure and compile Linux backend
+      if: runner.os == 'Linux'
+      run: "cmake -S . -B \"$G4_BUILD\" -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=\"$G4_PREFIX\" \\\n  -DEXPAT_INCLUDE_DIR=\"\
+        $G4_PREFIX/include\" -DEXPAT_LIBRARY=\"$G4_PREFIX/lib/libexpat.so\" \\\n  -DZLIB_INCLUDE_DIR=\"$G4_PREFIX/include\"\
+        \ -DZLIB_LIBRARY=\"$G4_PREFIX/lib/libz.so\" \\\n  -DFREETYPE_INCLUDE_DIRS=\"$G4_PREFIX/include/freetype2\" -DFREETYPE_LIBRARY=\"\
+        $G4_PREFIX/lib/libfreetype.so\"\ncmake --build \"$G4_BUILD\" --parallel 4\n\"$G4_BUILD/G4UniversalSim\" --check-geant4-data\
+        \ > \"$DELIVERY_ROOT/discovery.json\"\n"
+    - name: Prepare hash-verified official Windows SDK
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: '$delivery = Join-Path $env:RUNNER_TEMP ''g4usim-delivery''
+
+        $bootstrap = Join-Path $delivery ''bootstrap''
+
+        New-Item -ItemType Directory -Path $bootstrap | Out-Null
+
+        $archive = Join-Path $bootstrap ''geant4-11.4.3-official.zip''
+
+        Invoke-WebRequest ''https://geant4-data.web.cern.ch/releases/lib4.11.4.p03/WIN64-VC17.14.41-11.zip'' -OutFile $archive
+
+        if ((Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant() -ne ''b0725c4e34d4714c5ccf0f575b4bccfb06c021fc19f3696f347bb7ea464e4d9c'')
+        { throw ''Official SDK archive identity mismatch'' }
+
+        Expand-Archive -LiteralPath $archive -DestinationPath (Join-Path $bootstrap ''sdk'')
+
+        $configs = @(Get-ChildItem -LiteralPath (Join-Path $bootstrap ''sdk'') -Filter Geant4Config.cmake -Recurse -File)
+
+        if ($configs.Count -ne 1) { throw ''Expected one Geant4 CMake configuration'' }
+
+        $prefix = $configs[0].Directory.Parent.Parent.Parent.FullName
+
+        "G4_PREFIX=$prefix" >> $env:GITHUB_ENV
+
+        "G4_BUILD=$(Join-Path $delivery ''backend'')" >> $env:GITHUB_ENV
+
+        "DELIVERY_ROOT=$delivery" >> $env:GITHUB_ENV
+
+        (Join-Path $prefix ''bin'') >> $env:GITHUB_PATH
+
+        python packaging/ci_fetch_geant4_data.py --config $configs[0].FullName --directory (Join-Path $bootstrap ''datasets'')
+
+        if ($LASTEXITCODE -ne 0) { throw ''Dataset acquisition or verification failed'' }
+
+        "GEANT4_DATA_DIR=$(Join-Path $bootstrap ''datasets/data'')" >> $env:GITHUB_ENV
+
+        '
+    - name: Configure and compile Windows backend
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: 'cmake -S . -B $env:G4_BUILD "-DGeant4_DIR=$env:G4_PREFIX/lib/cmake/Geant4"
+
+        if ($LASTEXITCODE -ne 0) { throw ''Backend configure failed'' }
+
+        cmake --build $env:G4_BUILD --config Release --parallel 4
+
+        if ($LASTEXITCODE -ne 0) { throw ''Backend compilation failed'' }
+
+        & "$env:G4_BUILD/Release/G4UniversalSim.exe" --check-geant4-data > "$env:DELIVERY_ROOT/discovery.json"
+
+        if ($LASTEXITCODE -ne 0) { throw ''Actual backend dataset discovery failed'' }
+
+        '
+    - name: Linux full runtime and SDK installation lifecycle
+      if: runner.os == 'Linux'
+      run: "python -B tools/test_assert_probe.py packaging/ci_delivery.py --build-dir \"$G4_BUILD\" --geant4-prefix \"$G4_PREFIX\"\
+        \ \\\n  --discovery-json \"$DELIVERY_ROOT/discovery.json\" --work-root \"$DELIVERY_ROOT/acceptance\" \\\n  --cmake\
+        \ \"$(command -v cmake)\" --compiler \"$(command -v c++)\" --application-build\n"
+    - name: Windows full runtime and SDK installation lifecycle
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: "$records = @(Get-ChildItem -LiteralPath \"$env:G4_BUILD/CMakeFiles\" -Filter CMakeCXXCompiler.cmake -Recurse -File)\n\
+        if ($records.Count -ne 1) { throw 'Expected one compiled backend C++ toolchain record' }\n$compilerRecord = [regex]::Matches([IO.File]::ReadAllText($records[0].FullName),\
+        \ '(?m)^set\\(CMAKE_CXX_COMPILER \"([^\"\\r\\n]+)\"\\)\\r?$')\n$cache = [IO.File]::ReadAllText(\"$env:G4_BUILD/CMakeCache.txt\"\
+        )\n$instanceRecord = [regex]::Matches($cache, '(?m)^CMAKE_GENERATOR_INSTANCE:INTERNAL=([^\\r\\n]+)\\r?$')\n$cmakeRecord\
+        \ = [regex]::Matches($cache, '(?m)^CMAKE_COMMAND:INTERNAL=([^\\r\\n]+)\\r?$')\nif ($compilerRecord.Count -ne 1 -or\
+        \ $instanceRecord.Count -ne 1 -or $cmakeRecord.Count -ne 1) {\n  throw 'Backend compiler, Visual Studio instance,\
+        \ or CMake is ambiguous'\n}\n$compiler = (Get-Item -LiteralPath $compilerRecord[0].Groups[1].Value -ErrorAction Stop).FullName\n\
+        $instance = (Get-Item -LiteralPath $instanceRecord[0].Groups[1].Value -ErrorAction Stop).FullName\n$cmake = (Get-Item\
+        \ -LiteralPath $cmakeRecord[0].Groups[1].Value -ErrorAction Stop).FullName\n$relative = [IO.Path]::GetRelativePath($instance,\
+        \ $compiler)\n$toolsetRecord = [regex]::Match($relative, '^VC[\\\\/]Tools[\\\\/]MSVC[\\\\/](\\d+\\.\\d+\\.\\d+)[\\\
+        \\/]bin[\\\\/]Hostx64[\\\\/]x64[\\\\/]cl\\.exe$', 'IgnoreCase')\nif (-not $toolsetRecord.Success) {\n  throw 'Backend\
+        \ compiler is not the x64 MSVC toolset of the configured Visual Studio instance'\n}\n$toolset = $toolsetRecord.Groups[1].Value\n\
+        $devCmd = (Get-Item -LiteralPath (Join-Path $instance 'Common7/Tools/VsDevCmd.bat') -ErrorAction Stop).FullName\n\
+        $environment = & $env:ComSpec /d /c ('call \"' + $devCmd + '\" -no_logo -arch=x64 -host_arch=x64 -vcvars_ver=' + $toolset\
+        \ + ' >nul && set')\nif ($LASTEXITCODE -ne 0) { throw 'The backend MSVC toolset could not be activated' }\n$values\
+        \ = @{}\nforeach ($line in $environment) {\n  if ($line -match '^(PATH|INCLUDE|LIB|LIBPATH)=(.+)$') { $values[$Matches[1]]\
+        \ = $Matches[2] }\n}\nforeach ($name in @('PATH', 'INCLUDE', 'LIB', 'LIBPATH')) {\n  if (-not $values.ContainsKey($name))\
+        \ { throw \"MSVC activation did not supply $name\" }\n  [Environment]::SetEnvironmentVariable($name, $values[$name],\
+        \ 'Process')\n}\nif ((Get-Command cl.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source\
+        \ -ine $compiler) {\n  throw 'Activated compiler differs from the one used to build the backend'\n}\nif (-not (Get-Command\
+        \ ninja.exe -CommandType Application -ErrorAction SilentlyContinue)) {\n  $ninja = (Get-Item -LiteralPath (Join-Path\
+        \ $instance 'Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe') -ErrorAction Stop).FullName\n  $env:PATH\
+        \ = (Split-Path $ninja -Parent) + [IO.Path]::PathSeparator + $env:PATH\n}\n[void](Get-Command ninja.exe -CommandType\
+        \ Application -ErrorAction Stop)\n# Keep the same compiler ABI while avoiding the default Visual Studio build processes.\n\
+        python -B tools/test_assert_probe.py packaging/ci_delivery.py --build-dir $env:G4_BUILD --geant4-prefix $env:G4_PREFIX\
+        \ --discovery-json \"$env:DELIVERY_ROOT/discovery.json\" --work-root \"$env:DELIVERY_ROOT/acceptance\" --cmake $cmake\
+        \ --compiler $compiler --generator Ninja --application-build\nif ($LASTEXITCODE -ne 0) { throw 'Full installation\
+        \ lifecycle verification failed' }\n"
+    - name: Retain actual runner and installation evidence
+      id: upload-evidence
+      if: always()
+      continue-on-error: true
+      uses: actions/upload-artifact@v6
+      with:
+        name: full-installation-${{ runner.os }}
+        retention-days: 7
+        path: '${{ runner.temp }}/g4usim-delivery/acceptance/evidence/
+
+          ${{ runner.temp }}/g4usim-delivery/acceptance/runtime-evidence/
+
+          ${{ runner.temp }}/g4usim-delivery/acceptance/sdk-evidence/
+
+          ${{ runner.temp }}/g4usim-delivery/acceptance/logs/
+
+          ${{ runner.temp }}/g4usim-delivery/acceptance/*.json
+
+          ${{ runner.temp }}/g4usim-delivery/acceptance/*.log
+
+          ${{ runner.temp }}/g4usim-delivery/bootstrap/datasets/fetch-report.json
+
+          ${{ runner.temp }}/g4usim-delivery/discovery.json
+
+          '
+        if-no-files-found: error
+    - name: Retain installation evidence in job log if artifact upload fails
+      if: always() && steps.upload-evidence.outcome == 'failure'
+      shell: bash
+      run: python -B .github/scripts/ci_log_evidence.py emit --root "$RUNNER_TEMP/g4usim-delivery" --name "full-installation-${{
+        runner.os }}" --include 'acceptance/delivery-report.json' --include 'acceptance/*.log' --include 'acceptance/logs/**/*.log'
+        --include 'acceptance/evidence/sdk/**/*' --include 'acceptance/*-evidence/flow-report.json' --include 'acceptance/*-evidence/uninstall-receipt.json'
+        --include 'acceptance/sdk-evidence/sdk-consumer.json' --include 'acceptance/sdk-evidence/sdk-application.json' --include
+        'acceptance/runtime-evidence/*.log' --include 'acceptance/runtime-evidence/gui-self-test.json' --include 'acceptance/runtime-evidence/result/run_summary.txt'
+        --include 'bootstrap/datasets/fetch-report.json' --include 'discovery.json'

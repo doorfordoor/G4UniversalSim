@@ -1,8 +1,6 @@
 name: AR6 Windows SDK process census (diagnostic only)
 'on':
-  push:
-    branches:
-    - codex-ar6-win-sdk-diagnostic-20261109
+  workflow_dispatch: {}
 permissions:
   contents: read
 jobs:
