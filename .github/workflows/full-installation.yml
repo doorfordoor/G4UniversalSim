@@ -126,7 +126,45 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          python -B tools/test_assert_probe.py packaging/ci_delivery.py --build-dir $env:G4_BUILD --geant4-prefix $env:G4_PREFIX --discovery-json "$env:DELIVERY_ROOT/discovery.json" --work-root "$env:DELIVERY_ROOT/acceptance" --cmake (Get-Command cmake).Source --application-build
+          $records = @(Get-ChildItem -LiteralPath "$env:G4_BUILD/CMakeFiles" -Filter CMakeCXXCompiler.cmake -Recurse -File)
+          if ($records.Count -ne 1) { throw 'Expected one compiled backend C++ toolchain record' }
+          $compilerRecord = [regex]::Matches([IO.File]::ReadAllText($records[0].FullName), '(?m)^set\(CMAKE_CXX_COMPILER "([^"\r\n]+)"\)\r?$')
+          $cache = [IO.File]::ReadAllText("$env:G4_BUILD/CMakeCache.txt")
+          $instanceRecord = [regex]::Matches($cache, '(?m)^CMAKE_GENERATOR_INSTANCE:INTERNAL=([^\r\n]+)\r?$')
+          $cmakeRecord = [regex]::Matches($cache, '(?m)^CMAKE_COMMAND:INTERNAL=([^\r\n]+)\r?$')
+          if ($compilerRecord.Count -ne 1 -or $instanceRecord.Count -ne 1 -or $cmakeRecord.Count -ne 1) {
+            throw 'Backend compiler, Visual Studio instance, or CMake is ambiguous'
+          }
+          $compiler = (Get-Item -LiteralPath $compilerRecord[0].Groups[1].Value -ErrorAction Stop).FullName
+          $instance = (Get-Item -LiteralPath $instanceRecord[0].Groups[1].Value -ErrorAction Stop).FullName
+          $cmake = (Get-Item -LiteralPath $cmakeRecord[0].Groups[1].Value -ErrorAction Stop).FullName
+          $relative = [IO.Path]::GetRelativePath($instance, $compiler)
+          $toolsetRecord = [regex]::Match($relative, '^VC[\\/]Tools[\\/]MSVC[\\/](\d+\.\d+\.\d+)[\\/]bin[\\/]Hostx64[\\/]x64[\\/]cl\.exe$', 'IgnoreCase')
+          if (-not $toolsetRecord.Success) {
+            throw 'Backend compiler is not the x64 MSVC toolset of the configured Visual Studio instance'
+          }
+          $toolset = $toolsetRecord.Groups[1].Value
+          $devCmd = (Get-Item -LiteralPath (Join-Path $instance 'Common7/Tools/VsDevCmd.bat') -ErrorAction Stop).FullName
+          $environment = & $env:ComSpec /d /c ('call "' + $devCmd + '" -no_logo -arch=x64 -host_arch=x64 -vcvars_ver=' + $toolset + ' >nul && set')
+          if ($LASTEXITCODE -ne 0) { throw 'The backend MSVC toolset could not be activated' }
+          $values = @{}
+          foreach ($line in $environment) {
+            if ($line -match '^(PATH|INCLUDE|LIB|LIBPATH)=(.+)$') { $values[$Matches[1]] = $Matches[2] }
+          }
+          foreach ($name in @('PATH', 'INCLUDE', 'LIB', 'LIBPATH')) {
+            if (-not $values.ContainsKey($name)) { throw "MSVC activation did not supply $name" }
+            [Environment]::SetEnvironmentVariable($name, $values[$name], 'Process')
+          }
+          if ((Get-Command cl.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source -ine $compiler) {
+            throw 'Activated compiler differs from the one used to build the backend'
+          }
+          if (-not (Get-Command ninja.exe -CommandType Application -ErrorAction SilentlyContinue)) {
+            $ninja = (Get-Item -LiteralPath (Join-Path $instance 'Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe') -ErrorAction Stop).FullName
+            $env:PATH = (Split-Path $ninja -Parent) + [IO.Path]::PathSeparator + $env:PATH
+          }
+          [void](Get-Command ninja.exe -CommandType Application -ErrorAction Stop)
+          # Keep the same compiler ABI while avoiding the default Visual Studio build processes.
+          python -B tools/test_assert_probe.py packaging/ci_delivery.py --build-dir $env:G4_BUILD --geant4-prefix $env:G4_PREFIX --discovery-json "$env:DELIVERY_ROOT/discovery.json" --work-root "$env:DELIVERY_ROOT/acceptance" --cmake $cmake --compiler $compiler --generator Ninja --application-build
           if ($LASTEXITCODE -ne 0) { throw 'Full installation lifecycle verification failed' }
       - name: Retain actual runner and installation evidence
         id: upload-evidence
