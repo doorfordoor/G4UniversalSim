@@ -2,6 +2,8 @@ name: M0 static and GUI regression
 
 on:
   push:
+    branches-ignore:
+      - codex-ar6-win-sdk-diagnostic-20261109
   pull_request:
 
 permissions:

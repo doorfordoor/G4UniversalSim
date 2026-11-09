@@ -2,6 +2,8 @@ name: I2 desktop package delivery
 
 on:
   push:
+    branches-ignore:
+      - codex-ar6-win-sdk-diagnostic-20261109
   pull_request:
 
 permissions:

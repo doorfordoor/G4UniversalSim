@@ -2,6 +2,8 @@ name: I2 native runtime and SDK installation
 
 on:
   push:
+    branches-ignore:
+      - codex-ar6-win-sdk-diagnostic-20261109
   pull_request:
 
 permissions:

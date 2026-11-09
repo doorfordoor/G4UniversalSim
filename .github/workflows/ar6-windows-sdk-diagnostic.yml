@@ -1,0 +1,71 @@
+name: AR6 Windows SDK process census (diagnostic only)
+'on':
+  push:
+    branches:
+    - codex-ar6-win-sdk-diagnostic-20261109
+permissions:
+  contents: read
+jobs:
+  observe:
+    name: Windows 11.4.3 SDK configure Job census
+    runs-on: windows-latest
+    timeout-minutes: 18
+    steps:
+    - uses: actions/checkout@v7
+    - uses: actions/setup-python@v7
+      with:
+        python-version: '3.11'
+    - name: Observe the official SDK configure before owned cleanup
+      shell: pwsh
+      run: "$d=Join-Path $env:RUNNER_TEMP 'ar6-sdk-diag'\n$baseline=Join-Path $d 'baseline-source'\n[void](New-Item -Path\
+        \ $baseline -ItemType Directory)\n@('cmake_minimum_required(VERSION 3.21)','project(Ar6Diagnostic LANGUAGES CXX)','add_executable(abi_probe\
+        \ main.cc)') |\n  Set-Content -LiteralPath \"$baseline/CMakeLists.txt\" -Encoding utf8\n'int main() { return 0; }'\
+        \ | Set-Content -LiteralPath \"$baseline/main.cc\" -Encoding utf8\n$env:G4_BUILD=Join-Path $d 'baseline-build'\ncmake\
+        \ -S $baseline -B $env:G4_BUILD *> \"$d/baseline-configure.log\"\nif($LASTEXITCODE -ne 0){ Get-Content -LiteralPath\
+        \ \"$d/baseline-configure.log\" -Tail 30; throw 'Actual backend toolchain discovery failed' }\n$archive=Join-Path\
+        \ $d 'geant4-official.zip'\nInvoke-WebRequest 'https://geant4-data.web.cern.ch/releases/lib4.11.4.p03/WIN64-VC17.14.41-11.zip'\
+        \ -OutFile $archive\nif ((Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant() -ne 'b0725c4e34d4714c5ccf0f575b4bccfb06c021fc19f3696f347bb7ea464e4d9c')\
+        \ {\n  throw 'Unexpected official Windows SDK archive'\n}\nExpand-Archive -LiteralPath $archive -DestinationPath \"\
+        $d/sdk\"\n$configs=@(Get-ChildItem -LiteralPath \"$d/sdk\" -Recurse -Filter Geant4Config.cmake -File)\nif($configs.Count\
+        \ -ne 1){throw 'Ambiguous official SDK configure entry'}\n$geant=$configs[0].Directory.Parent.Parent.Parent.FullName\n\
+        $records = @(Get-ChildItem -LiteralPath \"$env:G4_BUILD/CMakeFiles\" -Filter CMakeCXXCompiler.cmake -Recurse -File)\n\
+        if ($records.Count -ne 1) { throw 'Expected one compiled backend C++ toolchain record' }\n$compilerRecord = [regex]::Matches([IO.File]::ReadAllText($records[0].FullName),\
+        \ '(?m)^set\\(CMAKE_CXX_COMPILER \"([^\"\\r\\n]+)\"\\)\\r?$')\n$cache = [IO.File]::ReadAllText(\"$env:G4_BUILD/CMakeCache.txt\"\
+        )\n$instanceRecord = [regex]::Matches($cache, '(?m)^CMAKE_GENERATOR_INSTANCE:INTERNAL=([^\\r\\n]+)\\r?$')\n$cmakeRecord\
+        \ = [regex]::Matches($cache, '(?m)^CMAKE_COMMAND:INTERNAL=([^\\r\\n]+)\\r?$')\nif ($compilerRecord.Count -ne 1 -or\
+        \ $instanceRecord.Count -ne 1 -or $cmakeRecord.Count -ne 1) {\n  throw 'Backend compiler, Visual Studio instance,\
+        \ or CMake is ambiguous'\n}\n$compiler = (Get-Item -LiteralPath $compilerRecord[0].Groups[1].Value -ErrorAction Stop).FullName\n\
+        $instance = (Get-Item -LiteralPath $instanceRecord[0].Groups[1].Value -ErrorAction Stop).FullName\n$cmake = (Get-Item\
+        \ -LiteralPath $cmakeRecord[0].Groups[1].Value -ErrorAction Stop).FullName\n$relative = [IO.Path]::GetRelativePath($instance,\
+        \ $compiler)\n$toolsetRecord = [regex]::Match($relative, '^VC[\\\\/]Tools[\\\\/]MSVC[\\\\/](\\d+\\.\\d+\\.\\d+)[\\\
+        \\/]bin[\\\\/]Hostx64[\\\\/]x64[\\\\/]cl\\.exe$', 'IgnoreCase')\nif (-not $toolsetRecord.Success) {\n  throw 'Backend\
+        \ compiler is not the x64 MSVC toolset of the configured Visual Studio instance'\n}\n$toolset = $toolsetRecord.Groups[1].Value\n\
+        $devCmd = (Get-Item -LiteralPath (Join-Path $instance 'Common7/Tools/VsDevCmd.bat') -ErrorAction Stop).FullName\n\
+        $environment = & $env:ComSpec /d /c ('call \"' + $devCmd + '\" -no_logo -arch=x64 -host_arch=x64 -vcvars_ver=' + $toolset\
+        \ + ' >nul && set')\nif ($LASTEXITCODE -ne 0) { throw 'The backend MSVC toolset could not be activated' }\n$values\
+        \ = @{}\nforeach ($line in $environment) {\n  if ($line -match '^(PATH|INCLUDE|LIB|LIBPATH)=(.+)$') { $values[$Matches[1]]\
+        \ = $Matches[2] }\n}\nforeach ($name in @('PATH', 'INCLUDE', 'LIB', 'LIBPATH')) {\n  if (-not $values.ContainsKey($name))\
+        \ { throw \"MSVC activation did not supply $name\" }\n  [Environment]::SetEnvironmentVariable($name, $values[$name],\
+        \ 'Process')\n}\nif ((Get-Command cl.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source\
+        \ -ine $compiler) {\n  throw 'Activated compiler differs from the one used to build the backend'\n}\nif (-not (Get-Command\
+        \ ninja.exe -CommandType Application -ErrorAction SilentlyContinue)) {\n  $ninja = (Get-Item -LiteralPath (Join-Path\
+        \ $instance 'Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe') -ErrorAction Stop).FullName\n  $env:PATH\
+        \ = (Split-Path $ninja -Parent) + [IO.Path]::PathSeparator + $env:PATH\n}\n[void](Get-Command ninja.exe -CommandType\
+        \ Application -ErrorAction Stop)\n# Keep the same compiler ABI while avoiding the default Visual Studio build processes.\n\
+        \npython -I -B .github/scripts/ar6-observe-owned-windows-configure.py --repo \"$env:GITHUB_WORKSPACE\" --out \"$d/evidence\"\
+        \ --geant4-prefix $geant --cmake $cmake --compiler $compiler --repeat 4\nif($LASTEXITCODE -ne 0){throw 'Owned configure\
+        \ diagnostic failed to collect evidence'}\n"
+    - name: Retain actual diagnostic observations
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v6
+      with:
+        name: ar6-windows-sdk-process-census
+        retention-days: 7
+        path: '${{ runner.temp }}/ar6-sdk-diag/evidence/**/trace.json
+
+          ${{ runner.temp }}/ar6-sdk-diag/evidence/**/configure.log
+
+          ${{ runner.temp }}/ar6-sdk-diag/evidence/*.json
+
+          ${{ runner.temp }}/ar6-sdk-diag/baseline-configure.log'
+        if-no-files-found: error
