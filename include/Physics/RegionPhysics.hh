@@ -14,6 +14,7 @@ struct RegionPhysicsSettings {
     double maxTrackLength = 0.0;          // G4UserLimits (G4UserSpecialCuts)
     double maxTime = 0.0;
     double minKineticEnergy = 0.0;
+    std::string selection;                 // referenced logical selection, when present
     std::vector<std::string> volumes;     // logical volumes that become region roots
 
     bool HasUserLimits() const

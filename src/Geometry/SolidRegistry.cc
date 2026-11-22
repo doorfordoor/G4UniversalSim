@@ -127,7 +127,7 @@ const std::vector<SolidRegistry::Entry>& SolidRegistry::Entries()
          false, false, true, true, "matching lists of >=2 planes; integer numSide>=3",
          [](VolumeBuilder& b, const VolumeNode& n) { return b.CreatePolyconeSolid(n, true); }},
         {VolumeShape::Tessellated, "tessellated", {"stl"}, "G4TessellatedSolid", {}, {},
-         {{"file", "path"}, {"file_unit", "length_unit", false, "mm"}}, false, false, true, true,
+         {{"file", "path"}, {"file_unit", "length_unit", false, "mm"}, {"scales", "dimensionless_vector", false, "1,1,1"}}, false, false, true, true,
          "closed consistently oriented manifold STL; file.resolved is internal captured input",
          &Build<&VolumeBuilder::CreateTessellatedSolid>}
     };

@@ -1,3 +1,10 @@
+#ifdef G4USIM_H6_ENGINEERING
+#include "Core/EngineeringWaterState.hh"
+#include "G4Material.hh"
+#include "G4Box.hh"
+#include "G4SystemOfUnits.hh"
+#include "Output/OutputManager.hh"
+#endif
 #include "Detector/DetectorConstruction.hh"
 
 #include "Detector/DetectorMessenger.hh"
@@ -76,6 +83,26 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         throw std::runtime_error("DetectorConstruction::Construct failed: GeometryManager::BuildWorld returned null");
     }
 
+#ifdef G4USIM_H6_ENGINEERING
+    const auto* logical=worldVolume_->GetLogicalVolume();
+    const auto* material=logical ? logical->GetMaterial() : nullptr;
+    const auto* box=logical ? dynamic_cast<const G4Box*>(logical->GetSolid()) : nullptr;
+    if (worldVolume_->GetName()!="world_PV" || !logical || logical->GetName()!="world_LV" ||
+        !material || material!=engineering_water::acceptedMaterial || material->GetName()!="H6-water" ||
+        material->GetTemperature()!=engineering_water::requestedTemperature ||
+        material->GetState()!=kStateLiquid || material->GetDensity()!=CLHEP::g/CLHEP::cm3 ||
+        material->GetNumberOfElements()!=2 || material->GetElement(0)->GetName()!="TS_H_of_Water" ||
+        material->GetElement(1)->GetZasInt()!=8 || !material->GetAtomsVector() ||
+        material->GetAtomsVector()[0]!=2 || material->GetAtomsVector()[1]!=1 ||
+        !box || box->GetXHalfLength()!=CLHEP::m || box->GetYHalfLength()!=CLHEP::m ||
+        box->GetZHalfLength()!=(engineering_water::thinWorld ? 0.001*CLHEP::mm : CLHEP::m) || logical->GetNoDaughters()!=0 || worldVolume_->GetMotherLogical()) {
+        if (engineeringOutput) engineeringOutput->RecordStartupFailure("engineering_water_world","unexpected native world");
+        throw std::runtime_error("engineering water native world mismatch");
+    }
+    engineering_water::acceptedWorld=worldVolume_;
+    G4cout << "WATER_PRODUCT_WORLD " << worldVolume_->GetName() << " " << material->GetName()
+           << " " << material->GetTemperature() << G4endl;
+#endif
     if (fieldConfig_ && !fieldConfig_->Empty()) FieldSetup::Validate(*fieldConfig_);
     if (postBuildCallback_) {
         postBuildCallback_(geometryManager_->GetRegistry());

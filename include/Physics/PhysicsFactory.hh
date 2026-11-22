@@ -24,6 +24,9 @@ enum class PhysicsCategory {
 
 class PhysicsFactory {
 public:
+#ifdef G4USIM_H6_ENGINEERING
+    static std::unique_ptr<G4VModularPhysicsList> CreateEngineeringWaterList(bool thermal, double temperature);
+#endif
     static std::string NormalizeOptionName(const std::string& option);
     static PhysicsCategory Classify(const std::string& canonicalName);
     static bool IsKnownOption(const std::string& option);

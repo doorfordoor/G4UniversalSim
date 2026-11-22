@@ -11,6 +11,7 @@ struct MacroPreflightLocks {
     bool numThreads = false;
     bool seed = false;
     bool checkOverlaps = false;
+    bool regionalDna = false;
 };
 
 class MacroPreflightError : public std::runtime_error {
@@ -43,6 +44,8 @@ struct MacroPreflightResult {
     std::vector<MacroCommand> commands;
     std::vector<std::pair<std::string, std::string>> inputs; // path, parsed-byte sha256 (includes empty/include-only files)
 };
+
+bool ChangesProjectPhysics(const std::string& normalizedCommand);
 
 MacroPreflightResult PreflightMacro(
     const std::string& filename,

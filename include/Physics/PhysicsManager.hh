@@ -108,6 +108,8 @@ public:
     void SetElectronCaptureThreshold(double threshold);
     double GetElectronCaptureThreshold() const;
 
+    const std::string& GetDnaRegion() const { return dnaRegion_; }
+    const std::string& GetDnaModel() const { return dnaModel_; }
     void LoadFromConfig(const ConfigManager& config);
 
     void Validate() const;
@@ -116,12 +118,17 @@ public:
     effective_config::Value ExportEffectiveConfigEvidence() const;
     void ConfirmEffectiveConfigMutation(const std::string& command, const effective_config::Origin& origin);
     void ObserveEffectiveConfigPhysics(const G4VModularPhysicsList& list, const std::string& stage) const;
+    void ObserveEffectiveProductionCuts(const G4VModularPhysicsList& list, const std::string& stage) const;
 
 private:
     // Reject conflicting selectors before changing cached values or provenance.
     // Empty option denotes a reference/mode change; otherwise match the
     // supported constructor category (type-zero extensions are independent).
     void RequireNoReplacementConflict(const char* selector, const std::string& option = "") const;
+public:
+    double engineeringWaterTemperature=0;
+    bool engineeringThermal=false;
+private:
     void LoadFromConfigImpl(const ConfigManager& config);
     std::vector<effective_config::Field> ProjectEffectiveConfigFields() const;
     std::shared_ptr<effective_config::ConsumerState> effective_ = std::make_shared<effective_config::ConsumerState>();
@@ -144,6 +151,8 @@ private:
     double radioactiveDecayTimeThreshold_ = -1.0;  // < 0: Geant4 default
     BiasingManager* biasingManager_ = nullptr; // not owned
     bool biasingPhysicsEnabled_ = false;
+    std::string dnaRegion_;
+    std::string dnaModel_;
     bool microElecEnabled_ = false;
     std::string microElecRegionName_ = "SV";
     bool electronCaptureEnabled_ = false;

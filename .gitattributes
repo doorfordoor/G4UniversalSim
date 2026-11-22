@@ -38,3 +38,21 @@ CMakeLists.txt text eol=lf
 docs/verification/** -text
 docs/collab/reviews/20261101-i2-j1-evidence/** -text
 docs/collab/decisions/20261105-q2-biasing-freeze-r1.json -text
+
+# Retain frozen source bytes in the F3 verification branch.
+/cmake/BackendTargets.cmake -text
+/include/Geometry/GdmlAffineBox.hh -text
+/include/Geometry/GdmlComponent.hh -text
+/include/Geometry/VolumeNode.hh -text
+/include/Output/EqualHistogramAxis.hh -text
+/include/Output/NamedEventNtuple.hh -text
+/include/Output/NamedHistogram2D.hh -text
+/include/Scoring/CompiledScorer.hh -text
+/include/Scoring/ProjectScorer.hh -text
+/include/Source/SourceManager.hh -text
+/include/Utils/NamedParameters.hh -text
+/src/Geometry/GeometryConfig.cc -text
+/src/Geometry/GeometryConfigDiagnostic.cc -text
+/src/Output/NamedEventNtuple.cc -text
+/src/Source/SourceManager.cc -text
+/src/Utils/NamedParameters.cc -text

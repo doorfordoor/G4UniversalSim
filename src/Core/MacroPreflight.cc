@@ -13,6 +13,20 @@
 #include <utility>
 #include <vector>
 
+bool ChangesProjectPhysics(const std::string& commandName)
+{
+    const bool physicsCommand = commandName.rfind("/aihl/physics/", 0) == 0 ||
+        commandName.rfind("/aihl/biasing/", 0) == 0;
+    const bool readOnlyPhysicsCommand = commandName == "/aihl/physics/print" ||
+        commandName == "/aihl/physics/listavailablereferences" ||
+        commandName == "/aihl/physics/listavailableemreferences" ||
+        commandName == "/aihl/physics/dumpprocesses" ||
+        commandName == "/aihl/biasing/print" ||
+        commandName == "/aihl/biasing/validate" ||
+        commandName == "/aihl/biasing/xs/printrules";
+    return physicsCommand && !readOnlyPhysicsCommand;
+}
+
 namespace {
 
 constexpr std::size_t kMaxMacroDepth = 64;
@@ -202,6 +216,19 @@ private:
             );
         }
         std::string conflict;
+        if (locks_.regionalDna) {
+            const bool control = StringUtils::StartsWith(line.command, "/control/");
+            const bool permittedControl = line.command == "/control/execute" || line.command == "/control/verbose";
+            const bool invalidBeamOn = line.command == "/run/beamon" &&
+                (line.arguments.empty() || line.arguments.find_first_not_of("0123456789") != std::string::npos);
+            if (ChangesProjectPhysics(line.command) || StringUtils::StartsWith(line.command, "/process/") ||
+                line.command == "/run/physicsmodified" || line.command == "/run/reinitializegeometry" ||
+                (control && !permittedControl) || invalidBeamOn) {
+                ThrowMacroError(filename, lineNumber,
+                    "[physics.dna] process/model, reinitialization or dynamic dispatch command is outside the regional configuration",
+                    line.text);
+            }
+        }
         if (locks_.outputDir &&
             (line.command == "/aihl/app/setoutputdir" || line.command == "/aihl/output/setdir")) {
             conflict = "output directory";

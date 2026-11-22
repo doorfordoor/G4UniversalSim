@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <cmath>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -12,6 +13,26 @@ enum class BiasingType {
     CrossSection,
     Region,
     Importance
+};
+
+// Mass-geometry sampling has an independent mode, separate from the XS gate.
+struct GeometricSamplingCell {
+    std::string section;
+    std::string volume;
+    int copyNumber = 0;
+    double importance = 1.0;
+    std::vector<double> lowerWeights;
+};
+
+struct GeometricSamplingConfig {
+    std::string mode = "off";
+    std::string particle = "neutron";
+    std::vector<double> energyUpperBounds;
+    double upperLimitFactor = 5.0;
+    double survivalFactor = 3.0;
+    int maxNumberOfSplits = 5;
+    std::vector<GeometricSamplingCell> cells;
+    bool Enabled() const { return mode != "off"; }
 };
 
 namespace BiasingConfigDetail {

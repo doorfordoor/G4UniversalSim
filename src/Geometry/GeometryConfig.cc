@@ -7,6 +7,9 @@
 #include "Geometry/GeometryUtils.hh"
 #include "Geometry/GeometryConfigDiagnostic.hh"
 #include "Geometry/StlReader.hh"
+#include "Geometry/GdmlComponent.hh"
+#include "Geometry/VoxelGridDescriptor.hh"
+#include "G4GeometryTolerance.hh"
 #include "G4SystemOfUnits.hh"
 #include "Utils/FileUtils.hh"
 #include "Utils/StringUtils.hh"
@@ -17,6 +20,8 @@
 #include <fstream>
 #include <functional>
 #include <iostream>
+#include <iomanip>
+#include <locale>
 #include <limits>
 #include <sstream>
 #include <stdexcept>
@@ -45,7 +50,7 @@ bool IsShapeProperty(const std::string& key)
         "dx1", "dx2", "dx3", "dx4", "dy1", "dy2", "dz",
         "theta", "phi", "alpha1", "alpha2",
         // roadmap A5: polycone/polyhedra planes and tessellated STL input
-        "z_planes", "r_inner", "r_outer", "file", "file_unit"
+        "z_planes", "r_inner", "r_outer", "file", "file_unit", "scales"
     };
     return keys.count(StringUtils::ToLower(StringUtils::Trim(key))) > 0;
 }
@@ -139,6 +144,7 @@ void GeometryConfig::LoadBytes(const std::string& filename,const std::string& by
         sections[currentSection][key] = value;
     }
 
+    std::vector<VoxelGridDescriptorReader> voxelReaders;
     std::map<std::string, std::map<int, BooleanSolidOperation>> pendingBooleanOps;
     std::map<std::string, std::string> pendingBooleanTargets;
 
@@ -148,6 +154,54 @@ void GeometryConfig::LoadBytes(const std::string& filename,const std::string& by
     CollectGeometryConfigDiagnostics(filename_, sourceFields_, sourceSections_, "hierarchical", diagnostics_, &bytes);
     ValidateCutFields();
 
+    std::map<std::string,named_parameters::Definition> definitions;
+    for (const auto& field : sourceReader_.GetDeclarations()) {
+        if (field.normalizedSection != "parameters") continue;
+        const auto location = filename + ":" + std::to_string(field.lineNumber) + " [parameters] " + field.originalKey;
+        if (!named_parameters::Table::ValidName(field.normalizedKey))
+            throw std::runtime_error(location + ": invalid parameter name");
+        if (!definitions.emplace(field.normalizedKey,named_parameters::Definition{field.value,location}).second)
+            throw std::runtime_error(location + ": duplicate parameter");
+    }
+    named_parameters::Table parameters(definitions);
+    std::map<std::string,std::map<std::string,std::set<std::string>>> fieldDependencies;
+    for (auto& section : sections) {
+        const auto lower = Normalize(section.first);
+        if (lower == "parameters") continue;
+        for (auto& field : section.second) {
+            // These numeric consumers opt in; path, name and metadata strings remain literal.
+            if ((field.first != "size" && field.first != "position") ||
+                field.second.find("${") == std::string::npos) continue;
+            try {
+                const auto shape = section.second.find("shape");
+                const auto placement = section.second.find("placement");
+                if (!(lower == "world" || (StringUtils::StartsWith(lower, "volume.") && !IsBooleanSectionName(lower))) ||
+                    shape == section.second.end() || GeometryUtils::ParseShape(shape->second) != VolumeShape::Box ||
+                    (placement != section.second.end() && GeometryUtils::ParsePlacementType(placement->second) != PlacementType::Normal))
+                    throw std::runtime_error("named expressions require ordinary box size or position");
+                const auto axes = StringUtils::Split(field.second, ',', false);
+                if (axes.size()!=3) throw std::runtime_error("expected three comma-separated axis expressions");
+                std::ostringstream canonical;
+                canonical.imbue(std::locale::classic());
+                canonical << std::setprecision(std::numeric_limits<double>::max_digits10);
+                auto& deps = fieldDependencies[section.first][field.first];
+                for (std::size_t i=0; i<axes.size(); ++i) {
+                    double length;
+                    if (axes[i].find("${") == std::string::npos) length = UnitParser::ParseLength(axes[i]);
+                    else {
+                        const auto result = parameters.Evaluate(axes[i]);
+                        if (!result.quantity.IsLength()) throw std::runtime_error("expected length result");
+                        length = result.quantity.value;
+                        deps.insert(result.dependencies.begin(), result.dependencies.end());
+                    }
+                    if (!std::isfinite(length)) throw std::runtime_error("non-finite expanded length");
+                    if (i) canonical << ",";
+                    canonical << length/mm << " mm";
+                }
+                field.second = canonical.str();
+            } catch (const std::exception& e) { throw FieldError(section.first,"",field.first,e.what()); }
+        }
+    }
     for (const auto& section : sections) {
         const std::string lower = StringUtils::ToLower(section.first);
         if (IsBooleanSectionName(section.first)) {
@@ -169,7 +223,15 @@ void GeometryConfig::LoadBytes(const std::string& filename,const std::string& by
             continue;
         }
         if (lower == "world" || (StringUtils::StartsWith(lower, "volume.") && lower != "volume.")) {
-            AddVolume(ParseVolumeSection(section.first, section.second));
+            auto node = ParseVolumeSection(section.first, section.second, voxelReaders);
+            if (node.IsWorld()) node.parameterDefinitions = parameters.Values();
+            if (fieldDependencies.count(section.first)) {
+                node.parameterDependencies = fieldDependencies.at(section.first);
+                if (node.IsWorld() && node.parameterDependencies.count("position"))
+                    throw FieldError(section.first,node.name,"position","named position requires a placed child; world is fixed at the origin");
+                node.parameterSourceSection = section.first;
+            }
+            AddVolume(node);
         }
     }
 
@@ -197,9 +259,18 @@ void GeometryConfig::LoadBytes(const std::string& filename,const std::string& by
         }
 
         VolumeNode& target = GetVolumeMutable(targetName);
+        if (!target.parameterDependencies.empty()) {
+            const auto& key = target.parameterDependencies.begin()->first;
+            throw FieldError(target.parameterSourceSection, target.name, key, "named expressions require an ordinary box without boolean operations");
+        }
         for (const auto& item : opsByIndex) target.booleanOperations.push_back(item.second);
     }
     Validate();
+    for (auto& reader : voxelReaders) {
+        reader.ReadPayload();
+        const auto grid = reader.Descriptor();
+        inputs_.insert(inputs_.end(), grid->inputs.begin(), grid->inputs.end());
+    }
 }
 
 void GeometryConfig::LoadFromConfigManager(const ConfigManager& config)
@@ -333,6 +404,41 @@ void GeometryConfig::Validate() const
     if (worldCount == 0) throw std::runtime_error("Geometry config has no world volume: '" + filename_ + "'");
     if (worldCount > 1) throw std::runtime_error("Geometry config has multiple world volumes: '" + filename_ + "'");
     ValidateNoCycles();
+    for (const auto& grid : flatVolumes_) {
+        if (grid.shape != VolumeShape::VoxelGrid) continue;
+        for (const auto& child : flatVolumes_) {
+            if (Normalize(child.parentName) == Normalize(grid.name)) {
+                throw Error(filename_, "", grid.name, "parent", "voxel_grid must not have configured children");
+            }
+        }
+        std::array<double, 3> centre{};
+        const VolumeNode* ancestor = &grid;
+        while (ancestor) {
+            const auto& rotation = ancestor->rotation;
+            if (ancestor->placementType != PlacementType::Normal || rotation.x || rotation.y || rotation.z) {
+                throw Error(filename_, "", grid.name, "placement",
+                    "voxel_grid requires a unique translation-only path; invalid volume '" + ancestor->name + "'");
+            }
+            if (ancestor == &grid && grid.HasBooleanOperations()) {
+                throw Error(filename_, "", grid.name, "shape", "voxel_grid cannot have boolean operations");
+            }
+            const auto& p = ancestor->position;
+            centre[0] += std::abs(p.x);
+            centre[1] += std::abs(p.y);
+            centre[2] += std::abs(p.z);
+            ancestor = ancestor->IsWorld() ? nullptr : &GetVolume(ancestor->parentName);
+        }
+        const double tolerance = G4GeometryTolerance::GetInstance()->GetSurfaceTolerance();
+        for (std::size_t axis = 0; axis < centre.size(); ++axis) {
+            const double edge = centre[axis] + grid.voxelGrid->spanMm[axis] * mm / 2;
+            const double pitch = grid.voxelGrid->pitchMm[axis] * mm;
+            if (!std::isfinite(edge) || pitch <= 2 * tolerance
+                || pitch <= std::nextafter(edge, std::numeric_limits<double>::infinity()) - edge) {
+                throw Error(filename_, "", grid.name, "position",
+                    "voxel_grid pitch is too small for the geometry tolerance or coordinate precision");
+            }
+        }
+    }
 }
 
 const std::string& GeometryConfig::GetFilename() const
@@ -573,11 +679,15 @@ void GeometryConfig::ValidateShapeContract(
     } else if (shape == VolumeShape::Polycone || shape == VolumeShape::Polyhedra) {
         allowedProperties = {"z_planes", "r_inner", "r_outer"};
     } else if (shape == VolumeShape::Tessellated) {
-        allowedProperties = {"file", "file_unit"};
+        allowedProperties = {"file", "file_unit", "scales"};
     }
     const bool a5Shape = shape == VolumeShape::Ellipsoid || shape == VolumeShape::EllipticalTube
         || shape == VolumeShape::Torus || shape == VolumeShape::Para || shape == VolumeShape::Hype
         || shape == VolumeShape::Polycone || shape == VolumeShape::Polyhedra || shape == VolumeShape::Tessellated;
+    if (booleanTool && shape==VolumeShape::GdmlComponent) fail("shape","gdml_component cannot be a boolean tool");
+    if (booleanTool && shape == VolumeShape::VoxelGrid) {
+        fail("shape", "voxel_grid cannot be a boolean tool.");
+    }
     if (booleanTool && a5Shape) {
         fail("shape", "shape=" + GeometryUtils::ShapeToString(shape) + " is not supported as a boolean tool.",
              "Use box, tubs, sphere, orb, cone, trd or trap as the boolean tool.");
@@ -684,7 +794,12 @@ void GeometryConfig::ValidateShapeContract(
                 try { unit = UnitParser::ParseLength("1 " + StringUtils::Trim(unitText->second)); }
                 catch (const std::exception& error) { fail("file_unit", error.what(), "Use a length unit such as mm, cm or m."); }
             }
-            try { (void)StlReader::Read(ResolveNextTo(filename_, file->second), unit, "geometry_validation"); }
+            StlReader::Scales scales{1, 1, 1};
+            if (const auto field = properties.find("scales"); field != properties.end()) {
+                try { scales = StlReader::ParseScales(field->second); }
+                catch (const std::exception& error) { fail("scales", error.what()); }
+            }
+            try { (void)StlReader::Read(ResolveNextTo(filename_, file->second), unit, "geometry_validation", scales); }
             catch (const std::exception& error) { fail("file", error.what()); }
         }
     } catch (const std::runtime_error&) {
@@ -698,7 +813,8 @@ void GeometryConfig::ValidateShapeContract(
 
 VolumeNode GeometryConfig::ParseVolumeSection(
     const std::string& sectionName,
-    const Section& values
+    const Section& values,
+    std::vector<VoxelGridDescriptorReader>& voxelReaders
 ) const
 {
     const std::string sectionLower = StringUtils::ToLower(sectionName);
@@ -719,8 +835,69 @@ VolumeNode GeometryConfig::ParseVolumeSection(
         throw FieldError(sectionName, node.name, "shape", "unsupported shape '" + node.shapeName + "'");
     }
 
-    if (!values.count("material")) throw Error(filename_, sectionName, node.name, "material", "missing material");
-    node.materialName = values.at("material");
+    if (node.shape == VolumeShape::GdmlComponent) {
+        if (isWorld) throw FieldError(sectionName,node.name,"shape","gdml_component must be placed in a host world");
+        static const std::set<std::string> allowed{"name","parent","shape","gdml_file","gdml_root","position","rotation","placement","copyno","scales"};
+        for (const auto& entry:values) {
+            if (!allowed.count(entry.first)) throw FieldError(sectionName,node.name,entry.first,"unsupported GDML component override");
+        }
+        for (const char* key:{"gdml_file","gdml_root"}) {
+            if (!values.count(key) || values.at(key).empty()) throw FieldError(sectionName,node.name,key,"required GDML component field");
+            node.userProperties[key]=values.at(key);
+        }
+        if (values.count("placement") && Normalize(values.at("placement"))!="normal")
+            throw FieldError(sectionName,node.name,"placement","GDML component requires normal placement");
+        StlReader::Scales componentScales{1,1,1};
+        if (values.count("scales")) {
+            try {
+                componentScales=StlReader::ParseScales(values.at("scales"));
+            } catch(const std::exception& e){throw FieldError(sectionName,node.name,"scales",e.what());}
+        }
+        const auto path=ResolveNextTo(filename_,values.at("gdml_file"));
+        node.userProperties["gdml_file.resolved"]=path;
+        try {
+            const auto inspected=GdmlIO::ReadComponent(path,values.at("gdml_root"),node.name,false,false,{},componentScales);
+            node.userProperties["gdml_sha256"]=inspected.inputs.front().sha256;
+            node.gdmlRootChoices=inspected.choices;
+        } catch(const GdmlIO::ComponentScaleError& e){throw FieldError(sectionName,node.name,"scales",e.what());}
+        catch(const std::exception& e){throw FieldError(sectionName,node.name,"gdml_root",e.what());}
+    } else if(values.count("gdml_file") || values.count("gdml_root")) {
+        throw FieldError(sectionName,node.name,values.count("gdml_file")?"gdml_file":"gdml_root","requires shape=gdml_component");
+    }
+    const bool voxel = node.shape == VolumeShape::VoxelGrid;
+    if (voxel) {
+        if (isWorld) throw FieldError(sectionName, node.name, "shape", "voxel_grid cannot be the world");
+        if (!values.count("voxel_descriptor")) {
+            throw FieldError(sectionName, node.name, "voxel_descriptor", "voxel_grid requires voxel_descriptor");
+        }
+        for (const auto& duplicate : sourceReader_.GetDuplicates()) {
+            if (duplicate.section == sectionLower) {
+                throw FieldError(sectionName, node.name, "voxel_descriptor",
+                    "duplicate voxel grid declaration at line " + std::to_string(duplicate.lineNumber));
+            }
+        }
+        for (const auto& item : values) {
+            if (item.first == "voxel_descriptor") continue;
+            if (item.first == "size" || item.first == "parameters" || IsShapeProperty(item.first)
+                || (!IsKnownKey(item.first) && !StringUtils::StartsWith(item.first, "metadata."))) {
+                throw FieldError(sectionName, node.name, item.first,
+                    "voxel_grid requires descriptor-derived dimensions and position as its container centre");
+            }
+        }
+        try {
+            voxelReaders.emplace_back(filename_, values.at("voxel_descriptor"),
+                                      2 * G4GeometryTolerance::GetInstance()->GetSurfaceTolerance() / mm);
+            node.voxelGrid = voxelReaders.back().Descriptor();
+            const auto& span = node.voxelGrid->spanMm;
+            node.size = {span[0] * mm, span[1] * mm, span[2] * mm};
+        } catch (const std::exception& error) {
+            throw FieldError(sectionName, node.name, "voxel_descriptor", error.what());
+        }
+    } else if (values.count("voxel_descriptor")) {
+        throw FieldError(sectionName, node.name, "voxel_descriptor", "requires shape=voxel_grid");
+    }
+    if (!voxel && node.shape!=VolumeShape::GdmlComponent && !values.count("material")) throw Error(filename_, sectionName, node.name, "material", "missing material");
+    node.materialName = values.count("material") ? values.at("material") : (voxel?"G4_Galactic":"");
 
     if (values.count("position")) {
         try { node.position = GeometryUtils::ParseVec3(values.at("position")); }
@@ -745,6 +922,9 @@ VolumeNode GeometryConfig::ParseVolumeSection(
                 "Use placement=normal with explicit child volumes, or placement=parameterised for repeated copies."
             );
         }
+    }
+    if (voxel && node.placementType != PlacementType::Normal) {
+        throw FieldError(sectionName, node.name, "placement", "voxel_grid requires normal placement");
     }
     ParsePlacement(sectionName, node, values);
 
@@ -783,14 +963,14 @@ VolumeNode GeometryConfig::ParseVolumeSection(
 
     for (const auto& item : values) {
         if (IsShapeProperty(item.first)) node.userProperties[item.first] = item.second;
-        if (!IsKnownKey(item.first)) node.userProperties[item.first] = item.second;
+        if (item.first != "voxel_descriptor" && !IsKnownKey(item.first)) node.userProperties[item.first] = item.second;
     }
     if (node.shape == VolumeShape::Tessellated && values.count("file")) {
         node.userProperties["file.resolved"] = ResolveNextTo(filename_, values.at("file"));
     }
 
     ValidateCopyNumber(sectionName, node.name);
-    ValidateShapeContract(
+    if (node.shape!=VolumeShape::GdmlComponent) ValidateShapeContract(
         sectionName, node.name, node.shape, node.size, node.parameters, node.userProperties, false
     );
 

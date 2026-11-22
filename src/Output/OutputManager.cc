@@ -1,6 +1,16 @@
+#include <array>
+#include <type_traits>
 #include "Output/OutputManager.hh"
 
 #include "Output/AnalysisOutput.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4Box.hh"
+#include "G4LogicalVolume.hh"
+#include "G4Material.hh"
+#include "G4PhantomParameterisation.hh"
+#include "G4VPhysicalVolume.hh"
+#include "Geometry/GeometryRegistry.hh"
+#include "Geometry/VoxelGridDescriptor.hh"
 #include "Config/InputProvenance.hh"
 #include "Scoring/HistoryStatistics.hh"
 #include "Scoring/NumericChecks.hh"
@@ -8,16 +18,27 @@
 #include "Utils/FileUtils.hh"
 #include "Utils/StringUtils.hh"
 
+#include <cfenv>
+#include <charconv>
 #include <cmath>
+#include <cstdio>
 #include <iomanip>
 #include <random>
 #include <limits>
+#include <locale>
 #include <algorithm>
 #include <cstdlib>
 #include <exception>
 #include <filesystem>
 #include <sstream>
 #include <stdexcept>
+
+#ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <windows.h>
+#endif
 
 namespace {
 
@@ -127,6 +148,11 @@ void OutputManager::SetRunId(int runId)
     }
     hitWriter_.reset();
     eventEdepWriter_.reset();
+    opticalPhotonCountsWriter_.reset();
+    opticalBoundaryStepsWriter_.reset();
+    activationObservationsWriter_.reset();
+    voxelEdepWriter_.reset();
+    ntupleWriters_.clear();
     histograms1D_.clear();
     runId_ = runId;
 }
@@ -285,6 +311,86 @@ void OutputManager::WriteScoringMeshesCsv(int runId, long long events)
     RegisterGeneratedFile(filename, ArtifactScope::Run, runId);
 }
 
+void OutputManager::WriteVoxelRoiMass(int runId, const GeometryRegistry& geometry)
+{
+    if (!WritesCsv() || runId < 0 || runId != runId_) {
+        throw std::runtime_error("voxel ROI mass requires an active CSV master run");
+    }
+    const auto& bindings = geometry.GetVoxelScoringBindings();
+    std::map<std::string, const std::map<const G4VPhysicalVolume*, VoxelScoringBinding>::value_type*> sorted;
+    for (const auto& binding : bindings) {
+        if (!sorted.emplace(binding.second.gridId, &binding).second) {
+            throw std::runtime_error("duplicate grid in voxel ROI mass output");
+        }
+    }
+    const auto filename = MakeOutputPath(runId > 0 ? "voxel_roi_mass_r" + std::to_string(runId) + ".csv"
+                                                   : "voxel_roi_mass.csv");
+    CsvWriter writer(filename);
+    writer.WriteHeader(StringUtils::Split(kVoxelRoiMassCsvHeader, ','));
+    const auto number = [](double value) {
+        if (!std::isfinite(value)) throw std::runtime_error("nonfinite voxel ROI mass output");
+        std::ostringstream stream;
+        stream.imbue(std::locale::classic());
+        stream << std::setprecision(std::numeric_limits<double>::max_digits10) << value;
+        return stream.str();
+    };
+    for (const auto& [id, entry] : sorted) {
+        const auto& [leaf, binding] = *entry;
+        const auto& native = *binding.parameterisation;
+        const auto& grid = *binding.descriptor;
+        const auto& descriptor = grid.inputs.at(0);
+        const auto& labels = grid.inputs.at(1);
+        auto* solid = dynamic_cast<G4Box*>(leaf->GetLogicalVolume()->GetSolid());
+        if (!solid || leaf->GetRegularStructureId() != 1 || native.SkipEqualMaterials()
+            || native.GetNoVoxelsX() != static_cast<std::size_t>(binding.shape[0])
+            || native.GetNoVoxelsY() != static_cast<std::size_t>(binding.shape[1])
+            || native.GetNoVoxelsZ() != static_cast<std::size_t>(binding.shape[2])) {
+            throw std::runtime_error("voxel ROI mass disagrees with the actual regular geometry");
+        }
+        const auto volume = solid->GetCubicVolume();
+        if (!std::isfinite(volume) || volume <= 0) throw std::runtime_error("invalid voxel cell volume");
+        const auto position = binding.container->GetObjectTranslation();
+        const auto& shape = binding.shape;
+        const std::vector<std::string> common{
+            GetExecutionId(), std::to_string(runId), id, std::to_string(shape[0]), std::to_string(shape[1]),
+            std::to_string(shape[2]), number(2 * native.GetVoxelHalfX() / mm),
+            number(2 * native.GetVoxelHalfY() / mm), number(2 * native.GetVoxelHalfZ() / mm),
+            number(position.x() / mm), number(position.y() / mm), number(position.z() / mm),
+            number((binding.worldCentre[0] - native.GetVoxelHalfX() * shape[0]) / mm),
+            number((binding.worldCentre[1] - native.GetVoxelHalfY() * shape[1]) / mm),
+            number((binding.worldCentre[2] - native.GetVoxelHalfZ() * shape[2]) / mm),
+            number(volume / (mm * mm * mm)), geometry.GetVoxelGeometryPath(), geometry.GetVoxelGeometrySha(),
+            descriptor.path, descriptor.sha256, labels.path, labels.sha256, std::to_string(grid.rois.size())};
+        auto gridRow = common;
+        gridRow.insert(gridRow.end(), {"grid", "", "", "", "", "", "", "", "", "", "", ""});
+        writer.WriteRow(gridRow);
+        for (const auto& [roi, indices] : grid.rois) {
+            const auto& input = grid.inputs.at(grid.roiInputIndices.at(roi));
+            auto declaration = common;
+            declaration.insert(declaration.end(), {"roi", roi, input.path, input.sha256,
+                std::to_string(indices.size()), "", "", "", "", "", "", ""});
+            writer.WriteRow(declaration);
+            for (const auto cell : indices) {
+                const auto* material = native.GetMaterial(cell);
+                const auto density = material->GetDensity();
+                const auto mass = density * volume;
+                if (!std::isfinite(mass) || mass <= 0) throw std::runtime_error("invalid voxel ROI member mass");
+                auto row = common;
+                row.insert(row.end(), {"member", roi, input.path, input.sha256, "", std::to_string(cell),
+                    std::to_string(cell % shape[0]), std::to_string(cell / shape[0] % shape[1]),
+                    std::to_string(cell / (shape[0] * shape[1])), material->GetName(),
+                    number(density / (g / cm3)), number(mass / g)});
+                writer.WriteRow(row);
+            }
+        }
+    }
+    if (TestOutputFault() == "voxel_roi_before_close") {
+        throw std::runtime_error("Injected voxel ROI mass write failure before close");
+    }
+    writer.Close();
+    RegisterGeneratedFile(filename, ArtifactScope::Run, runId);
+}
+
 void OutputManager::WriteScorerStatisticsCsv(int runId, long long events, double wallSeconds)
 {
     const auto entries = HistoryStatistics::Take(runId);
@@ -355,7 +461,13 @@ bool OutputManager::IsEventEdepFileOpen() const
 
 bool OutputManager::HasOpenFiles() const
 {
-    return IsHitFileOpen() || IsEventEdepFileOpen();
+    const bool ntupleOpen = std::any_of(ntupleWriters_.begin(), ntupleWriters_.end(), [](const auto& entry) {
+        return entry.second.csv && entry.second.csv->IsOpen();
+    });
+    return ntupleOpen || IsHitFileOpen() || IsEventEdepFileOpen() ||
+           (opticalPhotonCountsWriter_ && opticalPhotonCountsWriter_->IsOpen()) ||
+           (opticalBoundaryStepsWriter_ && opticalBoundaryStepsWriter_->IsOpen()) ||
+           (activationObservationsWriter_ && activationObservationsWriter_->IsOpen());
 }
 
 std::string OutputManager::GetHitFilename() const
@@ -393,7 +505,10 @@ std::string OutputManager::MakeThreadFilename(const std::string& baseName) const
     return parent.empty() ? named : FileUtils::JoinPath(parent, named);
 }
 
-void OutputManager::ValidateOutputTargetDirectories(int runId, int threadCount) const
+void OutputManager::ValidateOutputTargetDirectories(int runId, int threadCount,
+                                                    bool opticalPhotonCounts,
+                                                    bool opticalBoundaryObservations,
+                                                    bool activationObservations, bool voxelScoring) const
 {
     if (runId < 0 || threadCount < 1) {
         throw std::runtime_error("Invalid run ID or thread count for output target validation");
@@ -424,12 +539,7 @@ void OutputManager::ValidateOutputTargetDirectories(int runId, int threadCount) 
                 throw std::runtime_error("Output ROOT target is an existing directory: " + rootPath.string());
             }
         }
-        if (!WritesCsv()) continue;
-        for (const char* name : {"hits.csv", "event_edep.csv", "hist_edep_raw.csv",
-                                 "hist_edep_weighted.csv", "edep_volume_summary.csv",
-                                 "edep_particle_summary.csv", "dose_volume_summary.csv",
-                                 "fluence_volume_summary.csv", "let_volume_summary.csv",
-                                 "displacement_volume_summary.csv"}) {
+        const auto validateCsv = [&](const char* name) {
             const std::filesystem::path path(candidate.MakeOutputPath(candidate.MakeThreadFilename(name)));
             error.clear();
             const bool exists = std::filesystem::exists(path, error);
@@ -438,6 +548,28 @@ void OutputManager::ValidateOutputTargetDirectories(int runId, int threadCount) 
                 throw std::runtime_error("Output CSV target is an existing directory: " + path.string());
             }
             if (error) throw std::filesystem::filesystem_error("Cannot inspect output CSV target", path, error);
+        };
+        if (opticalPhotonCounts) validateCsv("optical_photon_counts.csv");
+        if (opticalBoundaryObservations) validateCsv("optical_boundary_steps.csv");
+        if (activationObservations) validateCsv("activation_observations.csv");
+        if (voxelScoring) {
+            validateCsv("voxel_edep.csv");
+            const auto massName = runId > 0 ? "voxel_roi_mass_r" + std::to_string(runId) + ".csv"
+                                            : "voxel_roi_mass.csv";
+            const auto massPath = std::filesystem::u8path(MakeOutputPath(massName));
+            const bool isDirectory = std::filesystem::is_directory(massPath, error);
+            if (error && error != std::errc::no_such_file_or_directory)
+                throw std::filesystem::filesystem_error("Cannot inspect voxel ROI mass target", massPath, error);
+            if (isDirectory) throw std::runtime_error("Voxel ROI mass target is an existing directory: " + massPath.string());
+            error.clear();
+        }
+        if (!WritesCsv()) continue;
+        for (const char* name : {"hits.csv", "event_edep.csv", "hist_edep_raw.csv",
+                                 "hist_edep_weighted.csv", "edep_volume_summary.csv",
+                                 "edep_particle_summary.csv", "dose_volume_summary.csv",
+                                 "fluence_volume_summary.csv", "let_volume_summary.csv",
+                                 "displacement_volume_summary.csv"}) {
+            validateCsv(name);
         }
     }
 }
@@ -472,35 +604,260 @@ void OutputManager::WriteHit(const HitRecord& record)
                          record.pz, record.kineticEnergy, record.weight}) {
         ScoringNumeric::Finite(value, "published hit");
     }
+    if (hitVolumePathEnabled_ && record.doseVolumePath.empty())
+        throw std::runtime_error("hit_volume_path: missing pre-step physical touchable path");
     if (WritesRoot()) AnalysisOutput::FillHit(record, threadId_);
     if (!WritesCsv()) return;
     if (!hitWriter_ || !hitWriter_->IsOpen()) {
         OpenHitFile();
     }
 
-    WriteHitRow({
+    // Match the published 12-significant-digit hit format. Keep stream
+    // conversion when the caller selected a different locale or rounding mode.
+    const bool useChars = std::locale() == std::locale::classic() &&
+                          std::fegetround() == FE_TONEAREST;
+    const auto number = [useChars](double value) {
+        if (useChars) {
+            char buffer[64];
+            const auto result = std::to_chars(buffer, buffer + sizeof(buffer), value,
+                                              std::chars_format::general, 12);
+            if (result.ec == std::errc{}) return std::string(buffer, result.ptr);
+        }
+        return ToString(value);
+    };
+
+    std::vector<std::string> values = {
         std::to_string(record.runID),
         std::to_string(record.eventID),
         std::to_string(record.trackID),
         std::to_string(record.parentID),
         record.particleName,
-        ToString(record.edep),
-        ToString(record.ndep),
-        ToString(record.stepLength),
-        ToString(record.x0),
-        ToString(record.y0),
-        ToString(record.z0),
-        ToString(record.x1),
-        ToString(record.y1),
-        ToString(record.z1),
-        ToString(record.px),
-        ToString(record.py),
-        ToString(record.pz),
-        ToString(record.kineticEnergy),
+        number(record.edep),
+        number(record.ndep),
+        number(record.stepLength),
+        number(record.x0),
+        number(record.y0),
+        number(record.z0),
+        number(record.x1),
+        number(record.y1),
+        number(record.z1),
+        number(record.px),
+        number(record.py),
+        number(record.pz),
+        number(record.kineticEnergy),
         record.processName,
         record.volumeName,
-        ToString(record.weight)
+        number(record.weight)
+    };
+    if (hitVolumePathEnabled_) values.push_back(record.doseVolumePath);
+    WriteHitRow(values);
+}
+
+void OutputManager::WriteOpticalPhotonCounts(const OpticalPhotonCountRecord& record)
+{
+    // This diagnostic is CSV even when the primary output format is ROOT.
+    if (!opticalPhotonCountsWriter_ || !opticalPhotonCountsWriter_->IsOpen()) {
+        auto writer = std::make_unique<CsvWriter>(
+            MakeOutputPath(MakeThreadFilename("optical_photon_counts.csv")));
+        writer->WriteHeader({"runID", "eventID", "scintillation_generated",
+                             "cerenkov_generated", "other_optical_generated"});
+        opticalPhotonCountsWriter_ = std::move(writer);
+    }
+    opticalPhotonCountsWriter_->WriteRow({
+        std::to_string(record.runID), std::to_string(record.eventID),
+        std::to_string(record.scintillation), std::to_string(record.cerenkov),
+        std::to_string(record.other)
     });
+}
+
+void OutputManager::WriteVoxelEvent(int eventId, const std::map<std::pair<std::string, int>, VoxelEdepRecord>& cells)
+{
+    if (!WritesCsv() || runId_ < 0 || threadId_ < 0 || eventId < 0) {
+        throw std::runtime_error("voxel event requires an active CSV worker output");
+    }
+    if (!voxelEdepWriter_) {
+        auto writer = std::make_unique<CsvWriter>(MakeOutputPath(MakeThreadFilename("voxel_edep.csv")));
+        writer->WriteHeader(StringUtils::Split(kVoxelEdepCsvHeader, ','));
+        voxelEdepWriter_ = std::move(writer);
+    }
+    const auto number = [](double value) {
+        std::ostringstream stream;
+        stream.imbue(std::locale::classic());
+        stream << std::setprecision(std::numeric_limits<double>::max_digits10) << value;
+        return stream.str();
+    };
+    const auto execution = GetExecutionId();
+    const auto run = std::to_string(runId_);
+    const auto event = std::to_string(eventId);
+    const auto worker = std::to_string(threadId_);
+    for (const auto& [key, cell] : cells) {
+        voxelEdepWriter_->WriteRow({execution, run, event, worker, "cell", key.first, std::to_string(key.second),
+            std::to_string(cell.index[0]), std::to_string(cell.index[1]), std::to_string(cell.index[2]),
+            cell.material, std::to_string(cell.steps), number(cell.rawEdep / MeV), number(cell.weightedEdep / MeV)});
+    }
+    // Fault control executes after rows were submitted but before the event closure.
+    if (!cells.empty() && threadId_ == 0 && TestOutputFault() == "voxel_after_cells_t0") {
+        throw std::runtime_error("Injected voxel write failure before event closure");
+    }
+    voxelEdepWriter_->WriteRow({execution, run, event, worker, "event_complete", "", "", "", "", "", "",
+                               "", "", ""});
+}
+
+void OutputManager::FinishVoxelShard(int runId, const std::set<int>& events)
+{
+    if (runId < 0 || runId != runId_ || threadId_ < 0
+        || (events.empty() == static_cast<bool>(voxelEdepWriter_))) {
+        throw std::runtime_error("invalid voxel worker shard identity or writer coverage");
+    }
+    VoxelShard shard;
+    shard.events.assign(events.begin(), events.end());
+    if (voxelEdepWriter_) {
+        voxelEdepWriter_->Close();
+        shard.path = voxelEdepWriter_->GetFilename();
+        voxelEdepWriter_.reset();
+    }
+    std::lock_guard<std::mutex> guard(generatedFiles_->mutex);
+    if (!generatedFiles_->voxelShards[runId].emplace(threadId_, std::move(shard)).second) {
+        throw std::runtime_error("duplicate voxel worker shard");
+    }
+}
+
+void OutputManager::PublishVoxelRun(int runId, int expectedWorkers, int completedEvents)
+{
+    if (runId < 0 || runId != runId_ || expectedWorkers <= 0 || completedEvents < 0) {
+        throw std::runtime_error("invalid master voxel run coverage identity");
+    }
+    std::map<int, VoxelShard> shards;
+    {
+        std::lock_guard<std::mutex> guard(generatedFiles_->mutex);
+        const auto found = generatedFiles_->voxelShards.find(runId);
+        if (found != generatedFiles_->voxelShards.end()) {
+            shards = std::move(found->second);
+            generatedFiles_->voxelShards.erase(found);
+        }
+    }
+    if (shards.size() != static_cast<std::size_t>(expectedWorkers)) {
+        throw std::runtime_error("voxel run is missing an actual worker completion receipt");
+    }
+    std::vector<bool> seen(completedEvents);
+    std::size_t count = 0;
+    std::string workerCounts;
+    for (const auto& [worker, shard] : shards) {
+        if (worker < 0 || worker >= expectedWorkers) throw std::runtime_error("voxel run has unexpected worker ID");
+        for (int event : shard.events) {
+            if (event < 0 || event >= completedEvents || seen[event]) {
+                throw std::runtime_error("voxel run has duplicate or out-of-range event ID");
+            }
+            seen[event] = true;
+            ++count;
+        }
+        if (!workerCounts.empty()) workerCounts += ',';
+        workerCounts += std::to_string(worker) + ':' + std::to_string(shard.events.size());
+    }
+    if (count != seen.size()) throw std::runtime_error("voxel run has gaps in the completed event IDs");
+    for (const auto& [worker, shard] : shards) {
+        if (!shard.path.empty()) RegisterGeneratedFile(shard.path, ArtifactScope::Thread, runId, worker);
+    }
+    runSummary_.Set("voxel_worker_event_counts_r" + std::to_string(runId), workerCounts);
+}
+
+void OutputManager::WriteActivationObservations(const std::vector<ActivationObservationRecord>& records,
+                                                int schemaVersion)
+{
+    if (records.empty()) return;
+    if (!activationObservationsWriter_ || !activationObservationsWriter_->IsOpen()) {
+        auto writer = std::make_unique<CsvWriter>(
+            MakeOutputPath(MakeThreadFilename("activation_observations.csv")));
+        std::string header = kActivationObservationCsvHeader;
+        if (schemaVersion >= 2) header += kActivationObservationCsvV2Columns;
+        if (schemaVersion >= 3) header += kActivationObservationCsvV3Columns;
+        writer->WriteHeader(StringUtils::Split(header, ','));
+        activationObservationsWriter_ = std::move(writer);
+    }
+    const auto number = [](double value) {
+        std::ostringstream stream;
+        stream.imbue(std::locale::classic());
+        stream << std::setprecision(std::numeric_limits<double>::max_digits10) << value;
+        return stream.str();
+    };
+    const auto optionalNumber = [&](const std::optional<double>& value) {
+        return value ? number(*value) : std::string{};
+    };
+    const auto optionalInt = [](const std::optional<int>& value) {
+        return value ? std::to_string(*value) : std::string{};
+    };
+    for (const auto& row : records) {
+        std::vector<std::string> fields{
+            std::to_string(row.runID), std::to_string(row.eventID),
+            std::to_string(row.trackID), std::to_string(row.parentID), std::to_string(row.stepID),
+            row.kind, row.process, row.particle, std::to_string(row.atomicNumber),
+            std::to_string(row.massNumber), std::to_string(row.isomer), number(row.excitationKeV),
+            number(row.timeSeconds), number(row.weight), number(row.positionMm[0]),
+            number(row.positionMm[1]), number(row.positionMm[2]), std::to_string(row.originStepID),
+            std::to_string(row.secondaryOrdinal)
+        };
+        if (schemaVersion >= 2) {
+            fields.insert(fields.end(), {
+                optionalInt(row.creatorModelID), row.creatorModelName, optionalNumber(row.properTimeSeconds),
+                optionalNumber(row.preGlobalTimeSeconds), optionalNumber(row.preProperTimeSeconds),
+                optionalNumber(row.preKineticEnergyKeV), optionalNumber(row.kineticEnergyKeV),
+                row.postStepStatus, row.postTrackStatus, row.secondaryCreatorRelation,
+                optionalInt(row.stepSecondaryCount), optionalInt(row.stepExcludedSecondaryCount)
+            });
+        }
+        if (schemaVersion >= 3) {
+            fields.insert(fields.end(), {
+                row.endpointTransport, row.preMassTouchable, row.postMassTouchable, row.trackNextMassTouchable,
+                row.postTouchableMatchesNext ? (*row.postTouchableMatchesNext ? "true" : "false") : "",
+                optionalInt(row.generatedPrimaryNeutrons), optionalNumber(row.generatedPrimaryNeutronWeight),
+                optionalInt(row.unknownPrimaryDefinitions), optionalInt(row.captureCreatorMatches),
+                optionalNumber(row.capturePreWeight), row.captureTargetObservation, row.captureModel,
+                optionalInt(row.captureTargetNucleusZ), optionalInt(row.captureTargetNucleusA),
+                optionalInt(row.captureTargetIsotopeZ), optionalInt(row.captureTargetIsotopeA)
+            });
+        }
+        activationObservationsWriter_->WriteRow(fields);
+    }
+}
+
+void OutputManager::WriteOpticalBoundarySteps(const std::vector<OpticalBoundaryStepRecord>& records)
+{
+    if (records.empty()) return;
+    if (!opticalBoundaryStepsWriter_ || !opticalBoundaryStepsWriter_->IsOpen()) {
+        auto writer = std::make_unique<CsvWriter>(
+            MakeOutputPath(MakeThreadFilename("optical_boundary_steps.csv")));
+        writer->WriteHeader(StringUtils::Split(kOpticalBoundaryStepCsvHeader, ','));
+        opticalBoundaryStepsWriter_ = std::move(writer);
+    }
+    const auto number = [](double value) {
+        std::ostringstream stream;
+        stream.imbue(std::locale::classic());
+        stream << std::setprecision(std::numeric_limits<double>::max_digits10) << value;
+        return stream.str();
+    };
+    for (const auto& record : records) {
+        std::vector<std::string> row{
+            std::to_string(record.runID), std::to_string(record.eventID),
+            std::to_string(record.trackID), std::to_string(record.parentID),
+            std::to_string(record.stepID), record.preVolumePath, record.postCandidateVolumePath,
+            record.preMaterial, record.postCandidateMaterial
+        };
+        row.reserve(29);
+        const auto append = [&](const std::array<double, 3>& vector) {
+            for (double component : vector) row.push_back(number(component));
+        };
+        append(record.positionMm);
+        row.push_back(number(record.stepLengthMm));
+        row.push_back(number(record.preEnergyMeV));
+        row.push_back(number(record.postEnergyMeV));
+        append(record.preDirection);
+        append(record.postDirection);
+        append(record.prePolarization);
+        append(record.postPolarization);
+        row.push_back(std::to_string(record.nativeStatusCode));
+        row.push_back(record.nativeStatus);
+        opticalBoundaryStepsWriter_->WriteRow(row);
+    }
 }
 
 void OutputManager::WriteEventEdep(const EventEdepRecord& record)
@@ -536,6 +893,189 @@ void OutputManager::WriteEventEdepRow(const std::vector<std::string>& values)
     }
     eventEdepWriter_->WriteRow(values);
 }
+
+std::string OutputManager::EventNtupleFilename(const NamedEventNtuple& definition, bool merged) const
+{
+    return MakeOutputPath("ntuple_" + definition.name + "_r" + std::to_string(runId_) +
+                          (merged ? "" : "_t" + std::to_string(threadId_)) + ".csv");
+}
+
+OutputManager::EventNtupleWriter& OutputManager::OpenEventNtuple(const NamedEventNtuple& definition)
+{
+    auto& state = ntupleWriters_[definition.name];
+    if (!state.csv) {
+        state.csv = std::make_unique<CsvWriter>(EventNtupleFilename(definition, false));
+        state.csv->WriteHeader(definition.Header());
+    }
+    return state;
+}
+
+void OutputManager::WriteEventNtuples(const std::vector<NamedEventNtuple>& definitions, const EventEdepRecord& event)
+{
+    if (event.runID != runId_ || event.eventID < 0 || threadId_ < 0)
+        throw std::runtime_error("event ntuple has invalid event identity");
+    const auto number = [](double value) {
+        ScoringNumeric::Finite(value, "event ntuple energy");
+        std::ostringstream output;
+        output.imbue(std::locale::classic());
+        output << std::setprecision(std::numeric_limits<double>::max_digits10) << value;
+        return output.str();
+    };
+    const auto raw = number(event.rawEdep / MeV);
+    const auto weighted = number(event.weightedEdep / MeV);
+    for (const auto& definition : definitions) {
+        auto& state = OpenEventNtuple(definition);
+        if (state.rows == std::numeric_limits<int>::max() || state.lastEvent >= event.eventID) throw std::runtime_error("event ntuple unordered worker key");
+        std::vector<std::string> row{std::to_string(runId_), std::to_string(event.eventID), std::to_string(threadId_)};
+        for (const auto& column : definition.columns)
+            row.push_back(column == "raw_edep_MeV" ? raw : weighted);
+        state.csv->WriteRow(row);
+        ++state.rows;
+        state.lastEvent = event.eventID;
+    }
+}
+
+void OutputManager::FinishEventNtuples(const std::vector<NamedEventNtuple>& definitions, int completed)
+{
+    for (const auto& definition : definitions) {
+        auto& state = OpenEventNtuple(definition);  // An idle worker contributes its header and zero rows.
+        if (state.rows != completed) throw std::runtime_error("event ntuple worker count mismatch");
+        if (TestOutputFault() == "named_ntuple_worker_before_close")
+            throw std::runtime_error("injected event ntuple worker close failure");
+        const auto path = state.csv->GetFilename();
+        state.csv->Close();
+        const auto digest = input_provenance::HashFile(path);
+        {
+            std::lock_guard<std::mutex> lock(generatedFiles_->mutex);
+            auto& workers = generatedFiles_->ntupleShards[runId_][definition.name];
+            if (!workers.emplace(threadId_, EventNtupleShard{path, digest.sha256, completed}).second)
+                throw std::runtime_error("duplicate event ntuple worker");
+        }
+        RegisterGeneratedFile(path, ArtifactScope::Thread, runId_, threadId_);
+    }
+    ntupleWriters_.clear();
+}
+
+void OutputManager::PublishEventNtuples(const std::vector<NamedEventNtuple>& definitions, int workers, int completed)
+{
+    std::map<std::string, std::map<int, EventNtupleShard>> all;
+    {
+        std::lock_guard<std::mutex> lock(generatedFiles_->mutex);
+        const auto run = generatedFiles_->ntupleShards.find(runId_);
+        if (run == generatedFiles_->ntupleShards.end()) throw std::runtime_error("missing event ntuple run");
+        all.swap(run->second);
+        generatedFiles_->ntupleShards.erase(run);
+    }
+    if (all.size() != definitions.size()) throw std::runtime_error("event ntuple declaration coverage mismatch");
+    for (const auto& definition : definitions) {
+        const auto& shards = all.at(definition.name);
+        if (shards.size() != static_cast<std::size_t>(workers) || shards.begin()->first != 0 ||
+            shards.rbegin()->first != workers - 1) throw std::runtime_error("event ntuple worker coverage mismatch");
+        const auto path = EventNtupleFilename(definition, true);
+        CsvWriter output(path);
+        MergeEventNtuple(definition, shards, runId_, completed, output);
+        if (TestOutputFault() == "named_ntuple_merge_before_close")
+            throw std::runtime_error("injected event ntuple merge close failure");
+        output.Close();
+        RegisterGeneratedFile(path, ArtifactScope::Run, runId_);
+    }
+}
+
+template<class Histogram>
+void OutputManager::WriteNamedHistogram(const Histogram& hist, bool merged)
+{
+    const std::string worker = merged ? "" : std::to_string(threadId_);
+    constexpr bool twoDimensional = std::is_same_v<Histogram, NamedHistogram2D>;
+    const std::string kind = twoDimensional ? "h2" : "h1";
+    const auto filename = MakeOutputPath(kind + "_" + hist.GetName() + "_r" + std::to_string(runId_) +
+                                         (merged ? "" : "_t" + worker) + ".csv");
+    CsvWriter writer(filename);
+    writer.WriteHeader(StringUtils::Split(twoDimensional ? kNamedH2CsvHeader : kNamedH1CsvHeader, ','));
+    const auto number = [](double v) {
+        std::ostringstream s;
+        s.imbue(std::locale::classic());
+        s << std::setprecision(std::numeric_limits<double>::max_digits10) << v;
+        return s.str();
+    };
+    if constexpr (twoDimensional) {
+        const auto axisFields = [&](const EqualHistogramAxis& axis, int i) {
+            const std::string index = i < 0 ? "underflow" : i == axis.bins ? "overflow" : std::to_string(i);
+            return std::array<std::string, 3>{index, i < 0 ? "" : number(axis.Edge(i)),
+                                             i == axis.bins ? "" : number(axis.Edge(i + 1))};
+        };
+        const auto entries = number(hist.GetEntries());
+        for (int x = -1; x <= hist.X().bins; ++x) {
+            const auto xFields = axisFields(hist.X(), x);
+            for (int y = -1; y <= hist.Y().bins; ++y) {
+                const auto yFields = axisFields(hist.Y(), y);
+                writer.WriteRow({"1","event_edep_raw","event_edep_weighted","MeV","MeV",hist.GetName(),
+                    std::to_string(runId_),worker,merged ? "run" : "thread",
+                    xFields[0],xFields[1],xFields[2],yFields[0],yFields[1],yFields[2],
+                    number(hist.Cell(x,y)),entries,entries});
+            }
+        }
+    } else {
+        const auto row = [&](const std::string& index, const std::string& low, const std::string& high, double count) {
+            writer.WriteRow({"1",hist.GetName(),"event_edep_raw","MeV",std::to_string(runId_),worker,
+                merged ? "run" : "thread",index,low,high,number(count),number(hist.GetEntries()),number(hist.GetSumWeight())});
+        };
+        std::string lower = number(hist.GetMin());
+        row("underflow", "", lower, hist.GetUnderflow());
+        for (int i = 0; i < hist.GetBins(); ++i) {
+            const auto upper = number(hist.EqualBinEdge(i + 1));
+            row(std::to_string(i), lower, upper, hist.GetBinContent(i));
+            lower = upper;
+        }
+        row("overflow", lower, "", hist.GetOverflow());
+    }
+    if (TestOutputFault() == "named_" + kind + (merged ? "_merge_before_close" : "_worker_before_close"))
+        throw std::runtime_error("injected named histogram close failure");
+    writer.Close();
+    if (merged) RegisterGeneratedFile(filename, ArtifactScope::Run, runId_);
+    else RegisterGeneratedFile(filename, ArtifactScope::Thread, runId_, threadId_);
+}
+
+template<class Histogram>
+void OutputManager::FinishNamedHistograms(const std::vector<Histogram>& histograms, int completedEvents)
+{
+    for (const auto& hist : histograms) {
+        if (hist.GetEntries() != completedEvents) throw std::runtime_error("named histogram worker count mismatch");
+        WriteNamedHistogram(hist, false);
+    }
+    std::lock_guard<std::mutex> lock(generatedFiles_->mutex);
+    if (!generatedFiles_->Shards(histograms)[runId_].emplace(threadId_, histograms).second)
+        throw std::runtime_error("duplicate named histogram worker");
+}
+
+template<class Histogram>
+void OutputManager::PublishNamedHistograms(const std::vector<Histogram>& definitions, int workers, int completedEvents)
+{
+    std::map<int, std::vector<Histogram>> shards;
+    {
+        std::lock_guard<std::mutex> lock(generatedFiles_->mutex);
+        auto& registry = generatedFiles_->Shards(definitions);
+        auto it = registry.find(runId_);
+        if (it == registry.end()) throw std::runtime_error("missing named histogram workers");
+        shards.swap(it->second);
+        registry.erase(it);
+    }
+    if (shards.size() != static_cast<std::size_t>(workers)) throw std::runtime_error("named histogram worker coverage mismatch");
+    auto merged = definitions;
+    for (auto& histogram : merged) histogram.Reset();
+    for (const auto& shard : shards) {
+        if (shard.second.size() != merged.size()) throw std::runtime_error("named histogram declaration mismatch");
+        for (std::size_t i = 0; i < merged.size(); ++i) merged[i].Merge(shard.second[i]);
+    }
+    for (const auto& hist : merged) {
+        if (hist.GetEntries() != completedEvents) throw std::runtime_error("named histogram merged count mismatch");
+        WriteNamedHistogram(hist, true);
+    }
+}
+
+template void OutputManager::FinishNamedHistograms(const std::vector<Histogram1D>&, int);
+template void OutputManager::PublishNamedHistograms(const std::vector<Histogram1D>&, int, int);
+template void OutputManager::FinishNamedHistograms(const std::vector<NamedHistogram2D>&, int);
+template void OutputManager::PublishNamedHistograms(const std::vector<NamedHistogram2D>&, int, int);
 
 void OutputManager::AddHistogram1D(const Histogram1D& hist)
 {
@@ -620,6 +1160,64 @@ void OutputManager::RecordRun(int runId, std::int64_t plannedEvents, std::int64_
 const std::string& OutputManager::GetExecutionId() const
 {
     return generatedFiles_->executionId;
+}
+
+void OutputManager::WriteNativeClockEvent(int runId,int eventId,const std::string& bytes)
+{
+    WriteEventArtifact(runId,eventId,bytes,"native_at_rest_e");
+}
+#ifdef G4USIM_H6_ENGINEERING
+void OutputManager::WriteEngineeringWaterEvent(int runId,int eventId,const std::string& bytes)
+{
+    WriteEventArtifact(runId,eventId,bytes,"water_collision_e");
+}
+#endif
+void OutputManager::WriteEventArtifact(int runId, int eventId, const std::string& bytes,const std::string& prefix)
+{
+    if (runId < 0 || runId != runId_ || eventId < 0 || bytes.empty()) {
+        throw std::invalid_argument("Invalid native clock output identity");
+    }
+    const auto name = MakeOutputPath(MakeThreadFilename(
+        prefix + std::to_string(eventId) + ".json"));
+    const auto target = std::filesystem::u8path(name);
+    auto temporary = target;
+    temporary += ".tmp-" + GetExecutionId();
+#ifdef _WIN32
+    std::FILE* stream = _wfopen(temporary.c_str(), L"wbx");
+#else
+    std::FILE* stream = std::fopen(temporary.c_str(), "wbx");
+#endif
+    if (!stream) {
+        throw std::runtime_error("Cannot create native clock temporary file: " + name);
+    }
+    try {
+        const auto fault = TestOutputFault();
+        const auto size = fault == "native_clock_short_write" ? bytes.size() / 2 : bytes.size();
+        if (std::fwrite(bytes.data(), 1, size, stream) != bytes.size() || std::fflush(stream) != 0) {
+            throw std::runtime_error("Cannot write native clock event: " + name);
+        }
+        const int closed = std::fclose(stream);
+        stream = nullptr;
+        if (closed != 0 || fault == "native_clock_close") {
+            throw std::runtime_error("Cannot close native clock event: " + name);
+        }
+        // Publish without replacing an older event file, even if another process
+        // creates it between staging and publication.
+#ifdef _WIN32
+        if (!MoveFileExW(temporary.c_str(), target.c_str(), MOVEFILE_WRITE_THROUGH)) {
+            throw std::runtime_error("Cannot publish native clock event: " + name);
+        }
+#else
+        std::filesystem::create_hard_link(temporary, target);
+        std::filesystem::remove(temporary);
+#endif
+        RegisterGeneratedFile(name);
+    } catch (...) {
+        if (stream) std::fclose(stream);
+        std::error_code ignored;
+        std::filesystem::remove(temporary, ignored);
+        throw;
+    }
 }
 
 void OutputManager::RegisterGeneratedFile(const std::string& filename)
@@ -809,6 +1407,11 @@ void OutputManager::Flush()
     };
     flushWriter(hitWriter_);
     flushWriter(eventEdepWriter_);
+    flushWriter(opticalPhotonCountsWriter_);
+    flushWriter(opticalBoundaryStepsWriter_);
+    flushWriter(activationObservationsWriter_);
+    flushWriter(voxelEdepWriter_);
+    for (const auto& entry : ntupleWriters_) flushWriter(entry.second.csv);
     if (firstError) std::rethrow_exception(firstError);
 }
 
@@ -826,16 +1429,37 @@ void OutputManager::Close()
     };
     closeWriter(hitWriter_);
     closeWriter(eventEdepWriter_);
+    closeWriter(opticalPhotonCountsWriter_);
+    closeWriter(opticalBoundaryStepsWriter_);
+    closeWriter(activationObservationsWriter_);
+    for (const auto& entry : ntupleWriters_) {
+        // Only FinishEventNtuples can register a complete worker shard.
+        try {
+            if (entry.second.csv && entry.second.csv->IsOpen()) entry.second.csv->Close();
+        } catch (...) {
+            if (!firstError) firstError = std::current_exception();
+        }
+    }
+    if (voxelEdepWriter_ && voxelEdepWriter_->IsOpen()) {
+        try {
+            // An unsubmitted stream may be from a failed worker. No publication here.
+            voxelEdepWriter_->Close();
+        } catch (...) {
+            if (!firstError) firstError = std::current_exception();
+        }
+    }
     if (firstError) std::rethrow_exception(firstError);
 }
 
-std::vector<std::string> OutputManager::HitHeader()
+std::vector<std::string> OutputManager::HitHeader() const
 {
-    return {
+    std::vector<std::string> columns = {
         "runID", "eventID", "trackID", "parentID", "particle", "edep_MeV", "ndep_MeV", "stepLength_mm",
         "x0_mm", "y0_mm", "z0_mm", "x1_mm", "y1_mm", "z1_mm", "px", "py", "pz", "kineticEnergy_MeV",
         "process", "volume", "weight"
     };
+    if (hitVolumePathEnabled_) columns.emplace_back("volume_path");
+    return columns;
 }
 
 std::vector<std::string> OutputManager::EventEdepHeader()

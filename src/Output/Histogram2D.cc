@@ -139,6 +139,13 @@ double Histogram2D::GetEntries() const
     return entries_;
 }
 
+double Histogram2D::GetBinContent(int xBin, int yBin) const
+{
+    if (xBin < 0 || yBin < 0 || xBin >= xBins_ || yBin >= yBins_)
+        throw std::out_of_range("Histogram2D bin outside configured grid");
+    return counts_.at(Index(xBin, yBin));
+}
+
 void Histogram2D::ValidateConfigured() const
 {
     if (xBins_ <= 0 || yBins_ <= 0 || counts_.empty()) {

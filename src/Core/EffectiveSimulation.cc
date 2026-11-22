@@ -125,7 +125,7 @@ std::vector<effective_config::Field> SimulationManager::ExportStartupFields() co
             "Mode absent: legacy consumer defaults retained; this is not an explicit auto request";
         fields.push_back(policy);
         const bool enabled=mode.first=="scoring" ? scoringManager_->IsEnabled() || !scoringMeshCommands_.empty() :
-            mode.first=="biasing" ? biasingManager_->IsEnabled() : mode.first=="field" ? !fieldConfig_.Empty() : scoringManager_->GetTrajectorySettings().events>0;
+            mode.first=="biasing" ? (biasingManager_->IsEnabled() || biasingManager_->IsGeometricSamplingEnabled()) : mode.first=="field" ? !fieldConfig_.Empty() : scoringManager_->GetTrajectorySettings().events>0;
         Field state;state.path=ObjectFieldPath("modules",mode.first,"enabled");state.requested_known=false;
         state.resolved=enabled;state.evidence_level=EvidenceLevel::ManagerAccepted;state.origins=policy.origins;
         for(auto& origin:state.origins)if(origin.disposition=="accepted")origin.disposition="derived";
@@ -343,8 +343,12 @@ void SimulationManager::CaptureEffectiveRunBegin(int runId, ScoringManager* scor
     sourceManager_->ObserveEffectiveRunSource();
     ScoringMeshConfig::ObserveEffectiveConfigMeshes();
     if (const auto* manager=G4RunManager::GetRunManager()) {
-        if (const auto* list=dynamic_cast<const G4VModularPhysicsList*>(manager->GetUserPhysicsList()))
+        if (const auto* list=dynamic_cast<const G4VModularPhysicsList*>(manager->GetUserPhysicsList())) {
             physicsManager_->ObserveEffectiveConfigPhysics(*list,"physics_process");
+            // Reference lists do not call the project's PhysicsList::SetCuts hook.
+            if (physicsManager_->HasReferenceList())
+                physicsManager_->ObserveEffectiveProductionCuts(*list, "run_begin");
+        }
     }
     output->RecordEffectiveConfigState("run_begin");
     if(configuredEffective_ && !effectiveConfigureWritten_.count(output->GetOutputDir())) {
@@ -397,7 +401,8 @@ void SimulationManager::ApplyModuleModes()
         return false;
     };
     bool scorerDemand=false;
-    for(const char* key:{"enabled","hits","event_edep","edep","let","dose","fluence","displacement"})
+    for(const char* key:{"enabled","hits","event_edep","edep","let","dose","fluence","displacement",
+                         "optical_photon_counts","optical_boundary_observations","activation_observations"})
         scorerDemand=scorerDemand || explicitTrue("scoring",key);
     // Tuning an active scorer is an explicit dependency; ignored sub-sections
     // without [scoring], and settings for explicitly disabled scorers, are not.
@@ -407,7 +412,9 @@ void SimulationManager::ApplyModuleModes()
             (scoringManager_->IsDisplacementScoringEnabled() && hasFields("scoring.displacement"));
     }
     const bool meshDemand=!scoringMeshCommands_.empty();
-    const bool biasRules=!biasingManager_->GetEnabledXSProcessBiasRules().empty();
+    const bool xsRules=!biasingManager_->GetEnabledXSProcessBiasRules().empty();
+    const bool geometricDemand=biasingManager_->IsGeometricSamplingEnabled();
+    const bool biasRules=xsRules || geometricDemand;
     const bool wrapperDemand=explicitTrue("physics","biasing");
     for(const char* name:{"scoring","biasing","field","trajectories"}) {
         const bool explicitMode=has("modules",name);
@@ -421,7 +428,7 @@ void SimulationManager::ApplyModuleModes()
             module=="field" ? !fieldConfig_.Empty() : scoringManager_->GetTrajectorySettings().events>0;
         const bool incomplete=module=="biasing" && !biasRules && (explicitTrue("biasing","enabled") || wrapperDemand);
         const bool blocked=(module=="scoring" && scorerDemand && explicitFalse("scoring","enabled")) ||
-            (module=="biasing" && demand && (explicitFalse("biasing","enabled") ||
+            (module=="biasing" && xsRules && (explicitFalse("biasing","enabled") ||
                 explicitFalse("physics","biasing")));
         if(mode=="off" && (demand || incomplete))
             throw std::runtime_error("[modules]/"+module+" = off conflicts with an explicit active request; remove the request or select auto/on");
@@ -442,10 +449,10 @@ void SimulationManager::ApplyModuleModes()
             if(!enabled)scoringManager_->SuppressModule(true,origin);
         } else if(module=="field")fieldConfig_.SetModuleEnabled(enabled);
         else {
-            biasingManager_->Enable(enabled);
+            biasingManager_->Enable(enabled && xsRules);
             biasingManager_->ConfirmEffectiveConfigDerived("[modules]/biasing = "+mode,origin);
-            physicsManager_->EnableBiasingPhysics(enabled);
-            physicsManager_->ConfirmEffectiveConfigMutation(std::string("/AIHL/physics/enableBiasing ")+(enabled?"true":"false"),origin);
+            physicsManager_->EnableBiasingPhysics(enabled && xsRules);
+            physicsManager_->ConfirmEffectiveConfigMutation(std::string("/AIHL/physics/enableBiasing ")+(enabled && xsRules?"true":"false"),origin);
         }
     }
     if(biasingManager_->IsEnabled()) {

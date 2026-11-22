@@ -2,6 +2,7 @@
 #include "Geometry/StlReader.hh"
 
 #include "Utils/StringUtils.hh"
+#include "Utils/UnitParser.hh"
 
 #include <algorithm>
 #include <cmath>
@@ -70,7 +71,20 @@ std::vector<std::array<Vertex, 3>> ReadBinary(const std::string& data, const std
 
 namespace StlReader {
 
-StlMesh Read(const std::string& path, double lengthUnit, const std::string& role)
+Scales ParseScales(const std::string& text)
+{
+    const auto parts = StringUtils::Split(text, ',', false);
+    if (parts.size() != 3) throw std::runtime_error("scales requires exactly three X,Y,Z factors");
+    Scales scales;
+    for (std::size_t i = 0; i < scales.size(); ++i) {
+        scales[i] = UnitParser::ParseDouble(parts[i]);
+        if (!std::isfinite(scales[i]) || scales[i] <= 0)
+            throw std::runtime_error("scales factors must be finite, positive and dimensionless");
+    }
+    return scales;
+}
+
+StlMesh Read(const std::string& path, double lengthUnit, const std::string& role, const Scales& scales)
 {
     if (!(lengthUnit > 0.0)) throw std::runtime_error("STL length unit must be > 0");
     const auto input=input_provenance::ReadFile(path, "stl", role);
@@ -163,6 +177,26 @@ StlMesh Read(const std::string& path, double lengthUnit, const std::string& role
         mesh.minCorner[axis] = lo[axis] * lengthUnit;
         mesh.maxCorner[axis] = hi[axis] * lengthUnit;
     }
+    for (int axis = 0; axis < 3; ++axis) {
+        mesh.minCorner[axis] *= scales[axis];
+        mesh.maxCorner[axis] *= scales[axis];
+        if (!std::isfinite(mesh.minCorner[axis]) || !std::isfinite(mesh.maxCorner[axis]) ||
+            !(mesh.maxCorner[axis] > mesh.minCorner[axis]))
+            throw std::runtime_error("STL '" + path + "' scales produce unrepresentable bounds");
+        for (auto& vertex : mesh.vertices) vertex[axis] *= scales[axis];
+    }
+    // Accumulate the determinant in exponent space to avoid intermediate overflow
+    // for anisotropic factors whose final volume is representable.
+    int exponent = 0;
+    double fraction = std::frexp(mesh.volume, &exponent);
+    for (double factor : scales) {
+        int factorExponent = 0;
+        fraction *= std::frexp(factor, &factorExponent);
+        exponent += factorExponent;
+    }
+    mesh.volume = std::ldexp(fraction, exponent);
+    if (!std::isfinite(mesh.volume) || mesh.volume <= 0)
+        throw std::runtime_error("STL '" + path + "' scales produce unrepresentable volume");
     return mesh;
 }
 

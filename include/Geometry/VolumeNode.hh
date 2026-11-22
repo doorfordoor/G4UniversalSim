@@ -1,10 +1,14 @@
 #pragma once
 
 #include "Geometry/GeometryTypes.hh"
+#include "Utils/NamedParameters.hh"
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
+
+struct VoxelGridDescriptor;
 
 class VolumeNode {
 public:
@@ -16,10 +20,14 @@ public:
     VolumeShape shape = VolumeShape::Unknown;
     std::string shapeName;
     std::string materialName;
+    std::map<std::string, named_parameters::Expansion> parameterDefinitions;
+    std::map<std::string, std::set<std::string>> parameterDependencies;
+    std::string parameterSourceSection;
     Vec3 size;
     Vec3 position;
     Rotation3 rotation;
     std::vector<double> parameters;
+    std::vector<std::string> gdmlRootChoices;
     bool sensitive = false;
     bool bias = false;
     std::string regionName;
@@ -27,6 +35,7 @@ public:
     bool hasProductionCuts = false;
     PlacementType placementType = PlacementType::Normal;
     PlacementSpec placement;
+    std::shared_ptr<const VoxelGridDescriptor> voxelGrid;
     VisualAttributes visual;
     std::vector<BooleanSolidOperation> booleanOperations;
     std::vector<VolumeNode> children;

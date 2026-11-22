@@ -25,6 +25,8 @@ G4ClassificationOfNewTrack PhaseSpaceStackingAction::ClassifyNewTrack(const G4Tr
         if(!stackManager || !track)throw std::runtime_error("PhaseSpace stacking SDK wiring missing");
         const auto classification=stackManager->GetDefaultClassification();
         phase_space_replay::RestoreBeforeTracking(*const_cast<G4Track*>(track));
+        if (auto* scoring = context_->GetScoringManager()) scoring->ObserveActivationStackedTrack(*track);
+        if (output->HasOutputFailure()) { abort(); return fKill; }
         return classification;
     } catch(const std::exception& e) {
         auto* rm=G4RunManager::GetRunManager();

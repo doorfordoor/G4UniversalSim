@@ -31,12 +31,10 @@ struct ConsumerState {
   f.requested_known=false;f.evidence_level=EvidenceLevel::ManagerAccepted;
   f.reason="Accepted Manager configuration; runtime application is recorded separately";
   Origin initial;initial.kind="default";initial.disposition="accepted";f.origins.push_back(initial);
-  const auto declarations=reader.GetDeclarations();
   // Parser applies each winning key according to consumer order, not file order.
   // Keep overwritten duplicates as shadowed and preserve each alias's spelling.
   for(const char* key:keys) {
-   std::vector<IniFieldInfo> matches;
-   for(const auto& d:declarations)if(d.normalizedSection==section && d.normalizedKey==key)matches.push_back(d);
+   const auto matches=reader.GetDeclarationsForNormalizedKey(section,key);
    for(std::size_t i=0;i<matches.size();++i){const auto& d=matches[i];Origin o;
     o.kind="main_ini";o.file=reader.GetFilename();o.line=d.lineNumber;o.section=d.originalSection;
     o.key=d.originalKey;o.raw=d.value;o.alias=d.originalKey;o.input_sha256=reader.GetInputSha256();

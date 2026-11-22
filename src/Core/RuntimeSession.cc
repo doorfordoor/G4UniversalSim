@@ -6,6 +6,7 @@
 #include "Biasing/BiasingManager.hh"
 #include "Materials/MaterialManager.hh"
 #include "Output/OutputManager.hh"
+#include "Scoring/ScoringManager.hh"
 #include "Source/SourceManager.hh"
 #include "Utils/StringUtils.hh"
 #include "G4RunManager.hh"
@@ -119,13 +120,15 @@ class AuditedCshSession final : public G4UIterminal {
       return;
     }
     const G4int result = handled ? fCommandSucceeded : execution_.ApplyCommand(auditedCommand);
+    const bool commandFailed = result != fCommandSucceeded;
     // Finish the current command's diagnostics, then stop reading later input.
     // Messenger failures can occur even when ApplyCommand returns zero.
-    if (result != fCommandSucceeded || hasHandlerFailure_()) stopAfterFailure_ = true;
+    if (commandFailed || hasHandlerFailure_()) stopAfterFailure_ = true;
     if (!stopAfterFailure_) afterCommand_(auditedCommand);
     const G4int parameterIndex = result % 100;
     const G4int status = result - parameterIndex;
-    if (status != fCommandSucceeded && failedCommand_.empty()) {
+    // CommandFailed can return a bare nonzero code, with no encoded status class.
+    if (commandFailed && failedCommand_.empty()) {
       failedCommand_ = command;
       failedCommandStatus_ = result;
     }
@@ -230,16 +233,7 @@ void RunBatchAndCshSession(SimulationManager& sim, G4RunManager& runManager,
           macroStatus = "failed";
           throw std::runtime_error(kRunRestartError);
         }
-        const bool physicsCommand = commandName.rfind("/aihl/physics/", 0) == 0 ||
-            commandName.rfind("/aihl/biasing/", 0) == 0;
-        const bool readOnlyPhysicsCommand = commandName == "/aihl/physics/print" ||
-            commandName == "/aihl/physics/listavailablereferences" ||
-            commandName == "/aihl/physics/listavailableemreferences" ||
-            commandName == "/aihl/physics/dumpprocesses" ||
-            commandName == "/aihl/biasing/print" ||
-            commandName == "/aihl/biasing/validate" ||
-            commandName == "/aihl/biasing/xs/printrules";
-        const bool changesPhysics = physicsCommand && !readOnlyPhysicsCommand;
+        const bool changesPhysics = ChangesProjectPhysics(commandName);
         const bool materialCommand = commandName.rfind("/aihl/material/", 0) == 0;
         const bool readOnlyMaterialCommand = commandName == "/aihl/material/print" ||
             commandName == "/aihl/material/list";
@@ -252,6 +246,13 @@ void RunBatchAndCshSession(SimulationManager& sim, G4RunManager& runManager,
           macroFailure = MacroFailureInfo{command.sourceFile.string(), static_cast<int>(command.lineNumber), command.text, 0, false};
           macroStatus = "failed";
           throw std::runtime_error("Physics/biasing macro command after kernel initialization is not supported; move it before /run/initialize or /run/beamOn: " + command.text);
+        }
+        if (sim.GetBiasingManager() && sim.GetBiasingManager()->IsGeometricSamplingEnabled() &&
+            (commandName == "/run/reinitializegeometry" || commandName == "/run/reinitializephysics" ||
+             commandName == "/run/geometrymodified" || commandName == "/run/physicsmodified")) {
+          macroFailure = MacroFailureInfo{command.sourceFile.string(), static_cast<int>(command.lineNumber), command.text, 0, false};
+          macroStatus = "failed";
+          throw std::runtime_error("H4 geometric sampling does not support geometry/physics reconstruction; use a fresh batch process.");
         }
         if (commandName == "/run/reinitializegeometry" && kernelInitialized &&
             sim.GetBiasingManager() && sim.GetBiasingManager()->IsEnabled()) {
@@ -320,7 +321,10 @@ void RunBatchAndCshSession(SimulationManager& sim, G4RunManager& runManager,
           try {
             const int nextRunId = static_cast<int>(sim.GetOutputManager()->GetRunSummary().GetRuns().size());
             sim.GetOutputManager()->ValidateOutputTargetDirectories(
-                nextRunId, sim.GetContext().GetNumThreads());
+                nextRunId, sim.GetContext().GetNumThreads(),
+                sim.GetScoringManager()->IsOpticalPhotonCountingEnabled(),
+                sim.GetScoringManager()->IsOpticalBoundaryObservationEnabled(),
+                sim.GetScoringManager()->IsActivationObservationEnabled());
           } catch (...) {
             macroFailure = MacroFailureInfo{command.sourceFile.string(), static_cast<int>(command.lineNumber), command.text, 0, false};
             macroStatus = "failed";

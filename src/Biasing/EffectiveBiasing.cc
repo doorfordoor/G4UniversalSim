@@ -150,6 +150,24 @@ std::vector<effective_config::Field> BiasingManager::BuildEffectiveConfigFields(
         add(identity, "max_interactions", rule.maxInteractions, sections, nullptr, derivation);
         add(identity, "legacy_generated", rule.legacyGenerated, {}, nullptr, rule.legacyGenerated ? derivation : "");
     }
+    result.push_back(effectiveState_->Make(ObjectFieldPath("biasing", "geometry", "mode"), geometricConfig_.mode, "", "biasing.geometry", {"mode"}));
+    if (geometricConfig_.Enabled()) {
+        result.push_back(effectiveState_->Make(ObjectFieldPath("biasing", "geometry", "particle"), geometricConfig_.particle, "", "biasing.geometry", {"particle"}));
+        Value::Array energyBounds;
+        for (double bound : geometricConfig_.energyUpperBounds)
+            energyBounds.emplace_back(std::isfinite(bound) ? Value(bound) : Value("inf"));
+        result.push_back(effectiveState_->Make(ObjectFieldPath("biasing", "geometry", "energy_upper_bounds"), energyBounds, "MeV", "biasing.geometry", {"energy_upper_bounds"}));
+        result.push_back(effectiveState_->Make(ObjectFieldPath("biasing", "geometry", "upper_limit_factor"), geometricConfig_.upperLimitFactor, "", "biasing.geometry", {"upper_limit_factor"}));
+        result.push_back(effectiveState_->Make(ObjectFieldPath("biasing", "geometry", "survival_factor"), geometricConfig_.survivalFactor, "", "biasing.geometry", {"survival_factor"}));
+        result.push_back(effectiveState_->Make(ObjectFieldPath("biasing", "geometry", "max_number_of_splits"), geometricConfig_.maxNumberOfSplits, "", "biasing.geometry", {"max_number_of_splits"}));
+        for (const auto& cell : geometricConfig_.cells) {
+            const auto identity = "geometry.cell." + cell.section.substr(std::string("biasing.geometry.cell.").size());
+            result.push_back(effectiveState_->Make(ObjectFieldPath("biasing", identity, "volume"), cell.volume, "", cell.section, {"volume"}));
+            result.push_back(effectiveState_->Make(ObjectFieldPath("biasing", identity, "copy_number"), cell.copyNumber, "", cell.section, {"copy_number"}));
+            if (geometricConfig_.mode == "importance") result.push_back(effectiveState_->Make(ObjectFieldPath("biasing", identity, "importance"), cell.importance, "", cell.section, {"importance"}));
+            else result.push_back(effectiveState_->Make(ObjectFieldPath("biasing", identity, "lower_weights"), Numbers(cell.lowerWeights), "", cell.section, {"lower_weights"}));
+        }
+    }
     return result;
 }
 

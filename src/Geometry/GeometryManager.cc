@@ -5,13 +5,17 @@
 #include "G4Material.hh"
 #include "G4VSolid.hh"
 #include "G4Box.hh"
+#include "G4PhantomParameterisation.hh"
+#include "G4PVParameterised.hh"
 #include "G4Tubs.hh"
 #include "G4Region.hh"
 #include "G4ProductionCuts.hh"
 #include "G4UserLimits.hh"
 #include "Geometry/GeometryManager.hh"
+#include "Geometry/StlReader.hh"
 
 #include "Geometry/GeometryUtils.hh"
+#include "Geometry/VoxelGridDescriptor.hh"
 #include "Materials/MaterialManager.hh"
 #include "Templates/GeometryTemplate.hh"
 #include "Templates/TemplateFactory.hh"
@@ -25,6 +29,7 @@
 #include "Utils/G4NameUtils.hh"
 #include "G4LogicalVolume.hh"
 #include "G4LogicalVolumeStore.hh"
+#include "G4PVPlacement.hh"
 #include "G4ProductionCuts.hh"
 #include "G4Region.hh"
 #include "G4RegionStore.hh"
@@ -102,6 +107,12 @@ void ValidateReplicaAgainstMother(const VolumeNode& mother, const VolumeNode& re
     }
 }
 
+bool ContainsVoxelGrid(const VolumeNode& node)
+{
+    return node.shape == VolumeShape::VoxelGrid
+        || std::any_of(node.children.begin(), node.children.end(), ContainsVoxelGrid);
+}
+
 void ValidateNodeRecursive(const VolumeNode& node, bool isRoot)
 {
     GeometryUtils::ValidateVolumeName(node.name);
@@ -123,7 +134,10 @@ void ValidateNodeRecursive(const VolumeNode& node, bool isRoot)
     if (node.shape == VolumeShape::Unknown) {
         throw std::runtime_error("Volume '" + node.name + "' has unsupported shape '" + node.shapeName + "'");
     }
-    if (!(isRoot && node.materialName.empty())) {
+    if(node.shape==VolumeShape::GdmlComponent && (isRoot || !node.children.empty() || node.HasBooleanOperations()
+       || node.placementType!=PlacementType::Normal || !node.HasProperty("gdml_sha256")))
+        throw std::runtime_error("GDML component requires an accepted source, normal placement and only native GDML children");
+    if (node.shape!=VolumeShape::GdmlComponent && !(isRoot && node.materialName.empty())) {
         if (StringUtils::Trim(node.materialName).empty()) {
             throw std::runtime_error("Volume '" + node.name + "' is missing materialName");
         }
@@ -244,7 +258,8 @@ void GeometryManager::LoadGeometryConfig(const std::string& filename)
     try {
         root = geometryTemplate->BuildNodesFromFile(filename);
         configDiagnostics_ = geometryTemplate->GetDiagnostics();
-        ValidateRootNode(root);
+        if (!root.IsWorld()) throw std::runtime_error("Geometry config requires a world root");
+        ValidateNodeRecursive(root, true);
     } catch (const std::exception& error) {
         if (configDiagnostics_.empty()) configDiagnostics_ = geometryTemplate->GetDiagnostics();
         throw std::runtime_error(
@@ -268,6 +283,12 @@ void GeometryManager::LoadGeometryConfig(const std::string& filename)
             }
             AppendChildToParent(*candidateRoot, node);
         }
+    }
+    try {
+        ValidateRootNode(*candidateRoot);
+    } catch (const std::exception& error) {
+        throw std::runtime_error(std::string(error.what()) + "; created_geometry_object_count="
+                                 + std::to_string(VolumeBuilder::GetCreatedGeometryObjectCount()));
     }
     std::string candidateFilename = filename;
     auto candidateInputs = geometryTemplate->GetInputs();
@@ -345,10 +366,24 @@ const std::string& GeometryManager::GetDefaultWorldMaterial() const
 
 void GeometryManager::SetRootNode(const VolumeNode& rootNode)
 {
-    ValidateRootNode(rootNode);
-    templateRootNode_ = std::make_unique<VolumeNode>(rootNode);
-    rootNode_ = std::make_unique<VolumeNode>(rootNode);
-    if (preserveUserVolumesOnLoad_) ApplyUserAddedVolumes();
+    if (ContainsVoxelGrid(rootNode)) {
+        throw std::runtime_error("SetRootNode: voxel_grid requires a descriptor in hierarchical geometry INI");
+    }
+    auto candidateTemplate = std::make_unique<VolumeNode>(rootNode);
+    auto candidateRoot = std::make_unique<VolumeNode>(rootNode);
+    if (preserveUserVolumesOnLoad_) {
+        for (const auto& user : userAddedVolumes_) {
+            ValidateUserVolume(user);
+            if (TreeContainsName(*candidateRoot, user.name)) {
+                throw std::runtime_error(UserVolumeContext("GeometryManager::SetRootNode", user)
+                                         + "volume name already exists in current tree");
+            }
+            AppendChildToParent(*candidateRoot, user);
+        }
+    }
+    ValidateRootNode(*candidateRoot);
+    templateRootNode_.swap(candidateTemplate);
+    rootNode_.swap(candidateRoot);
     MarkDirty();
 }
 
@@ -367,18 +402,28 @@ void GeometryManager::AddVolume(const VolumeNode& node)
 {
     if (!rootNode_) throw std::runtime_error("GeometryManager::AddVolume failed: rootNode_ is not set");
     ValidateUserVolume(node);
-    if (!FindNode(*rootNode_, node.parentName)) {
+    const auto* parent = FindNode(*rootNode_, node.parentName);
+    if (!parent) {
         throw std::runtime_error(UserVolumeContext("GeometryManager::AddVolume", node) + "parent volume does not exist in current tree");
     }
     if (TreeContainsName(*rootNode_, node.name)) {
         throw std::runtime_error(UserVolumeContext("GeometryManager::AddVolume", node) + "volume name already exists in current tree");
     }
+    if (parent->shape == VolumeShape::VoxelGrid) {
+        throw std::runtime_error(UserVolumeContext("GeometryManager::AddVolume", node)
+                                 + "voxel_grid requires a dedicated empty container");
+    }
     if (HasUserAddedVolume(node.name)) {
         throw std::runtime_error(UserVolumeContext("GeometryManager::AddVolume", node) + "volume name already exists in user-added volumes");
     }
 
-    userAddedVolumes_.push_back(node);
-    AppendChildToParent(*rootNode_, node);
+    auto candidate = std::make_unique<VolumeNode>(*rootNode_);
+    AppendChildToParent(*candidate, node);
+    ValidateRootNode(*candidate);
+    auto users = userAddedVolumes_;
+    users.push_back(node);
+    rootNode_.swap(candidate);
+    userAddedVolumes_.swap(users);
     MarkDirty();
     PrintReinitializeHint();
 }
@@ -510,13 +555,16 @@ void GeometryManager::ApplyUserAddedVolumes()
     if (!rootNode_) throw std::runtime_error("GeometryManager::ApplyUserAddedVolumes failed: rootNode_ is not set");
     if (userAddedVolumes_.empty()) return;
 
+    auto candidate = std::make_unique<VolumeNode>(*rootNode_);
     for (const VolumeNode& node : userAddedVolumes_) {
         ValidateUserVolume(node);
-        if (TreeContainsName(*rootNode_, node.name)) {
+        if (TreeContainsName(*candidate, node.name)) {
             throw std::runtime_error(UserVolumeContext("GeometryManager::ApplyUserAddedVolumes", node) + "volume name already exists in current tree");
         }
-        AppendChildToParent(*rootNode_, node);
+        AppendChildToParent(*candidate, node);
     }
+    ValidateRootNode(*candidate);
+    rootNode_.swap(candidate);
     MarkDirty();
 }
 
@@ -568,8 +616,9 @@ G4VPhysicalVolume* GeometryManager::BuildWorld()
     if (!materialManager_) throw std::runtime_error("GeometryManager cannot build world: MaterialManager is null");
     if (!rootNode_) throw std::runtime_error("GeometryManager cannot build world: root node is not set");
 
-    ValidateRootNode(*rootNode_);
     VolumeBuilder::ResetCreatedGeometryObjectCount();
+    ValidateRootNode(*rootNode_);
+    if (physicsManager_ && !physicsManager_->GetDnaRegion().empty()) ValidateRegionPhysicsNames();
     registry_.Clear();
     volumeBuilder_.Clear();
     volumeBuilder_.SetMaterialManager(materialManager_);
@@ -579,14 +628,29 @@ G4VPhysicalVolume* GeometryManager::BuildWorld()
 
     if (rootNode_->GetProperty("template") == "gdml") {
         G4VPhysicalVolume* world = BuildGdmlWorld(*rootNode_);
-        ApplyRegionPhysics();
+        ApplyRegionPhysics(world);
         ClearDirty();
         return world;
     }
 
     G4VPhysicalVolume* world = volumeBuilder_.BuildWorld(*rootNode_);
     if (!world) throw std::runtime_error("GeometryManager BuildWorld returned null world physical volume");
-    ApplyRegionPhysics();
+    if (registry_.HasVoxelScoring()) {
+        const auto& geometry = inputFiles_.at(0);
+        registry_.SetVoxelGeometryInput(geometry.path, geometry.sha256);
+        std::function<void(const VolumeNode&, G4ThreeVector)> capture;
+        capture = [&](const VolumeNode& node, G4ThreeVector centre) {
+            const auto* physical = registry_.GetPhysicalVolume(node.name);
+            centre += physical->GetObjectTranslation();
+            if (node.shape == VolumeShape::VoxelGrid && node.sensitive) {
+                const auto* leaf = physical->GetLogicalVolume()->GetDaughter(0);
+                registry_.SetVoxelWorldCentre(leaf, {centre.x(), centre.y(), centre.z()});
+            }
+            for (const auto& child : node.children) capture(child, centre);
+        };
+        capture(*rootNode_, {});
+    }
+    ApplyRegionPhysics(world);
     RecordEffectiveConfigConstruction();
     ClearDirty();
     return world;
@@ -597,10 +661,89 @@ void GeometryManager::SetPhysicsManager(const PhysicsManager* physicsManager)
     physicsManager_ = physicsManager;
 }
 
-void GeometryManager::ApplyRegionPhysics()
+namespace {
+using RegionRoots = std::map<std::string, std::vector<G4LogicalVolume*>>;
+
+G4LogicalVolume* LegacyRegionVolume(const std::string& name)
+{
+    auto* store = G4LogicalVolumeStore::GetInstance();
+    auto* logical = store->GetVolume(name, false);
+    return logical ? logical : store->GetVolume(name + "_LV", false);
+}
+
+RegionRoots ResolveRegionRoots(G4VPhysicalVolume* world, const std::map<std::string,RegionPhysicsSettings>& settings)
+{
+    auto* worldLV = world->GetLogicalVolume();
+    using LV = G4LogicalVolume*;
+    std::map<std::string, std::set<LV>> reachable;
+    std::set<std::pair<LV,bool>> visited;
+    std::set<LV> repeated;
+    std::function<void(LV,bool)> index = [&](LV lv, bool nonordinary) {
+        if (!visited.emplace(lv, nonordinary).second) return;
+        reachable[lv->GetName()].insert(lv);
+        if (nonordinary) repeated.insert(lv);
+        for (size_t i=0; i<lv->GetNoDaughters(); ++i) {
+            const auto* pv = lv->GetDaughter(i);
+            index(pv->GetLogicalVolume(), nonordinary || !dynamic_cast<const G4PVPlacement*>(pv));
+        }
+    };
+    index(worldLV, false);
+    RegionRoots roots;
+    std::map<LV,std::string> explicitRegion;
+    for (const auto& entry : settings) {
+        const auto& region = entry.first;
+        const auto& spec = entry.second;
+        auto* existing = G4RegionStore::GetInstance()->GetRegion(region,false);
+        if (!existing && spec.volumes.empty()) throw std::runtime_error("unknown region '" + region + "'");
+        if (existing && existing->GetProductionCuts() && !spec.cuts.empty())
+            throw std::runtime_error("region '" + region + "' already has production cuts from geometry");
+        for (const auto& member : spec.volumes) {
+            LV lv = nullptr;
+            if (spec.selection.empty()) lv = LegacyRegionVolume(member);
+            else {
+                const auto found = reachable.find(member);
+                if (found == reachable.end()) throw std::runtime_error("unknown reachable logical volume '" + member + "'");
+                if (found->second.size() != 1) throw std::runtime_error("ambiguous logical volume '" + member + "'");
+                lv = *found->second.begin();
+                if (lv == worldLV || repeated.count(lv))
+                    throw std::runtime_error("logical selection excludes world and repeated placements: " + member);
+            }
+            if (!lv) throw std::runtime_error("unknown logical volume '" + member + "'");
+            if (lv->IsRootRegion() && lv->GetRegion() && lv->GetRegion()->GetName() != region)
+                throw std::runtime_error("logical volume already roots another region: " + member);
+            const auto inserted = explicitRegion.emplace(lv, region);
+            if (!inserted.second && inserted.first->second != region)
+                throw std::runtime_error("competing explicit regions for logical volume '" + member + "'");
+            if (inserted.second) roots[region].push_back(lv);
+        }
+    }
+    std::map<LV,std::string> resolved;
+    std::function<void(LV,std::string)> check = [&](LV lv, std::string inherited) {
+        if (lv->IsRootRegion() && lv->GetRegion()) inherited = lv->GetRegion()->GetName();
+        const auto binding = explicitRegion.find(lv);
+        if (binding != explicitRegion.end()) inherited = binding->second;
+        const auto inserted = resolved.emplace(lv,inherited);
+        if (!inserted.second) {
+            if (inserted.first->second != inherited)
+                throw std::runtime_error("conflicting inherited regions for shared logical volume '" +
+                                         std::string(lv->GetName()) + "'");
+            return;
+        }
+        for (size_t i=0; i<lv->GetNoDaughters(); ++i) check(lv->GetDaughter(i)->GetLogicalVolume(), inherited);
+    };
+    check(worldLV,"DefaultRegionForTheWorld");
+    return roots;
+}
+}
+
+void GeometryManager::ApplyRegionPhysics(G4VPhysicalVolume* world)
 {
     if (!physicsManager_) return;
-    for (const auto& item : physicsManager_->GetRegionPhysics()) {
+    const auto& settingsByRegion = physicsManager_->GetRegionPhysics();
+    const bool named = std::any_of(settingsByRegion.begin(),settingsByRegion.end(),
+                                  [](const auto& item){return !item.second.selection.empty();});
+    auto roots = named ? ResolveRegionRoots(world,settingsByRegion) : RegionRoots{};
+    for (const auto& item : settingsByRegion) {
         const std::string& name = item.first;
         const RegionPhysicsSettings& settings = item.second;
         const std::string context = "[physics.region." + name + "]: ";
@@ -616,9 +759,10 @@ void GeometryManager::ApplyRegionPhysics()
         }
         const bool created = region == nullptr;
         if (created) region = new G4Region(name);
-        for (const std::string& volume : settings.volumes) {
-            G4LogicalVolume* logical = G4LogicalVolumeStore::GetInstance()->GetVolume(volume, false);
-            if (!logical) logical = G4LogicalVolumeStore::GetInstance()->GetVolume(volume + "_LV", false);
+        if (named) {
+            for (auto* logical : roots[name]) region->AddRootLogicalVolume(logical);
+        } else for (const std::string& volume : settings.volumes) {
+            auto* logical = LegacyRegionVolume(volume);
             if (!logical) throw std::runtime_error(context + "volumes names unknown logical volume '" + volume + "'");
             if (logical->GetRegion() && logical->IsRootRegion() && logical->GetRegion() != region) {
                 throw std::runtime_error(context + "logical volume '" + volume + "' is already the root of region '" +
@@ -661,7 +805,32 @@ bool GeometryManager::HasConfiguredVolume(const std::string& name) const
 
 void GeometryManager::ValidateRegionPhysicsNames() const
 {
-    if (!physicsManager_ || !rootNode_ || rootNode_->GetProperty("template") == "gdml") return;
+    if (!physicsManager_) return;
+    const auto& dnaRegion = physicsManager_->GetDnaRegion();
+    if (!dnaRegion.empty()) {
+        const auto fail = [&](const std::string& reason) {
+            throw std::runtime_error("[physics.dna] region '" + dnaRegion + "': " + reason);
+        };
+        if (!rootNode_ || rootNode_->GetProperty("template") == "gdml") fail("requires a configured ordinary geometry tree");
+        const auto override = physicsManager_->GetRegionPhysics().find(dnaRegion);
+        if (override != physicsManager_->GetRegionPhysics().end() && !override->second.volumes.empty()) {
+            fail("declare the region on its water volume; volumes overrides are unsupported");
+        }
+        unsigned roots = 0;
+        std::function<void(const VolumeNode&, bool)> visit = [&](const VolumeNode& node, bool single) {
+            single = single && node.placementType == PlacementType::Normal;
+            if (node.regionName == dnaRegion) {
+                ++roots;
+                if (!single || node.IsWorld() || node.shape != VolumeShape::Box || node.HasChildren() ||
+                    node.HasBooleanOperations()) fail("requires one ordinary non-world leaf box and a single-placement path");
+                if (node.materialName != "G4_WATER") fail("requires standard G4_WATER material");
+            }
+            for (const auto& child : node.children) visit(child, single);
+        };
+        visit(*rootNode_, true);
+        if (roots != 1) fail(roots ? "multiple declared roots" : "does not exist in the geometry");
+    }
+    if (!rootNode_ || rootNode_->GetProperty("template") == "gdml") return;
     const std::vector<std::string> regions = GetRegionNames();
     for (const auto& item : physicsManager_->GetRegionPhysics()) {
         if (!item.second.volumes.empty()) continue;
@@ -818,7 +987,20 @@ void GeometryManager::ValidateRootNode(const VolumeNode& rootNode) const
     if (!rootNode.IsWorld()) {
         throw std::runtime_error("Geometry root node must be world-like with empty parentName, got '" + rootNode.name + "'");
     }
+    bool hasComponents=false;
+    std::set<std::string> hostNames;
+    std::function<void(const VolumeNode&)> collect=[&](const VolumeNode& n) {
+        hasComponents=hasComponents || n.shape==VolumeShape::GdmlComponent;
+        hostNames.insert(StringUtils::ToLower(GeometryUtils::NormalizeVolumeName(n.name)));
+        for(const auto& child:n.children)collect(child);
+    };
+    collect(rootNode);
+    if(hasComponents)for(const auto& name:hostNames) {
+        if(name.rfind("g4usimpart_",0)==0)
+            throw std::runtime_error("GDML component runtime namespace G4USimPart_ conflicts with host volume '"+name+"'");
+    }
     ValidateNodeRecursive(rootNode, true);
+    volumeBuilder_.ValidateVoxelGrids(rootNode);
 }
 
 void GeometryManager::ValidateUserVolume(const VolumeNode& node) const
@@ -827,6 +1009,9 @@ void GeometryManager::ValidateUserVolume(const VolumeNode& node) const
     if (StringUtils::Trim(node.name).empty()) throw std::runtime_error(prefix + "name must not be empty");
     if (StringUtils::Trim(node.parentName).empty()) throw std::runtime_error(prefix + "parentName must not be empty");
     if (node.shape == VolumeShape::Unknown) throw std::runtime_error(prefix + "shape must not be unknown");
+    if (ContainsVoxelGrid(node)) {
+        throw std::runtime_error(prefix + "voxel_grid requires a descriptor in hierarchical geometry INI");
+    }
     if (StringUtils::Trim(node.materialName).empty()) throw std::runtime_error(prefix + "materialName must not be empty");
     if (node.placementType != PlacementType::Normal) {
         throw std::runtime_error(
@@ -985,9 +1170,14 @@ std::vector<effective_config::Field> GeometryManager::ProjectEffectiveConfigFiel
   if(!node.IsWorld() && templateName_=="simple_box")section="target";
   const auto add=[&](const std::string& key,Value value,const char* unit,std::initializer_list<const char*> keys){
    auto f=state.Make(ObjectFieldPath("geometry",node.name,key),std::move(value),unit,section,keys);
-   if(key=="boolean_operations" || (key=="visual" && templateName_=="simple_box") || (!node.IsWorld() && (templateName_=="array" || templateName_=="layered_device" || templateName_=="shielding"))) {
+   if(node.parameterDependencies.count(key) || key=="named_parameters" || key=="boolean_operations" || (key=="visual" && templateName_=="simple_box") || (!node.IsWorld() && (templateName_=="array" || templateName_=="layered_device" || templateName_=="shielding"))) {
     std::set<std::pair<std::string,std::string>> dependencies;
     const auto depend=[&](const std::string& source,const std::string& input){dependencies.insert({source,input});};
+    if(node.parameterDependencies.count(key)){
+     depend(StringUtils::ToLower(node.parameterSourceSection),key);
+     for(const auto& name:node.parameterDependencies.at(key)) depend("parameters",name);
+    }
+    if(key=="named_parameters")for(const auto& item:node.parameterDefinitions)depend("parameters",item.first);
     if(key=="visual" && templateName_=="simple_box")for(const auto& d:state.reader.GetDeclarations())if(d.normalizedSection==(node.IsWorld()?"visual.world":"visual.target"))depend(d.normalizedSection,d.normalizedKey);
     if(key=="boolean_operations")for(const auto& d:state.reader.GetDeclarations())if(d.normalizedSection.rfind(section+".boolean.",0)==0)depend(d.normalizedSection,d.normalizedKey);
     if(templateName_=="array") {
@@ -1023,14 +1213,34 @@ std::vector<effective_config::Field> GeometryManager::ProjectEffectiveConfigFiel
    }
    result.push_back(std::move(f));
   };
+  if(!node.parameterDefinitions.empty()){
+   Value::Object definitions;
+   for(const auto& item:node.parameterDefinitions){
+    Value::Array deps;
+    for(const auto& dep:item.second.dependencies)deps.emplace_back(dep);
+    const auto q=item.second.quantity;
+    definitions[item.first]=Value::Object{{"value",q.IsLength()?q.value/mm:q.value},{"unit",q.IsLength()?"mm":"1"},{"dependencies",deps}};
+   }
+   add("named_parameters",definitions,"",{});
+  }
   add("parent",node.parentName,"",{"parent"});
   if(node.GetProperty("template")=="gdml") {
    add("import_descriptor",Value::Object{{"file",node.GetProperty("gdml_file")},{"validate",node.GetProperty("gdml_validate")},{"sensitive_volumes",node.GetProperty("sensitive_volumes")},{"bias_volumes",node.GetProperty("bias_volumes")}},"",{});
    // The placeholder Box/material/size are not an accepted imported geometry.
    return;
   }
-  add("shape",node.ShapeAsString(),"",{"shape"});add("material",node.materialName,"",{"material"});
+  add("shape",node.ShapeAsString(),"",{"shape"});if(node.shape!=VolumeShape::GdmlComponent)add("material",node.materialName,"",{"material"});
   if(node.shape==VolumeShape::Box)add("size",vector(node.size,mm),"mm",{"size"});
+  if(node.shape==VolumeShape::VoxelGrid){
+   add("size",vector(node.size,mm),"mm",{"voxel_descriptor"});
+   const auto& grid=*node.voxelGrid;
+   Value::Array shape, pitch;
+   for(std::size_t axis=0;axis<grid.shape.size();++axis){
+    shape.emplace_back(grid.shape[axis]);pitch.emplace_back(grid.pitchMm[axis]);
+   }
+   add("voxel_shape",shape,"",{"voxel_descriptor"});
+   add("voxel_pitch",pitch,"mm",{"voxel_descriptor"});
+  }
   if(!node.parameters.empty())add("parameters",Numbers(node.parameters),"Geant4_internal_shape_specific",{"parameters"});
   add("position",vector(node.position,mm),"mm",{"position"});add("rotation",rotation(node.rotation),"deg",{"rotation"});
   add("sensitive",node.sensitive,"",{"sensitive"});add("bias",node.bias,"",{"bias"});
@@ -1050,6 +1260,17 @@ std::vector<effective_config::Field> GeometryManager::ProjectEffectiveConfigFiel
     {"unit",node.placement.replicaAxis=="phi"?"deg":"mm"},{"offset_explicit",node.placement.hasReplicaOffset}},"",{"replica_axis","replica_count","replica_width","replica_offset"});
   if(node.placementType==PlacementType::Parameterised){Value::Array copies;for(const auto& copy:node.placement.copies)copies.emplace_back(Value::Object{{"position_mm",vector(copy.position,mm)},{"rotation_deg",rotation(copy.rotation)},{"material",copy.material}});add("copies",copies,"",{"copies_file","copies","copy_step","position","rotation"});}
   add("visual",Value::Object{{"visible",node.visual.visible},{"color",node.visual.color},{"alpha",node.visual.alpha},{"wireframe",node.visual.wireframe}},"",{"vis.visible","vis.color","vis.alpha","vis.wireframe"});
+  if(node.shape==VolumeShape::GdmlComponent) {
+   add("gdml_file",node.GetProperty("gdml_file"),"",{"gdml_file"});
+   add("gdml_root",node.GetProperty("gdml_root"),"",{"gdml_root"});
+   add("gdml_available_roots",effective_config::List(node.gdmlRootChoices),"",{"gdml_file"});
+   const auto s=StlReader::ParseScales(node.GetProperty("scales","1,1,1"));
+   add("scales",Value::Array{s[0],s[1],s[2]},"",{"scales"});
+  }
+  if(node.shape==VolumeShape::Tessellated) {
+   const auto scales=StlReader::ParseScales(node.GetProperty("scales","1,1,1"));
+   add("property:scales",Value::Array{scales[0],scales[1],scales[2]},"",{"scales"});
+  }
   for(const auto& property:node.userProperties){
    static const std::set<std::string> used={"file","file.resolved","file_unit","dz","dy1","dy2","dx1","dx2","dx3","dx4","theta","phi","alpha1","alpha2","z_planes","r_inner","r_outer"};
    if(!used.count(property.first))continue;
@@ -1103,7 +1324,21 @@ void GeometryManager::RecordEffectiveConfigConstruction() const
  visit=[&](const VolumeNode& node){auto* lv=registry_.GetLogicalVolume(node.name);auto* pv=registry_.GetPhysicalVolume(node.name);
   if(lv){record(node.name,"material",lv->GetMaterial()->GetName());std::string actual=lv->GetSolid()->GetEntityType();
    static const std::map<std::string,std::string> shapes={{"G4Box","box"},{"G4Tubs","tubs"},{"G4Sphere","sphere"},{"G4Orb","orb"},{"G4Cons","cone"},{"G4Trd","trd"},{"G4Trap","trap"},{"G4Ellipsoid","ellipsoid"},{"G4EllipticalTube","eltube"},{"G4Torus","torus"},{"G4Para","para"},{"G4Hype","hype"},{"G4Polycone","polycone"},{"G4Polyhedra","polyhedra"},{"G4TessellatedSolid","tessellated"}};
-   if(shapes.count(actual))record(node.name,"shape",shapes.at(actual));
+   if(node.shape==VolumeShape::VoxelGrid) {
+    auto* box=dynamic_cast<G4Box*>(lv->GetSolid());
+    auto* child=lv->GetNoDaughters()==1?dynamic_cast<G4PVParameterised*>(lv->GetDaughter(0)):nullptr;
+    const auto* grid=child?dynamic_cast<const G4PhantomParameterisation*>(child->GetParameterisation()):nullptr;
+    if(!box || !grid || child->GetRegularStructureId()!=1 || grid->SkipEqualMaterials()
+       || static_cast<std::size_t>(child->GetMultiplicity())!=grid->GetNoVoxels()) {
+     throw std::runtime_error("Geometry voxel grid '"+node.name+"': actual regular construction disagrees with its contract");
+    }
+    record(node.name,"shape","voxel_grid");
+    record(node.name,"voxel_shape",Value::Array{static_cast<std::int64_t>(grid->GetNoVoxelsX()),
+     static_cast<std::int64_t>(grid->GetNoVoxelsY()),static_cast<std::int64_t>(grid->GetNoVoxelsZ())});
+    record(node.name,"voxel_pitch",Value::Array{2*grid->GetVoxelHalfX()/mm,2*grid->GetVoxelHalfY()/mm,
+     2*grid->GetVoxelHalfZ()/mm});
+   } else if(node.shape==VolumeShape::GdmlComponent)record(node.name,"shape","gdml_component");
+   else if(shapes.count(actual))record(node.name,"shape",shapes.at(actual));
    if(const auto* box=dynamic_cast<const G4Box*>(lv->GetSolid()))record(node.name,"size",Value::Array{2*box->GetXHalfLength()/mm,2*box->GetYHalfLength()/mm,2*box->GetZHalfLength()/mm});
    if(const auto* tubs=dynamic_cast<const G4Tubs*>(lv->GetSolid()))record(node.name,"parameters",Value::Array{tubs->GetInnerRadius(),tubs->GetOuterRadius(),tubs->GetZHalfLength(),tubs->GetStartPhiAngle(),tubs->GetDeltaPhiAngle()});
    if(lv->GetRegion()){record(node.name,"region",lv->GetRegion()->GetName());if(auto* cuts=lv->GetRegion()->GetProductionCuts())if(node.hasProductionCuts){Value::Object actual;
@@ -1118,5 +1353,10 @@ void GeometryManager::RecordEffectiveConfigConstruction() const
   for(const auto& child:node.children)visit(child);
  };
  visit(*rootNode_);
- for(const auto& input:volumeBuilder_.GetInputEvidence())effective_->Record(Receipt(FieldPath("geometry","input_files"),input,"geometry_construct","VolumeBuilder STL exact parsed bytes"));
+ for(const auto& input:volumeBuilder_.GetInputEvidence()) {
+  const auto& fields=std::get<Value::Object>(input.data);
+  const auto component=fields.count("gdml_root")!=0;
+  effective_->Record(Receipt(FieldPath("geometry","input_files"),input,"geometry_construct",
+    component?"VolumeBuilder GDML component native exact parsed bytes":"VolumeBuilder STL exact parsed bytes"));
+ }
 }

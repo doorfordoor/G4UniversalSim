@@ -334,6 +334,13 @@ void GeometryMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
             return;
         }
     } catch (const std::exception& e) {
+        if (command == exportMeshCmd_) {
+            G4ExceptionDescription description;
+            description << "/AIHL/geometry/exportMesh: " << e.what();
+            command->CommandFailed(description);
+            G4Exception("GeometryMessenger", "AIHLGeometryMesh001", JustWarning, description);
+            return;
+        }
         ReportCommandError("GeometryMessenger::SetNewValue", newValue, e);
         return;
     }

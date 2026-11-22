@@ -223,6 +223,31 @@ G4Material* MaterialManager::BuildMaterial(const std::string& name)
     }
 }
 
+#ifdef G4USIM_H6_ENGINEERING
+G4Material* MaterialManager::BuildEngineeringWater(double temperature)
+{
+    constexpr char name[] = "H6-water";
+    constexpr char element[] = "TS_H_of_Water";
+    if (temperature != 293.6 * CLHEP::kelvin && temperature != 323.6 * CLHEP::kelvin)
+        throw std::runtime_error("unsupported engineering water temperature");
+    if (HasMaterial(name) || HasElement(element) || G4Material::GetMaterial(name, false) ||
+        G4Element::GetElement(element, false))
+        throw std::runtime_error("engineering water material or element already exists");
+    auto* nist = G4NistManager::Instance();
+    auto* natural = nist->FindOrBuildElement("H");
+    auto* oxygen = nist->FindOrBuildElement("O");
+    auto* hydrogen = new G4Element(element, "H", natural->GetNumberOfIsotopes());
+    for (std::size_t i = 0; i < natural->GetNumberOfIsotopes(); ++i)
+        hydrogen->AddIsotope((*natural->GetIsotopeVector())[i], natural->GetRelativeAbundanceVector()[i]);
+    auto* water = new G4Material(name, CLHEP::g / CLHEP::cm3, 2, kStateLiquid, temperature);
+    water->AddElement(hydrogen, 2);
+    water->AddElement(oxygen, 1);
+    RegisterElement(element, hydrogen);
+    RegisterMaterial(name, water);
+    return water;
+}
+#endif
+
 void MaterialManager::BuildAll()
 {
     for (const std::string& nistName : nistMaterialDefinitions_) BuildNistMaterial(nistName);

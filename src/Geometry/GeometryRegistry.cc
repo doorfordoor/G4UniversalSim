@@ -4,6 +4,7 @@
 
 #include "G4ios.hh"
 #include "G4LogicalVolume.hh"
+#include "G4VPhysicalVolume.hh"
 
 #include <algorithm>
 #include <stdexcept>
@@ -14,6 +15,9 @@ void GeometryRegistry::Clear()
     importedLogicalVolumes_.clear();
     ambiguousImportedLogicalNames_.clear();
     physicalVolumes_.clear();
+    voxelScoring_.clear();
+    voxelGeometryPath_.clear();
+    voxelGeometrySha_.clear();
     sensitiveVolumes_.clear();
     sensitiveLogicalVolumes_.clear();
     biasVolumes_.clear();
@@ -32,6 +36,33 @@ void GeometryRegistry::RegisterPhysicalVolume(const std::string& name, G4VPhysic
     ValidateName(name, "register physical volume");
     if (!pv) throw std::runtime_error("Cannot register null G4VPhysicalVolume for '" + name + "'");
     physicalVolumes_[Normalize(name)] = pv; // Last registration wins to support geometry reinitialization.
+}
+
+void GeometryRegistry::RegisterVoxelScoring(G4VPhysicalVolume* leaf, VoxelScoringBinding binding)
+{
+    if (!leaf || !binding.container || !binding.parameterisation || !binding.descriptor
+        || !voxelScoring_.emplace(leaf, std::move(binding)).second) {
+        throw std::runtime_error("Invalid or duplicate voxel scoring leaf");
+    }
+    MarkSensitiveLogicalVolume(leaf->GetLogicalVolume());
+}
+
+void GeometryRegistry::SetVoxelGeometryInput(const std::string& path, const std::string& sha)
+{
+    if (path.empty() || sha.size() != 64) throw std::runtime_error("Missing accepted voxel geometry input identity");
+    voxelGeometryPath_ = path;
+    voxelGeometrySha_ = sha;
+}
+
+void GeometryRegistry::SetVoxelWorldCentre(const G4VPhysicalVolume* leaf, std::array<double, 3> centre)
+{
+    voxelScoring_.at(leaf).worldCentre = centre;
+}
+
+const VoxelScoringBinding* GeometryRegistry::FindVoxelScoring(const G4VPhysicalVolume* leaf) const
+{
+    const auto found = voxelScoring_.find(leaf);
+    return found == voxelScoring_.end() ? nullptr : &found->second;
 }
 
 void GeometryRegistry::TrackImportedLogicalVolume(G4LogicalVolume* logical)

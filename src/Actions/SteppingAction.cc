@@ -1,3 +1,13 @@
+#ifdef G4USIM_H6_ENGINEERING
+#include "Core/EngineeringWaterEvent.hh"
+#include "G4CoupledTransportation.hh"
+#endif
+#ifdef G4USIM_H6_ENGINEERING
+#include "Core/EngineeringWaterState.hh"
+#include "G4Event.hh"
+#include "G4Threading.hh"
+#include "G4HadronicProcessType.hh"
+#endif
 #include "Actions/SteppingAction.hh"
 #include "Source/PhaseSpaceReplayState.hh"
 #include "Output/OutputManager.hh"
@@ -40,6 +50,34 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
     auto* track = step->GetTrack();
     if (!track) return;
+#ifdef G4USIM_H6_ENGINEERING
+    if (track->GetParentID()==0 && track->GetCurrentStepNumber()==1) {
+        const auto* pre=step->GetPreStepPoint();
+        const auto* post=step->GetPostStepPoint();
+        const auto* process=post ? post->GetProcessDefinedStep() : nullptr;
+        auto* manager=G4RunManager::GetRunManager();
+        const auto run=manager->GetCurrentRun()->GetRunID();
+        const auto event=manager->GetCurrentEvent()->GetEventID();
+        if (!pre || pre->GetWeight()!=1 || track->GetTrackID()!=1 || !process || !pre->GetTouchable() || pre->GetTouchable()->GetVolume()!=engineering_water::acceptedWorld ||
+            pre->GetMaterial()!=engineering_water::acceptedMaterial ||
+            pre->GetMaterial()->GetTemperature()!=engineering_water::requestedTemperature ||
+            track->GetDefinition()->GetPDGEncoding()!=2112 || pre->GetKineticEnergy()!=0.0253*CLHEP::eV ||
+            (process->GetProcessSubType()!=fHadronElastic && process->GetProcessSubType()!=fCapture &&
+             !(engineering_water::thinWorld && typeid(*process)==typeid(G4CoupledTransportation) &&
+               post->GetStepStatus()==fWorldBoundary))) {
+            context_->GetOutputManager()->RecordOutputFailure("engineering_water_step","first-step mismatch",run);
+            track->SetTrackStatus(fStopAndKill);
+            manager->AbortRun(false);
+            return;
+        }
+        engineering_event::Observe(*step,*context_->GetOutputManager());
+        if(context_->GetOutputManager()->HasOutputFailure()) return;
+        G4cout << "WATER_PRODUCT_STEP " << pre->GetMaterial()->GetName() << " "
+               << pre->GetMaterial()->GetTemperature() << " " << process->GetProcessName()
+               << " run=" << run << " event=" << event << " worker=" << G4Threading::G4GetThreadId()
+               << " track=" << track->GetTrackID() << " step=" << track->GetCurrentStepNumber() << G4endl;
+    }
+#endif
     try { phase_space_replay::ObserveFirstStep(*step); }
     catch (const std::exception& error) {
         auto* output=context_?context_->GetOutputManager():nullptr;
@@ -61,6 +99,11 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     }
 
     ScoringManager* scoringManager = ActiveScoringManager();
+    if (scoringManager) {
+        scoringManager->CountOpticalSecondaries(*step);
+        scoringManager->ObserveOpticalBoundary(*step);
+        scoringManager->ObserveActivation(*step);
+    }
     if (scoringManager && scoringManager->RecordsTrajectories()) {
         scoringManager->RecordTrajectoryStep(step);
     }

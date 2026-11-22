@@ -12,6 +12,7 @@
 namespace {
 
 thread_local bool booked = false;
+thread_local bool bookedHitVolumePath = false;
 thread_local bool fileOpen = false;
 thread_local bool finalizationPending = false;
 
@@ -44,7 +45,7 @@ void CheckH1(int id, int expected, const char* name)
 }
 
 void Book(G4AnalysisManager* manager, const AnalysisOutput::H1Binning& raw,
-          const AnalysisOutput::H1Binning& weighted)
+          const AnalysisOutput::H1Binning& weighted, bool hitVolumePath)
 {
     manager->SetVerboseLevel(0);
     manager->SetDefaultFileType("root");
@@ -60,13 +61,15 @@ void Book(G4AnalysisManager* manager, const AnalysisOutput::H1Binning& raw,
             AnalysisOutput::kEdepWeightedH1, "edep_weighted");
 
     // Column names and units mirror the CSV v3 contract (internal units: MeV, mm).
-    NtupleBuilder(manager, AnalysisOutput::kHitsNtuple, "hits", "Sensitive-detector hits")
+    NtupleBuilder hits(manager, AnalysisOutput::kHitsNtuple, "hits", "Sensitive-detector hits");
+    hits
         .I("runID").I("eventID").I("trackID").I("parentID").S("particle")
         .D("edep_MeV").D("ndep_MeV").D("stepLength_mm")
         .D("x0_mm").D("y0_mm").D("z0_mm").D("x1_mm").D("y1_mm").D("z1_mm")
         .D("px").D("py").D("pz").D("kineticEnergy_MeV")
-        .S("process").S("volume").D("weight").I("threadID")
-        .Finish();
+        .S("process").S("volume").D("weight").I("threadID");
+    if (hitVolumePath) hits.S("volume_path");
+    hits.Finish();
     NtupleBuilder(manager, AnalysisOutput::kEventsNtuple, "events", "Per-event energy deposition")
         .I("runID").I("eventID").D("raw_edep_MeV").D("weighted_edep_MeV").I("threadID")
         .Finish();
@@ -127,7 +130,7 @@ private:
 
 namespace AnalysisOutput {
 
-void BeginRun(const std::string& filePath, const H1Binning& raw, const H1Binning& weighted)
+void BeginRun(const std::string& filePath, const H1Binning& raw, const H1Binning& weighted, bool hitVolumePath)
 {
     if (fileOpen) {
         throw std::runtime_error("AnalysisOutput: previous ROOT file is still open");
@@ -137,9 +140,12 @@ void BeginRun(const std::string& filePath, const H1Binning& raw, const H1Binning
     }
     auto* manager = G4AnalysisManager::Instance();
     if (!booked) {
-        Book(manager, raw, weighted);
+        Book(manager, raw, weighted, hitVolumePath);
+        bookedHitVolumePath = hitVolumePath;
         booked = true;
     } else {
+        if (bookedHitVolumePath != hitVolumePath)
+            throw std::runtime_error("ROOT hits schema changed after booking");
         manager->SetH1(kEdepRawH1, raw.bins, raw.min, raw.max);
         manager->SetH1(kEdepWeightedH1, weighted.bins, weighted.min, weighted.max);
     }
@@ -165,13 +171,15 @@ bool IsOpen()
 void FillHit(const HitRecord& r, int threadId)
 {
     if (!fileOpen || !finalizationPending) return;
-    RowFiller(G4AnalysisManager::Instance(), kHitsNtuple)
+    RowFiller row(G4AnalysisManager::Instance(), kHitsNtuple);
+    row
         .I(r.runID).I(r.eventID).I(r.trackID).I(r.parentID).S(r.particleName)
         .D(r.edep).D(r.ndep).D(r.stepLength)
         .D(r.x0).D(r.y0).D(r.z0).D(r.x1).D(r.y1).D(r.z1)
         .D(r.px).D(r.py).D(r.pz).D(r.kineticEnergy)
-        .S(r.processName).S(r.volumeName).D(r.weight).I(threadId)
-        .Add();
+        .S(r.processName).S(r.volumeName).D(r.weight).I(threadId);
+    if (bookedHitVolumePath) row.S(r.doseVolumePath);
+    row.Add();
 }
 
 void FillEvent(const EventEdepRecord& r, int threadId)

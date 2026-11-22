@@ -1,3 +1,9 @@
+#ifdef G4USIM_H6_ENGINEERING
+#include "Core/EngineeringWaterEvent.hh"
+#endif
+#ifdef G4USIM_H6_ENGINEERING
+#include "Output/OutputManager.hh"
+#endif
 #include "Source/PrimaryGeneratorAction.hh"
 
 #include "Source/SourceManager.hh"
@@ -76,6 +82,10 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
             "PrimaryGeneratorAction::GeneratePrimaries failed: G4Event is null");
     }
 
+#ifdef G4USIM_H6_ENGINEERING
+    engineering_event::BeforePrimary(*event,*engineeringOutput);
+    if(engineeringOutput->HasOutputFailure())return;
+#endif
     if (sourceManager_ && sourceManager_->UsesPhaseSpace()) {
         sourceManager_->GeneratePhaseSpaceEvent(event);
         ObserveTestPrimaries(*event);
@@ -88,7 +98,31 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
             "PrimaryGeneratorAction::GeneratePrimaries failed: G4GeneralParticleSource is null");
     }
 
+#ifdef G4USIM_H6_ENGINEERING
+    // Generate exactly once. Only a checked single vertex is handed to transport.
+    G4Event candidate(event->GetEventID());
+    auto* manager=G4RunManager::GetRunManager();
+    const auto run=manager->GetCurrentRun()->GetRunID();
+    gps->GeneratePrimaryVertex(&candidate);
+    const auto* vertex=candidate.GetPrimaryVertex();
+    const auto* primary=vertex ? vertex->GetPrimary() : nullptr;
+    if (candidate.GetNumberOfPrimaryVertex()!=1 || !vertex || vertex->GetNumberOfParticle()!=1 ||
+        !primary || primary->GetPDGcode()!=2112 || primary->GetKineticEnergy()!=0.0253*CLHEP::eV ||
+        vertex->GetPosition()!=G4ThreeVector() || vertex->GetT0()!=0 || vertex->GetWeight()!=1 ||
+        primary->GetWeight()!=1 || primary->GetMomentumDirection()!=G4ThreeVector(0,0,1)) {
+        engineeringOutput->RecordOutputFailure("engineering_water_primary","native primary mismatch",run);
+        event->SetEventAborted();
+        manager->AbortRun(false);
+        return;
+    }
+    engineering_event::Generated(*event,*engineeringOutput);
+    if(engineeringOutput->HasOutputFailure())return;
+    event->AddPrimaryVertex(new G4PrimaryVertex(*vertex));
+    G4cout << "WATER_PRODUCT_PRIMARY " << run << " " << event->GetEventID()
+           << " " << G4Threading::G4GetThreadId() << " " << primary->GetPDGcode() << G4endl;
+#else
     gps->GeneratePrimaryVertex(event);
+#endif
     ObserveTestPrimaries(*event);
 }
 

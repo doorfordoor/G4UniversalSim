@@ -48,6 +48,11 @@ const std::map<std::string, std::vector<std::string>>& KnownKeys()
 
 bool IsKnownDynamicSection(const std::string& section)
 {
+    if (StartsWith(section, "biasing.geometry.cell.")) {
+        const auto suffix = section.substr(std::string("biasing.geometry.cell.").size());
+        return !suffix.empty() && suffix.find('.') == std::string::npos;
+    }
+    if (section == "parameters") return true;  // file-local names validated by the parameter consumer
     if (section == "physics.cuts") return true;
     if (section == "scoring.displacement") return true;  // keys are particle names
     if (StartsWith(section, "physics.region.")) {
@@ -76,6 +81,10 @@ bool IsKnownDynamicSection(const std::string& section)
         return separator != std::string::npos && separator > 0 &&
                separator + 1 < suffix.size() && suffix.find('.', separator + 1) == std::string::npos;
     }
+    if (StartsWith(section, "analysis.ntuple.")) return section.size() > 16;
+    if (StartsWith(section, "analysis.h1.") || StartsWith(section, "analysis.h2.")) return section.size() > 12;
+    if (StartsWith(section, "geometry.selection.")) return section.size() > 19;
+    if (StartsWith(section, "scoring.selection.")) return section.size() > 18;
     if (StartsWith(section, "scoring.filter.")) {
         const std::string suffix = section.substr(std::string("scoring.filter.").size());
         return !suffix.empty() && suffix.find('.') == std::string::npos;
@@ -89,6 +98,7 @@ bool IsKnownDynamicSection(const std::string& section)
 
 std::vector<std::string> DynamicKeys(const std::string& section)
 {
+    if (StartsWith(section, "biasing.geometry.cell.")) return ConfigSchema::Keys("main_ini", "biasing.geometry.cell.<id>");
     if (StartsWith(section, "physics.cuts")) return ConfigSchema::Keys("main_ini", "physics.cuts", true);
     if (StartsWith(section, "physics.region.")) {
         return ConfigSchema::Keys("main_ini", "physics.region.<name>");
@@ -105,6 +115,11 @@ std::vector<std::string> DynamicKeys(const std::string& section)
         return ConfigSchema::Keys("main_ini", "source.<name>", true);
     }
     if (StartsWith(section, "biasing.xs.")) return ConfigSchema::Keys("main_ini", "biasing.xs.<particle>.<process>");
+    if (StartsWith(section, "analysis.ntuple.")) return ConfigSchema::Keys("main_ini", "analysis.ntuple.<name>");
+    if (StartsWith(section, "analysis.h2.")) return ConfigSchema::Keys("main_ini", "analysis.h2.<name>");
+    if (StartsWith(section, "analysis.h1.")) return ConfigSchema::Keys("main_ini", "analysis.h1.<name>");
+    if (StartsWith(section, "geometry.selection.")) return ConfigSchema::Keys("main_ini", "geometry.selection.<name>");
+    if (StartsWith(section, "scoring.selection.")) return ConfigSchema::Keys("main_ini", "scoring.selection.<name>");
     if (StartsWith(section, "scoring.filter.")) return ConfigSchema::Keys("main_ini", "scoring.filter.<scorer>");
     if (StartsWith(section, "scoring.spectrum.")) return ConfigSchema::Keys("main_ini", "scoring.spectrum.<scorer>");
     return {};

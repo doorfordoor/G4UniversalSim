@@ -21,7 +21,9 @@ enum class VolumeShape {
     Polycone,
     Polyhedra,
     Tessellated,
-    Unknown
+    Unknown,
+    VoxelGrid,
+    GdmlComponent
 };
 
 enum class PlacementType {

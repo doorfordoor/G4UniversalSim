@@ -89,7 +89,7 @@ public:
     G4VPhysicalVolume* BuildGdmlWorld(const VolumeNode& root);
     // Roadmap A6: physics settings per region, applied after each world build.
     void SetPhysicsManager(const PhysicsManager* physicsManager);
-    void ApplyRegionPhysics();
+    void ApplyRegionPhysics(G4VPhysicalVolume* world);
     // Configure-time check (INI geometries): every [physics.region.<name>]
     // either names a region of the volume tree or lists its own volumes.
     void ValidateRegionPhysicsNames() const;

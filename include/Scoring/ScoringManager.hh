@@ -1,7 +1,12 @@
 #pragma once
 
+#include "Output/Histogram1D.hh"
+#include "Output/NamedHistogram2D.hh"
+#include "Output/NamedEventNtuple.hh"
+
 #include "Output/OutputRecord.hh"
 #include "Config/EffectiveConfigSupport.hh"
+#include "Scoring/ActivationObservation.hh"
 #include "Scoring/PhaseSpace.hh"
 #include "Scoring/ScorerBase.hh"
 #include "Scoring/ScorerFactory.hh"
@@ -15,8 +20,11 @@
 #include <string>
 #include <vector>
 
+namespace activation_observation { class ClockEvent; }
 class ConfigManager;
+class G4Event;
 class G4Step;
+class GeometryRegistry;
 class CsvWriter;
 class EdepScorer;
 class NielTable;
@@ -39,9 +47,14 @@ public:
 
     void EnableHitOutput(bool enable);
     bool IsHitOutputEnabled() const;
+    bool IsHitVolumePathEnabled() const { return hitVolumePathEnabled_; }
 
     void EnableEventEdepOutput(bool enable);
     bool IsEventEdepOutputEnabled() const;
+    bool IsOpticalPhotonCountingEnabled() const;
+    bool IsOpticalBoundaryObservationEnabled() const;
+    bool IsActivationObservationEnabled() const;
+    int GetActivationObservationSchemaVersion() const { return activationObservationSchemaVersion_; }
 
     void EnableEdepScoring(bool enable);
     bool IsEdepScoringEnabled() const;
@@ -102,7 +115,22 @@ public:
     void EndRun(int runID);
 
     void BeginEvent(int eventID);
-    void EndEvent(int eventID);
+    void EndEvent(int eventID, bool aborted = false, const G4Event* nativeEvent = nullptr);
+    void CountOpticalSecondaries(const G4Step& step);
+    void ObserveOpticalBoundary(const G4Step& step);
+    void ObserveActivation(const G4Step& step);
+    void ObserveActivationStackedTrack(const G4Track& track);
+    void ClearPendingActivationBirths() noexcept;
+
+    void SetGeometryRegistry(const GeometryRegistry* registry) { geometryRegistry_ = registry; }
+    bool IsVoxelScoringRequested() const;
+    // SD-only. Returns true when the step belongs to a registered grid leaf.
+    bool ScoreVoxelStep(const G4Step& step);
+    void FinishVoxelShard(int eventsProcessed);
+    const std::vector<Histogram1D>& NamedHistograms() const { return namedH1_; }
+    const std::vector<NamedHistogram2D>& NamedHistograms2D() const { return namedH2_; }
+    const std::vector<NamedEventNtuple>& EventNtuples() const { return eventNtuples_; }
+    void WriteVoxelRoiMass(OutputManager& output, int runId) const;
 
     void ScoreHit(const HitRecord& hit);
     // Accumulate a zero-deposition step for fluence only, without hits or Edep.
@@ -145,7 +173,7 @@ public:
     };
     const std::vector<VolumeFilterSpec>& GetVolumeFilterSpecs() const { return filterSpecs_; }
     const std::vector<VolumeSpectrumSpec>& GetVolumeSpectrumSpecs() const { return spectrumSpecs_; }
-    bool HasVolumeConfig() const { return !filterSpecs_.empty() || !spectrumSpecs_.empty(); }
+    bool HasVolumeConfig() const { return !filterSpecs_.empty() || !spectrumSpecs_.empty() || !namedPlacementPaths_.empty(); }
     // Roadmap H2-4: validates configured filter particle names against the live
     // Geant4 particle table and the requested output format. Must run before the
     // event loop starts so a rejected configuration processes zero events.
@@ -204,7 +232,17 @@ private:
     OutputManager* outputManager_ = nullptr;
     bool enabled_ = true;
     bool hitOutputEnabled_ = true;
+    bool hitVolumePathEnabled_ = false;
     bool eventEdepOutputEnabled_ = true;
+    bool opticalPhotonCountsEnabled_ = false;
+    bool opticalBoundaryObservationsEnabled_ = false;
+#ifdef G4USIM_WITH_NATIVE_AT_REST_OBSERVER
+    std::unique_ptr<activation_observation::ClockEvent> clockEvent_;
+#endif
+    std::string clockLibraryHash_;
+    bool activationObservationsEnabled_ = false;
+    int activationObservationSchemaVersion_ = 1;
+    double activationDecayThresholdSeconds_ = 0;
     bool edepScoringEnabled_ = true;
     bool letScoringEnabled_ = false;
     bool doseScoringEnabled_ = false;
@@ -215,11 +253,16 @@ private:
     // Geant4 particle table is still empty; resolved in BeginRun before the first event.
     bool nielNamesPending_ = false;
     std::map<std::string, std::string> nielPendingLocations_;  // raw key -> "file line N"
+    std::map<std::string, std::string> namedPlacementPaths_;
     std::vector<VolumeFilterSpec> filterSpecs_;
     std::vector<VolumeSpectrumSpec> spectrumSpecs_;
     std::set<std::string> letParticles_;
     bool autoCreateDefaultScorers_ = true;
 
+    std::vector<Histogram1D> namedH1_;
+    std::vector<NamedHistogram2D> namedH2_;
+    std::vector<NamedEventNtuple> eventNtuples_;
+    void ConfigureNamedHistograms(const ConfigManager& config);
     bool edepRawHistogramEnabled_ = true;
     bool edepWeightedHistogramEnabled_ = true;
     bool edepVolumeSummaryEnabled_ = true;
@@ -228,8 +271,18 @@ private:
     HistogramConfig weightedEdepHistogram_;
 
     int verboseLevel_ = 0;
+    const GeometryRegistry* geometryRegistry_ = nullptr;
+    using VoxelKey = std::pair<std::string, int>;
+    std::map<VoxelKey, VoxelEdepRecord> voxelEvent_;
+    std::set<std::pair<int, int>> voxelSteps_;
+    int voxelEventID_ = -1;
+    std::set<int> voxelCompletedEvents_;
+
     int currentRunID_ = -1;
     int currentEventID_ = -1;
+    OpticalPhotonCountRecord opticalPhotonCounts_;
+    std::vector<OpticalBoundaryStepRecord> opticalBoundarySteps_;
+    activation_observation::Event activationEvent_;
     double currentEventRawEdep_ = 0.0;
     double currentEventWeightedEdep_ = 0.0;
     std::vector<std::unique_ptr<ScorerBase>> scorers_;

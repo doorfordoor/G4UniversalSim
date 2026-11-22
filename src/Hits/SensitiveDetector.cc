@@ -86,7 +86,11 @@ G4bool SensitiveDetector::ProcessHits(G4Step* step, G4TouchableHistory* history)
     (void)history;
     if (!step || callbackFailed_) return false;
     try {
-
+        if (scoringEnabled_) {
+            if (auto* manager = ResolveScoringManager(); manager && manager->ScoreVoxelStep(*step)) {
+                return true;
+            }
+        }
         const G4double edep = step->GetTotalEnergyDeposit();
         const G4double ndep = step->GetNonIonizingEnergyDeposit();
         if (!zeroEdepHitsEnabled_ && edep <= 0.0 && ndep <= 0.0) {
@@ -126,9 +130,12 @@ G4bool SensitiveDetector::ProcessHits(G4Step* step, G4TouchableHistory* history)
             if (ScoringManager* scoringManager = ResolveScoringManager()) {
                 auto record = hit->ToHitRecord();
                 InjectBoundaryFault(false);
+                const bool hitPath = scoringManager->IsHitOutputEnabled() && scoringManager->IsHitVolumePathEnabled();
                 if (scoringManager->IsDoseScoringEnabled() || scoringManager->IsFluenceScoringEnabled() ||
                     scoringManager->IsLETScoringEnabled() || scoringManager->IsDisplacementScoringEnabled()) {
-                    PopulateDoseContext(step, record);
+                    PopulateDoseContext(step, record, hitPath);
+                } else if (hitPath) {
+                    record.doseVolumePath = PhysicalTouchablePath(step, true);
                 }
                 if (scoringManager->IsLETScoringEnabled()) record.LETstep = ElectronicStoppingPower(step);
                 scoringManager->ScoreHit(record);

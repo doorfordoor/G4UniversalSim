@@ -692,6 +692,8 @@ bool SimulationManager::FinalizeRunSummary(const std::string& status,
     summary.Set("biasing_matched_process_rule_count", static_cast<int>(biasingManager_ ? biasingManager_->GetMatchedProcessRuleCount() : 0));
     summary.Set("biasing_process_match_status", !biasingManager_ || !biasingManager_->IsEnabled() ? "not_applicable" :
                 (biasingManager_->GetMatchedProcessRuleCount() > 0 ? "validated" : "not_validated"));
+    summary.Set("biasing_geometric_mode", biasingManager_ ? biasingManager_->GetGeometricSamplingConfig().mode : "off");
+    summary.Set("biasing_geometric_worker_evidence_json", biasingManager_ ? biasingManager_->ExportGeometricSamplingEvidence().ToJson() : "[]");
     summary.Set("biasing_effect_observed", "unknown");
     summary.Set("biasing_attachment_scope", "master_geometry");
     summary.Set("biasing_worker_evidence_count", static_cast<int>(workerEvidence.size()));
@@ -858,6 +860,7 @@ void SimulationManager::BuildManagers()
     geometryManager_->SetPhysicsManager(physicsManager_.get());
     outputManager_->SetOutputDir(context_.GetOutputDir());
     scoringManager_->SetOutputManager(outputManager_.get());
+    scoringManager_->SetGeometryRegistry(&geometryManager_->GetRegistry());
 
     if (!appMessenger_) {
         appMessenger_ = std::make_unique<AppMessenger>(this);
@@ -963,6 +966,9 @@ std::unique_ptr<DetectorConstruction> SimulationManager::CreateDetectorConstruct
         throw std::runtime_error("SimulationManager::CreateDetectorConstruction failed: GeometryManager is null");
     }
     auto detector = std::make_unique<DetectorConstruction>(geometryManager_.get());
+#ifdef G4USIM_H6_ENGINEERING
+    detector->SetEngineeringOutput(outputManager_.get());
+#endif
     detector->SetFieldConfig(&fieldConfig_);
     detector->SetSensitiveDetectorFactory(CreateSensitiveDetectorFactory());
     detector->SetGeometryPostBuildCallback(CreateGeometryPostBuildCallback());
@@ -983,7 +989,13 @@ std::unique_ptr<G4VModularPhysicsList> SimulationManager::CreatePhysicsList() co
     }
 
     if (physicsManager_->HasReferenceList()) {
-        auto list = PhysicsFactory::CreateReferencePhysicsList(physicsManager_->GetReferenceList());
+        auto list =
+#ifdef G4USIM_H6_ENGINEERING
+            physicsManager_->engineeringWaterTemperature ?
+                PhysicsFactory::CreateEngineeringWaterList(physicsManager_->engineeringThermal,
+                      physicsManager_->engineeringWaterTemperature) :
+#endif
+                PhysicsFactory::CreateReferencePhysicsList(physicsManager_->GetReferenceList());
         PhysicsFactory::RegisterExtraModules(
             list.get(),
             FilterOutGenericBiasingModules(physicsManager_->GetExtraModules()));
@@ -995,6 +1007,7 @@ std::unique_ptr<G4VModularPhysicsList> SimulationManager::CreatePhysicsList() co
         }
 
         const auto* biasing = physicsManager_->GetBiasingManager();
+        if (biasing) biasing->RegisterGeometricSamplingPhysics(list.get());
         const bool needsBiasing = physicsManager_->IsBiasingPhysicsEnabled() ||
             (biasing && biasing->IsEnabled());
         if (needsBiasing) {
@@ -1068,6 +1081,7 @@ std::function<G4VSensitiveDetector*(const std::string&)> SimulationManager::Crea
 std::function<void(const GeometryRegistry&)> SimulationManager::CreateGeometryPostBuildCallback() const
 {
     return [this](const GeometryRegistry& registry) {
+        if (biasingManager_) biasingManager_->BindGeometricSamplingCells(registry);
         if (biasingManager_ && biasingManager_->IsEnabled()) {
             biasingManager_->AttachOperators(registry);
         }
@@ -1103,7 +1117,7 @@ void SimulationManager::ValidateParallelWorldDependencies()
     const G4ScoringManager* scoringManager = G4ScoringManager::GetScoringManager();
     const bool nativeMesh = scoringManager != nullptr && scoringManager->GetNumberOfMesh() > 0;
     const auto dependencyProblems = parallelWorldConfig_->ValidateDependencies(
-        *scoringManager_, *outputManager_, biasingManager_ && biasingManager_->IsEnabled(),
+        *scoringManager_, *outputManager_, biasingManager_ && (biasingManager_->IsEnabled() || biasingManager_->IsGeometricSamplingEnabled()),
         !fieldConfig_.Empty(), nativeMesh);
     if (!dependencyProblems.empty()) {
         outputManager_->RecordOutputFailure("parallel_world_config", dependencyProblems.front());
@@ -1575,8 +1589,11 @@ void SimulationManager::WriteBaseRunSummary()
     summary.Set("biasing_matched_process_rule_count", static_cast<int>(biasingManager_ ? biasingManager_->GetMatchedProcessRuleCount() : 0));
     summary.Set("biasing_process_match_status", !biasingManager_ || !biasingManager_->IsEnabled() ? "not_applicable" :
                 (biasingManager_->GetMatchedProcessRuleCount() > 0 ? "validated" : "not_validated"));
+    summary.Set("biasing_geometric_mode", biasingManager_ ? biasingManager_->GetGeometricSamplingConfig().mode : "off");
+    summary.Set("biasing_geometric_worker_evidence_json", biasingManager_ ? biasingManager_->ExportGeometricSamplingEvidence().ToJson() : "[]");
     summary.Set("biasing_effect_observed", "unknown");
     summary.SetBool("scoring_enabled", scoringManager_ ? scoringManager_->IsEnabled() : false);
+    summary.SetBool("scoring_hit_volume_path_enabled", scoringManager_ && scoringManager_->IsHitVolumePathEnabled());
     summary.SetBool("scoring_hits_enabled", scoringManager_ ? scoringManager_->IsHitOutputEnabled() : false);
     summary.SetBool("scoring_event_edep_enabled", scoringManager_ ? scoringManager_->IsEventEdepOutputEnabled() : false);
     summary.SetBool("scoring_edep_enabled", scoringManager_ ? scoringManager_->IsEdepScoringEnabled() : false);
@@ -1660,6 +1677,16 @@ void SimulationManager::WriteFinalConfigSnapshot(const std::string& macroStatus)
     // The legacy scoring_* keys were captured before batch macro execution.
     // Preserve them as an initialization snapshot, and expose the final
     // manager setting separately (without asserting Geant4 kernel application).
+    summary.SetBool("effective_scoring_optical_boundary_observations_enabled",
+                    scoringManager_ && scoringManager_->IsOpticalBoundaryObservationEnabled());
+    summary.SetBool("effective_scoring_activation_observations_enabled",
+                    scoringManager_ && scoringManager_->IsActivationObservationEnabled());
+    if (scoringManager_ && scoringManager_->IsActivationObservationEnabled() &&
+        scoringManager_->GetActivationObservationSchemaVersion() == 3) {
+        summary.Set("effective_scoring_activation_observation_schema_version", 3);
+    }
+    summary.SetBool("effective_scoring_optical_photon_counts_enabled",
+                    scoringManager_ && scoringManager_->IsOpticalPhotonCountingEnabled());
     summary.SetBool("effective_scoring_event_edep_enabled",
                     scoringManager_ && scoringManager_->IsEventEdepOutputEnabled());
     summary.SetBool("effective_biasing_enabled", biasingManager_ && biasingManager_->IsEnabled());

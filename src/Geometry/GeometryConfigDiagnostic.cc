@@ -227,6 +227,7 @@ void CollectGeometryConfigDiagnostics(
     const auto known = [&](const std::string& section, const std::string& key) {
         std::string selected = mode;
         if (mode == "hierarchical_boolean" || mode == "boolean_hierarchical" || mode == "boolean") selected = "hierarchical";
+        if (selected == "hierarchical" && section == "parameters") return true;
         const std::string file = "geometry_" + selected + "_ini";
         std::string pattern = section;
         if (selected == "hierarchical") {
@@ -237,6 +238,8 @@ void CollectGeometryConfigDiagnostics(
         } else if (selected == "shielding" && StringUtils::StartsWith(section, "shield.") && shieldNames.count(section.substr(7))) {
             pattern = "shield.<name>";
         }
+        // Parser-only H8 descriptor field until voxel construction is exposed.
+        if (selected == "hierarchical" && pattern == "volume.<name>" && key == "voxel_descriptor") return true;
         std::string field = key;
         if (IsCut(key)) field = "cut.<particle>";
         else if (IsCanonicalMetadata(key)) field = "metadata.<name>";
@@ -249,7 +252,7 @@ void CollectGeometryConfigDiagnostics(
         if (mode == "array") return section == "global" || section == "world" || section == "array";
         if (mode == "shielding") return section == "global" || section == "world" || section == "shielding" || section == "detector" || (StringUtils::StartsWith(section, "shield.") && shieldNames.count(section.substr(7)));
         if (mode == "gdml") return section == "global" || section == "gdml";
-        if (mode == "hierarchical" || mode == "hierarchical_boolean" || mode == "boolean_hierarchical" || mode == "boolean") return section == "global" || IsOrdinaryHierarchicalSection(section) || IsBooleanSection(section);
+        if (mode == "hierarchical" || mode == "hierarchical_boolean" || mode == "boolean_hierarchical" || mode == "boolean") return section == "global" || section == "parameters" || IsOrdinaryHierarchicalSection(section) || IsBooleanSection(section);
         return false;
     };
 

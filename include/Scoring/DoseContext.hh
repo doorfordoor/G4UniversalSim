@@ -9,11 +9,31 @@
 #include "G4VPhysicalVolume.hh"
 #include "G4VSolid.hh"
 
+#include <stdexcept>
 #include <string>
+
+// Preserve world-to-leaf order and use history copy numbers for replicas.
+inline std::string PhysicalTouchablePath(const G4Step* step, bool requireHitPath)
+{
+    std::string path;
+    if (!step || !step->GetPreStepPoint()) return path;
+    const auto& touchable = step->GetPreStepPoint()->GetTouchableHandle();
+    if (!touchable) return path;
+    for (int i = touchable->GetHistoryDepth(); i >= 0; --i) {
+        const auto* volume = touchable->GetVolume(i);
+        if (requireHitPath && (!volume || volume->GetName().empty() ||
+                               volume->GetName().find_first_of("/#\r\n") != std::string::npos)) {
+            throw std::runtime_error("hit_volume_path: missing or ambiguous physical placement name");
+        }
+        if (!volume) continue;
+        path += "/" + std::string(volume->GetName()) + "#" + std::to_string(touchable->GetCopyNumber(i));
+    }
+    return path;
+}
 
 // Transport-only metadata. Dose is scored per physical touchable instance;
 // GetMass(true,false) removes daughter displacement without adding their mass.
-inline void PopulateDoseContext(const G4Step* step, HitRecord& record)
+inline void PopulateDoseContext(const G4Step* step, HitRecord& record, bool requireHitPath = false)
 {
     if (!step || !step->GetPreStepPoint()) return;
     const auto& touchable = step->GetPreStepPoint()->GetTouchableHandle();
@@ -33,11 +53,5 @@ inline void PopulateDoseContext(const G4Step* step, HitRecord& record)
         record.meanKineticEnergy =
             0.5 * (step->GetPreStepPoint()->GetKineticEnergy() + post->GetKineticEnergy());
     }
-    const int depth = touchable->GetHistoryDepth();
-    for (int i = depth; i >= 0; --i) {
-        const auto* volume = touchable->GetVolume(i);
-        if (!volume) continue;
-        record.doseVolumePath += "/" + std::string(volume->GetName()) +
-                                 "#" + std::to_string(touchable->GetCopyNumber(i));
-    }
+    record.doseVolumePath = PhysicalTouchablePath(step, requireHitPath);
 }

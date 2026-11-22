@@ -1,8 +1,9 @@
-﻿#include "Core/RunFinalization.hh"
+#include "Core/RunFinalization.hh"
 #include "Actions/ActionInitialization.hh"
 #include "Actions/RunManagerFactory.hh"
 #include "Biasing/BiasingManager.hh"
 #include "Core/MacroPreflight.hh"
+#include "Physics/PhysicsManager.hh"
 #include "Core/RandomCommandGuard.hh"
 #include "Core/BackendCapabilities.hh"
 #include "Core/Geant4DataLocator.hh"
@@ -22,6 +23,7 @@
 #include "G4UIterminal.hh"
 #include "G4UIcsh.hh"
 #include "G4UImanager.hh"
+#include "Scoring/ProjectScorer.hh"
 #include "G4ScoringManager.hh"
 #include "G4UIcommand.hh"
 #include "G4UIparameter.hh"
@@ -31,6 +33,7 @@
 #include "Output/OutputManager.hh"
 
 #include <cstdlib>
+#include <cerrno>
 #include <cctype>
 #include <cstdio>
 #include <exception>
@@ -449,10 +452,16 @@ std::unique_ptr<G4RunManager> CreateRunManager(const SimulationManager& sim) {
 
 }  // namespace
 
+#ifdef G4USIM_H6_ENGINEERING
+#include "Core/EngineeringWaterGate.hh"
+#endif
 int main(int argc, char** argv) {
   CommandLineOptions options;
   std::string invokedProgram = argc > 0 ? argv[0] : "";
   try {
+#ifdef G4USIM_H6_ENGINEERING
+    engineering_water::guard(argc,argv);
+#endif
     options = ParseCommandLine(argc, argv);
     if (!options.workingDirectory.empty()) {
       const auto directory = std::filesystem::u8path(NativeArgumentToUtf8(options.workingDirectory));
@@ -534,6 +543,7 @@ int main(int argc, char** argv) {
           locks.numThreads = cliOverrides.numThreads.has_value();
           locks.seed = cliOverrides.seed.has_value();
           locks.checkOverlaps = cliOverrides.checkOverlaps.has_value();
+          locks.regionalDna = sim.GetPhysicsManager() && !sim.GetPhysicsManager()->GetDnaRegion().empty();
           plan = PreflightMacro(context.GetMacroFile(), locks);
           sim.SetEffectiveMacroInputs(plan.inputs);
         }
@@ -551,7 +561,11 @@ int main(int argc, char** argv) {
 #else
             std::FILE* output = std::fopen(destination.c_str(), "wbx");
 #endif
-            if (!output) throw std::runtime_error("Cannot create new EffectiveConfig export (target must not exist): " + options.dumpEffectiveConfig);
+            if (!output) {
+              const int openError = errno;
+              throw std::system_error(openError, std::generic_category(),
+                                      "Cannot create new EffectiveConfig export: " + options.dumpEffectiveConfig);
+            }
             const bool written = std::fwrite(json.data(), 1, json.size(), output) == json.size();
             const bool closed = std::fclose(output) == 0;
             if (!written || !closed) throw std::runtime_error("EffectiveConfig export write failed: " + options.dumpEffectiveConfig);
@@ -568,6 +582,10 @@ int main(int argc, char** argv) {
     sim.BeginRuntimeTracking();
     const SimulationContext& context = sim.GetContext();
 
+    const bool regionalDna = sim.GetPhysicsManager() && !sim.GetPhysicsManager()->GetDnaRegion().empty();
+    if (regionalDna && (options.sessionServer || context.IsInteractive())) {
+      throw std::runtime_error("[physics.dna] requires a non-interactive batch macro");
+    }
     if (options.sessionServer && context.HasMacroFile()) {
       throw std::runtime_error(
           "--session-server does not support a preconfigured macro from the main INI "
@@ -588,7 +606,15 @@ int main(int argc, char** argv) {
       locks.numThreads = cliOverrides.numThreads.has_value();
       locks.seed = cliOverrides.seed.has_value();
       locks.checkOverlaps = cliOverrides.checkOverlaps.has_value();
+      locks.regionalDna = regionalDna;
       preflight = PreflightMacro(context.GetMacroFile(), locks);
+#ifdef G4USIM_H6_ENGINEERING
+      if(preflight.inputs.size()!=1 || preflight.inputs.front().second!=engineering_water::approvedMacro ||
+         preflight.commands.size()!=3 || preflight.commands[0].text!="/run/initialize" ||
+         preflight.commands[1].text!="/AIHL/physics/dumpProcesses processes.json neutron" ||
+         preflight.commands[2].text!="/run/beamOn "+std::to_string(engineering_water::approvedEvents))
+          throw std::runtime_error("executed macro differs from approved water preflight");
+#endif
       sim.SetEffectiveMacroInputs(preflight.inputs);
       sim.SetExecutedMacroPath(preflight.macroPath.string());
     }
@@ -616,12 +642,20 @@ int main(int argc, char** argv) {
     }
 
     sim.Initialize();
+    compiled_scorer::Register(compiled_scorer::ProjectScorer, *sim.GetScoringManager(),
+                              sim.GetOutputManager()->GetRunSummary());
     if (sim.GetContext().HasSeed()) {
       CLHEP::HepRandom::setTheSeed(
           static_cast<long>(sim.GetContext().GetSeed()));
     }
 
     auto runManager = CreateRunManager(sim);
+#ifdef G4USIM_H6_ENGINEERING
+    const auto nativeThreads = runManager->GetNumberOfThreads();
+    if (nativeThreads != 1 || sim.GetContext().GetNumThreads() != 1)
+        throw std::runtime_error("engineering water requires exactly one native worker before event initialization");
+    G4cout << "WATER_PRODUCT_NATIVE_THREADS " << nativeThreads << G4endl;
+#endif
     // Enable Geant4 command-based scoring (/score/...). Must exist on the
     // master before /run/initialize; meshes are merged across threads.
     G4ScoringManager::GetScoringManager();

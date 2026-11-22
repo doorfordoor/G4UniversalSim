@@ -28,6 +28,12 @@ public:
     // name would never be found.
     using SensitiveDetectorFactory = std::function<G4VSensitiveDetector*(const std::string&)>;
 
+#ifdef G4USIM_H6_ENGINEERING
+    void SetEngineeringOutput(OutputManager* output) { engineeringOutput=output; }
+private:
+    OutputManager* engineeringOutput=nullptr;
+public:
+#endif
     explicit DetectorConstruction(GeometryManager* geometryManager);
     ~DetectorConstruction() override;
 

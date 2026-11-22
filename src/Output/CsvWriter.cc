@@ -212,7 +212,8 @@ void CsvWriter::WriteEscapedRow(const std::vector<std::string>& values)
     const auto fault = TestOutputFault();
     if (headerWritten_ && ((fault == "event_row_t0" &&
         std::filesystem::path(filename_).filename() == "event_edep_t0.csv") ||
-        ClaimWorkerFault(fault, "event_row_any_worker", filename_, "event_edep", claimed))) {
+        ClaimWorkerFault(fault, "event_row_any_worker", filename_, "event_edep", claimed) ||
+        ClaimWorkerFault(fault, "optical_photon_counts_row_any_worker", filename_, "optical_photon_counts", claimed))) {
         writeFailed_ = true;
         throw std::runtime_error("Injected CSV row write failure: '" + filename_ + "'");
     }

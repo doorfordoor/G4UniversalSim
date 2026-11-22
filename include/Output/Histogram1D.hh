@@ -13,6 +13,9 @@ public:
 
     void Fill(double value, double weight = 1.0);
 
+    double EqualBinEdge(int index) const;
+    void FillUnitAtEdges(double value);
+
     void Merge(const Histogram1D& other);
 
     void Reset();

@@ -16,6 +16,8 @@ class ConfigManager;
 class GeometryRegistry;
 class BiasingMultiParticleXS;
 class G4LogicalVolume;
+class G4VPhysicalVolume;
+class G4VModularPhysicsList;
 
 class BiasingManager {
 public:
@@ -24,6 +26,14 @@ public:
 
     void Enable(bool enable);
     bool IsEnabled() const;
+    bool IsGeometricSamplingEnabled() const;
+    const GeometricSamplingConfig& GetGeometricSamplingConfig() const;
+    void RegisterGeometricSamplingPhysics(G4VModularPhysicsList* list) const;
+    void BindGeometricSamplingCells(const GeometryRegistry& registry);
+    void ConstructGeometricSamplingProcess() const;
+    void TerminateGeometricSamplingThread() const;
+    void ValidateGeometricSamplingThread(int runId, bool endRun = false) const;
+    effective_config::Value ExportGeometricSamplingEvidence() const;
     void SetInteractiveSessionMode(bool interactive);
     bool IsInteractiveSessionMode() const;
     // A rejected mutation in an interactive session used to be a JustWarning:
@@ -142,6 +152,7 @@ public:
     std::vector<WorkerEvidence> GetWorkerEvidence() const;
 
 private:
+    void LoadGeometricSamplingConfig(const ConfigManager& config);
     static std::string NormalizeParticleName(const std::string& particleName);
     static std::string ProcessRuleKey(const std::string& particleName, const std::string& processName);
     static std::string TrimRequired(const std::string& value, const std::string& label);
@@ -156,6 +167,16 @@ private:
     std::shared_ptr<effective_config::ConsumerState> effectiveState_ = std::make_shared<effective_config::ConsumerState>();
     std::map<std::string, std::vector<std::string>> effectiveRuleSections_;
     BiasingConfig config_;
+    GeometricSamplingConfig geometricConfig_;
+    struct GeometricBoundCell {
+        G4VPhysicalVolume* physical = nullptr;
+        GeometricSamplingCell config;
+    };
+    std::vector<GeometricBoundCell> geometricCells_;
+    G4VPhysicalVolume* geometricWorld_ = nullptr;
+    struct GeometricThreadState;
+    mutable G4Cache<GeometricThreadState*> geometricThreadState_;
+    mutable std::map<std::pair<int, int>, effective_config::Value> geometricEvidence_;
 
     // Global volumes are interpreted as shared target volumes for all rules by
     // later AttachOperators/BiasingXS code; GetBiasVolumes() returns their union

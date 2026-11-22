@@ -57,6 +57,8 @@ VolumeShape ParseShape(const std::string& text)
     if (value == "polycone") return VolumeShape::Polycone;
     if (value == "polyhedra") return VolumeShape::Polyhedra;
     if (value == "tessellated" || value == "stl") return VolumeShape::Tessellated;
+    if (value == "gdml_component") return VolumeShape::GdmlComponent;
+    if (value == "voxel_grid") return VolumeShape::VoxelGrid;
     return VolumeShape::Unknown;
 }
 
@@ -78,6 +80,8 @@ std::string ShapeToString(VolumeShape shape)
         case VolumeShape::Polycone: return "polycone";
         case VolumeShape::Polyhedra: return "polyhedra";
         case VolumeShape::Tessellated: return "tessellated";
+        case VolumeShape::GdmlComponent: return "gdml_component";
+        case VolumeShape::VoxelGrid: return "voxel_grid";
         default: return "unknown";
     }
 }

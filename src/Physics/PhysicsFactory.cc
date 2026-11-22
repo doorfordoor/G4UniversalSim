@@ -4,8 +4,20 @@
 #include "Physics/PhysicsManager.hh"
 #include "Utils/StringUtils.hh"
 
+#ifdef G4USIM_H6_ENGINEERING
+#include "G4ThermalNeutrons.hh"
+#include "G4SystemOfUnits.hh"
+#endif
 #include "G4DecayPhysics.hh"
 #include "G4EmDNAPhysics.hh"
+#include "G4EmDNAPhysicsActivator.hh"
+#include "G4EmParameters.hh"
+#include "G4LogicalVolume.hh"
+#include "G4NistManager.hh"
+#include "G4Region.hh"
+#include "G4RegionStore.hh"
+#include "G4ProductionCuts.hh"
+#include "G4ProductionCutsTable.hh"
 #include "G4EmLivermorePhysics.hh"
 #include "G4EmPenelopePhysics.hh"
 #include "G4EmStandardPhysics.hh"
@@ -40,6 +52,17 @@
 #include <iostream>
 #include <map>
 #include <stdexcept>
+
+#ifdef G4USIM_H6_ENGINEERING
+std::unique_ptr<G4VModularPhysicsList> PhysicsFactory::CreateEngineeringWaterList(bool thermal, double temperature)
+{
+    if (temperature != 293.6 * CLHEP::kelvin && temperature != 323.6 * CLHEP::kelvin)
+        throw std::runtime_error("unsupported engineering water temperature");
+    auto list = CreateReferencePhysicsList("FTFP_BERT_HP");
+    if (thermal) RegisterChecked(list.get(), std::make_unique<G4ThermalNeutrons>(0, "H6-water", temperature));
+    return list;
+}
+#endif
 
 namespace {
 
@@ -529,6 +552,85 @@ bool PhysicsFactory::HasRadioactiveDecay(const G4VModularPhysicsList* list)
     }
 }
 
+namespace {
+
+class RegionalDnaPhysics final : public G4EmDNAPhysicsActivator {
+public:
+    RegionalDnaPhysics(std::string region, std::string model)
+        : G4EmDNAPhysicsActivator(0), region_(std::move(region)), model_(std::move(model)) {}
+
+    void ConstructProcess() override
+    {
+        const auto* em = G4EmParameters::Instance();
+        if (em->RegionsDNA().size() != 1 || em->TypesDNA().size() != 1 ||
+            em->RegionsDNA().front() != region_ || em->TypesDNA().front() != model_) {
+            throw std::runtime_error("[physics.dna] actual Geant4 DNA region/model differs from the accepted selection");
+        }
+        G4Region* found = nullptr;
+        for (auto* region : *G4RegionStore::GetInstance()) {
+            if (region->GetName() != region_) continue;
+            if (found) throw std::runtime_error("[physics.dna] actual region name is ambiguous: '" + region_ + "'");
+            found = region;
+        }
+        if (!found || found->GetNumberOfRootVolumes() != 1) {
+            throw std::runtime_error("[physics.dna] actual region must have one water root: '" + region_ + "'");
+        }
+        const auto* root = *found->GetRootLogicalVolumeIterator();
+        const auto* water = G4NistManager::Instance()->FindOrBuildMaterial("G4_WATER", false);
+        if (!root || root->GetRegion() != found || root->GetMaterial() != water || !water || root->GetNoDaughters() != 0) {
+            throw std::runtime_error("[physics.dna] actual region requires a leaf with NIST G4_WATER: '" + region_ + "'");
+        }
+        // EM model selection keys each material-cuts couple by the cuts
+        // pointer. Inherited world cuts can otherwise activate DNA outside.
+        const auto* world = G4RegionStore::GetInstance()->GetRegion("DefaultRegionForTheWorld", false);
+        if (!world || world == found) {
+            throw std::runtime_error("[physics.dna] no distinct actual mass-world region");
+        }
+        const auto* worldCuts = world->GetProductionCuts();
+        if (!worldCuts) worldCuts = G4ProductionCutsTable::GetProductionCutsTable()->GetDefaultProductionCuts();
+        if (!found->GetProductionCuts() || found->GetProductionCuts() == worldCuts) {
+            distinctCuts_ = std::make_unique<G4ProductionCuts>(*worldCuts);
+            found->SetProductionCuts(distinctCuts_.get());
+        }
+        for (const auto* other : *G4RegionStore::GetInstance()) {
+            if (other != found && other->GetProductionCuts() == found->GetProductionCuts()) {
+                throw std::runtime_error("[physics.dna] actual region shares its production cuts");
+            }
+        }
+        G4EmDNAPhysicsActivator::ConstructProcess();
+    }
+
+private:
+    std::string region_;
+    std::string model_;
+    std::unique_ptr<G4ProductionCuts> distinctCuts_;
+};
+
+void ConfigureRegionalDna(G4VModularPhysicsList& list, const PhysicsManager& manager)
+{
+    if (manager.GetDnaRegion().empty()) return;
+    manager.Validate();
+    auto* em = G4EmParameters::Instance();
+    const auto& region = manager.GetDnaRegion();
+    const auto& model = manager.GetDnaModel();
+    if (!em->RegionsDNA().empty() || !em->TypesDNA().empty()) {
+        throw std::runtime_error("[physics.dna] conflicting native DNA region setup");
+    }
+    const bool standardFluo = em->Fluo();
+    auto activator = std::make_unique<RegionalDnaPhysics>(region, model);
+    // The SDK activator constructor enables fluorescence globally. Keep the
+    // reference list's setting for the standard EM pathway.
+    em->SetFluo(standardFluo);
+    em->AddDNA(region, model);
+    if (em->RegionsDNA().size() != 1 || em->TypesDNA().size() != 1 ||
+        em->RegionsDNA().front() != region || em->TypesDNA().front() != model) {
+        throw std::runtime_error("[physics.dna] Geant4 refused the regional DNA setup");
+    }
+    list.RegisterPhysics(activator.release());
+}
+
+}  // namespace
+
 void PhysicsFactory::ApplyRegionAndDecaySettings(G4VModularPhysicsList* list, const PhysicsManager& manager)
 {
     if (!list) throw std::runtime_error("PhysicsFactory::ApplyRegionAndDecaySettings failed: physics list is null");
@@ -550,6 +652,7 @@ void PhysicsFactory::ApplyRegionAndDecaySettings(G4VModularPhysicsList* list, co
     if (manager.NeedsStepLimiter() && !list->GetPhysics("stepLimiter")) {
         list->RegisterPhysics(new G4StepLimiterPhysics());
     }
+    ConfigureRegionalDna(*list, manager);
     manager.ObserveEffectiveConfigPhysics(*list, "physics_list_registered");
 }
 

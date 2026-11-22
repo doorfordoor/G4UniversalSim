@@ -47,7 +47,7 @@ struct H1Binning {
 };
 
 // Book objects on first use for this thread, apply current binning, open file.
-void BeginRun(const std::string& filePath, const H1Binning& raw, const H1Binning& weighted);
+void BeginRun(const std::string& filePath, const H1Binning& raw, const H1Binning& weighted, bool hitVolumePath = false);
 // Attempt Write and Close once each for this run, preserving the first failure.
 // Returns true only after both succeed and the file is closed. IsOpen tracks
 // remaining resources even after a failed finalization; EndRun does not retry.

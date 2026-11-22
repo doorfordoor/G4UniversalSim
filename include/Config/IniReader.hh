@@ -69,6 +69,9 @@ public:
 
     // Full source order, including overridden declarations; no consumption side effects.
     std::vector<IniFieldInfo> GetDeclarations() const;
+    // Source-ordered declarations for an already normalized section/key, including overrides.
+    std::vector<IniFieldInfo> GetDeclarationsForNormalizedKey(
+        const std::string& section, const std::string& key) const;
     std::vector<IniSectionInfo> GetSectionDeclarations() const { return sectionDeclarations_; }
     const std::string& GetInputSha256() const { return inputSha256_; }
     void Clear();
@@ -80,6 +83,8 @@ private:
         std::string originalSection;
         std::string originalKey;
         mutable bool consumed = false;
+        std::size_t declarationIndex = 0;
+        std::vector<std::size_t> overriddenDeclarations;
     };
 
     using Section = std::map<std::string, Entry>;

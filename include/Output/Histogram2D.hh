@@ -39,6 +39,7 @@ public:
     double GetUnderflow() const;
     double GetOverflow() const;
     double GetEntries() const;
+    double GetBinContent(int xBin, int yBin) const;
 
 private:
     void ValidateConfigured() const;

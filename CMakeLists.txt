@@ -65,6 +65,38 @@ configure_file(
 # Establish BUILD_TESTING before selecting the GDML archive variants.
 # Existing CTest registrations below retain the standalone boundary.
 include(CTest)
+option(G4USIM_WITH_WATER_ENGINEERING "Build the isolated H6B water engineering program" OFF)
+if(G4USIM_WITH_WATER_ENGINEERING)
+  set(G4USIM_WATER_APPROVAL_FILE "" CACHE FILEPATH "Approved H6B manifest")
+  if(NOT EXISTS "${G4USIM_WATER_APPROVAL_FILE}")
+    message(FATAL_ERROR "Missing approved H6B manifest")
+  endif()
+  if(WIN32)
+    if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" OR NOT MSVC_CXX_ARCHITECTURE_ID STREQUAL "x64"
+       OR NOT Geant4_VERSION VERSION_EQUAL "11.3.2")
+      message(FATAL_ERROR "Windows water engineering requires the MSVC x64 Geant4 11.3.2 SDK")
+    endif()
+    get_target_property(water_import Geant4::G4processes IMPORTED_IMPLIB_RELEASE)
+    file(SHA256 "${water_import}" water_import_digest)
+    if(NOT water_import_digest STREQUAL "85373d54a2754d27ed5d8184f33483b4e3a76376510fdd5a8aec7490f2336e52")
+      message(FATAL_ERROR "Unapproved Windows water engineering import library")
+    endif()
+  endif()
+  # The two approved inline cache headers are byte-identical on both SDKs.
+  file(SHA256 "${Geant4_DIR}/../../../include/Geant4/G4CrossSectionDataStore.hh" actual_cache_header)
+  if(NOT actual_cache_header STREQUAL "20c9607ac7d37483007e935c97ec4ac1871127b48dc59c9d53c66e8f5808db24")
+    message(FATAL_ERROR "Missing accepted native G4CrossSectionDataStore.hh cache method")
+  endif()
+  file(SHA256 "${Geant4_DIR}/../../../include/Geant4/G4ParticleHPElasticData.hh" actual_cache_header)
+  if(NOT actual_cache_header STREQUAL "3595828ef47d91899c9976d1bbd585d12bceae0cce76a5a2ccd67e50c1dfe508")
+    message(FATAL_ERROR "Missing accepted native G4ParticleHPElasticData.hh cache method")
+  endif()
+  file(SHA256 "${G4USIM_WATER_APPROVAL_FILE}" WATER_APPROVAL_SHA256)
+  configure_file(cmake/water_approval_digest.hh.in water_approval_digest.hh @ONLY)
+  include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+  add_compile_definitions(G4USIM_H6_ENGINEERING)
+endif()
+
 include("${PROJECT_SOURCE_DIR}/cmake/BackendTargets.cmake")
 
 # The executable advertises this generated fingerprint from main.cc.
@@ -107,6 +139,11 @@ if(BUILD_TESTING)
         target_link_libraries(gdmlInputCaptureCheck PRIVATE g4usim_gdml_native)
     endif()
     # Exercise real numeric accumulation/merge code independently of transport.
+    add_executable(namedEventNtupleCheck tools/namedEventNtupleCheck.cc)
+    target_link_libraries(namedEventNtupleCheck PRIVATE g4usim_geant)
+    add_executable(namedHistogramEdgeCheck tools/namedHistogramEdgeCheck.cc)
+    target_link_libraries(namedHistogramEdgeCheck PRIVATE g4usim_geant)
+    add_test(NAME named_histogram_edges COMMAND namedHistogramEdgeCheck)
     add_executable(scoringNumericCheck tools/scoringNumericCheck.cc)
     target_compile_features(scoringNumericCheck PRIVATE cxx_std_17)
     target_link_libraries(scoringNumericCheck PRIVATE g4usim_logic)
@@ -189,6 +226,9 @@ if(BUILD_TESTING)
             G4USIM_BUILD_CONFIGURATION="$<IF:$<BOOL:$<CONFIG>>,$<CONFIG>,unknown>")
         g4usim_link_backend(geometryTransactionCheck native)
         g4usim_configure_windows_runtime(geometryTransactionCheck)
+        add_test(NAME geometry_voxel_descriptor_component
+            COMMAND geometryTransactionCheck --voxel-config "${PROJECT_BINARY_DIR}/Testing/voxel-descriptor")
+        set_tests_properties(geometry_voxel_descriptor_component PROPERTIES LABELS "h8;component")
         set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
             ${PROJECT_SOURCE_DIR}/tools/geometryTransactionCheck.cc)
         file(SHA256 ${PROJECT_SOURCE_DIR}/tools/geometryTransactionCheck.cc G4USIM_TRANSACTION_PROBE_SHA256)
@@ -227,6 +267,17 @@ if(BUILD_TESTING)
         file(SHA256 ${PROJECT_SOURCE_DIR}/tools/scorerFactoryCheck.cc G4USIM_SCORER_FACTORY_PROBE_SHA256)
         set_source_files_properties(tools/scorerFactoryCheck.cc PROPERTIES
             COMPILE_DEFINITIONS G4USIM_SCORER_FACTORY_PROBE_SHA256="${G4USIM_SCORER_FACTORY_PROBE_SHA256}")
+        add_executable(geometricSamplingObservationCheck tools/geometricSamplingObservationCheck.cc)
+        target_include_directories(geometricSamplingObservationCheck PRIVATE ${PROJECT_BINARY_DIR}/generated)
+        g4usim_link_backend(geometricSamplingObservationCheck native)
+        g4usim_configure_windows_runtime(geometricSamplingObservationCheck)
+        set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+            ${PROJECT_SOURCE_DIR}/tools/geometricSamplingObservationCheck.cc
+            ${PROJECT_SOURCE_DIR}/include/Biasing/detail/GeometricSamplingObservation.hh)
+        file(SHA256 ${PROJECT_SOURCE_DIR}/tools/geometricSamplingObservationCheck.cc G4USIM_H4_OBSERVATION_PROBE_SHA256)
+        file(SHA256 ${PROJECT_SOURCE_DIR}/include/Biasing/detail/GeometricSamplingObservation.hh G4USIM_H4_OBSERVATION_SOURCE_SHA256)
+        set_source_files_properties(tools/geometricSamplingObservationCheck.cc PROPERTIES COMPILE_DEFINITIONS
+            "G4USIM_H4_OBSERVATION_PROBE_SHA256=\"${G4USIM_H4_OBSERVATION_PROBE_SHA256}\";G4USIM_H4_OBSERVATION_SOURCE_SHA256=\"${G4USIM_H4_OBSERVATION_SOURCE_SHA256}\"")
         add_executable(scoringLifecycleCheck tools/scoringLifecycleCheck.cc)
         target_include_directories(scoringLifecycleCheck PRIVATE ${PROJECT_BINARY_DIR}/generated)
         target_compile_definitions(scoringLifecycleCheck PRIVATE

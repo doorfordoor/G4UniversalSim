@@ -80,7 +80,8 @@ class OutputEvidence:
         return path
 
 
-def _path(value: str):
+def recorded_path(value: str) -> PurePosixPath | PureWindowsPath:
+    """Interpret path text using the syntax of the system that recorded it."""
     return PureWindowsPath(value) if "\\" in value or re.match(r"^[A-Za-z]:", value) else PurePosixPath(value)
 
 
@@ -127,7 +128,7 @@ def _read_output_evidence(directory: str | Path) -> OutputEvidence:
                 raise ValueError("invalid generated file record")
             if not isinstance(row.get("schema"), str) or not row["schema"]:
                 raise ValueError("missing generated file schema")
-            paths.append(_path(row["path"]))
+            paths.append(recorded_path(row["path"]))
         anchors = [p.parent for p in paths if p.name == "run_metadata.json" and p.is_absolute()]
         if len(anchors) > 1:
             raise ValueError("ambiguous manifest anchor")

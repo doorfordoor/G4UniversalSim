@@ -13,6 +13,12 @@ public:
     explicit PrimaryGeneratorAction(SourceManager* sourceManager = nullptr);
     ~PrimaryGeneratorAction() override;
 
+#ifdef G4USIM_H6_ENGINEERING
+    void SetEngineeringOutput(class OutputManager* output) { engineeringOutput=output; }
+private:
+    class OutputManager* engineeringOutput=nullptr;
+public:
+#endif
     void GeneratePrimaries(G4Event* event) override;
 
     void SetSourceManager(SourceManager* sourceManager);

@@ -1,18 +1,34 @@
 #include "Actions/TrackingAction.hh"
+#include "Actions/WorkerRunContext.hh"
+#include "Scoring/ScoringManager.hh"
 
 #include "G4ParticleDefinition.hh"
 #include "G4Track.hh"
 #include "G4ios.hh"
 
 #include <stdexcept>
+#include <utility>
 
-TrackingAction::TrackingAction() = default;
+TrackingAction::TrackingAction(std::shared_ptr<WorkerRunContext> context)
+    : context_(std::move(context))
+{
+}
 
 TrackingAction::~TrackingAction() = default;
+
+void TrackingAction::ClearPendingActivationBirths() const noexcept
+{
+    if (context_) {
+        if (auto* scoring = context_->GetScoringManager()) scoring->ClearPendingActivationBirths();
+    }
+}
 
 void TrackingAction::PreUserTrackingAction(const G4Track* track)
 {
     if (!track) return;
+    // Native stacking resolves the previous parent's births before the next track starts.
+    // Drop any unclassified identities before the allocator can reuse their addresses.
+    ClearPendingActivationBirths();
     if (!trackLoggingEnabled_ || verboseLevel_ <= 0) return;
 
     const auto* particle = track->GetParticleDefinition();
@@ -27,6 +43,8 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
 void TrackingAction::PostUserTrackingAction(const G4Track* track)
 {
     if (!track) return;
+    // In this branch G4EventManager deletes the secondaries without invoking stacking.
+    if (track->GetTrackStatus() == fKillTrackAndSecondaries) ClearPendingActivationBirths();
     if (!trackLoggingEnabled_ || verboseLevel_ <= 0) return;
 
     const auto* particle = track->GetParticleDefinition();

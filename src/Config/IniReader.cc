@@ -53,8 +53,21 @@ void IniReader::ParseBytes(const std::string& filename, const std::string& bytes
         if (lineNumber == 1 && parseLine.compare(0, 3, "\xEF\xBB\xBF") == 0)
             parseLine.erase(0, 3);
 
-        const std::string withoutComment =
-            StringUtils::Trim(StringUtils::RemoveComment(parseLine));
+        std::string withoutComment = StringUtils::Trim(StringUtils::RemoveComment(parseLine));
+        // Only this path-valued field uses embedded #copy numbers. A spaced #
+        // and a semicolon still introduce comments; all old fields retain their grammar.
+        const auto separator = withoutComment.find('=');
+        if (currentSection.rfind("scoring.selection.", 0) == 0 && separator != std::string::npos &&
+            NormalizeName(withoutComment.substr(0, separator)) == "physical_path") {
+            auto pathLine = StringUtils::RemoveComment(parseLine, {';'});
+            for (size_t i = 1; i < pathLine.size(); ++i) {
+                if (pathLine[i] == '#' && (pathLine[i-1] == ' ' || pathLine[i-1] == '\t')) {
+                    pathLine.resize(i);
+                    break;
+                }
+            }
+            withoutComment = StringUtils::Trim(pathLine);
+        }
         if (withoutComment.empty()) {
             continue;
         }
@@ -102,7 +115,15 @@ void IniReader::ParseBytes(const std::string& filename, const std::string& bytes
         } else {
             keyFirstLine_[currentSection][normalizedKey] = lineNumber;
         }
-        data_[currentSection][normalizedKey] = {value, lineNumber, currentOriginalSection, key};
+        auto& entry = data_[currentSection][normalizedKey];
+        if (entry.lineNumber != 0) {
+            entry.overriddenDeclarations.push_back(entry.declarationIndex);
+        }
+        entry.value = value;
+        entry.lineNumber = lineNumber;
+        entry.originalSection = currentOriginalSection;
+        entry.originalKey = key;
+        entry.declarationIndex = declarations_.size();
         declarations_.push_back({currentSection, key, value, lineNumber, false,
                                  currentOriginalSection, currentSection, key, normalizedKey, line});
     }
@@ -228,6 +249,23 @@ std::vector<IniFieldInfo> IniReader::GetDeclarations() const
                 field.consumed = key->second.consumed;
         }
     }
+    return result;
+}
+
+std::vector<IniFieldInfo> IniReader::GetDeclarationsForNormalizedKey(
+    const std::string& section, const std::string& key) const
+{
+    const auto sectionIt = data_.find(section);
+    if (sectionIt == data_.end()) return {};
+    const auto keyIt = sectionIt->second.find(key);
+    if (keyIt == sectionIt->second.end()) return {};
+
+    const auto& entry = keyIt->second;
+    std::vector<IniFieldInfo> result;
+    result.reserve(entry.overriddenDeclarations.size() + 1);
+    for (const auto index : entry.overriddenDeclarations) result.push_back(declarations_[index]);
+    result.push_back(declarations_[entry.declarationIndex]);
+    result.back().consumed = entry.consumed;
     return result;
 }
 

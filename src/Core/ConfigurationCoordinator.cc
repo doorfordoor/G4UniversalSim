@@ -1,3 +1,6 @@
+#ifdef G4USIM_H6_ENGINEERING
+#include "Core/EngineeringWaterState.hh"
+#endif
 #include "Core/ConfigurationCoordinator.hh"
 #include "Core/SimulationContext.hh"
 #include "Config/ConfigManager.hh"
@@ -143,6 +146,11 @@ void ConfigureLoadedInputs(const ConfigManager& config, SimulationContext& conte
 
     targets.physics.SetBiasingManager(&targets.biasing);
     targets.physics.LoadFromConfig(config);
+#ifdef G4USIM_H6_ENGINEERING
+    engineering_water::thermal=targets.physics.engineeringThermal;
+    engineering_water::requestedTemperature=targets.physics.engineeringWaterTemperature;
+    engineering_water::acceptedMaterial=targets.materials.BuildEngineeringWater(engineering_water::requestedTemperature);
+#endif
     targets.geometry.ValidateRegionPhysicsNames();
     targets.field.LoadFromConfig(config);
     for (const FieldSpec& field : targets.field.GetFields()) {
@@ -161,6 +169,8 @@ void ConfigureLoadedInputs(const ConfigManager& config, SimulationContext& conte
         targets.physics.EnableBiasingPhysics(true);
     }
 
+    if (!targets.physics.GetDnaRegion().empty()) targets.physics.Validate();
+
     // Roadmap H3: optional parallel scoring world. Parsed only after every
     // dependency (materials, geometry, scoring, output format, field, mesh,
     // biasing) is configured, so Stage A can reject unsupported combinations
@@ -173,8 +183,11 @@ void ConfigureLoadedInputs(const ConfigManager& config, SimulationContext& conte
         }
     }
     if (targets.parallelWorld->enabled()) {
+        if (!targets.physics.GetDnaRegion().empty()) {
+            throw std::runtime_error("[physics.dna] parallel scoring worlds are outside the regional configuration");
+        }
         const auto dependencies = targets.parallelWorld->ValidateDependencies(
-            targets.scoring, targets.output, targets.biasing.IsEnabled(),
+            targets.scoring, targets.output, targets.biasing.IsEnabled() || targets.biasing.IsGeometricSamplingEnabled(),
             !targets.field.Empty(), !targets.meshCommands.empty());
         if (!dependencies.empty()) {
             throw std::runtime_error("[parallel_world] " + dependencies.front());

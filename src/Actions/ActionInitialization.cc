@@ -76,7 +76,8 @@ void ActionInitialization::Build() const
             "ActionInitialization::Build failed: SourceManager is null");
     }
 
-    SetUserAction(new PrimaryGeneratorAction(sourceManager_));
+    auto* generator=new PrimaryGeneratorAction(sourceManager_);
+    SetUserAction(generator);
 
     auto context = std::make_shared<WorkerRunContext>();
     const int threadId = CurrentThreadIdOrZero();
@@ -90,6 +91,9 @@ void ActionInitialization::Build() const
         context->output->SetThreadId(threadId);
     }
     auto* output = context->GetOutputManager();
+#ifdef G4USIM_H6_ENGINEERING
+    generator->SetEngineeringOutput(output);
+#endif
     output->SetThreadId(threadId);
     output->EnableThreadSuffix(true);
 
@@ -127,7 +131,7 @@ void ActionInitialization::Build() const
     steppingAction->SetVerboseLevel(verboseLevel_);
     SetUserAction(steppingAction);
 
-    auto* trackingAction = new TrackingAction();
+    auto* trackingAction = new TrackingAction(context);
     trackingAction->SetVerboseLevel(verboseLevel_);
     SetUserAction(trackingAction);
     SetUserAction(new PhaseSpaceStackingAction(context));

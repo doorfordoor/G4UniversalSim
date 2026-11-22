@@ -12,6 +12,7 @@
 #include <vector>
 
 class ConfigManager;
+class VoxelGridDescriptorReader;
 
 class GeometryConfig {
 public:
@@ -85,7 +86,8 @@ private:
 
     VolumeNode ParseVolumeSection(
         const std::string& sectionName,
-        const Section& values
+        const Section& values,
+        std::vector<VoxelGridDescriptorReader>& voxelReaders
     ) const;
     BooleanSolidOperation ParseBooleanSection(
         const std::string& sectionName,

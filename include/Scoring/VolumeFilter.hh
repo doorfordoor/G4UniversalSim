@@ -22,6 +22,8 @@ struct VolumeFilterConfig {
     std::set<std::string> particles;        // empty with allParticles == false: no particle condition
     double energyMinMeV = 0.0;              // inclusive
     double energyMaxMeV = std::numeric_limits<double>::infinity();  // exclusive
+    std::string selection;
+    std::string physicalPath;
     std::string section;                    // e.g. "scoring.filter.dose"
     std::string location;                   // "file:line" of the declared section
 
@@ -54,6 +56,7 @@ class VolumeFilter {
         } else if (!config_.particles.empty() && config_.particles.count(hit.particleName) == 0) {
             return false;
         }
+        if (!config_.physicalPath.empty() && hit.doseVolumePath != config_.physicalPath) return false;
         const double energy = hit.kineticEnergy;
         if (!(energy >= config_.energyMinMeV)) return false;
         if (!(energy < config_.energyMaxMeV)) return false;

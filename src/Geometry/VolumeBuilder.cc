@@ -7,7 +7,9 @@
 #include "Geometry/SolidRegistry.hh"
 #include "Geometry/GeometryUtils.hh"
 #include "Geometry/StlReader.hh"
+#include "Geometry/GdmlComponent.hh"
 #include "Geometry/VolumeNode.hh"
+#include "Geometry/VoxelGridDescriptor.hh"
 #include "Materials/MaterialManager.hh"
 #include "Utils/G4NameUtils.hh"
 #include "Utils/StringUtils.hh"
@@ -20,12 +22,14 @@
 #include "G4EllipticalTube.hh"
 #include "G4Hype.hh"
 #include "G4Exception.hh"
+#include "G4GeometryTolerance.hh"
 #include "G4IntersectionSolid.hh"
 #include "G4LogicalVolume.hh"
 #include "G4Material.hh"
 #include "G4Orb.hh"
 #include "G4PVParameterised.hh"
 #include "G4PVReplica.hh"
+#include "G4PhantomParameterisation.hh"
 #include "G4Para.hh"
 #include "G4Polycone.hh"
 #include "G4Polyhedra.hh"
@@ -51,12 +55,62 @@
 #include "G4ios.hh"
 
 #include <cmath>
+#include <functional>
+#include <limits>
+#include <set>
 #include <memory>
 #include <stdexcept>
 
 namespace {
 
 constexpr double kZeroTolerance = 1.0e-12;
+
+class RegularVoxelParameterisation final : public G4PhantomParameterisation {
+public:
+    RegularVoxelParameterisation(std::shared_ptr<const VoxelGridDescriptor> grid,
+                                 const std::map<std::uint16_t, G4Material*>& mapped,
+                                 G4Box* container)
+        : grid_(std::move(grid))
+    {
+        std::vector<G4Material*> materials;
+        std::map<std::uint16_t, std::size_t> indices;
+        for (const auto& item : mapped) {
+            indices.emplace(item.first, materials.size());
+            materials.push_back(item.second);
+        }
+        materialIndices_.reserve(grid_->labels.size());
+        for (const auto label : grid_->labels) materialIndices_.push_back(indices.at(label));
+        SetMaterials(materials);
+        SetMaterialIndices(materialIndices_.data());
+        SetVoxelDimensions(grid_->pitchMm[0] * mm / 2, grid_->pitchMm[1] * mm / 2,
+                           grid_->pitchMm[2] * mm / 2);
+        SetNoVoxels(grid_->shape[0], grid_->shape[1], grid_->shape[2]);
+        BuildContainerSolid(container);
+        CheckVoxelsFillContainer(container->GetXHalfLength(), container->GetYHalfLength(),
+                                 container->GetZHalfLength());
+        SetSkipEqualMaterials(false);
+    }
+
+private:
+    std::shared_ptr<const VoxelGridDescriptor> grid_;
+    std::vector<std::size_t> materialIndices_;
+};
+
+// The physical-volume store destroys the owning leaf through a virtual destructor.
+class RegularVoxelPlacement final : public G4PVParameterised {
+public:
+    RegularVoxelPlacement(const std::string& name, G4LogicalVolume* logical,
+                          G4LogicalVolume* container, G4int cells,
+                          std::unique_ptr<RegularVoxelParameterisation> parameterisation)
+        : G4PVParameterised(name, logical, container, kXAxis, cells, parameterisation.get(), false),
+          parameterisation_(std::move(parameterisation))
+    {
+        SetRegularStructureId(1);
+    }
+
+private:
+    std::unique_ptr<RegularVoxelParameterisation> parameterisation_;
+};
 
 // One position, rotation and (optional) material per copy number.
 class CopyTableParameterisation : public G4VPVParameterisation {
@@ -254,6 +308,73 @@ void VolumeBuilder::RecordCreatedGeometryObject()
     createdGeometryObjectCount_.fetch_add(1);
 }
 
+void VolumeBuilder::ValidateVoxelGrids(const VolumeNode& root) const
+{
+    const double tolerance = G4GeometryTolerance::GetInstance()->GetSurfaceTolerance();
+    std::set<std::string> names;
+    std::function<void(const VolumeNode&, std::array<double, 3>, bool)> visit;
+    visit = [&](const VolumeNode& node, std::array<double, 3> offset, bool translationOnly) {
+        const auto& position = node.position;
+        const auto& rotation = node.rotation;
+        offset[0] += std::abs(position.x);
+        offset[1] += std::abs(position.y);
+        offset[2] += std::abs(position.z);
+        translationOnly = translationOnly && node.placementType == PlacementType::Normal
+            && rotation.x == 0 && rotation.y == 0 && rotation.z == 0;
+        if (node.shape == VolumeShape::VoxelGrid) {
+            const auto fail = [&](const std::string& message) {
+                throw std::runtime_error("Geometry voxel grid '" + node.name + "': " + message);
+            };
+            if (&node == &root || !translationOnly) fail("requires a unique translation-only path with a parent");
+            if (!names.insert(GeometryUtils::NormalizeVolumeName(node.name)).second) fail("duplicate grid identity");
+            if (!node.children.empty() || node.HasBooleanOperations()) fail("requires a dedicated empty container");
+            if (node.bias || node.HasRegion() || node.hasProductionCuts || node.HasProperty("copyNo")) {
+                fail("bias, region, production cuts and custom copy numbers are unavailable for voxel_grid");
+            }
+            if (!node.voxelGrid) fail("missing descriptor");
+            const auto& grid = *node.voxelGrid;
+            const std::array<double, 3> sizes{node.size.x, node.size.y, node.size.z};
+            std::size_t count = 1;
+            for (std::size_t axis = 0; axis < sizes.size(); ++axis) {
+                const int n = grid.shape[axis];
+                const double pitch = grid.pitchMm[axis] * mm;
+                const double span = pitch * n;
+                const double extreme = offset[axis] + span / 2;
+                if (n <= 0 || count > static_cast<std::size_t>(std::numeric_limits<G4int>::max()) / n) {
+                    fail("invalid copy count");
+                }
+                count *= n;
+                if (!std::isfinite(extreme) || pitch <= 2 * tolerance || span != sizes[axis]
+                    || span != grid.spanMm[axis] * mm
+                    || pitch <= std::nextafter(extreme, std::numeric_limits<double>::infinity()) - extreme) {
+                    fail("invalid descriptor size, geometry tolerance or coordinate precision");
+                }
+            }
+            if (grid.labels.size() != count) fail("labels do not match the copy count");
+            std::set<std::uint16_t> used;
+            for (const auto label : grid.labels) used.insert(label);
+            for (const auto label : used) {
+                if (!grid.materials.count(label)) fail("unmapped material label " + std::to_string(label));
+            }
+            if (!materialManager_) fail("requires a MaterialManager");
+            const auto validate = [&](const std::string& name) {
+                try {
+                    const auto* material = materialManager_->GetMaterial(name);
+                    if (!material || !std::isfinite(material->GetDensity()) || material->GetDensity() <= 0) {
+                        throw std::runtime_error("material has no finite positive density");
+                    }
+                } catch (const std::exception& error) {
+                    fail("material '" + name + "': " + error.what());
+                }
+            };
+            validate(node.materialName);
+            for (const auto& entry : grid.materials) validate(entry.second);
+        }
+        for (const auto& child : node.children) visit(child, offset, translationOnly);
+    };
+    visit(root, {}, true);
+}
+
 G4VPhysicalVolume* VolumeBuilder::BuildWorld(const VolumeNode& rootNode)
 {
     EnsureReady("build world");
@@ -264,6 +385,7 @@ G4VPhysicalVolume* VolumeBuilder::BuildWorld(const VolumeNode& rootNode)
     // Validate every declaration before constructing even the world solid.
     // The plan is temporary; VolumeNode remains the editable source of truth.
     (void)PlanRegionCuts(rootNode);
+    ValidateVoxelGrids(rootNode);
     G4LogicalVolume* worldLogical = BuildLogicalVolume(rootNode);
     G4VPhysicalVolume* worldPhysical = new G4PVPlacement(
         nullptr,
@@ -287,6 +409,31 @@ G4LogicalVolume* VolumeBuilder::BuildLogicalVolume(const VolumeNode& node)
 {
     EnsureReady("build logical volume");
 
+    if (node.shape == VolumeShape::GdmlComponent) {
+        const auto scales=StlReader::ParseScales(node.GetProperty("scales","1,1,1"));
+        const auto component=GdmlIO::ReadComponent(node.GetProperty("gdml_file.resolved"),node.GetProperty("gdml_root"),
+            node.name,true,checkOverlaps_,node.GetProperty("gdml_sha256"),scales);
+        registry_->RegisterLogicalVolume(node.name,component.root);
+        effective_config::Value::Array names;
+        for(const auto& [source,logical]:component.logicals) {
+            registry_->TrackImportedLogicalVolume(logical);
+            names.emplace_back(effective_config::Value::Object{{"source_logical",source},{"logical",logical->GetName()},
+                {"material",logical->GetMaterial()->GetName()},{"solid",logical->GetSolid()->GetName()}});
+        }
+        for(const auto& occurrence:component.occurrences) {
+            auto* logical=occurrence.logical;
+            registry_->TrackImportedLogicalVolume(logical);
+            names.emplace_back(effective_config::Value::Object{{"source_logical",occurrence.source},
+                {"occurrence",occurrence.path},{"logical",logical->GetName()},{"material",logical->GetMaterial()->GetName()},
+                {"solid",logical->GetSolid()->GetName()}});
+        }
+        for(auto* logical:component.sensitive)registry_->MarkSensitiveLogicalVolume(logical);
+        for(const auto& input:component.inputs)inputEvidence_.emplace_back(effective_config::Value::Object{
+            {"object",node.name},{"format","gdml_component"},{"path",input.path},{"sha256",input.sha256},
+            {"gdml_root",node.GetProperty("gdml_root")},{"available_roots",effective_config::List(component.choices)},
+            {"scales",effective_config::Value::Array{scales[0],scales[1],scales[2]}},{"logicals",names}});
+        return component.root;
+    }
     G4VSolid* solid = CreateSolid(node);
     if (!solid) throw std::runtime_error("Failed to create solid for volume '" + node.name + "'");
 
@@ -311,7 +458,7 @@ G4LogicalVolume* VolumeBuilder::BuildLogicalVolume(const VolumeNode& node)
     if (!logical) throw std::runtime_error("Failed to create logical volume for '" + node.name + "'");
 
     registry_->RegisterLogicalVolume(node.name, logical);
-    if (node.sensitive) registry_->MarkSensitiveVolume(node.name);
+    if (node.sensitive && node.shape != VolumeShape::VoxelGrid) registry_->MarkSensitiveVolume(node.name);
     if (node.bias) registry_->MarkBiasVolume(node.name);
     CreateRegion(node, logical);
     ApplyVisualAttributes(node, logical);
@@ -352,8 +499,32 @@ G4VPhysicalVolume* VolumeBuilder::BuildVolume(const VolumeNode& node, G4LogicalV
     if (!physical) throw std::runtime_error("Failed to create physical volume for '" + node.name + "'");
 
     registry_->RegisterPhysicalVolume(node.name, physical);
-    BuildChildren(node, logical);
+    if (node.shape == VolumeShape::VoxelGrid) BuildVoxelCells(node, physical);
+    else BuildChildren(node, logical);
     return physical;
+}
+
+void VolumeBuilder::BuildVoxelCells(const VolumeNode& node, G4VPhysicalVolume* placement)
+{
+    auto* container = placement->GetLogicalVolume();
+    const auto& grid = *node.voxelGrid;
+    const auto name = G4NameUtils::SanitizeName(node.name) + "::voxel";
+    std::map<std::uint16_t, G4Material*> mapped;
+    for (const auto& item : grid.materials) {
+        mapped.emplace(item.first, materialManager_->GetMaterial(item.second));
+    }
+    auto parameterisation = std::make_unique<RegularVoxelParameterisation>(
+        node.voxelGrid, mapped, static_cast<G4Box*>(container->GetSolid()));
+    auto* solid = new G4Box(name + "_Solid", grid.pitchMm[0] * mm / 2,
+                           grid.pitchMm[1] * mm / 2, grid.pitchMm[2] * mm / 2);
+    RecordCreatedGeometryObject();
+    auto* logical = new G4LogicalVolume(solid, mapped.at(grid.labels.front()), name + "_LV");
+    RecordCreatedGeometryObject();
+    const auto* native = parameterisation.get();
+    auto* leaf = new RegularVoxelPlacement(name + "_PV", logical, container,
+        static_cast<G4int>(grid.labels.size()), std::move(parameterisation));
+    RecordCreatedGeometryObject();
+    if (node.sensitive) registry_->RegisterVoxelScoring(leaf, {node.name, placement, native, grid.shape, node.voxelGrid});
 }
 
 G4VSolid* VolumeBuilder::CreateSolid(const VolumeNode& node)
@@ -385,6 +556,7 @@ G4VSolid* VolumeBuilder::CreatePrimitiveSolid(const VolumeNode& node)
         throw std::runtime_error("GDML geometry is read by GeometryManager (template = gdml), not built per volume: '" + node.name + "'");
     }
 
+    if (node.shape == VolumeShape::VoxelGrid) return CreateBoxSolid(node);
     return SolidRegistry::Create(*this, node);
 }
 
@@ -700,7 +872,8 @@ G4VSolid* VolumeBuilder::CreateTessellatedSolid(const VolumeNode& node)
 {
     const std::string path = node.HasProperty("file.resolved") ? node.GetProperty("file.resolved") : node.GetProperty("file");
     const std::string unitText = StringUtils::Trim(node.GetProperty("file_unit", "mm"));
-    const StlMesh mesh = StlReader::Read(path, UnitParser::ParseLength("1 " + unitText), "geometry_construct");
+    const auto scales = StlReader::ParseScales(node.GetProperty("scales", "1,1,1"));
+    const StlMesh mesh = StlReader::Read(path, UnitParser::ParseLength("1 " + unitText), "geometry_construct", scales);
     auto* solid = new G4TessellatedSolid(G4NameUtils::SolidName(node.name));
     RecordCreatedGeometryObject();
     auto vertex = [&](int index) {
@@ -708,15 +881,34 @@ G4VSolid* VolumeBuilder::CreateTessellatedSolid(const VolumeNode& node)
         return G4ThreeVector(v[0], v[1], v[2]);
     };
     for (const auto& tri : mesh.triangles) {
-        auto* facet = new G4TriangularFacet(vertex(tri[0]), vertex(tri[1]), vertex(tri[2]), ABSOLUTE);
-        if (!facet->IsDefined() || !solid->AddFacet(facet)) {
+        auto facet = std::make_unique<G4TriangularFacet>(vertex(tri[0]), vertex(tri[1]), vertex(tri[2]), ABSOLUTE);
+        if (!facet->IsDefined()) {
             throw std::runtime_error("Volume '" + node.name + "' STL '" + path + "' has a facet Geant4 cannot use "
                                      "(degenerate or too small)");
         }
+        // Finite vertices alone cannot guarantee a usable normal or circumcircle
+        // after a large scale factor. Reject before transferring the facet to the solid.
+        const auto centre = facet->GetCircumcentre();
+        const double normalSquared = facet->GetSurfaceNormal().mag2();
+        if (!(std::isfinite(normalSquared) && std::abs(normalSquared - 1.0) <= 1e-10 &&
+              std::isfinite(facet->GetArea()) && facet->GetArea() > 0 &&
+              std::isfinite(facet->GetRadius()) && facet->GetRadius() > 0 &&
+              std::isfinite(centre.x()) && std::isfinite(centre.y()) && std::isfinite(centre.z()))) {
+            throw std::runtime_error("Volume '" + node.name + "' STL '" + path +
+                                     "' scales produce an unrepresentable facet normal, area or circumcircle");
+        }
+        if (!solid->AddFacet(facet.get())) {
+            throw std::runtime_error("Volume '" + node.name + "' STL '" + path + "' has a facet Geant4 cannot use "
+                                     "(degenerate or too small)");
+        }
+        facet.release();  // G4TessellatedSolid now owns the facet.
     }
     solid->SetSolidClosed(true);
     inputEvidence_.emplace_back(effective_config::Value::Object{{"object",node.name},{"path",mesh.inputPath},
       {"sha256",mesh.inputSha256},{"length_unit_internal",mesh.lengthUnit},{"format",mesh.binary?"binary_stl":"ascii_stl"},
+      {"scales",effective_config::Value::Array{scales[0],scales[1],scales[2]}},
+      {"min_mm",effective_config::Value::Array{mesh.minCorner[0]/mm,mesh.minCorner[1]/mm,mesh.minCorner[2]/mm}},
+      {"max_mm",effective_config::Value::Array{mesh.maxCorner[0]/mm,mesh.maxCorner[1]/mm,mesh.maxCorner[2]/mm}},
       {"triangles",static_cast<std::int64_t>(mesh.triangles.size())},{"volume_mm3",mesh.volume/(mm*mm*mm)}});
     return solid;
 }

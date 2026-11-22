@@ -2,9 +2,11 @@
 
 #include "Scoring/PhaseSpace.hh"
 #include "Config/EffectiveConfigSupport.hh"
+#include "Utils/NamedParameters.hh"
 
 #include <map>
 #include <memory>
+#include <optional>
 #include <string>
 #include <utility>
 #include <vector>
@@ -169,7 +171,7 @@ public:
 private:
     std::size_t commandFailureCount_ = 0;
     std::string lastCommandFailure_;
-    void LoadFromConfigImpl(const ConfigManager& config);
+    void LoadFromConfigImpl(const ConfigManager& config, std::optional<double> expandedEnergy);
     std::vector<effective_config::Field> ProjectEffectiveConfigFields() const;
     void ObserveGPS(std::size_t index, const G4SingleParticleSource& source, const std::string& stage) const;
     std::shared_ptr<effective_config::ConsumerState> effective_ = std::make_shared<effective_config::ConsumerState>();
@@ -179,7 +181,7 @@ private:
     SourceSpec& Current();
     const SourceSpec& Current() const;
     void RequireSingleSourceForCommand(const char* what) const;
-    void LoadSection(const ConfigManager& config, const std::string& section, bool namedSource);
+    void LoadSection(const ConfigManager& config, const std::string& section, bool namedSource, std::optional<double> expandedEnergy = {});
     void LoadAdvancedSection(const ConfigManager& config, const std::string& section, SourceSpec& spec);
 
     void EnsureGPS() const;
@@ -207,6 +209,7 @@ private:
         bool confineOverridden = false;
     };
     mutable std::map<G4SingleParticleSource*, DeferredSource> deferredSources_;
+    std::map<std::string, named_parameters::Expansion> energyParameterOrigins_;
     std::vector<SourceSpec> sources_{1};
     std::size_t current_ = 0;
     bool loadingNamedSources_ = false;

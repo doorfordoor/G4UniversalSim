@@ -488,6 +488,7 @@ void SourceManager::ResetGPS()
     deferredSources_.clear();
     configuredGPSSources_.clear();
     nativeGPSIdentityUncertain_ = false;
+    energyParameterOrigins_.clear();
     phaseSpaceInputs_.clear();
     gps_.reset();
     phaseSpaceFiles_.clear();
@@ -505,12 +506,51 @@ void SourceManager::ResetGPS()
 
 void SourceManager::LoadFromConfig(const ConfigManager& config)
 {
-    LoadFromConfigImpl(config);
+    // Validate the entire file-local parameter table and the consuming mode before changing a source.
+    const auto& reader = config.GetMainReader();
+    std::map<std::string,named_parameters::Definition> definitions;
+    for (const auto& field : reader.GetDeclarations()) {
+        if (field.normalizedSection != "parameters") continue;
+        const auto where = reader.GetFilename()+":"+std::to_string(field.lineNumber)+" [parameters] "+field.originalKey;
+        if (!named_parameters::Table::ValidName(field.normalizedKey))
+            throw std::runtime_error(where+": invalid parameter name");
+        if (!definitions.emplace(field.normalizedKey,named_parameters::Definition{field.value,where}).second)
+            throw std::runtime_error(where+": duplicate parameter");
+        (void)config.GetString("parameters",field.normalizedKey);
+    }
+    named_parameters::Table parameters(definitions,named_parameters::Dimension::Energy);
+    std::optional<double> expanded;
+    std::map<std::string,named_parameters::Expansion> origins;
+    const auto sections = config.GetSections();
+    const bool named = std::any_of(sections.begin(),sections.end(),[](const auto& section){
+        return section.rfind("source.",0)==0;
+    });
+    for (const auto& field : reader.GetFields()) {
+        if ((field.normalizedSection!="source" && field.normalizedSection.rfind("source.",0)!=0) ||
+            field.normalizedKey!="energy" || field.value.find("${")==std::string::npos) continue;
+        try {
+            if (named || config.HasKey("source","phase_space_file") || config.HasKey("source","preset") ||
+                config.HasKey("source","ion") || Lower(config.GetString("source","particle",""))=="ion" ||
+                Lower(config.GetString("source","energy_type","mono"))!="mono")
+                throw std::runtime_error("named energy requires a single ordinary mono [source]");
+            const auto result = parameters.Evaluate(field.value);
+            if (result.quantity.dimension!=named_parameters::Dimension::Energy || !(result.quantity.value>0.0) ||
+                !std::isfinite(result.quantity.value))
+                throw std::runtime_error("expected a finite positive energy result");
+            expanded = result.quantity.value;
+            for (const auto& name : result.dependencies) origins.emplace(name,parameters.Values().at(name));
+        } catch (const std::exception& error) {
+            throw std::runtime_error(reader.GetFilename()+":"+std::to_string(field.lineNumber)+" ["+
+                                     field.originalSection+"] "+field.originalKey+": "+error.what());
+        }
+    }
+    LoadFromConfigImpl(config,expanded);
+    energyParameterOrigins_ = std::move(origins);
     effective_->reader = config.GetMainReader();
     effective_->Accept(config.GetMainReader(),ProjectEffectiveConfigFields());
 }
 
-void SourceManager::LoadFromConfigImpl(const ConfigManager& config)
+void SourceManager::LoadFromConfigImpl(const ConfigManager& config, std::optional<double> expandedEnergy)
 {
     std::vector<std::string> named;
     for (const std::string& section : config.GetSections()) {
@@ -599,7 +639,7 @@ void SourceManager::LoadFromConfigImpl(const ConfigManager& config)
     if (config.HasKey("source", "phase_space_recycle")) {
         throw std::runtime_error("SourceManager [source]/phase_space_recycle requires phase_space_file");
     }
-    LoadSection(config, "source", false);
+    LoadSection(config, "source", false, expandedEnergy);
 }
 
 bool SourceManager::UsesPhaseSpace() const
@@ -651,7 +691,7 @@ bool SourceManager::IsPhaseSpaceRecycled() const
     return phaseSpaceRecycle_;
 }
 
-void SourceManager::LoadSection(const ConfigManager& config, const std::string& section, bool namedSource)
+void SourceManager::LoadSection(const ConfigManager& config, const std::string& section, bool namedSource, std::optional<double> expandedEnergy)
 {
     if (config.HasKey(section, "preset")) {
         const std::string preset = StringUtils::Trim(config.GetString(section, "preset", ""));
@@ -677,7 +717,7 @@ void SourceManager::LoadSection(const ConfigManager& config, const std::string& 
             throw std::runtime_error("SourceManager [" + section + "]/energy must not be empty; "
                                      "remove the key or specify a positive energy with units.");
         }
-        const double value = UnitParser::ParseEnergy(energy);
+        const double value = expandedEnergy ? *expandedEnergy : UnitParser::ParseEnergy(energy);
         if (ionParticle && value == 0.0) {
             Current().monoEnergy = 0.0;
             Current().restEnergy = true;
@@ -1659,6 +1699,28 @@ std::vector<effective_config::Field> SourceManager::ProjectEffectiveConfigFields
         const auto path=[&](const char* key){return spec.name.empty()?FieldPath("source",key):ObjectFieldPath("source",spec.name,key);};
         const auto add=[&](const char* key,Value value,const char* unit,std::initializer_list<const char*> keys,bool presetAffected=false){
             Field f=effective_->Make(path(key),std::move(value),unit,section,keys);
+            if (spec.name.empty() && std::string(key)=="energy" && !energyParameterOrigins_.empty()) {
+                Value::Object requested{{"expression",f.requested}};
+                Value::Object parameters;
+                for (const auto& d : effective_->reader.GetDeclarations()) {
+                    if (d.normalizedSection!="parameters") continue;
+                    const auto it=energyParameterOrigins_.find(d.normalizedKey);
+                    if (it==energyParameterOrigins_.end()) continue;
+                    Origin origin;
+                    origin.kind="main_ini"; origin.file=effective_->reader.GetFilename(); origin.line=d.lineNumber;
+                    origin.section=d.originalSection; origin.key=d.originalKey; origin.raw=d.value;
+                    origin.input_sha256=effective_->reader.GetInputSha256(); origin.disposition="derived";
+                    // Confirm() shadows the last effective declaration on a later macro override.
+                    f.origins.insert(f.origins.end()-1,origin);
+                    const auto q=it->second.quantity;
+                    const bool energy=q.dimension==named_parameters::Dimension::Energy;
+                    Value::Array deps; for (const auto& name:it->second.dependencies) deps.emplace_back(name);
+                    parameters[d.originalKey]=Value::Object{{"raw",d.value},{"value",energy?q.value/CLHEP::MeV:q.value},
+                                                           {"unit",energy?"MeV":"1"},{"dependencies",deps}};
+                }
+                requested["parameters"]=std::move(parameters);
+                f.requested=std::move(requested);
+            }
             if(presetAffected && !spec.preset.empty()) {
                 std::vector<Origin> chain{f.origins.front()};chain.front().disposition="shadowed";
                 for(const auto& d:effective_->reader.GetDeclarations())if(d.normalizedSection==section && d.normalizedKey=="preset") {

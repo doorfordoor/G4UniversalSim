@@ -1,3 +1,7 @@
+#include <set>
+#ifdef G4USIM_H6_ENGINEERING
+#include "Core/EngineeringWaterGate.hh"
+#endif
 #include "Config/EffectiveRuntime.hh"
 #include "G4VModularPhysicsList.hh"
 #include "G4VPhysicsConstructor.hh"
@@ -390,6 +394,7 @@ void PhysicsManager::SetRegionPhysics(const std::string& regionName, const Regio
     target.maxTrackLength = settings.maxTrackLength;
     target.maxTime = settings.maxTime;
     target.minKineticEnergy = settings.minKineticEnergy;
+    target.selection = settings.selection;
     target.volumes = settings.volumes;
 }
 
@@ -521,6 +526,30 @@ void PhysicsManager::LoadFromConfig(const ConfigManager& config)
 
 void PhysicsManager::LoadFromConfigImpl(const ConfigManager& config)
 {
+    dnaRegion_.clear();
+    dnaModel_.clear();
+    constexpr const char* dnaSection = "physics.dna";
+    if (config.HasSection(dnaSection)) {
+        for (const auto& duplicate : config.GetMainReader().GetDuplicates()) {
+            if (duplicate.section == dnaSection) {
+                throw std::runtime_error("[physics.dna] duplicate declaration at line " + std::to_string(duplicate.lineNumber));
+            }
+        }
+        for (const auto& key : config.GetKeys(dnaSection)) {
+            if (key != "region" && key != "model") {
+                throw std::runtime_error("[physics.dna] unsupported field '" + key + "'");
+            }
+        }
+        dnaRegion_ = StringUtils::Trim(config.GetString(dnaSection, "region", ""));
+        dnaModel_ = StringUtils::Trim(config.GetString(dnaSection, "model", ""));
+        if (dnaRegion_.empty()) throw std::runtime_error("[physics.dna] region is required");
+        if (dnaRegion_ == "DefaultRegionForTheWorld" || dnaRegion_ == "DefaultRegionForParallelWorld"
+            || StringUtils::ToLower(dnaRegion_) == "world") {
+            throw std::runtime_error("[physics.dna] default/world regions are unsupported");
+        }
+        if (dnaModel_.empty()) throw std::runtime_error("[physics.dna] model is required");
+        if (dnaModel_ != "DNA_Opt4") throw std::runtime_error("[physics.dna] unsupported model '" + dnaModel_ + "'; use DNA_Opt4");
+    }
     if (config.HasSection("physics") && config.HasKey("physics", "reference")) {
         const auto reference = StringUtils::Trim(config.GetString("physics", "reference", ""));
         if (reference.empty()) {
@@ -529,6 +558,35 @@ void PhysicsManager::LoadFromConfigImpl(const ConfigManager& config)
             SetReferenceList(reference);
         }
     }
+    const auto arm = config.GetString("physics", "water_thermal_mode", "off");
+    if (arm != "off") {
+        if (arm != "hp_control" && arm != "water_thermal")
+            throw std::runtime_error("unknown [physics] water_thermal_mode");
+        if (GetReferenceList() != "FTFP_BERT_HP")
+            throw std::runtime_error("water transport requires FTFP_BERT_HP");
+        const auto node = config.GetString("physics", "water_table_temperature", "");
+        if (node != "293.6 K" && node != "323.6 K")
+            throw std::runtime_error("water_table_temperature requires 293.6 K or 323.6 K");
+#ifdef G4USIM_H6_ENGINEERING
+        if(config.GetMainReader().GetInputSha256()!=engineering_water::approvedMain)
+            throw std::runtime_error("parsed main configuration differs from approval");
+        if(engineering_water::captureFirstWorkerState)
+            engineering_water::parsedMainSha256=config.GetMainReader().GetInputSha256();
+        engineeringWaterTemperature=(node=="293.6 K"?293.6:323.6)*CLHEP::kelvin;
+        engineeringThermal=(arm=="water_thermal");
+        const auto policy=config.GetString("physics","water_oxygen_cache_policy","legacy");
+        if((policy!="legacy" && policy!="event_local") ||
+            (policy=="event_local" && !engineeringThermal) ||
+            (policy=="event_local")!=engineering_water::approvedEventLocal)
+            throw std::runtime_error("requested oxygen cache policy incompatible with approved arm");
+#else
+        throw std::runtime_error("water engineering SDK unavailable");
+#endif
+    }
+    if (arm=="off" && config.HasKey("physics", "water_oxygen_cache_policy"))
+        throw std::runtime_error("water_oxygen_cache_policy requires an enabled water arm");
+    if (arm=="off" && config.HasKey("physics", "water_table_temperature"))
+        throw std::runtime_error("water_table_temperature requires enabled water transport");
     const bool hasReference = HasReferenceList();
 
     if (config.HasSection("physics") && config.HasKey("physics", "em")) {
@@ -640,6 +698,44 @@ void PhysicsManager::LoadFromConfigImpl(const ConfigManager& config)
         }
     }
 
+    const std::string selectionPrefix = "geometry.selection.";
+    std::map<std::string, std::vector<std::string>> selections;
+    const std::string regionPrefix = "physics.region.";
+    std::map<std::string, IniSectionInfo> regionDeclarations;
+    for (const auto& declaration : config.GetMainReader().GetSectionDeclarations()) {
+        const auto& section = declaration.normalizedSection;
+        if (section.rfind(regionPrefix, 0) != 0 || !config.HasKey(section, "selection")) continue;
+        const auto first = regionDeclarations.emplace(section, declaration);
+        if (first.second) continue;
+        const auto& previous = first.first->second;
+        if (previous.originalSection.substr(regionPrefix.size()) != declaration.originalSection.substr(regionPrefix.size()))
+            throw std::runtime_error("conflicting case-sensitive region declarations at " + config.GetMainConfigPath() +
+                " line " + std::to_string(previous.lineNumber) + " [" + previous.originalSection + "] and line " +
+                std::to_string(declaration.lineNumber) + " [" + declaration.originalSection + "]");
+    }
+    for (const auto& dup : config.GetMainReader().GetDuplicates()) {
+        if (dup.section.rfind(selectionPrefix, 0) == 0 ||
+            (dup.section.rfind("physics.region.", 0) == 0 && dup.key == "selection"))
+            throw std::runtime_error("duplicate logical selection declaration at line " + std::to_string(dup.lineNumber));
+    }
+    for (const auto& info : config.GetSectionInfo()) {
+        if (info.section.rfind(selectionPrefix, 0) != 0) continue;
+        const auto name = info.section.substr(selectionPrefix.size());
+        if (name.empty() || name.find_first_not_of("abcdefghijklmnopqrstuvwxyz0123456789_-") != std::string::npos)
+            throw std::runtime_error("invalid logical selection name: " + info.section);
+        const auto keys = config.GetKeys(info.section);
+        if (keys.size() != 1 || !config.HasKey(info.section, "logical_volumes"))
+            throw std::runtime_error("[" + info.section + "] requires only logical_volumes");
+        auto& volumes = selections[name];
+        for (const auto& token : StringUtils::Split(config.GetString(info.section,"logical_volumes"), ',', false)) {
+            const auto member = StringUtils::Trim(token);
+            if (member.empty() || member.find('/') != std::string::npos)
+                throw std::runtime_error("[" + info.section + "] requires logical names, not physical paths");
+            volumes.push_back(member);
+        }
+        if (volumes.empty()) throw std::runtime_error("[" + info.section + "] empty logical selection");
+    }
+
     // Geant4 region names are case-sensitive; section lookups use the
     // normalized name, the region keeps the spelling from the INI.
     for (const auto& info : config.GetSectionInfo()) {
@@ -671,6 +767,14 @@ void PhysicsManager::LoadFromConfigImpl(const ConfigManager& config)
                 settings.maxTime = positive(UnitParser::ParseTime(value));
             } else if (name == "min_kinetic_energy") {
                 settings.minKineticEnergy = positive(UnitParser::ParseEnergy(value));
+            } else if (name == "selection") {
+                if (config.HasKey(section, "volumes"))
+                    throw std::runtime_error("[" + section + "] selection conflicts with volumes");
+                settings.selection = StringUtils::ToLower(StringUtils::Trim(value));
+                const auto found = selections.find(settings.selection);
+                if (found == selections.end())
+                    throw std::runtime_error("[" + section + "] unknown logical selection '" + value + "'");
+                settings.volumes = found->second;
             } else if (name == "volumes") {
                 for (const auto& part : StringUtils::Split(value, ',')) {
                     const std::string volume = StringUtils::Trim(part);
@@ -703,6 +807,11 @@ void PhysicsManager::LoadFromConfigImpl(const ConfigManager& config)
 
 void PhysicsManager::Validate() const
 {
+    if (!dnaRegion_.empty() &&
+        (referenceListName_ != "FTFP_BERT" || !extraModules_.empty() || !replacementModules_.empty() ||
+         microElecEnabled_ || biasingPhysicsEnabled_)) {
+        throw std::runtime_error("[physics.dna] first regional scope requires unmodified FTFP_BERT reference EM, without extra or replacement constructors, MicroElec or biasing physics");
+    }
     if (!HasReferenceList() && !replacementModules_.empty())
         throw std::runtime_error("replace_modules requires reference mode (including after macro configuration)");
     if (HasReferenceList()) {
@@ -797,6 +906,11 @@ std::vector<effective_config::Field> PhysicsManager::ProjectEffectiveConfigField
   for(auto origin:ignored.origins)if(origin.kind=="main_ini"){origin.disposition="shadowed";field.origins.push_back(std::move(origin));}
   field.reason+="; explicit empty em is ignored by the consumer";
  };
+#ifdef G4USIM_H6_ENGINEERING
+ add("water_thermal_mode",engineeringThermal?"water_thermal":"hp_control","","physics",{"water_thermal_mode"});
+ add("water_oxygen_cache_policy",engineering_water::approvedEventLocal?"event_local":"legacy","","physics",{"water_oxygen_cache_policy"});
+ add("water_table_temperature",engineeringWaterTemperature/CLHEP::kelvin,"K","physics",{"water_table_temperature"});
+#endif
  add("mode",HasReferenceList()?"reference":"manual","","physics",{"reference"});
  add("verbose",verboseLevel_,"","physics",{"verbose"});
  if(HasReferenceList()){
@@ -835,11 +949,19 @@ std::vector<effective_config::Field> PhysicsManager::ProjectEffectiveConfigField
  for(const auto& cut:particleCuts_)result.push_back(effective_->Make(ObjectFieldPath("physics", "particle:"+cut.first,"cut"),cut.second/mm,"mm","physics.cuts",{cut.first.c_str()}));
  for(const auto& region:regionCuts_)for(const auto& cut:region.second)
   result.push_back(effective_->Make(ObjectFieldPath("physics","region:"+region.first,"cut_"+cut.first),cut.second/mm,"mm","physics.region."+StringUtils::ToLower(region.first),{cut.first.c_str()}));
+ std::set<std::string> publishedSelections;
  for(const auto& region:regionPhysics_) {
   const auto section="physics.region."+StringUtils::ToLower(region.first);const auto& s=region.second;
   const auto item=[&](const std::string& key,Value value,const char* unit){result.push_back(effective_->Make(ObjectFieldPath("physics","region:"+region.first,key),std::move(value),unit,section,{key.c_str()}));};
   for(const auto& cut:s.cuts)item(cut.first,cut.second/mm,"mm");
-  item("volumes",List(s.volumes),"");
+  if (s.selection.empty()) {
+   item("volumes",List(s.volumes),"");
+  } else {
+   item("selection",s.selection,"");
+   if (publishedSelections.insert(s.selection).second)
+    result.push_back(effective_->Make(ObjectFieldPath("geometry","selection:"+s.selection,"logical_volumes"),
+                    List(s.volumes),"","geometry.selection."+s.selection,{"logical_volumes"}));
+  }
   if(s.maxStep>0)item("max_step",s.maxStep/mm,"mm");
   if(s.maxTrackLength>0)item("max_track_length",s.maxTrackLength/mm,"mm");
   if(s.maxTime>0)item("max_time",s.maxTime/ns,"ns");
@@ -848,6 +970,10 @@ std::vector<effective_config::Field> PhysicsManager::ProjectEffectiveConfigField
  add("radioactive_decay",radioactiveDecayEnabled_,"","physics.radioactive_decay",{"enabled"});
  if(HasRadioactiveDecayTimeThreshold())add("radioactive_decay_time_threshold",radioactiveDecayTimeThreshold_/ns,"ns","physics.radioactive_decay",{"time_threshold"});
  add("biasing",biasingPhysicsEnabled_,"","physics",{"biasing"});
+ if(!dnaRegion_.empty()){
+  add("dna_region",dnaRegion_,"","physics.dna",{"region"});
+  add("dna_model",dnaModel_,"","physics.dna",{"model"});
+ }
  add("microelec",microElecEnabled_,"","physics.microelec",{"enabled"});
  if(microElecEnabled_){
   add("microelec_region",microElecRegionName_,"","physics.microelec",{"region"});
@@ -906,16 +1032,27 @@ void PhysicsManager::ObserveEffectiveConfigPhysics(const G4VModularPhysicsList& 
     }
     effective_->Record(std::move(inventory));
     effective_->Record(Receipt(FieldPath("physics","verbose"),list.GetVerboseLevel(),stage,"Actual physics-list verbosity readback"));
-    if(stage=="physics_cuts") {
-        effective_->Record(Receipt(FieldPath("physics","default_cut"),list.GetDefaultCutValue()/mm,stage,"Actual physics-list default cut readback"));
-        for(const auto& cut:particleCuts_)
-            effective_->Record(Receipt(ObjectFieldPath("physics","particle:"+cut.first,"cut"),list.GetCutValue(cut.first)/mm,stage,"Actual physics-list particle production cut readback"));
-        for(const auto& settings:regionPhysics_) {
-            const auto* region=G4RegionStore::GetInstance()->GetRegion(settings.first,false);
-            if(!region || !region->GetProductionCuts())continue;
-            for(const auto& cut:settings.second.cuts)
-                effective_->Record(Receipt(ObjectFieldPath("physics","region:"+settings.first,cut.first),
-                    region->GetProductionCuts()->GetProductionCut(cut.first)/mm,stage,"Actual named-region production cut readback"));
+    if (stage == "physics_cuts")
+        ObserveEffectiveProductionCuts(list, stage);
+}
+
+void PhysicsManager::ObserveEffectiveProductionCuts(const G4VModularPhysicsList& list, const std::string& stage) const
+{
+    using namespace effective_config;
+    effective_->Record(Receipt(FieldPath("physics", "default_cut"), list.GetDefaultCutValue() / mm,
+        stage, "Actual physics-list default cut readback"));
+    for (const auto& cut : particleCuts_)
+        effective_->Record(Receipt(ObjectFieldPath("physics", "particle:" + cut.first, "cut"),
+            list.GetCutValue(cut.first) / mm, stage, "Actual physics-list particle production cut readback"));
+    for (const auto& settings : regionPhysics_) {
+        const auto* region = G4RegionStore::GetInstance()->GetRegion(settings.first, false);
+        if (!region || !region->GetProductionCuts()) continue;
+        for (const auto& cut : settings.second.cuts) {
+            const auto observed = region->GetProductionCuts()->GetProductionCut(cut.first) / mm;
+            // The configuration projects the named-region field and its cut alias.
+            for (const auto& key : {cut.first, "cut_" + cut.first})
+                effective_->Record(Receipt(ObjectFieldPath("physics", "region:" + settings.first, key),
+                    observed, stage, "Actual named-region production cut readback"));
         }
     }
 }

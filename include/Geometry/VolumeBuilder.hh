@@ -38,6 +38,7 @@ public:
     void Clear();
     const effective_config::Value::Array& GetInputEvidence() const { return inputEvidence_; }
 
+    void ValidateVoxelGrids(const VolumeNode& rootNode) const;
     G4VPhysicalVolume* BuildWorld(const VolumeNode& rootNode);
     G4LogicalVolume* BuildLogicalVolume(const VolumeNode& node);
     G4VPhysicalVolume* BuildVolume(const VolumeNode& node, G4LogicalVolume* motherLogical);
@@ -84,6 +85,7 @@ public:
 private:
     void EnsureReady(const std::string& action) const;
     void BuildChildren(const VolumeNode& parentNode, G4LogicalVolume* motherLogical);
+    void BuildVoxelCells(const VolumeNode& node, G4VPhysicalVolume* placement);
     G4VPhysicalVolume* PlaceReplica(const VolumeNode& node, G4LogicalVolume* logical, G4LogicalVolume* motherLogical);
     G4VPhysicalVolume* PlaceParameterised(const VolumeNode& node, G4LogicalVolume* logical, G4LogicalVolume* motherLogical);
 

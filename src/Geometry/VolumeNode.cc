@@ -107,7 +107,10 @@ void VolumeNode::ValidateBasic() const
     if (shape == VolumeShape::Unknown) {
         throw std::runtime_error("Volume '" + name + "' has unsupported or missing shape");
     }
-    if (materialName.empty()) {
+    if (shape == VolumeShape::VoxelGrid && (!voxelGrid || IsWorld())) {
+        throw std::runtime_error("Volume '" + name + "' requires a voxel grid descriptor and a parent");
+    }
+    if (shape != VolumeShape::GdmlComponent && materialName.empty()) {
         throw std::runtime_error("Volume '" + name + "' is missing material");
     }
     if (shape == VolumeShape::Box) {

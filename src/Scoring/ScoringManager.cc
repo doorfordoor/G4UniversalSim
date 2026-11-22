@@ -1,6 +1,13 @@
 #include "Scoring/ScoringManager.hh"
+#ifdef G4USIM_WITH_NATIVE_AT_REST_OBSERVER
+#include "Scoring/NativeClockEvent.hh"
+#endif
 
 #include "Config/ConfigManager.hh"
+#include "Geometry/GeometryRegistry.hh"
+#include "Hits/SensitiveDetector.hh"
+#include "G4Material.hh"
+#include "G4PhantomParameterisation.hh"
 #include "Config/EffectiveRuntime.hh"
 #include "Config/InputProvenance.hh"
 #include "Output/AnalysisOutput.hh"
@@ -12,9 +19,15 @@
 #include "Scoring/FluenceScorer.hh"
 #include "Scoring/LETScorer.hh"
 #include "Scoring/NielTable.hh"
+#include "Scoring/OpticalBoundaryObservation.hh"
 #include "Scoring/NumericChecks.hh"
+#include "Scoring/ThreadLocalScoringContext.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4Threading.hh"
 #include "Utils/StringUtils.hh"
 #include "Utils/UnitParser.hh"
+#include "G4EmProcessSubType.hh"
+#include "G4Event.hh"
 #include "G4IonTable.hh"
 #include "G4NistManager.hh"
 #include "G4NucleiProperties.hh"
@@ -22,6 +35,12 @@
 #include "G4ParticleTable.hh"
 #include "G4PhysicalVolumeStore.hh"
 #include "G4RunManager.hh"
+#include "G4TransportationManager.hh"
+#include "G4Navigator.hh"
+#include "G4PVPlacement.hh"
+#include "G4Step.hh"
+#include "G4Track.hh"
+#include "G4VProcess.hh"
 
 #include <algorithm>
 #include <charconv>
@@ -143,6 +162,7 @@ std::string NielKeyLocation(const ConfigManager& config, const std::string& rawK
 // ---------------------------------------------------------------------------
 // Roadmap H2-2: [scoring.filter.<scorer>] / [scoring.spectrum.<scorer>] support.
 // ---------------------------------------------------------------------------
+const std::string kSelectionPrefix = "scoring.selection.";
 constexpr const char* kFilterSectionPrefix = "scoring.filter.";
 constexpr const char* kSpectrumSectionPrefix = "scoring.spectrum.";
 
@@ -159,9 +179,41 @@ bool IsVolumeSpectrumSection(const std::string& section)
 bool HasVolumeSections(const ConfigManager& config)
 {
     for (const IniSectionInfo& info : config.GetSectionInfo()) {
-        if (IsVolumeFilterSection(info.section) || IsVolumeSpectrumSection(info.section)) return true;
+        if (IsVolumeFilterSection(info.section) || IsVolumeSpectrumSection(info.section) ||
+            info.section.rfind(kSelectionPrefix, 0) == 0) return true;
     }
     return false;
+}
+
+void ValidateOrdinaryPlacement(const std::string& selection, const std::string& path)
+{
+    const auto parts = StringUtils::Split(path.substr(1), '/', false);
+    auto* current = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking()->GetWorldVolume();
+    auto fail = [&](const std::string& why) {
+        throw std::runtime_error("[scoring.selection." + selection + "] " + path + ": " + why);
+    };
+    for (size_t depth = 0; depth < parts.size(); ++depth) {
+        const auto& part = parts[depth];
+        const auto hash = part.rfind('#');
+        if (hash == std::string::npos || hash == 0) fail("expected physical name#copy number");
+        const auto name = part.substr(0, hash);
+        if (depth > 0) {
+            auto* mother = current->GetLogicalVolume();
+            current = nullptr;
+            for (size_t index = 0; index < mother->GetNoDaughters(); ++index) {
+                auto* child = mother->GetDaughter(index);
+                if (child->GetName() != name) continue;
+                if (child->IsReplicated() || child->IsParameterised())
+                    fail("replica and parameterised placement selection is unsupported");
+                if (part != name + "#" + std::to_string(child->GetCopyNo())) continue;
+                if (!dynamic_cast<const G4PVPlacement*>(child)) fail("unsupported physical placement type");
+                if (current) fail("ambiguous ordinary daughter");
+                current = child;
+            }
+        }
+        if (!current || part != std::string(current->GetName()) + "#" + std::to_string(current->GetCopyNo()))
+            fail("unmatched physical placement " + part);
+    }
 }
 
 std::string VolumeSectionLocation(const ConfigManager& config, const IniSectionInfo& info)
@@ -271,6 +323,7 @@ std::unique_ptr<ScoringManager> ScoringManager::CloneForThread(OutputManager* ou
     const auto descriptions = GetScorerDescriptions();
     auto clone = std::make_unique<ScoringManager>();
     clone->outputManager_ = outputManager;
+    clone->geometryRegistry_ = geometryRegistry_;
     clone->scorerFactories_ = scorerFactories_;
     clone->scorerFactories_.Freeze();
     clone->letParticleLocation_ = letParticleLocation_;
@@ -278,7 +331,13 @@ std::unique_ptr<ScoringManager> ScoringManager::CloneForThread(OutputManager* ou
     clone->effectiveState_ = effectiveState_->Clone();
     clone->enabled_ = enabled_;
     clone->hitOutputEnabled_ = hitOutputEnabled_;
+    clone->hitVolumePathEnabled_ = hitVolumePathEnabled_;
     clone->eventEdepOutputEnabled_ = eventEdepOutputEnabled_;
+    clone->opticalPhotonCountsEnabled_ = opticalPhotonCountsEnabled_;
+    clone->opticalBoundaryObservationsEnabled_ = opticalBoundaryObservationsEnabled_;
+    clone->clockLibraryHash_ = clockLibraryHash_;
+    clone->activationObservationsEnabled_ = activationObservationsEnabled_;
+    clone->activationObservationSchemaVersion_ = activationObservationSchemaVersion_;
     clone->edepScoringEnabled_ = edepScoringEnabled_;
     clone->letScoringEnabled_ = letScoringEnabled_;
     clone->letParticles_ = letParticles_;
@@ -288,9 +347,13 @@ std::unique_ptr<ScoringManager> ScoringManager::CloneForThread(OutputManager* ou
     clone->nielTables_ = nielTables_;
     clone->nielNamesPending_ = nielNamesPending_;
     clone->nielPendingLocations_ = nielPendingLocations_;
+    clone->namedPlacementPaths_ = namedPlacementPaths_;
     clone->filterSpecs_ = filterSpecs_;
     clone->spectrumSpecs_ = spectrumSpecs_;
     clone->autoCreateDefaultScorers_ = autoCreateDefaultScorers_;
+    clone->namedH1_ = namedH1_;
+    clone->namedH2_ = namedH2_;
+    clone->eventNtuples_ = eventNtuples_;
     clone->edepRawHistogramEnabled_ = edepRawHistogramEnabled_;
     clone->edepWeightedHistogramEnabled_ = edepWeightedHistogramEnabled_;
     clone->edepVolumeSummaryEnabled_ = edepVolumeSummaryEnabled_;
@@ -516,6 +579,7 @@ void ScoringManager::Clear()
     nielTables_.clear();
     nielNamesPending_ = false;
     nielPendingLocations_.clear();
+    namedPlacementPaths_.clear();
     filterSpecs_.clear();
     spectrumSpecs_.clear();
     currentRunID_ = -1;
@@ -670,11 +734,37 @@ std::vector<std::string> ScoringManager::GetScorerNames() const
 void ScoringManager::BeginRun(int runID)
 {
     enteredScorers_.clear();
+    voxelEvent_.clear();
+    voxelSteps_.clear();
+    voxelEventID_ = -1;
+    voxelCompletedEvents_.clear();
+    if (IsVoxelScoringRequested()) {
+        try {
+            for (const auto& [leaf, binding] : geometryRegistry_->GetVoxelScoringBindings()) {
+                const auto* sd = dynamic_cast<const SensitiveDetector*>(leaf->GetLogicalVolume()->GetSensitiveDetector());
+                if (!sd || !sd->isActive() || !sd->IsScoringEnabled()) {
+                    throw std::runtime_error("voxel grid '" + binding.gridId + "' has no active worker SensitiveDetector binding");
+                }
+            }
+        } catch (const std::exception& error) {
+            if (outputManager_) outputManager_->RecordOutputFailure("voxel_sd_binding", error.what(), runID);
+            throw;
+        }
+    }
     enteredScorerRun_ = runID;
     scorerRunReady_ = false;
     // Test-only deterministic fault in the real Geant4 worker run callback.
     if (InjectBeginScoringFailure(runID, outputManager_)) {
         throw std::runtime_error("Injected ScoringManager::BeginRun failure");
+    }
+    if (activationObservationsEnabled_) {
+        try {
+            if (!enabled_) throw std::runtime_error("[scoring]/activation_observations requires [scoring]/enabled = true");
+            activationDecayThresholdSeconds_ = activation_observation::ValidateRun();
+        } catch (const std::exception& error) {
+            if (outputManager_) outputManager_->RecordOutputFailure("activation_observations_begin_run", error.what(), runID);
+            throw;
+        }
     }
     // The particle table exists by now, so an unresolvable [scoring.displacement] key can be
     // rejected before the first event instead of leaving the DDD silently at zero.
@@ -682,6 +772,14 @@ void ScoringManager::BeginRun(int runID)
     ResolvePendingNielNames();
     scorerFactories_.Freeze();
     currentRunID_ = runID;
+    if ((!namedH1_.empty() || !namedH2_.empty() || !eventNtuples_.empty()) && (!enabled_ || !outputManager_ || !outputManager_->WritesCsv()))
+        throw std::runtime_error("named histogram requires enabled scoring and CSV output at run start");
+    for (auto& histogram : namedH1_) histogram.Reset();
+    for (auto& histogram : namedH2_) histogram.Reset();
+#ifdef G4USIM_WITH_NATIVE_AT_REST_OBSERVER
+    if (!clockLibraryHash_.empty())
+        clockEvent_ = std::make_unique<activation_observation::ClockEvent>(clockLibraryHash_);
+#endif
     BeginPhaseSpaceRun();
     if (trajectories_.IsEnabled() && outputManager_) {
         outputManager_->Initialize();
@@ -715,6 +813,12 @@ void ScoringManager::BeginRun(int runID)
 
 void ScoringManager::EndRun(int runID)
 {
+#ifdef G4USIM_WITH_NATIVE_AT_REST_OBSERVER
+    if (clockEvent_ && clockEvent_->active) {
+        clockEvent_->Discard();
+        ReportScoringFailure("native_clock_end_run", "missing native event closure");
+    }
+#endif
     if (enteredScorerRun_ != runID) return;
     auto entered = std::move(enteredScorers_);
     enteredScorers_.clear();
@@ -739,11 +843,117 @@ void ScoringManager::EndRun(int runID)
     if (firstFailure) std::rethrow_exception(firstFailure);
 }
 
+bool ScoringManager::IsOpticalPhotonCountingEnabled() const
+{
+    return enabled_ && opticalPhotonCountsEnabled_;
+}
+
+void ScoringManager::CountOpticalSecondaries(const G4Step& step)
+{
+    if (!IsOpticalPhotonCountingEnabled() ||
+        (outputManager_ && outputManager_->HasOutputFailure())) return;
+    try {
+        // Geant4 has accepted these secondaries for this step. The cumulative
+        // secondary list would count earlier births again on subsequent steps.
+        const auto* secondaries = step.GetSecondaryInCurrentStep();
+        for (const auto* secondary : *secondaries) {
+            // Read the track's definition. OpticalPhoton() can register a
+            // new particle if the active physics list has no optical module.
+            if (secondary->GetParticleDefinition()->GetParticleName() != "opticalphoton") continue;
+            const auto* creator = secondary->GetCreatorProcess();
+            const int subtype = creator && creator->GetProcessType() == fElectromagnetic
+                ? creator->GetProcessSubType() : -1;
+            auto& count = subtype == fScintillation ? opticalPhotonCounts_.scintillation
+                : subtype == fCerenkov ? opticalPhotonCounts_.cerenkov
+                : opticalPhotonCounts_.other;
+            if (count == std::numeric_limits<std::uint64_t>::max())
+                throw std::overflow_error("Optical secondary count overflow");
+            ++count;
+        }
+    } catch (const std::exception& error) {
+        ReportScoringFailure("optical_photon_counts_accumulate", error.what());
+    } catch (...) {
+        ReportScoringFailure("optical_photon_counts_accumulate", "unknown exception");
+    }
+}
+
+bool ScoringManager::IsOpticalBoundaryObservationEnabled() const
+{
+    return enabled_ && opticalBoundaryObservationsEnabled_;
+}
+
+void ScoringManager::ObserveOpticalBoundary(const G4Step& step)
+{
+    if (!IsOpticalBoundaryObservationEnabled() ||
+        step.GetTrack()->GetParticleDefinition()->GetParticleName() != "opticalphoton" ||
+        (outputManager_ && outputManager_->HasOutputFailure())) return;
+    try {
+        if (auto record = optical_boundary::ObserveStep(step, currentRunID_, currentEventID_))
+            opticalBoundarySteps_.push_back(std::move(*record));
+    } catch (const std::exception& error) {
+        ReportScoringFailure("optical_boundary_observation", error.what());
+    } catch (...) {
+        ReportScoringFailure("optical_boundary_observation", "unknown exception");
+    }
+}
+
+bool ScoringManager::IsActivationObservationEnabled() const
+{
+    return enabled_ && activationObservationsEnabled_;
+}
+
+void ScoringManager::ObserveActivation(const G4Step& step)
+{
+    if (!IsActivationObservationEnabled() || (outputManager_ && outputManager_->HasOutputFailure())) return;
+    try {
+#ifdef G4USIM_WITH_NATIVE_AT_REST_OBSERVER
+        if (clockEvent_) clockEvent_->Observe(step);
+#endif
+        activationEvent_.ObserveStep(step, currentRunID_, currentEventID_, activationObservationSchemaVersion_);
+    } catch (const std::exception& error) {
+        ReportScoringFailure("activation_observation", error.what());
+    } catch (...) {
+        ReportScoringFailure("activation_observation", "unknown exception");
+    }
+}
+
+void ScoringManager::ObserveActivationStackedTrack(const G4Track& track)
+{
+    if (!IsActivationObservationEnabled()) return;
+    try {
+        activationEvent_.ObserveStackedTrack(track, activationObservationSchemaVersion_ >= 2);
+    } catch (const std::exception& error) {
+        ReportScoringFailure("activation_observation_stack", error.what());
+    } catch (...) {
+        ReportScoringFailure("activation_observation_stack", "unknown exception");
+    }
+}
+
+void ScoringManager::ClearPendingActivationBirths() noexcept
+{
+    if (IsActivationObservationEnabled()) activationEvent_.ClearPendingBirths();
+}
+
 void ScoringManager::BeginEvent(int eventID)
 {
     if (outputManager_ && outputManager_->HasOutputFailure()) return;
     try {
+#ifdef G4USIM_WITH_NATIVE_AT_REST_OBSERVER
+        if (clockEvent_) clockEvent_->Begin(currentRunID_, eventID);
+#endif
+        if (IsVoxelScoringRequested()) {
+            if (voxelEventID_ >= 0 || eventID < 0 ||
+                (!voxelCompletedEvents_.empty() && eventID <= *voxelCompletedEvents_.rbegin())) {
+                throw std::runtime_error("invalid or duplicate voxel event begin");
+            }
+            voxelEvent_.clear();
+            voxelSteps_.clear();
+            voxelEventID_ = eventID;
+        }
         currentEventID_ = eventID;
+        opticalPhotonCounts_ = {currentRunID_, eventID};
+        opticalBoundarySteps_.clear();
+        activationEvent_.Clear();
         currentEventRawEdep_ = 0.0;
         currentEventWeightedEdep_ = 0.0;
         trajectories_.BeginEvent(eventID);
@@ -756,8 +966,24 @@ void ScoringManager::BeginEvent(int eventID)
     }
 }
 
-void ScoringManager::EndEvent(int eventID)
+void ScoringManager::EndEvent(int eventID, bool aborted, const G4Event* nativeEvent)
 {
+#ifdef G4USIM_WITH_NATIVE_AT_REST_OBSERVER
+    if (clockEvent_) {
+        try {
+            if (!outputManager_) throw std::runtime_error("missing clock output");
+            if (outputManager_->HasOutputFailure()) { clockEvent_->Discard(); return; }
+            if (aborted || !nativeEvent || nativeEvent->IsAborted() ||
+                nativeEvent->GetEventID() != eventID || currentEventID_ != eventID)
+                throw std::runtime_error("aborted or mismatched native clock event");
+            clockEvent_->Stage(*nativeEvent, currentRunID_, eventID);
+        } catch (const std::exception& e) {
+            clockEvent_->Discard(); ReportScoringFailure("native_clock_event", e.what()); return;
+        } catch (...) {
+            clockEvent_->Discard(); ReportScoringFailure("native_clock_event", "unknown exception"); return;
+        }
+    }
+#endif
     // A failed event must not be folded into statistics or published as valid.
     if (outputManager_ && outputManager_->HasOutputFailure()) return;
     try {
@@ -793,13 +1019,9 @@ void ScoringManager::EndEvent(int eventID)
             }
         }
 
+        const EventEdepRecord record{currentRunID_, currentEventID_, currentEventRawEdep_, currentEventWeightedEdep_};
         if (enabled_ && eventEdepOutputEnabled_ && outputManager_ &&
             !outputManager_->HasOutputFailure()) {
-            EventEdepRecord record;
-            record.runID = currentRunID_;
-            record.eventID = currentEventID_;
-            record.rawEdep = currentEventRawEdep_;
-            record.weightedEdep = currentEventWeightedEdep_;
             try {
                 outputManager_->WriteEventEdep(record);
             } catch (const std::exception& error) {
@@ -807,11 +1029,244 @@ void ScoringManager::EndEvent(int eventID)
                 if (auto* runManager = G4RunManager::GetRunManager()) runManager->AbortRun(true);
             }
         }
+        if (IsOpticalPhotonCountingEnabled() && !aborted && outputManager_ &&
+            !outputManager_->HasOutputFailure()) {
+            try {
+                outputManager_->WriteOpticalPhotonCounts(opticalPhotonCounts_);
+            } catch (const std::exception& error) {
+                ReportScoringFailure("optical_photon_counts_write", error.what());
+            }
+        }
+        if (!aborted && !opticalBoundarySteps_.empty() && outputManager_ &&
+            !outputManager_->HasOutputFailure()) {
+            try {
+                outputManager_->WriteOpticalBoundarySteps(opticalBoundarySteps_);
+            } catch (const std::exception& error) {
+                ReportScoringFailure("optical_boundary_steps_write", error.what());
+            }
+        }
+        opticalBoundarySteps_.clear();
+        if (!aborted && IsActivationObservationEnabled() && outputManager_ &&
+            !outputManager_->HasOutputFailure()) {
+            try {
+                if (activationObservationSchemaVersion_ == 3) {
+                    if (!nativeEvent || eventID != currentEventID_ ||
+                        nativeEvent->GetEventID() != eventID || nativeEvent->IsAborted())
+                        throw std::runtime_error("activation event primary summary requires the current native event");
+                    activationEvent_.AppendCompletedEventPrimaries(*nativeEvent, currentRunID_);
+                }
+                outputManager_->WriteActivationObservations(activationEvent_.Records(),
+                                                           activationObservationSchemaVersion_);
+            } catch (const std::exception& error) {
+                ReportScoringFailure("activation_observations_write", error.what());
+            }
+        }
+#ifdef G4USIM_WITH_NATIVE_AT_REST_OBSERVER
+        if (clockEvent_ && !outputManager_->HasOutputFailure())
+            clockEvent_->Publish(*outputManager_, currentRunID_, eventID);
+#endif
+        activationEvent_.Clear();
+        if (IsVoxelScoringRequested() && outputManager_ && !outputManager_->HasOutputFailure()) {
+            try {
+                if (aborted || !nativeEvent || nativeEvent->IsAborted() || nativeEvent->GetEventID() != eventID
+                    || voxelEventID_ != eventID || currentEventID_ != eventID
+                    || voxelCompletedEvents_.count(eventID)) {
+                    throw std::runtime_error("aborted, missing or duplicate voxel event closure");
+                }
+                outputManager_->WriteVoxelEvent(eventID, voxelEvent_);
+                voxelCompletedEvents_.insert(eventID);
+                voxelEventID_ = -1;
+                voxelEvent_.clear();
+                voxelSteps_.clear();
+            } catch (const std::exception& error) {
+                ReportScoringFailure("voxel_event_write", error.what());
+            }
+        }
+        if ((!namedH1_.empty() || !namedH2_.empty() || !eventNtuples_.empty()) && !aborted && !outputManager_->HasOutputFailure()) {
+            if (!enabled_ || !nativeEvent || nativeEvent->IsAborted() || nativeEvent->GetEventID() != eventID ||
+                eventID != currentEventID_) throw std::runtime_error("invalid named histogram event closure");
+            for (auto& histogram : namedH1_) histogram.FillUnitAtEdges(currentEventRawEdep_ / MeV);
+            for (auto& histogram : namedH2_) histogram.Fill(currentEventRawEdep_ / MeV, currentEventWeightedEdep_ / MeV);
+            if (!eventNtuples_.empty()) outputManager_->WriteEventNtuples(eventNtuples_, record);
+        }
     } catch (const std::exception& error) {
         ReportScoringFailure("scoring_end_event", error.what());
     } catch (...) {
         ReportScoringFailure("scoring_end_event", "unknown exception");
     }
+}
+
+void ScoringManager::ConfigureNamedHistograms(const ConfigManager& config)
+{
+    const std::string h1 = "analysis.h1.";
+    const std::string h2 = "analysis.h2.";
+    const std::string ntuple = "analysis.ntuple.";
+    eventNtuples_.clear();
+    namedH2_.clear();
+    int totalCells = 0;
+    namedH1_.clear();
+    int totalBins = 0;
+    for (const auto& duplicate : config.GetMainReader().GetDuplicates()) {
+        if (duplicate.section.rfind(h1, 0) == 0 || duplicate.section.rfind(h2, 0) == 0 || duplicate.section.rfind(ntuple, 0) == 0)
+            throw std::runtime_error("duplicate [" + duplicate.section + "] " + duplicate.key);
+    }
+    for (const auto& info : config.GetSectionInfo()) {
+        if (info.section == "analysis.h1" || info.section == "analysis.h2" || info.section == "analysis.ntuple")
+            throw std::runtime_error(info.section + " requires a name");
+        const bool twoDimensional = info.section.rfind(h2, 0) == 0;
+        const bool eventTable = info.section.rfind(ntuple, 0) == 0;
+        if (!eventTable && !twoDimensional && info.section.rfind(h1, 0) != 0) continue;
+        const auto name = info.originalSection.substr(eventTable ? ntuple.size() : h1.size());
+        const auto fail = [&](const std::string& reason) {
+            throw std::runtime_error(VolumeSectionLocation(config, info) + ": " + reason);
+        };
+        if (name.empty() || name.size() > 32 || name.front() < 'a' || name.front() > 'z' ||
+            name.find_first_not_of("abcdefghijklmnopqrstuvwxyz0123456789_") != std::string::npos)
+            fail("invalid histogram name");
+        if (!config.HasSection("scoring") || !config.GetBool("scoring", "enabled", enabled_) ||
+            !outputManager_ || !outputManager_->WritesCsv()) fail("requires enabled scoring and CSV output");
+        if (eventTable) {
+            if (eventNtuples_.size() >= 16) fail("too many event ntuples");
+            for (const auto& key : config.GetKeys(info.section))
+                if (key != "source" && key != "columns") fail("unknown key " + key);
+            if (config.GetString(info.section, "source") != "event_edep") fail("unsupported ntuple source");
+            auto columns = StringUtils::Split(config.GetString(info.section, "columns"), ',', false);
+            if (columns.empty() || columns.size() > 2) fail("select one or two energy columns");
+            for (auto& column : columns) {
+                column = StringUtils::Trim(column);
+                if (!NamedEventNtuple::IsEnergyColumn(column)) fail("unsupported ntuple column " + column);
+            }
+            if (columns.size() == 2 && columns.front() == columns.back()) fail("duplicate ntuple column");
+            eventNtuples_.push_back({name, std::move(columns)});
+            continue;
+        }
+        static const std::set<std::string> oneKeys{"quantity", "bins", "min_mev", "max_mev"};
+        static const std::set<std::string> twoKeys{"x_quantity", "x_bins", "x_min_mev", "x_max_mev",
+                                                   "y_quantity", "y_bins", "y_min_mev", "y_max_mev"};
+        const auto& keys = twoDimensional ? twoKeys : oneKeys;
+        for (const auto& key : config.GetKeys(info.section))
+            if (!keys.count(key)) fail("unknown key " + key);
+        const auto axis = [&](const std::string& prefix, const char* quantity) {
+            if (config.GetString(info.section, prefix + "quantity") != quantity)
+                throw std::runtime_error("unsupported " + prefix + "quantity");
+            return EqualHistogramAxis{config.GetInt(info.section, prefix + "bins"),
+                                      config.GetDouble(info.section, prefix + "min_mev"),
+                                      config.GetDouble(info.section, prefix + "max_mev")};
+        };
+        try {
+            if (twoDimensional) {
+                const auto x = axis("x_", "event_edep_raw");
+                const auto y = axis("y_", "event_edep_weighted");
+                if (namedH2_.size() >= 16 || x.bins < 1 || y.bins < 1 || x.bins > 65534 || y.bins > 65534 ||
+                    x.bins + 2 > (65536 - totalCells) / (y.bins + 2))
+                    throw std::runtime_error("histogram cell budget exceeded");
+                x.ValidateEdges();
+                y.ValidateEdges();
+                namedH2_.emplace_back(name, x, y);
+                totalCells += (x.bins + 2) * (y.bins + 2);
+            } else {
+                const auto x = axis("", "event_edep_raw");
+                if (namedH1_.size() >= 16 || x.bins < 1 || x.bins > 65536 - totalBins)
+                    throw std::runtime_error("histogram budget exceeded");
+                x.ValidateEdges();
+                namedH1_.emplace_back(name, x.bins, x.low, x.high);
+                totalBins += x.bins;
+            }
+        } catch (const std::exception& error) {
+            fail(error.what());
+        }
+    }
+}
+
+bool ScoringManager::IsVoxelScoringRequested() const
+{
+    return geometryRegistry_ && geometryRegistry_->HasVoxelScoring();
+}
+
+bool ScoringManager::ScoreVoxelStep(const G4Step& step)
+{
+    if (!IsVoxelScoringRequested()) return false;
+    const auto* pre = step.GetPreStepPoint();
+    if (!pre) return false;
+    const auto* binding = geometryRegistry_->FindVoxelScoring(pre->GetPhysicalVolume());
+    const auto* track = step.GetTrack();
+    const bool optical = track && track->GetParticleDefinition()->GetParticleName() == "opticalphoton";
+    if (!binding) {
+        const auto* post = step.GetPostStepPoint();
+        if (!optical || !post || !geometryRegistry_->FindVoxelScoring(post->GetPhysicalVolume())) return false;
+        ReportScoringFailure("voxel_sd_step", "voxel SD excludes optical dispatch to the post-step leaf");
+        return true;
+    }
+    if (!outputManager_ || outputManager_->HasOutputFailure()) return true;
+    try {
+        if (G4Threading::G4GetThreadId() >= 0 && AIHL::GetCurrentThreadScoringManager() != this) {
+            throw std::runtime_error("voxel SD requires the active worker scoring manager");
+        }
+        const auto* manager = G4RunManager::GetRunManager();
+        const auto* event = manager ? manager->GetCurrentEvent() : nullptr;
+        if (!enabled_ || !event || event->IsAborted() || event->GetEventID() != voxelEventID_
+            || voxelEventID_ < 0 || voxelEventID_ != currentEventID_) {
+            throw std::runtime_error("voxel hit outside an open scoring event");
+        }
+        const auto* touch = pre->GetTouchable();
+        const auto* material = pre->GetMaterial();
+        if (!touch || touch->GetHistoryDepth() < 1 || touch->GetVolume(1) != binding->container) {
+            throw std::runtime_error("voxel step has no matching pre-step container touchable");
+        }
+        const int cell = touch->GetCopyNumber();
+        if (cell < 0 || static_cast<std::size_t>(cell) >= binding->parameterisation->GetNoVoxels()
+            || !material || material != binding->parameterisation->GetMaterial(static_cast<std::size_t>(cell))) {
+            throw std::runtime_error("voxel step has invalid copy number or actual material");
+        }
+        if (!track || optical) {
+            throw std::runtime_error("voxel SD ordinary-EM slice excludes optical InvokeSD dispatch");
+        }
+        const double energy = step.GetTotalEnergyDeposit();
+        const double weight = pre->GetWeight();
+        if (!std::isfinite(energy) || energy < 0 || !std::isfinite(weight) || weight < 0) {
+            throw std::runtime_error("voxel step has invalid deposit or pre-step weight");
+        }
+        if (energy == 0) return true;
+        if (track->GetTrackID() <= 0 || track->GetCurrentStepNumber() <= 0
+            || !voxelSteps_.emplace(track->GetTrackID(), track->GetCurrentStepNumber()).second) {
+            throw std::runtime_error("voxel step has invalid or duplicate native track/step identity");
+        }
+        const auto& dims = binding->shape;
+        const std::array<int, 3> index{cell % dims[0], cell / dims[0] % dims[1], cell / (dims[0] * dims[1])};
+        auto& record = voxelEvent_.try_emplace({binding->gridId, cell},
+            VoxelEdepRecord{index, material->GetName(), 0, 0, 0}).first->second;
+        if (record.material != material->GetName()) throw std::runtime_error("voxel material changed during event");
+        const double raw = record.rawEdep + energy;
+        const double weighted = record.weightedEdep + energy * weight;
+        if (!std::isfinite(raw) || !std::isfinite(weighted) ||
+            record.steps == std::numeric_limits<std::uint64_t>::max()) {
+            throw std::runtime_error("voxel event accumulation overflow");
+        }
+        record.rawEdep = raw;
+        record.weightedEdep = weighted;
+        ++record.steps;
+    } catch (const std::exception& error) {
+        ReportScoringFailure("voxel_sd_step", error.what());
+    } catch (...) {
+        ReportScoringFailure("voxel_sd_step", "unknown exception");
+    }
+    // A bound leaf never falls through to the ordinary hit/scorer path.
+    return true;
+}
+
+void ScoringManager::FinishVoxelShard(int eventsProcessed)
+{
+    if (!IsVoxelScoringRequested()) return;
+    if (!outputManager_ || voxelEventID_ >= 0 || eventsProcessed < 0 ||
+        voxelCompletedEvents_.size() != static_cast<std::size_t>(eventsProcessed)) {
+        throw std::runtime_error("voxel worker did not close its completed events");
+    }
+    outputManager_->FinishVoxelShard(currentRunID_, voxelCompletedEvents_);
+}
+
+void ScoringManager::WriteVoxelRoiMass(OutputManager& output, int runId) const
+{
+    if (IsVoxelScoringRequested()) output.WriteVoxelRoiMass(runId, *geometryRegistry_);
 }
 
 void ScoringManager::ScoreHit(const HitRecord& hit)
@@ -996,6 +1451,7 @@ void ScoringManager::LoadFromConfig(const ConfigManager& config)
         }
         phaseSpaceKill_ = config.GetBool("phase_space", "kill", false);
     }
+    ConfigureNamedHistograms(config);
     if (!config.HasSection("scoring") && HasVolumeSections(config)) {
         throw std::runtime_error("[scoring.filter.*] and [scoring.spectrum.*] require a [scoring] section");
     }
@@ -1007,7 +1463,29 @@ void ScoringManager::LoadFromConfig(const ConfigManager& config)
 
     Enable(config.GetBool("scoring", "enabled", enabled_));
     EnableHitOutput(config.GetBool("scoring", "hits", hitOutputEnabled_));
+    hitVolumePathEnabled_ = config.GetBool("scoring", "hit_volume_path", false);
     EnableEventEdepOutput(config.GetBool("scoring", "event_edep", eventEdepOutputEnabled_));
+    opticalPhotonCountsEnabled_ = config.GetBool("scoring", "optical_photon_counts", false);
+    opticalBoundaryObservationsEnabled_ = config.GetBool("scoring", "optical_boundary_observations", false);
+    activationObservationsEnabled_ = config.GetBool("scoring", "activation_observations", false);
+    activationObservationSchemaVersion_ = config.GetInt("scoring", "activation_observation_schema_version", 1);
+    if (activationObservationSchemaVersion_ < 1 || activationObservationSchemaVersion_ > 3)
+        throw std::runtime_error("[scoring]/activation_observation_schema_version must be 1, 2 or 3");
+    if (activationObservationSchemaVersion_ > 1 && !activationObservationsEnabled_)
+        throw std::runtime_error("[scoring]/activation_observation_schema_version requires activation_observations = true");
+    clockLibraryHash_ = config.GetString("scoring", "native_at_rest_engineering_library_sha256", "");
+    if (!clockLibraryHash_.empty()) {
+#ifndef G4USIM_WITH_NATIVE_AT_REST_OBSERVER
+        throw std::runtime_error("native AtRest engineering feature absent from this build");
+#else
+        if (!activationObservationsEnabled_ || activationObservationSchemaVersion_ != 3 ||
+            clockLibraryHash_.size() != 64 ||
+            clockLibraryHash_.find_first_not_of("0123456789abcdef") != std::string::npos)
+            throw std::runtime_error("native AtRest engineering requires activation V3 and a lowercase SHA-256");
+#endif
+    }
+    if (activationObservationsEnabled_ && !enabled_)
+        throw std::runtime_error("[scoring]/activation_observations requires [scoring]/enabled = true");
     EnableEdepScoring(config.GetBool("scoring", "edep", edepScoringEnabled_));
     EnableLETScoring(config.GetBool("scoring", "let", letScoringEnabled_));
     EnableDoseScoring(config.GetBool("scoring", "dose", doseScoringEnabled_));
@@ -1310,6 +1788,7 @@ std::string FormatFailureMessage(const std::string& stage, const OutputManager& 
 
 void ScoringManager::ParseVolumeConfig(const ConfigManager& config)
 {
+    namedPlacementPaths_.clear();
     filterSpecs_.clear();
     spectrumSpecs_.clear();
     const std::set<std::string> filterScorers{"dose", "fluence", "let", "displacement"};
@@ -1317,6 +1796,25 @@ void ScoringManager::ParseVolumeConfig(const ConfigManager& config)
     const std::set<std::string> filterKeys{"particles", "energy_min", "energy_max"};
     const std::set<std::string> spectrumKeys{"bins", "min", "max"};
     std::vector<std::string> spectrumSections;
+    for (const auto& duplicate : config.GetMainReader().GetDuplicates()) {
+        if (duplicate.section.rfind(kSelectionPrefix, 0) == 0 ||
+            (duplicate.section == "scoring.filter.dose" && duplicate.key == "selection")) {
+            throw std::runtime_error("Repeated placement selection declaration at line " +
+                                     std::to_string(duplicate.lineNumber));
+        }
+    }
+    for (const auto& info : config.GetSectionInfo()) {
+        if (info.section.rfind(kSelectionPrefix, 0) != 0) continue;
+        const auto name = info.section.substr(kSelectionPrefix.size());
+        RejectUnknownVolumeKeys(config, info, {"physical_path"});
+        const auto path = config.GetString(info.section, "physical_path", "");
+        if (name.empty() || name.find_first_not_of("abcdefghijklmnopqrstuvwxyz0123456789_-") != std::string::npos ||
+            path.empty() || path.front() != '/' || path.back() == '/' || path.find("//") != std::string::npos) {
+            throw std::runtime_error(VolumeSectionLocation(config, info) +
+                                     " requires a named selection with an absolute physical_path");
+        }
+        namedPlacementPaths_.emplace(name, path);
+    }
 
     for (const IniSectionInfo& info : config.GetSectionInfo()) {
         const bool filterSection = IsVolumeFilterSection(info.section);
@@ -1331,7 +1829,9 @@ void ScoringManager::ParseVolumeConfig(const ConfigManager& config)
                 throw std::runtime_error("Unknown scoring filter topic '" + scorer +
                                          "'; expected dose, fluence, let or displacement (" + location + ")");
             }
-            RejectUnknownVolumeKeys(config, info, filterKeys);
+            auto allowedKeys = filterKeys;
+            if (scorer == "dose") allowedKeys.insert("selection");
+            RejectUnknownVolumeKeys(config, info, allowedKeys);
             const bool scorerEnabled = scorer == "dose"        ? doseScoringEnabled_
                                        : scorer == "fluence"  ? fluenceScoringEnabled_
                                        : scorer == "let"      ? letScoringEnabled_
@@ -1347,7 +1847,14 @@ void ScoringManager::ParseVolumeConfig(const ConfigManager& config)
             const bool hasParticles = config.HasKey(info.section, "particles");
             const bool hasMin = config.HasKey(info.section, "energy_min");
             const bool hasMax = config.HasKey(info.section, "energy_max");
-            if (!hasParticles && !hasMin && !hasMax) {
+            if (config.HasKey(info.section, "selection")) {
+                cfg.selection = StringUtils::ToLower(config.GetString(info.section, "selection"));
+                const auto item = namedPlacementPaths_.find(cfg.selection);
+                if (item == namedPlacementPaths_.end())
+                    throw std::runtime_error(location + ": unknown placement selection '" + cfg.selection + "'");
+                cfg.physicalPath = item->second;
+            }
+            if (!hasParticles && !hasMin && !hasMax && cfg.physicalPath.empty()) {
                 throw std::runtime_error("[" + info.section + "] at " + location +
                                          " declares no condition; set at least one of particles, energy_min or "
                                          "energy_max");
@@ -1477,7 +1984,8 @@ void ScoringManager::ValidateLegacyParticleSelectors() const
 void ScoringManager::ValidateVolumeConfigsForRun()
 {
     ValidateLegacyParticleSelectors();
-    if (spectrumSpecs_.empty() && filterSpecs_.empty()) return;
+    if (!HasVolumeConfig()) return;
+    for (const auto& item : namedPlacementPaths_) ValidateOrdinaryPlacement(item.first, item.second);
     // This runs before the event loop, so default scorers may not be created
     // yet (BeginRun calls EnsureDefaultScorers). The parsed enable flags are
     // therefore the authoritative record of whether a topic is active.
@@ -1530,6 +2038,10 @@ void ScoringManager::RecordVolumeFilterAttachReceipts(int runId)
                                {"all_particles", spec.config.allParticles},
                                {"energy_min_MeV", spec.config.energyMinMeV},
                                {"energy_max_MeV", std::move(energyMax)}};
+        if (!spec.config.physicalPath.empty()) {
+            observed["selection"] = spec.config.selection;
+            observed["physical_path"] = spec.config.physicalPath;
+        }
         if (!spec.config.allParticles) {
             observed["particles"] = Value::Array{};
             auto& list = std::get<Value::Array>(observed["particles"].data);

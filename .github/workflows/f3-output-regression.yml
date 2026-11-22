@@ -1,0 +1,110 @@
+name: F3 output regression
+
+on:
+  push:
+    branches:
+      - 'codex-f3-r12-output-regression-*'
+
+permissions:
+  contents: read
+
+jobs:
+  actual-hits:
+    name: ${{ matrix.os }} hit CSV and ROOT
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.gitattributes
+            /CMakeLists.txt
+            /main.cc
+            /cmake/
+            /src/
+            /include/
+            /tools/mergeHistograms.cc
+            /packaging/ci_fetch_geant4_data.py
+            /scripts/test_hit_volume_path.py
+            /gui/g4usim_gui/
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+      - run: python -m pip install uproot
+      - name: Prepare Linux Geant4 SDK and its actual datasets
+        if: runner.os == 'Linux'
+        run: |
+          set -euo pipefail
+          delivery="$RUNNER_TEMP/g4usim-delivery"
+          mkdir -p "$delivery/bootstrap"
+          curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xj -C "$delivery/bootstrap" bin/micromamba
+          prefix="$delivery/bootstrap/geant4"
+          "$delivery/bootstrap/bin/micromamba" create -y -p "$prefix" -c conda-forge 'geant4=11.4.3' 'python=3.11' expat zlib freetype
+          "$delivery/bootstrap/bin/micromamba" run -p "$prefix" -- printenv | grep -E '^(G4[A-Z0-9_]*DATA|GEANT4[A-Z0-9_]*)=' >> "$GITHUB_ENV"
+          echo "G4_PREFIX=$prefix" >> "$GITHUB_ENV"
+          echo "G4_BUILD=$delivery/backend" >> "$GITHUB_ENV"
+          echo "DELIVERY_ROOT=$delivery" >> "$GITHUB_ENV"
+      - name: Configure and compile Linux backend
+        if: runner.os == 'Linux'
+        run: |
+          cmake -S . -B "$G4_BUILD" -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$G4_PREFIX" \
+            -DEXPAT_INCLUDE_DIR="$G4_PREFIX/include" -DEXPAT_LIBRARY="$G4_PREFIX/lib/libexpat.so" \
+            -DZLIB_INCLUDE_DIR="$G4_PREFIX/include" -DZLIB_LIBRARY="$G4_PREFIX/lib/libz.so" \
+            -DFREETYPE_INCLUDE_DIRS="$G4_PREFIX/include/freetype2" -DFREETYPE_LIBRARY="$G4_PREFIX/lib/libfreetype.so"
+          cmake --build "$G4_BUILD" --target G4UniversalSim --parallel 4
+          "$G4_BUILD/G4UniversalSim" --check-geant4-data > "$DELIVERY_ROOT/discovery.json"
+      - name: Prepare hash-verified official Windows SDK
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $delivery = Join-Path $env:RUNNER_TEMP 'g4usim-delivery'
+          $bootstrap = Join-Path $delivery 'bootstrap'
+          New-Item -ItemType Directory -Path $bootstrap | Out-Null
+          $archive = Join-Path $bootstrap 'geant4-11.4.3-official.zip'
+          Invoke-WebRequest 'https://geant4-data.web.cern.ch/releases/lib4.11.4.p03/WIN64-VC17.14.41-11.zip' -OutFile $archive
+          if ((Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant() -ne 'b0725c4e34d4714c5ccf0f575b4bccfb06c021fc19f3696f347bb7ea464e4d9c') { throw 'Official SDK archive identity mismatch' }
+          Expand-Archive -LiteralPath $archive -DestinationPath (Join-Path $bootstrap 'sdk')
+          $configs = @(Get-ChildItem -LiteralPath (Join-Path $bootstrap 'sdk') -Filter Geant4Config.cmake -Recurse -File)
+          if ($configs.Count -ne 1) { throw 'Expected one Geant4 CMake configuration' }
+          $prefix = $configs[0].Directory.Parent.Parent.Parent.FullName
+          "G4_PREFIX=$prefix" >> $env:GITHUB_ENV
+          "G4_BUILD=$(Join-Path $delivery 'backend')" >> $env:GITHUB_ENV
+          "DELIVERY_ROOT=$delivery" >> $env:GITHUB_ENV
+          (Join-Path $prefix 'bin') >> $env:GITHUB_PATH
+          python packaging/ci_fetch_geant4_data.py --config $configs[0].FullName --directory (Join-Path $bootstrap 'datasets')
+          if ($LASTEXITCODE -ne 0) { throw 'Dataset acquisition or verification failed' }
+          "GEANT4_DATA_DIR=$(Join-Path $bootstrap 'datasets/data')" >> $env:GITHUB_ENV
+      - name: Configure and compile Windows backend
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          cmake -S . -B $env:G4_BUILD -DBUILD_TESTING=OFF "-DGeant4_DIR=$env:G4_PREFIX/lib/cmake/Geant4"
+          if ($LASTEXITCODE -ne 0) { throw 'Backend configure failed' }
+          cmake --build $env:G4_BUILD --config Release --target G4UniversalSim --parallel 4
+          if ($LASTEXITCODE -ne 0) { throw 'Backend compilation failed' }
+          & "$env:G4_BUILD/Release/G4UniversalSim.exe" --check-geant4-data > "$env:DELIVERY_ROOT/discovery.json"
+          if ($LASTEXITCODE -ne 0) { throw 'Actual backend dataset discovery failed' }
+
+      - name: Check exact candidate and actual hit contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          exe="$G4_BUILD/G4UniversalSim"
+          if [[ "$RUNNER_OS" == Windows ]]; then
+            exe="$(cygpath -u "$G4_BUILD")/Release/G4UniversalSim.exe"
+          fi
+          mkdir evidence
+          "$exe" --capabilities > evidence/capabilities.json
+          python -c 'import hashlib,json,os,pathlib,sys; p=pathlib.Path(sys.argv[1]); c=json.loads(pathlib.Path("evidence/capabilities.json").read_text()); assert c["source_fingerprint"]=="017258e353491ad32ce592cddec6a270b0c82ae774fa0469505579f90af9a375",c["source_fingerprint"]; assert c["build_git_commit"]==os.environ["GITHUB_SHA"] and c["build_git_source_state"]=="clean",c; print(hashlib.sha256(p.read_bytes()).hexdigest())' "$exe" | tee evidence/binary.sha256
+          python -B scripts/test_hit_volume_path.py --exe "$exe" --output evidence/hits
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: f3-output-${{ matrix.os }}
+          path: evidence/
+          if-no-files-found: warn

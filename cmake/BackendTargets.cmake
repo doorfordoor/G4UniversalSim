@@ -11,6 +11,7 @@ set(G4USIM_LOGIC_MEMBERS
     src/Core/SessionJson.cc
     src/Core/SimulationContext.cc
     src/Geometry/GeometryConfigDiagnostic.cc
+    src/Geometry/VoxelGridDescriptor.cc
     src/Geometry/StlReader.cc
     src/Scoring/HistoryStatistics.cc
     src/Utils/CommandParser.cc
@@ -35,8 +36,10 @@ set(G4USIM_GEANT_MEMBERS
     src/Biasing/BiasingRegion.cc
     src/Biasing/BiasingXS.cc
     src/Biasing/EffectiveBiasing.cc
+    src/Biasing/GeometricSampling.cc
     src/Core/AppMessenger.cc
     src/Core/ConfigurationCoordinator.cc
+  src/Core/EngineeringWaterEvent.cc
     src/Core/EffectiveSimulation.cc
     src/Core/Geant4DataLocator.cc
     src/Core/MacroPreflight.cc
@@ -75,6 +78,7 @@ set(G4USIM_GEANT_MEMBERS
     src/Output/EffectiveOutput.cc
     src/Output/Histogram1D.cc
     src/Output/Histogram2D.cc
+    src/Output/NamedEventNtuple.cc
     src/Output/OutputManager.cc
     src/Output/OutputMessenger.cc
     src/Output/RunSummary.cc
@@ -95,6 +99,8 @@ set(G4USIM_GEANT_MEMBERS
     src/Scoring/FluenceScorer.cc
     src/Scoring/LETScorer.cc
     src/Scoring/NielTable.cc
+    src/Scoring/OpticalBoundaryObservation.cc
+    src/Scoring/ActivationObservation.cc
     src/Scoring/ParticleAggregator.cc
     src/Scoring/PhaseSpace.cc
     src/Scoring/ScorerBase.cc
@@ -118,10 +124,12 @@ set(G4USIM_GEANT_MEMBERS
     src/Templates/ShieldingTemplate.cc
     src/Templates/SimpleBoxTemplate.cc
     src/Templates/TemplateFactory.cc
+    src/Utils/NamedParameters.cc
     src/Utils/UnitParser.cc
 )
 
 set(G4USIM_GDML_MEMBERS
+    src/Geometry/GdmlComponent.cc
     src/Geometry/GdmlIO.cc
     src/Geometry/GdmlInputCapture.cc
 )
@@ -167,6 +175,31 @@ target_include_directories(g4usim_geant SYSTEM PUBLIC ${Geant4_INCLUDE_DIRS})
 target_compile_definitions(g4usim_geant PRIVATE
     G4USIM_BUILD_CONFIGURATION="$<IF:$<BOOL:$<CONFIG>>,$<CONFIG>,unknown>")
 target_link_libraries(g4usim_geant PUBLIC g4usim_logic ${Geant4_LIBRARIES})
+option(G4USIM_WITH_NATIVE_AT_REST_OBSERVER "Enable the engineering AtRest sidecar" OFF)
+if(G4USIM_WITH_NATIVE_AT_REST_OBSERVER)
+    if(TARGET Geant4::G4processes_hadronic)
+        set(_clock_target Geant4::G4processes_hadronic)
+    elseif(TARGET Geant4::G4processes)
+        set(_clock_target Geant4::G4processes)
+    else()
+        message(FATAL_ERROR "Native observer requires a shared Geant4 process target")
+    endif()
+    include(CheckCXXSourceCompiles)
+    include(CMakePushCheckState)
+    cmake_push_check_state(RESET)
+    set(CMAKE_REQUIRED_LIBRARIES ${_clock_target})
+    unset(G4USIM_CLOCK_ABI_LINKS CACHE)
+    check_cxx_source_compiles("#include <G4AtRestObserverV1.h>
+      int main(){ G4AtRestObserverV1Row row{}; uint64_t n=0;
+      static_assert(sizeof(row)==120); return G4AtRestObserverV1Begin(sizeof(row),1,0,0,0,&row,1)
+      + G4AtRestObserverV1End(1,&n); }" G4USIM_CLOCK_ABI_LINKS)
+    cmake_pop_check_state()
+    if(NOT G4USIM_CLOCK_ABI_LINKS)
+        message(FATAL_ERROR "Selected SDK lacks linkable native observer V1")
+    endif()
+    target_compile_definitions(g4usim_geant PUBLIC G4USIM_WITH_NATIVE_AT_REST_OBSERVER)
+    target_link_libraries(g4usim_geant PUBLIC ${_clock_target} ${CMAKE_DL_LIBS})
+endif()
 
 # The ONLY intentional dual compilation: these two TUs read the GDML flag.
 # Their API headers have no conditional ABI, and their project dependency is

@@ -25,7 +25,11 @@ struct StlMesh {
 
 namespace StlReader {
 
+using Scales = std::array<double, 3>;
+Scales ParseScales(const std::string& text);
+
 // lengthUnit: value of one file unit in Geant4 units (e.g. CLHEP::mm).
-StlMesh Read(const std::string& path, double lengthUnit, const std::string& role = "mesh_parse");
+StlMesh Read(const std::string& path, double lengthUnit, const std::string& role = "mesh_parse",
+             const Scales& scales = {1.0, 1.0, 1.0});
 
 }  // namespace StlReader

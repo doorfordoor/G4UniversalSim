@@ -1,7 +1,12 @@
+#include "Output/NamedEventNtuple.hh"
 #include "Output/RunSummary.hh"
+#if defined(G4USIM_WITH_NATIVE_AT_REST_OBSERVER) || defined(G4USIM_H6_ENGINEERING)
+#include "Core/SessionJson.hh"
+#endif
 
 #include "Output/AnalysisOutput.hh"
 #include "Output/CsvWriter.hh"
+#include "Output/OutputRecord.hh"
 #include "Utils/FileUtils.hh"
 
 #include <fstream>
@@ -30,6 +35,25 @@ std::string GeneratedFileSchema(const std::string& path)
                name.rfind(stem + "_t", 0) == 0 ||
                name.rfind(stem + "_r", 0) == 0;
     };
+#ifdef G4USIM_WITH_NATIVE_AT_REST_OBSERVER
+    if (name.rfind("native_at_rest_e", 0) == 0 && std::filesystem::path(name).extension() == ".json") {
+        std::ifstream stream(path);
+        if (!stream) return "unknown";
+        const auto object = SessionJson::Json::parse(stream, nullptr, false);
+        constexpr auto schema = "g4usim_native_at_rest_engineering_v1";
+        if (object.is_object() && object.contains("schema") && object["schema"] == schema)
+            return schema;
+        return "unknown";
+    }
+#endif
+#ifdef G4USIM_H6_ENGINEERING
+    if(name.rfind("water_collision_e",0)==0 && std::filesystem::path(name).extension()==".json"){
+        std::ifstream stream(path);
+        const auto obj=SessionJson::Json::parse(stream,nullptr,false);
+        constexpr auto id="g4usim_water_collision_engineering_v1";
+        return obj.is_object() && obj.contains("schema") && obj["schema"]==id ? id : "unknown";
+    }
+#endif
     if (name == "run_summary.txt") return "run_summary_v1";
     if (name == "run_metadata.json") return "run_metadata_json_v1";
     if (name == "effective_config_configure.json" || name == "effective_config_finalization.json" ||
@@ -60,9 +84,11 @@ std::string GeneratedFileSchema(const std::string& path)
     if (!input || !std::getline(input, header)) return "unknown";
     if (!header.empty() && header.back() == '\r') header.pop_back();
     if (matches("hits")) {
-        if (header == "runID,eventID,trackID,parentID,particle,edep_MeV,ndep_MeV,stepLength_mm,"
+        const std::string base = "runID,eventID,trackID,parentID,particle,edep_MeV,ndep_MeV,stepLength_mm,"
                       "x0_mm,y0_mm,z0_mm,x1_mm,y1_mm,z1_mm,px,py,pz,kineticEnergy_MeV,"
-                      "process,volume,weight") return "hits_csv_v3";
+                      "process,volume,weight";
+        if (header == base) return "hits_csv_v3";
+        if (header == base + ",volume_path") return "hits_csv_v4";
         if (header == "runID,eventID,trackID,parentID,particle,edep,ndep,stepLength,"
                       "x0,y0,z0,x1,y1,z1,px,py,pz,kineticEnergy,process,volume,weight,LETcalc,LETstep")
             return "hits_csv_v2";
@@ -71,6 +97,27 @@ std::string GeneratedFileSchema(const std::string& path)
         if (header == "runID,eventID,raw_edep_MeV,weighted_edep_MeV") return "event_edep_csv_v3";
         if (header == "runID,eventID,raw_edep,weighted_edep") return "event_edep_csv_v2";
     }
+    if (matches("optical_photon_counts") &&
+        header == "runID,eventID,scintillation_generated,cerenkov_generated,other_optical_generated")
+        return "optical_photon_counts_csv_v1";
+    if (name.rfind("ntuple_", 0) == 0 && std::filesystem::path(name).extension() == ".csv" &&
+        NamedEventNtuple::MatchesHeader(header)) return "analysis_event_ntuple_csv_v1";
+    if (name.rfind("h2_", 0) == 0 && std::filesystem::path(name).extension() == ".csv" &&
+        header == kNamedH2CsvHeader) return "analysis_h2_csv_v1";
+    if (name.rfind("h1_", 0) == 0 && std::filesystem::path(name).extension() == ".csv" &&
+        header == kNamedH1CsvHeader) return "analysis_h1_csv_v1";
+    if (matches("voxel_edep") && header == kVoxelEdepCsvHeader) return "voxel_edep_csv_v1";
+    if ((name == "voxel_roi_mass.csv" || (name.rfind("voxel_roi_mass_r", 0) == 0
+        && std::filesystem::path(name).extension() == ".csv")) && header == kVoxelRoiMassCsvHeader)
+        return "voxel_roi_mass_csv_v1";
+    if (matches("activation_observations")) {
+        if (header == kActivationObservationCsvHeader) return "activation_observations_csv_v1";
+        const auto v2 = std::string(kActivationObservationCsvHeader) + kActivationObservationCsvV2Columns;
+        if (header == v2) return "activation_observations_csv_v2";
+        if (header == v2 + kActivationObservationCsvV3Columns) return "activation_observations_csv_v3";
+    }
+    if (matches("optical_boundary_steps") && header == kOpticalBoundaryStepCsvHeader)
+        return "optical_boundary_steps_csv_v1";
     if (matches("hist_edep_raw") || matches("hist_edep_weighted")) {
         if (header == "bin,low_edge_MeV,high_edge_MeV,center_MeV,count") return "histogram1d_csv_v3";
         if (header == "bin,low_edge,high_edge,center,count") return "histogram1d_csv_v2";

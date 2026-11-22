@@ -140,6 +140,8 @@ void PhysicsList::ConfigureExtraPhysicsModules()
 
 void PhysicsList::ConfigureBiasingPhysics()
 {
+    if (manager_ && manager_->GetBiasingManager())
+        manager_->GetBiasingManager()->RegisterGeometricSamplingPhysics(this);
     const bool explicitEnabled = manager_ && manager_->IsBiasingPhysicsEnabled();
     const auto* biasingManager = manager_ ? manager_->GetBiasingManager() : nullptr;
     const bool managerEnabled = biasingManager && biasingManager->IsEnabled();

@@ -1,6 +1,7 @@
 #include "Output/Histogram1D.hh"
 
 #include "Output/CsvWriter.hh"
+#include "Output/EqualHistogramAxis.hh"
 
 #include <cmath>
 #include <stdexcept>
@@ -50,6 +51,22 @@ void Histogram1D::Fill(double value, double weight)
         bin = bins_ - 1;
     }
     counts_[static_cast<std::size_t>(bin)] += weight;
+}
+
+double Histogram1D::EqualBinEdge(int index) const
+{
+    return EqualHistogramAxis{bins_, min_, max_}.Edge(index);
+}
+
+void Histogram1D::FillUnitAtEdges(double value)
+{
+    ValidateConfigured();
+    const int bin = EqualHistogramAxis{bins_, min_, max_}.Locate(value);
+    ++entries_;
+    ++sumWeight_;
+    if (bin < 0) ++underflow_;
+    else if (bin == bins_) ++overflow_;
+    else ++counts_[bin];
 }
 
 void Histogram1D::Merge(const Histogram1D& other)

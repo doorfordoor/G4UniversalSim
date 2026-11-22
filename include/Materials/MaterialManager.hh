@@ -34,6 +34,9 @@ public:
     G4Element* BuildElement(const std::string& name);
     G4Material* BuildMaterial(const std::string& name);
 
+#ifdef G4USIM_H6_ENGINEERING
+    G4Material* BuildEngineeringWater(double temperature);
+#endif
     void BuildAll();
 
     G4Material* GetMaterial(const std::string& name) const;

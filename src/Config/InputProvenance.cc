@@ -61,13 +61,21 @@ private:
  std::size_t used_=0;
  std::uint64_t size_=0;
 };
+class InputLimitExceeded final : public std::runtime_error {
+public:
+ using std::runtime_error::runtime_error;
+};
 // The istream owns error state; streambuf iterators alone cannot distinguish
 // a failed underflow from real EOF. Keep this shared for fault-stream tests.
-std::string ReadBuffered(std::istream& input, const std::string& path) {
+std::string ReadBuffered(std::istream& input, const std::string& path,
+                         std::optional<std::size_t> maxBytes = std::nullopt) {
  std::string bytes;std::array<char,65536> block{};
  for(;;){
   input.read(block.data(),static_cast<std::streamsize>(block.size()));
-  const auto count=input.gcount();if(count>0)bytes.append(block.data(),static_cast<std::size_t>(count));
+  const auto count=static_cast<std::size_t>(input.gcount());
+  if(maxBytes && count > *maxBytes - bytes.size())
+   throw InputLimitExceeded("Input file exceeds byte limit " + std::to_string(*maxBytes) + ": '"+path+"'");
+  if(count>0)bytes.append(block.data(),count);
   if(input.bad() || (input.fail()&&!input.eof()))throw std::runtime_error("Failed while reading input file: '"+path+"'");
   if(input.eof())break;
  }
@@ -81,6 +89,19 @@ void Append(InputObservation entry) {
  entry.sequence=static_cast<std::uint64_t>(ledger.entries.size())+1;
  ledger.entries.push_back(std::move(entry));
 }
+}
+struct StreamDigest::State { Hasher hash; };
+StreamDigest::StreamDigest() : state_(std::make_unique<State>()) {}
+StreamDigest::~StreamDigest() = default;
+void StreamDigest::Update(std::string_view bytes) {
+    if (!state_) throw std::logic_error("digest already finalized");
+    state_->hash.Update(bytes);
+}
+FileDigest StreamDigest::Finish() {
+    if (!state_) throw std::logic_error("digest already finalized");
+    const auto result = state_->hash.Finish();
+    state_.reset();
+    return result;
 }
 std::string Sha256(std::string_view bytes) { Hasher hash;hash.Update(bytes);return hash.Finish().sha256; }
 void RecordRead(const std::string& path,const FileDigest& digest,const std::string& kind,
@@ -112,11 +133,18 @@ FileDigest HashFile(const std::string& path) {
  input.clear();input.close();if(input.fail())throw std::runtime_error("Failed to close hash file: '"+path+"'");
  return hash.Finish();
 }
-InputFile ReadFile(const std::string& path,const std::string& kind,const std::string& role) {
+InputFile ReadFile(const std::string& path,const std::string& kind,const std::string& role,
+                   std::optional<std::size_t> maxBytes) {
  if(!std::filesystem::is_regular_file(std::filesystem::u8path(path))) throw std::runtime_error("Input file does not exist or is not regular: '"+path+"'");
  std::ifstream input(std::filesystem::u8path(path),std::ios::binary);
  if(!input) throw std::runtime_error("Failed to open input file: '"+path+"'");
- std::string bytes=ReadBuffered(input,path);
+ std::string bytes;
+ try {
+  bytes=ReadBuffered(input,path,maxBytes);
+ } catch (const InputLimitExceeded& error) {
+  MarkUnobserved(path,error.what(),kind,role,"bounded_binary_read");
+  throw;
+ }
  input.clear();input.close();if(input.fail())throw std::runtime_error("Failed to close input file: '"+path+"'");
  auto digest=Sha256(bytes);
  RecordRead(path,{digest,static_cast<std::uint64_t>(bytes.size())},kind,role,"binary_buffer");

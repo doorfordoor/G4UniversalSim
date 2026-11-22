@@ -1,3 +1,6 @@
+#ifdef G4USIM_H6_ENGINEERING
+#include "Core/EngineeringWaterEvent.hh"
+#endif
 #include "Actions/RunAction.hh"
 #include "Actions/RunProgress.hh"
 
@@ -52,6 +55,9 @@ void RunAction::BeginOfRunAction(const G4Run* run)
     if (!run) {
         throw std::runtime_error("RunAction::BeginOfRunAction failed: G4Run is null");
     }
+#ifdef G4USIM_H6_ENGINEERING
+    if(role_!=Role::Master) engineering_event::BeginRun(*run);
+#endif
     scoringRunEntered_ = false;
     biasingRunEntered_ = false;
     runTimerStarted_ = false;
@@ -115,9 +121,12 @@ void RunAction::BeginOfRunAction(const G4Run* run)
     OutputManager* outputManager = ActiveOutputManager();
     ScoringManager* scoringManager = ActiveScoringManager();
 
+    const bool hitVolumePath = scoringManager && scoringManager->IsHitVolumePathEnabled();
+    if (outputManager) outputManager->SetHitVolumePathEnabled(hitVolumePath);
     const char* stage = "run_begin_validate_targets";
     try {
-        if (role_ != Role::Master && biasingManager_ && biasingManager_->IsEnabled()) {
+        if (role_ != Role::Master && biasingManager_ &&
+            (biasingManager_->IsEnabled() || biasingManager_->IsGeometricSamplingEnabled())) {
             stage = "biasing_thread_begin";
             biasingRunEntered_ = true;
             biasingManager_->BeginThreadRun(runID);
@@ -129,13 +138,29 @@ void RunAction::BeginOfRunAction(const G4Run* run)
         if (outputManager && role_ != Role::Worker) {
             auto* runManager = G4RunManager::GetRunManager();
             const int threads = runManager ? std::max(1, runManager->GetNumberOfThreads()) : 1;
-            outputManager->ValidateOutputTargetDirectories(runID, threads);
+            if (scoringManager && scoringManager->IsVoxelScoringRequested() &&
+                (!scoringManager->IsEnabled() || !outputManager->WritesCsv())) {
+                stage = "voxel_scoring_begin_run";
+                throw std::runtime_error("voxel SD scoring requires scoring enabled and CSV output");
+            }
+            outputManager->ValidateOutputTargetDirectories(
+                runID, threads, scoringManager && scoringManager->IsOpticalPhotonCountingEnabled(),
+                scoringManager && scoringManager->IsOpticalBoundaryObservationEnabled(),
+                scoringManager && scoringManager->IsActivationObservationEnabled(),
+                scoringManager && scoringManager->IsVoxelScoringRequested());
         }
         stage = "run_begin_set_run_id";
         if (outputManager) {
             outputManager->SetRunId(runID);
             stage = "run_begin_summary";
             outputManager->GetRunSummary().Set("run_id_begin", runID);
+            if (role_ != Role::Worker && scoringManager && scoringManager->IsVoxelScoringRequested() &&
+                scoringManager->IsFluenceScoringEnabled()) {
+                const char* warning = "Ordinary Fluence covers only ordinary sensitive volumes. "
+                                      "Steps inside the voxel grid do not contribute to the Fluence CSV.";
+                outputManager->GetRunSummary().AddWarning(warning);
+                G4cerr << "[ScoringWarning] " << warning << G4endl;
+            }
             stage = "run_begin_initialize";
             outputManager->Initialize();
             if (outputManager->WritesRoot()) {
@@ -150,7 +175,7 @@ void RunAction::BeginOfRunAction(const G4Run* run)
                     raw = {r.bins, r.min, r.max};
                     weighted = {w.bins, w.min, w.max};
                 }
-                AnalysisOutput::BeginRun(outputManager->RootFilePath(), raw, weighted);
+                AnalysisOutput::BeginRun(outputManager->RootFilePath(), raw, weighted, hitVolumePath);
             }
         }
         if (role_ != Role::Master && scoringManager) {
@@ -196,6 +221,9 @@ void RunAction::EndOfRunAction(const G4Run* run)
     OutputManager* outputManager = ActiveOutputManager();
     ScoringManager* scoringManager = ActiveScoringManager();
 
+#ifdef G4USIM_H6_ENGINEERING
+    if(role_!=Role::Master) engineering_event::EndRun(*run,*outputManager);
+#endif
     // Geant4 worker callbacks must not let an output exception escape into the
     // worker event loop: the shared registry lets the master reject beamOn.
     const auto attempt = [outputManager](const char* stage, const auto& operation) {
@@ -210,7 +238,8 @@ void RunAction::EndOfRunAction(const G4Run* run)
         }
     };
 
-    if (biasingRunEntered_ && role_ != Role::Master && biasingManager_ && biasingManager_->IsEnabled()) {
+    if (biasingRunEntered_ && role_ != Role::Master && biasingManager_ &&
+        (biasingManager_->IsEnabled() || biasingManager_->IsGeometricSamplingEnabled())) {
         attempt("biasing_thread_end", [&]() { biasingManager_->EndThreadRun(runID); });
     }
 
@@ -237,6 +266,39 @@ void RunAction::EndOfRunAction(const G4Run* run)
         if (!outputManager->HasOutputFailure()) {
             attempt("run_flush", [&]() { outputManager->Flush(); });
         }
+        if (role_ != Role::Master && scoringManager && !outputManager->HasOutputFailure()) {
+            attempt("voxel_worker_finalize", [&]() {
+                scoringManager->FinishVoxelShard(run->GetNumberOfEvent());
+            });
+        }
+        const auto finalizeHistograms = [&](const auto& histograms, const char* workerStage, const char* mergeStage) {
+            if (histograms.empty() || outputManager->HasOutputFailure()) return;
+            if (role_ != Role::Master)
+                attempt(workerStage, [&]() { outputManager->FinishNamedHistograms(histograms, run->GetNumberOfEvent()); });
+            if (role_ != Role::Worker && !outputManager->HasOutputFailure())
+                attempt(mergeStage, [&]() {
+                    if (run->GetNumberOfEventToBeProcessed() != run->GetNumberOfEvent())
+                        throw std::runtime_error("named histogram incomplete run");
+                    const int workers = std::max(1, G4RunManager::GetRunManager()->GetNumberOfThreads());
+                    outputManager->PublishNamedHistograms(histograms, workers, run->GetNumberOfEvent());
+                });
+        };
+        if (scoringManager) {
+            finalizeHistograms(scoringManager->NamedHistograms(), "named_h1_worker", "named_h1_merge");
+            finalizeHistograms(scoringManager->NamedHistograms2D(), "named_h2_worker", "named_h2_merge");
+            const auto& ntuples = scoringManager->EventNtuples();
+            if (!ntuples.empty() && !outputManager->HasOutputFailure()) {
+                if (role_ != Role::Master)
+                    attempt("named_ntuple_worker", [&]() { outputManager->FinishEventNtuples(ntuples, run->GetNumberOfEvent()); });
+                if (role_ != Role::Worker && !outputManager->HasOutputFailure())
+                    attempt("named_ntuple_merge", [&]() {
+                        if (run->GetNumberOfEventToBeProcessed() != run->GetNumberOfEvent())
+                            throw std::runtime_error("event ntuple incomplete run");
+                        const int workers = std::max(1, G4RunManager::GetRunManager()->GetNumberOfThreads());
+                        outputManager->PublishEventNtuples(ntuples, workers, run->GetNumberOfEvent());
+                    });
+            }
+        }
         // Geant4 merges worker scoring meshes into the master before the
         // master's EndOfRunAction, so meshes are exported once, here.
         // Workers still hold their own partial mesh values here; in MT the
@@ -249,6 +311,21 @@ void RunAction::EndOfRunAction(const G4Run* run)
                 });
             }
             if (role_ != Role::Worker) {
+                if (scoringManager && scoringManager->IsVoxelScoringRequested()) {
+                    attempt("voxel_event_coverage", [&]() {
+                        if (run->GetNumberOfEvent() != run->GetNumberOfEventToBeProcessed()) {
+                            throw std::runtime_error("voxel run did not complete its planned events");
+                        }
+                        auto* runManager = G4RunManager::GetRunManager();
+                        const int workers = runManager ? std::max(1, runManager->GetNumberOfThreads()) : 1;
+                        outputManager->PublishVoxelRun(runID, workers, run->GetNumberOfEvent());
+                    });
+                    if (!outputManager->HasOutputFailure()) {
+                        attempt("voxel_roi_mass_write", [&]() {
+                            scoringManager->WriteVoxelRoiMass(*outputManager, runID);
+                        });
+                    }
+                }
                 attempt("scoring_mesh_csv", [&]() {
                     outputManager->WriteScoringMeshesCsv(runID, run->GetNumberOfEvent());
                 });

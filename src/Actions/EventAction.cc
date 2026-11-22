@@ -1,3 +1,6 @@
+#ifdef G4USIM_H6_ENGINEERING
+#include "Core/EngineeringWaterEvent.hh"
+#endif
 #include "Actions/EventAction.hh"
 #include "Actions/RunProgress.hh"
 #include "Core/SessionServer.hh"
@@ -31,6 +34,9 @@ void EventAction::BeginOfEventAction(const G4Event* event)
     }
 
     const int eventID = event->GetEventID();
+#ifdef G4USIM_H6_ENGINEERING
+    engineering_event::Begin(*event,*context_->GetOutputManager());
+#endif
     if (verboseLevel_ > 1) {
         G4cout << "[EventAction] Begin event " << eventID << G4endl;
     }
@@ -46,8 +52,11 @@ void EventAction::EndOfEventAction(const G4Event* event)
     }
 
     const int eventID = event->GetEventID();
+#ifdef G4USIM_H6_ENGINEERING
+    engineering_event::End(*event,*context_->GetOutputManager());
+#endif
     if (ScoringManager* scoringManager = ActiveScoringManager()) {
-        scoringManager->EndEvent(eventID);
+        scoringManager->EndEvent(eventID, event->IsAborted(), event);
     }
     if (auto* manager = G4RunManager::GetRunManager()) {
         if (const auto* run = manager->GetCurrentRun()) {

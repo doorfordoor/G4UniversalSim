@@ -76,6 +76,8 @@ BiasingManager::~BiasingManager() = default;
 
 void BiasingManager::Enable(bool enable)
 {
+    if (enable && IsGeometricSamplingEnabled())
+        throw std::runtime_error("Geometric sampling cannot be combined with the XS biasing gate");
     if (enable && interactiveSessionMode_) {
         throw std::runtime_error("XS biasing is not supported in an interactive session because geometry reinitialization can invalidate attached operators. Use a batch macro in a fresh process instead.");
     }
@@ -89,6 +91,8 @@ bool BiasingManager::IsEnabled() const
 
 void BiasingManager::SetInteractiveSessionMode(bool interactive)
 {
+    if (interactive && IsGeometricSamplingEnabled())
+        throw std::runtime_error("H4 geometric sampling requires a fresh batch process; interactive mode is unsupported");
     if (interactive && IsEnabled()) {
         throw std::runtime_error("XS biasing is not supported in an interactive session because geometry reinitialization can invalidate attached operators. Use a batch macro in a fresh process instead.");
     }
@@ -118,8 +122,10 @@ const std::string& BiasingManager::GetLastInteractiveReject() const
 
 void BiasingManager::Clear()
 {
+    if (geometricWorld_) throw std::runtime_error("Cannot clear bound geometric sampling; start a fresh process");
     ClearOperators();
     config_.Clear();
+    geometricConfig_ = GeometricSamplingConfig{};
     globalBiasVolumes_.clear();
     legacyWarningEmitted_ = false;
     legacyDetailWarnings_.clear();
@@ -467,13 +473,16 @@ void BiasingManager::PrintSummary() const
 
 void BiasingManager::LoadFromConfig(const ConfigManager& config)
 {
+    if (geometricWorld_) throw std::runtime_error("Cannot reload bound geometric sampling; start a fresh process");
     const auto previousConfig = config_;
+    const auto previousGeometric = geometricConfig_;
     const auto previousVolumes = globalBiasVolumes_;
     const auto previousSections = effectiveRuleSections_;
     try {
     // Load is a configuration transaction. Do not destroy accepted operators or
     // source chains before validation succeeds.
     config_.Clear();
+    LoadGeometricSamplingConfig(config);
     globalBiasVolumes_.clear();
     effectiveRuleSections_.clear();
     const auto mode=config.HasKey("modules","biasing")?
@@ -567,6 +576,7 @@ void BiasingManager::LoadFromConfig(const ConfigManager& config)
     AcceptEffectiveConfig(config.GetMainReader());
     } catch (...) {
         config_ = previousConfig;
+        geometricConfig_ = previousGeometric;
         globalBiasVolumes_ = previousVolumes;
         effectiveRuleSections_ = previousSections;
         throw;
@@ -731,6 +741,7 @@ void BiasingManager::ConstructThreadOperators(const GeometryRegistry&) const
 
 void BiasingManager::BeginThreadRun(int runId) const
 {
+    ValidateGeometricSamplingThread(runId);
     if (!IsEnabled()) return;
     const bool worker = G4Threading::IsWorkerThread();
     const int threadId = worker ? G4Threading::G4GetThreadId() : 0;
@@ -792,6 +803,7 @@ void BiasingManager::BeginThreadRun(int runId) const
 
 void BiasingManager::EndThreadRun(int runId) const
 {
+    ValidateGeometricSamplingThread(runId, true);
     if (!IsEnabled()) return;
     auto* state = threadState_.Get();
     if (!state || state->current.runId != runId) return;

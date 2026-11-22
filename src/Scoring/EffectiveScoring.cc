@@ -45,8 +45,20 @@ std::vector<effective_config::Field> ScoringManager::ExportEffectiveConfigFields
         result.push_back(std::move(field));
     };
     add("scoring", "", "enabled", enabled_, "scoring", "enabled");
+    add("scoring", "", "hit_volume_path", hitVolumePathEnabled_, "scoring", "hit_volume_path");
     add("scoring", "", "hits", hitOutputEnabled_, "scoring", "hits");
     add("scoring", "", "event_edep", eventEdepOutputEnabled_, "scoring", "event_edep");
+    add("scoring", "", "optical_photon_counts", IsOpticalPhotonCountingEnabled(), "scoring", "optical_photon_counts");
+    add("scoring", "", "activation_observations", IsActivationObservationEnabled(),
+        "scoring", "activation_observations");
+    add("scoring", "", "activation_observation_schema_version", activationObservationSchemaVersion_,
+        "scoring", "activation_observation_schema_version");
+    if (!clockLibraryHash_.empty()) {
+        add("scoring", "", "native_at_rest_engineering_library_sha256", clockLibraryHash_,
+            "scoring", "native_at_rest_engineering_library_sha256");
+    }
+    add("scoring", "", "optical_boundary_observations", IsOpticalBoundaryObservationEnabled(),
+        "scoring", "optical_boundary_observations");
     add("scoring", "", "edep", edepScoringEnabled_, "scoring", "edep");
     add("scoring", "", "let", letScoringEnabled_, "scoring", "let");
     add("scoring", "", "dose", doseScoringEnabled_, "scoring", "dose");
@@ -105,8 +117,12 @@ std::vector<effective_config::Field> ScoringManager::ExportEffectiveConfigFields
     add("phase_space", "", "kill", phaseSpaceKill_, "phase_space", "kill");
     // Roadmap H2-2: only sections actually declared are exported; absent sections
     // leave both the file output and the effective-config view unchanged.
+    for (const auto& item : namedPlacementPaths_)
+        add("scoring", "selection/" + item.first, "physical_path", item.second, "scoring.selection." + item.first, "physical_path");
     for (const VolumeFilterSpec& spec : filterSpecs_) {
         const std::string object = "filter/" + spec.scorer;
+        if (!spec.config.selection.empty())
+            add("scoring", object, "selection", spec.config.selection, spec.config.section, "selection");
         Value particles = List({spec.config.particles.begin(), spec.config.particles.end()});
         if (spec.config.allParticles) particles = Value("all");
         add("scoring", object, "particles", std::move(particles), spec.config.section, "particles");
@@ -162,6 +178,8 @@ void ScoringManager::SuppressModule(bool trajectoriesOnly, const effective_confi
         trajectories_ = TrajectoryRecorder(settings);
     } else {
         Enable(false); EnableHitOutput(false); EnableEventEdepOutput(false);
+        opticalPhotonCountsEnabled_ = false;
+        opticalBoundaryObservationsEnabled_ = false;
         // Phase-space boundary output and trajectories are independent of
         // the sensitive-hit scorer gate (BeginRun initializes both separately).
     }
@@ -197,6 +215,26 @@ void ScoringManager::RecordEffectiveConfigApplied(int runId, int threadId)
     auto& gateDetails=std::get<Value::Object>(gate.data);
     gateDetails["run_id"]=runId;gateDetails["thread_id"]=actualThread;gateDetails["manager_thread_id"]=threadId;
     gateDetails["scorers"]=std::move(inventory);effectiveState_->Record(std::move(gate));
+    record("/scoring/optical_photon_counts", IsOpticalPhotonCountingEnabled(),
+           "Actual thread-owned optical secondary counting gate after successful BeginRun");
+    record("/scoring/optical_boundary_observations", IsOpticalBoundaryObservationEnabled(),
+           "Actual thread-owned optical boundary observation gate after successful BeginRun");
+    if (IsActivationObservationEnabled()) {
+        auto activation = Receipt("/scoring/activation_observations", true, "run_begin",
+                                  "Actual thread-owned G4RadioactiveDecay validated on GenericIon", "thread_applied");
+        auto& details = std::get<Value::Object>(activation.data);
+        details["run_id"] = runId;
+        details["thread_id"] = actualThread;
+        details["manager_thread_id"] = threadId;
+        details["generic_ion_decay_threshold_s"] = activationDecayThresholdSeconds_;
+        details["analogue"] = true;
+        details["csv_schema_version"] = activationObservationSchemaVersion_;
+        effectiveState_->Record(std::move(activation));
+    } else {
+        record("/scoring/activation_observations", false, "Actual thread-owned activation gate is disabled");
+    }
+    record("/scoring/activation_observation_schema_version", activationObservationSchemaVersion_,
+           "Configured activation observation CSV schema selected by the thread-owned scoring manager");
     const auto* edep=dynamic_cast<const EdepScorer*>(GetScorer("edep"));
     const auto* let=dynamic_cast<const LETScorer*>(GetScorer("let"));
     const auto* dose=dynamic_cast<const DoseScorer*>(GetScorer("dose"));
@@ -233,7 +271,7 @@ void ScoringManager::RecordEffectiveConfigApplied(int runId, int threadId)
     for(const auto& field:ExportEffectiveConfigFields()) {
         const bool histogram=field.path.find("edep_histogram/")!=std::string::npos;
         const bool niel=field.path.find("/objects/niel:")!=std::string::npos;
-        const bool dispatch=field.path=="/scoring/hits" || field.path=="/scoring/event_edep" ||
+        const bool dispatch=field.path=="/scoring/hit_volume_path" || field.path=="/scoring/hits" || field.path=="/scoring/event_edep" ||
             field.path=="/phase_space/particles" || field.path=="/phase_space/kill" ||
             field.path=="/scoring/auto_create_default_scorers" || field.path=="/scoring/verbose";
         if(!histogram && !niel && !dispatch)continue;
